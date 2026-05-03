@@ -1,6 +1,6 @@
 'use client';
 
-import { type ChangeEvent, useEffect, useMemo, useState } from 'react';
+import { type ChangeEvent, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import {
   AlertTriangle,
@@ -33,23 +33,28 @@ import {
   useAuthorSimulation,
   useUploadAuthorImport,
 } from '@/hooks/useAuthorMemoryV3';
+import { EmptyState } from '@/components/author/empty-state';
+import { useDashboardTranslation } from '@/contexts/DashboardLocaleContext';
 import { AuditLogView } from './audit-log-view';
 
 type JsonRecord = Record<string, unknown>;
 
-const screens = [
-  { id: 'inbox', label: 'Inbox', icon: FileText },
-  { id: 'review', label: 'Review', icon: RefreshCw },
-  { id: 'characters', label: 'Characters', icon: UserRound },
-  { id: 'graph', label: 'Graph', icon: GitBranch },
-  { id: 'timeline', label: 'Timeline', icon: Clock3 },
-  { id: 'conflicts', label: 'Conflicts', icon: AlertTriangle },
-  { id: 'simulate', label: 'Simulate', icon: Play },
-  { id: 'audit', label: 'Audit', icon: ScrollText },
+const screenMeta = [
+  { id: 'inbox', icon: FileText },
+  { id: 'review', icon: RefreshCw },
+  { id: 'characters', icon: UserRound },
+  { id: 'graph', icon: GitBranch },
+  { id: 'timeline', icon: Clock3 },
+  { id: 'conflicts', icon: AlertTriangle },
+  { id: 'simulate', icon: Play },
+  { id: 'audit', icon: ScrollText },
 ] as const;
 
+type ScreenId = (typeof screenMeta)[number]['id'];
+
 export function AuthorMemoryV3Client() {
-  const [screen, setScreen] = useState<(typeof screens)[number]['id']>('review');
+  const { t } = useDashboardTranslation();
+  const [screen, setScreen] = useState<ScreenId>('review');
   const [simulationId, setSimulationId] = useState<string | undefined>();
   const [selectedCharacterId, setSelectedCharacterId] = useState<string | undefined>();
   const [backlogResult, setBacklogResult] = useState<JsonRecord | null>(null);
@@ -74,6 +79,13 @@ export function AuthorMemoryV3Client() {
   const [uploadRole, setUploadRole] = useState('canon');
   const [uploadMode, setUploadMode] = useState('extract');
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const uploadInputRef = useRef<HTMLInputElement>(null);
+
+  const screens = useMemo(() => screenMeta.map((item) => ({
+    ...item,
+    label: t(`author.tabs.${item.id}`),
+  })), [t]);
+  const activeScreen = screens.find((item) => item.id === screen) ?? screens[0];
 
   const counts = useMemo(() => ({
     imports: imports.data?.summary?.total ?? 0,
@@ -105,6 +117,10 @@ export function AuthorMemoryV3Client() {
     });
     setSimulationId(result.simulation_id);
     setScreen('simulate');
+  }
+
+  function openUploadDialog() {
+    uploadInputRef.current?.click();
   }
 
   async function handleImportFile(event: ChangeEvent<HTMLInputElement>) {
@@ -165,7 +181,7 @@ export function AuthorMemoryV3Client() {
                 className="inline-flex min-h-10 items-center gap-2 rounded-md border border-slate-300 bg-white px-4 text-sm font-medium text-slate-800 hover:bg-slate-100"
               >
                 <Settings className="h-4 w-4" aria-hidden="true" />
-                Settings
+                {t('dashboard.nav.author.settings')}
               </Link>
               <button
                 type="button"
@@ -174,17 +190,42 @@ export function AuthorMemoryV3Client() {
                 className="inline-flex min-h-10 items-center gap-2 rounded-md bg-slate-950 px-4 text-sm font-medium text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 <Play className="h-4 w-4" aria-hidden="true" />
-                Run Scene
+                {t('author.actions.run_scene')}
               </button>
             </div>
           </div>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
-            <Metric label="Imports" value={counts.imports} />
-            <Metric label="Candidates" value={counts.candidates} />
-            <Metric label="Characters" value={counts.characters} />
-            <Metric label="Conflicts" value={counts.conflicts} danger={counts.conflicts > 0} />
-            <Metric label="Edges" value={counts.graphEdges} />
-            <Metric label="Events" value={counts.events} />
+            <Metric
+              label={t('author.cards.imports')}
+              value={counts.imports}
+              descriptor={t('author.cards.imports.descriptor')}
+            />
+            <Metric
+              label={t('author.cards.candidates')}
+              value={counts.candidates}
+              descriptor={t('author.cards.candidates.descriptor')}
+            />
+            <Metric
+              label={t('author.cards.characters')}
+              value={counts.characters}
+              descriptor={t('author.cards.characters.descriptor')}
+            />
+            <Metric
+              label={t('author.cards.conflicts')}
+              value={counts.conflicts}
+              descriptor={t('author.cards.conflicts.descriptor')}
+              danger={counts.conflicts > 0}
+            />
+            <Metric
+              label={t('author.cards.edges')}
+              value={counts.graphEdges}
+              descriptor={t('author.cards.edges.descriptor')}
+            />
+            <Metric
+              label={t('author.cards.events')}
+              value={counts.events}
+              descriptor={t('author.cards.events.descriptor')}
+            />
           </div>
         </div>
       </div>
@@ -219,15 +260,16 @@ export function AuthorMemoryV3Client() {
             </Panel>
           ) : null}
           {!isLoading && screen === 'inbox' ? (
-            <Panel title="Document Inbox">
+            <Panel title={t('author.panels.inbox')} description={t('author.tabs.inbox.subline')}>
               <div className="mb-4 flex flex-wrap items-center gap-2">
                 <label
                   aria-disabled={uploadImport.isMutating}
                   className="inline-flex min-h-10 cursor-pointer items-center gap-2 rounded-md bg-slate-950 px-3 text-sm font-medium text-white hover:bg-slate-800 aria-disabled:cursor-not-allowed aria-disabled:opacity-60"
                 >
                   <UploadCloud className="h-4 w-4" aria-hidden="true" />
-                  Upload
+                  {t('author.actions.upload')}
                   <input
+                    ref={uploadInputRef}
                     type="file"
                     className="sr-only"
                     accept=".md,.markdown,.docx,.pdf,.txt,text/markdown,text/plain,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
@@ -262,7 +304,7 @@ export function AuthorMemoryV3Client() {
                     aria-live="polite"
                   >
                     <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
-                    Uploading…
+                    {t('author.toasts.uploading')}
                   </span>
                 ) : null}
                 {uploadError ? (
@@ -272,99 +314,129 @@ export function AuthorMemoryV3Client() {
               <ImportsTable
                 projectId={projectId}
                 imports={(imports.data?.imports as JsonRecord[] | undefined) ?? []}
+                t={t}
+                onUpload={openUploadDialog}
               />
             </Panel>
           ) : null}
           {!isLoading && screen === 'review' ? (
-            <Panel title="Review Queue">
-              <Rows rows={candidates.data?.candidates ?? []} columns={['id', 'type', 'status', 'confidence']} />
+            <Panel title={t('author.panels.review')} description={t('author.tabs.review.subline')}>
+              {candidates.data?.candidates?.length ? (
+                <Rows rows={candidates.data.candidates} columns={['id', 'type', 'status', 'confidence']} />
+              ) : (
+                <EmptyState
+                  title={t('author.empty.review.title')}
+                  body={t('author.empty.review.body')}
+                  icon={<RefreshCw className="h-6 w-6" aria-hidden="true" />}
+                  cta={{ label: t('author.empty.review.cta'), onClick: handleGenerateBacklog }}
+                />
+              )}
             </Panel>
           ) : null}
           {!isLoading && screen === 'characters' ? (
-            <Panel title="Characters">
-              <div className="mb-4 flex flex-wrap items-center gap-2">
-                <select
-                  value={activeCharacterId}
-                  onChange={(event) => {
-                    setSelectedCharacterId(event.target.value);
-                    setBacklogResult(null);
-                  }}
-                  className="min-h-10 min-w-56 rounded-md border border-slate-300 bg-white px-3 text-sm text-slate-800"
-                >
-                  {(characters.data?.characters ?? []).map((character) => (
-                    <option key={String(character.id)} value={String(character.id)}>
-                      {String(character.name)}
-                    </option>
-                  ))}
-                </select>
-                <button
-                  type="button"
-                  onClick={handleGenerateBacklog}
-                  disabled={!activeCharacterId || generateBacklog.isMutating}
-                  aria-busy={generateBacklog.isMutating}
-                  className="inline-flex min-h-10 items-center gap-2 rounded-md bg-slate-950 px-3 text-sm font-medium text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
-                >
-                  {generateBacklog.isMutating ? (
-                    <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
-                  ) : (
-                    <Sparkles className="h-4 w-4" aria-hidden="true" />
-                  )}
-                  {generateBacklog.isMutating ? 'AI가 생성 중…' : 'Generate backlog'}
-                </button>
-                {generateBacklog.isMutating ? (
-                  <span
-                    className="inline-flex items-center gap-1 text-sm text-slate-500"
-                    role="status"
-                    aria-live="polite"
-                  >
-                    <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
-                    {backlogElapsedSec}초 경과 · 보통 10~30초 소요됩니다
-                  </span>
-                ) : null}
-                {!generateBacklog.isMutating && generateBacklog.error ? (
-                  <span className="text-sm text-[var(--signal-conflict-ink)]">{generateBacklog.error.message}</span>
-                ) : null}
-              </div>
-              {backlogResult ? (
-                <div className="mb-4 rounded-md border border-[var(--signal-canon)] bg-[var(--signal-canon-soft)] p-3 text-sm text-[var(--signal-canon-ink)]">
-                  <div className="font-medium">
-                    {String(backlogResult.character_name)} backlog generated · {Number((backlogResult.candidates as unknown[] | undefined)?.length ?? 0)} candidates
+            <Panel title={activeScreen.label} description={t('author.tabs.characters.subline')}>
+              {characters.data?.characters?.length ? (
+                <>
+                  <div className="mb-4 flex flex-wrap items-center gap-2">
+                    <select
+                      value={activeCharacterId}
+                      onChange={(event) => {
+                        setSelectedCharacterId(event.target.value);
+                        setBacklogResult(null);
+                      }}
+                      className="min-h-10 min-w-56 rounded-md border border-slate-300 bg-white px-3 text-sm text-slate-800"
+                    >
+                      {characters.data.characters.map((character) => (
+                        <option key={String(character.id)} value={String(character.id)}>
+                          {String(character.name)}
+                        </option>
+                      ))}
+                    </select>
+                    <button
+                      type="button"
+                      onClick={handleGenerateBacklog}
+                      disabled={!activeCharacterId || generateBacklog.isMutating}
+                      aria-busy={generateBacklog.isMutating}
+                      className="inline-flex min-h-10 items-center gap-2 rounded-md bg-slate-950 px-3 text-sm font-medium text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+                    >
+                      {generateBacklog.isMutating ? (
+                        <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                      ) : (
+                        <Sparkles className="h-4 w-4" aria-hidden="true" />
+                      )}
+                      {generateBacklog.isMutating ? t('author.toasts.ai_generating') : t('author.actions.generate_backlog')}
+                    </button>
+                    {generateBacklog.isMutating ? (
+                      <span
+                        className="inline-flex items-center gap-1 text-sm text-slate-500"
+                        role="status"
+                        aria-live="polite"
+                      >
+                        <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
+                        {backlogElapsedSec}초 경과
+                      </span>
+                    ) : null}
+                    {!generateBacklog.isMutating && generateBacklog.error ? (
+                      <span className="text-sm text-[var(--signal-conflict-ink)]">{generateBacklog.error.message}</span>
+                    ) : null}
                   </div>
-                  <div className="mt-1 text-[var(--signal-canon-ink)]">Review Queue updated.</div>
-                  <div className="mt-3">
-                    <Rows
-                      rows={((backlogResult.candidates as JsonRecord[] | undefined) ?? []).slice(0, 8)}
-                      columns={['category', 'content', 'rationale']}
-                    />
-                  </div>
-                </div>
-              ) : null}
-              <Rows rows={characters.data?.characters ?? []} columns={['name', 'summary']} />
+                  {backlogResult ? (
+                    <div className="mb-4 rounded-md border border-[var(--signal-canon)] bg-[var(--signal-canon-soft)] p-3 text-sm text-[var(--signal-canon-ink)]">
+                      <div className="font-medium">
+                        {String(backlogResult.character_name)} 백로그 생성 완료 · 후보 {Number((backlogResult.candidates as unknown[] | undefined)?.length ?? 0)}개
+                      </div>
+                      <div className="mt-1 text-[var(--signal-canon-ink)]">{t('author.toasts.review_queue_updated')}</div>
+                      <div className="mt-3">
+                        <Rows
+                          rows={((backlogResult.candidates as JsonRecord[] | undefined) ?? []).slice(0, 8)}
+                          columns={['category', 'content', 'rationale']}
+                        />
+                      </div>
+                    </div>
+                  ) : null}
+                  <Rows rows={characters.data.characters} columns={['name', 'summary']} />
+                </>
+              ) : (
+                <EmptyState
+                  title={t('author.empty.characters.title')}
+                  body={t('author.empty.characters.body')}
+                  icon={<UserRound className="h-6 w-6" aria-hidden="true" />}
+                  cta={{ label: t('author.empty.characters.cta'), onClick: openUploadDialog }}
+                />
+              )}
             </Panel>
           ) : null}
           {!isLoading && screen === 'graph' ? (
-            <Panel title="Relationship Graph Data">
+            <Panel title={activeScreen.label} description={t('author.tabs.graph.subline')}>
               <Rows rows={graph.data?.edges?.slice(0, 12) ?? []} columns={['from', 'type', 'to', 'intensity']} />
             </Panel>
           ) : null}
           {!isLoading && screen === 'timeline' ? (
-            <Panel title="Timeline">
-              <Rows rows={timeline.data?.events?.slice(0, 16) ?? []} columns={['day', 'date', 'where', 'what']} />
+            <Panel title={activeScreen.label} description={t('author.tabs.timeline.subline')}>
+              {timeline.data?.events?.length ? (
+                <Rows rows={timeline.data.events.slice(0, 16)} columns={['day', 'date', 'where', 'what']} />
+              ) : (
+                <EmptyState
+                  title={t('author.empty.timeline.title')}
+                  body={t('author.empty.timeline.body')}
+                  icon={<Clock3 className="h-6 w-6" aria-hidden="true" />}
+                />
+              )}
             </Panel>
           ) : null}
           {!isLoading && screen === 'conflicts' ? (
-            <Panel title="Conflict Inbox">
+            <Panel title={activeScreen.label} description={t('author.tabs.conflicts.subline')}>
               <Rows rows={conflicts.data?.conflicts ?? []} columns={['id', 'severity', 'status', 'impact_summary']} />
             </Panel>
           ) : null}
           {!isLoading && screen === 'simulate' ? (
-            <Panel title="Scene Simulation">
+            <Panel title={activeScreen.label} description={t('author.tabs.simulate.subline')}>
               {simulationId ? (
                 <div className="space-y-4">
                   <div className="rounded-md border border-slate-200 bg-slate-50 p-4 text-sm">
-                    <div className="font-medium">Simulation {simulationId}</div>
+                    <div className="font-medium">미리보기 {simulationId}</div>
                     <div className="mt-1 text-slate-600">
-                      Status: {String(simulation.data?.status ?? 'loading')} · Candidates: {Number((simulation.data?.candidates as unknown[] | undefined)?.length ?? 0)}
+                      상태: {String(simulation.data?.status ?? 'loading')} · 후보 {Number((simulation.data?.candidates as unknown[] | undefined)?.length ?? 0)}개
                     </div>
                   </div>
                   <Rows
@@ -373,19 +445,30 @@ export function AuthorMemoryV3Client() {
                   />
                 </div>
               ) : (
-                <div className="rounded-md border border-dashed border-slate-300 p-8 text-center text-sm text-slate-600">
-                  Run a scene to generate candidate thoughts, dialogue, and actions from current memory.
-                </div>
+                <EmptyState
+                  title={t('author.empty.simulate.title')}
+                  body={t('author.empty.simulate.body')}
+                  icon={<Play className="h-6 w-6" aria-hidden="true" />}
+                  cta={{ label: t('author.empty.simulate.cta'), onClick: handleRunSimulation }}
+                />
               )}
             </Panel>
           ) : null}
           {!isLoading && screen === 'audit' ? (
-            <Panel title="Audit Log">
-              <AuditLogView
-                logs={audit.data?.audit_logs ?? []}
-                replayResult={auditReplay.data ?? null}
-                onReplay={setReplayDecisionId}
-              />
+            <Panel title={activeScreen.label} description={t('author.tabs.audit.subline')}>
+              {audit.data?.audit_logs?.length ? (
+                <AuditLogView
+                  logs={audit.data.audit_logs}
+                  replayResult={auditReplay.data ?? null}
+                  onReplay={setReplayDecisionId}
+                />
+              ) : (
+                <EmptyState
+                  title={t('author.empty.audit.title')}
+                  body={t('author.empty.audit.body')}
+                  icon={<ScrollText className="h-6 w-6" aria-hidden="true" />}
+                />
+              )}
               {audit.error ? (
                 <div className="mt-4 rounded-md border border-[var(--signal-conflict)] bg-[var(--signal-conflict-soft)] p-3 text-sm text-[var(--signal-conflict-ink)]">
                   Audit log could not be loaded.
@@ -399,22 +482,46 @@ export function AuthorMemoryV3Client() {
   );
 }
 
-function Metric({ label, value, danger = false }: { label: string; value: unknown; danger?: boolean }) {
+function Metric({
+  label,
+  value,
+  descriptor,
+  danger = false,
+}: {
+  label: string;
+  value: unknown;
+  descriptor?: string;
+  danger?: boolean;
+}) {
   return (
     <div className="rounded-md border border-slate-200 bg-white p-3">
-      <div className="text-xs font-medium uppercase tracking-normal text-slate-500">{label}</div>
+      <div className="text-xs font-medium tracking-normal text-slate-500">{label}</div>
       <div className={`mt-1 text-2xl font-semibold ${danger ? 'text-[var(--signal-conflict-ink)]' : 'text-slate-950'}`}>
         {String(value)}
       </div>
+      {descriptor ? (
+        <div className="mt-1 text-xs text-slate-500">{descriptor}</div>
+      ) : null}
     </div>
   );
 }
 
-function Panel({ title, children }: { title: string; children: React.ReactNode }) {
+function Panel({
+  title,
+  description,
+  children,
+}: {
+  title: string;
+  description?: string;
+  children: React.ReactNode;
+}) {
   return (
     <div className="rounded-md border border-slate-200 bg-white">
       <div className="border-b border-slate-200 px-4 py-3">
         <h2 className="text-base font-semibold tracking-normal">{title}</h2>
+        {description ? (
+          <p className="mt-1 text-sm text-slate-500">{description}</p>
+        ) : null}
       </div>
       <div className="p-4">{children}</div>
     </div>
@@ -471,9 +578,13 @@ const IMPORT_COLUMNS = [
 function ImportsTable({
   projectId,
   imports,
+  t,
+  onUpload,
 }: {
   projectId: string;
   imports: JsonRecord[];
+  t: (key: string) => string;
+  onUpload: () => void;
 }) {
   const [pendingId, setPendingId] = useState<string | null>(null);
   const deleteImport = useDeleteAuthorImport(projectId, pendingId ?? undefined);
@@ -491,11 +602,26 @@ function ImportsTable({
     }
   }
 
+  const isParsingOnly = imports.length > 0 && imports.every((item) => item.parse_status === 'parsing');
+
   if (imports.length === 0) {
     return (
-      <div className="rounded-md border border-dashed border-slate-300 p-8 text-center text-sm text-slate-600">
-        업로드된 파일이 없습니다.
-      </div>
+      <EmptyState
+        title={t('author.empty.inbox.title')}
+        body={t('author.empty.inbox.body')}
+        icon={<FileText className="h-6 w-6" aria-hidden="true" />}
+        cta={{ label: t('author.empty.inbox.cta'), onClick: onUpload }}
+      />
+    );
+  }
+
+  if (isParsingOnly) {
+    return (
+      <EmptyState
+        title={t('author.empty.inbox.parsing.title')}
+        body={t('author.empty.inbox.parsing.body')}
+        icon={<Loader2 className="h-6 w-6 animate-spin" aria-hidden="true" />}
+      />
     );
   }
 
