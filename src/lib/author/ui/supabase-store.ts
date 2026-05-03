@@ -217,12 +217,13 @@ export class SupabaseAuthorUiStore implements AuthorUiStore {
     userId: string,
     projectId: string,
     conflictKey: string,
-    resolution: JsonValue
+    resolution: JsonValue,
+    status: AuthorConflictRow['status'] = 'resolved'
   ): Promise<void> {
     const { error } = await this.client
       .from('author_conflicts')
       .update({
-        status: 'resolved',
+        status,
         resolution: sanitizeAuthorAuditJson(resolution),
         resolved_at: new Date().toISOString(),
       })

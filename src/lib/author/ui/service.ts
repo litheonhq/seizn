@@ -38,6 +38,7 @@ import {
   type ExtractedAuthorCandidate,
 } from '@/lib/author/extraction';
 import { InMemoryAuthorUiStore } from './in-memory-store';
+import { conflictStatusForDecision, normalizeConflictResolution } from './conflict-resolution';
 import { seedAuthorUiProject, type AuthorUiSeedRows } from './seed-project';
 import { createAuthorUiStoreForUser, type AuthorUiStore } from './store';
 import type {
@@ -967,20 +968,34 @@ export class AuthorUiService {
 
   async resolveConflict(projectId: string, conflictId: string, input: JsonRecord) {
     this.ensureProject(projectId);
+    const resolution = normalizeConflictResolution(input);
+    if (!resolution) {
+      throw new AuthorUiValidationError('decision must be keep_existing, replace_with_new, defer_both, or custom');
+    }
     const conflicts = await this.store.listConflicts(this.userId, projectId, {});
     const conflict = conflicts.find((item) => item.conflict_key === conflictId || item.id === conflictId);
     if (!conflict) {
       throw new AuthorUiNotFoundError(`Conflict not found: ${conflictId}`);
     }
-    const resolution = readString(input, 'decision') ?? 'defer';
-    await this.store.resolveConflict(this.userId, projectId, conflict.conflict_key, resolution);
+    await this.store.resolveConflict(
+      this.userId,
+      projectId,
+      conflict.conflict_key,
+      canonicalize(resolution),
+      conflictStatusForDecision(resolution.decision)
+    );
     this.touchProject(projectId);
     const audit = this.logAudit(projectId, 'conflict.resolved', {
       conflict_id: conflictId,
-      decision: resolution,
+      decision: resolution.decision,
+      resolution,
       affected_entities: authorConflictAffectedEntities(conflict),
     });
-    return { resolved: true, decision_id: audit.decisionId, side_effects: [`conflict:${conflictId}:${resolution}`] };
+    return {
+      resolved: true,
+      decision_id: audit.decisionId,
+      side_effects: [`conflict:${conflictId}:${resolution.decision}`],
+    };
   }
 
   async runSimulation(projectId: string, input: JsonRecord) {
@@ -1619,7 +1634,7 @@ function authorConflictRowToUi(row: AuthorConflictRow): ReturnType<typeof buildS
     llm_analysis: readString(payload, 'llm_analysis') ?? '',
     impact_summary: readString(payload, 'impact_summary') ?? '',
     affected_entities: readStringArray(payload, 'affected_entities'),
-    resolution: typeof row.resolution === 'string' ? row.resolution : null,
+    resolution: row.resolution,
   } as ReturnType<typeof buildSeedConflicts>[number];
 }
 
@@ -1708,7 +1723,7 @@ function isAuthorConflictSeverity(value: string | null): value is AuthorConflict
 }
 
 function isAuthorConflictStatus(value: string | null): value is AuthorConflictStatus {
-  return value === 'open' || value === 'resolved';
+  return value === 'open' || value === 'resolved' || value === 'deferred';
 }
 
 function auditFilterFromSearchParams(projectId: string, params: URLSearchParams): AuthorAuditSearchFilter {
