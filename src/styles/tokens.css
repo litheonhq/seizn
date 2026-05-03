@@ -31,7 +31,8 @@
 }
 
 /* V1 design tokens — monochrome ink slate + 3 semantic signals (canon/conflict/pending).
-   Locked in Phase D'' (commit 1d3a3c49) and adopted by auth pages in 9aaaaea6. */
+   Locked in Phase D'' (commit 1d3a3c49) and adopted by auth pages in 9aaaaea6.
+   Preview env: Turnstile keys removed for unblocked dogfood signup/login. */
 :root {
   --font-sans: "Pretendard", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-serif: "Source Serif 4", "Charter", "Iowan Old Style", Georgia, serif;
