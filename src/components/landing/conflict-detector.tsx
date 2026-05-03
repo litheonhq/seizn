@@ -106,11 +106,15 @@ export function ConflictDetector({ compact = false }: { compact?: boolean }) {
         <label className="author-eyebrow mb-2 block" htmlFor="author-conflict-input">
           propose a fact
         </label>
+        <p id="author-conflict-help" className="sr-only">
+          Reconciles every fact against the sample character, rule, and timeline ledger.
+        </p>
         <textarea
           id="author-conflict-input"
           value={text}
           onChange={(event) => setText(event.currentTarget.value)}
           rows={compact ? 2 : 3}
+          aria-describedby="author-conflict-result author-conflict-help"
           className="w-full resize-none rounded-[var(--radius-md)] border px-3.5 py-3 text-[15px] leading-6 outline-none transition-shadow"
           style={{ borderColor: "var(--ink-200)", background: "var(--ink-0)", color: "var(--ink-900)" }}
           placeholder="e.g. Han Iseul has gray eyes."
@@ -123,7 +127,7 @@ export function ConflictDetector({ compact = false }: { compact?: boolean }) {
               key={prompt.text}
               type="button"
               onClick={() => setText(prompt.text)}
-              className="min-h-8 rounded-full border px-2.5 text-left text-[12px]"
+              className="min-h-11 rounded-full border px-3 text-left text-[12px]"
               style={{ borderColor: "var(--ink-200)", background: "var(--ink-50)", color: "var(--ink-600)", fontFamily: "var(--font-mono)" }}
             >
               {prompt.label}
@@ -133,6 +137,9 @@ export function ConflictDetector({ compact = false }: { compact?: boolean }) {
       </div>
 
       <div
+        id="author-conflict-result"
+        role="status"
+        aria-live="polite"
         className="mx-4 rounded-[var(--radius-md)] border p-4"
         style={{
           minHeight: 88,
@@ -169,15 +176,15 @@ export function ConflictDetector({ compact = false }: { compact?: boolean }) {
               <button
                 type="button"
                 onClick={commit}
-                className="author-btn min-h-9 px-3 text-[13px]"
+                className="author-btn min-h-11 px-3 text-[13px]"
                 style={{ background: "var(--ink-900)", color: "var(--ink-0)" }}
               >
-                {result.verdict === "conflict" ? "open ledger" : result.verdict === "canon" ? "accept" : "queue review"}
+                {result.verdict === "conflict" ? "log conflict" : result.verdict === "canon" ? "accept" : "queue review"}
               </button>
               <button
                 type="button"
                 onClick={() => setText("")}
-                className="author-btn min-h-9 border px-3 text-[13px]"
+                className="author-btn min-h-11 border px-3 text-[13px]"
                 style={{ borderColor: "var(--ink-200)", color: "var(--ink-800)" }}
               >
                 discard

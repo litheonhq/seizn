@@ -68,7 +68,7 @@ export function CanonGraph({
           canon graph D30
         </span>
         <span className="author-mono text-[11px]" style={{ color: subText }}>
-          {Math.min(data.summary.characters, 8)} nodes / {data.summary.relationships} links
+          {GRAPH_NODES.length} nodes / {GRAPH_EDGES.length} links
         </span>
       </div>
 
@@ -99,10 +99,9 @@ export function CanonGraph({
         const cy = node.y * height;
 
         return (
-          <button
+          <div
             key={`${node.fallback}-${index}`}
-            type="button"
-            className="absolute z-20 flex items-center justify-center rounded-full border text-center transition-transform hover:scale-[1.04] focus:scale-[1.04]"
+            className="absolute z-20 flex items-center justify-center rounded-full border text-center"
             style={{
               left: `${((cx - node.r) / width) * 100}%`,
               top: `${((cy - node.r) / height) * 100}%`,
@@ -113,10 +112,10 @@ export function CanonGraph({
               color: nodeText,
               boxShadow: "0 0 0 6px transparent",
             }}
-            aria-label={`${label}, ${node.role}`}
+            title={`${label}, ${node.role}`}
           >
             <span className="px-1 text-[10px] font-medium leading-tight md:text-[11px]">{label}</span>
-          </button>
+          </div>
         );
       })}
 

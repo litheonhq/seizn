@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Menu } from "lucide-react";
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import { CheckoutButton } from "@/components/checkout-button";
 import {
   AUTHOR_BILLING_TIERS,
@@ -74,8 +74,11 @@ export function HeroSplitDetector({
 }
 
 function LandingNav({ copy, locale }: { copy: AuthorLandingCopy; locale: Locale }) {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const closeMobileMenu = () => setMobileMenuOpen(false);
+
   return (
-    <nav className="border-b" aria-label="Main navigation" style={{ borderColor: "oklch(1 0 0 / 0.08)" }}>
+    <nav className="relative z-50 border-b" aria-label="Main navigation" style={{ borderColor: "oklch(1 0 0 / 0.08)" }}>
       <div className="author-shell flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8 xl:px-0">
         <Link href={`/${locale}`} className="inline-flex min-h-11 items-center">
           <SeiznLockup tone="light" />
@@ -110,10 +113,46 @@ function LandingNav({ copy, locale }: { copy: AuthorLandingCopy; locale: Locale 
           className="inline-flex h-11 w-11 items-center justify-center rounded-[var(--radius-md)] border lg:hidden"
           style={{ borderColor: "oklch(1 0 0 / 0.12)", background: "oklch(1 0 0 / 0.06)", color: "var(--ink-0)" }}
           aria-label={copy.nav.menu}
+          aria-controls="author-mobile-menu"
+          aria-expanded={mobileMenuOpen}
+          onClick={() => setMobileMenuOpen((open) => !open)}
         >
           <Menu size={18} aria-hidden="true" />
         </button>
       </div>
+      {mobileMenuOpen ? (
+        <div
+          id="author-mobile-menu"
+          className="border-t lg:hidden"
+          style={{ borderColor: "oklch(1 0 0 / 0.08)", background: "var(--ink-900)" }}
+        >
+          <div className="author-shell grid gap-1 px-4 py-3 sm:px-6">
+            <a href="#workflow" onClick={closeMobileMenu} className="min-h-11 py-3 text-sm font-medium" style={{ color: "oklch(1 0 0 / 0.78)" }}>
+              {copy.nav.workflow}
+            </a>
+            <Link href={`/${locale}/demo`} onClick={closeMobileMenu} className="min-h-11 py-3 text-sm font-medium" style={{ color: "oklch(1 0 0 / 0.78)" }}>
+              {copy.nav.demo}
+            </Link>
+            <a href="#pricing" onClick={closeMobileMenu} className="min-h-11 py-3 text-sm font-medium" style={{ color: "oklch(1 0 0 / 0.78)" }}>
+              {copy.nav.pricing}
+            </a>
+            <Link href={`/${locale}/docs`} onClick={closeMobileMenu} className="min-h-11 py-3 text-sm font-medium" style={{ color: "oklch(1 0 0 / 0.78)" }}>
+              {copy.nav.docs}
+            </Link>
+            <Link href="/login" onClick={closeMobileMenu} className="min-h-11 py-3 text-sm font-medium" style={{ color: "oklch(1 0 0 / 0.78)" }}>
+              {copy.nav.signIn}
+            </Link>
+            <Link
+              href="/signup"
+              onClick={closeMobileMenu}
+              className="author-btn mt-2 min-h-11 justify-center px-4 py-2 text-sm"
+              style={{ background: "var(--ink-0)", color: "var(--ink-900)" }}
+            >
+              {copy.nav.start}
+            </Link>
+          </div>
+        </div>
+      ) : null}
     </nav>
   );
 }
@@ -180,6 +219,7 @@ function PlanPicker({
               key={tier}
               type="button"
               onClick={() => setSelectedPlan(tier)}
+              aria-pressed={active}
               className="min-h-11 rounded-[var(--radius-md)] px-3.5 text-left text-sm font-medium lg:text-center"
               style={{
                 background: active ? "var(--ink-0)" : "transparent",
@@ -196,23 +236,32 @@ function PlanPicker({
       </div>
 
       <div className="mt-3 grid gap-3 sm:grid-cols-[1fr_auto] lg:flex lg:flex-wrap lg:items-center">
-        <CheckoutButton
-          tier={selectedPlan}
-          cadence={cadence}
-          successUrl="/dashboard/billing?success=true"
-          cancelUrl={`/${locale}/pricing`}
-          privacyHref={`/${locale}/legal/privacy`}
-          termsHref={`/${locale}/legal/terms`}
-          legalCopy={copy.checkout}
-          requireLegalAgreement={false}
-          className="author-btn min-h-12 w-full px-5 py-3 text-sm sm:w-auto"
-          disabled={false}
+        <div
+          style={
+            {
+              "--szn-text-2": "oklch(1 0 0 / 0.72)",
+              "--checkout-link-color": "var(--signal-canon)",
+            } as CSSProperties
+          }
         >
-          {checkoutLabel}
-        </CheckoutButton>
+          <CheckoutButton
+            tier={selectedPlan}
+            cadence={cadence}
+            successUrl="/dashboard/billing?success=true"
+            cancelUrl={`/${locale}/pricing`}
+            privacyHref={`/${locale}/legal/privacy`}
+            termsHref={`/${locale}/legal/terms`}
+            legalCopy={copy.checkout}
+            className="author-btn min-h-12 w-full bg-[color:var(--ink-0)] px-5 py-3 text-sm text-[color:var(--ink-900)] hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
+            disabled={false}
+          >
+            {checkoutLabel}
+          </CheckoutButton>
+        </div>
         <button
           type="button"
           onClick={() => setCadence(cadence === "monthly" ? "yearly" : "monthly")}
+          aria-pressed={cadence === "yearly"}
           className="author-btn min-h-11 border px-4 text-sm"
           style={{ borderColor: "oklch(1 0 0 / 0.18)", color: "oklch(1 0 0 / 0.86)" }}
         >

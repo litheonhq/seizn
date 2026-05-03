@@ -3,6 +3,7 @@ import { act } from "react";
 import type { ReactNode } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { CheckoutButton } from "@/components/checkout-button";
+import { CHECKOUT_LEGAL_VERSIONS } from "@/lib/checkout-copy";
 
 let root: Root | null = null;
 let container: HTMLDivElement | null = null;
@@ -78,7 +79,12 @@ describe("CheckoutButton legal agreement", () => {
     await waitForCondition(() => {
       expect(global.fetch).toHaveBeenCalledWith("/api/billing/checkout", expect.objectContaining({
         method: "POST",
-        body: JSON.stringify({ tier: "pro", cadence: "yearly" }),
+        body: JSON.stringify({
+          tier: "pro",
+          cadence: "yearly",
+          legalAccepted: true,
+          legalVersions: CHECKOUT_LEGAL_VERSIONS,
+        }),
         headers: expect.objectContaining({ "x-csrf-token": "csrf-legal" }),
       }));
       expect(window.open).toHaveBeenCalledWith("https://checkout.stripe.test/session", "_self", "noopener,noreferrer");

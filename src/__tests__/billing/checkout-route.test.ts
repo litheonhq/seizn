@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { NextRequest } from 'next/server';
 import { POST } from '@/app/api/billing/checkout/route';
+import { CHECKOUT_LEGAL_VERSIONS } from '@/lib/checkout-copy';
 import { AUTHOR_TRIAL_DAYS } from '@/lib/stripe-config';
 
 const mocks = vi.hoisted(() => ({
@@ -171,10 +172,10 @@ describe('Author checkout route', () => {
 
       expect(response.status).toBe(200);
       expect(body.url).toBe('https://checkout.stripe.com/session_123');
-      expect(mocks.checkoutCreate).toHaveBeenCalledWith(expect.objectContaining({
+      expectCheckoutCreateWith({
         customer: 'cus_author_123',
         line_items: [{ price: 'price_pro_monthly_v7', quantity: 1 }],
-      }));
+      });
       expect(mocks.portalCreate).not.toHaveBeenCalled();
     }
   );
@@ -198,9 +199,9 @@ describe('Author checkout route', () => {
     expect(response.status).toBe(200);
     expect(body.url).toBe('https://checkout.stripe.com/session_123');
     expect(mocks.portalCreate).not.toHaveBeenCalled();
-    expect(mocks.checkoutCreate).toHaveBeenCalledWith(expect.objectContaining({
+    expectCheckoutCreateWith({
       customer: 'cus_author_123',
-    }));
+    });
     expect(mocks.profileUpdates).toContainEqual(expect.objectContaining({
       plan: 'free',
       stripe_subscription_id: null,
@@ -315,9 +316,9 @@ describe('Author checkout route', () => {
       metadata: expect.objectContaining({ user_id: 'user-1' }),
     }));
     expect(mocks.profileUpdates).toContainEqual({ stripe_customer_id: 'cus_created_123' });
-    expect(mocks.checkoutCreate).toHaveBeenCalledWith(expect.objectContaining({
+    expectCheckoutCreateWith({
       customer: 'cus_created_123',
-    }));
+    });
   });
 
   it('creates checkout as a no-card 30-day trial session', async () => {
@@ -326,7 +327,7 @@ describe('Author checkout route', () => {
 
     expect(response.status).toBe(200);
     expect(body.url).toBe('https://checkout.stripe.com/session_123');
-    expect(mocks.checkoutCreate).toHaveBeenCalledWith(expect.objectContaining({
+    expectCheckoutCreateWith({
       mode: 'subscription',
       payment_method_types: ['card'],
       payment_method_collection: 'if_required',
@@ -337,16 +338,41 @@ describe('Author checkout route', () => {
             missing_payment_method: 'cancel',
           },
         },
+        metadata: expect.objectContaining({
+          legal_terms_version: CHECKOUT_LEGAL_VERSIONS.terms,
+          legal_privacy_version: CHECKOUT_LEGAL_VERSIONS.privacy,
+          legal_accepted: 'true',
+        }),
       }),
-    }));
+      metadata: expect.objectContaining({
+        legal_terms_version: CHECKOUT_LEGAL_VERSIONS.terms,
+        legal_privacy_version: CHECKOUT_LEGAL_VERSIONS.privacy,
+        legal_accepted: 'true',
+      }),
+    });
+  });
+
+  it('requires current legal agreement metadata before creating checkout', async () => {
+    const response = await POST(makeCheckoutRequest({ legalAccepted: false }));
+    const body = await response.json();
+
+    expect(response.status).toBe(400);
+    expect(body).toEqual({ error: 'Legal agreement is required before checkout' });
+    expect(mocks.checkoutCreate).not.toHaveBeenCalled();
   });
 });
 
-function makeCheckoutRequest(): NextRequest {
+function makeCheckoutRequest(overrides: Record<string, unknown> = {}): NextRequest {
   return new NextRequest('https://app.seizn.test/api/billing/checkout', {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ tier: 'pro', cadence: 'monthly' }),
+    body: JSON.stringify({
+      tier: 'pro',
+      cadence: 'monthly',
+      legalAccepted: true,
+      legalVersions: CHECKOUT_LEGAL_VERSIONS,
+      ...overrides,
+    }),
   });
 }
 
@@ -366,4 +392,13 @@ function restoreEnv(name: keyof typeof ORIGINAL_ENV, value: string | undefined):
   } else {
     process.env[name] = value;
   }
+}
+
+function expectCheckoutCreateWith(params: Record<string, unknown>): void {
+  expect(mocks.checkoutCreate).toHaveBeenCalledWith(
+    expect.objectContaining(params),
+    expect.objectContaining({
+      idempotencyKey: expect.stringMatching(/^author-checkout-v7-[a-z0-9]+$/),
+    })
+  );
 }

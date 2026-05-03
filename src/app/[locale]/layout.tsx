@@ -120,8 +120,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       icon: [
         { url: "/icons/seizn-mark.svg", type: "image/svg+xml" },
         { url: "/icons/seizn-mark-16.svg", sizes: "16x16", type: "image/svg+xml" },
-        { url: "/favicon-32.png", sizes: "32x32", type: "image/png" },
-        { url: "/favicon-16.png", sizes: "16x16", type: "image/png" },
       ],
       apple: "/apple-touch-icon.png",
     },

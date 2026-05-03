@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createHash } from "crypto";
 import { getStripeClient } from "@/lib/stripe";
 import { auth } from "@/lib/auth";
 import { verifyCsrf } from "@/lib/csrf";
 import { getAuthorByokStatus } from "@/lib/author/llm";
+import { CHECKOUT_LEGAL_VERSIONS } from "@/lib/checkout-copy";
 import { createServerClient } from "@/lib/supabase";
 import {
   AUTHOR_PRICE_LOCK_VERSION,
@@ -24,6 +26,8 @@ interface CheckoutRequestBody {
   cadence?: unknown;
   successUrl?: unknown;
   cancelUrl?: unknown;
+  legalAccepted?: unknown;
+  legalVersions?: unknown;
 }
 
 interface CheckoutSelection {
@@ -103,6 +107,20 @@ function resolveCheckoutSelection(body: CheckoutRequestBody): CheckoutSelection 
   }
 
   return null;
+}
+
+function hasCurrentLegalAcceptance(body: CheckoutRequestBody): boolean {
+  if (body.legalAccepted !== true) {
+    return false;
+  }
+
+  if (!body.legalVersions || typeof body.legalVersions !== "object") {
+    return false;
+  }
+
+  const versions = body.legalVersions as Record<string, unknown>;
+  return versions.terms === CHECKOUT_LEGAL_VERSIONS.terms
+    && versions.privacy === CHECKOUT_LEGAL_VERSIONS.privacy;
 }
 
 async function getOrCreateCheckoutCustomer(input: {
@@ -186,11 +204,19 @@ export async function POST(request: NextRequest) {
       return csrfError;
     }
 
-    const { priceId, tier, cadence, successUrl, cancelUrl } = (await request.json()) as CheckoutRequestBody;
-    const selection = resolveCheckoutSelection({ priceId, tier, cadence, successUrl, cancelUrl });
+    const body = (await request.json()) as CheckoutRequestBody;
+    const { successUrl, cancelUrl } = body;
+    const selection = resolveCheckoutSelection(body);
 
     if (!selection) {
       return NextResponse.json({ error: "Invalid author billing tier" }, { status: 400 });
+    }
+
+    if (!hasCurrentLegalAcceptance(body)) {
+      return NextResponse.json(
+        { error: "Legal agreement is required before checkout" },
+        { status: 400 }
+      );
     }
 
     const resolvedPriceId = getAuthorStripePriceId(selection.tier, selection.cadence);
@@ -227,6 +253,12 @@ export async function POST(request: NextRequest) {
     const discounts = byokStatus.enabled
       ? [{ coupon: process.env.STRIPE_BYOK_COUPON_ID?.trim() || BYOK_COUPON_ID }]
       : undefined;
+    const resolvedSuccessUrl = resolveSameOriginUrl(
+      successUrl,
+      origin,
+      "/dashboard/billing?success=true"
+    );
+    const resolvedCancelUrl = resolveSameOriginUrl(cancelUrl, origin, "/pricing");
 
     const checkoutSession = await stripe.checkout.sessions.create({
       mode: "subscription",
@@ -249,21 +281,33 @@ export async function POST(request: NextRequest) {
           billing_cadence: selection.cadence,
           price_lock_version: AUTHOR_PRICE_LOCK_VERSION,
           byok_discount: byokStatus.enabled ? "true" : "false",
+          legal_terms_version: CHECKOUT_LEGAL_VERSIONS.terms,
+          legal_privacy_version: CHECKOUT_LEGAL_VERSIONS.privacy,
+          legal_accepted: "true",
         },
       },
-      success_url: resolveSameOriginUrl(
-        successUrl,
-        origin,
-        "/dashboard/billing?success=true"
-      ),
-      cancel_url: resolveSameOriginUrl(cancelUrl, origin, "/pricing"),
+      success_url: resolvedSuccessUrl,
+      cancel_url: resolvedCancelUrl,
       client_reference_id: session.user.id,
       metadata: {
         user_id: session.user.id,
         author_billing_tier: selection.tier,
         billing_cadence: selection.cadence,
         price_lock_version: AUTHOR_PRICE_LOCK_VERSION,
+        legal_terms_version: CHECKOUT_LEGAL_VERSIONS.terms,
+        legal_privacy_version: CHECKOUT_LEGAL_VERSIONS.privacy,
+        legal_accepted: "true",
       },
+    }, {
+      idempotencyKey: createCheckoutIdempotencyKey({
+        userId: session.user.id,
+        tier: selection.tier,
+        cadence: selection.cadence,
+        priceId: resolvedPriceId,
+        byokEnabled: byokStatus.enabled,
+        successUrl: resolvedSuccessUrl,
+        cancelUrl: resolvedCancelUrl,
+      }),
     });
 
     return NextResponse.json({ url: checkoutSession.url });
@@ -361,4 +405,26 @@ function hasLocalCheckoutSubscriptionState(profile: CheckoutBillingProfile): boo
 
   const status = (profile.subscription_status ?? profile.stripe_subscription_status ?? "").toLowerCase();
   return Boolean(status && status !== "inactive" && status !== "free");
+}
+
+function createCheckoutIdempotencyKey(input: {
+  userId: string;
+  tier: AuthorBillingTier;
+  cadence: BillingCadence;
+  priceId: string;
+  byokEnabled: boolean;
+  successUrl: string;
+  cancelUrl: string;
+}): string {
+  const digest = createHash("sha256")
+    .update(JSON.stringify({
+      ...input,
+      priceLockVersion: AUTHOR_PRICE_LOCK_VERSION,
+      legalTermsVersion: CHECKOUT_LEGAL_VERSIONS.terms,
+      legalPrivacyVersion: CHECKOUT_LEGAL_VERSIONS.privacy,
+    }))
+    .digest("hex")
+    .slice(0, 40);
+
+  return `author-checkout-${AUTHOR_PRICE_LOCK_VERSION}-${digest}`;
 }

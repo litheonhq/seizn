@@ -29,7 +29,9 @@ export function SectionFooter({ copy, locale }: { copy: AuthorLandingCopy; local
             title={copy.footer.company}
             links={[
               { label: copy.footer.links.about, href: `/${locale}/docs` },
-              { label: copy.footer.links.trust, href: `/${locale}/legal/privacy` },
+              { label: copy.footer.links.privacy, href: `/${locale}/legal/privacy` },
+              { label: copy.footer.links.terms, href: `/${locale}/legal/terms` },
+              { label: copy.footer.links.beta, href: `/${locale}/legal/beta-disclosure` },
               { label: copy.footer.links.status, href: "/status" },
               { label: copy.footer.links.contact, href: `/${locale}/docs/faq` },
             ]}

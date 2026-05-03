@@ -7,6 +7,7 @@ const DEFAULT_PATHS = [
   "docs/marketing",
   "src/app/[locale]/page.tsx",
   "src/app/[locale]/demo",
+  "src/app/[locale]/pricing",
   "src/app/demo",
   "src/app/legal",
   "src/app/pricing",
@@ -14,6 +15,7 @@ const DEFAULT_PATHS = [
   "public",
   ".next/server/app/[locale]/page.js",
   ".next/server/app/[locale]/demo",
+  ".next/server/app/[locale]/pricing",
   ".next/server/app/demo",
   ".next/server/app/legal",
   ".next/server/app/pricing",
@@ -55,6 +57,7 @@ const keywords = args.keywords.length > 0 ? args.keywords : DEFAULT_KEYWORDS;
 const exclude = new Set([...DEFAULT_EXCLUDE, ...args.exclude.map(normalizePath)]);
 const compiled = keywords.map((keyword) => ({ keyword, pattern: compileKeyword(keyword) }));
 const matches = [];
+const filesToScan = new Map();
 
 for (const inputPath of paths) {
   const absolute = path.resolve(process.cwd(), inputPath);
@@ -62,24 +65,32 @@ for (const inputPath of paths) {
     continue;
   }
   for (const file of collectFiles(absolute)) {
-    const relative = normalizePath(path.relative(process.cwd(), file));
-    if (exclude.has(relative)) continue;
-    if (!TEXT_EXTENSIONS.has(path.extname(file))) continue;
-    const content = fs.readFileSync(file, "utf8");
-    const lines = content.split(/\r?\n/);
-    lines.forEach((line, index) => {
-      for (const { keyword, pattern } of compiled) {
-        if (pattern.test(line)) {
-          matches.push({
-            file: relative,
-            line: index + 1,
-            keyword,
-            preview: line.trim().slice(0, 180),
-          });
-        }
-      }
-    });
+    addScanFile(filesToScan, file);
   }
+}
+
+for (const file of collectNextRouteBuildFiles(filesToScan)) {
+  addScanFile(filesToScan, file);
+}
+
+for (const file of filesToScan.values()) {
+  const relative = normalizePath(path.relative(process.cwd(), file));
+  if (exclude.has(relative)) continue;
+  if (!TEXT_EXTENSIONS.has(path.extname(file))) continue;
+  const content = fs.readFileSync(file, "utf8");
+  const lines = content.split(/\r?\n/);
+  lines.forEach((line, index) => {
+    for (const { keyword, pattern } of compiled) {
+      if (pattern.test(line)) {
+        matches.push({
+          file: relative,
+          line: index + 1,
+          keyword,
+          preview: line.trim().slice(0, 180),
+        });
+      }
+    }
+  });
 }
 
 if (matches.length > 0) {
@@ -137,6 +148,70 @@ function collectFiles(inputPath) {
     }
   }
   return files;
+}
+
+function addScanFile(files, file) {
+  const absolute = path.resolve(file);
+  files.set(normalizePath(absolute), absolute);
+}
+
+function collectNextRouteBuildFiles(filesToScan) {
+  const discovered = new Map();
+  for (const file of filesToScan.values()) {
+    const relative = normalizePath(path.relative(process.cwd(), file));
+    if (!relative.startsWith(".next/server/app/") || path.extname(file) !== ".js") {
+      continue;
+    }
+
+    for (const chunk of collectRouteServerChunks(file)) {
+      addScanFile(discovered, chunk);
+    }
+
+    const routeBuildManifest = path.join(
+      path.dirname(file),
+      path.basename(file, ".js"),
+      "build-manifest.json"
+    );
+    for (const chunk of collectRouteClientChunks(routeBuildManifest)) {
+      addScanFile(discovered, chunk);
+    }
+  }
+
+  return [...discovered.values()];
+}
+
+function collectRouteServerChunks(entrypoint) {
+  if (!fs.existsSync(entrypoint)) return [];
+  const content = fs.readFileSync(entrypoint, "utf8");
+  const files = [];
+  const regex = /R\.c\("([^"]+)"\)/g;
+  let match;
+  while ((match = regex.exec(content)) !== null) {
+    const chunk = path.resolve(process.cwd(), ".next", match[1]);
+    if (fs.existsSync(chunk)) {
+      files.push(chunk);
+    }
+  }
+  return files;
+}
+
+function collectRouteClientChunks(manifestPath) {
+  if (!fs.existsSync(manifestPath)) return [];
+  try {
+    const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
+    const files = [];
+    for (const value of Object.values(manifest)) {
+      if (Array.isArray(value)) {
+        files.push(...value);
+      }
+    }
+    return files
+      .filter((file) => typeof file === "string" && file.startsWith("static/"))
+      .map((file) => path.resolve(process.cwd(), ".next", file))
+      .filter((file) => fs.existsSync(file));
+  } catch {
+    return [];
+  }
 }
 
 function compileKeyword(keyword) {

@@ -3,6 +3,7 @@
 import { useId, useState } from "react";
 import type { AuthorBillingTier, BillingCadence } from "@/lib/stripe-config";
 import {
+  CHECKOUT_LEGAL_VERSIONS,
   DEFAULT_CHECKOUT_LEGAL_COPY,
   type CheckoutLegalCopy,
 } from "@/lib/checkout-copy";
@@ -78,6 +79,12 @@ export function CheckoutButton({
           ...(legacyTier ? { tier: legacyTier, cadence } : priceId ? { priceId } : { tier, cadence }),
           ...(successUrl ? { successUrl } : {}),
           ...(cancelUrl ? { cancelUrl } : {}),
+          ...(requireLegalAgreement
+            ? {
+                legalAccepted: legalAgreementAccepted,
+                legalVersions: CHECKOUT_LEGAL_VERSIONS,
+              }
+            : {}),
         }),
       });
 

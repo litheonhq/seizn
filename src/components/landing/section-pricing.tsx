@@ -95,7 +95,11 @@ function PricingCardPrimary({ tier, copy, locale }: { tier: AuthorBillingTier; c
           privacyHref={`/${locale}/legal/privacy`}
           termsHref={`/${locale}/legal/terms`}
           legalCopy={copy.checkout}
-          className="author-btn mt-6 w-full px-4 py-3 text-sm"
+          className={`author-btn mt-6 w-full px-4 py-3 text-sm hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50 ${
+            highlight
+              ? "bg-[color:var(--ink-0)] text-[color:var(--ink-900)]"
+              : "bg-[color:var(--ink-900)] text-[color:var(--ink-0)]"
+          }`}
           disabled={false}
         >
           {copy.pricing.start} {plan.label}
@@ -144,8 +148,7 @@ function PricingRowSecondary({ tier, copy, locale }: { tier: AuthorBillingTier; 
             privacyHref={`/${locale}/legal/privacy`}
             termsHref={`/${locale}/legal/terms`}
             legalCopy={copy.checkout}
-            requireLegalAgreement={false}
-            className="author-btn min-h-9 border px-3 text-xs"
+            className="author-btn min-h-11 border border-[color:var(--ink-300)] bg-[color:var(--ink-0)] px-3 text-xs text-[color:var(--ink-800)] hover:bg-[color:var(--ink-100)] disabled:cursor-not-allowed disabled:opacity-50"
             disabled={false}
           >
             {copy.pricing.start} {plan.label}

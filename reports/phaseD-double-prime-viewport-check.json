@@ -3,7 +3,7 @@
   "checks": [
     {
       "viewport": "1440",
-      "screenshot": "C:\\Users\\admin\\Projects\\seizn\\reports\\phaseD-double-prime-landing-en-1440.png",
+      "screenshot": "reports/phaseD-double-prime-landing-en-1440.png",
       "scrollWidth": 1440,
       "clientWidth": 1440,
       "bodyScrollWidth": 1440,
@@ -42,7 +42,7 @@
     },
     {
       "viewport": "768",
-      "screenshot": "C:\\Users\\admin\\Projects\\seizn\\reports\\phaseD-double-prime-landing-en-768.png",
+      "screenshot": "reports/phaseD-double-prime-landing-en-768.png",
       "scrollWidth": 768,
       "clientWidth": 768,
       "bodyScrollWidth": 768,
@@ -81,7 +81,7 @@
     },
     {
       "viewport": "360",
-      "screenshot": "C:\\Users\\admin\\Projects\\seizn\\reports\\phaseD-double-prime-landing-en-360.png",
+      "screenshot": "reports/phaseD-double-prime-landing-en-360.png",
       "scrollWidth": 360,
       "clientWidth": 360,
       "bodyScrollWidth": 360,
@@ -119,5 +119,5 @@
       ]
     }
   ],
-  "faviconScaleScreenshot": "C:\\Users\\admin\\Projects\\seizn\\reports\\phaseD-double-prime-favicon-scale.png"
+  "faviconScaleScreenshot": "reports/phaseD-double-prime-favicon-scale.png"
 }
