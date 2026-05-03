@@ -74,7 +74,6 @@ export function AuthorSettingsClient({ navigateToBilling = defaultNavigate }: Au
       return response.byok_discount ?? { status: "inactive" };
     } catch (saveError) {
       const message = saveError instanceof Error ? saveError.message : copy.byok.error;
-      setError(message);
       throw new Error(message);
     } finally {
       setAction("idle");
@@ -94,7 +93,6 @@ export function AuthorSettingsClient({ navigateToBilling = defaultNavigate }: Au
       return response.byok_discount ?? { status: "inactive", removed: true };
     } catch (removeError) {
       const message = removeError instanceof Error ? removeError.message : copy.byok.error;
-      setError(message);
       throw new Error(message);
     } finally {
       setAction("idle");

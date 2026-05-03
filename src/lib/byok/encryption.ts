@@ -95,8 +95,8 @@ export function maskApiKey(apiKey: string): string {
  */
 export function validateKeyFormat(provider: string, apiKey: string): boolean {
   const patterns: Record<string, RegExp> = {
-    openai: /^sk-[a-zA-Z0-9]{32,}$/,
-    anthropic: /^sk-ant-[a-zA-Z0-9-]{32,}$/,
+    openai: /^sk-[a-zA-Z0-9_-]{32,}$/,
+    anthropic: /^sk-ant-[a-zA-Z0-9_-]{32,}$/,
     cohere: /^[a-zA-Z0-9]{32,}$/,
     voyage: /^[a-zA-Z0-9-]{32,}$/,
     google: /^[a-zA-Z0-9_-]{32,}$/,
