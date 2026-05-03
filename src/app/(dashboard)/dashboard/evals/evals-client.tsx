@@ -337,7 +337,7 @@ function WinnerBadge({
   winnerLabel: string;
 }) {
   return (
-    <span className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-yellow-100 text-yellow-800 rounded-full">
+    <span className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-[var(--signal-pending-soft)] text-[var(--signal-pending-ink)] rounded-full">
       <TrophyIcon className="w-3 h-3" />
       {winner === "tie" ? tieLabel : `${winnerLabel}: ${winner}`}
     </span>
@@ -367,13 +367,13 @@ function MetricComparison({
   const showComparison = valueB !== undefined && diff !== 0;
 
   return (
-    <div className="flex items-center justify-between py-3 border-b border-szn-border last:border-0">
+    <div className="flex items-center justify-between py-3 border-b border-[var(--ink-200)] last:border-0">
       <div className="flex items-center gap-2">
-        <span className="text-sm font-medium text-szn-text-2">{label}</span>
+        <span className="text-sm font-medium text-[var(--ink-600)]">{label}</span>
         {showComparison && (
           <span
             className={`text-xs px-1.5 py-0.5 rounded ${
-              isWinnerA ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+              isWinnerA ? "bg-[var(--signal-canon-soft)] text-[var(--signal-canon-ink)]" : "bg-[var(--signal-conflict-soft)] text-[var(--signal-conflict-ink)]"
             }`}
           >
             {isWinnerA ? "+" : "-"}{percentDiff.toFixed(1)}%
@@ -383,11 +383,11 @@ function MetricComparison({
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-1">
           {winner === "A" && showComparison && isWinnerA && (
-            <TrophyIcon className="w-4 h-4 text-yellow-500" />
+            <TrophyIcon className="w-4 h-4 text-[var(--signal-pending-ink)]" />
           )}
           <span
             className={`text-sm font-semibold ${
-              showComparison && isWinnerA ? "text-green-600" : "text-szn-text-1"
+              showComparison && isWinnerA ? "text-[var(--signal-canon-ink)]" : "text-[var(--ink-900)]"
             }`}
           >
             {format(valueA)}
@@ -395,21 +395,21 @@ function MetricComparison({
         </div>
         {valueB !== undefined && (
           <>
-            <span className="text-szn-text-3 text-xs">vs</span>
+            <span className="text-[var(--ink-500)] text-xs">vs</span>
             <div className="flex items-center gap-1">
               <span
                 className={`text-sm font-semibold ${
-                  showComparison && !isWinnerA ? "text-green-600" : "text-szn-text-1"
+                  showComparison && !isWinnerA ? "text-[var(--signal-canon-ink)]" : "text-[var(--ink-900)]"
                 }`}
               >
                 {format(valueB)}
               </span>
               {winner === "B" && showComparison && !isWinnerA && (
-                <TrophyIcon className="w-4 h-4 text-yellow-500" />
+                <TrophyIcon className="w-4 h-4 text-[var(--signal-pending-ink)]" />
               )}
             </div>
             {showComparison && (
-              <span className={`inline-flex items-center text-xs ${isWinnerA ? "text-green-500" : "text-red-500"}`}>
+              <span className={`inline-flex items-center text-xs ${isWinnerA ? "text-[var(--signal-canon-ink)]" : "text-[var(--signal-conflict-ink)]"}`}>
                 {isWinnerA ? <ArrowUpIcon className="w-3 h-3" /> : <ArrowDownIcon className="w-3 h-3" />}
               </span>
             )}
@@ -437,8 +437,8 @@ function CustomTooltip({
 }) {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-szn-card/95 backdrop-blur-sm border border-szn-border rounded-lg shadow-lg p-3">
-        <p className="font-medium text-szn-text-1 mb-2">{label}</p>
+      <div className="bg-[var(--ink-0)]/95 backdrop-blur-sm border border-[var(--ink-200)] rounded-lg shadow-lg p-3">
+        <p className="font-medium text-[var(--ink-900)] mb-2">{label}</p>
         {payload.map((entry, index) => (
           <p key={index} className="text-sm" style={{ color: entry.color }}>
             {entry.name}: {entry.value}%
@@ -577,7 +577,7 @@ export default function EvalsClient() {
     switch (status) {
       case "completed":
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-green-100 text-green-700 rounded-full">
+          <span className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-[var(--signal-canon-soft)] text-[var(--signal-canon-ink)] rounded-full">
             <CheckCircleIcon className="w-3 h-3" />
             {t("dashboard.evals.completed") || "Completed"}
           </span>
@@ -591,14 +591,14 @@ export default function EvalsClient() {
         );
       case "failed":
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-red-100 text-red-700 rounded-full">
+          <span className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-[var(--signal-conflict-soft)] text-[var(--signal-conflict-ink)] rounded-full">
             <XCircleIcon className="w-3 h-3" />
             {t("dashboard.evals.failed") || "Failed"}
           </span>
         );
       default:
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-szn-surface text-szn-text-2 rounded-full">
+          <span className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-[var(--ink-50)] text-[var(--ink-600)] rounded-full">
             <ClockIcon className="w-3 h-3" />
             {t("dashboard.evals.pending") || "Pending"}
           </span>
@@ -612,15 +612,15 @@ export default function EvalsClient() {
       <div className="szn-card rounded-lg p-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-400 to-indigo-500 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--ink-900)] to-[var(--ink-900)] flex items-center justify-center">
               <BeakerIcon className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-szn-text-1">{t("dashboard.evals.title") || "Evaluations"}</h1>
-              <p className="text-szn-text-2">{t("dashboard.evals.subtitle") || "A/B test and measure retrieval quality"}</p>
+              <h1 className="text-2xl font-bold text-[var(--ink-900)]">{t("dashboard.evals.title") || "Evaluations"}</h1>
+              <p className="text-[var(--ink-600)]">{t("dashboard.evals.subtitle") || "A/B test and measure retrieval quality"}</p>
             </div>
           </div>
-          <button className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500 to-indigo-500 text-white rounded-xl hover:opacity-90 transition-opacity">
+          <button className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[var(--ink-900)] to-[var(--ink-900)] text-white rounded-xl hover:opacity-90 transition-opacity">
             <PlayIcon className="w-4 h-4" />
             {t("dashboard.evals.newRun") || "New Eval Run"}
           </button>
@@ -630,17 +630,17 @@ export default function EvalsClient() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Eval Runs List */}
         <div className="lg:col-span-1 szn-card rounded-lg overflow-hidden">
-          <div className="p-4 border-b border-szn-border">
-            <h2 className="font-semibold text-szn-text-1">{t("dashboard.evals.runs") || "Evaluation Runs"}</h2>
+          <div className="p-4 border-b border-[var(--ink-200)]">
+            <h2 className="font-semibold text-[var(--ink-900)]">{t("dashboard.evals.runs") || "Evaluation Runs"}</h2>
           </div>
-          <div className="divide-y divide-szn-border max-h-[600px] overflow-y-auto">
+          <div className="divide-y divide-[var(--ink-200)] max-h-[600px] overflow-y-auto">
             {isLoading ? (
               <div className="p-8 text-center">
-                <div className="w-8 h-8 border-2 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto" />
+                <div className="w-8 h-8 border-2 border-[var(--ink-900)] border-t-transparent rounded-full animate-spin mx-auto" />
               </div>
             ) : evalRuns.length === 0 ? (
-              <div className="p-8 text-center text-szn-text-2">
-                <BeakerIcon className="w-12 h-12 text-szn-text-3 mx-auto mb-2" />
+              <div className="p-8 text-center text-[var(--ink-600)]">
+                <BeakerIcon className="w-12 h-12 text-[var(--ink-500)] mx-auto mb-2" />
                 <p>{t("dashboard.evals.noRuns") || "No evaluation runs yet"}</p>
               </div>
             ) : (
@@ -649,19 +649,19 @@ export default function EvalsClient() {
                   key={run.id}
                   onClick={() => setSelectedRun(run)}
                   className={`w-full p-4 text-left transition-colors ${
-                    selectedRun?.id === run.id ? "bg-purple-50 border-l-2 border-purple-500" : "hover:bg-szn-surface"
+                    selectedRun?.id === run.id ? "bg-[var(--ink-50)] border-l-2 border-[var(--ink-900)]" : "hover:bg-[var(--ink-50)]"
                   }`}
                 >
                   <div className="flex items-start justify-between mb-2">
-                    <h3 className="font-medium text-szn-text-1 line-clamp-1">{run.name}</h3>
+                    <h3 className="font-medium text-[var(--ink-900)] line-clamp-1">{run.name}</h3>
                     {getStatusBadge(run.status)}
                   </div>
-                  <p className="text-sm text-szn-text-2 mb-2">{run.dataset_name}</p>
-                  <div className="flex items-center gap-2 text-xs text-szn-text-3">
+                  <p className="text-sm text-[var(--ink-600)] mb-2">{run.dataset_name}</p>
+                  <div className="flex items-center gap-2 text-xs text-[var(--ink-500)]">
                     <ClockIcon className="w-3 h-3" />
                     {formatDate(run.created_at, "long")}
                     {run.metrics?.winner && (
-                      <span className="ml-auto px-2 py-0.5 bg-yellow-100 text-yellow-700 rounded-full inline-flex items-center gap-1">
+                      <span className="ml-auto px-2 py-0.5 bg-[var(--signal-pending-soft)] text-[var(--signal-pending-ink)] rounded-full inline-flex items-center gap-1">
                         <TrophyIcon className="w-3 h-3" />
                         {run.metrics.winner}
                       </span>
@@ -682,8 +682,8 @@ export default function EvalsClient() {
               <div className="szn-card rounded-lg p-6">
                 <div className="flex items-start justify-between mb-4">
                   <div>
-                    <h2 className="text-xl font-bold text-szn-text-1">{selectedRun.name}</h2>
-                    <p className="text-szn-text-2">{selectedRun.dataset_name}</p>
+                    <h2 className="text-xl font-bold text-[var(--ink-900)]">{selectedRun.name}</h2>
+                    <p className="text-[var(--ink-600)]">{selectedRun.dataset_name}</p>
                   </div>
                   <div className="flex items-center gap-2">
                     {selectedRun.metrics?.winner && (
@@ -702,14 +702,14 @@ export default function EvalsClient() {
                   <div className="flex gap-2 mb-4">
                     <button
                       onClick={exportAsCSV}
-                      className="inline-flex items-center gap-2 px-3 py-1.5 text-sm bg-szn-surface hover:bg-szn-surface-1 text-szn-text-2 rounded-lg transition-colors"
+                      className="inline-flex items-center gap-2 px-3 py-1.5 text-sm bg-[var(--ink-50)] hover:bg-[var(--ink-50)] text-[var(--ink-600)] rounded-lg transition-colors"
                     >
                       <DownloadIcon className="w-4 h-4" />
                       {t("dashboard.evals.exportCSV") || "Export CSV"}
                     </button>
                     <button
                       onClick={exportAsJSON}
-                      className="inline-flex items-center gap-2 px-3 py-1.5 text-sm bg-szn-surface hover:bg-szn-surface-1 text-szn-text-2 rounded-lg transition-colors"
+                      className="inline-flex items-center gap-2 px-3 py-1.5 text-sm bg-[var(--ink-50)] hover:bg-[var(--ink-50)] text-[var(--ink-600)] rounded-lg transition-colors"
                     >
                       <DownloadIcon className="w-4 h-4" />
                       {t("dashboard.evals.exportJSON") || "Export JSON"}
@@ -719,9 +719,9 @@ export default function EvalsClient() {
 
                 {/* Config Comparison */}
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="p-4 bg-purple-50 rounded-xl">
-                    <h3 className="font-semibold text-purple-900 mb-2">Config A: {selectedRun.config_a.label}</h3>
-                    <div className="space-y-1 text-sm text-purple-700">
+                  <div className="p-4 bg-[var(--ink-50)] rounded-xl">
+                    <h3 className="font-semibold text-[var(--ink-900)] mb-2">Config A: {selectedRun.config_a.label}</h3>
+                    <div className="space-y-1 text-sm text-[var(--ink-900)] underline">
                       <p>Search: {selectedRun.config_a.search_type}</p>
                       <p>Top K: {selectedRun.config_a.top_k}</p>
                       <p>Rerank: {selectedRun.config_a.rerank_enabled ? selectedRun.config_a.rerank_model : "Off"}</p>
@@ -750,15 +750,15 @@ export default function EvalsClient() {
               {/* Tab Navigation */}
               {selectedRun.metrics && (
                 <div className="szn-card rounded-lg overflow-hidden">
-                  <div className="flex border-b border-szn-border">
+                  <div className="flex border-b border-[var(--ink-200)]">
                     {(["comparison", "charts", "timeline"] as ViewTab[]).map((tab) => (
                       <button
                         key={tab}
                         onClick={() => setActiveTab(tab)}
                         className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${
                           activeTab === tab
-                            ? "text-purple-600 border-b-2 border-purple-500 bg-purple-50/50"
-                            : "text-szn-text-2 hover:text-szn-text-1 hover:bg-szn-surface"
+                            ? "text-[var(--ink-900)] underline border-b-2 border-[var(--ink-900)] bg-[var(--ink-50)]/50"
+                            : "text-[var(--ink-600)] hover:text-[var(--ink-900)] hover:bg-[var(--ink-50)]"
                         }`}
                       >
                         {tab === "comparison" && (t("dashboard.evals.tabComparison") || "Comparison")}
@@ -773,10 +773,10 @@ export default function EvalsClient() {
                     {activeTab === "comparison" && (
                       <div className="space-y-1">
                         <div className="flex items-center gap-2 mb-4">
-                          <ChartIcon className="w-5 h-5 text-purple-500" />
-                          <h2 className="font-semibold text-szn-text-1">{t("dashboard.evals.metrics") || "Metrics"}</h2>
+                          <ChartIcon className="w-5 h-5 text-[var(--ink-700)] underline" />
+                          <h2 className="font-semibold text-[var(--ink-900)]">{t("dashboard.evals.metrics") || "Metrics"}</h2>
                           {selectedRun.metrics.winner && selectedRun.metrics.confidence && (
-                            <span className="ml-auto text-sm text-szn-text-2">
+                            <span className="ml-auto text-sm text-[var(--ink-600)]">
                               {formatPercent(selectedRun.metrics.confidence)} {t("dashboard.evals.confidence") || "confidence"}
                             </span>
                           )}
@@ -841,7 +841,7 @@ export default function EvalsClient() {
                       <div className="space-y-8">
                         {/* Bar Chart */}
                         <div>
-                          <h3 className="font-semibold text-szn-text-1 mb-4">{t("dashboard.evals.barChart") || "Metric Comparison"}</h3>
+                          <h3 className="font-semibold text-[var(--ink-900)] mb-4">{t("dashboard.evals.barChart") || "Metric Comparison"}</h3>
                           <div className="h-80">
                             <ResponsiveContainer width="100%" height="100%">
                               <BarChart data={barChartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
@@ -861,7 +861,7 @@ export default function EvalsClient() {
 
                         {/* Radar Chart */}
                         <div>
-                          <h3 className="font-semibold text-szn-text-1 mb-4">{t("dashboard.evals.radarChart") || "Multi-Metric Overview"}</h3>
+                          <h3 className="font-semibold text-[var(--ink-900)] mb-4">{t("dashboard.evals.radarChart") || "Multi-Metric Overview"}</h3>
                           <div className="h-80">
                             <ResponsiveContainer width="100%" height="100%">
                               <RadarChart data={radarChartData}>
@@ -887,8 +887,8 @@ export default function EvalsClient() {
                         {/* Metrics Trend Line Chart */}
                         <div>
                           <div className="flex items-center gap-2 mb-4">
-                            <TrendingUpIcon className="w-5 h-5 text-purple-500" />
-                            <h3 className="font-semibold text-szn-text-1">{t("dashboard.evals.metricsTrend") || "Metrics Trend"}</h3>
+                            <TrendingUpIcon className="w-5 h-5 text-[var(--ink-700)] underline" />
+                            <h3 className="font-semibold text-[var(--ink-900)]">{t("dashboard.evals.metricsTrend") || "Metrics Trend"}</h3>
                           </div>
                           <div className="h-64">
                             <ResponsiveContainer width="100%" height="100%">
@@ -915,7 +915,7 @@ export default function EvalsClient() {
 
                         {/* Latency Area Chart */}
                         <div>
-                          <h3 className="font-semibold text-szn-text-1 mb-4">{t("dashboard.evals.latencyTrend") || "Latency Trend"}</h3>
+                          <h3 className="font-semibold text-[var(--ink-900)] mb-4">{t("dashboard.evals.latencyTrend") || "Latency Trend"}</h3>
                           <div className="h-48">
                             <ResponsiveContainer width="100%" height="100%">
                               <AreaChart data={HISTORICAL_TRENDS} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
@@ -938,7 +938,7 @@ export default function EvalsClient() {
 
                         {/* Recent Runs */}
                         <div>
-                          <h3 className="font-semibold text-szn-text-1 mb-4">{t("dashboard.evals.recentRuns") || "Recent Completed Runs"}</h3>
+                          <h3 className="font-semibold text-[var(--ink-900)] mb-4">{t("dashboard.evals.recentRuns") || "Recent Completed Runs"}</h3>
                           <div className="space-y-2">
                             {evalRuns
                               .filter((run) => run.status === "completed")
@@ -946,15 +946,15 @@ export default function EvalsClient() {
                               .map((run) => (
                                 <div
                                   key={run.id}
-                                  className="flex items-center justify-between p-3 bg-szn-surface rounded-lg hover:bg-szn-surface-1 transition-colors cursor-pointer"
+                                  className="flex items-center justify-between p-3 bg-[var(--ink-50)] rounded-lg hover:bg-[var(--ink-50)] transition-colors cursor-pointer"
                                   onClick={() => setSelectedRun(run)}
                                 >
                                   <div>
-                                    <p className="font-medium text-szn-text-1">{run.name}</p>
-                                    <p className="text-xs text-szn-text-2">{formatDate(run.created_at, "long")}</p>
+                                    <p className="font-medium text-[var(--ink-900)]">{run.name}</p>
+                                    <p className="text-xs text-[var(--ink-600)]">{formatDate(run.created_at, "long")}</p>
                                   </div>
                                   {run.metrics?.winner && (
-                                    <span className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-yellow-100 text-yellow-800 rounded-full">
+                                    <span className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-[var(--signal-pending-soft)] text-[var(--signal-pending-ink)] rounded-full">
                                       <TrophyIcon className="w-3 h-3" />
                                       {run.metrics.winner}
                                     </span>
@@ -973,8 +973,8 @@ export default function EvalsClient() {
               {/* Visual Chart (Simple bars - kept for non-metric runs) */}
               {!selectedRun.metrics && (
                 <div className="szn-card rounded-lg p-6">
-                  <h2 className="font-semibold text-szn-text-1 mb-4">{t("dashboard.evals.comparison") || "Visual Comparison"}</h2>
-                  <p className="text-szn-text-2 text-center py-8">
+                  <h2 className="font-semibold text-[var(--ink-900)] mb-4">{t("dashboard.evals.comparison") || "Visual Comparison"}</h2>
+                  <p className="text-[var(--ink-600)] text-center py-8">
                     {t("dashboard.evals.waitingForMetrics") || "Waiting for evaluation to complete..."}
                   </p>
                 </div>
@@ -982,11 +982,11 @@ export default function EvalsClient() {
             </div>
           ) : (
             <div className="szn-card rounded-lg p-12 text-center">
-              <BeakerIcon className="w-16 h-16 text-szn-text-3 mx-auto mb-4" />
-              <h2 className="text-xl font-semibold text-szn-text-3 mb-2">
+              <BeakerIcon className="w-16 h-16 text-[var(--ink-500)] mx-auto mb-4" />
+              <h2 className="text-xl font-semibold text-[var(--ink-500)] mb-2">
                 {t("dashboard.evals.selectRun") || "Select an evaluation run"}
               </h2>
-              <p className="text-szn-text-3">
+              <p className="text-[var(--ink-500)]">
                 {t("dashboard.evals.selectRunHint") || "Choose a run from the list to view detailed metrics"}
               </p>
             </div>

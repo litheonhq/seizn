@@ -165,8 +165,8 @@ export default function ApiKeysClient() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-szn-text-1">{t("dashboard.keysPage.title")}</h1>
-          <p className="text-szn-text-2 mt-1">
+          <h1 className="text-2xl font-bold text-[var(--ink-900)]">{t("dashboard.keysPage.title")}</h1>
+          <p className="text-[var(--ink-600)] mt-1">
             {t("dashboard.keysPage.subtitle")}
           </p>
         </div>
@@ -181,34 +181,34 @@ export default function ApiKeysClient() {
 
       {/* API Keys List */}
       <div className="szn-card rounded-lg overflow-hidden">
-        <div className="p-4 border-b border-szn-border">
-          <h2 className="font-semibold text-szn-text-1">{t("dashboard.keysPage.activeKeys")}</h2>
+        <div className="p-4 border-b border-[var(--ink-200)]">
+          <h2 className="font-semibold text-[var(--ink-900)]">{t("dashboard.keysPage.activeKeys")}</h2>
         </div>
 
         {isLoading ? (
           <div className="p-4 space-y-4">
             {[1, 2].map((i) => (
-              <div key={i} className="animate-pulse flex items-center justify-between p-4 bg-szn-surface-1 rounded-xl">
+              <div key={i} className="animate-pulse flex items-center justify-between p-4 bg-[var(--ink-50)] rounded-xl">
                 <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 bg-szn-surface rounded-lg" />
+                  <div className="w-10 h-10 bg-[var(--ink-50)] rounded-lg" />
                   <div>
-                    <div className="h-4 bg-szn-surface rounded w-24 mb-2" />
-                    <div className="h-3 bg-szn-surface rounded w-32" />
+                    <div className="h-4 bg-[var(--ink-50)] rounded w-24 mb-2" />
+                    <div className="h-3 bg-[var(--ink-50)] rounded w-32" />
                   </div>
                 </div>
-                <div className="h-8 bg-szn-surface rounded w-20" />
+                <div className="h-8 bg-[var(--ink-50)] rounded w-20" />
               </div>
             ))}
           </div>
         ) : apiKeys.length === 0 ? (
           <div className="p-12 text-center">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-szn-surface flex items-center justify-center">
-              <KeyIcon className="w-8 h-8 text-szn-text-3" />
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[var(--ink-50)] flex items-center justify-center">
+              <KeyIcon className="w-8 h-8 text-[var(--ink-500)]" />
             </div>
-            <h3 className="text-lg font-semibold text-szn-text-1 mb-2">
+            <h3 className="text-lg font-semibold text-[var(--ink-900)] mb-2">
               {t("dashboard.keysPage.noKeysTitle")}
             </h3>
-            <p className="text-szn-text-2 mb-6 max-w-sm mx-auto">
+            <p className="text-[var(--ink-600)] mb-6 max-w-sm mx-auto">
               {t("dashboard.keysPage.noKeysDesc")}
             </p>
             <button
@@ -222,50 +222,50 @@ export default function ApiKeysClient() {
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-szn-border text-left">
-                  <th className="px-4 py-3 text-xs font-medium text-szn-text-2 uppercase tracking-wider">{t("dashboard.keysPage.name")}</th>
-                  <th className="px-4 py-3 text-xs font-medium text-szn-text-2 uppercase tracking-wider hidden sm:table-cell">{t("dashboard.keysPage.keyColumn")}</th>
-                  <th className="px-4 py-3 text-xs font-medium text-szn-text-2 uppercase tracking-wider hidden md:table-cell">{t("dashboard.keysPage.created")}</th>
-                  <th className="px-4 py-3 text-xs font-medium text-szn-text-2 uppercase tracking-wider hidden lg:table-cell">{t("dashboard.keysPage.lastUsed")}</th>
-                  <th className="px-4 py-3 text-xs font-medium text-szn-text-2 uppercase tracking-wider text-right">{t("dashboard.keysPage.actions")}</th>
+                <tr className="border-b border-[var(--ink-200)] text-left">
+                  <th className="px-4 py-3 text-xs font-medium text-[var(--ink-600)] uppercase tracking-wider">{t("dashboard.keysPage.name")}</th>
+                  <th className="px-4 py-3 text-xs font-medium text-[var(--ink-600)] uppercase tracking-wider hidden sm:table-cell">{t("dashboard.keysPage.keyColumn")}</th>
+                  <th className="px-4 py-3 text-xs font-medium text-[var(--ink-600)] uppercase tracking-wider hidden md:table-cell">{t("dashboard.keysPage.created")}</th>
+                  <th className="px-4 py-3 text-xs font-medium text-[var(--ink-600)] uppercase tracking-wider hidden lg:table-cell">{t("dashboard.keysPage.lastUsed")}</th>
+                  <th className="px-4 py-3 text-xs font-medium text-[var(--ink-600)] uppercase tracking-wider text-right">{t("dashboard.keysPage.actions")}</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-szn-border">
+              <tbody className="divide-y divide-[var(--ink-200)]">
                 {apiKeys.map((key) => (
-                  <tr key={key.id} className="hover:bg-szn-surface-1 transition-colors">
+                  <tr key={key.id} className="hover:bg-[var(--ink-50)] transition-colors">
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-sm">
                           <KeyIcon className="w-4 h-4 text-white" />
                         </div>
-                        <span className="font-medium text-szn-text-1">{key.name}</span>
+                        <span className="font-medium text-[var(--ink-900)]">{key.name}</span>
                       </div>
                     </td>
                     <td className="px-4 py-3 hidden sm:table-cell">
-                      <code className="text-sm text-szn-text-2 bg-szn-surface px-2 py-0.5 rounded">{key.key_prefix}...</code>
+                      <code className="text-sm text-[var(--ink-600)] bg-[var(--ink-50)] px-2 py-0.5 rounded">{key.key_prefix}...</code>
                     </td>
                     <td className="px-4 py-3 hidden md:table-cell">
-                      <span className="text-sm text-szn-text-1">{formatDate(key.created_at)}</span>
+                      <span className="text-sm text-[var(--ink-900)]">{formatDate(key.created_at)}</span>
                     </td>
                     <td className="px-4 py-3 hidden lg:table-cell">
                       {key.last_used_at ? (
-                        <span className="text-sm text-szn-text-1">{formatDate(key.last_used_at)}</span>
+                        <span className="text-sm text-[var(--ink-900)]">{formatDate(key.last_used_at)}</span>
                       ) : (
-                        <span className="text-sm text-szn-text-3">{t("dashboard.keysPage.neverUsed")}</span>
+                        <span className="text-sm text-[var(--ink-500)]">{t("dashboard.keysPage.neverUsed")}</span>
                       )}
                     </td>
                     <td className="px-2 sm:px-4 py-3">
                       <div className="flex items-center justify-end gap-0.5 sm:gap-1">
                         <button
                           onClick={() => setRotateTarget({ id: key.id, name: key.name })}
-                          className="p-2.5 min-w-[44px] min-h-[44px] sm:p-2 sm:min-w-0 sm:min-h-0 flex items-center justify-center text-szn-text-3 hover:text-szn-accent hover:bg-szn-accent/10 active:bg-szn-accent/20 rounded-lg transition-colors"
+                          className="p-2.5 min-w-[44px] min-h-[44px] sm:p-2 sm:min-w-0 sm:min-h-0 flex items-center justify-center text-[var(--ink-500)] hover:text-[var(--ink-900)] hover:bg-[var(--ink-900)]/10 active:bg-[var(--ink-900)]/20 rounded-lg transition-colors"
                           title={t("dashboard.keysPage.rotate")}
                         >
                           <RotateIcon className="w-5 h-5 sm:w-4 sm:h-4" />
                         </button>
                         <button
                           onClick={() => setRevokeTarget({ id: key.id, name: key.name })}
-                          className="p-2.5 min-w-[44px] min-h-[44px] sm:p-2 sm:min-w-0 sm:min-h-0 flex items-center justify-center text-szn-text-3 hover:text-red-600 hover:bg-red-50 active:bg-red-100 rounded-lg transition-colors"
+                          className="p-2.5 min-w-[44px] min-h-[44px] sm:p-2 sm:min-w-0 sm:min-h-0 flex items-center justify-center text-[var(--ink-500)] hover:text-[var(--signal-conflict-ink)] hover:bg-[var(--signal-conflict-soft)] active:bg-[var(--signal-conflict-soft)] rounded-lg transition-colors"
                           title={t("dashboard.keysPage.revoke")}
                         >
                           <TrashIcon className="w-5 h-5 sm:w-4 sm:h-4" />
@@ -282,21 +282,21 @@ export default function ApiKeysClient() {
 
       {/* Usage Guide */}
       <div className="szn-card rounded-lg p-6">
-        <h2 className="font-semibold text-szn-text-1 mb-4">{t("dashboard.keysPage.usageGuide")}</h2>
+        <h2 className="font-semibold text-[var(--ink-900)] mb-4">{t("dashboard.keysPage.usageGuide")}</h2>
         <div className="grid gap-4 md:grid-cols-2">
           <div>
-            <h3 className="text-sm font-medium text-szn-text-1 mb-2">{t("dashboard.keysPage.authentication")}</h3>
-            <p className="text-sm text-szn-text-2 mb-3">
+            <h3 className="text-sm font-medium text-[var(--ink-900)] mb-2">{t("dashboard.keysPage.authentication")}</h3>
+            <p className="text-sm text-[var(--ink-600)] mb-3">
               {t("dashboard.keysPage.authDesc")}
             </p>
-            <div className="bg-szn-bg dark:bg-szn-surface rounded-xl p-4 overflow-x-auto">
-              <code className="text-sm text-szn-text-2">x-api-key: YOUR_API_KEY</code>
+            <div className="bg-[var(--ink-50)] dark:bg-[var(--ink-50)] rounded-xl p-4 overflow-x-auto">
+              <code className="text-sm text-[var(--ink-600)]">x-api-key: YOUR_API_KEY</code>
             </div>
           </div>
           <div>
-            <h3 className="text-sm font-medium text-szn-text-1 mb-2">{t("dashboard.keysPage.exampleRequest")}</h3>
-            <div className="bg-szn-bg dark:bg-szn-surface rounded-xl p-4 overflow-x-auto">
-              <pre className="text-sm text-szn-text-2">
+            <h3 className="text-sm font-medium text-[var(--ink-900)] mb-2">{t("dashboard.keysPage.exampleRequest")}</h3>
+            <div className="bg-[var(--ink-50)] dark:bg-[var(--ink-50)] rounded-xl p-4 overflow-x-auto">
+              <pre className="text-sm text-[var(--ink-600)]">
 {`curl -X POST \\
   https://seizn.com/api/memories \\
   -H "x-api-key: YOUR_KEY" \\
@@ -315,10 +315,10 @@ export default function ApiKeysClient() {
             className="absolute inset-0 bg-black/30 backdrop-blur-sm"
             onClick={closeModal}
           />
-          <div className="relative szn-card rounded-3xl p-8 w-full max-w-md shadow-2xl animate-scale-in">
+          <div className="relative szn-card rounded-2xl p-8 w-full max-w-md shadow-2xl animate-scale-in">
             <button
               onClick={closeModal}
-              className="absolute top-4 right-4 p-2 text-szn-text-3 hover:text-szn-text-1 hover:bg-szn-surface-1 rounded-full transition-colors"
+              className="absolute top-4 right-4 p-2 text-[var(--ink-500)] hover:text-[var(--ink-900)] hover:bg-[var(--ink-50)] rounded-full transition-colors"
             >
               <CloseIcon className="w-5 h-5" />
             </button>
@@ -327,17 +327,17 @@ export default function ApiKeysClient() {
               /* Key Created Success */
               <div>
                 <div className="text-center mb-6">
-                  <div className="w-14 h-14 mx-auto mb-4 rounded-lg bg-gradient-to-br from-szn-success to-szn-success flex items-center justify-center shadow-lg">
+                  <div className="w-14 h-14 mx-auto mb-4 rounded-lg bg-gradient-to-br from-[var(--signal-canon)] to-[var(--signal-canon)] flex items-center justify-center shadow-lg">
                     <CheckIcon className="w-7 h-7 text-white" />
                   </div>
-                  <h2 className="text-xl font-bold text-szn-text-1">{t("dashboard.keysPage.keyCreated")}</h2>
-                  <p className="text-szn-text-2 text-sm mt-1">
+                  <h2 className="text-xl font-bold text-[var(--ink-900)]">{t("dashboard.keysPage.keyCreated")}</h2>
+                  <p className="text-[var(--ink-600)] text-sm mt-1">
                     {t("dashboard.keysPage.keyCreatedDesc")}
                   </p>
                 </div>
 
-                <div className="bg-szn-bg dark:bg-szn-surface rounded-xl p-4 mb-4">
-                  <code className="text-sm text-szn-text-2 break-all">{newKey}</code>
+                <div className="bg-[var(--ink-50)] dark:bg-[var(--ink-50)] rounded-xl p-4 mb-4">
+                  <code className="text-sm text-[var(--ink-600)] break-all">{newKey}</code>
                 </div>
 
                 <button
@@ -352,25 +352,25 @@ export default function ApiKeysClient() {
                   {copied ? t("dashboard.keysPage.copied") : t("dashboard.keysPage.copyToClipboard")}
                 </button>
 
-                <div className="mt-4 rounded-lg border border-szn-border bg-szn-bg p-4">
+                <div className="mt-4 rounded-lg border border-[var(--ink-200)] bg-[var(--ink-50)] p-4">
                   <div className="flex items-start justify-between gap-3 mb-3">
                     <div>
-                      <h3 className="text-sm font-medium text-szn-text-1">
+                      <h3 className="text-sm font-medium text-[var(--ink-900)]">
                         {t("dashboard.keysPage.exampleRequest")}
                       </h3>
-                      <p className="text-xs text-szn-text-2 mt-1">
+                      <p className="text-xs text-[var(--ink-600)] mt-1">
                         {t("dashboard.onboarding.steps.firstQuery.description")}
                       </p>
                     </div>
                     <button
                       onClick={() => copyToClipboard(buildExampleRequest(newKey))}
                       data-testid="copy-example-request-button"
-                      className="px-3 py-1.5 rounded-lg bg-szn-surface text-szn-text-1 text-sm font-medium hover:bg-szn-surface-1 transition-colors"
+                      className="px-3 py-1.5 rounded-lg bg-[var(--ink-50)] text-[var(--ink-900)] text-sm font-medium hover:bg-[var(--ink-50)] transition-colors"
                     >
                       {copied ? t("dashboard.keysPage.copied") : t("dashboard.keysPage.copyToClipboard")}
                     </button>
                   </div>
-                  <pre className="rounded-xl bg-gray-900 p-4 overflow-x-auto text-xs text-gray-200">
+                  <pre className="rounded-xl bg-[var(--ink-900)] p-4 overflow-x-auto text-xs text-gray-200">
                     <code>{buildExampleRequest(newKey)}</code>
                   </pre>
                   <div className="mt-3 flex flex-col sm:flex-row gap-3">
@@ -384,7 +384,7 @@ export default function ApiKeysClient() {
                     </Link>
                     <button
                       onClick={closeModal}
-                      className="flex-1 px-4 py-3 text-szn-text-2 hover:text-szn-text-1 transition-colors"
+                      className="flex-1 px-4 py-3 text-[var(--ink-600)] hover:text-[var(--ink-900)] transition-colors"
                     >
                       {t("dashboard.keysPage.done")}
                     </button>
@@ -398,20 +398,20 @@ export default function ApiKeysClient() {
                   <div className="w-14 h-14 mx-auto mb-4 rounded-lg theme-gradient-btn flex items-center justify-center shadow-lg">
                     <KeyIcon className="w-7 h-7 text-white" />
                   </div>
-                  <h2 className="text-xl font-bold text-szn-text-1">{t("dashboard.keysPage.createKeyTitle")}</h2>
-                  <p className="text-szn-text-2 text-sm mt-1">
+                  <h2 className="text-xl font-bold text-[var(--ink-900)]">{t("dashboard.keysPage.createKeyTitle")}</h2>
+                  <p className="text-[var(--ink-600)] text-sm mt-1">
                     {t("dashboard.keysPage.createKeyDesc")}
                   </p>
                 </div>
 
                 {error && (
-                  <div className="mb-4 p-3 bg-red-50 border border-red-100 rounded-xl text-red-600 text-sm">
+                  <div className="mb-4 p-3 bg-[var(--signal-conflict-soft)] border border-[var(--signal-conflict)] rounded-xl text-[var(--signal-conflict-ink)] text-sm">
                     {error}
                   </div>
                 )}
 
                 <div className="mb-6">
-                  <label htmlFor="api-key-name" className="block text-sm font-medium text-szn-text-1 mb-1.5">
+                  <label htmlFor="api-key-name" className="block text-sm font-medium text-[var(--ink-900)] mb-1.5">
                     {t("dashboard.keysPage.keyName")}
                   </label>
                   <input
@@ -420,7 +420,7 @@ export default function ApiKeysClient() {
                     value={newKeyName}
                     onChange={(e) => setNewKeyName(e.target.value)}
                     placeholder={t("dashboard.keysPage.keyNamePlaceholder")}
-                    className="w-full px-4 py-3 bg-szn-card border border-szn-border rounded-xl text-szn-text-1 placeholder-szn-text-3 focus:outline-none focus:ring-2 focus:ring-szn-accent focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 bg-[var(--ink-0)] border border-[var(--ink-200)] rounded-xl text-[var(--ink-900)] placeholder-[var(--ink-500)] focus:outline-none focus:ring-2 focus:ring-[var(--ink-900)] focus:border-transparent transition-all"
                     onKeyDown={(e) => e.key === "Enter" && createApiKey()}
                     autoFocus
                   />
@@ -429,7 +429,7 @@ export default function ApiKeysClient() {
                 <div className="flex gap-3">
                   <button
                     onClick={closeModal}
-                    className="flex-1 px-4 py-3 bg-szn-surface text-szn-text-1 rounded-xl font-medium hover:bg-szn-surface-1 transition-colors"
+                    className="flex-1 px-4 py-3 bg-[var(--ink-50)] text-[var(--ink-900)] rounded-xl font-medium hover:bg-[var(--ink-50)] transition-colors"
                   >
                     {t("dashboard.keysPage.cancel")}
                   </button>
@@ -454,10 +454,10 @@ export default function ApiKeysClient() {
             className="absolute inset-0 bg-black/30 backdrop-blur-sm"
             onClick={() => setRevokeTarget(null)}
           />
-          <div className="relative szn-card rounded-3xl p-8 w-full max-w-md shadow-2xl animate-scale-in">
+          <div className="relative szn-card rounded-2xl p-8 w-full max-w-md shadow-2xl animate-scale-in">
             <button
               onClick={() => setRevokeTarget(null)}
-              className="absolute top-4 right-4 p-2 text-szn-text-3 hover:text-szn-text-1 hover:bg-szn-surface-1 rounded-full transition-colors"
+              className="absolute top-4 right-4 p-2 text-[var(--ink-500)] hover:text-[var(--ink-900)] hover:bg-[var(--ink-50)] rounded-full transition-colors"
             >
               <CloseIcon className="w-5 h-5" />
             </button>
@@ -466,19 +466,19 @@ export default function ApiKeysClient() {
               <div className="w-14 h-14 mx-auto mb-4 rounded-lg bg-gradient-to-br from-red-400 to-red-600 flex items-center justify-center shadow-lg">
                 <AlertIcon className="w-7 h-7 text-white" />
               </div>
-              <h2 className="text-xl font-bold text-szn-text-1">
+              <h2 className="text-xl font-bold text-[var(--ink-900)]">
                 {t("dashboard.keysPage.revokeConfirm").replace("{keyName}", revokeTarget.name)}
               </h2>
-              <p className="text-szn-text-2 text-sm mt-2">
+              <p className="text-[var(--ink-600)] text-sm mt-2">
                 {t("dashboard.keysPage.revokeWarning")}
               </p>
             </div>
 
-            <div className="bg-red-50 border border-red-100 rounded-xl p-4 mb-6">
+            <div className="bg-[var(--signal-conflict-soft)] border border-[var(--signal-conflict)] rounded-xl p-4 mb-6">
               <div className="flex items-center gap-3">
-                <KeyIcon className="w-5 h-5 text-red-500 flex-shrink-0" />
+                <KeyIcon className="w-5 h-5 text-[var(--signal-conflict-ink)] flex-shrink-0" />
                 <div>
-                  <p className="font-medium text-szn-text-1">{revokeTarget.name}</p>
+                  <p className="font-medium text-[var(--ink-900)]">{revokeTarget.name}</p>
                 </div>
               </div>
             </div>
@@ -486,14 +486,14 @@ export default function ApiKeysClient() {
             <div className="flex gap-3">
               <button
                 onClick={() => setRevokeTarget(null)}
-                className="flex-1 px-4 py-3 bg-szn-surface text-szn-text-1 rounded-xl font-medium hover:bg-szn-surface-1 transition-colors"
+                className="flex-1 px-4 py-3 bg-[var(--ink-50)] text-[var(--ink-900)] rounded-xl font-medium hover:bg-[var(--ink-50)] transition-colors"
               >
                 {t("dashboard.keysPage.cancel")}
               </button>
               <button
                 onClick={confirmRevoke}
                 disabled={isRevoking}
-                className="flex-1 bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded-xl font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="flex-1 bg-[var(--signal-conflict)] hover:bg-[var(--signal-conflict)] text-white px-4 py-3 rounded-xl font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 {isRevoking ? "..." : t("dashboard.keysPage.revokeAction")}
               </button>
@@ -509,10 +509,10 @@ export default function ApiKeysClient() {
             className="absolute inset-0 bg-black/30 backdrop-blur-sm"
             onClick={closeRotateModal}
           />
-          <div className="relative szn-card rounded-3xl p-8 w-full max-w-md shadow-2xl animate-scale-in">
+          <div className="relative szn-card rounded-2xl p-8 w-full max-w-md shadow-2xl animate-scale-in">
             <button
               onClick={closeRotateModal}
-              className="absolute top-4 right-4 p-2 text-szn-text-3 hover:text-szn-text-1 hover:bg-szn-surface-1 rounded-full transition-colors"
+              className="absolute top-4 right-4 p-2 text-[var(--ink-500)] hover:text-[var(--ink-900)] hover:bg-[var(--ink-50)] rounded-full transition-colors"
             >
               <CloseIcon className="w-5 h-5" />
             </button>
@@ -521,17 +521,17 @@ export default function ApiKeysClient() {
               /* Key Rotated Success */
               <div>
                 <div className="text-center mb-6">
-                  <div className="w-14 h-14 mx-auto mb-4 rounded-lg bg-gradient-to-br from-szn-success to-szn-success flex items-center justify-center shadow-lg">
+                  <div className="w-14 h-14 mx-auto mb-4 rounded-lg bg-gradient-to-br from-[var(--signal-canon)] to-[var(--signal-canon)] flex items-center justify-center shadow-lg">
                     <CheckIcon className="w-7 h-7 text-white" />
                   </div>
-                  <h2 className="text-xl font-bold text-szn-text-1">{t("dashboard.keysPage.keyRotated")}</h2>
-                  <p className="text-szn-text-2 text-sm mt-1">
+                  <h2 className="text-xl font-bold text-[var(--ink-900)]">{t("dashboard.keysPage.keyRotated")}</h2>
+                  <p className="text-[var(--ink-600)] text-sm mt-1">
                     {t("dashboard.keysPage.keyRotatedDesc")}
                   </p>
                 </div>
 
-                <div className="bg-szn-bg dark:bg-szn-surface rounded-xl p-4 mb-4">
-                  <code className="text-sm text-szn-text-2 break-all">{rotatedKey}</code>
+                <div className="bg-[var(--ink-50)] dark:bg-[var(--ink-50)] rounded-xl p-4 mb-4">
+                  <code className="text-sm text-[var(--ink-600)] break-all">{rotatedKey}</code>
                 </div>
 
                 <button
@@ -547,7 +547,7 @@ export default function ApiKeysClient() {
 
                 <button
                   onClick={closeRotateModal}
-                  className="w-full mt-3 py-3 text-szn-text-2 hover:text-szn-text-1 transition-colors"
+                  className="w-full mt-3 py-3 text-[var(--ink-600)] hover:text-[var(--ink-900)] transition-colors"
                 >
                   {t("dashboard.keysPage.done")}
                 </button>
@@ -556,22 +556,22 @@ export default function ApiKeysClient() {
               /* Rotate Confirmation */
               <div>
                 <div className="text-center mb-6">
-                  <div className="w-14 h-14 mx-auto mb-4 rounded-lg bg-gradient-to-br from-szn-accent to-szn-accent/70 flex items-center justify-center shadow-lg">
+                  <div className="w-14 h-14 mx-auto mb-4 rounded-lg bg-[var(--ink-900)] flex items-center justify-center shadow-lg">
                     <RotateIcon className="w-7 h-7 text-white" />
                   </div>
-                  <h2 className="text-xl font-bold text-szn-text-1">
+                  <h2 className="text-xl font-bold text-[var(--ink-900)]">
                     {t("dashboard.keysPage.rotateConfirm").replace("{keyName}", rotateTarget.name)}
                   </h2>
-                  <p className="text-szn-text-2 text-sm mt-2">
+                  <p className="text-[var(--ink-600)] text-sm mt-2">
                     {t("dashboard.keysPage.rotateWarning")}
                   </p>
                 </div>
 
-                <div className="bg-szn-accent/10 border border-szn-accent/20 rounded-xl p-4 mb-6">
+                <div className="bg-[var(--ink-900)]/10 border border-[var(--ink-900)]/20 rounded-xl p-4 mb-6">
                   <div className="flex items-center gap-3">
-                    <KeyIcon className="w-5 h-5 text-szn-accent flex-shrink-0" />
+                    <KeyIcon className="w-5 h-5 text-[var(--ink-900)] flex-shrink-0" />
                     <div>
-                      <p className="font-medium text-szn-text-1">{rotateTarget.name}</p>
+                      <p className="font-medium text-[var(--ink-900)]">{rotateTarget.name}</p>
                     </div>
                   </div>
                 </div>
@@ -579,7 +579,7 @@ export default function ApiKeysClient() {
                 <div className="flex gap-3">
                   <button
                     onClick={closeRotateModal}
-                    className="flex-1 px-4 py-3 bg-szn-surface text-szn-text-1 rounded-xl font-medium hover:bg-szn-surface-1 transition-colors"
+                    className="flex-1 px-4 py-3 bg-[var(--ink-50)] text-[var(--ink-900)] rounded-xl font-medium hover:bg-[var(--ink-50)] transition-colors"
                   >
                     {t("dashboard.keysPage.cancel")}
                   </button>

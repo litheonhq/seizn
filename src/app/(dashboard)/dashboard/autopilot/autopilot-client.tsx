@@ -212,11 +212,11 @@ export default function AutopilotClient() {
   const getOutcomeIcon = (outcome: DecisionLog["outcome"]) => {
     switch (outcome) {
       case "success":
-        return <CheckIcon className="w-4 h-4 text-green-500" />;
+        return <CheckIcon className="w-4 h-4 text-[var(--signal-canon-ink)]" />;
       case "failure":
-        return <XIcon className="w-4 h-4 text-red-500" />;
+        return <XIcon className="w-4 h-4 text-[var(--signal-conflict-ink)]" />;
       default:
-        return <ClockIcon className="w-4 h-4 text-yellow-500" />;
+        return <ClockIcon className="w-4 h-4 text-[var(--signal-pending-ink)]" />;
     }
   };
 
@@ -243,12 +243,12 @@ export default function AutopilotClient() {
       <div className="szn-card rounded-lg p-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-szn-accent to-szn-accent-2 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--ink-900)] to-[var(--ink-900)]-2 flex items-center justify-center">
               <CpuIcon className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-szn-text-1">{t("dashboard.autopilot.title") || "Autopilot"}</h1>
-              <p className="text-szn-text-2">{t("dashboard.autopilot.subtitle") || "AI-powered retrieval optimization"}</p>
+              <h1 className="text-2xl font-bold text-[var(--ink-900)]">{t("dashboard.autopilot.title") || "Autopilot"}</h1>
+              <p className="text-[var(--ink-600)]">{t("dashboard.autopilot.subtitle") || "AI-powered retrieval optimization"}</p>
             </div>
           </div>
 
@@ -256,7 +256,7 @@ export default function AutopilotClient() {
           <div className="flex items-center gap-3">
             <span
               className={`text-sm font-medium ${
-                config?.enabled ? "text-green-600 dark:text-green-400" : "text-szn-text-2"
+                config?.enabled ? "text-[var(--signal-canon-ink)] dark:text-green-400" : "text-[var(--ink-600)]"
               }`}
             >
               {config?.enabled ? "Enabled" : "Disabled"}
@@ -264,8 +264,8 @@ export default function AutopilotClient() {
             <button
               onClick={handleToggle}
               disabled={isLoading || isSaving}
-              className={`relative w-14 h-8 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-szn-accent/40 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-gray-950 ${
-                config?.enabled ? "bg-green-500" : "bg-szn-surface"
+              className={`relative w-14 h-8 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[var(--ink-900)]/40 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-gray-950 ${
+                config?.enabled ? "bg-green-500" : "bg-[var(--ink-50)]"
               } ${isSaving ? "opacity-50" : ""}`}
             >
               <span
@@ -279,22 +279,22 @@ export default function AutopilotClient() {
 
         {/* Stats */}
         {config && (
-          <div className="grid grid-cols-4 gap-4 mt-6 pt-6 border-t border-szn-border">
+          <div className="grid grid-cols-4 gap-4 mt-6 pt-6 border-t border-[var(--ink-200)]">
             <div className="text-center">
-              <p className="text-2xl font-bold text-szn-text-1">{config.total_decisions.toLocaleString()}</p>
-              <p className="text-xs text-szn-text-2">Total Decisions</p>
+              <p className="text-2xl font-bold text-[var(--ink-900)]">{config.total_decisions.toLocaleString()}</p>
+              <p className="text-xs text-[var(--ink-600)]">Total Decisions</p>
             </div>
             <div className="text-center">
-              <p className="text-2xl font-bold text-green-600">{successRate}%</p>
-              <p className="text-xs text-szn-text-2">Success Rate</p>
+              <p className="text-2xl font-bold text-[var(--signal-canon-ink)]">{successRate}%</p>
+              <p className="text-xs text-[var(--ink-600)]">Success Rate</p>
             </div>
             <div className="text-center">
-              <p className="text-2xl font-bold text-szn-text-1">{config.mode}</p>
-              <p className="text-xs text-szn-text-2">Current Mode</p>
+              <p className="text-2xl font-bold text-[var(--ink-900)]">{config.mode}</p>
+              <p className="text-xs text-[var(--ink-600)]">Current Mode</p>
             </div>
             <div className="text-center">
-              <p className="text-2xl font-bold text-szn-text-1">{(config.exploration_rate * 100).toFixed(0)}%</p>
-              <p className="text-xs text-szn-text-2">Exploration Rate</p>
+              <p className="text-2xl font-bold text-[var(--ink-900)]">{(config.exploration_rate * 100).toFixed(0)}%</p>
+              <p className="text-xs text-[var(--ink-600)]">Exploration Rate</p>
             </div>
           </div>
         )}
@@ -306,8 +306,8 @@ export default function AutopilotClient() {
           onClick={() => setActiveTab("settings")}
           className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-colors ${
             activeTab === "settings"
-              ? "bg-szn-accent text-white"
-              : "bg-szn-card text-szn-text-2 hover:bg-szn-surface-1"
+              ? "bg-[var(--ink-900)] text-white"
+              : "bg-[var(--ink-0)] text-[var(--ink-600)] hover:bg-[var(--ink-50)]"
           }`}
         >
           <CogIcon className="w-4 h-4" />
@@ -317,8 +317,8 @@ export default function AutopilotClient() {
           onClick={() => setActiveTab("logs")}
           className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-colors ${
             activeTab === "logs"
-              ? "bg-szn-accent text-white"
-              : "bg-szn-card text-szn-text-2 hover:bg-szn-surface-1"
+              ? "bg-[var(--ink-900)] text-white"
+              : "bg-[var(--ink-0)] text-[var(--ink-600)] hover:bg-[var(--ink-50)]"
           }`}
         >
           <ListIcon className="w-4 h-4" />
@@ -330,7 +330,7 @@ export default function AutopilotClient() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Mode Selection */}
           <div className="szn-card rounded-lg p-6">
-            <h2 className="font-semibold text-szn-text-1 mb-4">{t("dashboard.autopilot.operationMode") || "Operation Mode"}</h2>
+            <h2 className="font-semibold text-[var(--ink-900)] mb-4">{t("dashboard.autopilot.operationMode") || "Operation Mode"}</h2>
             <div className="space-y-3">
               {(["conservative", "balanced", "aggressive", "experimental"] as const).map((mode) => (
                 <button
@@ -339,17 +339,17 @@ export default function AutopilotClient() {
                   disabled={isSaving}
                   className={`w-full p-4 rounded-xl text-left transition-colors ${
                     config?.mode === mode
-                      ? "bg-szn-accent/10 border-2 border-szn-accent"
-                      : "bg-szn-bg border-2 border-transparent hover:border-szn-border"
+                      ? "bg-[var(--ink-900)]/10 border-2 border-[var(--ink-900)]"
+                      : "bg-[var(--ink-50)] border-2 border-transparent hover:border-[var(--ink-200)]"
                   }`}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="font-medium capitalize text-szn-text-1">{mode}</span>
+                    <span className="font-medium capitalize text-[var(--ink-900)]">{mode}</span>
                     {config?.mode === mode && (
-                      <span className="px-2 py-1 text-xs bg-szn-accent text-white rounded-full">Active</span>
+                      <span className="px-2 py-1 text-xs bg-[var(--ink-900)] text-white rounded-full">Active</span>
                     )}
                   </div>
-                  <p className="text-sm text-szn-text-2 mt-1">{getModeDescription(mode)}</p>
+                  <p className="text-sm text-[var(--ink-600)] mt-1">{getModeDescription(mode)}</p>
                 </button>
               ))}
             </div>
@@ -357,38 +357,38 @@ export default function AutopilotClient() {
 
           {/* Parameters */}
           <div className="szn-card rounded-lg p-6">
-            <h2 className="font-semibold text-szn-text-1 mb-4">{t("dashboard.autopilot.parameters") || "Parameters"}</h2>
+            <h2 className="font-semibold text-[var(--ink-900)] mb-4">{t("dashboard.autopilot.parameters") || "Parameters"}</h2>
             {config && (
               <div className="space-y-4">
-                <div className="flex items-center justify-between py-2 border-b border-szn-border">
-                  <span className="text-sm text-szn-text-2">Max Latency</span>
-                  <span className="font-medium text-szn-text-1">{config.max_latency_ms}ms</span>
+                <div className="flex items-center justify-between py-2 border-b border-[var(--ink-200)]">
+                  <span className="text-sm text-[var(--ink-600)]">Max Latency</span>
+                  <span className="font-medium text-[var(--ink-900)]">{config.max_latency_ms}ms</span>
                 </div>
-                <div className="flex items-center justify-between py-2 border-b border-szn-border">
-                  <span className="text-sm text-szn-text-2">Max Cost per Query</span>
-                  <span className="font-medium text-szn-text-1">${config.max_cost_per_query.toFixed(4)}</span>
+                <div className="flex items-center justify-between py-2 border-b border-[var(--ink-200)]">
+                  <span className="text-sm text-[var(--ink-600)]">Max Cost per Query</span>
+                  <span className="font-medium text-[var(--ink-900)]">${config.max_cost_per_query.toFixed(4)}</span>
                 </div>
-                <div className="flex items-center justify-between py-2 border-b border-szn-border">
-                  <span className="text-sm text-szn-text-2">Min Relevance Threshold</span>
-                  <span className="font-medium text-szn-text-1">{(config.min_relevance_threshold * 100).toFixed(0)}%</span>
+                <div className="flex items-center justify-between py-2 border-b border-[var(--ink-200)]">
+                  <span className="text-sm text-[var(--ink-600)]">Min Relevance Threshold</span>
+                  <span className="font-medium text-[var(--ink-900)]">{(config.min_relevance_threshold * 100).toFixed(0)}%</span>
                 </div>
-                <div className="flex items-center justify-between py-2 border-b border-szn-border">
-                  <span className="text-sm text-szn-text-2">Learning Rate</span>
-                  <span className="font-medium text-szn-text-1">{config.learning_rate}</span>
+                <div className="flex items-center justify-between py-2 border-b border-[var(--ink-200)]">
+                  <span className="text-sm text-[var(--ink-600)]">Learning Rate</span>
+                  <span className="font-medium text-[var(--ink-900)]">{config.learning_rate}</span>
                 </div>
-                <div className="flex items-center justify-between py-2 border-b border-szn-border">
-                  <span className="text-sm text-szn-text-2">Min Samples Before Learning</span>
-                  <span className="font-medium text-szn-text-1">{config.min_samples_before_learning}</span>
+                <div className="flex items-center justify-between py-2 border-b border-[var(--ink-200)]">
+                  <span className="text-sm text-[var(--ink-600)]">Min Samples Before Learning</span>
+                  <span className="font-medium text-[var(--ink-900)]">{config.min_samples_before_learning}</span>
                 </div>
-                <div className="flex items-center justify-between py-2 border-b border-szn-border">
-                  <span className="text-sm text-szn-text-2">Thompson Sampling</span>
-                  <span className={`font-medium ${config.use_thompson_sampling ? "text-green-600 dark:text-green-400" : "text-szn-text-3"}`}>
+                <div className="flex items-center justify-between py-2 border-b border-[var(--ink-200)]">
+                  <span className="text-sm text-[var(--ink-600)]">Thompson Sampling</span>
+                  <span className={`font-medium ${config.use_thompson_sampling ? "text-[var(--signal-canon-ink)] dark:text-green-400" : "text-[var(--ink-500)]"}`}>
                     {config.use_thompson_sampling ? "Enabled" : "Disabled"}
                   </span>
                 </div>
                 <div className="flex items-center justify-between py-2">
-                  <span className="text-sm text-szn-text-2">Decay Factor</span>
-                  <span className="font-medium text-szn-text-1">{config.decay_factor}</span>
+                  <span className="text-sm text-[var(--ink-600)]">Decay Factor</span>
+                  <span className="font-medium text-[var(--ink-900)]">{config.decay_factor}</span>
                 </div>
               </div>
             )}
@@ -397,41 +397,41 @@ export default function AutopilotClient() {
       ) : (
         /* Decision Logs */
         <div className="szn-card rounded-lg overflow-hidden">
-          <div className="p-4 border-b border-szn-border">
-            <h2 className="font-semibold text-szn-text-1">{t("dashboard.autopilot.recentDecisions") || "Recent Decisions"}</h2>
+          <div className="p-4 border-b border-[var(--ink-200)]">
+            <h2 className="font-semibold text-[var(--ink-900)]">{t("dashboard.autopilot.recentDecisions") || "Recent Decisions"}</h2>
           </div>
-          <div className="divide-y divide-szn-border">
+          <div className="divide-y divide-[var(--ink-200)]">
             {isLoading ? (
               <div className="p-8 text-center">
-                <div className="w-8 h-8 border-2 border-szn-accent border-t-transparent rounded-full animate-spin mx-auto" />
+                <div className="w-8 h-8 border-2 border-[var(--ink-900)] border-t-transparent rounded-full animate-spin mx-auto" />
               </div>
             ) : logs.length === 0 ? (
-              <div className="p-8 text-center text-szn-text-2">
+              <div className="p-8 text-center text-[var(--ink-600)]">
                 <ListIcon className="w-12 h-12 text-gray-300 dark:text-gray-700 mx-auto mb-2" />
                 <p>{t("dashboard.autopilot.noLogs") || "No decision logs yet"}</p>
               </div>
             ) : (
               logs.map((log) => (
-                <div key={log.id} className="p-4 hover:bg-szn-surface-1 transition-colors">
+                <div key={log.id} className="p-4 hover:bg-[var(--ink-50)] transition-colors">
                   <div className="flex items-start gap-3">
                     <div className="mt-1">{getOutcomeIcon(log.outcome)}</div>
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium text-szn-text-1 line-clamp-1">{log.query}</p>
-                      <p className="text-sm text-szn-text-2 mt-1">{log.reason}</p>
+                      <p className="font-medium text-[var(--ink-900)] line-clamp-1">{log.query}</p>
+                      <p className="text-sm text-[var(--ink-600)] mt-1">{log.reason}</p>
                       <div className="flex flex-wrap items-center gap-3 mt-2 text-xs">
-                        <span className="px-2 py-1 bg-szn-surface text-szn-text-1 rounded-full">
+                        <span className="px-2 py-1 bg-[var(--ink-50)] text-[var(--ink-900)] rounded-full">
                           {log.decision.search_type}
                         </span>
-                        <span className="px-2 py-1 bg-szn-surface text-szn-text-1 rounded-full">
+                        <span className="px-2 py-1 bg-[var(--ink-50)] text-[var(--ink-900)] rounded-full">
                           top_k: {log.decision.top_k}
                         </span>
                         {log.decision.rerank_enabled && (
-                          <span className="px-2 py-1 bg-purple-100 dark:bg-purple-950/40 text-purple-700 dark:text-purple-200 rounded-full">rerank</span>
+                          <span className="px-2 py-1 bg-[var(--ink-100)] dark:bg-[var(--ink-900)]/40 text-[var(--ink-900)] underline dark:text-[var(--ink-300)] rounded-full">rerank</span>
                         )}
                         <span className="text-gray-400 dark:text-gray-600">|</span>
-                        <span className="text-szn-text-2">{log.latency_ms}ms</span>
-                        <span className="text-szn-text-2">${(log.cost_usd * 1000).toFixed(2)}m</span>
-                        <span className="text-szn-text-3 ml-auto">{formatDate(log.created_at, "long")}</span>
+                        <span className="text-[var(--ink-600)]">{log.latency_ms}ms</span>
+                        <span className="text-[var(--ink-600)]">${(log.cost_usd * 1000).toFixed(2)}m</span>
+                        <span className="text-[var(--ink-500)] ml-auto">{formatDate(log.created_at, "long")}</span>
                       </div>
                     </div>
                   </div>

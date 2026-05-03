@@ -243,7 +243,7 @@ export function AuthorMemoryV3Client() {
                   <span className="text-sm text-slate-600">Uploading</span>
                 ) : null}
                 {uploadError ? (
-                  <span className="text-sm text-red-700">{uploadError}</span>
+                  <span className="text-sm text-[var(--signal-conflict-ink)]">{uploadError}</span>
                 ) : null}
               </div>
               <Rows
@@ -284,15 +284,15 @@ export function AuthorMemoryV3Client() {
                   Generate backlog
                 </button>
                 {generateBacklog.error ? (
-                  <span className="text-sm text-red-700">{generateBacklog.error.message}</span>
+                  <span className="text-sm text-[var(--signal-conflict-ink)]">{generateBacklog.error.message}</span>
                 ) : null}
               </div>
               {backlogResult ? (
-                <div className="mb-4 rounded-md border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-950">
+                <div className="mb-4 rounded-md border border-[var(--signal-canon)] bg-[var(--signal-canon-soft)] p-3 text-sm text-[var(--signal-canon-ink)]">
                   <div className="font-medium">
                     {String(backlogResult.character_name)} backlog generated · {Number((backlogResult.candidates as unknown[] | undefined)?.length ?? 0)} candidates
                   </div>
-                  <div className="mt-1 text-emerald-900">Review Queue updated.</div>
+                  <div className="mt-1 text-[var(--signal-canon-ink)]">Review Queue updated.</div>
                   <div className="mt-3">
                     <Rows
                       rows={((backlogResult.candidates as JsonRecord[] | undefined) ?? []).slice(0, 8)}
@@ -349,7 +349,7 @@ export function AuthorMemoryV3Client() {
                 onReplay={setReplayDecisionId}
               />
               {audit.error ? (
-                <div className="mt-4 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-800">
+                <div className="mt-4 rounded-md border border-[var(--signal-conflict)] bg-[var(--signal-conflict-soft)] p-3 text-sm text-[var(--signal-conflict-ink)]">
                   Audit log could not be loaded.
                 </div>
               ) : null}
@@ -365,7 +365,7 @@ function Metric({ label, value, danger = false }: { label: string; value: unknow
   return (
     <div className="rounded-md border border-slate-200 bg-white p-3">
       <div className="text-xs font-medium uppercase tracking-normal text-slate-500">{label}</div>
-      <div className={`mt-1 text-2xl font-semibold ${danger ? 'text-red-700' : 'text-slate-950'}`}>
+      <div className={`mt-1 text-2xl font-semibold ${danger ? 'text-[var(--signal-conflict-ink)]' : 'text-slate-950'}`}>
         {String(value)}
       </div>
     </div>

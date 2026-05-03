@@ -402,8 +402,8 @@ export function FederatedClient() {
     return (
       <div className="max-w-6xl mx-auto px-4 py-8">
         <div className="animate-pulse space-y-4">
-          <div className="h-8 bg-szn-surface rounded w-48" />
-          <div className="h-64 bg-szn-surface rounded" />
+          <div className="h-8 bg-[var(--ink-50)] rounded w-48" />
+          <div className="h-64 bg-[var(--ink-50)] rounded" />
         </div>
       </div>
     );
@@ -414,36 +414,36 @@ export function FederatedClient() {
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-szn-text-1">Federated Connectors</h1>
-          <p className="text-szn-text-2 mt-1">
+          <h1 className="text-2xl font-bold text-[var(--ink-900)]">Federated Connectors</h1>
+          <p className="text-[var(--ink-600)] mt-1">
             Connect external vector databases for unified search
           </p>
         </div>
         <button
           onClick={() => setShowAddForm(true)}
-          className="px-4 py-2 bg-szn-accent text-white rounded-lg hover:bg-szn-accent/90"
+          className="px-4 py-2 bg-[var(--ink-900)] text-white rounded-lg hover:bg-[var(--ink-900)]/90"
         >
           Add Connector
         </button>
       </div>
 
       {(loadError || actionError) && (
-        <div className="mb-6 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-200">
+        <div className="mb-6 rounded-lg border border-[var(--signal-pending)] bg-[var(--signal-pending-soft)] px-4 py-3 text-sm text-[var(--signal-pending-ink)] dark:border-[var(--signal-pending)]/60 dark:bg-[var(--signal-pending)]/30 dark:text-[var(--signal-pending-soft)]">
           {actionError || loadError}
         </div>
       )}
 
       {/* Connectors Grid */}
       {connectors.length === 0 ? (
-        <div className="bg-szn-card rounded-lg border border-szn-border p-8 text-center">
+        <div className="bg-[var(--ink-0)] rounded-lg border border-[var(--ink-200)] p-8 text-center">
           <div className="text-4xl mb-4">🔗</div>
-          <h3 className="font-semibold text-szn-text-1 mb-2">No Connectors</h3>
-          <p className="text-szn-text-2 mb-4">
+          <h3 className="font-semibold text-[var(--ink-900)] mb-2">No Connectors</h3>
+          <p className="text-[var(--ink-600)] mb-4">
             Add a connector to enable federated search across multiple vector databases
           </p>
           <button
             onClick={() => setShowAddForm(true)}
-            className="px-4 py-2 bg-szn-accent text-white rounded-lg hover:bg-szn-accent/90"
+            className="px-4 py-2 bg-[var(--ink-900)] text-white rounded-lg hover:bg-[var(--ink-900)]/90"
           >
             Add Your First Connector
           </button>
@@ -463,8 +463,8 @@ export function FederatedClient() {
 
       {/* Test Search Section */}
       {connectors.length > 0 && (
-        <div className="bg-szn-card rounded-lg border border-szn-border p-6 mb-8">
-          <h3 className="font-semibold text-szn-text-1 mb-4">Test Federated Search</h3>
+        <div className="bg-[var(--ink-0)] rounded-lg border border-[var(--ink-200)] p-6 mb-8">
+          <h3 className="font-semibold text-[var(--ink-900)] mb-4">Test Federated Search</h3>
           <div className="flex gap-4">
             <input
               type="text"
@@ -477,14 +477,14 @@ export function FederatedClient() {
             <button
               onClick={handleTestSearch}
               disabled={testLoading || !testQuery.trim()}
-              className="px-6 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 disabled:opacity-50"
+              className="px-6 py-2 bg-[var(--ink-900)] text-white rounded-lg hover:bg-[var(--ink-800)] disabled:opacity-50"
             >
               {testLoading ? "Searching..." : "Search"}
             </button>
           </div>
 
           {testResults !== null && (
-            <div className="mt-4 p-4 bg-szn-surface rounded-lg">
+            <div className="mt-4 p-4 bg-[var(--ink-50)] rounded-lg">
               <pre className="text-sm overflow-auto max-h-96">
                 {JSON.stringify(testResults, null, 2)}
               </pre>
@@ -496,14 +496,14 @@ export function FederatedClient() {
       {/* Add Connector Wizard Modal */}
       {showAddForm && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-szn-card rounded-lg max-w-2xl w-full max-h-[90vh] overflow-auto">
+          <div className="bg-[var(--ink-0)] rounded-lg max-w-2xl w-full max-h-[90vh] overflow-auto">
             {/* Wizard Header */}
-            <div className="p-6 border-b sticky top-0 bg-szn-card rounded-t-2xl">
+            <div className="p-6 border-b sticky top-0 bg-[var(--ink-0)] rounded-t-2xl">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-bold text-szn-text-1">Add Connector</h2>
+                <h2 className="text-xl font-bold text-[var(--ink-900)]">Add Connector</h2>
                 <button
                   onClick={() => { setShowAddForm(false); resetWizard(); }}
-                  className="text-szn-text-3 hover:text-szn-text-2"
+                  className="text-[var(--ink-500)] hover:text-[var(--ink-600)]"
                 >
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -518,10 +518,10 @@ export function FederatedClient() {
                     <div
                       className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
                         wizardStep === step
-                          ? "bg-szn-accent text-white"
+                          ? "bg-[var(--ink-900)] text-white"
                           : wizardStep > step
-                          ? "bg-szn-success/10 text-szn-success"
-                          : "bg-gray-100 text-szn-text-3"
+                          ? "bg-[var(--signal-canon)]/10 text-[var(--signal-canon)]"
+                          : "bg-gray-100 text-[var(--ink-500)]"
                       }`}
                     >
                       {wizardStep > step ? (
@@ -533,12 +533,12 @@ export function FederatedClient() {
                       )}
                     </div>
                     {step < 3 && (
-                      <div className={`w-12 h-1 mx-2 rounded ${wizardStep > step ? "bg-szn-accent" : "bg-gray-200"}`} />
+                      <div className={`w-12 h-1 mx-2 rounded ${wizardStep > step ? "bg-[var(--ink-900)]" : "bg-gray-200"}`} />
                     )}
                   </div>
                 ))}
               </div>
-              <div className="flex justify-between mt-2 text-xs text-szn-text-2">
+              <div className="flex justify-between mt-2 text-xs text-[var(--ink-600)]">
                 <span>Select Type</span>
                 <span>Configure & Test</span>
                 <span>Permissions</span>
@@ -550,7 +550,7 @@ export function FederatedClient() {
               {/* Step 1: Select Connector Type */}
               {wizardStep === 1 && (
                 <div className="space-y-4">
-                  <p className="text-szn-text-2 mb-4">Choose the type of vector database you want to connect:</p>
+                  <p className="text-[var(--ink-600)] mb-4">Choose the type of vector database you want to connect:</p>
                   <div className="grid grid-cols-2 gap-3">
                     {CONNECTOR_TYPES.map((ct) => (
                       <button
@@ -558,19 +558,19 @@ export function FederatedClient() {
                         onClick={() => setForm({ ...form, type: ct.id })}
                         className={`p-4 rounded-xl border-2 text-left transition-all ${
                           form.type === ct.id
-                            ? "border-szn-accent bg-szn-accent/10"
-                            : "border-szn-border hover:border-szn-border/80"
+                            ? "border-[var(--ink-900)] bg-[var(--ink-900)]/10"
+                            : "border-[var(--ink-200)] hover:border-[var(--ink-200)]/80"
                         }`}
                       >
                         <span className="text-2xl">{ct.icon}</span>
-                        <h4 className="font-semibold text-szn-text-1 mt-2">{ct.name}</h4>
-                        <p className="text-xs text-szn-text-2">{ct.description}</p>
+                        <h4 className="font-semibold text-[var(--ink-900)] mt-2">{ct.name}</h4>
+                        <p className="text-xs text-[var(--ink-600)]">{ct.description}</p>
                       </button>
                     ))}
                   </div>
 
                   <div className="mt-6">
-                    <label className="block text-sm font-medium text-szn-text-1 mb-1">
+                    <label className="block text-sm font-medium text-[var(--ink-900)] mb-1">
                       Connector Name
                     </label>
                     <input
@@ -580,7 +580,7 @@ export function FederatedClient() {
                       placeholder="e.g., production-pinecone"
                       className="w-full px-3 py-2 border rounded-lg"
                     />
-                    <p className="text-xs text-szn-text-3 mt-1">A unique name to identify this connector</p>
+                    <p className="text-xs text-[var(--ink-500)] mt-1">A unique name to identify this connector</p>
                   </div>
                 </div>
               )}
@@ -588,7 +588,7 @@ export function FederatedClient() {
               {/* Step 2: Configure Credentials & Test */}
               {wizardStep === 2 && (
                 <div className="space-y-4">
-                  <p className="text-szn-text-2 mb-4">
+                  <p className="text-[var(--ink-600)] mb-4">
                     Enter credentials for <strong>{CONNECTOR_TYPES.find(c => c.id === form.type)?.name}</strong>:
                   </p>
 
@@ -596,7 +596,7 @@ export function FederatedClient() {
                   {form.type === "pinecone" && (
                     <>
                       <div>
-                        <label className="block text-sm font-medium text-szn-text-1 mb-1">API Key *</label>
+                        <label className="block text-sm font-medium text-[var(--ink-900)] mb-1">API Key *</label>
                         <input
                           type="password"
                           value={form.pinecone_apiKey}
@@ -606,7 +606,7 @@ export function FederatedClient() {
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-szn-text-1 mb-1">Environment / Host *</label>
+                        <label className="block text-sm font-medium text-[var(--ink-900)] mb-1">Environment / Host *</label>
                         <input
                           type="text"
                           value={form.pinecone_environment}
@@ -616,7 +616,7 @@ export function FederatedClient() {
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-szn-text-1 mb-1">Index Name *</label>
+                        <label className="block text-sm font-medium text-[var(--ink-900)] mb-1">Index Name *</label>
                         <input
                           type="text"
                           value={form.pinecone_indexName}
@@ -625,7 +625,7 @@ export function FederatedClient() {
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-szn-text-1 mb-1">Namespace (optional)</label>
+                        <label className="block text-sm font-medium text-[var(--ink-900)] mb-1">Namespace (optional)</label>
                         <input
                           type="text"
                           value={form.pinecone_namespace}
@@ -640,7 +640,7 @@ export function FederatedClient() {
                   {form.type === "weaviate" && (
                     <>
                       <div>
-                        <label className="block text-sm font-medium text-szn-text-1 mb-1">Host *</label>
+                        <label className="block text-sm font-medium text-[var(--ink-900)] mb-1">Host *</label>
                         <input
                           type="text"
                           value={form.weaviate_host}
@@ -651,7 +651,7 @@ export function FederatedClient() {
                       </div>
                       <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-sm font-medium text-szn-text-1 mb-1">Scheme</label>
+                          <label className="block text-sm font-medium text-[var(--ink-900)] mb-1">Scheme</label>
                           <select
                             value={form.weaviate_scheme}
                             onChange={(e) => setForm({ ...form, weaviate_scheme: e.target.value as "http" | "https" })}
@@ -662,7 +662,7 @@ export function FederatedClient() {
                           </select>
                         </div>
                         <div>
-                          <label className="block text-sm font-medium text-szn-text-1 mb-1">API Key (optional)</label>
+                          <label className="block text-sm font-medium text-[var(--ink-900)] mb-1">API Key (optional)</label>
                           <input
                             type="password"
                             value={form.weaviate_apiKey}
@@ -672,7 +672,7 @@ export function FederatedClient() {
                         </div>
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-szn-text-1 mb-1">Class Name *</label>
+                        <label className="block text-sm font-medium text-[var(--ink-900)] mb-1">Class Name *</label>
                         <input
                           type="text"
                           value={form.weaviate_className}
@@ -688,7 +688,7 @@ export function FederatedClient() {
                   {form.type === "qdrant" && (
                     <>
                       <div>
-                        <label className="block text-sm font-medium text-szn-text-1 mb-1">Host *</label>
+                        <label className="block text-sm font-medium text-[var(--ink-900)] mb-1">Host *</label>
                         <input
                           type="text"
                           value={form.qdrant_host}
@@ -698,7 +698,7 @@ export function FederatedClient() {
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-szn-text-1 mb-1">API Key (optional)</label>
+                        <label className="block text-sm font-medium text-[var(--ink-900)] mb-1">API Key (optional)</label>
                         <input
                           type="password"
                           value={form.qdrant_apiKey}
@@ -707,7 +707,7 @@ export function FederatedClient() {
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-szn-text-1 mb-1">Collection Name *</label>
+                        <label className="block text-sm font-medium text-[var(--ink-900)] mb-1">Collection Name *</label>
                         <input
                           type="text"
                           value={form.qdrant_collection}
@@ -720,8 +720,8 @@ export function FederatedClient() {
 
                   {/* Other connectors placeholder */}
                   {!["pinecone", "weaviate", "qdrant"].includes(form.type) && (
-                    <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
-                      <p className="text-amber-800 text-sm">
+                    <div className="p-4 bg-[var(--signal-pending-soft)] border border-[var(--signal-pending)] rounded-lg">
+                      <p className="text-[var(--signal-pending-ink)] text-sm">
                         Configuration for {CONNECTOR_TYPES.find(c => c.id === form.type)?.name} coming soon.
                         Contact support for early access.
                       </p>
@@ -729,13 +729,13 @@ export function FederatedClient() {
                   )}
 
                   {/* Test Connection */}
-                  <div className="mt-6 p-4 bg-szn-surface rounded-lg">
+                  <div className="mt-6 p-4 bg-[var(--ink-50)] rounded-lg">
                     <div className="flex items-center justify-between mb-3">
-                      <h4 className="font-medium text-szn-text-1">Test Connection</h4>
+                      <h4 className="font-medium text-[var(--ink-900)]">Test Connection</h4>
                       <button
                         onClick={handleTestConnection}
                         disabled={testingConnection}
-                        className="px-4 py-2 bg-gray-900 text-white text-sm rounded-lg hover:bg-gray-800 disabled:opacity-50 flex items-center gap-2"
+                        className="px-4 py-2 bg-[var(--ink-900)] text-white text-sm rounded-lg hover:bg-[var(--ink-800)] disabled:opacity-50 flex items-center gap-2"
                       >
                         {testingConnection ? (
                           <>
@@ -754,26 +754,26 @@ export function FederatedClient() {
                     </div>
 
                     {connectionTest && (
-                      <div className={`p-3 rounded-lg ${connectionTest.success ? "bg-green-50 border border-green-200" : "bg-red-50 border border-red-200"}`}>
+                      <div className={`p-3 rounded-lg ${connectionTest.success ? "bg-[var(--signal-canon-soft)] border border-[var(--signal-canon)]" : "bg-[var(--signal-conflict-soft)] border border-[var(--signal-conflict)]"}`}>
                         <div className="flex items-start gap-2">
                           {connectionTest.success ? (
-                            <svg className="w-5 h-5 text-green-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg className="w-5 h-5 text-[var(--signal-canon-ink)] mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                           ) : (
-                            <svg className="w-5 h-5 text-red-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg className="w-5 h-5 text-[var(--signal-conflict-ink)] mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                           )}
                           <div>
-                            <p className={`text-sm font-medium ${connectionTest.success ? "text-green-800" : "text-red-800"}`}>
+                            <p className={`text-sm font-medium ${connectionTest.success ? "text-[var(--signal-canon-ink)]" : "text-[var(--signal-conflict-ink)]"}`}>
                               {connectionTest.success ? "Connection Successful" : "Connection Failed"}
                             </p>
-                            <p className={`text-xs ${connectionTest.success ? "text-green-600" : "text-red-600"}`}>
+                            <p className={`text-xs ${connectionTest.success ? "text-[var(--signal-canon-ink)]" : "text-[var(--signal-conflict-ink)]"}`}>
                               {connectionTest.message}
                             </p>
                             {connectionTest.latency_ms && (
-                              <p className="text-xs text-green-600 mt-1">Latency: {connectionTest.latency_ms}ms</p>
+                              <p className="text-xs text-[var(--signal-canon-ink)] mt-1">Latency: {connectionTest.latency_ms}ms</p>
                             )}
                           </div>
                         </div>
@@ -786,24 +786,24 @@ export function FederatedClient() {
               {/* Step 3: Permissions & Policy */}
               {wizardStep === 3 && (
                 <div className="space-y-6">
-                  <p className="text-szn-text-2 mb-4">Configure access permissions for this connector:</p>
+                  <p className="text-[var(--ink-600)] mb-4">Configure access permissions for this connector:</p>
 
                   <div className="space-y-4">
-                    <label className="flex items-start gap-3 p-4 rounded-lg border cursor-pointer hover:bg-szn-surface-1">
+                    <label className="flex items-start gap-3 p-4 rounded-lg border cursor-pointer hover:bg-[var(--ink-50)]">
                       <input
                         type="checkbox"
                         checked={form.readOnly}
                         onChange={(e) => setForm({ ...form, readOnly: e.target.checked })}
-                        className="mt-1 w-4 h-4 text-szn-accent rounded"
+                        className="mt-1 w-4 h-4 text-[var(--ink-900)] rounded"
                       />
                       <div>
-                        <span className="font-medium text-szn-text-1">Read-only Mode</span>
-                        <p className="text-sm text-szn-text-2">Only allow read operations. Prevents writes, updates, and deletes.</p>
+                        <span className="font-medium text-[var(--ink-900)]">Read-only Mode</span>
+                        <p className="text-sm text-[var(--ink-600)]">Only allow read operations. Prevents writes, updates, and deletes.</p>
                       </div>
                     </label>
 
                     <div>
-                      <label className="block text-sm font-medium text-szn-text-1 mb-1">
+                      <label className="block text-sm font-medium text-[var(--ink-900)] mb-1">
                         Namespace Filter (optional)
                       </label>
                       <input
@@ -813,16 +813,16 @@ export function FederatedClient() {
                         placeholder="e.g., production-*, tenant-123"
                         className="w-full px-3 py-2 border rounded-lg"
                       />
-                      <p className="text-xs text-szn-text-3 mt-1">
+                      <p className="text-xs text-[var(--ink-500)] mt-1">
                         Restrict queries to specific namespaces. Supports wildcards (*).
                       </p>
                     </div>
                   </div>
 
                   {/* Summary */}
-                  <div className="mt-6 p-4 bg-szn-accent/5 border border-szn-accent/20 rounded-lg">
-                    <h4 className="font-medium text-szn-accent mb-2">Ready to Add</h4>
-                    <ul className="text-sm text-szn-success space-y-1">
+                  <div className="mt-6 p-4 bg-[var(--ink-900)]/5 border border-[var(--ink-900)]/20 rounded-lg">
+                    <h4 className="font-medium text-[var(--ink-900)] mb-2">Ready to Add</h4>
+                    <ul className="text-sm text-[var(--signal-canon)] space-y-1">
                       <li><strong>Name:</strong> {form.name}</li>
                       <li><strong>Type:</strong> {CONNECTOR_TYPES.find(c => c.id === form.type)?.name}</li>
                       <li><strong>Mode:</strong> {form.readOnly ? "Read-only" : "Read/Write"}</li>
@@ -834,7 +834,7 @@ export function FederatedClient() {
             </div>
 
             {/* Wizard Footer */}
-            <div className="p-6 border-t sticky bottom-0 bg-szn-card rounded-b-2xl flex justify-between">
+            <div className="p-6 border-t sticky bottom-0 bg-[var(--ink-0)] rounded-b-2xl flex justify-between">
               <button
                 onClick={() => {
                   if (wizardStep === 1) {
@@ -844,7 +844,7 @@ export function FederatedClient() {
                     setWizardStep((wizardStep - 1) as WizardStep);
                   }
                 }}
-                className="px-4 py-2 border rounded-lg hover:bg-szn-surface-1"
+                className="px-4 py-2 border rounded-lg hover:bg-[var(--ink-50)]"
               >
                 {wizardStep === 1 ? "Cancel" : "Back"}
               </button>
@@ -853,14 +853,14 @@ export function FederatedClient() {
                 <button
                   onClick={() => setWizardStep((wizardStep + 1) as WizardStep)}
                   disabled={wizardStep === 1 && !form.name}
-                  className="px-6 py-2 bg-szn-accent text-white rounded-lg hover:bg-szn-accent/90 disabled:opacity-50"
+                  className="px-6 py-2 bg-[var(--ink-900)] text-white rounded-lg hover:bg-[var(--ink-900)]/90 disabled:opacity-50"
                 >
                   Next
                 </button>
               ) : (
                 <button
                   onClick={handleAddConnector}
-                  className="px-6 py-2 bg-szn-accent text-white rounded-lg hover:bg-szn-accent/90"
+                  className="px-6 py-2 bg-[var(--ink-900)] text-white rounded-lg hover:bg-[var(--ink-900)]/90"
                 >
                   Add Connector
                 </button>
@@ -893,10 +893,10 @@ function ConnectorCard({
 
   // Health badge colors
   const healthColors: Record<HealthStatus, string> = {
-    healthy: "bg-green-100 text-green-700 border-green-200",
-    degraded: "bg-amber-100 text-amber-700 border-amber-200",
-    down: "bg-red-100 text-red-700 border-red-200",
-    unknown: "bg-szn-surface text-szn-text-2 border-szn-border",
+    healthy: "bg-[var(--signal-canon-soft)] text-[var(--signal-canon-ink)] border-[var(--signal-canon)]",
+    degraded: "bg-[var(--signal-pending-soft)] text-[var(--signal-pending-ink)] border-[var(--signal-pending)]",
+    down: "bg-[var(--signal-conflict-soft)] text-[var(--signal-conflict-ink)] border-[var(--signal-conflict)]",
+    unknown: "bg-[var(--ink-50)] text-[var(--ink-600)] border-[var(--ink-200)]",
   };
 
   const healthLabels: Record<HealthStatus, string> = {
@@ -915,16 +915,16 @@ function ConnectorCard({
   };
 
   return (
-    <div className="bg-szn-card rounded-xl border border-szn-border p-5 hover:shadow-md transition-shadow">
+    <div className="bg-[var(--ink-0)] rounded-xl border border-[var(--ink-200)] p-5 hover:shadow-md transition-shadow">
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-szn-surface rounded-lg flex items-center justify-center">
+          <div className="w-10 h-10 bg-[var(--ink-50)] rounded-lg flex items-center justify-center">
             <span className="text-xl">{typeLogos[connector.type] || "🔗"}</span>
           </div>
           <div>
-            <h3 className="font-semibold text-szn-text-1">{connector.name}</h3>
-            <p className="text-sm text-szn-text-2 capitalize">{connector.type.replace("-", " ")}</p>
+            <h3 className="font-semibold text-[var(--ink-900)]">{connector.name}</h3>
+            <p className="text-sm text-[var(--ink-600)] capitalize">{connector.type.replace("-", " ")}</p>
           </div>
         </div>
 
@@ -936,9 +936,9 @@ function ConnectorCard({
                 healthStatus === "healthy"
                   ? "bg-green-500"
                   : healthStatus === "degraded"
-                  ? "bg-amber-500"
+                  ? "bg-[var(--signal-pending)]"
                   : healthStatus === "down"
-                  ? "bg-red-500"
+                  ? "bg-[var(--signal-conflict)]"
                   : "bg-gray-400"
               }`}
             />
@@ -949,18 +949,18 @@ function ConnectorCard({
 
       {/* Health Metrics */}
       {connector.health && healthStatus !== "unknown" && (
-        <div className="grid grid-cols-3 gap-3 p-3 bg-szn-surface rounded-lg mb-4">
+        <div className="grid grid-cols-3 gap-3 p-3 bg-[var(--ink-50)] rounded-lg mb-4">
           <div>
-            <p className="text-xs text-szn-text-2">p50 Latency</p>
-            <p className="font-mono text-sm text-szn-text-1">{connector.health.latency_p50 || "—"}ms</p>
+            <p className="text-xs text-[var(--ink-600)]">p50 Latency</p>
+            <p className="font-mono text-sm text-[var(--ink-900)]">{connector.health.latency_p50 || "—"}ms</p>
           </div>
           <div>
-            <p className="text-xs text-szn-text-2">p95 Latency</p>
-            <p className="font-mono text-sm text-szn-text-1">{connector.health.latency_p95 || "—"}ms</p>
+            <p className="text-xs text-[var(--ink-600)]">p95 Latency</p>
+            <p className="font-mono text-sm text-[var(--ink-900)]">{connector.health.latency_p95 || "—"}ms</p>
           </div>
           <div>
-            <p className="text-xs text-szn-text-2">Last Ping</p>
-            <p className="text-sm text-szn-text-1">{formatLastPing(connector.health.last_ping)}</p>
+            <p className="text-xs text-[var(--ink-600)]">Last Ping</p>
+            <p className="text-sm text-[var(--ink-900)]">{formatLastPing(connector.health.last_ping)}</p>
           </div>
         </div>
       )}
@@ -971,12 +971,12 @@ function ConnectorCard({
           <span className="px-2 py-0.5 bg-blue-50 text-blue-600 text-xs rounded">Read-only</span>
         )}
         {connector.namespaceFilter && (
-          <span className="px-2 py-0.5 bg-purple-50 text-purple-600 text-xs rounded">
+          <span className="px-2 py-0.5 bg-[var(--ink-50)] text-[var(--ink-900)] underline text-xs rounded">
             Filter: {connector.namespaceFilter}
           </span>
         )}
         {!connector.readOnly && !connector.namespaceFilter && (
-          <span className="px-2 py-0.5 bg-szn-surface text-szn-text-2 text-xs rounded">Full Access</span>
+          <span className="px-2 py-0.5 bg-[var(--ink-50)] text-[var(--ink-600)] text-xs rounded">Full Access</span>
         )}
       </div>
 
@@ -984,7 +984,7 @@ function ConnectorCard({
       <div className="flex items-center gap-4 pt-3 border-t">
         <button
           onClick={onRefresh}
-          className="text-sm text-szn-text-2 hover:text-szn-text-1 flex items-center gap-1"
+          className="text-sm text-[var(--ink-600)] hover:text-[var(--ink-900)] flex items-center gap-1"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -993,7 +993,7 @@ function ConnectorCard({
         </button>
         <button
           onClick={onRemove}
-          className="text-sm text-red-600 hover:text-red-700 flex items-center gap-1"
+          className="text-sm text-[var(--signal-conflict-ink)] hover:text-[var(--signal-conflict-ink)] flex items-center gap-1"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />

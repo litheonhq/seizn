@@ -225,7 +225,7 @@ export function TraceDetailClient({ traceId }: TraceDetailClientProps) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <p className="text-red-400 mb-4">{error || "Trace not found"}</p>
+          <p className="text-[var(--signal-conflict-soft)] mb-4">{error || "Trace not found"}</p>
           <Link
             href="/dashboard/devtools"
             className="text-blue-400 hover:text-blue-300"
@@ -240,12 +240,12 @@ export function TraceDetailClient({ traceId }: TraceDetailClientProps) {
   return (
     <div className="min-h-screen bg-gray-950">
       {/* Header */}
-      <div className="sticky top-0 z-10 bg-gray-900 border-b border-gray-800">
+      <div className="sticky top-0 z-10 bg-[var(--ink-900)] border-b border-gray-800">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center gap-4">
             <Link
               href="/dashboard/devtools"
-              className="p-2 rounded-lg bg-gray-800 text-gray-400 hover:text-white transition-colors"
+              className="p-2 rounded-lg bg-[var(--ink-800)] text-gray-400 hover:text-white transition-colors"
             >
               <ArrowLeftIcon className="w-5 h-5" />
             </Link>
@@ -254,13 +254,13 @@ export function TraceDetailClient({ traceId }: TraceDetailClientProps) {
               <div className="flex items-center gap-3">
                 <h1 className="text-xl font-bold text-white">Trace Detail</h1>
                 {traceDetail.replay.is_replay && (
-                  <span className="flex items-center gap-1 px-2 py-1 text-xs bg-purple-900/50 text-purple-300 rounded">
+                  <span className="flex items-center gap-1 px-2 py-1 text-xs bg-[var(--ink-900)]/50 text-[var(--ink-500)] rounded">
                     <ReplayIcon className="w-3 h-3" />
                     Replay
                   </span>
                 )}
                 {traceDetail.status.has_error && (
-                  <span className="px-2 py-1 text-xs bg-red-900/50 text-red-300 rounded">
+                  <span className="px-2 py-1 text-xs bg-[var(--signal-conflict)]/50 text-[var(--signal-conflict-soft)] rounded">
                     Error
                   </span>
                 )}
@@ -279,7 +279,7 @@ export function TraceDetailClient({ traceId }: TraceDetailClientProps) {
                     traceDetail.latency.total_ms > 500
                       ? "text-yellow-400"
                       : traceDetail.latency.total_ms > 1000
-                        ? "text-red-400"
+                        ? "text-[var(--signal-conflict-soft)]"
                         : "text-green-400"
                   }`}
                 >
@@ -303,7 +303,7 @@ export function TraceDetailClient({ traceId }: TraceDetailClientProps) {
             {/* Share Button */}
             <button
               onClick={() => setShowShareModal(true)}
-              className="flex items-center gap-2 px-3 py-2 bg-gray-800 text-gray-300 hover:text-white hover:bg-gray-700 rounded-lg transition-colors"
+              className="flex items-center gap-2 px-3 py-2 bg-[var(--ink-800)] text-gray-300 hover:text-white hover:bg-gray-700 rounded-lg transition-colors"
               title="Share trace"
             >
               <ShareIcon className="w-4 h-4" />
@@ -343,7 +343,7 @@ export function TraceDetailClient({ traceId }: TraceDetailClientProps) {
       {/* Content */}
       <div className="max-w-7xl mx-auto px-4 py-6">
         {/* Query Section */}
-        <div className="mb-6 p-4 bg-gray-900 rounded-lg border border-gray-800">
+        <div className="mb-6 p-4 bg-[var(--ink-900)] rounded-lg border border-gray-800">
           <div className="text-xs text-gray-500 uppercase tracking-wider mb-2">Query</div>
           <p className="text-white">
             {traceDetail.query.text || (
@@ -356,7 +356,7 @@ export function TraceDetailClient({ traceId }: TraceDetailClientProps) {
             {traceDetail.replay.is_replay && traceDetail.replay.original_trace_id && (
               <Link
                 href={`/dashboard/devtools/${traceDetail.replay.original_trace_id}`}
-                className="text-purple-400 hover:text-purple-300"
+                className="text-[var(--ink-700)] hover:text-[var(--ink-500)]"
               >
                 Original Trace
               </Link>
@@ -425,11 +425,11 @@ export function TraceDetailClient({ traceId }: TraceDetailClientProps) {
         )}
 
         {activeTab === "cost" && (
-          <div className="bg-gray-900 rounded-lg border border-gray-800 p-6">
+          <div className="bg-[var(--ink-900)] rounded-lg border border-gray-800 p-6">
             <h3 className="text-lg font-semibold text-white mb-4">Cost Analysis</h3>
 
             {/* Total Cost */}
-            <div className="mb-6 p-4 bg-gray-800 rounded-lg">
+            <div className="mb-6 p-4 bg-[var(--ink-800)] rounded-lg">
               <div className="text-2xl font-bold text-white">
                 {formatCost(traceDetail.cost.total)}
               </div>
@@ -444,7 +444,7 @@ export function TraceDetailClient({ traceId }: TraceDetailClientProps) {
                   <div className="w-32 text-sm text-gray-300">{stage.label}</div>
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
-                      <div className="flex-1 h-2 bg-gray-800 rounded-full overflow-hidden">
+                      <div className="flex-1 h-2 bg-[var(--ink-800)] rounded-full overflow-hidden">
                         <div
                           className="h-full bg-blue-500 rounded-full"
                           style={{ width: `${stage.percentage_cost}%` }}
@@ -464,25 +464,25 @@ export function TraceDetailClient({ traceId }: TraceDetailClientProps) {
 
             {/* Detailed Breakdown */}
             <div className="mt-6 grid grid-cols-4 gap-4">
-              <div className="p-3 bg-gray-800 rounded-lg">
+              <div className="p-3 bg-[var(--ink-800)] rounded-lg">
                 <div className="text-xs text-gray-500">Embedding</div>
                 <div className="text-lg font-bold text-white">
                   {formatCost(traceDetail.cost.breakdown.embedding || 0)}
                 </div>
               </div>
-              <div className="p-3 bg-gray-800 rounded-lg">
+              <div className="p-3 bg-[var(--ink-800)] rounded-lg">
                 <div className="text-xs text-gray-500">Vector Search</div>
                 <div className="text-lg font-bold text-white">
                   {formatCost(traceDetail.cost.breakdown.vectorSearch || 0)}
                 </div>
               </div>
-              <div className="p-3 bg-gray-800 rounded-lg">
+              <div className="p-3 bg-[var(--ink-800)] rounded-lg">
                 <div className="text-xs text-gray-500">Rerank</div>
                 <div className="text-lg font-bold text-white">
                   {formatCost(traceDetail.cost.breakdown.rerank || 0)}
                 </div>
               </div>
-              <div className="p-3 bg-gray-800 rounded-lg">
+              <div className="p-3 bg-[var(--ink-800)] rounded-lg">
                 <div className="text-xs text-gray-500">LLM</div>
                 <div className="text-lg font-bold text-white">
                   {formatCost(traceDetail.cost.breakdown.llm || 0)}
@@ -493,9 +493,9 @@ export function TraceDetailClient({ traceId }: TraceDetailClientProps) {
         )}
 
         {activeTab === "raw" && (
-          <div className="bg-gray-900 rounded-lg border border-gray-800 p-4">
+          <div className="bg-[var(--ink-900)] rounded-lg border border-gray-800 p-4">
             <h3 className="text-lg font-semibold text-white mb-4">Raw Trace Data</h3>
-            <pre className="text-xs text-gray-300 overflow-x-auto bg-gray-800 p-4 rounded-lg max-h-[600px] overflow-y-auto">
+            <pre className="text-xs text-gray-300 overflow-x-auto bg-[var(--ink-800)] p-4 rounded-lg max-h-[600px] overflow-y-auto">
               {JSON.stringify(traceDetail, null, 2)}
             </pre>
           </div>

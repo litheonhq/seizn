@@ -674,11 +674,11 @@ export default function MemoriesClient() {
   const getTypeColor = (type: string) => {
     switch (type) {
       case "fact": return "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300";
-      case "preference": return "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300";
-      case "experience": return "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300";
+      case "preference": return "bg-[var(--ink-100)] text-[var(--ink-900)] underline dark:bg-[var(--ink-900)]/30 dark:text-[var(--ink-500)]";
+      case "experience": return "bg-[var(--signal-canon-soft)] text-[var(--signal-canon-ink)] dark:bg-green-900/30 dark:text-green-300";
       case "relationship": return "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300";
-      case "instruction": return "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300";
-      default: return "bg-szn-surface text-szn-text-2";
+      case "instruction": return "bg-[var(--signal-conflict-soft)] text-[var(--signal-conflict-ink)] dark:bg-[var(--signal-conflict)]/30 dark:text-[var(--signal-conflict-soft)]";
+      default: return "bg-[var(--ink-50)] text-[var(--ink-600)]";
     }
   };
 
@@ -759,30 +759,30 @@ export default function MemoriesClient() {
       <div className="szn-card rounded-lg p-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-szn-accent flex items-center justify-center">
+            <div className="w-12 h-12 rounded-xl bg-[var(--ink-900)] flex items-center justify-center">
               <BrainIcon className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-szn-text-1">
+              <h1 className="text-2xl font-bold text-[var(--ink-900)]">
                 {t("dashboard.memoriesPage.title") || "Memories"}
               </h1>
-              <p className="text-szn-text-2">
+              <p className="text-[var(--ink-600)]">
                 {t("dashboard.memoriesPage.subtitle") || "Browse and search your AI memories"}
               </p>
             </div>
           </div>
           <div className="text-right">
-            <p className="text-2xl font-bold text-szn-text-1">{totalCount}</p>
-            <p className="text-sm text-szn-text-2">{t("dashboard.memoriesPage.totalMemories") || "Total Memories"}</p>
+            <p className="text-2xl font-bold text-[var(--ink-900)]">{totalCount}</p>
+            <p className="text-sm text-[var(--ink-600)]">{t("dashboard.memoriesPage.totalMemories") || "Total Memories"}</p>
 
             <div className="mt-3 flex items-center justify-end gap-2">
               {e2eLoading ? (
-                <div className="h-9 w-28 rounded-xl bg-szn-surface animate-pulse" />
+                <div className="h-9 w-28 rounded-xl bg-[var(--ink-50)] animate-pulse" />
               ) : !hasE2ESetup ? (
                 <button
                   type="button"
                   onClick={openPinSetup}
-                  className="px-4 py-2 text-sm rounded-xl bg-szn-accent text-white font-medium hover:bg-szn-accent/90 transition-colors"
+                  className="px-4 py-2 text-sm rounded-xl bg-[var(--ink-900)] text-white font-medium hover:bg-[var(--ink-900)]/90 transition-colors"
                 >
                   Set up PIN
                 </button>
@@ -790,7 +790,7 @@ export default function MemoriesClient() {
                 <button
                   type="button"
                   onClick={lockEncryptedMemories}
-                  className="px-4 py-2 text-sm rounded-xl border border-szn-border text-szn-text-1 bg-szn-card hover:bg-szn-surface-1 transition-colors"
+                  className="px-4 py-2 text-sm rounded-xl border border-[var(--ink-200)] text-[var(--ink-900)] bg-[var(--ink-0)] hover:bg-[var(--ink-50)] transition-colors"
                 >
                   Lock
                 </button>
@@ -798,7 +798,7 @@ export default function MemoriesClient() {
                 <button
                   type="button"
                   onClick={openPinUnlock}
-                  className="px-4 py-2 text-sm rounded-xl bg-szn-accent text-white font-medium hover:bg-szn-accent/90 transition-colors"
+                  className="px-4 py-2 text-sm rounded-xl bg-[var(--ink-900)] text-white font-medium hover:bg-[var(--ink-900)]/90 transition-colors"
                 >
                   Unlock
                 </button>
@@ -806,7 +806,7 @@ export default function MemoriesClient() {
             </div>
 
             {hasE2ESetup && !isE2EUnlocked && (
-              <p className="mt-2 text-xs text-szn-text-3">
+              <p className="mt-2 text-xs text-[var(--ink-500)]">
                 Encrypted memories are hidden until unlocked.
               </p>
             )}
@@ -814,29 +814,29 @@ export default function MemoriesClient() {
         </div>
 
         {/* Export / Import Actions */}
-        <div className="flex items-center gap-2 mt-4 pt-4 border-t border-szn-border">
+        <div className="flex items-center gap-2 mt-4 pt-4 border-t border-[var(--ink-200)]">
           {/* Export Dropdown */}
           <div className="relative">
             <button
               type="button"
               onClick={() => setShowExportMenu(v => !v)}
               disabled={isExporting}
-              className="flex items-center gap-2 px-4 py-2 text-sm rounded-xl border border-szn-border text-szn-text-1 bg-szn-card hover:bg-szn-surface-1 transition-colors disabled:opacity-50"
+              className="flex items-center gap-2 px-4 py-2 text-sm rounded-xl border border-[var(--ink-200)] text-[var(--ink-900)] bg-[var(--ink-0)] hover:bg-[var(--ink-50)] transition-colors disabled:opacity-50"
             >
               {isExporting ? <LoadingSpinner className="w-4 h-4" /> : <DownloadIcon className="w-4 h-4" />}
               {t("dashboard.memoriesPage.export") || "Export"}
             </button>
             {showExportMenu && (
-              <div className="absolute right-0 mt-2 w-36 bg-szn-card border border-szn-border rounded-xl shadow-lg z-10">
+              <div className="absolute right-0 mt-2 w-36 bg-[var(--ink-0)] border border-[var(--ink-200)] rounded-xl shadow-lg z-10">
                 <button
                   onClick={() => handleExport("json")}
-                  className="w-full px-4 py-2 text-left text-sm text-szn-text-1 hover:bg-szn-surface-1 rounded-t-xl"
+                  className="w-full px-4 py-2 text-left text-sm text-[var(--ink-900)] hover:bg-[var(--ink-50)] rounded-t-xl"
                 >
                   JSON
                 </button>
                 <button
                   onClick={() => handleExport("csv")}
-                  className="w-full px-4 py-2 text-left text-sm text-szn-text-1 hover:bg-szn-surface-1 rounded-b-xl"
+                  className="w-full px-4 py-2 text-left text-sm text-[var(--ink-900)] hover:bg-[var(--ink-50)] rounded-b-xl"
                 >
                   CSV
                 </button>
@@ -845,7 +845,7 @@ export default function MemoriesClient() {
           </div>
 
           {/* Import */}
-          <label className="flex items-center gap-2 px-4 py-2 text-sm rounded-xl border border-szn-border text-szn-text-1 bg-szn-card hover:bg-szn-surface-1 transition-colors cursor-pointer">
+          <label className="flex items-center gap-2 px-4 py-2 text-sm rounded-xl border border-[var(--ink-200)] text-[var(--ink-900)] bg-[var(--ink-0)] hover:bg-[var(--ink-50)] transition-colors cursor-pointer">
             {isImporting ? <LoadingSpinner className="w-4 h-4" /> : <UploadIcon className="w-4 h-4" />}
             {t("dashboard.memoriesPage.import") || "Import"}
             <input
@@ -859,10 +859,10 @@ export default function MemoriesClient() {
 
           {/* Import Result Toast */}
           {importResult && (
-            <div className="flex items-center gap-2 px-3 py-1.5 text-xs rounded-lg bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-800">
+            <div className="flex items-center gap-2 px-3 py-1.5 text-xs rounded-lg bg-[var(--signal-canon-soft)] dark:bg-green-900/20 text-[var(--signal-canon-ink)] dark:text-green-300 border border-[var(--signal-canon)] dark:border-[var(--signal-canon)]">
               <span>{importResult.imported} imported</span>
               {importResult.skipped > 0 && <span>/ {importResult.skipped} skipped</span>}
-              {importResult.failed > 0 && <span className="text-red-600 dark:text-red-400">/ {importResult.failed} failed</span>}
+              {importResult.failed > 0 && <span className="text-[var(--signal-conflict-ink)] dark:text-[var(--signal-conflict-soft)]">/ {importResult.failed} failed</span>}
               <button onClick={() => setImportResult(null)} className="ml-1 hover:opacity-70">
                 <XIcon className="w-3 h-3" />
               </button>
@@ -876,7 +876,7 @@ export default function MemoriesClient() {
         <div className="lg:col-span-1 space-y-4">
           {/* Search */}
           <div className="szn-card rounded-lg p-4">
-            <label className="block text-sm font-medium text-szn-text-2 mb-2">
+            <label className="block text-sm font-medium text-[var(--ink-600)] mb-2">
               <SearchIcon className="w-4 h-4 inline mr-1" />
               {t("dashboard.memoriesPage.search") || "Search"}
             </label>
@@ -886,7 +886,7 @@ export default function MemoriesClient() {
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={t("dashboard.memoriesPage.searchPlaceholder") || "Search memories..."}
               aria-label={t("dashboard.memoriesPage.search") || "Search memories"}
-              className="w-full px-4 py-2 rounded-xl border border-szn-border bg-szn-surface-1 text-szn-text-1 placeholder:text-szn-text-3 focus:outline-none focus:ring-2 focus:ring-szn-accent"
+              className="w-full px-4 py-2 rounded-xl border border-[var(--ink-200)] bg-[var(--ink-50)] text-[var(--ink-900)] placeholder:text-[var(--ink-500)] focus:outline-none focus:ring-2 focus:ring-[var(--ink-900)]"
             />
           </div>
 
@@ -896,25 +896,25 @@ export default function MemoriesClient() {
               type="button"
               onClick={() => setMobileFiltersOpen(open => !open)}
               aria-expanded={mobileFiltersOpen}
-              className="w-full px-4 py-3 text-sm font-medium text-szn-text-1 bg-szn-surface-1 border border-szn-border rounded-lg hover:bg-szn-surface-1 transition-colors flex items-center justify-between"
+              className="w-full px-4 py-3 text-sm font-medium text-[var(--ink-900)] bg-[var(--ink-50)] border border-[var(--ink-200)] rounded-lg hover:bg-[var(--ink-50)] transition-colors flex items-center justify-between"
             >
               <span className="flex items-center gap-2">
-                <FilterIcon className="w-4 h-4 text-szn-text-2" />
+                <FilterIcon className="w-4 h-4 text-[var(--ink-600)]" />
                 {t("dashboard.memoriesPage.filters") || "Filters"}
                 {activeFilterCount > 0 && (
-                  <span className="ml-1 inline-flex items-center px-2 py-0.5 text-xs rounded-full bg-szn-accent/10 text-szn-accent">
+                  <span className="ml-1 inline-flex items-center px-2 py-0.5 text-xs rounded-full bg-[var(--ink-900)]/10 text-[var(--ink-900)]">
                     {activeFilterCount}
                   </span>
                 )}
               </span>
-              <ChevronDownIcon className={`w-4 h-4 text-szn-text-2 transition-transform ${mobileFiltersOpen ? "rotate-180" : ""}`} />
+              <ChevronDownIcon className={`w-4 h-4 text-[var(--ink-600)] transition-transform ${mobileFiltersOpen ? "rotate-180" : ""}`} />
             </button>
           </div>
 
           <div className={`${mobileFiltersOpen ? "block" : "hidden"} lg:block space-y-4`}>
             {/* Namespace */}
             <div className="szn-card rounded-lg p-4">
-              <label className="block text-sm font-medium text-szn-text-2 mb-2">
+              <label className="block text-sm font-medium text-[var(--ink-600)] mb-2">
                 {t("dashboard.memoriesPage.namespace") || "Namespace"}
               </label>
               {namespaces.length > 0 ? (
@@ -922,7 +922,7 @@ export default function MemoriesClient() {
                   value={namespace}
                   onChange={(e) => setNamespace(e.target.value)}
                   aria-label={t("dashboard.memoriesPage.namespace") || "Namespace"}
-                  className="w-full px-4 py-2 rounded-xl border border-szn-border bg-szn-surface-1 text-szn-text-1 focus:outline-none focus:ring-2 focus:ring-szn-accent"
+                  className="w-full px-4 py-2 rounded-xl border border-[var(--ink-200)] bg-[var(--ink-50)] text-[var(--ink-900)] focus:outline-none focus:ring-2 focus:ring-[var(--ink-900)]"
                 >
                   {namespaces.map((ns) => (
                     <option key={ns.name} value={ns.name}>
@@ -936,7 +936,7 @@ export default function MemoriesClient() {
                   value={namespace}
                   onChange={(e) => setNamespace(e.target.value)}
                   placeholder="default"
-                  className="w-full px-4 py-2 rounded-xl border border-szn-border bg-szn-surface-1 text-szn-text-1 placeholder:text-szn-text-3 focus:outline-none focus:ring-2 focus:ring-szn-accent"
+                  className="w-full px-4 py-2 rounded-xl border border-[var(--ink-200)] bg-[var(--ink-50)] text-[var(--ink-900)] placeholder:text-[var(--ink-500)] focus:outline-none focus:ring-2 focus:ring-[var(--ink-900)]"
                 />
               )}
             </div>
@@ -944,17 +944,17 @@ export default function MemoriesClient() {
             {/* Adaptive Learning */}
             <div className="szn-card rounded-lg p-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-szn-text-2">
+                <span className="text-sm font-medium text-[var(--ink-600)]">
                   Adaptive Learning
                 </span>
                 {personalizationLoading ? (
-                  <LoadingSpinner className="w-4 h-4 text-szn-accent" />
+                  <LoadingSpinner className="w-4 h-4 text-[var(--ink-900)]" />
                 ) : (
                   <span
                     className={`text-xs px-2 py-0.5 rounded-full ${
                       personalizationEnabled
-                        ? "bg-szn-success/10 text-szn-success"
-                        : "bg-szn-surface text-szn-text-2"
+                        ? "bg-[var(--signal-canon)]/10 text-[var(--signal-canon)]"
+                        : "bg-[var(--ink-50)] text-[var(--ink-600)]"
                     }`}
                   >
                     {personalizationEnabled ? "ON" : "OFF"}
@@ -962,11 +962,11 @@ export default function MemoriesClient() {
                 )}
               </div>
 
-              <p className="text-xs text-szn-text-2 mb-3">
+              <p className="text-xs text-[var(--ink-600)] mb-3">
                 Learns from your feedback and re-ranks search results for this namespace.
               </p>
 
-              <div className="flex items-center justify-between text-xs text-szn-text-2 mb-3">
+              <div className="flex items-center justify-between text-xs text-[var(--ink-600)] mb-3">
                 <span>Feedback signals</span>
                 <span>{feedbackCount}</span>
               </div>
@@ -978,8 +978,8 @@ export default function MemoriesClient() {
                   disabled={personalizationActionLoading || personalizationLoading || !personalizationAvailable}
                   className={`flex-1 px-3 py-1.5 text-xs rounded-lg transition-colors ${
                     personalizationEnabled
-                      ? "bg-szn-surface text-szn-text-2 hover:bg-szn-surface-1"
-                      : "bg-szn-accent text-white hover:bg-szn-accent/90"
+                      ? "bg-[var(--ink-50)] text-[var(--ink-600)] hover:bg-[var(--ink-50)]"
+                      : "bg-[var(--ink-900)] text-white hover:bg-[var(--ink-900)]/90"
                   } disabled:opacity-50`}
                 >
                   {personalizationEnabled ? "Disable" : "Enable"}
@@ -988,28 +988,28 @@ export default function MemoriesClient() {
                   type="button"
                   onClick={handleResetPersonalization}
                   disabled={personalizationActionLoading || personalizationLoading || !personalizationAvailable}
-                  className="px-3 py-1.5 text-xs rounded-lg bg-amber-100 text-amber-700 hover:bg-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:hover:bg-amber-900/50 disabled:opacity-50"
+                  className="px-3 py-1.5 text-xs rounded-lg bg-[var(--signal-pending-soft)] text-[var(--signal-pending-ink)] hover:bg-[var(--signal-pending-soft)] dark:bg-[var(--signal-pending)]/30 dark:text-[var(--signal-pending-soft)] dark:hover:bg-[var(--signal-pending)]/50 disabled:opacity-50"
                 >
                   Reset
                 </button>
               </div>
 
               {personalizationMessage && (
-                <p className="mt-3 text-xs text-szn-text-2">{personalizationMessage}</p>
+                <p className="mt-3 text-xs text-[var(--ink-600)]">{personalizationMessage}</p>
               )}
             </div>
 
             {/* Date Range */}
             <div className="szn-card rounded-lg p-4">
               <div className="flex items-center gap-2 mb-3">
-                <CalendarIcon className="w-4 h-4 text-szn-text-2" />
-                <span className="text-sm font-medium text-szn-text-2">
+                <CalendarIcon className="w-4 h-4 text-[var(--ink-600)]" />
+                <span className="text-sm font-medium text-[var(--ink-600)]">
                   {t("dashboard.memoriesPage.dateRange") || "Date Range"}
                 </span>
               </div>
               <div className="space-y-2">
                 <div>
-                  <label className="block text-xs text-szn-text-2 mb-1">
+                  <label className="block text-xs text-[var(--ink-600)] mb-1">
                     {t("dashboard.memoriesPage.after") || "After"}
                   </label>
                   <input
@@ -1017,11 +1017,11 @@ export default function MemoriesClient() {
                     value={afterDate}
                     onChange={(e) => setAfterDate(e.target.value)}
                     aria-label={t("dashboard.memoriesPage.after") || "After date"}
-                    className="w-full px-3 py-1.5 text-sm rounded-lg border border-szn-border bg-szn-surface-1 text-szn-text-1 focus:outline-none focus:ring-2 focus:ring-szn-accent"
+                    className="w-full px-3 py-1.5 text-sm rounded-lg border border-[var(--ink-200)] bg-[var(--ink-50)] text-[var(--ink-900)] focus:outline-none focus:ring-2 focus:ring-[var(--ink-900)]"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs text-szn-text-2 mb-1">
+                  <label className="block text-xs text-[var(--ink-600)] mb-1">
                     {t("dashboard.memoriesPage.before") || "Before"}
                   </label>
                   <input
@@ -1029,7 +1029,7 @@ export default function MemoriesClient() {
                     value={beforeDate}
                     onChange={(e) => setBeforeDate(e.target.value)}
                     aria-label={t("dashboard.memoriesPage.before") || "Before date"}
-                    className="w-full px-3 py-1.5 text-sm rounded-lg border border-szn-border bg-szn-surface-1 text-szn-text-1 focus:outline-none focus:ring-2 focus:ring-szn-accent"
+                    className="w-full px-3 py-1.5 text-sm rounded-lg border border-[var(--ink-200)] bg-[var(--ink-50)] text-[var(--ink-900)] focus:outline-none focus:ring-2 focus:ring-[var(--ink-900)]"
                   />
                 </div>
               </div>
@@ -1038,8 +1038,8 @@ export default function MemoriesClient() {
             {/* Memory Types */}
             <div className="szn-card rounded-lg p-4">
               <div className="flex items-center gap-2 mb-3">
-                <FilterIcon className="w-4 h-4 text-szn-text-2" />
-                <span className="text-sm font-medium text-szn-text-2">
+                <FilterIcon className="w-4 h-4 text-[var(--ink-600)]" />
+                <span className="text-sm font-medium text-[var(--ink-600)]">
                   {t("dashboard.memoriesPage.memoryTypes") || "Memory Types"}
                 </span>
               </div>
@@ -1050,7 +1050,7 @@ export default function MemoriesClient() {
                       type="checkbox"
                       checked={selectedTypes.includes(type)}
                       onChange={() => toggleType(type)}
-                      className="w-4 h-4 rounded border-szn-border text-szn-accent focus:ring-szn-accent"
+                      className="w-4 h-4 rounded border-[var(--ink-200)] text-[var(--ink-900)] focus:ring-[var(--ink-900)]"
                     />
                     <span className={`px-2 py-0.5 text-xs rounded-full ${getTypeColor(type)}`}>
                       {type}
@@ -1063,8 +1063,8 @@ export default function MemoriesClient() {
             {/* Tags */}
             <div className="szn-card rounded-lg p-4">
               <div className="flex items-center gap-2 mb-3">
-                <TagIcon className="w-4 h-4 text-szn-text-2" />
-                <span className="text-sm font-medium text-szn-text-2">
+                <TagIcon className="w-4 h-4 text-[var(--ink-600)]" />
+                <span className="text-sm font-medium text-[var(--ink-600)]">
                   {t("dashboard.memoriesPage.tags") || "Tags"}
                 </span>
               </div>
@@ -1076,8 +1076,8 @@ export default function MemoriesClient() {
                       onClick={() => toggleTag(tag)}
                       className={`px-3 py-1 text-xs rounded-full transition-colors ${
                         selectedTags.includes(tag)
-                          ? "bg-szn-accent text-white"
-                          : "bg-szn-surface text-szn-text-2 hover:bg-szn-surface-1"
+                          ? "bg-[var(--ink-900)] text-white"
+                          : "bg-[var(--ink-50)] text-[var(--ink-600)] hover:bg-[var(--ink-50)]"
                       }`}
                     >
                       {tag}
@@ -1085,7 +1085,7 @@ export default function MemoriesClient() {
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-szn-text-3">
+                <p className="text-sm text-[var(--ink-500)]">
                   {t("dashboard.memoriesPage.noTags") || "No tags available"}
                 </p>
               )}
@@ -1095,7 +1095,7 @@ export default function MemoriesClient() {
             {hasActiveFilters && (
               <button
                 onClick={clearFilters}
-                className="w-full px-4 py-2 text-sm text-szn-text-2 hover:text-szn-text-1 bg-szn-surface hover:bg-szn-surface-1 rounded-xl transition-colors flex items-center justify-center gap-2"
+                className="w-full px-4 py-2 text-sm text-[var(--ink-600)] hover:text-[var(--ink-900)] bg-[var(--ink-50)] hover:bg-[var(--ink-50)] rounded-xl transition-colors flex items-center justify-center gap-2"
               >
                 <XIcon className="w-4 h-4" />
                 {t("dashboard.memoriesPage.clearFilters") || "Clear Filters"}
@@ -1108,7 +1108,7 @@ export default function MemoriesClient() {
         <div className="lg:col-span-3 space-y-4">
           {/* Sort & Info Bar */}
           <div className="flex items-center justify-between">
-            <p className="text-sm text-szn-text-2">
+            <p className="text-sm text-[var(--ink-600)]">
               {t("dashboard.memoriesPage.showing") || "Showing"} {memories.length} {t("dashboard.memoriesPage.of") || "of"} {totalCount} {t("dashboard.memoriesPage.results") || "results"}
             </p>
 
@@ -1119,9 +1119,9 @@ export default function MemoriesClient() {
                 aria-expanded={showSortDropdown}
                 aria-haspopup="listbox"
                 aria-label={t("dashboard.memoriesPage.sortBy") || "Sort memories"}
-                className="flex items-center gap-2 px-3 py-2 text-sm text-szn-text-1 bg-szn-card border border-szn-border rounded-xl hover:bg-szn-surface-1 transition-colors"
+                className="flex items-center gap-2 px-3 py-2 text-sm text-[var(--ink-900)] bg-[var(--ink-0)] border border-[var(--ink-200)] rounded-xl hover:bg-[var(--ink-50)] transition-colors"
               >
-                <SortIcon className="w-4 h-4 text-szn-text-2" />
+                <SortIcon className="w-4 h-4 text-[var(--ink-600)]" />
                 <span>
                   {sortOption === "date_desc" && (t("dashboard.memoriesPage.sortNewest") || "Newest First")}
                   {sortOption === "date_asc" && (t("dashboard.memoriesPage.sortOldest") || "Oldest First")}
@@ -1132,7 +1132,7 @@ export default function MemoriesClient() {
               </button>
 
               {showSortDropdown && (
-                <div className="absolute right-0 mt-2 w-48 bg-szn-card border border-szn-border rounded-xl shadow-lg z-10">
+                <div className="absolute right-0 mt-2 w-48 bg-[var(--ink-0)] border border-[var(--ink-200)] rounded-xl shadow-lg z-10">
                   {([
                     ["date_desc", t("dashboard.memoriesPage.sortNewest") || "Newest First"],
                     ["date_asc", t("dashboard.memoriesPage.sortOldest") || "Oldest First"],
@@ -1142,10 +1142,10 @@ export default function MemoriesClient() {
                     <button
                       key={value}
                       onClick={() => { setSortOption(value); setShowSortDropdown(false); }}
-                      className={`w-full px-4 py-2 text-left text-sm hover:bg-szn-surface-1 ${
+                      className={`w-full px-4 py-2 text-left text-sm hover:bg-[var(--ink-50)] ${
                         i === 0 ? "rounded-t-xl" : ""
                       } ${i === arr.length - 1 ? "rounded-b-xl" : ""} ${
-                        sortOption === value ? "text-szn-accent font-medium" : "text-szn-text-1"
+                        sortOption === value ? "text-[var(--ink-900)] font-medium" : "text-[var(--ink-900)]"
                       }`}
                     >
                       {label}
@@ -1158,22 +1158,22 @@ export default function MemoriesClient() {
 
           {searchDiagnostics && (
             <div
-              className="szn-card rounded-lg p-3 border border-szn-border"
+              className="szn-card rounded-lg p-3 border border-[var(--ink-200)]"
               role="status"
               aria-live="polite"
             >
-              <div className="flex flex-wrap items-center gap-2 text-xs text-szn-text-2">
-                <span className="px-2 py-0.5 rounded-full bg-szn-surface">
+              <div className="flex flex-wrap items-center gap-2 text-xs text-[var(--ink-600)]">
+                <span className="px-2 py-0.5 rounded-full bg-[var(--ink-50)]">
                   mode: {searchDiagnostics.mode}
                 </span>
-                <span className="px-2 py-0.5 rounded-full bg-szn-surface">
+                <span className="px-2 py-0.5 rounded-full bg-[var(--ink-50)]">
                   requested: {searchDiagnostics.requestedMode}
                 </span>
                 <span
                   className={`px-2 py-0.5 rounded-full ${
                     searchDiagnostics.cached
-                      ? "bg-szn-success/10 text-szn-success"
-                      : "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300"
+                      ? "bg-[var(--signal-canon)]/10 text-[var(--signal-canon)]"
+                      : "bg-[var(--signal-pending-soft)] text-[var(--signal-pending-ink)] dark:bg-[var(--signal-pending)]/30 dark:text-[var(--signal-pending-soft)]"
                   }`}
                 >
                   {searchDiagnostics.cached ? "cache hit" : "cache miss"}
@@ -1189,12 +1189,12 @@ export default function MemoriesClient() {
                   </span>
                 )}
                 {searchDiagnostics.routerLearningApplied !== null && (
-                  <span className="px-2 py-0.5 rounded-full bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300">
+                  <span className="px-2 py-0.5 rounded-full bg-[var(--ink-100)] text-[var(--ink-900)] underline dark:bg-[var(--ink-900)]/30 dark:text-[var(--ink-500)]">
                     router learning: {searchDiagnostics.routerLearningApplied ? "applied" : "not applied"}
                   </span>
                 )}
                 {typeof searchDiagnostics.latencyMs === "number" && (
-                  <span className="px-2 py-0.5 rounded-full bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-300">
+                  <span className="px-2 py-0.5 rounded-full bg-[var(--ink-100)] text-[var(--ink-900)] dark:bg-[var(--ink-900)]/30 dark:text-[var(--ink-900)]">
                     latency: {searchDiagnostics.latencyMs}ms
                   </span>
                 )}
@@ -1205,7 +1205,7 @@ export default function MemoriesClient() {
           {/* Active Filters */}
           {hasActiveFilters && (
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-sm text-szn-text-2">{t("dashboard.memoriesPage.activeFilters") || "Active filters"}:</span>
+              <span className="text-sm text-[var(--ink-600)]">{t("dashboard.memoriesPage.activeFilters") || "Active filters"}:</span>
               {selectedTypes.map(type => (
                 <span key={type} className={`inline-flex items-center gap-1 px-2 py-1 text-xs rounded-full ${getTypeColor(type)}`}>
                   {type}
@@ -1215,7 +1215,7 @@ export default function MemoriesClient() {
                 </span>
               ))}
               {selectedTags.map(tag => (
-                <span key={tag} className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-szn-accent/10 text-szn-accent rounded-full">
+                <span key={tag} className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-[var(--ink-900)]/10 text-[var(--ink-900)] rounded-full">
                   {tag}
                   <button onClick={() => toggleTag(tag)} className="hover:opacity-70" aria-label={`Remove ${tag} filter`}>
                     <XIcon className="w-3 h-3" />
@@ -1223,7 +1223,7 @@ export default function MemoriesClient() {
                 </span>
               ))}
               {searchQuery && (
-                <span className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-szn-surface text-szn-text-1 rounded-full">
+                <span className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-[var(--ink-50)] text-[var(--ink-900)] rounded-full">
                   &quot;{searchQuery}&quot;
                   <button onClick={() => setSearchQuery("")} className="hover:opacity-70">
                     <XIcon className="w-3 h-3" />
@@ -1231,7 +1231,7 @@ export default function MemoriesClient() {
                 </span>
               )}
               {afterDate && (
-                <span className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-200 rounded-full">
+                <span className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-[var(--ink-100)] text-[var(--ink-900)] dark:bg-[var(--ink-900)]/30 dark:text-[var(--ink-900)] rounded-full">
                   After {afterDate}
                   <button onClick={() => setAfterDate("")} className="hover:opacity-70">
                     <XIcon className="w-3 h-3" />
@@ -1239,7 +1239,7 @@ export default function MemoriesClient() {
                 </span>
               )}
               {beforeDate && (
-                <span className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-200 rounded-full">
+                <span className="inline-flex items-center gap-1 px-2 py-1 text-xs bg-[var(--ink-100)] text-[var(--ink-900)] dark:bg-[var(--ink-900)]/30 dark:text-[var(--ink-900)] rounded-full">
                   Before {beforeDate}
                   <button onClick={() => setBeforeDate("")} className="hover:opacity-70">
                     <XIcon className="w-3 h-3" />
@@ -1251,19 +1251,19 @@ export default function MemoriesClient() {
 
           {/* Error Banner */}
           {fetchError && (
-            <div className="szn-card rounded-lg p-4 border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20 flex items-center justify-between" role="alert">
+            <div className="szn-card rounded-lg p-4 border-[var(--signal-conflict)] dark:border-[var(--signal-conflict)] bg-[var(--signal-conflict-soft)] dark:bg-[var(--signal-conflict)]/20 flex items-center justify-between" role="alert">
               <div className="flex items-center gap-3">
-                <svg className="w-5 h-5 text-red-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} aria-hidden="true">
+                <svg className="w-5 h-5 text-[var(--signal-conflict-ink)] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
                 </svg>
                 <div>
-                  <p className="text-sm font-medium text-red-800 dark:text-red-200">{t("dashboard.memoriesPage.fetchError") || "Failed to load memories"}</p>
-                  <p className="text-xs text-red-600 dark:text-red-400">{fetchError}</p>
+                  <p className="text-sm font-medium text-[var(--signal-conflict-ink)] dark:text-[var(--signal-conflict-soft)]">{t("dashboard.memoriesPage.fetchError") || "Failed to load memories"}</p>
+                  <p className="text-xs text-[var(--signal-conflict-ink)] dark:text-[var(--signal-conflict-soft)]">{fetchError}</p>
                 </div>
               </div>
               <button
                 onClick={() => fetchMemories(true)}
-                className="px-3 py-1.5 text-xs font-medium text-red-700 dark:text-red-300 bg-red-100 dark:bg-red-900/40 rounded-lg hover:bg-red-200 dark:hover:bg-red-800/60 transition-colors"
+                className="px-3 py-1.5 text-xs font-medium text-[var(--signal-conflict-ink)] dark:text-[var(--signal-conflict-soft)] bg-[var(--signal-conflict-soft)] dark:bg-[var(--signal-conflict)]/40 rounded-lg hover:bg-[var(--signal-conflict-soft)] dark:hover:bg-[var(--signal-conflict)]/60 transition-colors"
               >
                 {t("dashboard.memoriesPage.retry") || "Retry"}
               </button>
@@ -1273,16 +1273,16 @@ export default function MemoriesClient() {
           {/* Memory Cards */}
           {isLoading && memories.length === 0 ? (
             <div className="szn-card rounded-lg p-12 text-center">
-              <LoadingSpinner className="w-8 h-8 text-szn-accent mx-auto" />
-              <p className="mt-4 text-szn-text-2">{t("dashboard.memoriesPage.loading") || "Loading memories..."}</p>
+              <LoadingSpinner className="w-8 h-8 text-[var(--ink-900)] mx-auto" />
+              <p className="mt-4 text-[var(--ink-600)]">{t("dashboard.memoriesPage.loading") || "Loading memories..."}</p>
             </div>
           ) : memories.length === 0 ? (
             <div className="szn-card rounded-lg p-12 text-center">
-              <InboxIcon className="w-16 h-16 text-szn-text-3 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-szn-text-3 mb-2">
+              <InboxIcon className="w-16 h-16 text-[var(--ink-500)] mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-[var(--ink-500)] mb-2">
                 {t("dashboard.memoriesPage.noMemories") || "No memories found"}
               </h3>
-              <p className="text-szn-text-3">
+              <p className="text-[var(--ink-500)]">
                 {hasActiveFilters
                   ? (t("dashboard.memoriesPage.noMatchingMemories") || "Try adjusting your filters or search query")
                   : (t("dashboard.memoriesPage.noMemoriesHint") || "Start adding memories via the API to see them here")
@@ -1318,20 +1318,20 @@ export default function MemoriesClient() {
                 return (
                   <div
                     key={memory.id}
-                    className="szn-card rounded-lg p-4 hover:border-szn-accent/30 transition-colors"
+                    className="szn-card rounded-lg p-4 hover:border-[var(--ink-900)]/30 transition-colors"
                   >
                     <div className="flex items-start gap-4">
                       <div className="flex-1 min-w-0">
                         {/* Content */}
-                        <p className="text-szn-text-1 mb-3 whitespace-pre-wrap">
+                        <p className="text-[var(--ink-900)] mb-3 whitespace-pre-wrap">
                           {isEncrypted ? (
                             decrypted ? (
                               decrypted
                             ) : decryptFailed ? (
                               "[Unable to decrypt]"
                             ) : (
-                              <span className="inline-flex items-center gap-2 text-szn-text-2">
-                                <LoadingSpinner className="w-4 h-4 text-szn-accent" />
+                              <span className="inline-flex items-center gap-2 text-[var(--ink-600)]">
+                                <LoadingSpinner className="w-4 h-4 text-[var(--ink-900)]" />
                                 Decrypting...
                               </span>
                             )
@@ -1348,14 +1348,14 @@ export default function MemoriesClient() {
                         </span>
 
                         {isEncrypted && (
-                          <span className="px-2 py-0.5 rounded-full bg-szn-surface text-szn-text-2">
+                          <span className="px-2 py-0.5 rounded-full bg-[var(--ink-50)] text-[var(--ink-600)]">
                             encrypted
                           </span>
                         )}
 
                         {/* Importance */}
                         {memory.importance != null && memory.importance !== 5 && (
-                          <span className="flex items-center gap-0.5 text-amber-600 dark:text-amber-400">
+                          <span className="flex items-center gap-0.5 text-[var(--signal-pending-ink)] dark:text-[var(--signal-pending-soft)]">
                             <StarIcon className="w-3 h-3" />
                             {memory.importance}
                           </span>
@@ -1363,7 +1363,7 @@ export default function MemoriesClient() {
 
                         {/* Source */}
                         {memory.source && memory.source !== "api" && (
-                          <span className="text-szn-text-3">
+                          <span className="text-[var(--ink-500)]">
                             via {memory.source}
                           </span>
                         )}
@@ -1371,27 +1371,27 @@ export default function MemoriesClient() {
                         {/* Tags */}
                         {memory.tags && memory.tags.length > 0 && (
                           <div className="flex items-center gap-1">
-                            <TagIcon className="w-3 h-3 text-szn-text-3" />
+                            <TagIcon className="w-3 h-3 text-[var(--ink-500)]" />
                             {memory.tags.slice(0, 3).map((tag) => (
-                              <span key={tag} className="text-szn-text-2">
+                              <span key={tag} className="text-[var(--ink-600)]">
                                 {tag}
                               </span>
                             ))}
                             {memory.tags.length > 3 && (
-                              <span className="text-szn-text-3">+{memory.tags.length - 3}</span>
+                              <span className="text-[var(--ink-500)]">+{memory.tags.length - 3}</span>
                             )}
                           </div>
                         )}
 
                         {/* Date */}
-                        <span className="flex items-center gap-1 text-szn-text-3">
+                        <span className="flex items-center gap-1 text-[var(--ink-500)]">
                           <CalendarIcon className="w-3 h-3" />
                           {formatDate(memory.created_at, "long")}
                         </span>
 
                         {/* Similarity Score */}
                         {memory.similarity !== undefined && memory.similarity > 0 && (
-                          <span className="text-szn-accent">
+                          <span className="text-[var(--ink-900)]">
                             {(memory.similarity * 100).toFixed(1)}% {t("dashboard.memoriesPage.match") || "match"}
                           </span>
                         )}
@@ -1413,8 +1413,8 @@ export default function MemoriesClient() {
                             disabled={feedbackSubmittingById[memory.id]}
                             className={`inline-flex items-center gap-1 px-2.5 py-1 text-xs rounded-lg transition-colors disabled:opacity-50 ${
                               feedbackStateById[memory.id] === "thumbs_up"
-                                ? "bg-szn-success/10 text-szn-success"
-                                : "bg-szn-surface text-szn-text-2 hover:bg-szn-surface-1"
+                                ? "bg-[var(--signal-canon)]/10 text-[var(--signal-canon)]"
+                                : "bg-[var(--ink-50)] text-[var(--ink-600)] hover:bg-[var(--ink-50)]"
                             }`}
                           >
                             <ThumbUpIcon className="w-3.5 h-3.5" />
@@ -1427,7 +1427,7 @@ export default function MemoriesClient() {
                             className={`inline-flex items-center gap-1 px-2.5 py-1 text-xs rounded-lg transition-colors disabled:opacity-50 ${
                               feedbackStateById[memory.id] === "thumbs_down"
                                 ? "bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-300"
-                                : "bg-szn-surface text-szn-text-2 hover:bg-szn-surface-1"
+                                : "bg-[var(--ink-50)] text-[var(--ink-600)] hover:bg-[var(--ink-50)]"
                             }`}
                           >
                             <ThumbDownIcon className="w-3.5 h-3.5" />
@@ -1449,7 +1449,7 @@ export default function MemoriesClient() {
               <button
                 onClick={loadMore}
                 disabled={isLoading}
-                className="px-6 py-2 bg-szn-accent text-white rounded-xl hover:bg-szn-accent/90 disabled:opacity-50 transition-colors inline-flex items-center gap-2"
+                className="px-6 py-2 bg-[var(--ink-900)] text-white rounded-xl hover:bg-[var(--ink-900)]/90 disabled:opacity-50 transition-colors inline-flex items-center gap-2"
               >
                 {isLoading ? (
                   <>

@@ -18,11 +18,11 @@ const typeColors: Record<NoteType, { bg: string; border: string; text: string; d
     darkBorder: "dark:border-blue-500",
   },
   preference: {
-    bg: "bg-purple-50",
-    border: "border-purple-400",
-    text: "text-purple-700",
-    darkBg: "dark:bg-purple-900/30",
-    darkBorder: "dark:border-purple-500",
+    bg: "bg-[var(--ink-50)]",
+    border: "border-[var(--ink-900)]",
+    text: "text-[var(--ink-900)] underline",
+    darkBg: "dark:bg-[var(--ink-900)]/30",
+    darkBorder: "dark:border-[var(--ink-900)]",
   },
   instruction: {
     bg: "bg-orange-50",
@@ -32,11 +32,11 @@ const typeColors: Record<NoteType, { bg: string; border: string; text: string; d
     darkBorder: "dark:border-orange-500",
   },
   episode: {
-    bg: "bg-green-50",
-    border: "border-green-400",
-    text: "text-green-700",
+    bg: "bg-[var(--signal-canon-soft)]",
+    border: "border-[var(--signal-canon)]",
+    text: "text-[var(--signal-canon-ink)]",
     darkBg: "dark:bg-green-900/30",
-    darkBorder: "dark:border-green-500",
+    darkBorder: "dark:border-[var(--signal-canon)]",
   },
   procedure: {
     bg: "bg-sky-50",
@@ -46,11 +46,11 @@ const typeColors: Record<NoteType, { bg: string; border: string; text: string; d
     darkBorder: "dark:border-sky-500",
   },
   relationship: {
-    bg: "bg-cyan-50",
-    border: "border-cyan-400",
-    text: "text-cyan-700",
-    darkBg: "dark:bg-cyan-900/30",
-    darkBorder: "dark:border-cyan-500",
+    bg: "bg-[var(--ink-50)]",
+    border: "border-[var(--ink-900)]",
+    text: "text-[var(--ink-900)]",
+    darkBg: "dark:bg-[var(--ink-900)]/30",
+    darkBorder: "dark:border-[var(--ink-900)]",
   },
 };
 
@@ -75,9 +75,9 @@ const statusStyles: Record<NoteStatus, { borderStyle: string; opacity: string; i
     indicator: "bg-gray-400",
   },
   contradicted: {
-    borderStyle: "border-solid border-red-500",
+    borderStyle: "border-solid border-[var(--signal-conflict)]",
     opacity: "opacity-70",
-    indicator: "bg-red-500",
+    indicator: "bg-[var(--signal-conflict)]",
   },
   deleted: {
     borderStyle: "border-dashed",
@@ -178,7 +178,7 @@ const PrivacyIndicator = ({ privacyClass }: { privacyClass: PrivacyClass }) => {
     <div
       className={`absolute -top-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center ${
         privacyClass === "restricted"
-          ? "bg-red-500 text-white"
+          ? "bg-[var(--signal-conflict)] text-white"
           : "bg-yellow-500 text-white"
       }`}
       title={privacyClass === "restricted" ? "Restricted access" : "Confidential"}
@@ -230,12 +230,12 @@ function MindMapNodeComponent({ data, selected }: NodeProps) {
       className={`
         ${size.width} ${size.padding}
         ${colors.bg} ${colors.darkBg}
-        border-2 ${nodeData.status === "contradicted" ? "border-red-500 dark:border-red-400" : colors.border}
+        border-2 ${nodeData.status === "contradicted" ? "border-[var(--signal-conflict)] dark:border-[var(--signal-conflict)]" : colors.border}
         ${colors.darkBorder}
         ${status.borderStyle} ${status.opacity}
         rounded-xl shadow-md
         transition-all duration-200
-        ${selected ? "ring-2 ring-szn-accent ring-offset-2 dark:ring-offset-gray-900" : ""}
+        ${selected ? "ring-2 ring-[var(--ink-900)] ring-offset-2 dark:ring-offset-gray-900" : ""}
         ${isHovered ? "shadow-lg scale-105" : ""}
         relative cursor-pointer
       `}
@@ -246,24 +246,24 @@ function MindMapNodeComponent({ data, selected }: NodeProps) {
       <Handle
         type="target"
         position={Position.Top}
-        className="!bg-szn-text-3 !border-2 !border-szn-card !w-3 !h-3"
+        className="!bg-[var(--ink-500)] !border-2 !border-[var(--ink-0)] !w-3 !h-3"
       />
       <Handle
         type="source"
         position={Position.Bottom}
-        className="!bg-szn-text-3 !border-2 !border-szn-card !w-3 !h-3"
+        className="!bg-[var(--ink-500)] !border-2 !border-[var(--ink-0)] !w-3 !h-3"
       />
       <Handle
         type="target"
         position={Position.Left}
         id="left"
-        className="!bg-szn-text-3 !border-2 !border-szn-card !w-3 !h-3"
+        className="!bg-[var(--ink-500)] !border-2 !border-[var(--ink-0)] !w-3 !h-3"
       />
       <Handle
         type="source"
         position={Position.Right}
         id="right"
-        className="!bg-szn-text-3 !border-2 !border-szn-card !w-3 !h-3"
+        className="!bg-[var(--ink-500)] !border-2 !border-[var(--ink-0)] !w-3 !h-3"
       />
 
       {/* Privacy Indicator */}
@@ -272,7 +272,7 @@ function MindMapNodeComponent({ data, selected }: NodeProps) {
       {/* Status Indicator */}
       <div className="absolute -bottom-1 -left-1">
         <div
-          className={`w-3 h-3 rounded-full ${status.indicator} border-2 border-szn-card`}
+          className={`w-3 h-3 rounded-full ${status.indicator} border-2 border-[var(--ink-0)]`}
           title={`Status: ${nodeData.status}`}
         />
       </div>
@@ -292,12 +292,12 @@ function MindMapNodeComponent({ data, selected }: NodeProps) {
       </div>
 
       {/* Content */}
-      <p className={`${size.fontSize} text-szn-text-1 line-clamp-3`}>
+      <p className={`${size.fontSize} text-[var(--ink-900)] line-clamp-3`}>
         {truncatedContent}
       </p>
 
       {/* Importance Bar */}
-      <div className="mt-2 h-1 bg-szn-surface rounded-full overflow-hidden">
+      <div className="mt-2 h-1 bg-[var(--ink-50)] rounded-full overflow-hidden">
         <div
           className={`h-full ${colors.border.replace("border-", "bg-")} dark:bg-opacity-70 rounded-full transition-all`}
           style={{ width: `${nodeData.importance * 100}%` }}
@@ -306,11 +306,11 @@ function MindMapNodeComponent({ data, selected }: NodeProps) {
 
       {/* Hover Preview */}
       {isHovered && nodeData.content.length > 80 && (
-        <div className="absolute z-50 left-full ml-2 top-0 w-72 p-3 bg-szn-card border border-szn-border rounded-lg shadow-xl">
-          <p className="text-sm text-szn-text-1 whitespace-pre-wrap">
+        <div className="absolute z-50 left-full ml-2 top-0 w-72 p-3 bg-[var(--ink-0)] border border-[var(--ink-200)] rounded-lg shadow-xl">
+          <p className="text-sm text-[var(--ink-900)] whitespace-pre-wrap">
             {nodeData.content}
           </p>
-          <div className="mt-2 flex items-center gap-2 text-xs text-szn-text-2">
+          <div className="mt-2 flex items-center gap-2 text-xs text-[var(--ink-600)]">
             <span className={`px-2 py-0.5 rounded-full ${colors.bg} ${colors.text}`}>
               {nodeData.type}
             </span>

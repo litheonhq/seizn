@@ -135,17 +135,17 @@ export default function CalculatorClient() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-szn-text-1">
+        <h1 className="text-2xl font-bold text-[var(--ink-900)]">
           {t("dashboard.calculator.title")}
         </h1>
-        <p className="mt-1 text-szn-text-2">
+        <p className="mt-1 text-[var(--ink-600)]">
           {t("dashboard.calculator.subtitle")}
         </p>
       </div>
 
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-szn-card rounded-lg border border-szn-border p-4">
+        <div className="bg-[var(--ink-0)] rounded-lg border border-[var(--ink-200)] p-4">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
               <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -153,47 +153,47 @@ export default function CalculatorClient() {
               </svg>
             </div>
             <div>
-              <p className="text-sm text-szn-text-2">{t("dashboard.calculator.stats.apiCalls")}</p>
-              <p className="text-lg font-semibold text-szn-text-1">{formatNumber(apiCalls)}</p>
+              <p className="text-sm text-[var(--ink-600)]">{t("dashboard.calculator.stats.apiCalls")}</p>
+              <p className="text-lg font-semibold text-[var(--ink-900)]">{formatNumber(apiCalls)}</p>
             </div>
           </div>
         </div>
-        <div className="bg-szn-card rounded-lg border border-szn-border p-4">
+        <div className="bg-[var(--ink-0)] rounded-lg border border-[var(--ink-200)] p-4">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
-              <svg className="w-5 h-5 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="p-2 bg-[var(--ink-100)] dark:bg-[var(--ink-900)]/30 rounded-lg">
+              <svg className="w-5 h-5 text-[var(--ink-900)] underline dark:text-[var(--ink-700)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
               </svg>
             </div>
             <div>
-              <p className="text-sm text-szn-text-2">{t("dashboard.calculator.stats.memories")}</p>
-              <p className="text-lg font-semibold text-szn-text-1">{formatNumber(memories)}</p>
+              <p className="text-sm text-[var(--ink-600)]">{t("dashboard.calculator.stats.memories")}</p>
+              <p className="text-lg font-semibold text-[var(--ink-900)]">{formatNumber(memories)}</p>
             </div>
           </div>
         </div>
-        <div className="bg-szn-card rounded-lg border border-szn-border p-4">
+        <div className="bg-[var(--ink-0)] rounded-lg border border-[var(--ink-200)] p-4">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg">
-              <svg className="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="p-2 bg-[var(--signal-canon-soft)] dark:bg-green-900/30 rounded-lg">
+              <svg className="w-5 h-5 text-[var(--signal-canon-ink)] dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
               </svg>
             </div>
             <div>
-              <p className="text-sm text-szn-text-2">{t("dashboard.calculator.stats.extractions")}</p>
-              <p className="text-lg font-semibold text-szn-text-1">{formatNumber(extractions)}</p>
+              <p className="text-sm text-[var(--ink-600)]">{t("dashboard.calculator.stats.extractions")}</p>
+              <p className="text-lg font-semibold text-[var(--ink-900)]">{formatNumber(extractions)}</p>
             </div>
           </div>
         </div>
-        <div className="bg-szn-card rounded-lg border border-szn-border p-4">
+        <div className="bg-[var(--ink-0)] rounded-lg border border-[var(--ink-200)] p-4">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-amber-100 dark:bg-amber-900/30 rounded-lg">
-              <svg className="w-5 h-5 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="p-2 bg-[var(--signal-pending-soft)] dark:bg-[var(--signal-pending)]/30 rounded-lg">
+              <svg className="w-5 h-5 text-[var(--signal-pending-ink)] dark:text-[var(--signal-pending-soft)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
             <div>
-              <p className="text-sm text-szn-text-2">{t("dashboard.calculator.stats.estimated")}</p>
-              <p className="text-lg font-semibold text-szn-text-1">{formatCurrency(recommendedTier.totalCost)}/mo</p>
+              <p className="text-sm text-[var(--ink-600)]">{t("dashboard.calculator.stats.estimated")}</p>
+              <p className="text-lg font-semibold text-[var(--ink-900)]">{formatCurrency(recommendedTier.totalCost)}/mo</p>
             </div>
           </div>
         </div>
@@ -203,8 +203,8 @@ export default function CalculatorClient() {
         {/* Usage Inputs */}
         <div className="lg:col-span-2 space-y-6">
           {/* Presets */}
-          <div className="bg-szn-card rounded-lg border border-szn-border p-6">
-            <h3 className="text-lg font-semibold text-szn-text-1 mb-4">
+          <div className="bg-[var(--ink-0)] rounded-lg border border-[var(--ink-200)] p-6">
+            <h3 className="text-lg font-semibold text-[var(--ink-900)] mb-4">
               {t("dashboard.calculator.presets.title")}
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -215,13 +215,13 @@ export default function CalculatorClient() {
                   className={`p-3 rounded-lg border text-left transition-all ${
                     selectedPreset === preset.id
                       ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
-                      : "border-szn-border hover:border-szn-border"
+                      : "border-[var(--ink-200)] hover:border-[var(--ink-200)]"
                   }`}
                 >
-                  <p className="font-medium text-szn-text-1 text-sm">
+                  <p className="font-medium text-[var(--ink-900)] text-sm">
                     {t(`calculator.presets.${preset.id}`)}
                   </p>
-                  <p className="text-xs text-szn-text-2 mt-1">
+                  <p className="text-xs text-[var(--ink-600)] mt-1">
                     {formatNumber(preset.apiCalls)} calls
                   </p>
                 </button>
@@ -230,18 +230,18 @@ export default function CalculatorClient() {
           </div>
 
           {/* Sliders */}
-          <div className="bg-szn-card rounded-lg border border-szn-border p-6">
-            <h3 className="text-lg font-semibold text-szn-text-1 mb-6">
+          <div className="bg-[var(--ink-0)] rounded-lg border border-[var(--ink-200)] p-6">
+            <h3 className="text-lg font-semibold text-[var(--ink-900)] mb-6">
               {t("dashboard.calculator.customize.title")}
             </h3>
             <div className="space-y-8">
               {/* API Calls Slider */}
               <div>
                 <div className="flex justify-between mb-2">
-                  <label className="text-sm font-medium text-szn-text-2">
+                  <label className="text-sm font-medium text-[var(--ink-600)]">
                     {t("dashboard.calculator.labels.apiCalls")}
                   </label>
-                  <span className="text-sm text-szn-text-2">
+                  <span className="text-sm text-[var(--ink-600)]">
                     {formatNumber(apiCalls)} / mo
                   </span>
                 </div>
@@ -255,7 +255,7 @@ export default function CalculatorClient() {
                     setApiCalls(Number(e.target.value));
                     setSelectedPreset(null);
                   }}
-                  className="w-full h-2 bg-szn-surface rounded-lg appearance-none cursor-pointer accent-blue-600"
+                  className="w-full h-2 bg-[var(--ink-50)] rounded-lg appearance-none cursor-pointer accent-blue-600"
                 />
                 <div className="flex justify-between text-xs text-gray-400 mt-1">
                   <span>0</span>
@@ -269,10 +269,10 @@ export default function CalculatorClient() {
               {/* Memories Slider */}
               <div>
                 <div className="flex justify-between mb-2">
-                  <label className="text-sm font-medium text-szn-text-2">
+                  <label className="text-sm font-medium text-[var(--ink-600)]">
                     {t("dashboard.calculator.labels.memories")}
                   </label>
-                  <span className="text-sm text-szn-text-2">
+                  <span className="text-sm text-[var(--ink-600)]">
                     {formatNumber(memories)} / mo
                   </span>
                 </div>
@@ -286,7 +286,7 @@ export default function CalculatorClient() {
                     setMemories(Number(e.target.value));
                     setSelectedPreset(null);
                   }}
-                  className="w-full h-2 bg-szn-surface rounded-lg appearance-none cursor-pointer accent-purple-600"
+                  className="w-full h-2 bg-[var(--ink-50)] rounded-lg appearance-none cursor-pointer accent-purple-600"
                 />
                 <div className="flex justify-between text-xs text-gray-400 mt-1">
                   <span>0</span>
@@ -300,10 +300,10 @@ export default function CalculatorClient() {
               {/* Extractions Slider */}
               <div>
                 <div className="flex justify-between mb-2">
-                  <label className="text-sm font-medium text-szn-text-2">
+                  <label className="text-sm font-medium text-[var(--ink-600)]">
                     {t("dashboard.calculator.labels.extractions")}
                   </label>
-                  <span className="text-sm text-szn-text-2">
+                  <span className="text-sm text-[var(--ink-600)]">
                     {formatNumber(extractions)} / mo
                   </span>
                 </div>
@@ -317,7 +317,7 @@ export default function CalculatorClient() {
                     setExtractions(Number(e.target.value));
                     setSelectedPreset(null);
                   }}
-                  className="w-full h-2 bg-szn-surface rounded-lg appearance-none cursor-pointer accent-green-600"
+                  className="w-full h-2 bg-[var(--ink-50)] rounded-lg appearance-none cursor-pointer accent-green-600"
                 />
                 <div className="flex justify-between text-xs text-gray-400 mt-1">
                   <span>0</span>
@@ -334,7 +334,7 @@ export default function CalculatorClient() {
         {/* Recommendation */}
         <div className="space-y-6">
           {/* Recommended Plan */}
-          <div className="bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg p-6 text-white">
+          <div className="bg-gradient-to-br from-[var(--ink-900)] to-[var(--ink-900)] rounded-lg p-6 text-white">
             <div className="flex items-center gap-2 mb-4">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
@@ -362,8 +362,8 @@ export default function CalculatorClient() {
           </div>
 
           {/* All Plans Comparison */}
-          <div className="bg-szn-card rounded-lg border border-szn-border p-6">
-            <h3 className="text-lg font-semibold text-szn-text-1 mb-4">
+          <div className="bg-[var(--ink-0)] rounded-lg border border-[var(--ink-200)] p-6">
+            <h3 className="text-lg font-semibold text-[var(--ink-900)] mb-4">
               {t("dashboard.calculator.comparison.title")}
             </h3>
             <div className="space-y-3">
@@ -373,12 +373,12 @@ export default function CalculatorClient() {
                   className={`p-3 rounded-lg border transition-all ${
                     calc.tier.id === recommendedTier.tier.id
                       ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
-                      : "border-szn-border"
+                      : "border-[var(--ink-200)]"
                   }`}
                 >
                   <div className="flex justify-between items-center">
                     <div>
-                      <p className="font-medium text-szn-text-1">
+                      <p className="font-medium text-[var(--ink-900)]">
                         {calc.tier.name}
                         {calc.tier.id === recommendedTier.tier.id && (
                           <span className="ml-2 text-xs bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400 px-2 py-0.5 rounded-full">
@@ -386,16 +386,16 @@ export default function CalculatorClient() {
                           </span>
                         )}
                       </p>
-                      <p className="text-xs text-szn-text-2">
+                      <p className="text-xs text-[var(--ink-600)]">
                         {formatNumber(calc.tier.includedCalls)} calls included
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="font-semibold text-szn-text-1">
+                      <p className="font-semibold text-[var(--ink-900)]">
                         {formatCurrency(calc.totalCost)}
                       </p>
                       {calc.overageCost > 0 && (
-                        <p className="text-xs text-amber-600 dark:text-amber-400">
+                        <p className="text-xs text-[var(--signal-pending-ink)] dark:text-[var(--signal-pending-soft)]">
                           +{formatCurrency(calc.overageCost)} overage
                         </p>
                       )}
@@ -409,37 +409,37 @@ export default function CalculatorClient() {
       </div>
 
       {/* Pricing Details Table */}
-      <div className="bg-szn-card rounded-lg border border-szn-border overflow-hidden">
-        <div className="p-6 border-b border-szn-border">
-          <h3 className="text-lg font-semibold text-szn-text-1">
+      <div className="bg-[var(--ink-0)] rounded-lg border border-[var(--ink-200)] overflow-hidden">
+        <div className="p-6 border-b border-[var(--ink-200)]">
+          <h3 className="text-lg font-semibold text-[var(--ink-900)]">
             {t("dashboard.calculator.details.title")}
           </h3>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-szn-bg">
+            <thead className="bg-[var(--ink-50)]">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-szn-text-2 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-[var(--ink-600)] uppercase tracking-wider">
                   {t("dashboard.calculator.details.plan")}
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-szn-text-2 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-[var(--ink-600)] uppercase tracking-wider">
                   {t("dashboard.calculator.details.base")}
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-szn-text-2 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-[var(--ink-600)] uppercase tracking-wider">
                   {t("dashboard.calculator.details.includedCalls")}
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-szn-text-2 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-[var(--ink-600)] uppercase tracking-wider">
                   {t("dashboard.calculator.details.overageRate")}
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-szn-text-2 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-[var(--ink-600)] uppercase tracking-wider">
                   {t("dashboard.calculator.details.yourOverage")}
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-szn-text-2 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-[var(--ink-600)] uppercase tracking-wider">
                   {t("dashboard.calculator.details.total")}
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-szn-border">
+            <tbody className="divide-y divide-[var(--ink-200)]">
               {calculations.map((calc) => (
                 <tr
                   key={calc.tier.id}
@@ -451,7 +451,7 @@ export default function CalculatorClient() {
                 >
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
-                      <span className="font-medium text-szn-text-1">
+                      <span className="font-medium text-[var(--ink-900)]">
                         {calc.tier.name}
                       </span>
                       {calc.tier.id === recommendedTier.tier.id && (
@@ -461,25 +461,25 @@ export default function CalculatorClient() {
                       )}
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-szn-text-2">
+                  <td className="px-6 py-4 whitespace-nowrap text-[var(--ink-600)]">
                     {formatCurrency(calc.tier.basePrice)}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-szn-text-2">
+                  <td className="px-6 py-4 whitespace-nowrap text-[var(--ink-600)]">
                     {formatNumber(calc.tier.includedCalls)}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-szn-text-2">
+                  <td className="px-6 py-4 whitespace-nowrap text-[var(--ink-600)]">
                     ${calc.tier.overageCallRate}/call
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     {calc.overageCost > 0 ? (
-                      <span className="text-amber-600 dark:text-amber-400">
+                      <span className="text-[var(--signal-pending-ink)] dark:text-[var(--signal-pending-soft)]">
                         {formatCurrency(calc.overageCost)}
                       </span>
                     ) : (
-                      <span className="text-green-600 dark:text-green-400">$0.00</span>
+                      <span className="text-[var(--signal-canon-ink)] dark:text-green-400">$0.00</span>
                     )}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap font-semibold text-szn-text-1">
+                  <td className="px-6 py-4 whitespace-nowrap font-semibold text-[var(--ink-900)]">
                     {formatCurrency(calc.totalCost)}
                   </td>
                 </tr>
