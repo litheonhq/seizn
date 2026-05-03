@@ -13,7 +13,7 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 | Language | TypeScript | ^5 | Strict mode, bundler module resolution |
 | Runtime | Node.js | 20 | Alpine-based Docker image |
 | Package Manager | npm | (lockfile) | `npm ci` in CI/CD pipelines |
-| Build | Turbopack + opt-in Webpack analyzer | -- | Normal build uses Turbopack; `npm run analyze` writes `.next/analyze/static-bundle-report.*`, with `SEIZN_ANALYZE_MODE=webpack` available for the heavier bundle analyzer |
+| Build | Turbopack + opt-in Webpack analyzer | -- | Normal build uses Turbopack; `npm run analyze` writes `.next/analyze/static-bundle-report.*`; `npm run analyze:budget` enforces CI guardrails, with `SEIZN_ANALYZE_MODE=webpack` available for the heavier bundle analyzer |
 
 ---
 
@@ -23,7 +23,7 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 |----------|-----------|---------|-------|
 | UI Library | React | ^18.3.1 | Server Components + Client Components |
 | Styling | Tailwind CSS | ^4 | v4 with `@import "tailwindcss"`, OKLCH custom properties, class-based dark mode |
-| Fonts | Pretendard + Source Serif 4 + JetBrains Mono | -- | Self-hosted files in `public/fonts/` with `@font-face` tokens in `src/styles/tokens.css` |
+| Fonts | Pretendard + Source Serif 4 + JetBrains Mono | -- | Self-hosted WOFF2 files in `public/fonts/` with `@font-face` tokens in `src/styles/tokens.css` |
 | Icons | Lucide React | ^0.563.0 | Used across 7+ component files |
 | Class Merging | tailwind-merge + clsx | ^3.4.0 | `cn()` utility in `src/lib/utils.ts` |
 | Charts | Recharts | ^3.6.0 | Analytics, evals, traces, RetOps dashboards (7 files) |
@@ -88,6 +88,8 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 | Workflow | File | Trigger |
 |----------|------|---------|
 | Seizn CI (Trace-Test-Fix) | `seizn-ci.yml` | PR/push to main/develop |
+| Auth E2E Smoke | `auth-e2e.yml` | Auth shell/pages/token/font changes |
+| Bundle Budget | `bundle-budget.yml` | Static JS/CSS budget changes |
 | E2E Tests (Linux) | `e2e-linux.yml` | PR/push, Playwright (Chromium + Firefox) |
 | Lighthouse CI | `lighthouse-ci.yml` | PR to main/develop |
 | Security Tests (OWASP LLM Top 10) | `security-tests.yml` | PR/push to main, releases |
@@ -115,6 +117,7 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 |------|---------|-------|
 | Vitest | ^4.0.17 | Unit + integration tests (`src/__tests__/`) |
 | Playwright + axe-core | ^1.57.0 / @axe-core/playwright | E2E tests (`e2e/`): core pages, auth V1 token smoke, API keys, Spring memory CRUD, dashboard smoke, accessibility smoke |
+| Static bundle budget | -- | `npm run analyze:budget` writes a Turbopack static report and fails if JS/CSS budgets regress |
 | @testing-library/react | ^16.3.1 | Component testing |
 | Lighthouse CI | ^0.14.0 | Performance auditing |
 | Custom Red Team | -- | `scripts/red-team-ci.ts` for prompt injection/jailbreak testing |
@@ -255,7 +258,7 @@ Three observability layers complement each other: OTEL for distributed traces (b
 The AI Gateway (`src/lib/ai-gateway/`) routes requests to Anthropic, OpenAI, or Google based on cost/capability. The Vercel AI SDK provides streaming integration. The Anthropic SDK is used directly for memory extraction where fine-grained control is needed, including Author Memory v3 BYOK calls through `src/lib/author/llm/` and structured extraction orchestration through `src/lib/author/extraction/`.
 
 **Tailwind CSS v4 + Self-hosted Author Fonts**
-Tailwind v4 custom properties integrate with class-based dark mode. Pretendard handles Korean/CJK UI text, Source Serif 4 carries author-facing display type, and JetBrains Mono supports code/canon chips through self-hosted `@font-face` assets.
+Tailwind v4 custom properties integrate with class-based dark mode. Pretendard handles Korean/CJK UI text, Source Serif 4 carries author-facing display type, and JetBrains Mono supports code/canon chips through self-hosted WOFF2 `@font-face` assets.
 
 **Seasonal Architecture (Spring/Summer/Fall/Winter)**
 Clear domain separation: Spring handles memory CRUD, Summer handles RAG/ingestion, Fall handles reliability/experiments, Winter handles governance/compliance. Each season has independent evolution paths with shared Supabase backend.

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
@@ -41,6 +41,7 @@ export default function SignupForm() {
   const [copied, setCopied] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const turnstileRequired = Boolean(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY);
+  const statusRef = useRef<HTMLDivElement>(null);
 
   const buildExampleRequest = useCallback(
     (key: string) => `curl -X POST \\
@@ -58,6 +59,12 @@ export default function SignupForm() {
   const handleTurnstileExpire = useCallback(() => {
     setTurnstileToken(null);
   }, []);
+
+  useEffect(() => {
+    if (error || success) {
+      statusRef.current?.focus();
+    }
+  }, [error, success]);
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -161,7 +168,13 @@ export default function SignupForm() {
       <AuthCard>
           {success && apiKey && (
             <div className="mb-6 space-y-4">
-              <div className="auth-status auth-status-canon">
+              <div
+                ref={statusRef}
+                role="status"
+                aria-live="polite"
+                tabIndex={-1}
+                className="auth-status auth-status-canon"
+              >
                 <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
@@ -216,7 +229,13 @@ export default function SignupForm() {
           )}
 
           {success && !apiKey && (
-            <div className="auth-status auth-status-canon mb-6">
+            <div
+              ref={statusRef}
+              role="status"
+              aria-live="polite"
+              tabIndex={-1}
+              className="auth-status auth-status-canon mb-6"
+            >
               <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
@@ -225,7 +244,13 @@ export default function SignupForm() {
           )}
 
           {error && (
-            <div className="auth-status auth-status-conflict mb-6">
+            <div
+              ref={statusRef}
+              role="alert"
+              aria-live="assertive"
+              tabIndex={-1}
+              className="auth-status auth-status-conflict mb-6"
+            >
               <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>

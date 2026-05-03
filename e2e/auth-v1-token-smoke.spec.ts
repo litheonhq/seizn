@@ -33,6 +33,8 @@ test.describe('Auth V1 token migration smoke', () => {
     expect(content).toContain('SeiznLockup');
     expect(content).toContain('AuthLoadingShell');
     expect(content).toContain('AuthPage');
+    expect(content).toContain('role="alert"');
+    expect(content).toContain('aria-live');
     expect(content).not.toMatch(/from-violet-|from-purple-|via-purple-|to-cyan-|bg-cyan-|bg-violet-|bg-purple-/);
     expect(content).not.toMatch(/szn-text-|szn-card|szn-border|szn-surface|gradient-hero|btn-premium/);
     expect(content).not.toMatch(/text-purple-|text-red-|bg-red-|border-red-|bg-gray-900/);
@@ -87,6 +89,19 @@ test.describe('Auth V1 token migration smoke', () => {
     await expect(input).toBeFocused();
     await input.fill('abcd1234');
     await expect(input).toHaveValue('ABCD-1234');
+  });
+
+  test('signup validation announces errors and moves focus to status', async ({ page }) => {
+    await page.goto('/signup');
+
+    await page.getByLabel('Email').fill('tester@example.com');
+    await page.getByLabel('Password', { exact: true }).fill('correct-horse');
+    await page.getByLabel('Confirm Password').fill('wrong-horse');
+    await page.getByRole('button', { name: 'Create Account' }).click();
+
+    const alert = page.getByRole('alert').filter({ hasText: 'Passwords do not match' });
+    await expect(alert).toBeVisible();
+    await expect(alert).toBeFocused();
   });
 
   test('auth pages have no serious or critical axe violations', async ({ page }) => {
