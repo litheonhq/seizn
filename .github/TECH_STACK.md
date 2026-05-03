@@ -50,7 +50,7 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 | Tenant Policy | Budget caps + degrade ladder | -- | Stored in `organizations.settings.budget_quota_policy`; internal enforcement via `/api/tenant-policy/enforce` (includes daily ingest chunk cap and configurable fail-open/fail-closed fallback mode in gateway policy routing) |
 | Bot Protection | Cloudflare Turnstile | -- | CAPTCHA on login/signup forms |
 | API Pattern | Next.js Route Handlers | -- | `src/app/api/` with 80+ route directories |
-| API Auth | Bearer token (`szn_` prefix) | -- | API key hash verification via Supabase, x-api-key deprecated (sunset 2026-05-01), namespace scope enforcement via `src/lib/auth/api-scope.ts` for Graph/Fall APIs |
+| API Auth | Bearer token (`szn_` prefix) | -- | API key hash verification via Supabase, x-api-key deprecated (sunset 2026-05-01), namespace scope enforcement via `src/lib/auth/api-scope.ts` for Graph/Fall APIs, and API auth surface drift detection via `npm run verify:api-auth-surface` |
 | Rate Limiting | Upstash Redis + in-memory fallback | -- | Sliding window algorithm, per-plan RPM limits |
 | Cache | Upstash Redis | ^1.36.1 | Embedding cache (7-day TTL), rate limit counters |
 | Object Storage | Cloudflare R2 (S3-compatible) | @aws-sdk/client-s3 ^3.1041.0 | Author Memory v3 upload persistence via private `seizn-author-uploads-temp` bucket and signed-read support; Phase 6 Litheon migration tooling lives in `scripts/migrate-r2-to-litheon.sh` and `scripts/verify-r2-integrity.ts` |
@@ -69,7 +69,7 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 | Error Tracking | Sentry | ^10.51.0 | Instrumentation client + server, PII pipeline integration |
 | Structured Logging | Redacted server logger | -- | `src/lib/server/logger.ts` sanitizes secrets, emails, JWTs, tokens, and nested payloads before console emission |
 | Analytics | PostHog | ^1.316.0 | TTFS tracking, conversion funnels, feature usage |
-| RUM | web-vitals | ^4.2.4 | WebVitalsReporter component in root layout |
+| RUM | web-vitals + Long Animation Frames API | ^4.2.4 | WebVitalsReporter component in root layout reports Web Vitals attribution plus capped LoAF signals to `/api/rum` |
 
 ---
 
@@ -118,6 +118,7 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 | Vitest | ^4.0.17 | Unit + integration tests (`src/__tests__/`) |
 | Playwright + axe-core | ^1.57.0 / @axe-core/playwright | E2E tests (`e2e/`): core pages, auth V1 token smoke, API keys, Spring memory CRUD, dashboard smoke, accessibility smoke |
 | Static bundle budget | -- | `npm run analyze:budget` writes a Turbopack static report and fails if JS/CSS budgets regress |
+| API auth surface snapshot | -- | `npm run verify:api-auth-surface` compares `src/app/api/**/route.ts` methods and auth markers against `docs/security/api-auth-surface.json` |
 | @testing-library/react | ^16.3.1 | Component testing |
 | Lighthouse CI | ^0.14.0 | Performance auditing |
 | Custom Red Team | -- | `scripts/red-team-ci.ts` for prompt injection/jailbreak testing |
@@ -349,7 +350,7 @@ User Request
 | Sentry Error Tracking | Fully Implemented | `src/instrumentation.ts`, `src/instrumentation-client.ts`, `next.config.ts` | Source maps disabled (build stability) |
 | OpenTelemetry Tracing | Fully Implemented | `src/lib/otel/instrumentation.ts`, `src/lib/telemetry/` | GenAI semantic conventions |
 | MCP Sampling (`sampling.tools`) | Fully Implemented | `mcp-server/src/index.ts` | `sampling_draft` tool invokes `sampling/createMessage` with `tools`/`toolChoice` and graceful fallback for clients without sampling.tools |
-| Web Vitals (RUM) | Fully Implemented | `src/components/rum/WebVitalsReporter.tsx` | Root layout integration |
+| Web Vitals + LoAF (RUM) | Fully Implemented | `src/components/rum/WebVitalsReporter.tsx`, `src/app/api/rum/route.ts` | Root layout integration with Web Vitals attribution, capped Long Animation Frames reporting, and server-side RUM payload sanitization |
 | Recharts Dashboards | Fully Implemented | `src/components/retops/`, analytics, evals, traces | 7 files with chart components |
 | React Flow Graphs | Fully Implemented | `src/app/(dashboard)/dashboard/memories/mindmap/`, `src/components/graph/` | 8 files |
 | Anthropic Claude Integration | Fully Implemented | `src/lib/ai.ts`, `src/lib/ai-gateway/gateway.ts`, `src/lib/anthropic/prompt-caching.ts`, `src/lib/spring/memory-v4/` (6 files), `src/lib/author/llm/`, `src/lib/author/extraction/` | Memory extraction, summarization, vision, prompt caching signals (`anthropic-beta`, `cache_control`), Author Memory v3 BYOK-backed Opus runtime, and structured extraction prompts/schemas |
@@ -377,7 +378,7 @@ User Request
 | Memory API Compatibility & Encoding Integrity Signals | Fully Implemented | `src/app/api/memories/route.ts`, `src/app/api/v1/memories/route.ts`, `src/app/api/v1/memories/[id]/route.ts`, `src/lib/memory/content-integrity.ts` | Added `q` query alias support for v0/v1 search, keyword fallback on search errors and zero-result cases (including post-filter zero), v1 `GET /api/v1/memories/{id}` endpoint parity, and soft POST integrity warnings (`integrity_warnings` / `meta.integrityWarnings`) to detect likely encoding corruption without blocking normal users |
 | Memory Search Guardrails, Timeout Budget, and Dashboard Diagnostics | Fully Implemented | `src/lib/memory/search-executor.ts`, `src/lib/memory/search-types.ts`, `src/lib/memory/semantic-cache-experiment.ts`, `src/app/api/v1/memories/route.ts`, `src/app/api/memories/route.ts`, `src/app/(dashboard)/dashboard/memories/memories-client.tsx`, `src/types/dashboard.ts`, `supabase/migrations/20260302001_search_bounded_rpc_wrappers.sql`, `supabase/migrations/20260302002_semantic_cache_experiment_events.sql` | Added mode/threshold input validation, bounded search timeout (`MEMORY_SEARCH_TIMEOUT_MS`, default 2500ms), deterministic keyword fallback with explicit `504 search_timeout` for terminal timeouts, DB-side statement timeout wrappers (`*_search_memories_bounded`), semantic cache A/B controls (`MEMORY_SEMANTIC_CACHE_AB_ENABLED/SCOPE/RATIO`) with deterministic user bucketing, variant-level experiment event persistence (`hit/latency/result_count/error`) for v0/v1 search, shared v0/v1 cache mapping utility, adaptive thresholding in dashboard search, stale request cancellation via `AbortController`, and retrieval diagnostics chips (`mode/requested/cache/fallback/router-learning/latency/semantic-cache-variant`) with `aria-live` status updates. |
 | Summer Competitive Retrieval Phases (0-6) | Fully Implemented | `src/lib/summer/rag-pipeline.ts`, `src/lib/summer/competitive/`, `src/app/api/summer/rag/route.ts` | Added phase-aware intent routing, query expansion + RRF fusion, trust guard filtering, graph context augmentation, shadow eval overlap metrics, and canary-aware metadata wiring for Summer RAG |
-| Security Tests | Fully Implemented | `src/__tests__/security/`, `.github/workflows/security-tests.yml` | OWASP LLM Top 10 |
+| Security Tests | Fully Implemented | `src/__tests__/security/`, `.github/workflows/security-tests.yml`, `docs/security/api-auth-surface.json` | OWASP LLM Top 10 plus API auth surface drift detection |
 | Lighthouse CI | Configured | `.github/workflows/lighthouse-ci.yml`, `lighthouserc.json` | Performance auditing |
 | @auth/supabase-adapter | Not Implemented | `package.json` only | Installed but never imported |
 | next-intl | Partially Implemented | 1 file (`src/app/[locale]/docs/components/page.tsx`) | Mostly unused, custom system preferred |
