@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next';
-import { locales } from '@/i18n/config';
+import { defaultLocale, locales } from '@/i18n/config';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://www.seizn.com';
@@ -11,6 +11,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/pricing', priority: 0.9, changeFreq: 'weekly' as const },
     { path: '/demo', priority: 0.85, changeFreq: 'weekly' as const },
     { path: '/comparison', priority: 0.8, changeFreq: 'monthly' as const },
+    { path: '/docs', priority: 0.9, changeFreq: 'weekly' as const },
+    { path: '/docs/tutorial', priority: 0.85, changeFreq: 'monthly' as const },
+    { path: '/docs/api-reference', priority: 0.85, changeFreq: 'monthly' as const },
+    { path: '/docs/faq', priority: 0.7, changeFreq: 'monthly' as const },
   ];
 
   // Generate sitemap entries for each locale
@@ -24,27 +28,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
         changeFrequency: route.changeFreq,
         priority: route.priority,
         alternates: {
-          languages: {
-            en: `${baseUrl}/en${route.path}`,
-            ko: `${baseUrl}/ko${route.path}`,
-            ja: `${baseUrl}/ja${route.path}`,
-          },
+          languages: buildLanguageAlternates(baseUrl, route.path),
         },
       });
     }
   }
 
-  // Add static docs routes (non-locale)
-  const docsRoutes = [
+  // Add root public routes that exist without locale prefixes.
+  const rootPublicRoutes = [
     { path: '/pricing', priority: 0.9, changeFreq: 'weekly' as const },
     { path: '/demo', priority: 0.85, changeFreq: 'weekly' as const },
-    { path: '/docs', priority: 0.9, changeFreq: 'weekly' as const },
-    { path: '/docs/tutorial', priority: 0.85, changeFreq: 'monthly' as const },
-    { path: '/docs/api-reference', priority: 0.85, changeFreq: 'monthly' as const },
-    { path: '/docs/faq', priority: 0.7, changeFreq: 'monthly' as const },
   ];
 
-  for (const route of docsRoutes) {
+  for (const route of rootPublicRoutes) {
     sitemapEntries.push({
       url: `${baseUrl}${route.path}`,
       lastModified: new Date(),
@@ -78,25 +74,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ];
 
   for (const route of localizedLegalRoutes) {
-    for (const locale of ['en', 'ko', 'ja', 'zh-hans'] as const) {
+    for (const locale of locales) {
       sitemapEntries.push({
         url: `${baseUrl}/${locale}${route.path}`,
         lastModified: new Date(),
         changeFrequency: route.changeFreq,
         priority: route.priority,
+        alternates: {
+          languages: buildLanguageAlternates(baseUrl, route.path),
+        },
       });
     }
-  }
-
-  // Add auth routes
-  const authRoutes = ['/login', '/signup'];
-  for (const route of authRoutes) {
-    sitemapEntries.push({
-      url: `${baseUrl}${route}`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.4,
-    });
   }
 
   // Add API spec
@@ -116,4 +104,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
   });
 
   return sitemapEntries;
+}
+
+function buildLanguageAlternates(baseUrl: string, routePath: string) {
+  return {
+    ...Object.fromEntries(locales.map((locale) => [locale, `${baseUrl}/${locale}${routePath}`])),
+    'x-default': `${baseUrl}/${defaultLocale}${routePath}`,
+  };
 }
