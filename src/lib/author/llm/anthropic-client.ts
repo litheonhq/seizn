@@ -162,9 +162,12 @@ export class AuthorAnthropicClient {
       );
     }
 
+    const cause = lastError instanceof Error ? lastError.message : String(lastError ?? '');
     throw new AuthorLlmError(
       'ANTHROPIC_REQUEST_FAILED',
-      'Anthropic request failed for Author Memory v3',
+      cause
+        ? `Anthropic request failed for Author Memory v3: ${cause}`
+        : 'Anthropic request failed for Author Memory v3',
       readErrorStatus(lastError)
     );
   }
