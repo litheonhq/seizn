@@ -79,30 +79,30 @@ export function FAQServer({ locale, dictionary }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
 
-      <div className="min-h-screen bg-szn-bg">
+      <div className="min-h-screen bg-[var(--ink-50)]">
         {/* Header */}
-        <header className="border-b border-szn-border sticky top-0 bg-szn-bg/80 backdrop-blur-sm z-10">
+        <header className="border-b border-[var(--ink-200)] sticky top-0 bg-[var(--ink-50)]/80 backdrop-blur-sm z-10">
           <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
             <Link href={`/${locale}`} className="text-xl font-bold text-white">
-              Seizn<span className="text-szn-accent">.</span>
+              Seizn<span className="text-[var(--ink-900)]">.</span>
             </Link>
             <nav className="flex items-center gap-4">
               <LanguageSwitcher currentLocale={locale} />
               <Link
                 href={`/${locale}/docs`}
-                className="text-szn-text-2 hover:text-white transition-colors"
+                className="text-[var(--ink-600)] hover:text-white transition-colors"
               >
                 {dictionary.nav?.docs || "Docs"}
               </Link>
               <Link
                 href="/dashboard"
-                className="text-szn-text-2 hover:text-white transition-colors"
+                className="text-[var(--ink-600)] hover:text-white transition-colors"
               >
                 {dictionary.docs?.nav?.dashboard || "Dashboard"}
               </Link>
               <Link
                 href="/login"
-                className="px-4 py-2 bg-szn-accent hover:bg-szn-accent/80 text-white font-medium rounded-lg transition-colors"
+                className="px-4 py-2 bg-[var(--ink-900)] hover:bg-[var(--ink-900)]/80 text-white font-medium rounded-lg transition-colors"
               >
                 {dictionary.docs?.nav?.getStarted ||
                   dictionary.nav?.getStarted ||
@@ -118,7 +118,7 @@ export function FAQServer({ locale, dictionary }: Props) {
             <h1 className="text-4xl font-bold text-white mb-4">
               {faqPage?.title || "Frequently Asked Questions"}
             </h1>
-            <p className="text-xl text-szn-text-2 max-w-2xl mx-auto">
+            <p className="text-xl text-[var(--ink-600)] max-w-2xl mx-auto">
               {faqPage?.subtitle ||
                 "Common questions about Seizn Memory API, from getting started to advanced operations."}
             </p>
@@ -135,28 +135,28 @@ export function FAQServer({ locale, dictionary }: Props) {
             {faqItems.map((item: FAQItem, index: number) => (
               <details
                 key={index}
-                className="group bg-szn-surface border border-szn-border rounded-xl overflow-hidden"
+                className="group bg-[var(--ink-50)] border border-[var(--ink-200)] rounded-xl overflow-hidden"
                 data-category={item.category}
               >
-                <summary className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-szn-surface-1/50 transition-colors cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+                <summary className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-[var(--ink-50)]/50 transition-colors cursor-pointer list-none [&::-webkit-details-marker]:hidden">
                   <div className="flex items-center gap-3">
-                    <span className="text-szn-accent font-mono text-sm">
+                    <span className="text-[var(--ink-900)] font-mono text-sm">
                       Q{index + 1}
                     </span>
                     <span className="text-white font-medium">
                       {item.question}
                     </span>
                   </div>
-                  <ChevronIcon className="w-5 h-5 text-szn-text-2 transition-transform flex-shrink-0 group-open:rotate-180" />
+                  <ChevronIcon className="w-5 h-5 text-[var(--ink-600)] transition-transform flex-shrink-0 group-open:rotate-180" />
                 </summary>
 
                 {/* Answer is always in HTML for SEO - CSS controls visibility */}
                 <div className="px-6 pb-4">
-                  <div className="pl-10 text-szn-text-2 leading-relaxed">
+                  <div className="pl-10 text-[var(--ink-600)] leading-relaxed">
                     {item.answer}
                   </div>
                   <div className="pl-10 mt-3">
-                    <span className="text-xs px-2 py-1 bg-szn-surface-1 text-szn-text-3 rounded">
+                    <span className="text-xs px-2 py-1 bg-[var(--ink-50)] text-[var(--ink-500)] rounded">
                       {getCategoryDisplayName(item.category)}
                     </span>
                   </div>
@@ -167,24 +167,24 @@ export function FAQServer({ locale, dictionary }: Props) {
 
           {/* CTA */}
           <div className="mt-16 text-center">
-            <div className="bg-szn-surface border border-szn-border rounded-2xl p-8">
+            <div className="bg-[var(--ink-50)] border border-[var(--ink-200)] rounded-2xl p-8">
               <h2 className="text-2xl font-bold text-white mb-4">
                 {faqPage?.stillHaveQuestions || "Still have questions?"}
               </h2>
-              <p className="text-szn-text-2 mb-6">
+              <p className="text-[var(--ink-600)] mb-6">
                 {faqPage?.stillHaveQuestionsDesc ||
                   "Check out our documentation or get in touch with our support team."}
               </p>
               <div className="flex gap-4 justify-center flex-wrap">
                 <Link
                   href={`/${locale}/docs`}
-                  className="px-6 py-3 bg-szn-surface-1 text-szn-text-1 font-medium rounded-lg hover:bg-szn-surface-1 transition-colors"
+                  className="px-6 py-3 bg-[var(--ink-50)] text-[var(--ink-900)] font-medium rounded-lg hover:bg-[var(--ink-50)] transition-colors"
                 >
                   {faqPage?.readDocs || "Read Docs"}
                 </Link>
                 <Link
                   href="mailto:support@seizn.com"
-                  className="px-6 py-3 bg-szn-accent text-white font-medium rounded-lg hover:bg-szn-accent/80 transition-colors"
+                  className="px-6 py-3 bg-[var(--ink-900)] text-white font-medium rounded-lg hover:bg-[var(--ink-900)]/80 transition-colors"
                 >
                   {faqPage?.contactSupport || "Contact Support"}
                 </Link>
@@ -194,8 +194,8 @@ export function FAQServer({ locale, dictionary }: Props) {
         </div>
 
         {/* Footer */}
-        <footer className="border-t border-szn-border py-8">
-          <div className="max-w-6xl mx-auto px-6 text-center text-szn-text-3 text-sm">
+        <footer className="border-t border-[var(--ink-200)] py-8">
+          <div className="max-w-6xl mx-auto px-6 text-center text-[var(--ink-500)] text-sm">
             {dictionary.docs?.footer?.copyright?.replace(
               "{year}",
               String(currentYear)

@@ -88,13 +88,13 @@ function Section({ title, icon, children, isActive, onClick }: SectionProps) {
     <div
       className={`border rounded-xl transition-all cursor-pointer ${
         isActive
-          ? "border-blue-500 bg-gray-900/80"
-          : "border-gray-800 bg-gray-900/50 hover:border-gray-700"
+          ? "border-blue-500 bg-[var(--ink-900)]/80"
+          : "border-gray-800 bg-[var(--ink-900)]/50 hover:border-gray-700"
       }`}
       onClick={onClick}
     >
       <div className="flex items-center gap-3 p-4">
-        <div className={`p-2 rounded-lg ${isActive ? "bg-blue-500/20 text-blue-400" : "bg-gray-800 text-gray-400"}`}>
+        <div className={`p-2 rounded-lg ${isActive ? "bg-blue-500/20 text-blue-400" : "bg-[var(--ink-800)] text-gray-400"}`}>
           {icon}
         </div>
         <h3 className="text-lg font-semibold text-white">{title}</h3>
@@ -325,7 +325,7 @@ export function TrustClient({ dict, locale }: TrustClientProps) {
       {/* Hero */}
       <section className="py-16 px-4">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-500/10 border border-green-500/30 rounded-full text-green-400 text-sm mb-6">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-500/10 border border-[var(--signal-canon)]/30 rounded-full text-green-400 text-sm mb-6">
             <ShieldIcon className="w-4 h-4" />
             Trust Center
           </div>
@@ -344,7 +344,7 @@ export function TrustClient({ dict, locale }: TrustClientProps) {
       {/* Roadmap Section */}
       <section className="px-4 pb-10">
         <div className="max-w-4xl mx-auto">
-          <div className="rounded-xl border border-gray-800 bg-gray-900/50 p-5">
+          <div className="rounded-xl border border-gray-800 bg-[var(--ink-900)]/50 p-5">
             <h2 className="text-lg font-semibold text-white mb-4">{roadmapTitle}</h2>
             <div className="grid md:grid-cols-2 gap-3">
               {roadmapItems.map((item) => (
@@ -389,14 +389,14 @@ export function TrustClient({ dict, locale }: TrustClientProps) {
                 </ul>
               </div>
               <div>
-                <h4 className="text-sm font-semibold text-red-400 mb-3 flex items-center gap-2">
+                <h4 className="text-sm font-semibold text-[var(--signal-conflict-soft)] mb-3 flex items-center gap-2">
                   <XIcon className="w-4 h-4" />
                   {t.sections.dataFlow.notStored.title}
                 </h4>
                 <ul className="space-y-2">
                   {t.sections.dataFlow.notStored.items.map((item, i) => (
                     <li key={i} className="text-sm text-gray-300 flex items-start gap-2">
-                      <span className="text-red-400 mt-1">-</span>
+                      <span className="text-[var(--signal-conflict-soft)] mt-1">-</span>
                       {item}
                     </li>
                   ))}
@@ -427,11 +427,11 @@ export function TrustClient({ dict, locale }: TrustClientProps) {
                 </ul>
               </div>
               <div>
-                <h4 className="text-sm font-semibold text-purple-400 mb-3">{t.sections.encryption.atRest.title}</h4>
+                <h4 className="text-sm font-semibold text-[var(--ink-700)] mb-3">{t.sections.encryption.atRest.title}</h4>
                 <ul className="space-y-2">
                   {t.sections.encryption.atRest.items.map((item, i) => (
                     <li key={i} className="text-sm text-gray-300 flex items-start gap-2">
-                      <CheckIcon className="w-4 h-4 text-purple-400 mt-0.5 flex-shrink-0" />
+                      <CheckIcon className="w-4 h-4 text-[var(--ink-700)] mt-0.5 flex-shrink-0" />
                       {item}
                     </li>
                   ))}
@@ -516,11 +516,11 @@ export function TrustClient({ dict, locale }: TrustClientProps) {
                 </table>
               </div>
               <div>
-                <h4 className="text-sm font-semibold text-red-400 mb-3">{t.sections.retention.deletion.title}</h4>
+                <h4 className="text-sm font-semibold text-[var(--signal-conflict-soft)] mb-3">{t.sections.retention.deletion.title}</h4>
                 <ul className="space-y-2">
                   {t.sections.retention.deletion.items.map((item, i) => (
                     <li key={i} className="text-sm text-gray-300 flex items-start gap-2">
-                      <span className="text-red-400 mt-1">-</span>
+                      <span className="text-[var(--signal-conflict-soft)] mt-1">-</span>
                       {item}
                     </li>
                   ))}
@@ -605,7 +605,7 @@ export function TrustClient({ dict, locale }: TrustClientProps) {
             onClick={() => handleSectionClick("disclosure")}
           >
             <p className="text-gray-400 mb-6">{t.sections.disclosure.description}</p>
-            <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4 mb-6">
+            <div className="bg-yellow-500/10 border border-[var(--signal-pending)]/30 rounded-lg p-4 mb-6">
               <h4 className="text-sm font-semibold text-yellow-400 mb-3">Gaps We&apos;re Working On</h4>
               <ul className="space-y-2">
                 {t.sections.disclosure.items.map((item, i) => (
