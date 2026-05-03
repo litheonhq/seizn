@@ -15,6 +15,7 @@ import {
   buildNavigationGroups, getSeason, seasonConfig,
   type NavGroup,
 } from "./navigation";
+import { SeiznMark } from "@/components/landing/brand-marks";
 
 export type { NavItem, NavGroup } from "./navigation";
 
@@ -129,8 +130,12 @@ export default function DashboardShell({ children }: { children: React.ReactNode
         {/* Logo */}
         <div className="p-4 border-b border-szn-border">
           <Link href="/" className="flex items-center gap-3 overflow-hidden">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/seizn-icon.svg" alt="Seizn" className="w-8 h-8 rounded-lg flex-shrink-0" />
+            <span
+              aria-label="Seizn"
+              className="w-8 h-8 rounded-lg flex-shrink-0 inline-flex items-center justify-center"
+            >
+              <SeiznMark size={28} color="var(--ink-900)" />
+            </span>
             <div className={`flex-1 min-w-0 transition-all duration-200 ease-out ${
               isSidebarExpanded ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-2 w-0"
             }`}>
@@ -225,8 +230,12 @@ export default function DashboardShell({ children }: { children: React.ReactNode
       <header className="lg:hidden fixed top-0 inset-x-0 z-30 bg-szn-card border-b border-szn-border">
         <div className="flex items-center justify-between px-3 sm:px-4 min-h-[56px] sm:min-h-[60px]">
           <Link href="/" className="flex items-center gap-2 min-h-[44px]">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/seizn-icon.svg" alt="Seizn" className="w-8 h-8 rounded-lg" />
+            <span
+              aria-label="Seizn"
+              className="w-8 h-8 rounded-lg inline-flex items-center justify-center"
+            >
+              <SeiznMark size={28} color="var(--ink-900)" />
+            </span>
             <span className="text-sm sm:text-base font-semibold text-szn-text-1">Seizn</span>
           </Link>
           <div className="flex items-center gap-1 sm:gap-2">

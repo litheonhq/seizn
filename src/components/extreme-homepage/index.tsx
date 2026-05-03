@@ -2,9 +2,9 @@
 
 import { useState, useCallback, useEffect, useMemo, useRef, Suspense, memo } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import dynamic from "next/dynamic";
 import { LanguageSwitcher } from "@/components/language-switcher";
+import { SeiznMark } from "@/components/landing/brand-marks";
 import { analytics } from "@/lib/analytics";
 import type { Dictionary } from "@/i18n/get-dictionary";
 import type { Locale } from "@/i18n/config";
@@ -222,15 +222,9 @@ const Navigation = memo(function Navigation({
         {/* Left: Logo + Navigation Links */}
         <div className="flex items-center gap-8">
           <Link href={`/${locale}`} className="flex items-center gap-2">
-            <Image
-              src="/seizn-icon.svg"
-              alt="Seizn"
-              className="w-8 h-8"
-              width={32}
-              height={32}
-              priority
-              unoptimized
-            />
+            <span aria-label="Seizn" className="w-8 h-8 inline-flex items-center justify-center">
+              <SeiznMark size={32} color="var(--ink-900)" />
+            </span>
             <span className="font-semibold text-xl tracking-tight text-szn-text-1">Seizn</span>
           </Link>
 
