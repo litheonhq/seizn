@@ -11,6 +11,8 @@ on:
     branches: [main]
     paths:
       - 'src/**'
+      - 'docs/security/**'
+      - 'scripts/verify-api-auth-surface.mjs'
       - 'package.json'
       - 'package-lock.json'
   release:
@@ -55,6 +57,9 @@ jobs:
         env:
           NODE_ENV: test
           SECURITY_LOG_RESULTS: true
+
+      - name: Verify API auth surface
+        run: npm run verify:api-auth-surface
 
       - name: Generate Security Report
         if: always()
