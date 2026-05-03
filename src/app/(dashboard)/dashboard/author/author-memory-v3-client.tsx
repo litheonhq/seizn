@@ -1,6 +1,6 @@
 'use client';
 
-import { type ChangeEvent, useEffect, useMemo, useRef, useState } from 'react';
+import { type ChangeEvent, type ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import {
   AlertTriangle,
@@ -36,8 +36,16 @@ import {
 import { EmptyState } from '@/components/author/empty-state';
 import { useDashboardTranslation } from '@/contexts/DashboardLocaleContext';
 import { AuditLogView } from './audit-log-view';
+import {
+  CANDIDATE_COLUMNS,
+  CHARACTER_COLUMNS,
+  IMPORT_COLUMNS,
+  TIMELINE_COLUMNS,
+} from './table-specs';
 
 type JsonRecord = Record<string, unknown>;
+type TableKey = 'imports' | 'candidates' | 'characters' | 'graph' | 'timeline' | 'audit';
+type CellRenderer = (value: unknown, row: JsonRecord) => ReactNode;
 
 const screenMeta = [
   { id: 'inbox', icon: FileText },
@@ -101,6 +109,21 @@ export function AuthorMemoryV3Client() {
     imports.isLoading ||
     candidates.isLoading ||
     characters.isLoading;
+  const importCellRenderers = useMemo<Record<string, CellRenderer>>(() => ({
+    parse_status: (value) => t(`author.table.imports.parse_status.${String(value)}`),
+    extract_status: (value) => t(`author.table.imports.extract_status.${String(value)}`),
+    source_role: (value) => t(`author.table.imports.source_role.${String(value)}`),
+  }), [t]);
+  const candidateCellRenderers = useMemo<Record<string, CellRenderer>>(() => ({
+    type: (value) => t(`author.table.candidates.type.${String(value)}`),
+    status: (value) => (
+      <StatusBadge status={String(value)} label={t(`author.table.candidates.status.${String(value)}`)} />
+    ),
+    confidence: (value) => <ConfidenceBar value={Number(value ?? 0)} />,
+  }), [t]);
+  const characterCellRenderers = useMemo<Record<string, CellRenderer>>(() => ({
+    aliases: (value) => Array.isArray(value) ? value.map(String).join(', ') : '',
+  }), []);
 
   async function handleRunSimulation() {
     const firstCharacter = characters.data?.characters?.[0];
@@ -316,13 +339,19 @@ export function AuthorMemoryV3Client() {
                 imports={(imports.data?.imports as JsonRecord[] | undefined) ?? []}
                 t={t}
                 onUpload={openUploadDialog}
+                cellRenderers={importCellRenderers}
               />
             </Panel>
           ) : null}
           {!isLoading && screen === 'review' ? (
             <Panel title={t('author.panels.review')} description={t('author.tabs.review.subline')}>
               {candidates.data?.candidates?.length ? (
-                <Rows rows={candidates.data.candidates} columns={['id', 'type', 'status', 'confidence']} />
+                <Rows
+                  rows={candidates.data.candidates}
+                  columns={CANDIDATE_COLUMNS}
+                  table="candidates"
+                  cellRenderers={candidateCellRenderers}
+                />
               ) : (
                 <EmptyState
                   title={t('author.empty.review.title')}
@@ -387,14 +416,19 @@ export function AuthorMemoryV3Client() {
                       </div>
                       <div className="mt-1 text-[var(--signal-canon-ink)]">{t('author.toasts.review_queue_updated')}</div>
                       <div className="mt-3">
-                        <Rows
+                        <RawRows
                           rows={((backlogResult.candidates as JsonRecord[] | undefined) ?? []).slice(0, 8)}
                           columns={['category', 'content', 'rationale']}
                         />
                       </div>
                     </div>
                   ) : null}
-                  <Rows rows={characters.data.characters} columns={['name', 'summary']} />
+                  <Rows
+                    rows={characters.data.characters}
+                    columns={CHARACTER_COLUMNS}
+                    table="characters"
+                    cellRenderers={characterCellRenderers}
+                  />
                 </>
               ) : (
                 <EmptyState
@@ -408,13 +442,13 @@ export function AuthorMemoryV3Client() {
           ) : null}
           {!isLoading && screen === 'graph' ? (
             <Panel title={activeScreen.label} description={t('author.tabs.graph.subline')}>
-              <Rows rows={graph.data?.edges?.slice(0, 12) ?? []} columns={['from', 'type', 'to', 'intensity']} />
+              <RawRows rows={graph.data?.edges?.slice(0, 12) ?? []} columns={['from', 'type', 'to', 'intensity']} />
             </Panel>
           ) : null}
           {!isLoading && screen === 'timeline' ? (
             <Panel title={activeScreen.label} description={t('author.tabs.timeline.subline')}>
               {timeline.data?.events?.length ? (
-                <Rows rows={timeline.data.events.slice(0, 16)} columns={['day', 'date', 'where', 'what']} />
+                <Rows rows={timeline.data.events.slice(0, 16)} columns={TIMELINE_COLUMNS} table="timeline" />
               ) : (
                 <EmptyState
                   title={t('author.empty.timeline.title')}
@@ -426,7 +460,7 @@ export function AuthorMemoryV3Client() {
           ) : null}
           {!isLoading && screen === 'conflicts' ? (
             <Panel title={activeScreen.label} description={t('author.tabs.conflicts.subline')}>
-              <Rows rows={conflicts.data?.conflicts ?? []} columns={['id', 'severity', 'status', 'impact_summary']} />
+              <RawRows rows={conflicts.data?.conflicts ?? []} columns={['id', 'severity', 'status', 'impact_summary']} />
             </Panel>
           ) : null}
           {!isLoading && screen === 'simulate' ? (
@@ -439,7 +473,7 @@ export function AuthorMemoryV3Client() {
                       상태: {String(simulation.data?.status ?? 'loading')} · 후보 {Number((simulation.data?.candidates as unknown[] | undefined)?.length ?? 0)}개
                     </div>
                   </div>
-                  <Rows
+                  <RawRows
                     rows={(simulation.data?.candidates as JsonRecord[] | undefined) ?? []}
                     columns={['candidate_id', 'rank']}
                   />
@@ -528,23 +562,61 @@ function Panel({
   );
 }
 
-function Rows({ rows, columns }: { rows: JsonRecord[]; columns: string[] }) {
-  if (rows.length === 0) {
-    return (
-      <div className="rounded-md border border-dashed border-slate-300 p-8 text-center text-sm text-slate-600">
-        No rows
-      </div>
-    );
-  }
+function Rows({
+  rows,
+  columns,
+  table,
+  cellRenderers,
+}: {
+  rows: JsonRecord[];
+  columns: readonly string[];
+  table: TableKey;
+  cellRenderers?: Record<string, CellRenderer>;
+}) {
+  const { t } = useDashboardTranslation();
+  if (rows.length === 0) return null;
 
   return (
     <div className="overflow-x-auto rounded-md border border-slate-200">
       <table className="min-w-full text-left text-sm">
-        <thead className="bg-slate-50 text-xs uppercase tracking-normal text-slate-500">
+        <thead className="bg-slate-50 text-xs tracking-normal text-slate-500">
           <tr>
             {columns.map((column) => (
               <th key={column} className="px-3 py-2 font-medium">
-                {column.replaceAll('_', ' ')}
+                {t(`author.table.${table}.columns.${column}`)}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-slate-100">
+          {rows.map((row, index) => (
+            <tr key={String(row.id ?? row.candidate_id ?? index)} className="align-top">
+              {columns.map((column) => (
+                <td key={column} className="max-w-[360px] px-3 py-2 text-slate-700">
+                  <span className="line-clamp-3 break-words">
+                    {cellRenderers?.[column]?.(row[column], row) ?? formatCell(row[column])}
+                  </span>
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function RawRows({ rows, columns }: { rows: JsonRecord[]; columns: readonly string[] }) {
+  if (rows.length === 0) return null;
+
+  return (
+    <div className="overflow-x-auto rounded-md border border-slate-200">
+      <table className="min-w-full text-left text-sm">
+        <thead className="bg-slate-50 text-xs tracking-normal text-slate-500">
+          <tr>
+            {columns.map((column) => (
+              <th key={column} className="px-3 py-2 font-medium">
+                {column}
               </th>
             ))}
           </tr>
@@ -565,26 +637,18 @@ function Rows({ rows, columns }: { rows: JsonRecord[]; columns: string[] }) {
   );
 }
 
-const IMPORT_COLUMNS = [
-  'file_name',
-  'source_role',
-  'parse_status',
-  'extract_status',
-  'candidate_count',
-  'parsed_text_preview',
-  'error_message',
-] as const;
-
 function ImportsTable({
   projectId,
   imports,
   t,
   onUpload,
+  cellRenderers,
 }: {
   projectId: string;
   imports: JsonRecord[];
   t: (key: string) => string;
   onUpload: () => void;
+  cellRenderers: Record<string, CellRenderer>;
 }) {
   const [pendingId, setPendingId] = useState<string | null>(null);
   const deleteImport = useDeleteAuthorImport(projectId, pendingId ?? undefined);
@@ -628,11 +692,11 @@ function ImportsTable({
   return (
     <div className="overflow-x-auto rounded-md border border-slate-200">
       <table className="min-w-full text-left text-sm">
-        <thead className="bg-slate-50 text-xs uppercase tracking-normal text-slate-500">
+        <thead className="bg-slate-50 text-xs tracking-normal text-slate-500">
           <tr>
             {IMPORT_COLUMNS.map((column) => (
               <th key={column} className="px-3 py-2 font-medium">
-                {column.replaceAll('_', ' ')}
+                {t(`author.table.imports.columns.${column}`)}
               </th>
             ))}
             <th className="px-3 py-2 font-medium" aria-label="actions" />
@@ -647,7 +711,9 @@ function ImportsTable({
               <tr key={importId || index} className="align-top">
                 {IMPORT_COLUMNS.map((column) => (
                   <td key={column} className="max-w-[360px] px-3 py-2 text-slate-700">
-                    <span className="line-clamp-3 break-words">{formatCell(row[column])}</span>
+                    <span className="line-clamp-3 break-words">
+                      {cellRenderers[column]?.(row[column], row) ?? formatCell(row[column])}
+                    </span>
                   </td>
                 ))}
                 <td className="px-3 py-2 text-right">
@@ -671,6 +737,44 @@ function ImportsTable({
         </tbody>
       </table>
     </div>
+  );
+}
+
+const STATUS_BADGE_CLASS: Record<string, string> = {
+  candidate: 'bg-slate-100 text-slate-600',
+  canon: 'bg-emerald-50 text-emerald-700',
+  rejected: 'bg-rose-50 text-rose-600',
+  retired: 'bg-slate-100 text-slate-500',
+  past_only: 'bg-amber-50 text-amber-700',
+  contradicted: 'bg-rose-50 text-rose-700',
+  invalidated: 'bg-slate-100 text-slate-500',
+  author_only: 'bg-indigo-50 text-indigo-600',
+  character_known: 'bg-sky-50 text-sky-700',
+  character_unknown: 'bg-slate-100 text-slate-600',
+};
+
+function StatusBadge({ status, label }: { status: string; label: string }) {
+  return (
+    <span className={`inline-flex min-h-6 items-center rounded-full px-2 text-xs font-medium ${STATUS_BADGE_CLASS[status] ?? STATUS_BADGE_CLASS.candidate}`}>
+      {label}
+    </span>
+  );
+}
+
+function ConfidenceBar({ value }: { value: number }) {
+  const normalized = Number.isFinite(value) ? Math.max(0, Math.min(1, value)) : 0;
+  const percent = Math.round(normalized * 100);
+
+  return (
+    <span className="inline-flex min-w-24 items-center gap-2">
+      <span className="h-1.5 w-16 overflow-hidden rounded-full bg-slate-100">
+        <span
+          className="block h-full rounded-full bg-slate-700"
+          style={{ width: `${percent}%` }}
+        />
+      </span>
+      <span className="text-xs tabular-nums text-slate-600">{percent}%</span>
+    </span>
   );
 }
 
