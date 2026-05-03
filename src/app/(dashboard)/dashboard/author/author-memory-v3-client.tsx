@@ -2,6 +2,7 @@
 
 import { type ChangeEvent, type ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import {
   AlertTriangle,
   Clock3,
@@ -36,6 +37,7 @@ import {
 import { EmptyState } from '@/components/author/empty-state';
 import { ConflictList } from '@/components/author/conflicts/conflict-list';
 import type { AuthorUiConflict } from '@/components/author/conflicts/conflict-card';
+import { RelationshipGraphTable } from '@/components/author/graph/relationship-graph-table';
 import { useDashboardTranslation } from '@/contexts/DashboardLocaleContext';
 import { AuditLogView } from './audit-log-view';
 import {
@@ -44,6 +46,11 @@ import {
   IMPORT_COLUMNS,
   TIMELINE_COLUMNS,
 } from './table-specs';
+
+const RelationshipGraph = dynamic(
+  () => import('@/components/author/graph/relationship-graph').then((m) => ({ default: m.RelationshipGraph })),
+  { ssr: false, loading: () => <div className="flex h-60 items-center justify-center text-sm text-slate-400">그래프 로딩 중…</div> },
+);
 
 type JsonRecord = Record<string, unknown>;
 type TableKey = 'imports' | 'candidates' | 'characters' | 'graph' | 'timeline' | 'audit';
@@ -65,6 +72,7 @@ type ScreenId = (typeof screenMeta)[number]['id'];
 export function AuthorMemoryV3Client() {
   const { t } = useDashboardTranslation();
   const [screen, setScreen] = useState<ScreenId>('review');
+  const [graphView, setGraphView] = useState<'diagram' | 'table'>('diagram');
   const [simulationId, setSimulationId] = useState<string | undefined>();
   const [selectedCharacterId, setSelectedCharacterId] = useState<string | undefined>();
   const [backlogResult, setBacklogResult] = useState<JsonRecord | null>(null);
@@ -444,7 +452,41 @@ export function AuthorMemoryV3Client() {
           ) : null}
           {!isLoading && screen === 'graph' ? (
             <Panel title={activeScreen.label} description={t('author.tabs.graph.subline')}>
-              <RawRows rows={graph.data?.edges?.slice(0, 12) ?? []} columns={['from', 'type', 'to', 'intensity']} />
+              {graph.data?.nodes?.length ? (
+                <>
+                  <div className="mb-3 flex justify-end">
+                    <div className="inline-flex rounded-md border border-slate-200 text-xs">
+                      {(['diagram', 'table'] as const).map((v) => (
+                        <button
+                          key={v}
+                          type="button"
+                          onClick={() => setGraphView(v)}
+                          className={`px-3 py-1.5 transition-colors first:rounded-l-md last:rounded-r-md ${graphView === v ? 'bg-slate-900 text-white' : 'bg-white text-slate-600 hover:bg-slate-50'}`}
+                        >
+                          {t(`author.graph.view.${v}`)}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  {graphView === 'diagram' ? (
+                    <RelationshipGraph
+                      nodes={graph.data.nodes as never}
+                      edges={graph.data.edges as never}
+                    />
+                  ) : (
+                    <RelationshipGraphTable
+                      nodes={graph.data.nodes as never}
+                      edges={graph.data.edges as never}
+                    />
+                  )}
+                </>
+              ) : (
+                <EmptyState
+                  title={t('author.empty.graph.title')}
+                  body={t('author.empty.graph.body')}
+                  icon={<GitBranch className="h-6 w-6" aria-hidden="true" />}
+                />
+              )}
             </Panel>
           ) : null}
           {!isLoading && screen === 'timeline' ? (
