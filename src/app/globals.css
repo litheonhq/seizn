@@ -51,8 +51,8 @@
   --szn-ease-expo-out: cubic-bezier(0.16, 1, 0.3, 1);
   --szn-ease-standard: cubic-bezier(0.645, 0.045, 0.355, 1);
   --szn-ease-overlay: cubic-bezier(0, 0, 0.2, 1);
-  --szn-font-sans: var(--font-geist-sans), "Pretendard", "Noto Sans KR", system-ui, sans-serif;
-  --szn-font-mono: var(--font-geist-mono), "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+  --szn-font-sans: var(--font-sans);
+  --szn-font-mono: var(--font-mono);
   /* Status colors */
   --status-ok: #22c55e;
   --status-warn: #f59e0b;
@@ -866,6 +866,210 @@ body {
 .auth-btn-oauth-github:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: var(--ink-50);
+  color: var(--ink-900);
+  font-family: var(--font-sans);
+}
+
+.auth-root {
+  font-family: var(--font-sans);
+}
+
+.auth-shell {
+  width: min(100%, 448px);
+}
+
+.auth-brand {
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.auth-brand-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+.auth-brand-subtitle {
+  margin-top: 12px;
+  color: var(--ink-600);
+  font-size: 14px;
+}
+
+.auth-card {
+  padding: 32px;
+  border: 1px solid var(--ink-200);
+  border-radius: 16px;
+  background: var(--ink-0);
+  box-shadow: var(--shadow-md);
+}
+
+.auth-status {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-radius: var(--radius-md);
+  padding: 16px;
+  font-size: 14px;
+}
+
+.auth-status-compact {
+  gap: 8px;
+  padding: 12px;
+}
+
+.auth-status-conflict {
+  border: 1px solid var(--signal-conflict);
+  background: var(--signal-conflict-soft);
+  color: var(--signal-conflict-ink);
+}
+
+.auth-status-canon {
+  border: 1px solid var(--signal-canon);
+  background: var(--signal-canon-soft);
+  color: var(--signal-canon-ink);
+}
+
+.auth-section-card {
+  border: 1px solid var(--ink-200);
+  border-radius: var(--radius-md);
+  background: var(--ink-0);
+  padding: 16px;
+}
+
+.auth-icon {
+  display: flex;
+  width: 64px;
+  height: 64px;
+  align-items: center;
+  justify-content: center;
+  margin-inline: auto;
+  margin-bottom: 16px;
+  border-radius: 16px;
+}
+
+.auth-icon-ink {
+  background: var(--ink-50);
+  color: var(--ink-900);
+}
+
+.auth-icon-canon {
+  background: var(--signal-canon-soft);
+  color: var(--signal-canon-ink);
+}
+
+.auth-icon-conflict {
+  background: var(--signal-conflict-soft);
+  color: var(--signal-conflict-ink);
+}
+
+.auth-icon-pending {
+  background: var(--signal-pending-soft);
+  color: var(--signal-pending-ink);
+}
+
+.auth-heading {
+  margin-bottom: 8px;
+  color: var(--ink-900);
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.auth-body {
+  color: var(--ink-600);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.auth-muted {
+  color: var(--ink-500);
+}
+
+.auth-label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--ink-900);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.auth-link {
+  color: var(--ink-900);
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.auth-link:hover {
+  color: var(--ink-700);
+}
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  margin-block: 24px;
+}
+
+.auth-divider-line {
+  flex: 1;
+  border-top: 1px solid var(--ink-200);
+}
+
+.auth-divider-label {
+  padding-inline: 16px;
+  color: var(--ink-500);
+  font-size: 14px;
+}
+
+.auth-code {
+  border-radius: var(--radius-md);
+  background: var(--ink-50);
+  color: var(--ink-900);
+  font-family: var(--font-mono);
+}
+
+.auth-code-inline {
+  display: inline-block;
+  padding: 8px 16px;
+  font-size: 18px;
+  letter-spacing: 0.12em;
+}
+
+.auth-code-block {
+  overflow-x: auto;
+  padding: 16px;
+  font-size: 12px;
+}
+
+.auth-warning-text {
+  color: var(--signal-pending-ink);
+}
+
+.auth-back-row {
+  margin-top: 24px;
+  text-align: center;
+}
+
+.auth-back-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  color: var(--ink-500);
+  font-size: 14px;
+  transition: color 160ms ease;
+}
+
+.auth-back-link:hover {
+  color: var(--ink-900);
 }
 
 /* Alert system */

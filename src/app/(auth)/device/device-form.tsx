@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { SeiznLockup } from "@/components/landing/brand-marks";
+import { AuthCard, AuthHomeLink, AuthPage } from "@/components/auth/auth-shell";
 import { getErrorMessage } from "@/lib/ui-error";
 
 type Step = "input" | "confirming" | "approved" | "denied" | "error" | "expired";
@@ -127,55 +127,24 @@ export default function DeviceForm() {
   }, []);
 
   return (
-    <div
-      className="min-h-screen flex items-center justify-center p-4"
-      style={{ background: "var(--ink-50)", fontFamily: "var(--font-sans)" }}
-    >
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center">
-            <SeiznLockup variant="graph" tone="dark" size="md" />
-          </Link>
-          <p className="mt-3 text-sm" style={{ color: "var(--ink-600)" }}>
-            Authorize Device
-          </p>
-        </div>
-
-        <div
-          className="rounded-2xl p-8"
-          style={{
-            background: "var(--ink-0)",
-            border: "1px solid var(--ink-200)",
-            boxShadow: "var(--shadow-md)",
-            color: "var(--ink-900)",
-          }}
-        >
+    <AuthPage subtitle="Authorize Device">
+      <AuthCard>
           {step === "input" && (
             <>
               <div className="text-center mb-6">
-                <div
-                  className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4"
-                  style={{ background: "var(--ink-50)", color: "var(--ink-900)" }}
-                >
+                <div className="auth-icon auth-icon-ink">
                   <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
                 </div>
-                <h2 className="text-xl font-semibold mb-2" style={{ color: "var(--ink-900)" }}>Enter Device Code</h2>
-                <p className="text-sm" style={{ color: "var(--ink-600)" }}>
+                <h2 className="auth-heading">Enter Device Code</h2>
+                <p className="auth-body">
                   Enter the code shown in your terminal or editor to authorize access to your Seizn account.
                 </p>
               </div>
 
               {errorMsg && (
-                <div
-                  className="mb-4 p-3 rounded-md text-sm flex items-center gap-2"
-                  style={{
-                    background: "var(--signal-conflict-soft)",
-                    border: "1px solid var(--signal-conflict)",
-                    color: "var(--signal-conflict-ink)",
-                  }}
-                >
+                <div className="auth-status auth-status-compact auth-status-conflict mb-4">
                   <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
@@ -200,8 +169,7 @@ export default function DeviceForm() {
                 <button
                   type="submit"
                   disabled={isLoading || userCode.length < 9}
-                  className="auth-btn-primary w-full py-3.5 rounded-md font-semibold disabled:opacity-50"
-                  style={{ fontSize: "15px" }}
+                  className="auth-btn-primary w-full rounded-md py-3.5 text-[15px] font-semibold disabled:opacity-50"
                 >
                   {isLoading ? (
                     <span className="flex items-center justify-center gap-2">
@@ -220,7 +188,7 @@ export default function DeviceForm() {
               </form>
 
               {isAuthenticated === false && (
-                <p className="mt-4 text-center text-xs" style={{ color: "var(--ink-500)" }}>
+                <p className="auth-muted mt-4 text-center text-xs">
                   You&apos;ll be asked to sign in first.
                 </p>
               )}
@@ -230,29 +198,19 @@ export default function DeviceForm() {
           {/* Step: Confirm approval */}
           {step === "confirming" && (
             <div className="text-center">
-              <div
-                className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4"
-                style={{ background: "var(--signal-pending-soft)", color: "var(--signal-pending-ink)" }}
-              >
+              <div className="auth-icon auth-icon-pending">
                 <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4.5c-.77-.833-2.694-.833-3.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" />
                 </svg>
               </div>
-              <h2 className="text-xl font-semibold mb-2" style={{ color: "var(--ink-900)" }}>Confirm Device Access</h2>
-              <p className="text-sm mb-2" style={{ color: "var(--ink-600)" }}>
+              <h2 className="auth-heading">Confirm Device Access</h2>
+              <p className="auth-body mb-2">
                 A device or application is requesting access to your Seizn account.
               </p>
-              <div
-                className="inline-block px-4 py-2 rounded-md text-lg tracking-widest mb-6"
-                style={{
-                  background: "var(--ink-50)",
-                  color: "var(--ink-900)",
-                  fontFamily: "var(--font-mono)",
-                }}
-              >
+              <div className="auth-code auth-code-inline mb-6">
                 {userCode}
               </div>
-              <p className="text-xs mb-6" style={{ color: "var(--ink-500)" }}>
+              <p className="auth-muted mb-6 text-xs">
                 Only approve if you initiated this request from your terminal or editor.
               </p>
               <div className="flex gap-3">
@@ -277,22 +235,18 @@ export default function DeviceForm() {
           {/* Step: Approved */}
           {step === "approved" && (
             <div className="text-center">
-              <div
-                className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4"
-                style={{ background: "var(--signal-canon-soft)", color: "var(--signal-canon-ink)" }}
-              >
+              <div className="auth-icon auth-icon-canon">
                 <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <h2 className="text-xl font-semibold mb-2" style={{ color: "var(--ink-900)" }}>Device Authorized</h2>
-              <p className="text-sm mb-6" style={{ color: "var(--ink-600)" }}>
+              <h2 className="auth-heading">Device Authorized</h2>
+              <p className="auth-body mb-6">
                 Your device has been authorized. You can close this window and return to your terminal or editor.
               </p>
               <Link
                 href="/dashboard"
-                className="font-medium text-sm transition-colors"
-                style={{ color: "var(--ink-900)", textDecoration: "underline" }}
+                className="auth-link text-sm"
               >
                 Go to Dashboard
               </Link>
@@ -302,22 +256,18 @@ export default function DeviceForm() {
           {/* Step: Denied */}
           {step === "denied" && (
             <div className="text-center">
-              <div
-                className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4"
-                style={{ background: "var(--signal-conflict-soft)", color: "var(--signal-conflict-ink)" }}
-              >
+              <div className="auth-icon auth-icon-conflict">
                 <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </div>
-              <h2 className="text-xl font-semibold mb-2" style={{ color: "var(--ink-900)" }}>Access Denied</h2>
-              <p className="text-sm mb-6" style={{ color: "var(--ink-600)" }}>
+              <h2 className="auth-heading">Access Denied</h2>
+              <p className="auth-body mb-6">
                 The device request has been denied. If you didn&apos;t initiate this, your account is safe.
               </p>
               <button
                 onClick={() => { setStep("input"); setUserCode(""); setErrorMsg(null); }}
-                className="font-medium text-sm transition-colors"
-                style={{ color: "var(--ink-900)", textDecoration: "underline" }}
+                className="auth-link text-sm"
               >
                 Try Another Code
               </button>
@@ -327,22 +277,18 @@ export default function DeviceForm() {
           {/* Step: Expired */}
           {step === "expired" && (
             <div className="text-center">
-              <div
-                className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4"
-                style={{ background: "var(--signal-conflict-soft)", color: "var(--signal-conflict-ink)" }}
-              >
+              <div className="auth-icon auth-icon-conflict">
                 <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <h2 className="text-xl font-semibold mb-2" style={{ color: "var(--ink-900)" }}>Code Expired</h2>
-              <p className="text-sm mb-6" style={{ color: "var(--ink-600)" }}>
+              <h2 className="auth-heading">Code Expired</h2>
+              <p className="auth-body mb-6">
                 This code has expired. Please generate a new code from your terminal or editor.
               </p>
               <button
                 onClick={() => { setStep("input"); setUserCode(""); setErrorMsg(null); }}
-                className="font-medium text-sm transition-colors"
-                style={{ color: "var(--ink-900)", textDecoration: "underline" }}
+                className="auth-link text-sm"
               >
                 Enter New Code
               </button>
@@ -352,36 +298,23 @@ export default function DeviceForm() {
           {/* Step: Error */}
           {step === "error" && (
             <div className="text-center">
-              <div
-                className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4"
-                style={{ background: "var(--signal-conflict-soft)", color: "var(--signal-conflict-ink)" }}
-              >
+              <div className="auth-icon auth-icon-conflict">
                 <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <h2 className="text-xl font-semibold mb-2" style={{ color: "var(--ink-900)" }}>Something Went Wrong</h2>
-              <p className="text-sm mb-6" style={{ color: "var(--ink-600)" }}>{errorMsg || "An unexpected error occurred."}</p>
+              <h2 className="auth-heading">Something Went Wrong</h2>
+              <p className="auth-body mb-6">{errorMsg || "An unexpected error occurred."}</p>
               <button
                 onClick={() => { setStep("input"); setErrorMsg(null); }}
-                className="font-medium text-sm transition-colors"
-                style={{ color: "var(--ink-900)", textDecoration: "underline" }}
+                className="auth-link text-sm"
               >
                 Try Again
               </button>
             </div>
           )}
-        </div>
-
-        <p className="mt-6 text-center">
-          <Link href="/" className="text-sm flex items-center justify-center gap-1 transition-colors" style={{ color: "var(--ink-500)" }}>
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-            Back to home
-          </Link>
-        </p>
-      </div>
-    </div>
+      </AuthCard>
+      <AuthHomeLink />
+    </AuthPage>
   );
 }

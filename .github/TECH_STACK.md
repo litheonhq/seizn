@@ -13,7 +13,7 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 | Language | TypeScript | ^5 | Strict mode, bundler module resolution |
 | Runtime | Node.js | 20 | Alpine-based Docker image |
 | Package Manager | npm | (lockfile) | `npm ci` in CI/CD pipelines |
-| Build | Turbopack (dev) / Webpack (prod) | -- | Sentry webpack plugin, bundle analyzer |
+| Build | Turbopack + opt-in Webpack analyzer | -- | Normal build uses Turbopack; `npm run analyze` writes `.next/analyze/static-bundle-report.*`, with `SEIZN_ANALYZE_MODE=webpack` available for the heavier bundle analyzer |
 
 ---
 
@@ -23,7 +23,7 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 |----------|-----------|---------|-------|
 | UI Library | React | ^18.3.1 | Server Components + Client Components |
 | Styling | Tailwind CSS | ^4 | v4 with `@import "tailwindcss"`, OKLCH custom properties, class-based dark mode |
-| Fonts | Geist Sans/Mono + Pretendard Variable | -- | `next/font/google`, Korean-optimized Pretendard via CDN |
+| Fonts | Pretendard + Source Serif 4 + JetBrains Mono | -- | Self-hosted files in `public/fonts/` with `@font-face` tokens in `src/styles/tokens.css` |
 | Icons | Lucide React | ^0.563.0 | Used across 7+ component files |
 | Class Merging | tailwind-merge + clsx | ^3.4.0 | `cn()` utility in `src/lib/utils.ts` |
 | Charts | Recharts | ^3.6.0 | Analytics, evals, traces, RetOps dashboards (7 files) |
@@ -67,6 +67,7 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 | Provenance | KMS Signing | -- | AWS KMS, Azure Key Vault, Google Cloud KMS for content signing |
 | Observability | OpenTelemetry | ^2.5.0 | OTLP HTTP/Proto export, custom GenAI semantic conventions |
 | Error Tracking | Sentry | ^10.51.0 | Instrumentation client + server, PII pipeline integration |
+| Structured Logging | Redacted server logger | -- | `src/lib/server/logger.ts` sanitizes secrets, emails, JWTs, tokens, and nested payloads before console emission |
 | Analytics | PostHog | ^1.316.0 | TTFS tracking, conversion funnels, feature usage |
 | RUM | web-vitals | ^4.2.4 | WebVitalsReporter component in root layout |
 
@@ -113,7 +114,7 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 | Tool | Version | Scope |
 |------|---------|-------|
 | Vitest | ^4.0.17 | Unit + integration tests (`src/__tests__/`) |
-| Playwright | ^1.57.0 | E2E tests (`e2e/`): core pages, API keys, Spring memory CRUD, dashboard smoke |
+| Playwright + axe-core | ^1.57.0 / @axe-core/playwright | E2E tests (`e2e/`): core pages, auth V1 token smoke, API keys, Spring memory CRUD, dashboard smoke, accessibility smoke |
 | @testing-library/react | ^16.3.1 | Component testing |
 | Lighthouse CI | ^0.14.0 | Performance auditing |
 | Custom Red Team | -- | `scripts/red-team-ci.ts` for prompt injection/jailbreak testing |
@@ -253,8 +254,8 @@ Three observability layers complement each other: OTEL for distributed traces (b
 **Anthropic SDK + Vercel AI SDK + Multi-provider Gateway**
 The AI Gateway (`src/lib/ai-gateway/`) routes requests to Anthropic, OpenAI, or Google based on cost/capability. The Vercel AI SDK provides streaming integration. The Anthropic SDK is used directly for memory extraction where fine-grained control is needed, including Author Memory v3 BYOK calls through `src/lib/author/llm/` and structured extraction orchestration through `src/lib/author/extraction/`.
 
-**Tailwind CSS v4 + Geist + Pretendard**
-Tailwind v4 custom properties integrate with class-based dark mode. Geist provides clean Latin typography while Pretendard handles Korean/CJK scripts, both loaded via `next/font` for zero-CLS font loading.
+**Tailwind CSS v4 + Self-hosted Author Fonts**
+Tailwind v4 custom properties integrate with class-based dark mode. Pretendard handles Korean/CJK UI text, Source Serif 4 carries author-facing display type, and JetBrains Mono supports code/canon chips through self-hosted `@font-face` assets.
 
 **Seasonal Architecture (Spring/Summer/Fall/Winter)**
 Clear domain separation: Spring handles memory CRUD, Summer handles RAG/ingestion, Fall handles reliability/experiments, Winter handles governance/compliance. Each season has independent evolution paths with shared Supabase backend.

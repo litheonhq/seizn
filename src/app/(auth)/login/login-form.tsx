@@ -5,7 +5,7 @@ import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Turnstile from "@/components/auth/Turnstile";
-import { SeiznLockup } from "@/components/landing/brand-marks";
+import { AuthCard, AuthDivider, AuthHomeLink, AuthPage } from "@/components/auth/auth-shell";
 import { sanitizeRelativeRedirect } from "@/lib/security/redirect";
 
 function buildAuthHref(path: string, callbackUrl: string): string {
@@ -83,38 +83,10 @@ export default function LoginForm() {
   };
 
   return (
-    <div
-      className="min-h-screen flex items-center justify-center p-4"
-      style={{ background: "var(--ink-50)", fontFamily: "var(--font-sans)" }}
-    >
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center">
-            <SeiznLockup variant="graph" tone="dark" size="md" />
-          </Link>
-          <p className="mt-3 text-sm" style={{ color: "var(--ink-600)" }}>
-            Sign in to your account
-          </p>
-        </div>
-
-        <div
-          className="rounded-2xl p-8"
-          style={{
-            background: "var(--ink-0)",
-            border: "1px solid var(--ink-200)",
-            boxShadow: "var(--shadow-md)",
-            color: "var(--ink-900)",
-          }}
-        >
+    <AuthPage subtitle="Sign in to your account">
+      <AuthCard>
           {authError && (
-            <div
-              className="mb-6 p-4 rounded-md text-sm flex items-center gap-3"
-              style={{
-                background: "var(--signal-conflict-soft)",
-                border: "1px solid var(--signal-conflict)",
-                color: "var(--signal-conflict-ink)",
-              }}
-            >
+            <div className="auth-status auth-status-conflict mb-6">
               <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
@@ -161,17 +133,11 @@ export default function LoginForm() {
             </button>
           </div>
 
-          <div className="flex items-center my-6">
-            <div className="flex-1" style={{ borderTop: "1px solid var(--ink-200)" }}></div>
-            <span className="px-4 text-sm" style={{ color: "var(--ink-500)" }}>
-              or
-            </span>
-            <div className="flex-1" style={{ borderTop: "1px solid var(--ink-200)" }}></div>
-          </div>
+          <AuthDivider />
 
           <form onSubmit={handleCredentialsLogin} className="space-y-4">
             <div>
-              <label htmlFor="login-email" className="block text-sm font-medium mb-2" style={{ color: "var(--ink-900)" }}>
+              <label htmlFor="login-email" className="auth-label">
                 Email
               </label>
               <input
@@ -186,7 +152,7 @@ export default function LoginForm() {
             </div>
 
             <div>
-              <label htmlFor="login-password" className="block text-sm font-medium mb-2" style={{ color: "var(--ink-900)" }}>
+              <label htmlFor="login-password" className="auth-label">
                 Password
               </label>
               <input
@@ -215,8 +181,7 @@ export default function LoginForm() {
             <button
               type="submit"
               disabled={isLoading || (turnstileRequired && !turnstileToken)}
-              className="auth-btn-primary w-full py-3.5 rounded-md font-semibold disabled:opacity-50"
-              style={{ fontSize: "15px" }}
+              className="auth-btn-primary w-full rounded-md py-3.5 text-[15px] font-semibold disabled:opacity-50"
             >
               {isLoading ? (
                 <span className="flex items-center justify-center gap-2">
@@ -232,23 +197,14 @@ export default function LoginForm() {
             </button>
           </form>
 
-          <p className="mt-6 text-center text-sm" style={{ color: "var(--ink-600)" }}>
+          <p className="auth-body mt-6 text-center">
             Don&apos;t have an account?{" "}
-            <Link href={signupHref} className="font-medium" style={{ color: "var(--ink-900)", textDecoration: "underline" }}>
+            <Link href={signupHref} className="auth-link">
               Sign up
             </Link>
           </p>
-        </div>
-
-        <p className="mt-6 text-center">
-          <Link href="/" className="text-sm flex items-center justify-center gap-1 transition-colors" style={{ color: "var(--ink-500)" }}>
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-            Back to home
-          </Link>
-        </p>
-      </div>
-    </div>
+      </AuthCard>
+      <AuthHomeLink />
+    </AuthPage>
   );
 }

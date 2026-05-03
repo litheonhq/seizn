@@ -10,7 +10,7 @@ import {
   isAuthorEngineSurfaceLive,
 } from "@/components/landing/author-flagship-landing";
 import { DETECTOR_SEED } from "@/components/landing/conflict-detector";
-import { getPricingPageCopy } from "@/app/[locale]/pricing/pricing-client";
+import { getPricingPageCopy } from "@/app/[locale]/pricing/pricing-copy";
 import {
   AUTHOR_BILLING_TIERS,
   type AuthorBillingTier,

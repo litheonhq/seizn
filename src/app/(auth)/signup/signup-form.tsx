@@ -5,7 +5,7 @@ import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Turnstile from "@/components/auth/Turnstile";
-import { SeiznLockup } from "@/components/landing/brand-marks";
+import { AuthCard, AuthDivider, AuthHomeLink, AuthPage } from "@/components/auth/auth-shell";
 import { ttfsEvents } from "@/lib/analytics";
 import { markOnboardingStepComplete } from "@/lib/onboarding/progress";
 import { sanitizeRelativeRedirect } from "@/lib/security/redirect";
@@ -157,55 +157,20 @@ export default function SignupForm() {
   };
 
   return (
-    <div
-      className="min-h-screen flex items-center justify-center p-4"
-      style={{ background: "var(--ink-50)", fontFamily: "var(--font-sans)" }}
-    >
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center">
-            <SeiznLockup variant="graph" tone="dark" size="md" />
-          </Link>
-          <p className="mt-3 text-sm" style={{ color: "var(--ink-600)" }}>
-            Create your account
-          </p>
-        </div>
-
-        <div
-          className="rounded-2xl p-8"
-          style={{
-            background: "var(--ink-0)",
-            border: "1px solid var(--ink-200)",
-            boxShadow: "var(--shadow-md)",
-            color: "var(--ink-900)",
-          }}
-        >
+    <AuthPage subtitle="Create your account">
+      <AuthCard>
           {success && apiKey && (
             <div className="mb-6 space-y-4">
-              <div
-                className="p-4 rounded-md text-sm flex items-center gap-3"
-                style={{
-                  background: "var(--signal-canon-soft)",
-                  border: "1px solid var(--signal-canon)",
-                  color: "var(--signal-canon-ink)",
-                }}
-              >
+              <div className="auth-status auth-status-canon">
                 <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
                 Account created successfully!
               </div>
-              <div className="p-4 rounded-md" style={{ background: "var(--ink-0)", border: "1px solid var(--ink-200)" }}>
-                <p className="text-sm mb-2 font-medium" style={{ color: "var(--ink-900)" }}>Your API Key</p>
+              <div className="auth-section-card">
+                <p className="auth-label">Your API Key</p>
                 <div className="flex items-center gap-2">
-                  <code
-                    className="flex-1 px-3 py-2 rounded-md text-xs break-all"
-                    style={{
-                      background: "var(--ink-50)",
-                      color: "var(--ink-900)",
-                      fontFamily: "var(--font-mono)",
-                    }}
-                  >
+                  <code className="auth-code flex-1 px-3 py-2 text-xs break-all">
                     {apiKey}
                   </code>
                   <button
@@ -215,18 +180,18 @@ export default function SignupForm() {
                     {copied ? "Copied!" : "Copy"}
                   </button>
                 </div>
-                <p className="mt-3 text-xs flex items-center gap-1" style={{ color: "var(--signal-pending-ink)" }}>
+                <p className="auth-warning-text mt-3 flex items-center gap-1 text-xs">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                   </svg>
                   Save this key securely. It will not be shown again.
                 </p>
               </div>
-              <div className="p-4 rounded-md" style={{ background: "var(--ink-0)", border: "1px solid var(--ink-200)" }}>
+              <div className="auth-section-card">
                 <div className="flex items-start justify-between gap-3 mb-3">
                   <div>
-                    <p className="text-sm font-medium" style={{ color: "var(--ink-900)" }}>Example Request</p>
-                    <p className="text-xs mt-1" style={{ color: "var(--ink-600)" }}>
+                    <p className="auth-label mb-0">Example Request</p>
+                    <p className="auth-body mt-1 text-xs">
                       Copy a working request and send your first memory right away.
                     </p>
                   </div>
@@ -237,21 +202,13 @@ export default function SignupForm() {
                     {copied ? "Copied!" : "Copy"}
                   </button>
                 </div>
-                <pre
-                  className="rounded-md p-4 overflow-x-auto text-xs"
-                  style={{
-                    background: "var(--ink-50)",
-                    color: "var(--ink-900)",
-                    fontFamily: "var(--font-mono)",
-                  }}
-                >
+                <pre className="auth-code auth-code-block">
                   <code>{buildExampleRequest(apiKey)}</code>
                 </pre>
               </div>
               <button
                 onClick={proceedToLogin}
-                className="auth-btn-primary w-full py-3.5 rounded-md font-semibold"
-                style={{ fontSize: "15px" }}
+                className="auth-btn-primary w-full rounded-md py-3.5 text-[15px] font-semibold"
               >
                 {continueLabel}
               </button>
@@ -259,14 +216,7 @@ export default function SignupForm() {
           )}
 
           {success && !apiKey && (
-            <div
-              className="mb-6 p-4 rounded-md text-sm flex items-center gap-3"
-              style={{
-                background: "var(--signal-canon-soft)",
-                border: "1px solid var(--signal-canon)",
-                color: "var(--signal-canon-ink)",
-              }}
-            >
+            <div className="auth-status auth-status-canon mb-6">
               <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
@@ -275,14 +225,7 @@ export default function SignupForm() {
           )}
 
           {error && (
-            <div
-              className="mb-6 p-4 rounded-md text-sm flex items-center gap-3"
-              style={{
-                background: "var(--signal-conflict-soft)",
-                border: "1px solid var(--signal-conflict)",
-                color: "var(--signal-conflict-ink)",
-              }}
-            >
+            <div className="auth-status auth-status-conflict mb-6">
               <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
@@ -319,17 +262,11 @@ export default function SignupForm() {
                 </button>
               </div>
 
-              <div className="flex items-center my-6">
-                <div className="flex-1" style={{ borderTop: "1px solid var(--ink-200)" }}></div>
-                <span className="px-4 text-sm" style={{ color: "var(--ink-500)" }}>
-                  or
-                </span>
-                <div className="flex-1" style={{ borderTop: "1px solid var(--ink-200)" }}></div>
-              </div>
+              <AuthDivider />
 
               <form onSubmit={handleSignup} className="space-y-4">
                 <div>
-                  <label htmlFor="signup-name" className="block text-sm font-medium mb-2" style={{ color: "var(--ink-900)" }}>Name</label>
+                  <label htmlFor="signup-name" className="auth-label">Name</label>
                   <input
                     id="signup-name"
                     type="text"
@@ -341,7 +278,7 @@ export default function SignupForm() {
                 </div>
 
                 <div>
-                  <label htmlFor="signup-email" className="block text-sm font-medium mb-2" style={{ color: "var(--ink-900)" }}>Email</label>
+                  <label htmlFor="signup-email" className="auth-label">Email</label>
                   <input
                     id="signup-email"
                     type="email"
@@ -354,7 +291,7 @@ export default function SignupForm() {
                 </div>
 
                 <div>
-                  <label htmlFor="signup-password" className="block text-sm font-medium mb-2" style={{ color: "var(--ink-900)" }}>Password</label>
+                  <label htmlFor="signup-password" className="auth-label">Password</label>
                   <input
                     id="signup-password"
                     type="password"
@@ -368,7 +305,7 @@ export default function SignupForm() {
                 </div>
 
                 <div>
-                  <label htmlFor="signup-confirm-password" className="block text-sm font-medium mb-2" style={{ color: "var(--ink-900)" }}>Confirm Password</label>
+                  <label htmlFor="signup-confirm-password" className="auth-label">Confirm Password</label>
                   <input
                     id="signup-confirm-password"
                     type="password"
@@ -396,8 +333,7 @@ export default function SignupForm() {
                 <button
                   type="submit"
                   disabled={isLoading || (turnstileRequired && !turnstileToken)}
-                  className="auth-btn-primary w-full py-3.5 rounded-md font-semibold disabled:opacity-50"
-                  style={{ fontSize: "15px" }}
+                  className="auth-btn-primary w-full rounded-md py-3.5 text-[15px] font-semibold disabled:opacity-50"
                 >
                   {isLoading ? (
                     <span className="flex items-center justify-center gap-2">
@@ -413,32 +349,23 @@ export default function SignupForm() {
                 </button>
               </form>
 
-              <p className="mt-4 text-xs text-center" style={{ color: "var(--ink-600)" }}>
+              <p className="auth-body mt-4 text-center text-xs">
                 By signing up, you agree to our{" "}
-                <Link href="/en/legal/terms" className="font-medium hover:underline" style={{ color: "var(--ink-900)" }}>Terms of Service</Link>{" "}
+                <Link href="/en/legal/terms" className="auth-link">Terms of Service</Link>{" "}
                 and{" "}
-                <Link href="/en/legal/privacy" className="font-medium hover:underline" style={{ color: "var(--ink-900)" }}>Privacy Policy</Link>
+                <Link href="/en/legal/privacy" className="auth-link">Privacy Policy</Link>
               </p>
 
-              <p className="mt-6 text-center text-sm" style={{ color: "var(--ink-600)" }}>
+              <p className="auth-body mt-6 text-center">
                 Already have an account?{" "}
-                <Link href={loginHref} className="font-medium" style={{ color: "var(--ink-900)", textDecoration: "underline" }}>
+                <Link href={loginHref} className="auth-link">
                   Sign in
                 </Link>
               </p>
             </>
           )}
-        </div>
-
-        <p className="mt-6 text-center">
-          <Link href="/" className="text-sm flex items-center justify-center gap-1 transition-colors" style={{ color: "var(--ink-500)" }}>
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-            Back to home
-          </Link>
-        </p>
-      </div>
-    </div>
+      </AuthCard>
+      <AuthHomeLink />
+    </AuthPage>
   );
 }

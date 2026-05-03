@@ -36,8 +36,8 @@ const nextConfig: NextConfig = {
       "frame-ancestors 'none'",
       "form-action 'self'",
       "img-src 'self' data: blob: https:",
-      "font-src 'self' data: https://fonts.gstatic.com https://cdn.jsdelivr.net",
-      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net",
+      "font-src 'self' data: https://cdn.jsdelivr.net",
+      "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net",
       [
         "script-src 'self' 'unsafe-inline'",
         isProduction ? '' : "'unsafe-eval'",
@@ -100,6 +100,7 @@ const nextConfig: NextConfig = {
       { source: '/:path*.ico', headers: [cacheHeader] },
       { source: '/:path*.woff', headers: [cacheHeader] },
       { source: '/:path*.woff2', headers: [cacheHeader] },
+      { source: '/:path*.ttf', headers: [cacheHeader] },
     ];
   },
 
