@@ -1,7 +1,13 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { hasServerSupabaseServiceRoleConfig } from '@/lib/supabase';
+import { InMemoryAuthorUiStore } from '@/lib/author/ui/in-memory-store';
 import { SupabaseAuthorUiStore } from '@/lib/author/ui/supabase-store';
 import { seedAuthorUiProject, type AuthorUiSeedRows } from '@/lib/author/ui/seed-project';
-import type { AuthorUiStore } from '@/lib/author/ui/store';
+import {
+  AuthorUiStoreConfigError,
+  createAuthorUiStoreForUser,
+  type AuthorUiStore,
+} from '@/lib/author/ui/store';
 import type {
   AuthorCandidateRow,
   AuthorCharacterRow,
@@ -11,6 +17,10 @@ import type {
 } from '@/lib/author/ui/store-types';
 
 describe('SupabaseAuthorUiStore', () => {
+  afterEach(() => {
+    delete process.env.AUTHOR_UI_STORE;
+  });
+
   it('writes import rows to author_imports', async () => {
     const { client, fromSpy, builder } = createClient();
     const store = new SupabaseAuthorUiStore({ userId: 'user-1', client });
@@ -114,6 +124,29 @@ describe('SupabaseAuthorUiStore', () => {
     await seedAuthorUiProject(store, 'user-1', 'knot', seedRows);
 
     expect(calls).toEqual(['import', 'candidates', 'character', 'conflict', 'simulation']);
+  });
+
+  it('creates memory stores when AUTHOR_UI_STORE is unset or memory', () => {
+    delete process.env.AUTHOR_UI_STORE;
+    expect(createAuthorUiStoreForUser({ userId: 'user-1' })).toBeInstanceOf(InMemoryAuthorUiStore);
+
+    process.env.AUTHOR_UI_STORE = 'memory';
+    expect(createAuthorUiStoreForUser({ userId: 'user-1' })).toBeInstanceOf(InMemoryAuthorUiStore);
+  });
+
+  it('creates supabase stores when AUTHOR_UI_STORE=supabase and config is present', () => {
+    process.env.AUTHOR_UI_STORE = 'supabase';
+    vi.mocked(hasServerSupabaseServiceRoleConfig).mockReturnValue(true);
+
+    expect(createAuthorUiStoreForUser({ userId: 'user-1' })).toBeInstanceOf(SupabaseAuthorUiStore);
+  });
+
+  it('fails supabase store dispatch when service-role config is missing', () => {
+    process.env.AUTHOR_UI_STORE = 'supabase';
+    vi.mocked(hasServerSupabaseServiceRoleConfig).mockReturnValue(false);
+
+    expect(() => createAuthorUiStoreForUser({ userId: 'user-1' }))
+      .toThrow(AuthorUiStoreConfigError);
   });
 });
 
