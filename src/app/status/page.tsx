@@ -105,10 +105,10 @@ function getStatusLabel(status: StatusData['status']): string {
 
 function getStatusColors(status: StatusData['status']) {
   const colors: Record<StatusData['status'], { bg: string; text: string; border: string }> = {
-    operational: { bg: 'bg-emerald-50', text: 'text-emerald-700', border: 'border-emerald-200' },
-    degraded: { bg: 'bg-yellow-50', text: 'text-yellow-700', border: 'border-yellow-200' },
+    operational: { bg: 'bg-[var(--signal-canon-soft)]', text: 'text-[var(--signal-canon-ink)]', border: 'border-[var(--signal-canon)]' },
+    degraded: { bg: 'bg-[var(--signal-pending-soft)]', text: 'text-[var(--signal-pending-ink)]', border: 'border-[var(--signal-pending)]' },
     partial_outage: { bg: 'bg-orange-50', text: 'text-orange-700', border: 'border-orange-200' },
-    major_outage: { bg: 'bg-red-50', text: 'text-red-700', border: 'border-red-200' },
+    major_outage: { bg: 'bg-[var(--signal-conflict-soft)]', text: 'text-[var(--signal-conflict-ink)]', border: 'border-[var(--signal-conflict)]' },
   };
   return colors[status];
 }
@@ -119,16 +119,16 @@ function SSRStatusContent({ data }: { data: StatusData }) {
   const statusLabel = getStatusLabel(computedStatus);
   const colors = getStatusColors(computedStatus);
   const statusIcon = computedStatus === 'operational' ? '\u2713' : '!';
-  const iconBg = computedStatus === 'operational' ? 'bg-emerald-500' :
-    computedStatus === 'major_outage' ? 'bg-red-500' : 'bg-orange-500';
+  const iconBg = computedStatus === 'operational' ? 'bg-[var(--signal-canon)]' :
+    computedStatus === 'major_outage' ? 'bg-[var(--signal-conflict)]' : 'bg-orange-500';
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <div className="flex items-center justify-between mb-8">
-        <Link href="/" className="text-2xl font-bold text-szn-text-1">
+        <Link href="/" className="text-2xl font-bold text-[var(--ink-900)]">
           Seizn
         </Link>
-        <span className="text-sm text-szn-text-2">System Status</span>
+        <span className="text-sm text-[var(--ink-600)]">System Status</span>
       </div>
 
       <div className={colors.bg + ' rounded-2xl p-6 mb-8 border ' + colors.border}>
@@ -140,7 +140,7 @@ function SSRStatusContent({ data }: { data: StatusData }) {
             <h1 className={'text-xl font-bold ' + colors.text}>
               {statusLabel}
             </h1>
-            <p className="text-szn-text-2 text-sm mt-1">
+            <p className="text-[var(--ink-600)] text-sm mt-1">
               Last updated: {new Date(data.last_updated).toISOString()}
             </p>
           </div>
@@ -148,45 +148,45 @@ function SSRStatusContent({ data }: { data: StatusData }) {
       </div>
 
       <div className="grid grid-cols-4 gap-4 mb-8">
-        <div className="bg-szn-card rounded-xl border p-4 text-center">
-          <p className="text-2xl font-bold text-szn-text-1">{data.uptime.last_24h.toFixed(2)}%</p>
-          <p className="text-sm text-szn-text-2">24 hours</p>
+        <div className="bg-[var(--ink-0)] rounded-xl border p-4 text-center">
+          <p className="text-2xl font-bold text-[var(--ink-900)]">{data.uptime.last_24h.toFixed(2)}%</p>
+          <p className="text-sm text-[var(--ink-600)]">24 hours</p>
         </div>
-        <div className="bg-szn-card rounded-xl border p-4 text-center">
-          <p className="text-2xl font-bold text-szn-text-1">{data.uptime.last_7d.toFixed(2)}%</p>
-          <p className="text-sm text-szn-text-2">7 days</p>
+        <div className="bg-[var(--ink-0)] rounded-xl border p-4 text-center">
+          <p className="text-2xl font-bold text-[var(--ink-900)]">{data.uptime.last_7d.toFixed(2)}%</p>
+          <p className="text-sm text-[var(--ink-600)]">7 days</p>
         </div>
-        <div className="bg-szn-card rounded-xl border p-4 text-center">
-          <p className="text-2xl font-bold text-szn-text-1">{data.uptime.last_30d.toFixed(2)}%</p>
-          <p className="text-sm text-szn-text-2">30 days</p>
+        <div className="bg-[var(--ink-0)] rounded-xl border p-4 text-center">
+          <p className="text-2xl font-bold text-[var(--ink-900)]">{data.uptime.last_30d.toFixed(2)}%</p>
+          <p className="text-sm text-[var(--ink-600)]">30 days</p>
         </div>
-        <div className="bg-szn-card rounded-xl border p-4 text-center">
-          <p className="text-2xl font-bold text-szn-text-1">{data.uptime.last_90d.toFixed(2)}%</p>
-          <p className="text-sm text-szn-text-2">90 days</p>
+        <div className="bg-[var(--ink-0)] rounded-xl border p-4 text-center">
+          <p className="text-2xl font-bold text-[var(--ink-900)]">{data.uptime.last_90d.toFixed(2)}%</p>
+          <p className="text-sm text-[var(--ink-600)]">90 days</p>
         </div>
       </div>
 
-      <div className="bg-szn-card rounded-2xl border mb-8">
+      <div className="bg-[var(--ink-0)] rounded-2xl border mb-8">
         <div className="p-4 border-b">
-          <h2 className="font-semibold text-szn-text-1">Service Status</h2>
+          <h2 className="font-semibold text-[var(--ink-900)]">Service Status</h2>
         </div>
         <div className="divide-y">
           {data.services.map((service) => {
-            const dotColor = service.status === 'operational' ? 'bg-emerald-500' :
-              service.status === 'degraded' ? 'bg-yellow-500' : 'bg-red-500';
-            const textColor = service.status === 'operational' ? 'text-szn-accent' :
-              service.status === 'degraded' ? 'text-yellow-600' : 'text-red-600';
+            const dotColor = service.status === 'operational' ? 'bg-[var(--signal-canon)]' :
+              service.status === 'degraded' ? 'bg-yellow-500' : 'bg-[var(--signal-conflict)]';
+            const textColor = service.status === 'operational' ? 'text-[var(--ink-900)]' :
+              service.status === 'degraded' ? 'text-[var(--signal-pending-ink)]' : 'text-[var(--signal-conflict-ink)]';
             const statusText = service.status === 'operational' ? 'Operational' :
               service.status === 'degraded' ? 'Degraded' : 'Down';
             return (
               <div key={service.name} className="flex items-center justify-between px-4 py-3">
                 <div className="flex items-center gap-3">
                   <div className={'w-2.5 h-2.5 rounded-full ' + dotColor} />
-                  <span className="font-medium text-szn-text-1">{service.name}</span>
+                  <span className="font-medium text-[var(--ink-900)]">{service.name}</span>
                 </div>
                 <div className="flex items-center gap-4">
                   {service.latency_ms && (
-                    <span className="text-sm text-szn-text-2">{service.latency_ms}ms</span>
+                    <span className="text-sm text-[var(--ink-600)]">{service.latency_ms}ms</span>
                   )}
                   <span className={'text-sm ' + textColor}>{statusText}</span>
                 </div>
@@ -218,7 +218,7 @@ export default async function StatusPage() {
   const data = await getStatusData();
 
   return (
-    <div className="min-h-screen bg-szn-bg">
+    <div className="min-h-screen bg-[var(--ink-50)]">
       {data && (
         <noscript>
           <SSRStatusContent data={data} />
