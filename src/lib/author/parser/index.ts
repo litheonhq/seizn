@@ -1,6 +1,5 @@
 import { parseDocxDocument } from './docx';
 import { parseMarkdownDocument } from './md';
-import { parsePdfDocument } from './pdf';
 import { parseTxtDocument } from './txt';
 import {
   AuthorDocumentParseError,
@@ -26,8 +25,13 @@ export async function parseAuthorDocument(input: {
       return parseMarkdownDocument(input.buffer);
     case 'docx':
       return parseDocxDocument(input.buffer);
-    case 'pdf':
+    case 'pdf': {
+      // Lazy import: pdf-parse depends on pdfjs-dist which references browser-only
+      // globals (DOMMatrix, etc.) at module load. Defer evaluation until a PDF
+      // file is actually parsed, so unrelated server endpoints don't crash.
+      const { parsePdfDocument } = await import('./pdf');
       return parsePdfDocument(input.buffer);
+    }
     case 'txt':
       return parseTxtDocument(input.buffer);
   }
