@@ -14,4 +14,6 @@ export const CHARACTER_COLUMNS = ['name', 'summary', 'scope', 'aliases'] as cons
 
 export const TIMELINE_COLUMNS = ['day', 'date', 'where', 'what'] as const;
 
+export const GRAPH_COLUMNS = ['from_name', 'relation', 'to_name', 'intensity_band', 'valid_at'] as const;
+
 export const AUDIT_COLUMNS = ['event', 'created', 'decision', 'llm', 'payload', 'replay'] as const;
