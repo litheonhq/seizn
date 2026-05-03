@@ -1,12 +1,13 @@
 'use client';
 
-import { type ChangeEvent, useMemo, useState } from 'react';
+import { type ChangeEvent, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import {
   AlertTriangle,
   Clock3,
   FileText,
   GitBranch,
+  Loader2,
   Play,
   RefreshCw,
   ScrollText,
@@ -50,6 +51,7 @@ export function AuthorMemoryV3Client() {
   const [simulationId, setSimulationId] = useState<string | undefined>();
   const [selectedCharacterId, setSelectedCharacterId] = useState<string | undefined>();
   const [backlogResult, setBacklogResult] = useState<JsonRecord | null>(null);
+  const [backlogElapsedSec, setBacklogElapsedSec] = useState(0);
   const [replayDecisionId, setReplayDecisionId] = useState<string | undefined>();
   const projects = useAuthorProjects();
   const projectId = String(projects.data?.projects?.[0]?.id ?? 'knot');
@@ -124,6 +126,7 @@ export function AuthorMemoryV3Client() {
 
   async function handleGenerateBacklog() {
     if (!activeCharacterId) return;
+    setBacklogElapsedSec(0);
     const result = await generateBacklog.trigger({
       categories: ['좋아하는 것', '싫어하는 것', '작은 보상', '작은 짜증'],
       items_per_category: 5,
@@ -131,6 +134,18 @@ export function AuthorMemoryV3Client() {
     setBacklogResult(result);
     setScreen('characters');
   }
+
+  useEffect(() => {
+    if (!generateBacklog.isMutating) {
+      setBacklogElapsedSec(0);
+      return;
+    }
+    const startedAt = Date.now();
+    const interval = setInterval(() => {
+      setBacklogElapsedSec(Math.floor((Date.now() - startedAt) / 1000));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [generateBacklog.isMutating]);
 
   return (
     <div className="min-h-screen bg-white text-slate-950">
@@ -278,12 +293,27 @@ export function AuthorMemoryV3Client() {
                   type="button"
                   onClick={handleGenerateBacklog}
                   disabled={!activeCharacterId || generateBacklog.isMutating}
+                  aria-busy={generateBacklog.isMutating}
                   className="inline-flex min-h-10 items-center gap-2 rounded-md bg-slate-950 px-3 text-sm font-medium text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  <Sparkles className="h-4 w-4" aria-hidden="true" />
-                  Generate backlog
+                  {generateBacklog.isMutating ? (
+                    <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                  ) : (
+                    <Sparkles className="h-4 w-4" aria-hidden="true" />
+                  )}
+                  {generateBacklog.isMutating ? 'AI가 생성 중…' : 'Generate backlog'}
                 </button>
-                {generateBacklog.error ? (
+                {generateBacklog.isMutating ? (
+                  <span
+                    className="inline-flex items-center gap-1 text-sm text-slate-500"
+                    role="status"
+                    aria-live="polite"
+                  >
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
+                    {backlogElapsedSec}초 경과 · 보통 10~30초 소요됩니다
+                  </span>
+                ) : null}
+                {!generateBacklog.isMutating && generateBacklog.error ? (
                   <span className="text-sm text-[var(--signal-conflict-ink)]">{generateBacklog.error.message}</span>
                 ) : null}
               </div>
