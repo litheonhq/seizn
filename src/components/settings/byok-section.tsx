@@ -1,7 +1,9 @@
 "use client";
 
 import { type FormEvent, useId, useState } from "react";
-import { AlertCircle, CheckCircle2, KeyRound, Trash2 } from "lucide-react";
+import { AlertCircle, CheckCircle2, ExternalLink, KeyRound, Trash2 } from "lucide-react";
+
+const ANTHROPIC_CONSOLE_KEYS_URL = "https://console.anthropic.com/settings/keys";
 import type {
   AuthorSettingsCopy,
   ByokDiscountState,
@@ -98,6 +100,36 @@ export function ByokSection({
           ) : null}
         </div>
       </dl>
+
+      {!isActive ? (
+        <div
+          className="mt-5 rounded-md border border-szn-border bg-szn-bg p-4"
+          aria-labelledby={`${inputId}-helper-title`}
+        >
+          <p
+            id={`${inputId}-helper-title`}
+            className="text-sm font-medium text-szn-text-1"
+          >
+            {copy.helper.title}
+          </p>
+          <a
+            href={ANTHROPIC_CONSOLE_KEYS_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={copy.helper.buttonAriaLabel}
+            className="mt-3 inline-flex min-h-10 items-center justify-center gap-2 rounded-md border border-szn-border bg-szn-card px-4 text-sm font-medium text-szn-text-1 transition-colors hover:bg-szn-surface focus:outline-none focus-visible:ring-2 focus-visible:ring-szn-accent/40"
+          >
+            {copy.helper.buttonLabel}
+            <ExternalLink className="h-4 w-4" aria-hidden="true" />
+          </a>
+          <ol className="mt-3 list-decimal space-y-1 pl-5 text-xs leading-5 text-szn-text-2">
+            <li>{copy.helper.step1}</li>
+            <li>{copy.helper.step2}</li>
+            <li>{copy.helper.step3}</li>
+            <li>{copy.helper.step4}</li>
+          </ol>
+        </div>
+      ) : null}
 
       <form onSubmit={handleSave} className="mt-5 grid gap-3 md:grid-cols-[1fr_auto]">
         <div>
