@@ -128,11 +128,11 @@ export function RegionSelector({
       {/* Current Region Display */}
       <div className="szn-card rounded-lg p-6">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-szn-text-1">
+          <h3 className="text-lg font-semibold text-[var(--ink-900)]">
             Data Residency
           </h3>
           {regionLocked && (
-            <span className="px-2 py-1 text-xs font-medium bg-amber-100 text-amber-700 rounded-full flex items-center gap-1">
+            <span className="px-2 py-1 text-xs font-medium bg-[var(--signal-pending-soft)] text-[var(--signal-pending-ink)] rounded-full flex items-center gap-1">
               <LockIcon className="w-3 h-3" />
               Locked
             </span>
@@ -144,10 +144,10 @@ export function RegionSelector({
             {currentRegionConfig.flag}
           </div>
           <div>
-            <p className="font-medium text-szn-text-1">
+            <p className="font-medium text-[var(--ink-900)]">
               {currentRegionConfig.name}
             </p>
-            <p className="text-sm text-szn-text-2">
+            <p className="text-sm text-[var(--ink-600)]">
               {currentRegionConfig.dataCenter.city}, {currentRegionConfig.dataCenter.country}
             </p>
           </div>
@@ -157,7 +157,7 @@ export function RegionSelector({
           {currentRegionConfig.compliance.map((cert) => (
             <span
               key={cert}
-              className="px-2 py-1 text-xs font-medium bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 rounded-full"
+              className="px-2 py-1 text-xs font-medium bg-[var(--signal-canon-soft)] dark:bg-green-900/20 text-[var(--signal-canon-ink)] dark:text-green-400 rounded-full"
             >
               {cert}
             </span>
@@ -174,7 +174,7 @@ export function RegionSelector({
           </button>
           <button
             onClick={() => setShowHistoryModal(true)}
-            className="px-4 py-2.5 rounded-xl font-medium bg-szn-surface text-szn-text-1 hover:bg-szn-surface-1 transition-all"
+            className="px-4 py-2.5 rounded-xl font-medium bg-[var(--ink-50)] text-[var(--ink-900)] hover:bg-[var(--ink-50)] transition-all"
           >
             <HistoryIcon className="w-5 h-5" />
           </button>
@@ -188,10 +188,10 @@ export function RegionSelector({
             className="absolute inset-0 bg-black/30 backdrop-blur-sm"
             onClick={() => setShowModal(false)}
           />
-          <div className="relative szn-card rounded-3xl p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl animate-scale-in">
+          <div className="relative szn-card rounded-2xl p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl animate-scale-in">
             <button
               onClick={() => setShowModal(false)}
-              className="absolute top-4 right-4 p-2 text-szn-text-3 hover:text-szn-text-2 hover:bg-szn-surface-1 rounded-full transition-colors"
+              className="absolute top-4 right-4 p-2 text-[var(--ink-500)] hover:text-[var(--ink-600)] hover:bg-[var(--ink-50)] rounded-full transition-colors"
             >
               <CloseIcon className="w-5 h-5" />
             </button>
@@ -200,16 +200,16 @@ export function RegionSelector({
               <div className="w-14 h-14 mx-auto mb-4 rounded-lg bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center shadow-lg">
                 <GlobeIcon className="w-7 h-7 text-white" />
               </div>
-              <h2 className="text-xl font-bold text-szn-text-1">
+              <h2 className="text-xl font-bold text-[var(--ink-900)]">
                 Change Data Region
               </h2>
-              <p className="text-szn-text-2 text-sm mt-1">
+              <p className="text-[var(--ink-600)] text-sm mt-1">
                 Select where your organization&apos;s data will be stored
               </p>
             </div>
 
             {error && (
-              <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800 rounded-xl text-red-600 dark:text-red-400 text-sm">
+              <div className="mb-4 p-3 bg-[var(--signal-conflict-soft)] dark:bg-[var(--signal-conflict)]/20 border border-[var(--signal-conflict)] dark:border-[var(--signal-conflict)] rounded-xl text-[var(--signal-conflict-ink)] dark:text-[var(--signal-conflict-soft)] text-sm">
                 {error}
               </div>
             )}
@@ -228,38 +228,38 @@ export function RegionSelector({
                     disabled={!isAvailable || !region.available}
                     className={`p-4 rounded-xl border-2 text-left transition-all ${
                       isSelected
-                        ? "border-szn-accent bg-szn-accent/5 dark:bg-szn-accent/10"
+                        ? "border-[var(--ink-900)] bg-[var(--ink-900)]/5 dark:bg-[var(--ink-900)]/10"
                         : isAvailable && region.available
-                        ? "border-szn-border hover:border-szn-text-3"
-                        : "border-szn-border opacity-50 cursor-not-allowed"
+                        ? "border-[var(--ink-200)] hover:border-[var(--ink-500)]"
+                        : "border-[var(--ink-200)] opacity-50 cursor-not-allowed"
                     }`}
                   >
                     <div className="flex items-start gap-3">
                       <span className="text-2xl">{region.flag}</span>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          <p className="font-medium text-szn-text-1 truncate">
+                          <p className="font-medium text-[var(--ink-900)] truncate">
                             {region.name}
                           </p>
                           {isCurrent && (
-                            <span className="px-1.5 py-0.5 text-[10px] font-medium bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded">
+                            <span className="px-1.5 py-0.5 text-[10px] font-medium bg-[var(--signal-canon-soft)] dark:bg-green-900/30 text-[var(--signal-canon-ink)] dark:text-green-400 rounded">
                               Current
                             </span>
                           )}
                           {!region.available && (
-                            <span className="px-1.5 py-0.5 text-[10px] font-medium bg-szn-surface text-szn-text-2 rounded">
+                            <span className="px-1.5 py-0.5 text-[10px] font-medium bg-[var(--ink-50)] text-[var(--ink-600)] rounded">
                               Coming Soon
                             </span>
                           )}
                         </div>
-                        <p className="text-xs text-szn-text-2 mt-0.5">
+                        <p className="text-xs text-[var(--ink-600)] mt-0.5">
                           {region.dataCenter.city}
                         </p>
                         <div className="flex flex-wrap gap-1 mt-2">
                           {region.compliance.slice(0, 3).map((cert) => (
                             <span
                               key={cert}
-                              className="px-1.5 py-0.5 text-[10px] bg-szn-surface text-szn-text-2 rounded"
+                              className="px-1.5 py-0.5 text-[10px] bg-[var(--ink-50)] text-[var(--ink-600)] rounded"
                             >
                               {cert}
                             </span>
@@ -295,11 +295,11 @@ export function RegionSelector({
 
             {/* Migration Info */}
             {migrationInfo && (
-              <div className="mb-6 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-xl">
-                <h4 className="font-medium text-amber-900 dark:text-amber-300 mb-2">
+              <div className="mb-6 p-4 bg-[var(--signal-pending-soft)] dark:bg-[var(--signal-pending)]/20 rounded-xl">
+                <h4 className="font-medium text-[var(--signal-pending-ink)] dark:text-[var(--signal-pending-soft)] mb-2">
                   Migration Information
                 </h4>
-                <ul className="text-sm text-amber-800 dark:text-amber-400 space-y-1">
+                <ul className="text-sm text-[var(--signal-pending-ink)] dark:text-[var(--signal-pending-soft)] space-y-1">
                   <li>
                     <strong>Estimated Duration:</strong>{" "}
                     {migrationInfo.estimatedDuration}
@@ -315,7 +315,7 @@ export function RegionSelector({
             {/* Reason Input */}
             {selectedRegion !== currentRegion && (
               <div className="mb-6">
-                <label className="block text-sm font-medium text-szn-text-1 mb-1.5">
+                <label className="block text-sm font-medium text-[var(--ink-900)] mb-1.5">
                   Reason for change (optional)
                 </label>
                 <input
@@ -323,7 +323,7 @@ export function RegionSelector({
                   value={reason}
                   onChange={(e) => setReason(e.target.value)}
                   placeholder="e.g., Compliance requirement, latency optimization"
-                  className="w-full px-4 py-3 bg-szn-card border border-szn-border rounded-xl text-szn-text-1 placeholder-szn-text-3 focus:outline-none focus:ring-2 focus:ring-szn-accent/40 dark:focus:ring-szn-accent/50 focus:border-transparent transition-all"
+                  className="w-full px-4 py-3 bg-[var(--ink-0)] border border-[var(--ink-200)] rounded-xl text-[var(--ink-900)] placeholder-[var(--ink-500)] focus:outline-none focus:ring-2 focus:ring-[var(--ink-900)]/40 dark:focus:ring-[var(--ink-900)]/50 focus:border-transparent transition-all"
                 />
               </div>
             )}
@@ -331,7 +331,7 @@ export function RegionSelector({
             <div className="flex gap-3">
               <button
                 onClick={() => setShowModal(false)}
-                className="flex-1 px-4 py-3 bg-szn-surface text-szn-text-1 rounded-xl font-medium hover:bg-szn-surface-1 transition-colors"
+                className="flex-1 px-4 py-3 bg-[var(--ink-50)] text-[var(--ink-900)] rounded-xl font-medium hover:bg-[var(--ink-50)] transition-colors"
               >
                 Cancel
               </button>
@@ -354,24 +354,24 @@ export function RegionSelector({
             className="absolute inset-0 bg-black/30 backdrop-blur-sm"
             onClick={() => setShowHistoryModal(false)}
           />
-          <div className="relative szn-card rounded-3xl p-8 w-full max-w-lg shadow-2xl animate-scale-in">
+          <div className="relative szn-card rounded-2xl p-8 w-full max-w-lg shadow-2xl animate-scale-in">
             <button
               onClick={() => setShowHistoryModal(false)}
-              className="absolute top-4 right-4 p-2 text-szn-text-3 hover:text-szn-text-2 hover:bg-szn-surface-1 rounded-full transition-colors"
+              className="absolute top-4 right-4 p-2 text-[var(--ink-500)] hover:text-[var(--ink-600)] hover:bg-[var(--ink-50)] rounded-full transition-colors"
             >
               <CloseIcon className="w-5 h-5" />
             </button>
 
             <div className="text-center mb-6">
-              <h2 className="text-xl font-bold text-szn-text-1">
+              <h2 className="text-xl font-bold text-[var(--ink-900)]">
                 Region Change History
               </h2>
             </div>
 
             {isLoadingHistory ? (
-              <div className="py-8 text-center text-szn-text-2">Loading...</div>
+              <div className="py-8 text-center text-[var(--ink-600)]">Loading...</div>
             ) : history.length === 0 ? (
-              <div className="py-8 text-center text-szn-text-2">
+              <div className="py-8 text-center text-[var(--ink-600)]">
                 No region changes recorded
               </div>
             ) : (
@@ -379,7 +379,7 @@ export function RegionSelector({
                 {history.map((item) => (
                   <div
                     key={item.id}
-                    className="p-4 bg-szn-bg rounded-xl"
+                    className="p-4 bg-[var(--ink-50)] rounded-xl"
                   >
                     <div className="flex items-center gap-2 mb-2">
                       {item.from_region && (
@@ -387,24 +387,24 @@ export function RegionSelector({
                           <span className="text-lg">
                             {REGIONS[item.from_region]?.flag || "?"}
                           </span>
-                          <span className="text-szn-text-3">→</span>
+                          <span className="text-[var(--ink-500)]">→</span>
                         </>
                       )}
                       <span className="text-lg">
                         {REGIONS[item.to_region]?.flag || "?"}
                       </span>
-                      <span className="font-medium text-szn-text-1">
+                      <span className="font-medium text-[var(--ink-900)]">
                         {REGIONS[item.to_region]?.name || item.to_region}
                       </span>
                     </div>
-                    <div className="flex items-center gap-2 text-xs text-szn-text-2">
+                    <div className="flex items-center gap-2 text-xs text-[var(--ink-600)]">
                       <span>{formatDate(item.created_at)}</span>
-                      <span className="px-1.5 py-0.5 bg-szn-surface rounded">
+                      <span className="px-1.5 py-0.5 bg-[var(--ink-50)] rounded">
                         {item.change_type.replace("_", " ")}
                       </span>
                     </div>
                     {item.reason && (
-                      <p className="mt-2 text-sm text-szn-text-2">
+                      <p className="mt-2 text-sm text-[var(--ink-600)]">
                         {item.reason}
                       </p>
                     )}
@@ -415,7 +415,7 @@ export function RegionSelector({
 
             <button
               onClick={() => setShowHistoryModal(false)}
-              className="w-full mt-6 px-4 py-3 bg-szn-surface text-szn-text-1 rounded-xl font-medium hover:bg-szn-surface-1 transition-colors"
+              className="w-full mt-6 px-4 py-3 bg-[var(--ink-50)] text-[var(--ink-900)] rounded-xl font-medium hover:bg-[var(--ink-50)] transition-colors"
             >
               Close
             </button>

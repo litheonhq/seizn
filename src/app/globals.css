@@ -16,23 +16,26 @@
   --foreground: #f8fafc;
 }
 
-/* ===== Seizn Design Tokens ===== */
+/* ===== Seizn Design Tokens — V1 monochrome ink + 3 semantic signals =====
+   Phase D'' V1 token system extension to dashboard / settings / locale routes.
+   --szn-* are remapped to V1 ink + signal tokens for visual brand consistency
+   while we incrementally rewrite Tailwind class strings off the legacy aliases. */
 :root {
-  --szn-bg: #fafaf9;
-  --szn-surface: #f1f5f9;
-  --szn-card: #ffffff;
-  --szn-text-1: #0f172a;
-  --szn-text-2: #475569;
-  --szn-text-3: #64748b;
-  --szn-accent: #22d3ee;
-  --szn-accent-2: #6366f1;
-  --szn-danger: #ef4444;
-  --szn-success: #22c55e;
-  --szn-warning: #f59e0b;
-  --szn-border: #e2e8f0;
-  --szn-border-subtle: rgba(148, 163, 184, 0.25);
-  --szn-surface-1: rgba(0, 0, 0, 0.03);
-  --szn-surface-2: rgba(0, 0, 0, 0.06);
+  --szn-bg: var(--ink-50);
+  --szn-surface: var(--ink-50);
+  --szn-card: var(--ink-0);
+  --szn-text-1: var(--ink-900);
+  --szn-text-2: var(--ink-600);
+  --szn-text-3: var(--ink-500);
+  --szn-accent: var(--ink-900);
+  --szn-accent-2: var(--ink-700);
+  --szn-danger: var(--signal-conflict);
+  --szn-success: var(--signal-canon);
+  --szn-warning: var(--signal-pending);
+  --szn-border: var(--ink-200);
+  --szn-border-subtle: oklch(0.50 0.014 250 / 0.25);
+  --szn-surface-1: oklch(0.14 0.012 250 / 0.04);
+  --szn-surface-2: oklch(0.14 0.012 250 / 0.07);
   --szn-radius-sm: 8px;
   --szn-radius-md: 10px;
   --szn-radius-lg: 16px;
@@ -61,16 +64,18 @@
 }
 
 .dark {
-  --szn-bg: #070a12;
-  --szn-surface: #0f172a;
-  --szn-card: #111827;
-  --szn-text-1: #f8fafc;
-  --szn-text-2: #cbd5e1;
-  --szn-text-3: #94a3b8;
-  --szn-border: #253047;
-  --szn-border-subtle: rgba(148, 163, 184, 0.15);
-  --szn-surface-1: rgba(255, 255, 255, 0.06);
-  --szn-surface-2: rgba(255, 255, 255, 0.1);
+  /* Dark mode keeps V1 ink scale meaning by inverting the light/dark anchor.
+     ink-0 is page surface (deepest), ink-900 is highest-contrast text. */
+  --szn-bg: var(--ink-950);
+  --szn-surface: var(--ink-900);
+  --szn-card: var(--ink-900);
+  --szn-text-1: var(--ink-50);
+  --szn-text-2: var(--ink-200);
+  --szn-text-3: var(--ink-300);
+  --szn-border: var(--ink-700);
+  --szn-border-subtle: oklch(0.80 0.010 250 / 0.15);
+  --szn-surface-1: oklch(0.99 0.003 250 / 0.06);
+  --szn-surface-2: oklch(0.99 0.003 250 / 0.10);
   --szn-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.12);
   --szn-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.16), 0 1px 3px rgba(0, 0, 0, 0.1);
   --szn-shadow-md: 0 6px 22px rgba(0, 0, 0, 0.2), 0 4px 8px rgba(0, 0, 0, 0.08);
