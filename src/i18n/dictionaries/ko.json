@@ -273,6 +273,27 @@
         "finops": "비용관리",
         "connect": "연동",
         "system": "시스템"
+      },
+      "memory": {
+        "author_memory": "작가 메모리"
+      },
+      "author": {
+        "workspace": "작가 작업실",
+        "groups": {
+          "work": "작업",
+          "account": "계정"
+        },
+        "inbox": "받은 자료",
+        "review": "검토 대기",
+        "characters": "인물",
+        "graph": "관계도",
+        "timeline": "시간축",
+        "conflicts": "충돌",
+        "simulate": "장면 미리보기",
+        "audit": "결정 기록",
+        "usage": "사용량",
+        "byok": "내 AI 키",
+        "settings": "설정"
       }
     },
     "pinSidebar": "사이드바 고정",
@@ -3343,6 +3364,262 @@
       "title": "질문이 있으신가요?",
       "description": "보안 관련 질문에 기꺼이 답변드립니다.",
       "email": "security@seizn.com"
+    }
+  },
+  "author": {
+    "tabs": {
+      "inbox": "받은 자료",
+      "review": "검토 대기",
+      "characters": "인물",
+      "graph": "관계도",
+      "timeline": "시간축",
+      "conflicts": "충돌",
+      "simulate": "장면 미리보기",
+      "audit": "결정 기록"
+    },
+    "cards": {
+      "imports": "받은 자료",
+      "candidates": "검토 후보",
+      "characters": "등록 인물",
+      "conflicts": "충돌 건수",
+      "edges": "관계 연결",
+      "events": "사건 수"
+    },
+    "table": {
+      "imports": {
+        "columns": {
+          "file_name": "파일 이름",
+          "source_role": "자료 분류",
+          "parse_status": "분석 상태",
+          "extract_status": "추출 상태",
+          "candidate_count": "추출된 후보 수",
+          "parsed_text_preview": "본문 미리보기",
+          "error_message": "오류 메시지"
+        },
+        "parse_status": {
+          "queued": "대기",
+          "parsing": "분석 중",
+          "parsed": "완료",
+          "failed": "실패"
+        },
+        "extract_status": {
+          "queued": "대기",
+          "extracting": "추출 중",
+          "extracted": "완료",
+          "failed": "실패"
+        },
+        "source_role": {
+          "canon": "캐논",
+          "character": "인물",
+          "scene": "장면",
+          "reference": "참고",
+          "visual": "비주얼"
+        }
+      },
+      "candidates": {
+        "columns": {
+          "type": "종류",
+          "status": "상태",
+          "confidence": "신뢰도",
+          "content": "내용",
+          "id": "자세히"
+        },
+        "type": {
+          "character": "인물",
+          "world_rule": "세계 규칙",
+          "event": "사건",
+          "relationship": "관계",
+          "voice_sample": "대사 샘플",
+          "fact": "사실"
+        },
+        "status": {
+          "candidate": "검토 중",
+          "canon": "캐논 채택",
+          "rejected": "반려",
+          "retired": "퇴장",
+          "past_only": "과거 한정",
+          "contradicted": "모순",
+          "invalidated": "무효",
+          "author_only": "작가 전용",
+          "character_known": "인물 인지",
+          "character_unknown": "인물 비인지"
+        }
+      },
+      "characters": {
+        "columns": {
+          "name": "이름",
+          "summary": "한 줄 소개",
+          "scope": "등장 범위",
+          "aliases": "다른 이름"
+        }
+      },
+      "graph": {
+        "columns": {
+          "from_name": "출발 인물",
+          "relation": "관계",
+          "to_name": "도착 인물",
+          "intensity_band": "관계 강도",
+          "valid_at": "시작 시점"
+        }
+      },
+      "timeline": {
+        "columns": {
+          "day": "Day",
+          "date": "날짜",
+          "where": "장소",
+          "what": "일어난 일"
+        }
+      },
+      "audit": {
+        "columns": {
+          "event": "결정 종류",
+          "created": "시각",
+          "decision": "결정 ID",
+          "llm": "LLM 정보",
+          "payload": "자세한 내용",
+          "replay": "재생"
+        }
+      }
+    },
+    "empty": {
+      "inbox": {
+        "title": "받은 자료가 아직 없어요",
+        "body": "원고와 설정 자료를 업로드하면 자동으로 분석하고 검토 대기로 넘겨요.",
+        "cta": "자료 업로드",
+        "parsing": {
+          "title": "자료를 읽는 중이에요",
+          "body": "큰 파일은 1~2분 정도 걸릴 수 있어요. 끝나면 후보 사실을 자동으로 정리해요.",
+          "cta": ""
+        }
+      },
+      "inbox_parsing": {
+        "title": "자료를 읽는 중이에요",
+        "body": "큰 파일은 1~2분 정도 걸릴 수 있어요. 끝나면 후보 사실을 자동으로 정리해요.",
+        "cta": ""
+      },
+      "review": {
+        "title": "검토할 후보가 없어요",
+        "body": "새 자료를 업로드하거나 인물 화면에서 백로그를 생성하면 후보를 채울 수 있어요.",
+        "cta": "백로그 생성"
+      },
+      "characters": {
+        "title": "등록된 인물이 없어요",
+        "body": "첫 자료가 들어오면 후보로 열린 인물을 캐논으로 채택할 수 있어요.",
+        "cta": "자료 업로드"
+      },
+      "character_detail": {
+        "title": "아직 비어 있는 인물이에요",
+        "body": "백로그를 생성하면 좋아하는 것과 싫어하는 것 같은 작은 결을 빠르게 채울 수 있어요.",
+        "cta": "백로그 생성"
+      },
+      "graph": {
+        "title": "관계도가 비어 있어요",
+        "body": "인물이 두 명 이상 등록되고 관계가 열리면 여기에서 한눈에 볼 수 있어요.",
+        "cta": ""
+      },
+      "timeline": {
+        "title": "시간축이 비어 있어요",
+        "body": "사건이 들어오면 Day 단위로 정리해요. 사건은 자료에서 자동으로 추출하거나 직접 추가할 수 있어요.",
+        "cta": "사건 추가"
+      },
+      "conflicts": {
+        "title": "충돌이 없어요",
+        "body": "캐논과 부딪히는 새 사실이 생기면 여기로 모여요. 지금은 깨끗해요.",
+        "cta": ""
+      },
+      "simulate": {
+        "title": "장면을 아직 돌려보지 않았어요",
+        "body": "인물 두 명을 고르고 장면 입력을 적으면 그 인물이 무엇을 느끼고 어떻게 말할지 미리 보여줘요.",
+        "cta": "장면 만들기"
+      },
+      "audit": {
+        "title": "기록된 결정이 아직 없어요",
+        "body": "후보를 채택하거나 충돌을 해결하면 결정이 시간 순서로 쌓여요.",
+        "cta": ""
+      }
+    },
+    "graph": {
+      "bands": {
+        "very_strong_positive": "매우 강한 호감",
+        "positive": "호감",
+        "weak_positive": "약한 호감",
+        "neutral": "중립",
+        "weak_negative": "약한 거리감",
+        "negative": "거리감",
+        "very_strong_negative": "매우 강한 적대"
+      },
+      "relation": {
+        "best_friend": "단짝",
+        "co_lead": "공동 주역",
+        "senior_mentor": "선배·멘토",
+        "family": "가족",
+        "informant": "정보원",
+        "crush": "호감 대상",
+        "rival": "라이벌",
+        "acquaintance": "지인",
+        "unknown": "정해지지 않음"
+      },
+      "view": {
+        "diagram": "그림으로 보기",
+        "table": "표로 보기"
+      },
+      "unknown_name": "이 인물의 이름이 아직 등록되지 않았어요.",
+      "unknown_relation": "등록되지 않은 관계 종류입니다. 추가 등록이 필요할 수 있어요."
+    },
+    "conflict": {
+      "severity": {
+        "high": "심각",
+        "medium": "중요",
+        "low": "낮음"
+      },
+      "status": {
+        "unresolved": "미해결",
+        "resolved": "해결됨",
+        "deferred": "보류"
+      },
+      "actions": {
+        "keep_existing": "기존 캐논 유지",
+        "replace_with_new": "새 사실로 교체",
+        "defer_both": "둘 다 보류",
+        "custom": "직접 수정"
+      },
+      "title": "충돌",
+      "reasoning_title": "충돌 근거",
+      "impact_title": "영향",
+      "impact_fallback": "이 결정이 다른 캐논에 미칠 영향은 작습니다.",
+      "undo": "되돌리기"
+    },
+    "events": {
+      "project.created": "프로젝트 생성",
+      "import.upload": "자료 업로드",
+      "import.parsed": "자료 분석 완료",
+      "import.failed": "자료 분석 실패",
+      "import.retried": "자료 재시도",
+      "import.deleted": "자료 삭제",
+      "candidate.added": "후보 추가",
+      "candidate.decided": "후보 결정",
+      "candidate.batch_decided": "후보 일괄 결정",
+      "character.updated": "인물 수정",
+      "conflict.resolved": "충돌 해결",
+      "simulation.run": "장면 실행",
+      "simulation.replay": "장면 재생",
+      "backlog.generated": "백로그 생성",
+      "settings.updated": "설정 수정",
+      "byok.updated": "BYOK 수정"
+    },
+    "actions": {
+      "generate_backlog": "백로그 생성",
+      "run_scene": "장면 돌리기",
+      "upload": "업로드"
+    },
+    "toasts": {
+      "review_queue_updated": "검토 대기 새로고침 완료",
+      "uploading": "업로드 중…",
+      "ai_generating": "AI가 생성 중이에요…"
+    },
+    "panels": {
+      "inbox": "받은 자료함",
+      "review": "검토 대기"
     }
   }
 }
