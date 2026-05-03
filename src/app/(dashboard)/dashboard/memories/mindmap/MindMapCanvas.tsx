@@ -324,10 +324,10 @@ export default function MindMapCanvas() {
   // Loading state
   if (isLoading) {
     return (
-      <div className="h-[calc(100vh-8rem)] flex items-center justify-center bg-szn-bg rounded-lg">
+      <div className="h-[calc(100vh-8rem)] flex items-center justify-center bg-[var(--ink-50)] rounded-lg">
         <div className="text-center space-y-4">
-          <div className="w-12 h-12 border-4 border-szn-accent border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="text-szn-text-2">Loading mind map...</p>
+          <div className="w-12 h-12 border-4 border-[var(--ink-900)] border-t-transparent rounded-full animate-spin mx-auto" />
+          <p className="text-[var(--ink-600)]">Loading mind map...</p>
         </div>
       </div>
     );
@@ -336,11 +336,11 @@ export default function MindMapCanvas() {
   // Error state
   if (error) {
     return (
-      <div className="h-[calc(100vh-8rem)] flex items-center justify-center bg-szn-bg rounded-lg">
+      <div className="h-[calc(100vh-8rem)] flex items-center justify-center bg-[var(--ink-50)] rounded-lg">
         <div className="text-center space-y-4 max-w-md">
-          <div className="w-16 h-16 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center mx-auto">
+          <div className="w-16 h-16 rounded-full bg-[var(--signal-conflict-soft)] dark:bg-[var(--signal-conflict)]/30 flex items-center justify-center mx-auto">
             <svg
-              className="w-8 h-8 text-red-500"
+              className="w-8 h-8 text-[var(--signal-conflict-ink)]"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -353,13 +353,13 @@ export default function MindMapCanvas() {
               />
             </svg>
           </div>
-          <h3 className="text-lg font-semibold text-szn-text-1">
+          <h3 className="text-lg font-semibold text-[var(--ink-900)]">
             Failed to load mind map
           </h3>
-          <p className="text-szn-text-2">{error.message}</p>
+          <p className="text-[var(--ink-600)]">{error.message}</p>
           <button
             onClick={() => refetch()}
-            className="px-4 py-2 bg-szn-accent hover:bg-szn-accent/90 text-white rounded-lg transition-colors"
+            className="px-4 py-2 bg-[var(--ink-900)] hover:bg-[var(--ink-900)]/90 text-white rounded-lg transition-colors"
           >
             Try Again
           </button>
@@ -371,11 +371,11 @@ export default function MindMapCanvas() {
   // Empty state
   if (!data || data.nodes.length === 0) {
     return (
-      <div className="h-[calc(100vh-8rem)] flex items-center justify-center bg-szn-bg rounded-lg">
+      <div className="h-[calc(100vh-8rem)] flex items-center justify-center bg-[var(--ink-50)] rounded-lg">
         <div className="text-center space-y-4 max-w-md">
-          <div className="w-16 h-16 rounded-full bg-szn-surface flex items-center justify-center mx-auto">
+          <div className="w-16 h-16 rounded-full bg-[var(--ink-50)] flex items-center justify-center mx-auto">
             <svg
-              className="w-8 h-8 text-szn-text-3"
+              className="w-8 h-8 text-[var(--ink-500)]"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -388,10 +388,10 @@ export default function MindMapCanvas() {
               />
             </svg>
           </div>
-          <h3 className="text-lg font-semibold text-szn-text-1">
+          <h3 className="text-lg font-semibold text-[var(--ink-900)]">
             No memories yet
           </h3>
-          <p className="text-szn-text-2">
+          <p className="text-[var(--ink-600)]">
             Start adding memories via the API to see them visualized here as a knowledge graph.
           </p>
         </div>
@@ -415,7 +415,7 @@ export default function MindMapCanvas() {
       )}
 
       {/* Main Canvas */}
-      <div className="flex-1 bg-szn-bg rounded-lg border border-szn-border overflow-hidden">
+      <div className="flex-1 bg-[var(--ink-50)] rounded-lg border border-[var(--ink-200)] overflow-hidden">
         <ReactFlow
           nodes={nodes}
           edges={edges}
@@ -439,14 +439,14 @@ export default function MindMapCanvas() {
             gap={20}
             size={1}
             color="rgba(156, 163, 175, 0.3)"
-            className="dark:!bg-gray-900"
+            className="dark:!bg-[var(--ink-900)]"
           />
           <Controls
-            className="!bg-szn-card !border-szn-border !rounded-lg !shadow-lg"
+            className="!bg-[var(--ink-0)] !border-[var(--ink-200)] !rounded-lg !shadow-lg"
             showInteractive={false}
           />
           <MiniMap
-            className="!bg-szn-card !border-szn-border !rounded-lg"
+            className="!bg-[var(--ink-0)] !border-[var(--ink-200)] !rounded-lg"
             nodeColor={(node) => {
               const data = node.data as MindMapNodeData;
               switch (data?.type) {
@@ -474,11 +474,11 @@ export default function MindMapCanvas() {
             <Panel position="top-left">
               <button
                 onClick={() => setShowFilters(true)}
-                className="p-2 bg-szn-card border border-szn-border rounded-lg shadow-lg hover:bg-szn-surface-1 transition-colors"
+                className="p-2 bg-[var(--ink-0)] border border-[var(--ink-200)] rounded-lg shadow-lg hover:bg-[var(--ink-50)] transition-colors"
                 title="Show Filters"
               >
                 <svg
-                  className="w-5 h-5 text-szn-text-2"
+                  className="w-5 h-5 text-[var(--ink-600)]"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -496,16 +496,16 @@ export default function MindMapCanvas() {
 
           {/* Stats Panel */}
           <Panel position="top-right">
-            <div className="bg-szn-card border border-szn-border rounded-lg shadow-lg px-4 py-2 flex items-center gap-4 text-sm">
-              <span className="text-szn-text-2">
-                <span className="font-semibold text-szn-text-1">
+            <div className="bg-[var(--ink-0)] border border-[var(--ink-200)] rounded-lg shadow-lg px-4 py-2 flex items-center gap-4 text-sm">
+              <span className="text-[var(--ink-600)]">
+                <span className="font-semibold text-[var(--ink-900)]">
                   {nodes.length}
                 </span>{" "}
                 nodes
               </span>
-              <span className="text-szn-text-3">|</span>
-              <span className="text-szn-text-2">
-                <span className="font-semibold text-szn-text-1">
+              <span className="text-[var(--ink-500)]">|</span>
+              <span className="text-[var(--ink-600)]">
+                <span className="font-semibold text-[var(--ink-900)]">
                   {edges.length}
                 </span>{" "}
                 connections

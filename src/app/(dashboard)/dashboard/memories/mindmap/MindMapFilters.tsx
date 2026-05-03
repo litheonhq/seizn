@@ -69,18 +69,18 @@ const ClockIcon = ({ className }: { className?: string }) => (
 
 const noteTypes: { value: NoteType; label: string; color: string }[] = [
   { value: "fact", label: "Fact", color: "bg-blue-500" },
-  { value: "preference", label: "Preference", color: "bg-purple-500" },
+  { value: "preference", label: "Preference", color: "bg-[var(--ink-900)]" },
   { value: "instruction", label: "Instruction", color: "bg-orange-500" },
   { value: "episode", label: "Episode", color: "bg-green-500" },
   { value: "procedure", label: "Procedure", color: "bg-sky-500" },
-  { value: "relationship", label: "Relationship", color: "bg-cyan-500" },
+  { value: "relationship", label: "Relationship", color: "bg-[var(--ink-900)]" },
 ];
 
 const noteStatuses: { value: NoteStatus; label: string; color: string }[] = [
   { value: "candidate", label: "Candidate", color: "bg-yellow-500" },
   { value: "active", label: "Active", color: "bg-green-500" },
   { value: "superseded", label: "Superseded", color: "bg-gray-400" },
-  { value: "contradicted", label: "Contradicted", color: "bg-red-500" },
+  { value: "contradicted", label: "Contradicted", color: "bg-[var(--signal-conflict)]" },
   { value: "deleted", label: "Deleted", color: "bg-gray-300" },
 ];
 
@@ -179,29 +179,29 @@ export function MindMapFilters({
     filters.timeRange[1] < 100;
 
   return (
-    <div className="h-full bg-szn-card border border-szn-border rounded-lg overflow-hidden flex flex-col">
+    <div className="h-full bg-[var(--ink-0)] border border-[var(--ink-200)] rounded-lg overflow-hidden flex flex-col">
       {/* Header */}
-      <div className="p-4 border-b border-szn-border flex items-center justify-between">
+      <div className="p-4 border-b border-[var(--ink-200)] flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <FilterIcon className="w-5 h-5 text-szn-text-2" />
-          <h2 className="font-semibold text-szn-text-1">Filters</h2>
+          <FilterIcon className="w-5 h-5 text-[var(--ink-600)]" />
+          <h2 className="font-semibold text-[var(--ink-900)]">Filters</h2>
         </div>
         <button
           onClick={onClose}
-          className="p-1 hover:bg-szn-surface-1 rounded-lg transition-colors"
+          className="p-1 hover:bg-[var(--ink-50)] rounded-lg transition-colors"
         >
-          <XIcon className="w-5 h-5 text-szn-text-2" />
+          <XIcon className="w-5 h-5 text-[var(--ink-600)]" />
         </button>
       </div>
 
       {/* Stats */}
-      <div className="px-4 py-2 bg-szn-bg border-b border-szn-border flex items-center gap-4 text-sm">
-        <span className="text-szn-text-2">
-          <span className="font-semibold text-szn-text-1">{nodeCount}</span> nodes
+      <div className="px-4 py-2 bg-[var(--ink-50)] border-b border-[var(--ink-200)] flex items-center gap-4 text-sm">
+        <span className="text-[var(--ink-600)]">
+          <span className="font-semibold text-[var(--ink-900)]">{nodeCount}</span> nodes
         </span>
-        <span className="text-szn-text-3">|</span>
-        <span className="text-szn-text-2">
-          <span className="font-semibold text-szn-text-1">{edgeCount}</span> edges
+        <span className="text-[var(--ink-500)]">|</span>
+        <span className="text-[var(--ink-600)]">
+          <span className="font-semibold text-[var(--ink-900)]">{edgeCount}</span> edges
         </span>
       </div>
 
@@ -210,13 +210,13 @@ export function MindMapFilters({
         {/* Search */}
         <div>
           <div className="relative">
-            <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-szn-text-3" />
+            <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--ink-500)]" />
             <input
               type="text"
               value={filters.searchQuery}
               onChange={(e) => updateSearch(e.target.value)}
               placeholder="Search memories..."
-              className="w-full pl-10 pr-4 py-2 text-sm bg-szn-bg border border-szn-border rounded-lg focus:outline-none focus:ring-2 focus:ring-szn-accent text-szn-text-1 placeholder-szn-text-3"
+              className="w-full pl-10 pr-4 py-2 text-sm bg-[var(--ink-50)] border border-[var(--ink-200)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--ink-900)] text-[var(--ink-900)] placeholder-[var(--ink-500)]"
             />
           </div>
         </div>
@@ -225,7 +225,7 @@ export function MindMapFilters({
         <div className="space-y-2">
           <button
             onClick={() => setIsExpanded((e) => ({ ...e, time: !e.time }))}
-            className="w-full flex items-center justify-between text-sm font-medium text-szn-text-1"
+            className="w-full flex items-center justify-between text-sm font-medium text-[var(--ink-900)]"
           >
             <div className="flex items-center gap-2">
               <ClockIcon className="w-4 h-4" />
@@ -243,7 +243,7 @@ export function MindMapFilters({
           </button>
           {isExpanded.time && (
             <div className="space-y-2 pt-2">
-              <div className="flex items-center justify-between text-xs text-szn-text-2">
+              <div className="flex items-center justify-between text-xs text-[var(--ink-600)]">
                 <span>Recent</span>
                 <span>30 days ago</span>
               </div>
@@ -255,9 +255,9 @@ export function MindMapFilters({
                 onChange={(e) =>
                   updateTimeRange([filters.timeRange[0], parseInt(e.target.value)])
                 }
-                className="w-full h-2 bg-szn-surface rounded-lg appearance-none cursor-pointer accent-szn-accent"
+                className="w-full h-2 bg-[var(--ink-50)] rounded-lg appearance-none cursor-pointer accent-[var(--ink-900)]"
               />
-              <div className="flex items-center justify-between text-xs text-szn-text-2">
+              <div className="flex items-center justify-between text-xs text-[var(--ink-600)]">
                 <span>{filters.timeRange[0]}%</span>
                 <span>{filters.timeRange[1]}%</span>
               </div>
@@ -269,12 +269,12 @@ export function MindMapFilters({
         <div className="space-y-2">
           <button
             onClick={() => setIsExpanded((e) => ({ ...e, types: !e.types }))}
-            className="w-full flex items-center justify-between text-sm font-medium text-szn-text-1"
+            className="w-full flex items-center justify-between text-sm font-medium text-[var(--ink-900)]"
           >
             <span>Note Types</span>
             <div className="flex items-center gap-2">
               {filters.types.length > 0 && (
-                <span className="px-2 py-0.5 text-xs bg-szn-accent/10 text-szn-accent rounded-full">
+                <span className="px-2 py-0.5 text-xs bg-[var(--ink-900)]/10 text-[var(--ink-900)] rounded-full">
                   {filters.types.length}
                 </span>
               )}
@@ -294,16 +294,16 @@ export function MindMapFilters({
               {noteTypes.map((type) => (
                 <label
                   key={type.value}
-                  className="flex items-center gap-3 p-2 rounded-lg hover:bg-szn-surface-1 cursor-pointer transition-colors"
+                  className="flex items-center gap-3 p-2 rounded-lg hover:bg-[var(--ink-50)] cursor-pointer transition-colors"
                 >
                   <input
                     type="checkbox"
                     checked={filters.types.includes(type.value)}
                     onChange={() => toggleType(type.value)}
-                    className="w-4 h-4 rounded border-szn-border text-szn-accent focus:ring-szn-accent"
+                    className="w-4 h-4 rounded border-[var(--ink-200)] text-[var(--ink-900)] focus:ring-[var(--ink-900)]"
                   />
                   <div className={`w-3 h-3 rounded-full ${type.color}`} />
-                  <span className="text-sm text-szn-text-1">{type.label}</span>
+                  <span className="text-sm text-[var(--ink-900)]">{type.label}</span>
                 </label>
               ))}
             </div>
@@ -314,12 +314,12 @@ export function MindMapFilters({
         <div className="space-y-2">
           <button
             onClick={() => setIsExpanded((e) => ({ ...e, statuses: !e.statuses }))}
-            className="w-full flex items-center justify-between text-sm font-medium text-szn-text-1"
+            className="w-full flex items-center justify-between text-sm font-medium text-[var(--ink-900)]"
           >
             <span>Status</span>
             <div className="flex items-center gap-2">
               {filters.statuses.length > 0 && (
-                <span className="px-2 py-0.5 text-xs bg-szn-accent/10 text-szn-accent rounded-full">
+                <span className="px-2 py-0.5 text-xs bg-[var(--ink-900)]/10 text-[var(--ink-900)] rounded-full">
                   {filters.statuses.length}
                 </span>
               )}
@@ -339,16 +339,16 @@ export function MindMapFilters({
               {noteStatuses.map((status) => (
                 <label
                   key={status.value}
-                  className="flex items-center gap-3 p-2 rounded-lg hover:bg-szn-surface-1 cursor-pointer transition-colors"
+                  className="flex items-center gap-3 p-2 rounded-lg hover:bg-[var(--ink-50)] cursor-pointer transition-colors"
                 >
                   <input
                     type="checkbox"
                     checked={filters.statuses.includes(status.value)}
                     onChange={() => toggleStatus(status.value)}
-                    className="w-4 h-4 rounded border-szn-border text-szn-accent focus:ring-szn-accent"
+                    className="w-4 h-4 rounded border-[var(--ink-200)] text-[var(--ink-900)] focus:ring-[var(--ink-900)]"
                   />
                   <div className={`w-3 h-3 rounded-full ${status.color}`} />
-                  <span className="text-sm text-szn-text-1">{status.label}</span>
+                  <span className="text-sm text-[var(--ink-900)]">{status.label}</span>
                 </label>
               ))}
             </div>
@@ -359,12 +359,12 @@ export function MindMapFilters({
         <div className="space-y-2">
           <button
             onClick={() => setIsExpanded((e) => ({ ...e, privacy: !e.privacy }))}
-            className="w-full flex items-center justify-between text-sm font-medium text-szn-text-1"
+            className="w-full flex items-center justify-between text-sm font-medium text-[var(--ink-900)]"
           >
             <span>Privacy Class</span>
             <div className="flex items-center gap-2">
               {filters.privacyClasses.length > 0 && (
-                <span className="px-2 py-0.5 text-xs bg-szn-accent/10 text-szn-accent rounded-full">
+                <span className="px-2 py-0.5 text-xs bg-[var(--ink-900)]/10 text-[var(--ink-900)] rounded-full">
                   {filters.privacyClasses.length}
                 </span>
               )}
@@ -384,15 +384,15 @@ export function MindMapFilters({
               {privacyClasses.map((privacy) => (
                 <label
                   key={privacy.value}
-                  className="flex items-center gap-3 p-2 rounded-lg hover:bg-szn-surface-1 cursor-pointer transition-colors"
+                  className="flex items-center gap-3 p-2 rounded-lg hover:bg-[var(--ink-50)] cursor-pointer transition-colors"
                 >
                   <input
                     type="checkbox"
                     checked={filters.privacyClasses.includes(privacy.value)}
                     onChange={() => togglePrivacy(privacy.value)}
-                    className="w-4 h-4 rounded border-szn-border text-szn-accent focus:ring-szn-accent"
+                    className="w-4 h-4 rounded border-[var(--ink-200)] text-[var(--ink-900)] focus:ring-[var(--ink-900)]"
                   />
-                  <span className="text-sm text-szn-text-1">{privacy.label}</span>
+                  <span className="text-sm text-[var(--ink-900)]">{privacy.label}</span>
                 </label>
               ))}
             </div>
@@ -402,10 +402,10 @@ export function MindMapFilters({
 
       {/* Footer - Clear Filters */}
       {hasActiveFilters && (
-        <div className="p-4 border-t border-szn-border">
+        <div className="p-4 border-t border-[var(--ink-200)]">
           <button
             onClick={clearFilters}
-            className="w-full px-4 py-2 text-sm text-szn-text-2 hover:text-szn-text-1 bg-szn-surface hover:bg-szn-surface-1 rounded-lg transition-colors flex items-center justify-center gap-2"
+            className="w-full px-4 py-2 text-sm text-[var(--ink-600)] hover:text-[var(--ink-900)] bg-[var(--ink-50)] hover:bg-[var(--ink-50)] rounded-lg transition-colors flex items-center justify-center gap-2"
           >
             <XIcon className="w-4 h-4" />
             Clear All Filters

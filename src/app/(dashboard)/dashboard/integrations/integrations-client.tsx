@@ -191,10 +191,10 @@ export default function IntegrationsClient() {
     <div className="max-w-6xl mx-auto space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-szn-text-1">
+        <h1 className="text-2xl font-bold text-[var(--ink-900)]">
           {t("dashboard.integrations.title") || "Integrations"}
         </h1>
-        <p className="text-szn-text-2 mt-1">
+        <p className="text-[var(--ink-600)] mt-1">
           {t("dashboard.integrations.subtitle") || "Connect Seizn with your favorite tools and frameworks"}
         </p>
       </div>
@@ -204,30 +204,30 @@ export default function IntegrationsClient() {
         <div className="szn-card rounded-xl p-4">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">🔌</span>
-            <span className="text-sm text-szn-text-2">{t("dashboard.integrations.stats.total") || "Total Integrations"}</span>
+            <span className="text-sm text-[var(--ink-600)]">{t("dashboard.integrations.stats.total") || "Total Integrations"}</span>
           </div>
-          <p className="text-2xl font-bold text-szn-text-1">{integrations.length}</p>
+          <p className="text-2xl font-bold text-[var(--ink-900)]">{integrations.length}</p>
         </div>
         <div className="szn-card rounded-xl p-4">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">✅</span>
-            <span className="text-sm text-szn-text-2">{t("dashboard.integrations.stats.available") || "Available"}</span>
+            <span className="text-sm text-[var(--ink-600)]">{t("dashboard.integrations.stats.available") || "Available"}</span>
           </div>
-          <p className="text-2xl font-bold text-szn-success">{integrations.filter(i => i.status === "available").length}</p>
+          <p className="text-2xl font-bold text-[var(--signal-canon)]">{integrations.filter(i => i.status === "available").length}</p>
         </div>
         <div className="szn-card rounded-xl p-4">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">🧪</span>
-            <span className="text-sm text-szn-text-2">{t("dashboard.integrations.stats.beta") || "In Beta"}</span>
+            <span className="text-sm text-[var(--ink-600)]">{t("dashboard.integrations.stats.beta") || "In Beta"}</span>
           </div>
           <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{integrations.filter(i => i.status === "beta").length}</p>
         </div>
         <div className="szn-card rounded-xl p-4">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">🔜</span>
-            <span className="text-sm text-szn-text-2">{t("dashboard.integrations.stats.comingSoon") || "Coming Soon"}</span>
+            <span className="text-sm text-[var(--ink-600)]">{t("dashboard.integrations.stats.comingSoon") || "Coming Soon"}</span>
           </div>
-          <p className="text-2xl font-bold text-szn-text-2">{integrations.filter(i => i.status === "coming_soon").length}</p>
+          <p className="text-2xl font-bold text-[var(--ink-600)]">{integrations.filter(i => i.status === "coming_soon").length}</p>
         </div>
       </div>
 
@@ -239,22 +239,22 @@ export default function IntegrationsClient() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder={t("dashboard.integrations.searchPlaceholder") || "Search integrations..."}
-            className="w-full px-4 py-2 border border-szn-border rounded-lg bg-szn-card text-szn-text-1 placeholder-szn-text-3 focus:outline-none focus:ring-2 focus:ring-szn-accent"
+            className="w-full px-4 py-2 border border-[var(--ink-200)] rounded-lg bg-[var(--ink-0)] text-[var(--ink-900)] placeholder-[var(--ink-500)] focus:outline-none focus:ring-2 focus:ring-[var(--ink-900)]"
           />
         </div>
-        <div className="flex gap-1 bg-szn-surface rounded-lg p-1 overflow-x-auto">
+        <div className="flex gap-1 bg-[var(--ink-50)] rounded-lg p-1 overflow-x-auto">
           {categories.map((category) => (
             <button
               key={category.id}
               onClick={() => setSelectedCategory(category.id)}
               className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
                 selectedCategory === category.id
-                  ? "bg-szn-card text-szn-text-1 shadow-sm"
-                  : "text-szn-text-2 hover:text-szn-text-1"
+                  ? "bg-[var(--ink-0)] text-[var(--ink-900)] shadow-sm"
+                  : "text-[var(--ink-600)] hover:text-[var(--ink-900)]"
               }`}
             >
               {category.label}
-              <span className="ml-1 text-xs text-szn-text-3">({category.count})</span>
+              <span className="ml-1 text-xs text-[var(--ink-500)]">({category.count})</span>
             </button>
           ))}
         </div>
@@ -266,22 +266,22 @@ export default function IntegrationsClient() {
           <div
             key={integration.id}
             onClick={() => setSelectedIntegration(integration)}
-            className={`szn-card rounded-xl p-4 cursor-pointer transition-all hover:shadow-md hover:ring-1 hover:ring-szn-accent/40 ${
-              selectedIntegration?.id === integration.id ? "ring-2 ring-szn-accent" : ""
+            className={`szn-card rounded-xl p-4 cursor-pointer transition-all hover:shadow-md hover:ring-1 hover:ring-[var(--ink-900)]/40 ${
+              selectedIntegration?.id === integration.id ? "ring-2 ring-[var(--ink-900)]" : ""
             }`}
           >
             <div className="flex items-start justify-between mb-3">
               <div className="flex items-center gap-3">
                 <span className="text-2xl">{integration.icon}</span>
                 <div>
-                  <h3 className="font-semibold text-szn-text-1">{integration.name}</h3>
+                  <h3 className="font-semibold text-[var(--ink-900)]">{integration.name}</h3>
                   <span
                     className={`text-xs px-2 py-0.5 rounded-full ${
                       integration.status === "available"
-                        ? "bg-szn-success/10 text-szn-success"
+                        ? "bg-[var(--signal-canon)]/10 text-[var(--signal-canon)]"
                         : integration.status === "beta"
                           ? "bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:text-blue-200"
-                          : "bg-szn-surface text-szn-text-2"
+                          : "bg-[var(--ink-50)] text-[var(--ink-600)]"
                     }`}
                   >
                     {integration.status === "available"
@@ -293,7 +293,7 @@ export default function IntegrationsClient() {
                 </div>
               </div>
             </div>
-            <p className="text-sm text-szn-text-2 line-clamp-2">{integration.description}</p>
+            <p className="text-sm text-[var(--ink-600)] line-clamp-2">{integration.description}</p>
 
             {integration.status === "available" && (
               <div className="mt-3 flex gap-2">
@@ -301,7 +301,7 @@ export default function IntegrationsClient() {
                   <a
                     href={integration.docsUrl}
                     onClick={(e) => e.stopPropagation()}
-                    className="text-xs px-3 py-1.5 bg-szn-surface text-szn-text-1 rounded-lg hover:bg-szn-surface-1 transition-colors"
+                    className="text-xs px-3 py-1.5 bg-[var(--ink-50)] text-[var(--ink-900)] rounded-lg hover:bg-[var(--ink-50)] transition-colors"
                   >
                     Docs
                   </a>
@@ -312,7 +312,7 @@ export default function IntegrationsClient() {
                       e.stopPropagation();
                       navigator.clipboard.writeText(integration.installCommand || "");
                     }}
-                    className="text-xs px-3 py-1.5 bg-szn-success/10 text-szn-success rounded-lg hover:bg-szn-success/20 transition-colors"
+                    className="text-xs px-3 py-1.5 bg-[var(--signal-canon)]/10 text-[var(--signal-canon)] rounded-lg hover:bg-[var(--signal-canon)]/20 transition-colors"
                   >
                     Copy Install
                   </button>
@@ -325,7 +325,7 @@ export default function IntegrationsClient() {
 
       {filteredIntegrations.length === 0 && (
         <div className="text-center py-12">
-          <p className="text-szn-text-2">No integrations found matching your criteria</p>
+          <p className="text-[var(--ink-600)]">No integrations found matching your criteria</p>
         </div>
       )}
 
@@ -363,21 +363,21 @@ function IntegrationModal({
         onClick={onClose}
       >
       <div
-        className="bg-szn-card border border-szn-border rounded-lg max-w-lg w-full p-6 shadow-xl"
+        className="bg-[var(--ink-0)] border border-[var(--ink-200)] rounded-lg max-w-lg w-full p-6 shadow-xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-start gap-4 mb-4">
           <span className="text-4xl">{integration.icon}</span>
           <div className="flex-1">
             <div className="flex items-center gap-2">
-              <h2 className="text-xl font-bold text-szn-text-1">{integration.name}</h2>
+              <h2 className="text-xl font-bold text-[var(--ink-900)]">{integration.name}</h2>
               <span
                 className={`text-xs px-2 py-0.5 rounded-full ${
                   integration.status === "available"
-                    ? "bg-szn-success/10 text-szn-success"
+                    ? "bg-[var(--signal-canon)]/10 text-[var(--signal-canon)]"
                     : integration.status === "beta"
                       ? "bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:text-blue-200"
-                      : "bg-szn-surface text-szn-text-2"
+                      : "bg-[var(--ink-50)] text-[var(--ink-600)]"
                 }`}
               >
                 {integration.status === "available"
@@ -387,7 +387,7 @@ function IntegrationModal({
                     : "Coming Soon"}
               </span>
             </div>
-            <p className="text-szn-text-2 mt-1">{integration.description}</p>
+            <p className="text-[var(--ink-600)] mt-1">{integration.description}</p>
           </div>
         </div>
 
@@ -395,11 +395,11 @@ function IntegrationModal({
           <>
             {integration.installCommand && (
               <div className="mb-4">
-                <label className="block text-sm font-medium text-szn-text-1 mb-2">
+                <label className="block text-sm font-medium text-[var(--ink-900)] mb-2">
                   Installation
                 </label>
-                <div className="flex items-center gap-2 bg-gray-900 rounded-lg p-3">
-                  <code className="flex-1 text-sm text-szn-success font-mono">
+                <div className="flex items-center gap-2 bg-[var(--ink-900)] rounded-lg p-3">
+                  <code className="flex-1 text-sm text-[var(--signal-canon)] font-mono">
                     {integration.installCommand}
                   </code>
                   <button
@@ -413,11 +413,11 @@ function IntegrationModal({
             )}
 
             <div className="mb-4">
-              <label className="block text-sm font-medium text-szn-text-1 mb-2">
+              <label className="block text-sm font-medium text-[var(--ink-900)] mb-2">
                 Quick Start
               </label>
-              <div className="bg-szn-bg rounded-lg p-4">
-                <pre className="text-sm text-szn-text-1 overflow-x-auto">
+              <div className="bg-[var(--ink-50)] rounded-lg p-4">
+                <pre className="text-sm text-[var(--ink-900)] overflow-x-auto">
                   {getQuickStartCode(integration.id)}
                 </pre>
               </div>
@@ -426,11 +426,11 @@ function IntegrationModal({
         )}
 
         {integration.status === "coming_soon" && (
-          <div className="bg-szn-bg rounded-lg p-4 mb-4">
-            <p className="text-sm text-szn-text-2">
+          <div className="bg-[var(--ink-50)] rounded-lg p-4 mb-4">
+            <p className="text-sm text-[var(--ink-600)]">
               This integration is currently in development. Sign up to get notified when it&apos;s available.
             </p>
-            <button className="mt-3 px-4 py-2 bg-szn-success text-white text-sm rounded-lg hover:bg-szn-success/90">
+            <button className="mt-3 px-4 py-2 bg-[var(--signal-canon)] text-white text-sm rounded-lg hover:bg-[var(--signal-canon)]/90">
               Notify Me
             </button>
           </div>
@@ -447,14 +447,14 @@ function IntegrationModal({
         <div className="flex gap-3">
           <button
             onClick={onClose}
-            className="flex-1 px-4 py-2 border border-szn-border text-szn-text-1 rounded-lg hover:bg-szn-surface-1 transition-colors"
+            className="flex-1 px-4 py-2 border border-[var(--ink-200)] text-[var(--ink-900)] rounded-lg hover:bg-[var(--ink-50)] transition-colors"
           >
             Close
           </button>
           {integration.docsUrl && (
             <a
               href={integration.docsUrl}
-              className="flex-1 px-4 py-2 bg-szn-accent text-white text-center rounded-lg hover:bg-szn-accent/90"
+              className="flex-1 px-4 py-2 bg-[var(--ink-900)] text-white text-center rounded-lg hover:bg-[var(--ink-900)]/90"
             >
               View Documentation
             </a>

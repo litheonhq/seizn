@@ -22,13 +22,16 @@ if (targets.length === 0) {
   exit(1);
 }
 
-// Paths that must never be modified (Phase D'' lock zones)
+// Paths that must never be modified during phases 2-6 (Phase D'' lock zones
+// + settings UI deferred to phase 1 / final phase to avoid mid-dogfood UI churn)
 const LOCK_PATHS = [
   "src/components/landing/",
   "src/app/(auth)/",
   "src/components/auth/auth-shell.tsx",
   "docs/brand/assets/raster/",
   "docs/knot-input/",
+  "src/components/settings/",
+  "src/app/(dashboard)/dashboard/settings/",
 ];
 
 // Ordered class-replacement rules. Each rule is [regex, replacement].
@@ -103,6 +106,15 @@ const rules = [
   // text-szn-border (icons / dividers)
   [/\btext-szn-border\b/g, "text-[var(--ink-200)]"],
 
+  // !important variants (used by react-flow handles etc.)
+  [/!border-szn-card\b/g, "!border-[var(--ink-0)]"],
+  [/!border-szn-border\b/g, "!border-[var(--ink-200)]"],
+  [/!bg-szn-card\b/g, "!bg-[var(--ink-0)]"],
+  [/!bg-szn-bg\b/g, "!bg-[var(--ink-50)]"],
+  [/!text-szn-text-1\b/g, "!text-[var(--ink-900)]"],
+  [/!text-szn-text-2\b/g, "!text-[var(--ink-600)]"],
+  [/!text-szn-text-3\b/g, "!text-[var(--ink-500)]"],
+
   // placeholder/stroke/fill/accent/shadow/decoration variants
   [/\bplaceholder-szn-text-1\b/g, "placeholder-[var(--ink-900)]"],
   [/\bplaceholder-szn-text-2\b/g, "placeholder-[var(--ink-600)]"],
@@ -139,15 +151,55 @@ const rules = [
   [/\bbtn-premium\b/g, "bg-[var(--ink-900)] hover:bg-[var(--ink-700)] text-white"],
 
   // ---- text-purple links / icons ----
-  [/\btext-purple-600\b/g, "text-[var(--ink-900)] underline"],
-  [/\btext-purple-700\b/g, "text-[var(--ink-900)] underline"],
+  [/\btext-purple-(950|900|800)\b/g, "text-[var(--ink-900)]"],
+  [/\btext-purple-(700|600)\b/g, "text-[var(--ink-900)] underline"],
   [/\btext-purple-500\b/g, "text-[var(--ink-700)] underline"],
   [/\btext-purple-400\b/g, "text-[var(--ink-700)]"],
   [/\btext-purple-300\b/g, "text-[var(--ink-500)]"],
   [/\btext-purple-(200|100|50)\b/g, "text-[var(--ink-300)]"],
-  [/\bhover:text-purple-500\b/g, "hover:text-[var(--ink-700)]"],
-  [/\bhover:text-purple-600\b/g, "hover:text-[var(--ink-700)]"],
-  [/\bhover:text-purple-700\b/g, "hover:text-[var(--ink-700)]"],
+  [/\bhover:text-purple-(500|600|700)\b/g, "hover:text-[var(--ink-700)]"],
+
+  // ---- from-/via-/to- color gradient stops (purple/violet/cyan/indigo/blue) → ink-900 ----
+  [/\bfrom-(purple|violet|indigo|cyan|blue|fuchsia|pink)-\d+\/(\d+)\b/g, "from-[var(--ink-900)]/$2"],
+  [/\bvia-(purple|violet|indigo|cyan|blue|fuchsia|pink)-\d+\/(\d+)\b/g, "via-[var(--ink-900)]/$2"],
+  [/\bto-(purple|violet|indigo|cyan|blue|fuchsia|pink)-\d+\/(\d+)\b/g, "to-[var(--ink-900)]/$2"],
+  [/\bfrom-(purple|violet|indigo|cyan|blue|fuchsia|pink)-(50|100)\b/g, "from-[var(--ink-50)]"],
+  [/\bto-(purple|violet|indigo|cyan|blue|fuchsia|pink)-(50|100)\b/g, "to-[var(--ink-100)]"],
+  [/\bvia-(purple|violet|indigo|cyan|blue|fuchsia|pink)-(50|100)\b/g, "via-[var(--ink-100)]"],
+  [/\bfrom-(purple|violet|indigo|cyan|blue|fuchsia|pink)-\d+\b/g, "from-[var(--ink-900)]"],
+  [/\bvia-(purple|violet|indigo|cyan|blue|fuchsia|pink)-\d+\b/g, "via-[var(--ink-900)]"],
+  [/\bto-(purple|violet|indigo|cyan|blue|fuchsia|pink)-\d+\b/g, "to-[var(--ink-900)]"],
+
+  // ---- from-szn-* / to-szn-* gradient stops ----
+  [/\bfrom-szn-success\/(\d+)\b/g, "from-[var(--signal-canon)]/$1"],
+  [/\bto-szn-success\/(\d+)\b/g, "to-[var(--signal-canon)]/$1"],
+  [/\bfrom-szn-success\b/g, "from-[var(--signal-canon)]"],
+  [/\bto-szn-success\b/g, "to-[var(--signal-canon)]"],
+  [/\bfrom-szn-warning\b/g, "from-[var(--signal-pending)]"],
+  [/\bto-szn-warning\b/g, "to-[var(--signal-pending)]"],
+  [/\bfrom-szn-danger\b/g, "from-[var(--signal-conflict)]"],
+  [/\bto-szn-danger\b/g, "to-[var(--signal-conflict)]"],
+  [/\bfrom-szn-surface-1\b/g, "from-[var(--ink-50)]"],
+  [/\bto-szn-surface-1\b/g, "to-[var(--ink-50)]"],
+  [/\bfrom-szn-surface-2\b/g, "from-[var(--ink-100)]"],
+  [/\bto-szn-surface-2\b/g, "to-[var(--ink-100)]"],
+  [/\bfrom-szn-surface\b/g, "from-[var(--ink-50)]"],
+  [/\bto-szn-surface\b/g, "to-[var(--ink-50)]"],
+  [/\bfrom-szn-card\b/g, "from-[var(--ink-0)]"],
+  [/\bto-szn-card\b/g, "to-[var(--ink-0)]"],
+  [/\bfrom-szn-bg\b/g, "from-[var(--ink-50)]"],
+  [/\bto-szn-bg\b/g, "to-[var(--ink-50)]"],
+  [/\bfrom-szn-text-1\b/g, "from-[var(--ink-900)]"],
+  [/\bto-szn-text-1\b/g, "to-[var(--ink-900)]"],
+  [/\bfrom-szn-border\b/g, "from-[var(--ink-200)]"],
+  [/\bto-szn-border\b/g, "to-[var(--ink-200)]"],
+
+  // ---- text-emerald 950, text-yellow-950 etc. (high digit not in earlier list) ----
+  [/\btext-emerald-950\b/g, "text-[var(--signal-canon-ink)]"],
+  [/\btext-amber-950\b/g, "text-[var(--signal-pending-ink)]"],
+  [/\btext-red-950\b/g, "text-[var(--signal-conflict-ink)]"],
+  [/\btext-yellow-950\b/g, "text-[var(--signal-pending-ink)]"],
+  [/\btext-green-950\b/g, "text-[var(--signal-canon-ink)]"],
 
   // ---- gradient legacy that uses szn-accent inside Tailwind gradient ----
   [/\bbg-gradient-to-r from-szn-accent\/(\d+) to-szn-accent\/(\d+)\b/g, "bg-[var(--ink-900)]/10"],

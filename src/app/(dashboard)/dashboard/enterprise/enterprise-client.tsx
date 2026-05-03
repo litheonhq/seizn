@@ -129,8 +129,8 @@ export function EnterpriseClient() {
     return (
       <div className="max-w-6xl mx-auto px-4 py-8">
         <div className="animate-pulse space-y-4">
-          <div className="h-8 bg-szn-surface rounded w-48" />
-          <div className="h-64 bg-szn-surface rounded" />
+          <div className="h-8 bg-[var(--ink-50)] rounded w-48" />
+          <div className="h-64 bg-[var(--ink-50)] rounded" />
         </div>
       </div>
     );
@@ -141,32 +141,32 @@ export function EnterpriseClient() {
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center gap-3">
-          <h1 className="text-2xl font-bold text-szn-text-1">{t("dashboard.enterpriseDashboard.title")}</h1>
-          <span className="px-2 py-0.5 text-xs bg-purple-100 text-purple-700 rounded-full">
+          <h1 className="text-2xl font-bold text-[var(--ink-900)]">{t("dashboard.enterpriseDashboard.title")}</h1>
+          <span className="px-2 py-0.5 text-xs bg-[var(--ink-100)] text-[var(--ink-900)] underline rounded-full">
             {t("dashboard.enterpriseDashboard.badge")}
           </span>
         </div>
-        <p className="text-szn-text-2 mt-1">
+        <p className="text-[var(--ink-600)] mt-1">
           {t("dashboard.enterpriseDashboard.subtitle")}
         </p>
       </div>
 
       {error && (
-        <div className="mb-6 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-200">
+        <div className="mb-6 rounded-lg border border-[var(--signal-pending)] bg-[var(--signal-pending-soft)] px-4 py-3 text-sm text-[var(--signal-pending-ink)] dark:border-[var(--signal-pending)]/60 dark:bg-[var(--signal-pending)]/30 dark:text-[var(--signal-pending-soft)]">
           {error}
         </div>
       )}
 
       {/* Tabs */}
-      <div className="flex gap-1 mb-6 bg-szn-surface rounded-lg p-1 w-fit">
+      <div className="flex gap-1 mb-6 bg-[var(--ink-50)] rounded-lg p-1 w-fit">
         {(["sso", "scim", "settings"] as TabType[]).map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
             className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
               activeTab === tab
-                ? "bg-szn-card text-szn-text-1 shadow-sm"
-                : "text-szn-text-2 hover:text-szn-text-1"
+                ? "bg-[var(--ink-0)] text-[var(--ink-900)] shadow-sm"
+                : "text-[var(--ink-600)] hover:text-[var(--ink-900)]"
             }`}
           >
             {tab === "sso" && t("dashboard.enterpriseDashboard.tabs.sso")}
@@ -180,58 +180,58 @@ export function EnterpriseClient() {
       {activeTab === "sso" && (
         <div className="space-y-6">
           {ssoConfig ? (
-            <div className="bg-szn-card rounded-lg border border-szn-border p-6">
+            <div className="bg-[var(--ink-0)] rounded-lg border border-[var(--ink-200)] p-6">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-szn-accent/10 rounded-lg flex items-center justify-center">
+                  <div className="w-10 h-10 bg-[var(--ink-900)]/10 rounded-lg flex items-center justify-center">
                     <span className="text-lg">🔐</span>
                   </div>
                   <div>
-                    <h3 className="font-semibold text-szn-text-1">{t("dashboard.enterpriseDashboard.sso.enabled")}</h3>
-                    <p className="text-sm text-szn-text-2">
+                    <h3 className="font-semibold text-[var(--ink-900)]">{t("dashboard.enterpriseDashboard.sso.enabled")}</h3>
+                    <p className="text-sm text-[var(--ink-600)]">
                       {t("dashboard.enterpriseDashboard.sso.provider")} {ssoConfig.provider} | {t("dashboard.enterpriseDashboard.sso.domains")} {ssoConfig.domains.join(", ")}
                     </p>
                   </div>
                 </div>
                 <div className="flex gap-2">
-                  <button className="px-3 py-1.5 text-sm border rounded-lg hover:bg-szn-surface-1">
+                  <button className="px-3 py-1.5 text-sm border rounded-lg hover:bg-[var(--ink-50)]">
                     {t("dashboard.enterpriseDashboard.sso.testConnection")}
                   </button>
-                  <button className="px-3 py-1.5 text-sm text-red-600 border border-red-200 rounded-lg hover:bg-red-50">
+                  <button className="px-3 py-1.5 text-sm text-[var(--signal-conflict-ink)] border border-[var(--signal-conflict)] rounded-lg hover:bg-[var(--signal-conflict-soft)]">
                     {t("dashboard.enterpriseDashboard.sso.disable")}
                   </button>
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 gap-4 p-4 bg-szn-surface rounded-lg">
+              <div className="grid grid-cols-3 gap-4 p-4 bg-[var(--ink-50)] rounded-lg">
                 <div>
-                  <span className="text-sm text-szn-text-2">{t("dashboard.enterpriseDashboard.sso.defaultRole")}</span>
-                  <p className="text-szn-text-1 capitalize">{ssoConfig.defaultRole}</p>
+                  <span className="text-sm text-[var(--ink-600)]">{t("dashboard.enterpriseDashboard.sso.defaultRole")}</span>
+                  <p className="text-[var(--ink-900)] capitalize">{ssoConfig.defaultRole}</p>
                 </div>
                 <div>
-                  <span className="text-sm text-szn-text-2">{t("dashboard.enterpriseDashboard.sso.status")}</span>
-                  <p className="text-szn-accent">{t("dashboard.enterpriseDashboard.sso.active")}</p>
+                  <span className="text-sm text-[var(--ink-600)]">{t("dashboard.enterpriseDashboard.sso.status")}</span>
+                  <p className="text-[var(--ink-900)]">{t("dashboard.enterpriseDashboard.sso.active")}</p>
                 </div>
                 <div>
-                  <span className="text-sm text-szn-text-2">{t("dashboard.enterpriseDashboard.sso.lastLogin")}</span>
-                  <p className="text-szn-text-1">{t("dashboard.enterpriseDashboard.sso.hoursAgo")}</p>
+                  <span className="text-sm text-[var(--ink-600)]">{t("dashboard.enterpriseDashboard.sso.lastLogin")}</span>
+                  <p className="text-[var(--ink-900)]">{t("dashboard.enterpriseDashboard.sso.hoursAgo")}</p>
                 </div>
               </div>
             </div>
           ) : (
-            <div className="bg-szn-card rounded-lg border border-szn-border p-8 text-center">
+            <div className="bg-[var(--ink-0)] rounded-lg border border-[var(--ink-200)] p-8 text-center">
               <div className="w-16 h-16 bg-gray-100 rounded-lg mx-auto mb-4 flex items-center justify-center">
                 <span className="text-3xl">🔐</span>
               </div>
-              <h3 className="font-semibold text-szn-text-1 mb-2">
+              <h3 className="font-semibold text-[var(--ink-900)] mb-2">
                 {t("dashboard.enterpriseDashboard.sso.notConfigured")}
               </h3>
-              <p className="text-szn-text-2 mb-6 max-w-md mx-auto">
+              <p className="text-[var(--ink-600)] mb-6 max-w-md mx-auto">
                 {t("dashboard.enterpriseDashboard.sso.notConfiguredDesc")}
               </p>
               <button
                 onClick={() => setShowSSOSetup(true)}
-                className="px-6 py-2 bg-szn-accent text-white rounded-lg hover:bg-szn-accent/90"
+                className="px-6 py-2 bg-[var(--ink-900)] text-white rounded-lg hover:bg-[var(--ink-900)]/90"
               >
                 {t("dashboard.enterpriseDashboard.sso.configure")}
               </button>
@@ -240,17 +240,17 @@ export function EnterpriseClient() {
 
           {/* Provider Selection */}
           {!ssoConfig && !showSSOSetup && (
-            <div className="bg-szn-card rounded-lg border border-szn-border p-6">
-              <h3 className="font-semibold text-szn-text-1 mb-4">{t("dashboard.enterpriseDashboard.sso.supportedProviders")}</h3>
+            <div className="bg-[var(--ink-0)] rounded-lg border border-[var(--ink-200)] p-6">
+              <h3 className="font-semibold text-[var(--ink-900)] mb-4">{t("dashboard.enterpriseDashboard.sso.supportedProviders")}</h3>
               <div className="grid grid-cols-3 gap-4">
                 {providers.map((provider) => (
                   <div
                     key={provider.id}
                     className="p-4 border rounded-lg hover:border-gray-300"
                   >
-                    <h4 className="font-medium text-szn-text-1">{provider.name}</h4>
-                    <p className="text-sm text-szn-text-2 mt-1">{provider.description}</p>
-                    <span className="text-xs text-szn-text-3 mt-2 block">
+                    <h4 className="font-medium text-[var(--ink-900)]">{provider.name}</h4>
+                    <p className="text-sm text-[var(--ink-600)] mt-1">{provider.description}</p>
+                    <span className="text-xs text-[var(--ink-500)] mt-2 block">
                       {provider.configType.toUpperCase()}
                     </span>
                   </div>
@@ -264,11 +264,11 @@ export function EnterpriseClient() {
       {/* SCIM Tab */}
       {activeTab === "scim" && (
         <div className="space-y-6">
-          <div className="bg-szn-card rounded-lg border border-szn-border p-6">
+          <div className="bg-[var(--ink-0)] rounded-lg border border-[var(--ink-200)] p-6">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h3 className="font-semibold text-szn-text-1">{t("dashboard.enterpriseDashboard.scim.title")}</h3>
-                <p className="text-sm text-szn-text-2 mt-1">
+                <h3 className="font-semibold text-[var(--ink-900)]">{t("dashboard.enterpriseDashboard.scim.title")}</h3>
+                <p className="text-sm text-[var(--ink-600)] mt-1">
                   {t("dashboard.enterpriseDashboard.scim.subtitle")}
                 </p>
               </div>
@@ -277,7 +277,7 @@ export function EnterpriseClient() {
                   setSCIMConfig({ ...scimConfig, enabled: !scimConfig.enabled })
                 }
                 className={`w-12 h-6 rounded-full transition-colors ${
-                  scimConfig.enabled ? "bg-szn-accent" : "bg-gray-200"
+                  scimConfig.enabled ? "bg-[var(--ink-900)]" : "bg-gray-200"
                 }`}
               >
                 <div
@@ -292,7 +292,7 @@ export function EnterpriseClient() {
               <>
                 <div className="space-y-4 mb-6">
                   <div>
-                    <label className="block text-sm font-medium text-szn-text-1 mb-1">
+                    <label className="block text-sm font-medium text-[var(--ink-900)] mb-1">
                       {t("dashboard.enterpriseDashboard.scim.endpoint")}
                     </label>
                     <input
@@ -304,7 +304,7 @@ export function EnterpriseClient() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-szn-text-1 mb-1">
+                    <label className="block text-sm font-medium text-[var(--ink-900)] mb-1">
                       {t("dashboard.enterpriseDashboard.scim.bearerToken")}
                     </label>
                     <div className="flex gap-2">
@@ -316,13 +316,13 @@ export function EnterpriseClient() {
                       />
                       <button
                         onClick={handleGenerateSCIMToken}
-                        className="px-4 py-2 border rounded-lg hover:bg-szn-surface-1"
+                        className="px-4 py-2 border rounded-lg hover:bg-[var(--ink-50)]"
                       >
                         {scimConfig.bearerToken ? t("dashboard.enterpriseDashboard.scim.regenerate") : t("dashboard.enterpriseDashboard.scim.generate")}
                       </button>
                     </div>
                     {scimConfig.bearerToken && (
-                      <p className="text-xs text-yellow-600 mt-1">
+                      <p className="text-xs text-[var(--signal-pending-ink)] mt-1">
                         {t("dashboard.enterpriseDashboard.scim.tokenWarning")}
                       </p>
                     )}
@@ -332,8 +332,8 @@ export function EnterpriseClient() {
                 <div className="space-y-3">
                   <label className="flex items-center justify-between p-3 border rounded-lg">
                     <div>
-                      <span className="font-medium text-szn-text-1">{t("dashboard.enterpriseDashboard.scim.syncUsers")}</span>
-                      <p className="text-sm text-szn-text-2">
+                      <span className="font-medium text-[var(--ink-900)]">{t("dashboard.enterpriseDashboard.scim.syncUsers")}</span>
+                      <p className="text-sm text-[var(--ink-600)]">
                         {t("dashboard.enterpriseDashboard.scim.syncUsersDesc")}
                       </p>
                     </div>
@@ -349,8 +349,8 @@ export function EnterpriseClient() {
 
                   <label className="flex items-center justify-between p-3 border rounded-lg">
                     <div>
-                      <span className="font-medium text-szn-text-1">{t("dashboard.enterpriseDashboard.scim.syncGroups")}</span>
-                      <p className="text-sm text-szn-text-2">
+                      <span className="font-medium text-[var(--ink-900)]">{t("dashboard.enterpriseDashboard.scim.syncGroups")}</span>
+                      <p className="text-sm text-[var(--ink-600)]">
                         {t("dashboard.enterpriseDashboard.scim.syncGroupsDesc")}
                       </p>
                     </div>
@@ -366,8 +366,8 @@ export function EnterpriseClient() {
 
                   <label className="flex items-center justify-between p-3 border rounded-lg">
                     <div>
-                      <span className="font-medium text-szn-text-1">{t("dashboard.enterpriseDashboard.scim.autoProvision")}</span>
-                      <p className="text-sm text-szn-text-2">
+                      <span className="font-medium text-[var(--ink-900)]">{t("dashboard.enterpriseDashboard.scim.autoProvision")}</span>
+                      <p className="text-sm text-[var(--ink-600)]">
                         {t("dashboard.enterpriseDashboard.scim.autoProvisionDesc")}
                       </p>
                     </div>
@@ -383,8 +383,8 @@ export function EnterpriseClient() {
 
                   <label className="flex items-center justify-between p-3 border rounded-lg">
                     <div>
-                      <span className="font-medium text-szn-text-1">{t("dashboard.enterpriseDashboard.scim.autoDeprovision")}</span>
-                      <p className="text-sm text-szn-text-2">
+                      <span className="font-medium text-[var(--ink-900)]">{t("dashboard.enterpriseDashboard.scim.autoDeprovision")}</span>
+                      <p className="text-sm text-[var(--ink-600)]">
                         {t("dashboard.enterpriseDashboard.scim.autoDeprovisionDesc")}
                       </p>
                     </div>
@@ -410,8 +410,8 @@ export function EnterpriseClient() {
       {/* Settings Tab */}
       {activeTab === "settings" && (
         <div className="space-y-6">
-          <div className="bg-szn-card rounded-lg border border-szn-border p-6">
-            <h3 className="font-semibold text-szn-text-1 mb-4">{t("dashboard.enterpriseDashboard.features.title")}</h3>
+          <div className="bg-[var(--ink-0)] rounded-lg border border-[var(--ink-200)] p-6">
+            <h3 className="font-semibold text-[var(--ink-900)] mb-4">{t("dashboard.enterpriseDashboard.features.title")}</h3>
             <div className="grid grid-cols-2 gap-4">
               <FeatureCard
                 name={t("dashboard.enterpriseDashboard.features.sso")}
@@ -472,8 +472,8 @@ export function EnterpriseClient() {
             </div>
           </div>
 
-          <div className="bg-szn-card rounded-lg border border-szn-border p-6">
-            <h3 className="font-semibold text-szn-text-1 mb-4">{t("dashboard.enterpriseDashboard.limits.title")}</h3>
+          <div className="bg-[var(--ink-0)] rounded-lg border border-[var(--ink-200)] p-6">
+            <h3 className="font-semibold text-[var(--ink-900)] mb-4">{t("dashboard.enterpriseDashboard.limits.title")}</h3>
             <div className="grid grid-cols-3 gap-6">
               <LimitCard label={t("dashboard.enterpriseDashboard.limits.users")} value={t("dashboard.enterpriseDashboard.limits.unlimited")} max="∞" />
               <LimitCard label={t("dashboard.enterpriseDashboard.limits.apiCalls")} value={t("dashboard.enterpriseDashboard.limits.apiCallsValue")} max="10,000,000" />
@@ -484,17 +484,17 @@ export function EnterpriseClient() {
             </div>
           </div>
 
-          <div className="bg-szn-card rounded-lg border border-szn-border p-6">
+          <div className="bg-[var(--ink-0)] rounded-lg border border-[var(--ink-200)] p-6">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="font-semibold text-szn-text-1">{t("dashboard.enterpriseDashboard.support.title")}</h3>
-                <p className="text-sm text-szn-text-2 mt-1">
+                <h3 className="font-semibold text-[var(--ink-900)]">{t("dashboard.enterpriseDashboard.support.title")}</h3>
+                <p className="text-sm text-[var(--ink-600)] mt-1">
                   {t("dashboard.enterpriseDashboard.support.subtitle")}
                 </p>
               </div>
               <a
                 href="mailto:enterprise@seizn.com"
-                className="px-4 py-2 bg-szn-accent text-white rounded-lg hover:bg-szn-accent/90"
+                className="px-4 py-2 bg-[var(--ink-900)] text-white rounded-lg hover:bg-[var(--ink-900)]/90"
               >
                 {t("dashboard.enterpriseDashboard.support.contact")}
               </a>
@@ -506,12 +506,12 @@ export function EnterpriseClient() {
       {/* SSO Setup Modal */}
       {showSSOSetup && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-szn-card rounded-lg max-w-2xl w-full p-6">
+          <div className="bg-[var(--ink-0)] rounded-lg max-w-2xl w-full p-6">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold text-szn-text-1">{t("dashboard.enterpriseDashboard.sso.configure")}</h2>
+              <h2 className="text-xl font-bold text-[var(--ink-900)]">{t("dashboard.enterpriseDashboard.sso.configure")}</h2>
               <button
                 onClick={() => setShowSSOSetup(false)}
-                className="text-szn-text-3 hover:text-szn-text-2"
+                className="text-[var(--ink-500)] hover:text-[var(--ink-600)]"
               >
                 ✕
               </button>
@@ -523,7 +523,7 @@ export function EnterpriseClient() {
                 <div
                   key={step}
                   className={`flex-1 h-1 rounded-full ${
-                    step <= ssoSetupStep ? "bg-szn-accent" : "bg-gray-200"
+                    step <= ssoSetupStep ? "bg-[var(--ink-900)]" : "bg-gray-200"
                   }`}
                 />
               ))}
@@ -531,7 +531,7 @@ export function EnterpriseClient() {
 
             {ssoSetupStep === 1 && (
               <div className="space-y-4">
-                <h3 className="font-medium text-szn-text-1">{t("dashboard.enterpriseDashboard.sso.selectProvider")}</h3>
+                <h3 className="font-medium text-[var(--ink-900)]">{t("dashboard.enterpriseDashboard.sso.selectProvider")}</h3>
                 <div className="grid grid-cols-2 gap-3">
                   {providers.map((provider) => (
                     <button
@@ -539,12 +539,12 @@ export function EnterpriseClient() {
                       onClick={() => setSelectedProvider(provider.id)}
                       className={`p-4 border rounded-lg text-left transition-colors ${
                         selectedProvider === provider.id
-                          ? "border-szn-accent bg-szn-accent/10"
-                          : "border-szn-border hover:border-szn-border/80"
+                          ? "border-[var(--ink-900)] bg-[var(--ink-900)]/10"
+                          : "border-[var(--ink-200)] hover:border-[var(--ink-200)]/80"
                       }`}
                     >
-                      <h4 className="font-medium text-szn-text-1">{provider.name}</h4>
-                      <p className="text-sm text-szn-text-2">{provider.description}</p>
+                      <h4 className="font-medium text-[var(--ink-900)]">{provider.name}</h4>
+                      <p className="text-sm text-[var(--ink-600)]">{provider.description}</p>
                     </button>
                   ))}
                 </div>
@@ -553,9 +553,9 @@ export function EnterpriseClient() {
 
             {ssoSetupStep === 2 && (
               <div className="space-y-4">
-                <h3 className="font-medium text-szn-text-1">{t("dashboard.enterpriseDashboard.sso.configureDomains")}</h3>
+                <h3 className="font-medium text-[var(--ink-900)]">{t("dashboard.enterpriseDashboard.sso.configureDomains")}</h3>
                 <div>
-                  <label className="block text-sm font-medium text-szn-text-1 mb-1">
+                  <label className="block text-sm font-medium text-[var(--ink-900)] mb-1">
                     {t("dashboard.enterpriseDashboard.sso.emailDomains")}
                   </label>
                   <input
@@ -565,7 +565,7 @@ export function EnterpriseClient() {
                     placeholder="example.com, corp.example.com"
                     className="w-full px-3 py-2 border rounded-lg"
                   />
-                  <p className="text-sm text-szn-text-2 mt-1">
+                  <p className="text-sm text-[var(--ink-600)] mt-1">
                     {t("dashboard.enterpriseDashboard.sso.emailDomainsHint")}
                   </p>
                 </div>
@@ -574,21 +574,21 @@ export function EnterpriseClient() {
 
             {ssoSetupStep === 3 && (
               <div className="space-y-4">
-                <h3 className="font-medium text-szn-text-1">{t("dashboard.enterpriseDashboard.sso.idpConfig")}</h3>
-                <div className="p-4 bg-szn-surface rounded-lg">
-                  <p className="text-sm text-szn-text-2 mb-2">
+                <h3 className="font-medium text-[var(--ink-900)]">{t("dashboard.enterpriseDashboard.sso.idpConfig")}</h3>
+                <div className="p-4 bg-[var(--ink-50)] rounded-lg">
+                  <p className="text-sm text-[var(--ink-600)] mb-2">
                     {t("dashboard.enterpriseDashboard.sso.idpCopyHint")}
                   </p>
                   <div className="space-y-2 font-mono text-sm">
                     <div>
-                      <span className="text-szn-text-2">{t("dashboard.enterpriseDashboard.sso.acsUrl")}</span>{" "}
-                      <span className="text-szn-text-1">
+                      <span className="text-[var(--ink-600)]">{t("dashboard.enterpriseDashboard.sso.acsUrl")}</span>{" "}
+                      <span className="text-[var(--ink-900)]">
                         https://app.seizn.com/api/auth/sso/callback
                       </span>
                     </div>
                     <div>
-                      <span className="text-szn-text-2">{t("dashboard.enterpriseDashboard.sso.entityId")}</span>{" "}
-                      <span className="text-szn-text-1">
+                      <span className="text-[var(--ink-600)]">{t("dashboard.enterpriseDashboard.sso.entityId")}</span>{" "}
+                      <span className="text-[var(--ink-900)]">
                         https://app.seizn.com/api/auth/sso/metadata
                       </span>
                     </div>
@@ -601,7 +601,7 @@ export function EnterpriseClient() {
               {ssoSetupStep > 1 && (
                 <button
                   onClick={() => setSSOSetupStep(ssoSetupStep - 1)}
-                  className="px-4 py-2 border rounded-lg hover:bg-szn-surface-1"
+                  className="px-4 py-2 border rounded-lg hover:bg-[var(--ink-50)]"
                 >
                   {t("dashboard.enterpriseDashboard.sso.back")}
                 </button>
@@ -615,7 +615,7 @@ export function EnterpriseClient() {
                   }
                 }}
                 disabled={ssoSetupStep === 1 && !selectedProvider}
-                className="flex-1 px-4 py-2 bg-szn-accent text-white rounded-lg hover:bg-szn-accent/90 disabled:opacity-50"
+                className="flex-1 px-4 py-2 bg-[var(--ink-900)] text-white rounded-lg hover:bg-[var(--ink-900)]/90 disabled:opacity-50"
               >
                 {ssoSetupStep < 3 ? t("dashboard.enterpriseDashboard.sso.continue") : t("dashboard.enterpriseDashboard.sso.enableSSO")}
               </button>
@@ -643,15 +643,15 @@ function FeatureCard({
   return (
     <div className="flex items-center justify-between p-4 border rounded-lg">
       <div>
-        <p className="font-medium text-szn-text-1">{name}</p>
-        <p className="text-sm text-szn-text-2">{description}</p>
+        <p className="font-medium text-[var(--ink-900)]">{name}</p>
+        <p className="text-sm text-[var(--ink-600)]">{description}</p>
       </div>
       {enabled ? (
-        <span className="px-2 py-1 text-xs bg-szn-success/10 text-szn-success rounded-full">
+        <span className="px-2 py-1 text-xs bg-[var(--signal-canon)]/10 text-[var(--signal-canon)] rounded-full">
           {enabledLabel}
         </span>
       ) : (
-        <span className="px-2 py-1 text-xs bg-szn-surface text-szn-text-2 rounded-full">
+        <span className="px-2 py-1 text-xs bg-[var(--ink-50)] text-[var(--ink-600)] rounded-full">
           {disabledLabel}
         </span>
       )}
@@ -669,9 +669,9 @@ function LimitCard({
   max: string;
 }) {
   return (
-    <div className="p-4 bg-szn-surface rounded-lg">
-      <p className="text-sm text-szn-text-2">{label}</p>
-      <p className="text-xl font-bold text-szn-text-1 mt-1">{value}</p>
+    <div className="p-4 bg-[var(--ink-50)] rounded-lg">
+      <p className="text-sm text-[var(--ink-600)]">{label}</p>
+      <p className="text-xl font-bold text-[var(--ink-900)] mt-1">{value}</p>
     </div>
   );
 }

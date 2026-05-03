@@ -312,9 +312,9 @@ export default function OrganizationDetailClient({
       case "owner":
         return "bg-gradient-to-r from-amber-400 to-orange-500 text-white";
       case "admin":
-        return "bg-gradient-to-r from-purple-400 to-indigo-500 text-white";
+        return "bg-gradient-to-r from-[var(--ink-900)] to-[var(--ink-900)] text-white";
       default:
-        return "bg-szn-surface text-szn-text-2";
+        return "bg-[var(--ink-50)] text-[var(--ink-600)]";
     }
   };
 
@@ -324,8 +324,8 @@ export default function OrganizationDetailClient({
     return (
       <div className="space-y-6">
         <div className="szn-card rounded-lg p-6 animate-pulse">
-          <div className="h-8 bg-szn-surface-1 rounded w-1/3 mb-4" />
-          <div className="h-4 bg-szn-surface rounded w-1/2" />
+          <div className="h-8 bg-[var(--ink-50)] rounded w-1/3 mb-4" />
+          <div className="h-4 bg-[var(--ink-50)] rounded w-1/2" />
         </div>
       </div>
     );
@@ -334,15 +334,15 @@ export default function OrganizationDetailClient({
   if (!organization) {
     return (
       <div className="szn-card rounded-lg p-12 text-center">
-        <h2 className="text-xl font-semibold text-szn-text-1 mb-2">
+        <h2 className="text-xl font-semibold text-[var(--ink-900)] mb-2">
           {pageError ? "Failed to load organization" : "Organization not found"}
         </h2>
-        <p className="text-szn-text-2 mb-4">
+        <p className="text-[var(--ink-600)] mb-4">
           {pageError || "This organization doesn't exist or you don't have access."}
         </p>
         <div className="flex items-center justify-center gap-3">
           {pageError && (
-            <button onClick={() => void fetchOrganization()} className="px-4 py-2 rounded-xl bg-szn-surface text-szn-text-1 hover:bg-szn-surface-1">
+            <button onClick={() => void fetchOrganization()} className="px-4 py-2 rounded-xl bg-[var(--ink-50)] text-[var(--ink-900)] hover:bg-[var(--ink-50)]">
               Retry
             </button>
           )}
@@ -359,7 +359,7 @@ export default function OrganizationDetailClient({
       {/* Back button */}
       <Link
         href="/dashboard/organizations"
-        className="inline-flex items-center gap-2 text-szn-text-2 hover:text-szn-text-2 transition-colors"
+        className="inline-flex items-center gap-2 text-[var(--ink-600)] hover:text-[var(--ink-600)] transition-colors"
       >
         <BackIcon className="w-4 h-4" />
         Back to Organizations
@@ -375,15 +375,15 @@ export default function OrganizationDetailClient({
               </span>
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-szn-text-1">{organization.name}</h1>
-              <p className="text-szn-text-2">/{organization.slug}</p>
+              <h1 className="text-2xl font-bold text-[var(--ink-900)]">{organization.name}</h1>
+              <p className="text-[var(--ink-600)]">/{organization.slug}</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
             <span className={`px-3 py-1.5 rounded-full text-sm font-medium ${getRoleBadgeColor(currentUserRole || "member")}`}>
               {currentUserRole}
             </span>
-            <span className="px-3 py-1.5 rounded-full text-sm font-medium bg-szn-surface text-szn-text-2">
+            <span className="px-3 py-1.5 rounded-full text-sm font-medium bg-[var(--ink-50)] text-[var(--ink-600)]">
               {organization.plan || "Free"} Plan
             </span>
           </div>
@@ -391,13 +391,13 @@ export default function OrganizationDetailClient({
       </div>
 
       {pageError && (
-        <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-200">
+        <div className="rounded-lg border border-[var(--signal-pending)] bg-[var(--signal-pending-soft)] px-4 py-3 text-sm text-[var(--signal-pending-ink)] dark:border-[var(--signal-pending)]/60 dark:bg-[var(--signal-pending)]/30 dark:text-[var(--signal-pending-soft)]">
           {pageError}
         </div>
       )}
 
       {usageError && activeTab === "usage" && (
-        <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-200">
+        <div className="rounded-lg border border-[var(--signal-pending)] bg-[var(--signal-pending-soft)] px-4 py-3 text-sm text-[var(--signal-pending-ink)] dark:border-[var(--signal-pending)]/60 dark:bg-[var(--signal-pending)]/30 dark:text-[var(--signal-pending-soft)]">
           {usageError}
         </div>
       )}
@@ -416,13 +416,13 @@ export default function OrganizationDetailClient({
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
               activeTab === tab.id
                 ? "theme-gradient-btn text-white shadow-md"
-                : "text-szn-text-2 hover:bg-white/80"
+                : "text-[var(--ink-600)] hover:bg-white/80"
             }`}
           >
             {tab.label}
             {tab.count !== undefined && tab.count > 0 && (
               <span className={`ml-2 px-1.5 py-0.5 rounded-full text-xs ${
-                activeTab === tab.id ? "bg-white/20" : "bg-szn-surface-1"
+                activeTab === tab.id ? "bg-white/20" : "bg-[var(--ink-50)]"
               }`}>
                 {tab.count}
               </span>
@@ -435,7 +435,7 @@ export default function OrganizationDetailClient({
       {activeTab === "members" && (
         <div className="szn-card rounded-lg overflow-hidden">
           <div className="p-4 border-b theme-border flex items-center justify-between">
-            <h2 className="font-semibold text-szn-text-1">Team Members</h2>
+            <h2 className="font-semibold text-[var(--ink-900)]">Team Members</h2>
             {canManageMembers && (
               <button
                 onClick={() => setShowInviteModal(true)}
@@ -446,7 +446,7 @@ export default function OrganizationDetailClient({
               </button>
             )}
           </div>
-          <div className="divide-y divide-szn-border">
+          <div className="divide-y divide-[var(--ink-200)]">
             {members.map((member) => (
               <div key={member.id} className="p-4 flex items-center justify-between hover:bg-white/50 transition-colors">
                 <div className="flex items-center gap-3">
@@ -454,15 +454,15 @@ export default function OrganizationDetailClient({
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={member.avatar} alt="" className="w-10 h-10 rounded-full" />
                   ) : (
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-szn-surface-1 to-szn-surface-2 flex items-center justify-center">
-                      <span className="text-szn-text-2 font-medium">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[var(--ink-50)] to-[var(--ink-100)] flex items-center justify-center">
+                      <span className="text-[var(--ink-600)] font-medium">
                         {(member.name || member.email)[0].toUpperCase()}
                       </span>
                     </div>
                   )}
                   <div>
-                    <p className="font-medium text-szn-text-1">{member.name || "Unknown"}</p>
-                    <p className="text-sm text-szn-text-2">{member.email}</p>
+                    <p className="font-medium text-[var(--ink-900)]">{member.name || "Unknown"}</p>
+                    <p className="text-sm text-[var(--ink-600)]">{member.email}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
@@ -470,7 +470,7 @@ export default function OrganizationDetailClient({
                     <select
                       value={member.role}
                       onChange={(e) => handleUpdateRole(member.id, e.target.value)}
-                      className="px-3 py-1.5 bg-white border border-szn-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-szn-accent/40"
+                      className="px-3 py-1.5 bg-white border border-[var(--ink-200)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--ink-900)]/40"
                     >
                       <option value="admin">Admin</option>
                       <option value="member">Member</option>
@@ -483,7 +483,7 @@ export default function OrganizationDetailClient({
                   {canManageMembers && member.role !== "owner" && (
                     <button
                       onClick={() => handleRemoveMember(member.id, member.email)}
-                      className="p-2 text-szn-text-3 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                      className="p-2 text-[var(--ink-500)] hover:text-[var(--signal-conflict-ink)] hover:bg-[var(--signal-conflict-soft)] rounded-lg transition-colors"
                     >
                       <TrashIcon className="w-4 h-4" />
                     </button>
@@ -499,7 +499,7 @@ export default function OrganizationDetailClient({
       {activeTab === "invites" && (
         <div className="szn-card rounded-lg overflow-hidden">
           <div className="p-4 border-b theme-border flex items-center justify-between">
-            <h2 className="font-semibold text-szn-text-1">Pending Invitations</h2>
+            <h2 className="font-semibold text-[var(--ink-900)]">Pending Invitations</h2>
             {canManageMembers && (
               <button
                 onClick={() => setShowInviteModal(true)}
@@ -511,22 +511,22 @@ export default function OrganizationDetailClient({
             )}
           </div>
           {invites.filter((i) => i.status === "pending").length === 0 ? (
-            <div className="p-8 text-center text-szn-text-2">
+            <div className="p-8 text-center text-[var(--ink-600)]">
               No pending invitations
             </div>
           ) : (
-            <div className="divide-y divide-szn-border">
+            <div className="divide-y divide-[var(--ink-200)]">
               {invites
                 .filter((i) => i.status === "pending")
                 .map((invite) => (
                   <div key={invite.id} className="p-4 flex items-center justify-between hover:bg-white/50 transition-colors">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-100 to-violet-200 flex items-center justify-center">
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[var(--ink-50)] to-[var(--ink-900)] flex items-center justify-center">
                         <MailIcon className="w-5 h-5 text-indigo-500" />
                       </div>
                       <div>
-                        <p className="font-medium text-szn-text-1">{invite.email}</p>
-                        <p className="text-sm text-szn-text-2">
+                        <p className="font-medium text-[var(--ink-900)]">{invite.email}</p>
+                        <p className="text-sm text-[var(--ink-600)]">
                           Expires {formatDate(invite.expires_at)}
                         </p>
                       </div>
@@ -538,7 +538,7 @@ export default function OrganizationDetailClient({
                       {canManageMembers && (
                         <button
                           onClick={() => handleCancelInvite(invite.id)}
-                          className="p-2 text-szn-text-3 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                          className="p-2 text-[var(--ink-500)] hover:text-[var(--signal-conflict-ink)] hover:bg-[var(--signal-conflict-soft)] rounded-lg transition-colors"
                         >
                           <TrashIcon className="w-4 h-4" />
                         </button>
@@ -564,7 +564,7 @@ export default function OrganizationDetailClient({
                   className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
                     usagePeriod === p
                       ? "theme-gradient-btn text-white shadow-md"
-                      : "text-szn-text-2 hover:bg-white/80"
+                      : "text-[var(--ink-600)] hover:bg-white/80"
                   }`}
                 >
                   {p === "7d" ? "7 Days" : p === "30d" ? "30 Days" : "90 Days"}
@@ -578,35 +578,35 @@ export default function OrganizationDetailClient({
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
               {[1, 2, 3, 4].map((i) => (
                 <div key={i} className="szn-card rounded-lg p-5 animate-pulse">
-                  <div className="h-4 bg-szn-surface-1 rounded w-1/2 mb-3" />
-                  <div className="h-8 bg-szn-surface rounded w-2/3" />
+                  <div className="h-4 bg-[var(--ink-50)] rounded w-1/2 mb-3" />
+                  <div className="h-8 bg-[var(--ink-50)] rounded w-2/3" />
                 </div>
               ))}
             </div>
           ) : usageSummary ? (
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
               <div className="szn-card rounded-lg p-5">
-                <p className="text-sm text-szn-text-2 mb-1">Total API Calls</p>
-                <p className="text-2xl font-bold text-szn-text-1">{usageSummary.totalCalls.toLocaleString()}</p>
+                <p className="text-sm text-[var(--ink-600)] mb-1">Total API Calls</p>
+                <p className="text-2xl font-bold text-[var(--ink-900)]">{usageSummary.totalCalls.toLocaleString()}</p>
               </div>
               <div className="szn-card rounded-lg p-5">
-                <p className="text-sm text-szn-text-2 mb-1">Total Tokens</p>
-                <p className="text-2xl font-bold text-szn-text-1">{usageSummary.totalTokens.toLocaleString()}</p>
+                <p className="text-sm text-[var(--ink-600)] mb-1">Total Tokens</p>
+                <p className="text-2xl font-bold text-[var(--ink-900)]">{usageSummary.totalTokens.toLocaleString()}</p>
               </div>
               <div className="szn-card rounded-lg p-5">
-                <p className="text-sm text-szn-text-2 mb-1">Estimated Cost</p>
-                <p className="text-2xl font-bold text-szn-text-1">${usageSummary.totalCostDollars}</p>
+                <p className="text-sm text-[var(--ink-600)] mb-1">Estimated Cost</p>
+                <p className="text-2xl font-bold text-[var(--ink-900)]">${usageSummary.totalCostDollars}</p>
               </div>
               <div className="szn-card rounded-lg p-5">
-                <p className="text-sm text-szn-text-2 mb-1">Active API Keys</p>
-                <p className="text-2xl font-bold text-szn-text-1">{usageSummary.activeKeys}</p>
+                <p className="text-sm text-[var(--ink-600)] mb-1">Active API Keys</p>
+                <p className="text-2xl font-bold text-[var(--ink-900)]">{usageSummary.activeKeys}</p>
               </div>
             </div>
           ) : null}
 
           {/* Usage Chart */}
           <div className="szn-card rounded-lg p-6">
-            <h3 className="font-semibold text-szn-text-1 mb-4">Daily API Calls</h3>
+            <h3 className="font-semibold text-[var(--ink-900)] mb-4">Daily API Calls</h3>
             {dailyUsage.length > 0 ? (
               <div className="h-48 flex items-end gap-1">
                 {dailyUsage.map((day, i) => {
@@ -623,7 +623,7 @@ export default function OrganizationDetailClient({
                         title={`${day.date}: ${day.calls} calls`}
                       />
                       {i % Math.ceil(dailyUsage.length / 7) === 0 && (
-                        <span className="text-[10px] text-szn-text-3 truncate w-full text-center">
+                        <span className="text-[10px] text-[var(--ink-500)] truncate w-full text-center">
                           {day.date.slice(5)}
                         </span>
                       )}
@@ -632,7 +632,7 @@ export default function OrganizationDetailClient({
                 })}
               </div>
             ) : (
-              <div className="h-48 flex items-center justify-center text-szn-text-3">
+              <div className="h-48 flex items-center justify-center text-[var(--ink-500)]">
                 No usage data for this period
               </div>
             )}
@@ -641,32 +641,32 @@ export default function OrganizationDetailClient({
           {/* Member Usage Breakdown */}
           <div className="szn-card rounded-lg overflow-hidden">
             <div className="p-4 border-b theme-border">
-              <h3 className="font-semibold text-szn-text-1">Usage by Member</h3>
+              <h3 className="font-semibold text-[var(--ink-900)]">Usage by Member</h3>
             </div>
             {memberUsage.length > 0 ? (
-              <div className="divide-y divide-szn-border">
+              <div className="divide-y divide-[var(--ink-200)]">
                 {memberUsage.map((member) => (
                   <div key={member.userId} className="p-4 flex items-center justify-between hover:bg-white/50 transition-colors">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-szn-surface-1 to-szn-surface-2 flex items-center justify-center">
-                        <span className="text-szn-text-2 font-medium">
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[var(--ink-50)] to-[var(--ink-100)] flex items-center justify-center">
+                        <span className="text-[var(--ink-600)] font-medium">
                           {(member.name || member.email)[0].toUpperCase()}
                         </span>
                       </div>
                       <div>
-                        <p className="font-medium text-szn-text-1">{member.name || member.email}</p>
-                        {member.name && <p className="text-sm text-szn-text-2">{member.email}</p>}
+                        <p className="font-medium text-[var(--ink-900)]">{member.name || member.email}</p>
+                        {member.name && <p className="text-sm text-[var(--ink-600)]">{member.email}</p>}
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="font-semibold text-szn-text-1">{member.calls.toLocaleString()} calls</p>
-                      <p className="text-sm text-szn-text-2">{member.tokens.toLocaleString()} tokens</p>
+                      <p className="font-semibold text-[var(--ink-900)]">{member.calls.toLocaleString()} calls</p>
+                      <p className="text-sm text-[var(--ink-600)]">{member.tokens.toLocaleString()} tokens</p>
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="p-8 text-center text-szn-text-2">
+              <div className="p-8 text-center text-[var(--ink-600)]">
                 No usage data for this period
               </div>
             )}
@@ -690,10 +690,10 @@ export default function OrganizationDetailClient({
             className="absolute inset-0 bg-black/30 backdrop-blur-sm"
             onClick={() => setShowInviteModal(false)}
           />
-          <div className="relative szn-card rounded-3xl p-8 w-full max-w-md shadow-2xl animate-scale-in">
+          <div className="relative szn-card rounded-2xl p-8 w-full max-w-md shadow-2xl animate-scale-in">
             <button
               onClick={() => setShowInviteModal(false)}
-              className="absolute top-4 right-4 p-2 text-szn-text-3 hover:text-szn-text-2 hover:bg-szn-surface rounded-full transition-colors"
+              className="absolute top-4 right-4 p-2 text-[var(--ink-500)] hover:text-[var(--ink-600)] hover:bg-[var(--ink-50)] rounded-full transition-colors"
             >
               <CloseIcon className="w-5 h-5" />
             </button>
@@ -702,20 +702,20 @@ export default function OrganizationDetailClient({
               <div className="w-14 h-14 mx-auto mb-4 rounded-lg theme-gradient-btn flex items-center justify-center shadow-lg">
                 <MailIcon className="w-7 h-7 text-white" />
               </div>
-              <h2 className="text-xl font-bold text-szn-text-1">Invite Team Member</h2>
-              <p className="text-szn-text-2 text-sm mt-1">
+              <h2 className="text-xl font-bold text-[var(--ink-900)]">Invite Team Member</h2>
+              <p className="text-[var(--ink-600)] text-sm mt-1">
                 Send an invitation to join {organization.name}
               </p>
             </div>
 
             {inviteError && (
-              <div className="mb-4 p-3 bg-red-50 border border-red-100 rounded-xl text-red-600 text-sm">
+              <div className="mb-4 p-3 bg-[var(--signal-conflict-soft)] border border-[var(--signal-conflict)] rounded-xl text-[var(--signal-conflict-ink)] text-sm">
                 {inviteError}
               </div>
             )}
 
             {inviteSuccess && (
-              <div className="mb-4 p-3 bg-green-50 border border-green-100 rounded-xl text-green-600 text-sm flex items-center gap-2">
+              <div className="mb-4 p-3 bg-[var(--signal-canon-soft)] border border-[var(--signal-canon)] rounded-xl text-[var(--signal-canon-ink)] text-sm flex items-center gap-2">
                 <CheckIcon className="w-5 h-5" />
                 {inviteSuccess}
               </div>
@@ -723,7 +723,7 @@ export default function OrganizationDetailClient({
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-szn-text-2 mb-1.5">
+                <label className="block text-sm font-medium text-[var(--ink-600)] mb-1.5">
                   Email Address
                 </label>
                 <input
@@ -731,11 +731,11 @@ export default function OrganizationDetailClient({
                   value={inviteEmail}
                   onChange={(e) => setInviteEmail(e.target.value)}
                   placeholder="colleague@company.com"
-                  className="w-full px-4 py-3 bg-white border border-szn-border rounded-xl text-szn-text-1 placeholder-szn-text-3 focus:outline-none focus:ring-2 focus:ring-szn-accent/40 focus:border-transparent transition-all"
+                  className="w-full px-4 py-3 bg-white border border-[var(--ink-200)] rounded-xl text-[var(--ink-900)] placeholder-[var(--ink-500)] focus:outline-none focus:ring-2 focus:ring-[var(--ink-900)]/40 focus:border-transparent transition-all"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-szn-text-2 mb-1.5">
+                <label className="block text-sm font-medium text-[var(--ink-600)] mb-1.5">
                   Role
                 </label>
                 <div className="grid grid-cols-2 gap-2">
@@ -748,12 +748,12 @@ export default function OrganizationDetailClient({
                       onClick={() => setInviteRole(role.value as typeof inviteRole)}
                       className={`p-3 rounded-xl border-2 text-left transition-all ${
                         inviteRole === role.value
-                          ? "border-szn-accent bg-szn-accent/5"
-                          : "border-szn-border hover:border-szn-border"
+                          ? "border-[var(--ink-900)] bg-[var(--ink-900)]/5"
+                          : "border-[var(--ink-200)] hover:border-[var(--ink-200)]"
                       }`}
                     >
-                      <p className="font-medium text-szn-text-1">{role.label}</p>
-                      <p className="text-xs text-szn-text-2">{role.desc}</p>
+                      <p className="font-medium text-[var(--ink-900)]">{role.label}</p>
+                      <p className="text-xs text-[var(--ink-600)]">{role.desc}</p>
                     </button>
                   ))}
                 </div>
@@ -763,7 +763,7 @@ export default function OrganizationDetailClient({
             <div className="flex gap-3 mt-6">
               <button
                 onClick={() => setShowInviteModal(false)}
-                className="flex-1 px-4 py-3 bg-szn-surface text-szn-text-2 rounded-xl font-medium hover:bg-szn-surface-1 transition-colors"
+                className="flex-1 px-4 py-3 bg-[var(--ink-50)] text-[var(--ink-600)] rounded-xl font-medium hover:bg-[var(--ink-50)] transition-colors"
               >
                 Cancel
               </button>
@@ -862,13 +862,13 @@ function OrgSettingsTab({
     <div className="space-y-6">
       {/* General Settings */}
       <div className="szn-card rounded-lg p-6">
-        <h2 className="font-semibold text-szn-text-1 mb-6">General Settings</h2>
+        <h2 className="font-semibold text-[var(--ink-900)] mb-6">General Settings</h2>
 
         {saveMessage && (
           <div className={`mb-4 p-3 rounded-xl text-sm ${
             saveMessage.type === "success"
-              ? "bg-green-50 border border-green-100 text-green-600"
-              : "bg-red-50 border border-red-100 text-red-600"
+              ? "bg-[var(--signal-canon-soft)] border border-[var(--signal-canon)] text-[var(--signal-canon-ink)]"
+              : "bg-[var(--signal-conflict-soft)] border border-[var(--signal-conflict)] text-[var(--signal-conflict-ink)]"
           }`}>
             {saveMessage.text}
           </div>
@@ -876,7 +876,7 @@ function OrgSettingsTab({
 
         <div className="space-y-5">
           <div>
-            <label className="block text-sm font-medium text-szn-text-2 mb-1.5">
+            <label className="block text-sm font-medium text-[var(--ink-600)] mb-1.5">
               Organization Name
             </label>
             <input
@@ -884,47 +884,47 @@ function OrgSettingsTab({
               value={name}
               onChange={(e) => setName(e.target.value)}
               disabled={!canManage}
-              className="w-full px-4 py-3 bg-white border border-szn-border rounded-xl text-szn-text-1 focus:outline-none focus:ring-2 focus:ring-szn-accent/40 focus:border-transparent disabled:bg-szn-surface disabled:text-szn-text-2 transition-all"
+              className="w-full px-4 py-3 bg-white border border-[var(--ink-200)] rounded-xl text-[var(--ink-900)] focus:outline-none focus:ring-2 focus:ring-[var(--ink-900)]/40 focus:border-transparent disabled:bg-[var(--ink-50)] disabled:text-[var(--ink-600)] transition-all"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-szn-text-2 mb-1.5">
+            <label className="block text-sm font-medium text-[var(--ink-600)] mb-1.5">
               URL Slug
             </label>
             <div className="flex items-center gap-2">
-              <span className="text-szn-text-3 text-sm">seizn.com/org/</span>
+              <span className="text-[var(--ink-500)] text-sm">seizn.com/org/</span>
               <input
                 type="text"
                 value={slug}
                 onChange={(e) => setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "-"))}
                 disabled={!canManage}
-                className="flex-1 px-4 py-3 bg-white border border-szn-border rounded-xl text-szn-text-1 focus:outline-none focus:ring-2 focus:ring-szn-accent/40 focus:border-transparent disabled:bg-szn-surface disabled:text-szn-text-2 transition-all"
+                className="flex-1 px-4 py-3 bg-white border border-[var(--ink-200)] rounded-xl text-[var(--ink-900)] focus:outline-none focus:ring-2 focus:ring-[var(--ink-900)]/40 focus:border-transparent disabled:bg-[var(--ink-50)] disabled:text-[var(--ink-600)] transition-all"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-szn-text-2 mb-1.5">
+            <label className="block text-sm font-medium text-[var(--ink-600)] mb-1.5">
               Plan
             </label>
-            <div className="px-4 py-3 bg-szn-surface border border-szn-border rounded-xl text-szn-text-2">
+            <div className="px-4 py-3 bg-[var(--ink-50)] border border-[var(--ink-200)] rounded-xl text-[var(--ink-600)]">
               {organization.plan || "Free"} Plan
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-szn-text-2 mb-1.5">
+            <label className="block text-sm font-medium text-[var(--ink-600)] mb-1.5">
               Organization ID
             </label>
-            <div className="px-4 py-3 bg-szn-surface border border-szn-border rounded-xl text-szn-text-3 font-mono text-sm">
+            <div className="px-4 py-3 bg-[var(--ink-50)] border border-[var(--ink-200)] rounded-xl text-[var(--ink-500)] font-mono text-sm">
               {organization.id}
             </div>
           </div>
         </div>
 
         {canManage && (
-          <div className="mt-6 pt-6 border-t border-szn-border">
+          <div className="mt-6 pt-6 border-t border-[var(--ink-200)]">
             <button
               onClick={handleSave}
               disabled={!hasChanges || isSaving}
@@ -938,15 +938,15 @@ function OrgSettingsTab({
 
       {/* Danger Zone */}
       {canManage && (
-        <div className="szn-card rounded-lg p-6 border-2 border-red-100">
-          <h2 className="font-semibold text-red-600 mb-2">Danger Zone</h2>
-          <p className="text-sm text-szn-text-2 mb-4">
+        <div className="szn-card rounded-lg p-6 border-2 border-[var(--signal-conflict)]">
+          <h2 className="font-semibold text-[var(--signal-conflict-ink)] mb-2">Danger Zone</h2>
+          <p className="text-sm text-[var(--ink-600)] mb-4">
             Deleting an organization is permanent and cannot be undone. All members will lose access and all data will be removed.
           </p>
 
           {showDeleteConfirm ? (
             <div className="space-y-3">
-              <p className="text-sm text-szn-text-2">
+              <p className="text-sm text-[var(--ink-600)]">
                 Type <strong>{organization.name}</strong> to confirm:
               </p>
               <input
@@ -954,19 +954,19 @@ function OrgSettingsTab({
                 value={deleteConfirmText}
                 onChange={(e) => setDeleteConfirmText(e.target.value)}
                 placeholder={organization.name}
-                className="w-full px-4 py-3 bg-white border border-red-200 rounded-xl text-szn-text-1 focus:outline-none focus:ring-2 focus:ring-red-300 transition-all"
+                className="w-full px-4 py-3 bg-white border border-[var(--signal-conflict)] rounded-xl text-[var(--ink-900)] focus:outline-none focus:ring-2 focus:ring-red-300 transition-all"
               />
               <div className="flex gap-3">
                 <button
                   onClick={() => { setShowDeleteConfirm(false); setDeleteConfirmText(""); }}
-                  className="px-4 py-2.5 bg-szn-surface text-szn-text-2 rounded-xl font-medium hover:bg-szn-surface-1 transition-colors"
+                  className="px-4 py-2.5 bg-[var(--ink-50)] text-[var(--ink-600)] rounded-xl font-medium hover:bg-[var(--ink-50)] transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleDelete}
                   disabled={deleteConfirmText !== organization.name}
-                  className="px-4 py-2.5 bg-red-500 text-white rounded-xl font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-red-600 transition-colors"
+                  className="px-4 py-2.5 bg-[var(--signal-conflict)] text-white rounded-xl font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[var(--signal-conflict)] transition-colors"
                 >
                   Delete Organization
                 </button>
@@ -975,7 +975,7 @@ function OrgSettingsTab({
           ) : (
             <button
               onClick={() => setShowDeleteConfirm(true)}
-              className="px-4 py-2.5 border-2 border-red-200 text-red-600 rounded-xl font-medium hover:bg-red-50 transition-colors"
+              className="px-4 py-2.5 border-2 border-[var(--signal-conflict)] text-[var(--signal-conflict-ink)] rounded-xl font-medium hover:bg-[var(--signal-conflict-soft)] transition-colors"
             >
               Delete Organization
             </button>

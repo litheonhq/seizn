@@ -103,26 +103,26 @@ const ArrowPathIcon = ({ className }: { className?: string }) => (
 
 const typeColors: Record<NoteType, { bg: string; text: string }> = {
   fact: { bg: "bg-blue-100 dark:bg-blue-900/50", text: "text-blue-700 dark:text-blue-300" },
-  preference: { bg: "bg-purple-100 dark:bg-purple-900/50", text: "text-purple-700 dark:text-purple-300" },
+  preference: { bg: "bg-[var(--ink-100)] dark:bg-[var(--ink-900)]/50", text: "text-[var(--ink-900)] underline dark:text-[var(--ink-500)]" },
   instruction: { bg: "bg-orange-100 dark:bg-orange-900/50", text: "text-orange-700 dark:text-orange-300" },
-  episode: { bg: "bg-green-100 dark:bg-green-900/50", text: "text-green-700 dark:text-green-300" },
+  episode: { bg: "bg-[var(--signal-canon-soft)] dark:bg-green-900/50", text: "text-[var(--signal-canon-ink)] dark:text-green-300" },
   procedure: { bg: "bg-sky-100 dark:bg-sky-900/50", text: "text-sky-700 dark:text-sky-300" },
-  relationship: { bg: "bg-cyan-100 dark:bg-cyan-900/50", text: "text-cyan-700 dark:text-cyan-300" },
+  relationship: { bg: "bg-[var(--ink-100)] dark:bg-[var(--ink-900)]/50", text: "text-[var(--ink-900)] dark:text-[var(--ink-900)]" },
 };
 
 const statusColors: Record<NoteStatus, { bg: string; text: string }> = {
-  candidate: { bg: "bg-yellow-100 dark:bg-yellow-900/50", text: "text-yellow-700 dark:text-yellow-300" },
-  active: { bg: "bg-green-100 dark:bg-green-900/50", text: "text-green-700 dark:text-green-300" },
-  superseded: { bg: "bg-szn-surface", text: "text-szn-text-2" },
-  contradicted: { bg: "bg-red-100 dark:bg-red-900/50", text: "text-red-700 dark:text-red-300" },
-  deleted: { bg: "bg-szn-surface", text: "text-szn-text-2" },
+  candidate: { bg: "bg-[var(--signal-pending-soft)] dark:bg-yellow-900/50", text: "text-[var(--signal-pending-ink)] dark:text-yellow-300" },
+  active: { bg: "bg-[var(--signal-canon-soft)] dark:bg-green-900/50", text: "text-[var(--signal-canon-ink)] dark:text-green-300" },
+  superseded: { bg: "bg-[var(--ink-50)]", text: "text-[var(--ink-600)]" },
+  contradicted: { bg: "bg-[var(--signal-conflict-soft)] dark:bg-[var(--signal-conflict)]/50", text: "text-[var(--signal-conflict-ink)] dark:text-[var(--signal-conflict-soft)]" },
+  deleted: { bg: "bg-[var(--ink-50)]", text: "text-[var(--ink-600)]" },
 };
 
 const privacyColors: Record<PrivacyClass, { bg: string; text: string }> = {
-  public: { bg: "bg-green-100 dark:bg-green-900/50", text: "text-green-700 dark:text-green-300" },
+  public: { bg: "bg-[var(--signal-canon-soft)] dark:bg-green-900/50", text: "text-[var(--signal-canon-ink)] dark:text-green-300" },
   internal: { bg: "bg-blue-100 dark:bg-blue-900/50", text: "text-blue-700 dark:text-blue-300" },
-  confidential: { bg: "bg-yellow-100 dark:bg-yellow-900/50", text: "text-yellow-700 dark:text-yellow-300" },
-  restricted: { bg: "bg-red-100 dark:bg-red-900/50", text: "text-red-700 dark:text-red-300" },
+  confidential: { bg: "bg-[var(--signal-pending-soft)] dark:bg-yellow-900/50", text: "text-[var(--signal-pending-ink)] dark:text-yellow-300" },
+  restricted: { bg: "bg-[var(--signal-conflict-soft)] dark:bg-[var(--signal-conflict)]/50", text: "text-[var(--signal-conflict-ink)] dark:text-[var(--signal-conflict-soft)]" },
 };
 
 // ============================================
@@ -306,15 +306,15 @@ export function NodeInspector({ node, onClose, onRefresh }: NodeInspectorProps) 
   }, [note.id, onRefresh]);
 
   return (
-    <div className="h-full bg-szn-card border border-szn-border rounded-lg overflow-hidden flex flex-col">
+    <div className="h-full bg-[var(--ink-0)] border border-[var(--ink-200)] rounded-lg overflow-hidden flex flex-col">
       {/* Header */}
-      <div className="p-4 border-b border-szn-border flex items-center justify-between">
-        <h2 className="font-semibold text-szn-text-1">Node Inspector</h2>
+      <div className="p-4 border-b border-[var(--ink-200)] flex items-center justify-between">
+        <h2 className="font-semibold text-[var(--ink-900)]">Node Inspector</h2>
         <button
           onClick={onClose}
-          className="p-1 hover:bg-szn-surface-1 rounded-lg transition-colors"
+          className="p-1 hover:bg-[var(--ink-50)] rounded-lg transition-colors"
         >
-          <XIcon className="w-5 h-5 text-szn-text-2" />
+          <XIcon className="w-5 h-5 text-[var(--ink-600)]" />
         </button>
       </div>
 
@@ -322,30 +322,30 @@ export function NodeInspector({ node, onClose, onRefresh }: NodeInspectorProps) 
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {/* Full Content */}
         <div className="space-y-2">
-          <h3 className="text-sm font-medium text-szn-text-2">Content</h3>
-          <div className="p-3 bg-szn-bg rounded-lg">
+          <h3 className="text-sm font-medium text-[var(--ink-600)]">Content</h3>
+          <div className="p-3 bg-[var(--ink-50)] rounded-lg">
             {isEditing ? (
               <div className="space-y-2">
                 <textarea
                   value={editedContent}
                   onChange={(event) => setEditedContent(event.target.value)}
-                  className="w-full min-h-28 px-3 py-2 text-sm bg-szn-card border border-szn-border rounded-lg text-szn-text-1 focus:outline-none focus:ring-2 focus:ring-szn-accent resize-y"
+                  className="w-full min-h-28 px-3 py-2 text-sm bg-[var(--ink-0)] border border-[var(--ink-200)] rounded-lg text-[var(--ink-900)] focus:outline-none focus:ring-2 focus:ring-[var(--ink-900)] resize-y"
                   maxLength={10000}
                   placeholder="Edit memory content..."
                 />
                 <div className="flex items-center justify-between">
                   {editError ? (
-                    <p className="text-xs text-red-600 dark:text-red-400">{editError}</p>
+                    <p className="text-xs text-[var(--signal-conflict-ink)] dark:text-[var(--signal-conflict-soft)]">{editError}</p>
                   ) : (
                     <span />
                   )}
-                  <p className="text-xs text-szn-text-3">
+                  <p className="text-xs text-[var(--ink-500)]">
                     {normalizedEditedContent.length}/10000
                   </p>
                 </div>
               </div>
             ) : (
-              <p className="text-sm text-szn-text-1 whitespace-pre-wrap">
+              <p className="text-sm text-[var(--ink-900)] whitespace-pre-wrap">
                 {editedContent}
               </p>
             )}
@@ -354,11 +354,11 @@ export function NodeInspector({ node, onClose, onRefresh }: NodeInspectorProps) 
 
         {/* Metadata */}
         <div className="space-y-3">
-          <h3 className="text-sm font-medium text-szn-text-2">Metadata</h3>
+          <h3 className="text-sm font-medium text-[var(--ink-600)]">Metadata</h3>
 
           {/* Type */}
           <div className="flex items-center justify-between">
-            <span className="text-sm text-szn-text-2">Type</span>
+            <span className="text-sm text-[var(--ink-600)]">Type</span>
             <span
               className={`px-2 py-1 text-xs font-medium rounded-full ${typeColors[data.type].bg} ${typeColors[data.type].text}`}
             >
@@ -368,7 +368,7 @@ export function NodeInspector({ node, onClose, onRefresh }: NodeInspectorProps) 
 
           {/* Status */}
           <div className="flex items-center justify-between">
-            <span className="text-sm text-szn-text-2">Status</span>
+            <span className="text-sm text-[var(--ink-600)]">Status</span>
             <span
               className={`px-2 py-1 text-xs font-medium rounded-full ${statusColors[data.status].bg} ${statusColors[data.status].text}`}
             >
@@ -378,7 +378,7 @@ export function NodeInspector({ node, onClose, onRefresh }: NodeInspectorProps) 
 
           {/* Privacy Class */}
           <div className="flex items-center justify-between">
-            <span className="text-sm text-szn-text-2">Privacy</span>
+            <span className="text-sm text-[var(--ink-600)]">Privacy</span>
             <span
               className={`px-2 py-1 text-xs font-medium rounded-full ${privacyColors[data.privacyClass].bg} ${privacyColors[data.privacyClass].text}`}
             >
@@ -388,49 +388,49 @@ export function NodeInspector({ node, onClose, onRefresh }: NodeInspectorProps) 
 
           {/* Importance */}
           <div className="flex items-center justify-between">
-            <span className="text-sm text-szn-text-2">Importance</span>
+            <span className="text-sm text-[var(--ink-600)]">Importance</span>
             <div className="flex items-center gap-2">
-              <div className="w-16 h-2 bg-szn-surface rounded-full overflow-hidden">
+              <div className="w-16 h-2 bg-[var(--ink-50)] rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-szn-accent rounded-full"
+                  className="h-full bg-[var(--ink-900)] rounded-full"
                   style={{ width: `${data.importance * 100}%` }}
                 />
               </div>
-              <span className="text-xs text-szn-text-2">{Math.round(data.importance * 100)}%</span>
+              <span className="text-xs text-[var(--ink-600)]">{Math.round(data.importance * 100)}%</span>
             </div>
           </div>
 
           {/* Created At */}
           <div className="flex items-center justify-between">
-            <span className="text-sm text-szn-text-2">Created</span>
-            <span className="text-sm text-szn-text-2">
+            <span className="text-sm text-[var(--ink-600)]">Created</span>
+            <span className="text-sm text-[var(--ink-600)]">
               {formatDate(note.createdAt, "long")}
             </span>
           </div>
 
           {/* Updated At */}
           <div className="flex items-center justify-between">
-            <span className="text-sm text-szn-text-2">Updated</span>
-            <span className="text-sm text-szn-text-2">
+            <span className="text-sm text-[var(--ink-600)]">Updated</span>
+            <span className="text-sm text-[var(--ink-600)]">
               {formatDate(note.updatedAt, "long")}
             </span>
           </div>
 
           {/* Scope */}
           <div className="flex items-center justify-between">
-            <span className="text-sm text-szn-text-2">Scope</span>
-            <span className="text-sm text-szn-text-2">{note.scope}</span>
+            <span className="text-sm text-[var(--ink-600)]">Scope</span>
+            <span className="text-sm text-[var(--ink-600)]">{note.scope}</span>
           </div>
 
           {/* Tags */}
           {note.tags && note.tags.length > 0 && (
             <div className="space-y-1">
-              <span className="text-sm text-szn-text-2">Tags</span>
+              <span className="text-sm text-[var(--ink-600)]">Tags</span>
               <div className="flex flex-wrap gap-1">
                 {note.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="px-2 py-0.5 text-xs bg-szn-surface text-szn-text-2 rounded-full"
+                    className="px-2 py-0.5 text-xs bg-[var(--ink-50)] text-[var(--ink-600)] rounded-full"
                   >
                     {tag}
                   </span>
@@ -443,10 +443,10 @@ export function NodeInspector({ node, onClose, onRefresh }: NodeInspectorProps) 
         {/* Where Used / Usage Stats */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-medium text-szn-text-2">Usage</h3>
+            <h3 className="text-sm font-medium text-[var(--ink-600)]">Usage</h3>
             <button
               onClick={() => setShowUsageTab(!showUsageTab)}
-              className="text-xs text-szn-accent hover:underline"
+              className="text-xs text-[var(--ink-900)] hover:underline"
             >
               {showUsageTab ? "Hide details" : "Show details"}
             </button>
@@ -458,30 +458,30 @@ export function NodeInspector({ node, onClose, onRefresh }: NodeInspectorProps) 
               className="w-3 h-3 rounded-full"
               style={{ backgroundColor: heatColor }}
             />
-            <span className="text-sm text-szn-text-2 capitalize">
+            <span className="text-sm text-[var(--ink-600)] capitalize">
               {heatLevel === "unused" ? "Never used" : `${heatLevel} (${stats.totalUsages} uses)`}
             </span>
           </div>
 
           {/* Quick Stats */}
           <div className="grid grid-cols-3 gap-2">
-            <div className="p-2 bg-szn-bg rounded-lg text-center">
-              <div className="text-lg font-semibold text-szn-text-1">
+            <div className="p-2 bg-[var(--ink-50)] rounded-lg text-center">
+              <div className="text-lg font-semibold text-[var(--ink-900)]">
                 {stats.recallCount}
               </div>
-              <div className="text-xs text-szn-text-2">Recalls</div>
+              <div className="text-xs text-[var(--ink-600)]">Recalls</div>
             </div>
-            <div className="p-2 bg-szn-bg rounded-lg text-center">
-              <div className="text-lg font-semibold text-szn-text-1">
+            <div className="p-2 bg-[var(--ink-50)] rounded-lg text-center">
+              <div className="text-lg font-semibold text-[var(--ink-900)]">
                 {Math.round(stats.successRate * 100)}%
               </div>
-              <div className="text-xs text-szn-text-2">Success</div>
+              <div className="text-xs text-[var(--ink-600)]">Success</div>
             </div>
-            <div className="p-2 bg-szn-bg rounded-lg text-center">
-              <div className="text-lg font-semibold text-szn-text-1">
+            <div className="p-2 bg-[var(--ink-50)] rounded-lg text-center">
+              <div className="text-lg font-semibold text-[var(--ink-900)]">
                 {Math.round(stats.positiveRate * 100)}%
               </div>
-              <div className="text-xs text-szn-text-2">Positive</div>
+              <div className="text-xs text-[var(--ink-600)]">Positive</div>
             </div>
           </div>
 
@@ -489,34 +489,34 @@ export function NodeInspector({ node, onClose, onRefresh }: NodeInspectorProps) 
           {showUsageTab && (
             <div className="space-y-2 max-h-48 overflow-y-auto">
               {usageLoading ? (
-                <div className="text-sm text-szn-text-2 text-center py-2">Loading...</div>
+                <div className="text-sm text-[var(--ink-600)] text-center py-2">Loading...</div>
               ) : usage.length === 0 ? (
-                <div className="text-sm text-szn-text-2 text-center py-2">
+                <div className="text-sm text-[var(--ink-600)] text-center py-2">
                   No usage recorded yet
                 </div>
               ) : (
                 usage.map((u) => (
                   <div
                     key={u.id}
-                    className="p-2 bg-szn-bg rounded-lg text-xs space-y-1"
+                    className="p-2 bg-[var(--ink-50)] rounded-lg text-xs space-y-1"
                   >
                     <div className="flex items-center justify-between">
-                      <span className="font-medium text-szn-text-1 capitalize">
+                      <span className="font-medium text-[var(--ink-900)] capitalize">
                         {u.usageType}
                       </span>
-                      <span className="text-szn-text-2">
+                      <span className="text-[var(--ink-600)]">
                         {formatDate(u.createdAt)}
                       </span>
                     </div>
                     {u.queryText && (
-                      <div className="text-szn-text-2 truncate">
+                      <div className="text-[var(--ink-600)] truncate">
                         Query: {u.queryText}
                       </div>
                     )}
                     {u.traceId && (
                       <a
                         href={`/dashboard/traces/${u.traceId}`}
-                        className="text-szn-accent hover:underline"
+                        className="text-[var(--ink-900)] hover:underline"
                       >
                         View trace
                       </a>
@@ -531,11 +531,11 @@ export function NodeInspector({ node, onClose, onRefresh }: NodeInspectorProps) 
         {/* Provenance */}
         {note.provenance && (
           <div className="space-y-2">
-            <h3 className="text-sm font-medium text-szn-text-2">Provenance</h3>
-            <div className="p-3 bg-szn-bg rounded-lg space-y-2">
+            <h3 className="text-sm font-medium text-[var(--ink-600)]">Provenance</h3>
+            <div className="p-3 bg-[var(--ink-50)] rounded-lg space-y-2">
               <div className="flex items-center justify-between text-sm">
-                <span className="text-szn-text-2">Source Type</span>
-                <span className="text-szn-text-2">
+                <span className="text-[var(--ink-600)]">Source Type</span>
+                <span className="text-[var(--ink-600)]">
                   {note.provenance.source.type}
                 </span>
               </div>
@@ -544,15 +544,15 @@ export function NodeInspector({ node, onClose, onRefresh }: NodeInspectorProps) 
                   href={note.provenance.source.sourceUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-1 text-sm text-szn-accent hover:underline"
+                  className="flex items-center gap-1 text-sm text-[var(--ink-900)] hover:underline"
                 >
                   <ExternalLinkIcon className="w-4 h-4" />
                   View Source
                 </a>
               )}
               <div className="flex items-center justify-between text-sm">
-                <span className="text-szn-text-2">Created By</span>
-                <span className="text-szn-text-2">
+                <span className="text-[var(--ink-600)]">Created By</span>
+                <span className="text-[var(--ink-600)]">
                   {note.provenance.createdBy}
                 </span>
               </div>
@@ -562,21 +562,21 @@ export function NodeInspector({ node, onClose, onRefresh }: NodeInspectorProps) 
       </div>
 
       {/* Actions */}
-      <div className="p-4 border-t border-szn-border space-y-2">
+      <div className="p-4 border-t border-[var(--ink-200)] space-y-2">
         {/* Primary Actions */}
         {isEditing ? (
           <div className="grid grid-cols-2 gap-2">
             <button
               onClick={handleSaveEdit}
               disabled={isLoading || normalizedEditedContent.length === 0 || !hasContentChanges}
-              className="flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-white bg-szn-accent hover:bg-szn-accent/90 rounded-lg transition-colors disabled:opacity-50"
+              className="flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-white bg-[var(--ink-900)] hover:bg-[var(--ink-900)]/90 rounded-lg transition-colors disabled:opacity-50"
             >
               {isLoading ? "Saving..." : "Save"}
             </button>
             <button
               onClick={handleCancelEdit}
               disabled={isLoading}
-              className="flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-szn-text-1 bg-szn-surface hover:bg-szn-surface-1 rounded-lg transition-colors disabled:opacity-50"
+              className="flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-[var(--ink-900)] bg-[var(--ink-50)] hover:bg-[var(--ink-50)] rounded-lg transition-colors disabled:opacity-50"
             >
               Cancel
             </button>
@@ -586,7 +586,7 @@ export function NodeInspector({ node, onClose, onRefresh }: NodeInspectorProps) 
             <button
               onClick={handleEdit}
               disabled={isLoading}
-              className="flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-szn-text-1 bg-szn-surface hover:bg-szn-surface-1 rounded-lg transition-colors disabled:opacity-50"
+              className="flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-[var(--ink-900)] bg-[var(--ink-50)] hover:bg-[var(--ink-50)] rounded-lg transition-colors disabled:opacity-50"
             >
               <EditIcon className="w-4 h-4" />
               Edit
@@ -594,7 +594,7 @@ export function NodeInspector({ node, onClose, onRefresh }: NodeInspectorProps) 
             <button
               onClick={() => setShowConfirmDelete(true)}
               disabled={isLoading}
-              className="flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/40 rounded-lg transition-colors disabled:opacity-50"
+              className="flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-[var(--signal-conflict-ink)] dark:text-[var(--signal-conflict-soft)] bg-[var(--signal-conflict-soft)] dark:bg-[var(--signal-conflict)]/20 hover:bg-[var(--signal-conflict-soft)] dark:hover:bg-[var(--signal-conflict)]/40 rounded-lg transition-colors disabled:opacity-50"
             >
               <TrashIcon className="w-4 h-4" />
               Delete
@@ -615,7 +615,7 @@ export function NodeInspector({ node, onClose, onRefresh }: NodeInspectorProps) 
           <button
             onClick={handleLock}
             disabled={isLoading || isEditing}
-            className="flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/20 hover:bg-purple-100 dark:hover:bg-purple-900/40 rounded-lg transition-colors disabled:opacity-50"
+            className="flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-[var(--ink-900)] underline dark:text-[var(--ink-700)] bg-[var(--ink-50)] dark:bg-[var(--ink-900)]/20 hover:bg-[var(--ink-100)] dark:hover:bg-[var(--ink-900)]/40 rounded-lg transition-colors disabled:opacity-50"
           >
             <LockIcon className="w-4 h-4" />
             {data.privacyClass === "restricted" ? "Unlock" : "Lock"}
@@ -627,7 +627,7 @@ export function NodeInspector({ node, onClose, onRefresh }: NodeInspectorProps) 
           <button
             onClick={handleMoveToSensitive}
             disabled={isLoading || isEditing}
-            className="w-full flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-900/20 hover:bg-yellow-100 dark:hover:bg-yellow-900/40 rounded-lg transition-colors disabled:opacity-50"
+            className="w-full flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-[var(--signal-pending-ink)] dark:text-yellow-400 bg-[var(--signal-pending-soft)] dark:bg-yellow-900/20 hover:bg-[var(--signal-pending-soft)] dark:hover:bg-yellow-900/40 rounded-lg transition-colors disabled:opacity-50"
           >
             <ShieldIcon className="w-4 h-4" />
             Move to Sensitive
@@ -638,7 +638,7 @@ export function NodeInspector({ node, onClose, onRefresh }: NodeInspectorProps) 
         <button
           onClick={onRefresh}
           disabled={isLoading || isEditing}
-          className="w-full flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-szn-text-2 bg-szn-bg hover:bg-szn-surface-1 rounded-lg transition-colors disabled:opacity-50"
+          className="w-full flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-[var(--ink-600)] bg-[var(--ink-50)] hover:bg-[var(--ink-50)] rounded-lg transition-colors disabled:opacity-50"
         >
           <ArrowPathIcon className={`w-4 h-4 ${isLoading ? "animate-spin" : ""}`} />
           Refresh
@@ -648,24 +648,24 @@ export function NodeInspector({ node, onClose, onRefresh }: NodeInspectorProps) 
       {/* Delete Confirmation Modal */}
       {showConfirmDelete && (
         <div className="absolute inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-szn-card rounded-xl p-6 max-w-sm w-full shadow-xl">
-            <h3 className="text-lg font-semibold text-szn-text-1 mb-2">
+          <div className="bg-[var(--ink-0)] rounded-xl p-6 max-w-sm w-full shadow-xl">
+            <h3 className="text-lg font-semibold text-[var(--ink-900)] mb-2">
               Delete Memory?
             </h3>
-            <p className="text-sm text-szn-text-2 mb-4">
+            <p className="text-sm text-[var(--ink-600)] mb-4">
               This action cannot be undone. The memory will be permanently removed.
             </p>
             <div className="flex gap-2">
               <button
                 onClick={() => setShowConfirmDelete(false)}
-                className="flex-1 px-4 py-2 text-sm font-medium text-szn-text-1 bg-szn-surface hover:bg-szn-surface-1 rounded-lg transition-colors"
+                className="flex-1 px-4 py-2 text-sm font-medium text-[var(--ink-900)] bg-[var(--ink-50)] hover:bg-[var(--ink-50)] rounded-lg transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={handleDelete}
                 disabled={isLoading}
-                className="flex-1 px-4 py-2 text-sm font-medium text-white bg-red-500 hover:bg-red-600 rounded-lg transition-colors disabled:opacity-50"
+                className="flex-1 px-4 py-2 text-sm font-medium text-white bg-[var(--signal-conflict)] hover:bg-[var(--signal-conflict)] rounded-lg transition-colors disabled:opacity-50"
               >
                 {isLoading ? "Deleting..." : "Delete"}
               </button>

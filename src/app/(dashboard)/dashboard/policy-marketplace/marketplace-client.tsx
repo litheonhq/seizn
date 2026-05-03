@@ -212,7 +212,7 @@ export function PolicyMarketplaceClient() {
           <p className="text-xs text-slate-500 dark:text-slate-400">
             Active Rules
           </p>
-          <p className="text-2xl font-bold text-green-600 dark:text-green-400 mt-1">
+          <p className="text-2xl font-bold text-[var(--signal-canon-ink)] dark:text-green-400 mt-1">
             {totalRules}
           </p>
         </div>

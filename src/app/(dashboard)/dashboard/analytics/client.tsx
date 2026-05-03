@@ -215,7 +215,7 @@ export function AnalyticsClient() {
   };
 
   return (
-    <div className="relative overflow-hidden space-y-6 rounded-3xl border border-slate-200/70 bg-white p-6 shadow-[0_10px_30px_rgba(15,23,42,0.06)] dark:border-slate-700/60 dark:bg-slate-900/70 sm:p-8">
+    <div className="relative overflow-hidden space-y-6 rounded-2xl border border-slate-200/70 bg-white p-6 shadow-[0_10px_30px_rgba(15,23,42,0.06)] dark:border-slate-700/60 dark:bg-slate-900/70 sm:p-8">
       <div className="absolute inset-0 -z-10">
         <div className="absolute inset-0 bg-gradient-to-b from-white via-slate-50/60 to-white dark:from-slate-950 dark:via-slate-900/40 dark:to-slate-950" />
         <div className="absolute top-[-180px] right-[-120px] h-[320px] w-[320px] rounded-full bg-[radial-gradient(circle_at_center,rgba(37,99,235,0.08),transparent_70%)]" />
@@ -337,7 +337,7 @@ export function AnalyticsClient() {
               <div className="absolute top-0 right-0 h-40 w-40 rounded-full bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.12),transparent_65%)] -mr-20 -mt-20 pointer-events-none" />
               <div className="relative">
                 <div className="flex items-center gap-2 mb-4">
-                  <div className="h-1 w-12 bg-gradient-to-r from-blue-600 to-sky-400 rounded-full" />
+                  <div className="h-1 w-12 bg-gradient-to-r from-[var(--ink-900)] to-sky-400 rounded-full" />
                   <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
                     {t("dashboard.analyticsPage.dailyActiveUsers")}
                   </h3>
@@ -381,7 +381,7 @@ export function AnalyticsClient() {
               <div className="absolute top-0 right-0 h-40 w-40 rounded-full bg-[radial-gradient(circle_at_center,rgba(56,189,248,0.12),transparent_65%)] -mr-20 -mt-20 pointer-events-none" />
               <div className="relative">
                 <div className="flex items-center gap-2 mb-4">
-                  <div className="h-1 w-12 bg-gradient-to-r from-sky-500 to-blue-600 rounded-full" />
+                  <div className="h-1 w-12 bg-gradient-to-r from-sky-500 to-[var(--ink-900)] rounded-full" />
                   <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
                     {t("dashboard.analyticsPage.apiCallsOverTime")}
                   </h3>
@@ -428,7 +428,7 @@ export function AnalyticsClient() {
               <div className="absolute top-0 right-0 h-40 w-40 rounded-full bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.12),transparent_65%)] -mr-20 -mt-20 pointer-events-none" />
               <div className="relative">
                 <div className="flex items-center gap-2 mb-4">
-                  <div className="h-1 w-12 bg-gradient-to-r from-indigo-500 to-blue-500 rounded-full" />
+                  <div className="h-1 w-12 bg-gradient-to-r from-[var(--ink-900)] to-[var(--ink-900)] rounded-full" />
                   <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
                     {t("dashboard.analyticsPage.memoryUsage")}
                   </h3>
@@ -671,17 +671,17 @@ function KpiCard({
 }) {
   const isPositive = invertChange ? change <= 0 : change >= 0;
   const changeColor = isError
-    ? "text-red-500"
+    ? "text-[var(--signal-conflict-ink)]"
     : isPositive
     ? "text-blue-500"
-    : "text-red-500";
+    : "text-[var(--signal-conflict-ink)]";
 
   const bgGradient = isError
     ? "from-white via-red-50/30 to-white dark:from-slate-950 dark:via-red-950/25 dark:to-slate-950"
     : "from-white via-slate-50 to-white dark:from-slate-950 dark:via-slate-900/50 dark:to-slate-950";
 
   const iconBgColor = isError
-    ? "bg-red-50 text-red-500 dark:bg-red-950/35 dark:text-red-300"
+    ? "bg-[var(--signal-conflict-soft)] text-[var(--signal-conflict-ink)] dark:bg-[var(--signal-conflict)]/35 dark:text-[var(--signal-conflict-soft)]"
     : "bg-blue-50 text-blue-600 dark:bg-blue-950/35 dark:text-blue-200";
 
   return (
@@ -709,7 +709,7 @@ function KpiCard({
             </div>
           )}
         </div>
-        <p className={`text-3xl font-bold mb-1 ${isError ? "text-red-600 dark:text-red-300" : "text-slate-900 dark:text-slate-100"}`}>
+        <p className={`text-3xl font-bold mb-1 ${isError ? "text-[var(--signal-conflict-ink)] dark:text-[var(--signal-conflict-soft)]" : "text-slate-900 dark:text-slate-100"}`}>
           {value}
         </p>
         <p className="text-sm font-medium text-slate-500 dark:text-slate-300">{title}</p>

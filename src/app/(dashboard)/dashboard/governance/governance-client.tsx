@@ -190,56 +190,56 @@ export default function GovernanceClient() {
     <div className="max-w-6xl mx-auto px-4 py-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-szn-text-1">
+        <h1 className="text-2xl font-bold text-[var(--ink-900)]">
           {t("dashboard.governance.title") || "Governance"}
         </h1>
-        <p className="text-szn-text-2 mt-1">
+        <p className="text-[var(--ink-600)] mt-1">
           {t("dashboard.governance.subtitle") || "Manage data policies, retention rules, and compliance settings"}
         </p>
       </div>
 
       {/* Overview Cards */}
       <div className="grid grid-cols-4 gap-4 mb-8">
-        <div className="bg-szn-card rounded-xl border border-szn-border p-4">
+        <div className="bg-[var(--ink-0)] rounded-xl border border-[var(--ink-200)] p-4">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">🗄️</span>
-            <span className="text-sm text-szn-text-2">{t("dashboard.governance.stats.retentionPolicies") || "Retention Policies"}</span>
+            <span className="text-sm text-[var(--ink-600)]">{t("dashboard.governance.stats.retentionPolicies") || "Retention Policies"}</span>
           </div>
-          <p className="text-2xl font-bold text-szn-text-1">{retentionPolicies.length}</p>
+          <p className="text-2xl font-bold text-[var(--ink-900)]">{retentionPolicies.length}</p>
         </div>
-        <div className="bg-szn-card rounded-xl border border-szn-border p-4">
+        <div className="bg-[var(--ink-0)] rounded-xl border border-[var(--ink-200)] p-4">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">🔐</span>
-            <span className="text-sm text-szn-text-2">{t("dashboard.governance.stats.accessRules") || "Access Rules"}</span>
+            <span className="text-sm text-[var(--ink-600)]">{t("dashboard.governance.stats.accessRules") || "Access Rules"}</span>
           </div>
-          <p className="text-2xl font-bold text-szn-text-1">{accessRules.filter(r => r.enabled).length}</p>
+          <p className="text-2xl font-bold text-[var(--ink-900)]">{accessRules.filter(r => r.enabled).length}</p>
         </div>
-        <div className="bg-szn-card rounded-xl border border-szn-border p-4">
+        <div className="bg-[var(--ink-0)] rounded-xl border border-[var(--ink-200)] p-4">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">🛡️</span>
-            <span className="text-sm text-szn-text-2">{t("dashboard.governance.stats.piiRules") || "PII Rules Active"}</span>
+            <span className="text-sm text-[var(--ink-600)]">{t("dashboard.governance.stats.piiRules") || "PII Rules Active"}</span>
           </div>
-          <p className="text-2xl font-bold text-szn-text-1">{piiRules.filter(r => r.enabled).length}</p>
+          <p className="text-2xl font-bold text-[var(--ink-900)]">{piiRules.filter(r => r.enabled).length}</p>
         </div>
-        <div className="bg-szn-card rounded-xl border border-szn-border p-4">
+        <div className="bg-[var(--ink-0)] rounded-xl border border-[var(--ink-200)] p-4">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">✅</span>
-            <span className="text-sm text-szn-text-2">{t("dashboard.governance.stats.complianceScore") || "Compliance Score"}</span>
+            <span className="text-sm text-[var(--ink-600)]">{t("dashboard.governance.stats.complianceScore") || "Compliance Score"}</span>
           </div>
-          <p className="text-2xl font-bold text-szn-accent">100%</p>
+          <p className="text-2xl font-bold text-[var(--ink-900)]">100%</p>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 mb-6 bg-szn-surface rounded-lg p-1 w-fit">
+      <div className="flex gap-1 mb-6 bg-[var(--ink-50)] rounded-lg p-1 w-fit">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             className={`px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-2 ${
               activeTab === tab.id
-                ? "bg-szn-card text-szn-text-1 shadow-sm"
-                : "text-szn-text-2 hover:text-szn-text-1"
+                ? "bg-[var(--ink-0)] text-[var(--ink-900)] shadow-sm"
+                : "text-[var(--ink-600)] hover:text-[var(--ink-900)]"
             }`}
           >
             <span>{tab.icon}</span>
@@ -292,33 +292,33 @@ function RetentionPoliciesTab({
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <p className="text-sm text-szn-text-2">
+        <p className="text-sm text-[var(--ink-600)]">
           Configure how long memories are retained in each namespace
         </p>
         <button
           onClick={() => setShowModal(true)}
-          className="px-4 py-2 bg-szn-accent text-white rounded-lg hover:bg-szn-accent/90"
+          className="px-4 py-2 bg-[var(--ink-900)] text-white rounded-lg hover:bg-[var(--ink-900)]/90"
         >
           Add Policy
         </button>
       </div>
 
-      <div className="bg-szn-card rounded-lg border border-szn-border overflow-hidden">
+      <div className="bg-[var(--ink-0)] rounded-lg border border-[var(--ink-200)] overflow-hidden">
         <table className="w-full">
-          <thead className="bg-szn-bg border-b border-szn-border">
+          <thead className="bg-[var(--ink-50)] border-b border-[var(--ink-200)]">
             <tr>
-              <th className="text-left px-4 py-3 text-xs font-medium text-szn-text-2 uppercase">Namespace</th>
-              <th className="text-left px-4 py-3 text-xs font-medium text-szn-text-2 uppercase">Memory Types</th>
-              <th className="text-left px-4 py-3 text-xs font-medium text-szn-text-2 uppercase">TTL</th>
-              <th className="text-left px-4 py-3 text-xs font-medium text-szn-text-2 uppercase">Auto Archive</th>
-              <th className="text-left px-4 py-3 text-xs font-medium text-szn-text-2 uppercase">Actions</th>
+              <th className="text-left px-4 py-3 text-xs font-medium text-[var(--ink-600)] uppercase">Namespace</th>
+              <th className="text-left px-4 py-3 text-xs font-medium text-[var(--ink-600)] uppercase">Memory Types</th>
+              <th className="text-left px-4 py-3 text-xs font-medium text-[var(--ink-600)] uppercase">TTL</th>
+              <th className="text-left px-4 py-3 text-xs font-medium text-[var(--ink-600)] uppercase">Auto Archive</th>
+              <th className="text-left px-4 py-3 text-xs font-medium text-[var(--ink-600)] uppercase">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-szn-border">
+          <tbody className="divide-y divide-[var(--ink-200)]">
             {policies.map((policy) => (
-              <tr key={policy.id} className="hover:bg-szn-surface-1">
+              <tr key={policy.id} className="hover:bg-[var(--ink-50)]">
                 <td className="px-4 py-3">
-                  <code className="px-2 py-1 bg-szn-surface rounded text-sm">{policy.namespace}</code>
+                  <code className="px-2 py-1 bg-[var(--ink-50)] rounded text-sm">{policy.namespace}</code>
                 </td>
                 <td className="px-4 py-3">
                   <div className="flex flex-wrap gap-1">
@@ -330,13 +330,13 @@ function RetentionPoliciesTab({
                   </div>
                 </td>
                 <td className="px-4 py-3">
-                  <span className="text-szn-text-1">{policy.ttl_days} days</span>
+                  <span className="text-[var(--ink-900)]">{policy.ttl_days} days</span>
                 </td>
                 <td className="px-4 py-3">
                   <span className={`px-2 py-0.5 text-xs rounded-full ${
                     policy.auto_archive
-                      ? "bg-szn-success/10 text-szn-success"
-                      : "bg-szn-surface text-szn-text-2"
+                      ? "bg-[var(--signal-canon)]/10 text-[var(--signal-canon)]"
+                      : "bg-[var(--ink-50)] text-[var(--ink-600)]"
                   }`}>
                     {policy.auto_archive ? "Enabled" : "Disabled"}
                   </span>
@@ -344,7 +344,7 @@ function RetentionPoliciesTab({
                 <td className="px-4 py-3">
                   <button
                     onClick={() => handleDelete(policy.id)}
-                    className="text-red-600 hover:text-red-800 text-sm"
+                    className="text-[var(--signal-conflict-ink)] hover:text-[var(--signal-conflict-ink)] text-sm"
                   >
                     Delete
                   </button>
@@ -390,12 +390,12 @@ function AddRetentionPolicyModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-      <div className="bg-szn-card rounded-lg max-w-md w-full p-6">
-        <h2 className="text-xl font-bold text-szn-text-1 mb-4">Add Retention Policy</h2>
+      <div className="bg-[var(--ink-0)] rounded-lg max-w-md w-full p-6">
+        <h2 className="text-xl font-bold text-[var(--ink-900)] mb-4">Add Retention Policy</h2>
 
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-szn-text-1 mb-1">Namespace Pattern</label>
+            <label className="block text-sm font-medium text-[var(--ink-900)] mb-1">Namespace Pattern</label>
             <input
               type="text"
               value={namespace}
@@ -403,11 +403,11 @@ function AddRetentionPolicyModal({
               placeholder="prod:*, session:*, default"
               className="w-full px-3 py-2 border rounded-lg"
             />
-            <p className="text-xs text-szn-text-2 mt-1">Use * for wildcard matching</p>
+            <p className="text-xs text-[var(--ink-600)] mt-1">Use * for wildcard matching</p>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-szn-text-1 mb-2">Memory Types</label>
+            <label className="block text-sm font-medium text-[var(--ink-900)] mb-2">Memory Types</label>
             <div className="flex flex-wrap gap-2">
               {allTypes.map((type) => (
                 <button
@@ -415,8 +415,8 @@ function AddRetentionPolicyModal({
                   onClick={() => toggleType(type)}
                   className={`px-3 py-1.5 text-sm rounded-full border ${
                     memoryTypes.includes(type)
-                      ? "bg-szn-accent text-white border-szn-accent"
-                      : "border-szn-border text-szn-text-2 hover:border-szn-border/80"
+                      ? "bg-[var(--ink-900)] text-white border-[var(--ink-900)]"
+                      : "border-[var(--ink-200)] text-[var(--ink-600)] hover:border-[var(--ink-200)]/80"
                   }`}
                 >
                   {type}
@@ -426,7 +426,7 @@ function AddRetentionPolicyModal({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-szn-text-1 mb-1">TTL (Days)</label>
+            <label className="block text-sm font-medium text-[var(--ink-900)] mb-1">TTL (Days)</label>
             <input
               type="number"
               value={ttlDays}
@@ -439,13 +439,13 @@ function AddRetentionPolicyModal({
 
           <div className="flex items-center justify-between">
             <div>
-              <p className="font-medium text-szn-text-1">Auto Archive</p>
-              <p className="text-sm text-szn-text-2">Archive before deletion</p>
+              <p className="font-medium text-[var(--ink-900)]">Auto Archive</p>
+              <p className="text-sm text-[var(--ink-600)]">Archive before deletion</p>
             </div>
             <button
               onClick={() => setAutoArchive(!autoArchive)}
               className={`w-12 h-6 rounded-full transition-colors ${
-                autoArchive ? "bg-szn-accent" : "bg-gray-200"
+                autoArchive ? "bg-[var(--ink-900)]" : "bg-gray-200"
               }`}
             >
               <div
@@ -458,13 +458,13 @@ function AddRetentionPolicyModal({
         </div>
 
         <div className="flex gap-3 mt-6">
-          <button onClick={onClose} className="flex-1 px-4 py-2 border rounded-lg hover:bg-szn-surface-1">
+          <button onClick={onClose} className="flex-1 px-4 py-2 border rounded-lg hover:bg-[var(--ink-50)]">
             Cancel
           </button>
           <button
             onClick={() => onAdd({ namespace, memory_types: memoryTypes, ttl_days: ttlDays, auto_archive: autoArchive })}
             disabled={!namespace || memoryTypes.length === 0}
-            className="flex-1 px-4 py-2 bg-szn-accent text-white rounded-lg hover:bg-szn-accent/90 disabled:opacity-50"
+            className="flex-1 px-4 py-2 bg-[var(--ink-900)] text-white rounded-lg hover:bg-[var(--ink-900)]/90 disabled:opacity-50"
           >
             Add Policy
           </button>
@@ -492,36 +492,36 @@ function AccessControlTab({
   const getRoleColor = (role: string) => {
     switch (role) {
       case "admin":
-        return "bg-purple-100 text-purple-700";
+        return "bg-[var(--ink-100)] text-[var(--ink-900)] underline";
       case "editor":
         return "bg-blue-100 text-blue-700";
       case "viewer":
-        return "bg-szn-surface text-szn-text-1";
+        return "bg-[var(--ink-50)] text-[var(--ink-900)]";
       case "api_only":
-        return "bg-yellow-100 text-yellow-700";
+        return "bg-[var(--signal-pending-soft)] text-[var(--signal-pending-ink)]";
       default:
-        return "bg-szn-surface text-szn-text-1";
+        return "bg-[var(--ink-50)] text-[var(--ink-900)]";
     }
   };
 
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <p className="text-sm text-szn-text-2">
+        <p className="text-sm text-[var(--ink-600)]">
           Define role-based access controls for your team
         </p>
-        <button className="px-4 py-2 bg-szn-accent text-white rounded-lg hover:bg-szn-accent/90">
+        <button className="px-4 py-2 bg-[var(--ink-900)] text-white rounded-lg hover:bg-[var(--ink-900)]/90">
           Add Rule
         </button>
       </div>
 
       <div className="space-y-4">
         {rules.map((rule) => (
-          <div key={rule.id} className="bg-szn-card rounded-xl border border-szn-border p-4">
+          <div key={rule.id} className="bg-[var(--ink-0)] rounded-xl border border-[var(--ink-200)] p-4">
             <div className="flex items-start justify-between">
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-2">
-                  <h3 className="font-semibold text-szn-text-1">{rule.name}</h3>
+                  <h3 className="font-semibold text-[var(--ink-900)]">{rule.name}</h3>
                   <span className={`px-2 py-0.5 text-xs rounded-full ${getRoleColor(rule.role)}`}>
                     {rule.role}
                   </span>
@@ -529,20 +529,20 @@ function AccessControlTab({
 
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
-                    <span className="text-szn-text-2">Namespaces:</span>
+                    <span className="text-[var(--ink-600)]">Namespaces:</span>
                     <div className="flex flex-wrap gap-1 mt-1">
                       {rule.namespaces.map((ns) => (
-                        <code key={ns} className="px-2 py-0.5 bg-szn-surface rounded text-xs">
+                        <code key={ns} className="px-2 py-0.5 bg-[var(--ink-50)] rounded text-xs">
                           {ns}
                         </code>
                       ))}
                     </div>
                   </div>
                   <div>
-                    <span className="text-szn-text-2">Permissions:</span>
+                    <span className="text-[var(--ink-600)]">Permissions:</span>
                     <div className="flex flex-wrap gap-1 mt-1">
                       {rule.permissions.map((perm) => (
-                        <span key={perm} className="px-2 py-0.5 bg-szn-success/10 text-szn-success rounded text-xs">
+                        <span key={perm} className="px-2 py-0.5 bg-[var(--signal-canon)]/10 text-[var(--signal-canon)] rounded text-xs">
                           {perm}
                         </span>
                       ))}
@@ -554,7 +554,7 @@ function AccessControlTab({
               <button
                 onClick={() => toggleRule(rule.id)}
                 className={`w-12 h-6 rounded-full transition-colors ${
-                  rule.enabled ? "bg-szn-accent" : "bg-gray-200"
+                  rule.enabled ? "bg-[var(--ink-900)]" : "bg-gray-200"
                 }`}
               >
                 <div
@@ -589,50 +589,50 @@ function PIIDetectionTab({
   const getActionColor = (action: string) => {
     switch (action) {
       case "block":
-        return "bg-red-100 text-red-700";
+        return "bg-[var(--signal-conflict-soft)] text-[var(--signal-conflict-ink)]";
       case "redact":
         return "bg-orange-100 text-orange-700";
       case "mask":
-        return "bg-yellow-100 text-yellow-700";
+        return "bg-[var(--signal-pending-soft)] text-[var(--signal-pending-ink)]";
       case "flag":
         return "bg-blue-100 text-blue-700";
       default:
-        return "bg-szn-surface text-szn-text-1";
+        return "bg-[var(--ink-50)] text-[var(--ink-900)]";
     }
   };
 
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <p className="text-sm text-szn-text-2">
+        <p className="text-sm text-[var(--ink-600)]">
           Automatically detect and handle personally identifiable information
         </p>
-        <button className="px-4 py-2 bg-szn-accent text-white rounded-lg hover:bg-szn-accent/90">
+        <button className="px-4 py-2 bg-[var(--ink-900)] text-white rounded-lg hover:bg-[var(--ink-900)]/90">
           Add Rule
         </button>
       </div>
 
-      <div className="bg-szn-card rounded-lg border border-szn-border overflow-hidden">
+      <div className="bg-[var(--ink-0)] rounded-lg border border-[var(--ink-200)] overflow-hidden">
         <table className="w-full">
-          <thead className="bg-szn-bg border-b border-szn-border">
+          <thead className="bg-[var(--ink-50)] border-b border-[var(--ink-200)]">
             <tr>
-              <th className="text-left px-4 py-3 text-xs font-medium text-szn-text-2 uppercase">Pattern</th>
-              <th className="text-left px-4 py-3 text-xs font-medium text-szn-text-2 uppercase">Type</th>
-              <th className="text-left px-4 py-3 text-xs font-medium text-szn-text-2 uppercase">Action</th>
-              <th className="text-left px-4 py-3 text-xs font-medium text-szn-text-2 uppercase">Status</th>
+              <th className="text-left px-4 py-3 text-xs font-medium text-[var(--ink-600)] uppercase">Pattern</th>
+              <th className="text-left px-4 py-3 text-xs font-medium text-[var(--ink-600)] uppercase">Type</th>
+              <th className="text-left px-4 py-3 text-xs font-medium text-[var(--ink-600)] uppercase">Action</th>
+              <th className="text-left px-4 py-3 text-xs font-medium text-[var(--ink-600)] uppercase">Status</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-szn-border">
+          <tbody className="divide-y divide-[var(--ink-200)]">
             {rules.map((rule) => (
-              <tr key={rule.id} className="hover:bg-szn-surface-1">
+              <tr key={rule.id} className="hover:bg-[var(--ink-50)]">
                 <td className="px-4 py-3">
-                  <span className="font-medium text-szn-text-1">{rule.pattern_name}</span>
+                  <span className="font-medium text-[var(--ink-900)]">{rule.pattern_name}</span>
                 </td>
                 <td className="px-4 py-3">
                   <span className={`px-2 py-0.5 text-xs rounded-full ${
                     rule.pattern_type === "ai_detection"
-                      ? "bg-purple-100 text-purple-700"
-                      : "bg-szn-surface text-szn-text-1"
+                      ? "bg-[var(--ink-100)] text-[var(--ink-900)] underline"
+                      : "bg-[var(--ink-50)] text-[var(--ink-900)]"
                   }`}>
                     {rule.pattern_type === "ai_detection" ? "AI Detection" : "Regex"}
                   </span>
@@ -646,7 +646,7 @@ function PIIDetectionTab({
                   <button
                     onClick={() => toggleRule(rule.id)}
                     className={`w-12 h-6 rounded-full transition-colors ${
-                      rule.enabled ? "bg-szn-accent" : "bg-gray-200"
+                      rule.enabled ? "bg-[var(--ink-900)]" : "bg-gray-200"
                     }`}
                   >
                     <div
@@ -662,12 +662,12 @@ function PIIDetectionTab({
         </table>
       </div>
 
-      <div className="bg-amber-50 rounded-xl border border-amber-200 p-4">
+      <div className="bg-[var(--signal-pending-soft)] rounded-xl border border-[var(--signal-pending)] p-4">
         <div className="flex items-start gap-3">
           <span className="text-xl">⚠️</span>
           <div>
-            <h4 className="font-medium text-amber-800">AI Detection is in Beta</h4>
-            <p className="text-sm text-amber-700 mt-1">
+            <h4 className="font-medium text-[var(--signal-pending-ink)]">AI Detection is in Beta</h4>
+            <p className="text-sm text-[var(--signal-pending-ink)] mt-1">
               AI-powered PII detection may have false positives. Review flagged content before taking action.
             </p>
           </div>
@@ -695,7 +695,7 @@ function ComplianceTab({ settings }: { settings: ComplianceSetting[] }) {
 
   return (
     <div className="space-y-6">
-      <p className="text-sm text-szn-text-2">
+      <p className="text-sm text-[var(--ink-600)]">
         Track compliance with major regulatory frameworks
       </p>
 
@@ -703,7 +703,7 @@ function ComplianceTab({ settings }: { settings: ComplianceSetting[] }) {
         {settings.map((setting) => (
           <div
             key={setting.id}
-            className={`bg-szn-card rounded-xl border border-szn-border p-6 ${
+            className={`bg-[var(--ink-0)] rounded-xl border border-[var(--ink-200)] p-6 ${
               !setting.enabled ? "opacity-60" : ""
             }`}
           >
@@ -711,11 +711,11 @@ function ComplianceTab({ settings }: { settings: ComplianceSetting[] }) {
               <div className="flex items-center gap-3">
                 <span className="text-2xl">{getComplianceIcon(setting.framework)}</span>
                 <div>
-                  <h3 className="font-semibold text-szn-text-1">{setting.framework}</h3>
+                  <h3 className="font-semibold text-[var(--ink-900)]">{setting.framework}</h3>
                   <span className={`text-xs px-2 py-0.5 rounded-full ${
                     setting.enabled
-                      ? "bg-szn-success/10 text-szn-success"
-                      : "bg-szn-surface text-szn-text-2"
+                      ? "bg-[var(--signal-canon)]/10 text-[var(--signal-canon)]"
+                      : "bg-[var(--ink-50)] text-[var(--ink-600)]"
                   }`}>
                     {setting.enabled ? "Active" : "Inactive"}
                   </span>
@@ -727,14 +727,14 @@ function ComplianceTab({ settings }: { settings: ComplianceSetting[] }) {
               <>
                 <div className="mb-2">
                   <div className="flex justify-between text-sm mb-1">
-                    <span className="text-szn-text-2">Requirements Met</span>
-                    <span className="font-medium text-szn-text-1">
+                    <span className="text-[var(--ink-600)]">Requirements Met</span>
+                    <span className="font-medium text-[var(--ink-900)]">
                       {setting.requirements_met}/{setting.total_requirements}
                     </span>
                   </div>
-                  <div className="h-2 bg-szn-surface rounded-full overflow-hidden">
+                  <div className="h-2 bg-[var(--ink-50)] rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-szn-accent rounded-full"
+                      className="h-full bg-[var(--ink-900)] rounded-full"
                       style={{
                         width: `${(setting.requirements_met / setting.total_requirements) * 100}%`,
                       }}
@@ -743,7 +743,7 @@ function ComplianceTab({ settings }: { settings: ComplianceSetting[] }) {
                 </div>
 
                 {setting.requirements_met === setting.total_requirements && (
-                  <div className="flex items-center gap-2 text-szn-accent text-sm">
+                  <div className="flex items-center gap-2 text-[var(--ink-900)] text-sm">
                     <span>✓</span>
                     <span>Fully Compliant</span>
                   </div>
@@ -752,7 +752,7 @@ function ComplianceTab({ settings }: { settings: ComplianceSetting[] }) {
             )}
 
             {!setting.enabled && (
-              <button className="w-full mt-4 px-4 py-2 border rounded-lg text-sm hover:bg-szn-surface-1">
+              <button className="w-full mt-4 px-4 py-2 border rounded-lg text-sm hover:bg-[var(--ink-50)]">
                 Enable Compliance Check
               </button>
             )}
@@ -760,42 +760,42 @@ function ComplianceTab({ settings }: { settings: ComplianceSetting[] }) {
         ))}
       </div>
 
-      <div className="bg-szn-card rounded-xl border border-szn-border p-6">
-        <h3 className="font-semibold text-szn-text-1 mb-4">Compliance Reports</h3>
+      <div className="bg-[var(--ink-0)] rounded-xl border border-[var(--ink-200)] p-6">
+        <h3 className="font-semibold text-[var(--ink-900)] mb-4">Compliance Reports</h3>
         <div className="space-y-3">
-          <div className="flex items-center justify-between p-3 bg-szn-surface rounded-lg">
+          <div className="flex items-center justify-between p-3 bg-[var(--ink-50)] rounded-lg">
             <div className="flex items-center gap-3">
               <span>📄</span>
               <div>
-                <p className="font-medium text-szn-text-1">SOC 2 Type II Report</p>
-                <p className="text-sm text-szn-text-2">Generated Dec 2024</p>
+                <p className="font-medium text-[var(--ink-900)]">SOC 2 Type II Report</p>
+                <p className="text-sm text-[var(--ink-600)]">Generated Dec 2024</p>
               </div>
             </div>
-            <button className="px-3 py-1.5 text-sm border rounded-lg hover:bg-szn-card">
+            <button className="px-3 py-1.5 text-sm border rounded-lg hover:bg-[var(--ink-0)]">
               Download
             </button>
           </div>
-          <div className="flex items-center justify-between p-3 bg-szn-surface rounded-lg">
+          <div className="flex items-center justify-between p-3 bg-[var(--ink-50)] rounded-lg">
             <div className="flex items-center gap-3">
               <span>📄</span>
               <div>
-                <p className="font-medium text-szn-text-1">Data Processing Agreement</p>
-                <p className="text-sm text-szn-text-2">GDPR compliant DPA template</p>
+                <p className="font-medium text-[var(--ink-900)]">Data Processing Agreement</p>
+                <p className="text-sm text-[var(--ink-600)]">GDPR compliant DPA template</p>
               </div>
             </div>
-            <button className="px-3 py-1.5 text-sm border rounded-lg hover:bg-szn-card">
+            <button className="px-3 py-1.5 text-sm border rounded-lg hover:bg-[var(--ink-0)]">
               Download
             </button>
           </div>
-          <div className="flex items-center justify-between p-3 bg-szn-surface rounded-lg">
+          <div className="flex items-center justify-between p-3 bg-[var(--ink-50)] rounded-lg">
             <div className="flex items-center gap-3">
               <span>📄</span>
               <div>
-                <p className="font-medium text-szn-text-1">Security Questionnaire</p>
-                <p className="text-sm text-szn-text-2">Pre-filled security assessment</p>
+                <p className="font-medium text-[var(--ink-900)]">Security Questionnaire</p>
+                <p className="text-sm text-[var(--ink-600)]">Pre-filled security assessment</p>
               </div>
             </div>
-            <button className="px-3 py-1.5 text-sm border rounded-lg hover:bg-szn-card">
+            <button className="px-3 py-1.5 text-sm border rounded-lg hover:bg-[var(--ink-0)]">
               Download
             </button>
           </div>
