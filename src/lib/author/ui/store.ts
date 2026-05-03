@@ -1,3 +1,9 @@
+// AuthorUiStore — persistence boundary for Author Memory v3 surface.
+// Dispatch is env-driven: AUTHOR_UI_STORE=supabase routes through SupabaseAuthorUiStore,
+// any other value (or unset) falls back to InMemoryAuthorUiStore.
+// Production and Vercel preview deployments must set AUTHOR_UI_STORE=supabase;
+// without it, serverless lambdas drop state across requests.
+
 import {
   hasServerSupabaseServiceRoleConfig,
   type createServerClient,
