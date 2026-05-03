@@ -19,11 +19,18 @@ const LOCAL_ALLOWED_ORIGINS = [
   'http://127.0.0.1:3100',
 ];
 
+function vercelUrl(value: string | undefined): string | undefined {
+  return value ? `https://${value}` : undefined;
+}
+
 const ALLOWED_ORIGINS = new Set([
   process.env.NEXT_PUBLIC_SITE_URL,
   process.env.NEXT_PUBLIC_APP_URL,
   process.env.NEXTAUTH_URL,
   process.env.PLAYWRIGHT_BASE_URL,
+  vercelUrl(process.env.VERCEL_PROJECT_PRODUCTION_URL),
+  vercelUrl(process.env.VERCEL_BRANCH_URL),
+  vercelUrl(process.env.VERCEL_URL),
   ...LOCAL_ALLOWED_ORIGINS,
 ].filter(Boolean) as string[]);
 const CSRF_TOKEN_BYTES = 32;
