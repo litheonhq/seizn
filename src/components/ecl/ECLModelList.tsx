@@ -247,7 +247,7 @@ function ModelCard({
       {/* Error Message */}
       {model.status === "failed" && model.errorMessage && (
         <div className="mt-3 pt-3 border-t border-gray-100">
-          <p className="text-xs text-red-600 truncate" title={model.errorMessage}>
+          <p className="text-xs text-[var(--signal-conflict-ink)] truncate" title={model.errorMessage}>
             {model.errorMessage}
           </p>
         </div>
@@ -260,7 +260,7 @@ function ModelCard({
             onClick={handleDelete}
             className={`inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded transition-colors ${
               showDeleteConfirm
-                ? "bg-red-600 text-white hover:bg-red-700"
+                ? "bg-[var(--signal-conflict)] text-white hover:bg-[var(--signal-conflict)]"
                 : "bg-gray-100 text-gray-600 hover:bg-gray-200"
             }`}
           >
@@ -401,8 +401,8 @@ export function ECLModelList({
 
       {/* Error */}
       {error && (
-        <div className="p-3 rounded-lg bg-red-50 border border-red-200">
-          <p className="text-sm text-red-700">{error}</p>
+        <div className="p-3 rounded-lg bg-[var(--signal-conflict-soft)] border border-[var(--signal-conflict)]">
+          <p className="text-sm text-[var(--signal-conflict-ink)]">{error}</p>
         </div>
       )}
 

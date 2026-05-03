@@ -140,7 +140,7 @@ export function RegionSelector({
         </div>
 
         <div className="flex items-center gap-4 mb-4">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center text-2xl">
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--ink-900)] to-[var(--ink-900)] flex items-center justify-center text-2xl">
             {currentRegionConfig.flag}
           </div>
           <div>
@@ -157,7 +157,7 @@ export function RegionSelector({
           {currentRegionConfig.compliance.map((cert) => (
             <span
               key={cert}
-              className="px-2 py-1 text-xs font-medium bg-[var(--signal-canon-soft)] dark:bg-green-900/20 text-[var(--signal-canon-ink)] dark:text-green-400 rounded-full"
+              className="px-2 py-1 text-xs font-medium bg-[var(--signal-canon-soft)] dark:bg-[var(--signal-canon-ink)]/20 text-[var(--signal-canon-ink)] dark:text-[var(--signal-canon-soft)] rounded-full"
             >
               {cert}
             </span>
@@ -197,7 +197,7 @@ export function RegionSelector({
             </button>
 
             <div className="text-center mb-6">
-              <div className="w-14 h-14 mx-auto mb-4 rounded-lg bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center shadow-lg">
+              <div className="w-14 h-14 mx-auto mb-4 rounded-lg bg-gradient-to-br from-[var(--ink-900)] to-[var(--ink-900)] flex items-center justify-center shadow-lg">
                 <GlobeIcon className="w-7 h-7 text-white" />
               </div>
               <h2 className="text-xl font-bold text-[var(--ink-900)]">
@@ -242,7 +242,7 @@ export function RegionSelector({
                             {region.name}
                           </p>
                           {isCurrent && (
-                            <span className="px-1.5 py-0.5 text-[10px] font-medium bg-[var(--signal-canon-soft)] dark:bg-green-900/30 text-[var(--signal-canon-ink)] dark:text-green-400 rounded">
+                            <span className="px-1.5 py-0.5 text-[10px] font-medium bg-[var(--signal-canon-soft)] dark:bg-[var(--signal-canon-ink)]/30 text-[var(--signal-canon-ink)] dark:text-[var(--signal-canon-soft)] rounded">
                               Current
                             </span>
                           )}

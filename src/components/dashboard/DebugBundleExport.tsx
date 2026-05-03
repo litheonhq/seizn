@@ -276,7 +276,7 @@ export function DebugBundleExport({ traceId, onExported }: DebugBundleExportProp
 
               {/* Share URL Success */}
               {shareUrl && activeTab === "share" && (
-                <div className="bg-green-500/10 border border-[var(--signal-canon)]/50 rounded-xl p-4">
+                <div className="bg-[var(--signal-canon)]/10 border border-[var(--signal-canon)]/50 rounded-xl p-4">
                   <div className="flex items-center gap-2 text-green-400 mb-3">
                     <CheckIcon className="w-5 h-5" />
                     <span className="font-medium">Share link created!</span>
@@ -290,7 +290,7 @@ export function DebugBundleExport({ traceId, onExported }: DebugBundleExportProp
                     />
                     <button
                       onClick={handleCopy}
-                      className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm font-medium flex items-center gap-2"
+                      className="px-4 py-2 bg-[var(--signal-canon)] text-white rounded-lg hover:bg-[var(--signal-canon)] text-sm font-medium flex items-center gap-2"
                     >
                       {copied ? (
                         <>

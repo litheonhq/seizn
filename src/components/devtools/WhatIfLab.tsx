@@ -202,7 +202,7 @@ export function WhatIfLab({
   };
 
   return (
-    <div className={`bg-gray-900 rounded-lg border border-gray-800 ${className}`}>
+    <div className={`bg-[var(--ink-900)] rounded-lg border border-gray-800 ${className}`}>
       {/* Header */}
       <div className="p-4 border-b border-gray-800">
         <div className="flex items-center justify-between">
@@ -215,7 +215,7 @@ export function WhatIfLab({
           <div className="flex gap-2">
             <button
               onClick={handleReset}
-              className="px-3 py-1.5 text-sm bg-gray-800 text-gray-400 rounded-lg hover:text-white transition-colors"
+              className="px-3 py-1.5 text-sm bg-[var(--ink-800)] text-gray-400 rounded-lg hover:text-white transition-colors"
             >
               <ResetIcon className="w-4 h-4 inline mr-1" />
               Reset
@@ -245,19 +245,19 @@ export function WhatIfLab({
           <span className="text-xs text-gray-500 self-center">Presets:</span>
           <button
             onClick={() => applyPreset("fast")}
-            className="px-3 py-1 text-xs bg-gray-800 text-gray-400 rounded-full hover:text-white transition-colors"
+            className="px-3 py-1 text-xs bg-[var(--ink-800)] text-gray-400 rounded-full hover:text-white transition-colors"
           >
             Fast
           </button>
           <button
             onClick={() => applyPreset("balanced")}
-            className="px-3 py-1 text-xs bg-gray-800 text-gray-400 rounded-full hover:text-white transition-colors"
+            className="px-3 py-1 text-xs bg-[var(--ink-800)] text-gray-400 rounded-full hover:text-white transition-colors"
           >
             Balanced
           </button>
           <button
             onClick={() => applyPreset("quality")}
-            className="px-3 py-1 text-xs bg-gray-800 text-gray-400 rounded-full hover:text-white transition-colors"
+            className="px-3 py-1 text-xs bg-[var(--ink-800)] text-gray-400 rounded-full hover:text-white transition-colors"
           >
             Quality
           </button>
@@ -281,7 +281,7 @@ export function WhatIfLab({
               onChange={(e) => setConfig((c) => ({ ...c, top_k: parseInt(e.target.value) }))}
               min={1}
               max={100}
-              className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 bg-[var(--ink-800)] border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
@@ -301,7 +301,7 @@ export function WhatIfLab({
                   search_type: e.target.value as "semantic" | "keyword" | "hybrid",
                 }))
               }
-              className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 bg-[var(--ink-800)] border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="semantic">Semantic</option>
               <option value="keyword">Keyword</option>
@@ -383,7 +383,7 @@ export function WhatIfLab({
                 }
                 min={1}
                 max={50}
-                className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 bg-[var(--ink-800)] border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
           )}
@@ -393,8 +393,8 @@ export function WhatIfLab({
       {/* Error */}
       {error && (
         <div className="px-4 pb-4">
-          <div className="p-3 bg-red-900/20 border border-red-800 rounded-lg">
-            <p className="text-sm text-red-400">{error}</p>
+          <div className="p-3 bg-[var(--signal-conflict)]/20 border border-[var(--signal-conflict)] rounded-lg">
+            <p className="text-sm text-[var(--signal-conflict-soft)]">{error}</p>
           </div>
         </div>
       )}
@@ -409,14 +409,14 @@ export function WhatIfLab({
 
           <div className="grid grid-cols-3 gap-4 mb-4">
             {/* Latency */}
-            <div className="bg-gray-800/50 rounded-lg p-3">
+            <div className="bg-[var(--ink-800)]/50 rounded-lg p-3">
               <div className="text-xs text-gray-500 mb-1">Latency</div>
               <div className="text-lg font-bold text-white">
                 {result.latency.replay_ms}ms
               </div>
               <div
                 className={`text-xs ${
-                  result.latency.delta_ms < 0 ? "text-green-400" : "text-red-400"
+                  result.latency.delta_ms < 0 ? "text-green-400" : "text-[var(--signal-conflict-soft)]"
                 }`}
               >
                 {result.latency.delta_ms > 0 ? "+" : ""}
@@ -425,14 +425,14 @@ export function WhatIfLab({
             </div>
 
             {/* Cost */}
-            <div className="bg-gray-800/50 rounded-lg p-3">
+            <div className="bg-[var(--ink-800)]/50 rounded-lg p-3">
               <div className="text-xs text-gray-500 mb-1">Cost</div>
               <div className="text-lg font-bold text-white">
                 ${result.cost.replay_usd.toFixed(6)}
               </div>
               <div
                 className={`text-xs ${
-                  result.cost.delta_usd < 0 ? "text-green-400" : "text-red-400"
+                  result.cost.delta_usd < 0 ? "text-green-400" : "text-[var(--signal-conflict-soft)]"
                 }`}
               >
                 {result.cost.delta_usd > 0 ? "+" : ""}
@@ -441,7 +441,7 @@ export function WhatIfLab({
             </div>
 
             {/* Results */}
-            <div className="bg-gray-800/50 rounded-lg p-3">
+            <div className="bg-[var(--ink-800)]/50 rounded-lg p-3">
               <div className="text-xs text-gray-500 mb-1">Results</div>
               <div className="text-lg font-bold text-white">{result.results_count}</div>
               <div className="text-xs text-gray-400">documents returned</div>
@@ -467,7 +467,7 @@ export function WhatIfLab({
                   >
                     <span className="text-gray-400">{change.param}</span>
                     <span className="text-gray-300">
-                      <span className="text-red-400 line-through">
+                      <span className="text-[var(--signal-conflict-soft)] line-through">
                         {String(change.original)}
                       </span>
                       {" -> "}

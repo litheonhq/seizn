@@ -40,7 +40,7 @@ interface CostPanelProps {
 export function CostPanel({ cost, isLoading, translations: t }: CostPanelProps) {
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center h-full min-h-[400px] text-szn-text-3">
+      <div className="flex flex-col items-center justify-center h-full min-h-[400px] text-[var(--ink-500)]">
         <svg className="animate-spin w-8 h-8 mb-4" viewBox="0 0 24 24" fill="none">
           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
@@ -52,7 +52,7 @@ export function CostPanel({ cost, isLoading, translations: t }: CostPanelProps) 
 
   if (!cost) {
     return (
-      <div className="flex flex-col items-center justify-center h-full min-h-[400px] text-szn-text-3">
+      <div className="flex flex-col items-center justify-center h-full min-h-[400px] text-[var(--ink-500)]">
         <svg className="w-12 h-12 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
@@ -63,8 +63,8 @@ export function CostPanel({ cost, isLoading, translations: t }: CostPanelProps) 
 
   const costItems = [
     { label: t?.embedding || "Embedding", value: cost.embedding, color: "bg-blue-500" },
-    { label: t?.vectorSearch || "Vector Search", value: cost.vectorSearch, color: "bg-purple-500" },
-    { label: t?.rerank || "Rerank", value: cost.rerank, color: "bg-amber-500" },
+    { label: t?.vectorSearch || "Vector Search", value: cost.vectorSearch, color: "bg-[var(--ink-900)]" },
+    { label: t?.rerank || "Rerank", value: cost.rerank, color: "bg-[var(--signal-pending)]" },
     { label: t?.answerContract || "Answer Contract", value: cost.answerContract, color: "bg-rose-500" },
   ].filter(item => item.value > 0);
 
@@ -75,19 +75,19 @@ export function CostPanel({ cost, isLoading, translations: t }: CostPanelProps) 
   return (
     <div className="space-y-6 h-full overflow-auto max-h-[calc(100%-2rem)]">
       {/* Total Cost Card */}
-      <div className="p-6 bg-gradient-to-br from-szn-accent/10 to-szn-accent-2/10 rounded-xl border border-szn-accent/20">
-        <div className="text-sm text-szn-accent mb-1">{t?.total || "Total Cost"}</div>
-        <div className="text-4xl font-bold text-szn-accent">
+      <div className="p-6 bg-gradient-to-br from-[var(--ink-900)]/10 to-[var(--ink-700)]/10 rounded-xl border border-[var(--ink-900)]/20">
+        <div className="text-sm text-[var(--ink-900)] mb-1">{t?.total || "Total Cost"}</div>
+        <div className="text-4xl font-bold text-[var(--ink-900)]">
           ${cost.total.toFixed(6)}
         </div>
-        <div className="text-xs text-szn-accent/70 mt-2">
+        <div className="text-xs text-[var(--ink-900)]/70 mt-2">
           {t?.basedOn || "Per query"}
         </div>
       </div>
 
       {/* Cost Breakdown */}
-      <div className="bg-szn-card rounded-xl border border-szn-border p-4">
-        <h3 className="text-sm font-medium text-szn-text-1 mb-4">
+      <div className="bg-[var(--ink-0)] rounded-xl border border-[var(--ink-200)] p-4">
+        <h3 className="text-sm font-medium text-[var(--ink-900)] mb-4">
           {t?.costBreakdown || "Cost Breakdown"}
         </h3>
         <div className="space-y-3">
@@ -96,12 +96,12 @@ export function CostPanel({ cost, isLoading, translations: t }: CostPanelProps) 
             return (
               <div key={index}>
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-sm text-szn-text-2">{item.label}</span>
-                  <span className="text-sm font-medium text-szn-text-1">
+                  <span className="text-sm text-[var(--ink-600)]">{item.label}</span>
+                  <span className="text-sm font-medium text-[var(--ink-900)]">
                     ${item.value.toFixed(6)}
                   </span>
                 </div>
-                <div className="h-2 bg-szn-surface rounded-full overflow-hidden">
+                <div className="h-2 bg-[var(--ink-50)] rounded-full overflow-hidden">
                   <div
                     className={`h-full ${item.color} rounded-full transition-all duration-500`}
                     style={{ width: `${percentage}%` }}
@@ -114,42 +114,42 @@ export function CostPanel({ cost, isLoading, translations: t }: CostPanelProps) 
       </div>
 
       {/* Usage Stats */}
-      <div className="bg-szn-card rounded-xl border border-szn-border p-4">
-        <h3 className="text-sm font-medium text-szn-text-1 mb-4">
+      <div className="bg-[var(--ink-0)] rounded-xl border border-[var(--ink-200)] p-4">
+        <h3 className="text-sm font-medium text-[var(--ink-900)] mb-4">
           {t?.usage || "Usage"}
         </h3>
         <div className="grid grid-cols-3 gap-4">
-          <div className="text-center p-3 bg-szn-bg rounded-lg">
-            <div className="text-lg font-semibold text-szn-text-1">
+          <div className="text-center p-3 bg-[var(--ink-50)] rounded-lg">
+            <div className="text-lg font-semibold text-[var(--ink-900)]">
               {cost.tokensIn.toLocaleString()}
             </div>
-            <div className="text-xs text-szn-text-2">{t?.tokensIn || "Tokens In"}</div>
+            <div className="text-xs text-[var(--ink-600)]">{t?.tokensIn || "Tokens In"}</div>
           </div>
-          <div className="text-center p-3 bg-szn-bg rounded-lg">
-            <div className="text-lg font-semibold text-szn-text-1">
+          <div className="text-center p-3 bg-[var(--ink-50)] rounded-lg">
+            <div className="text-lg font-semibold text-[var(--ink-900)]">
               {cost.tokensOut.toLocaleString()}
             </div>
-            <div className="text-xs text-szn-text-2">{t?.tokensOut || "Tokens Out"}</div>
+            <div className="text-xs text-[var(--ink-600)]">{t?.tokensOut || "Tokens Out"}</div>
           </div>
-          <div className="text-center p-3 bg-szn-bg rounded-lg">
-            <div className="text-lg font-semibold text-szn-text-1">
+          <div className="text-center p-3 bg-[var(--ink-50)] rounded-lg">
+            <div className="text-lg font-semibold text-[var(--ink-900)]">
               {cost.queryUnits.toFixed(1)}
             </div>
-            <div className="text-xs text-szn-text-2">{t?.queryUnits || "Query Units"}</div>
+            <div className="text-xs text-[var(--ink-600)]">{t?.queryUnits || "Query Units"}</div>
           </div>
         </div>
       </div>
 
       {/* Monthly Estimate */}
-      <div className="bg-szn-bg rounded-xl p-4">
+      <div className="bg-[var(--ink-50)] rounded-xl p-4">
         <div className="flex items-center justify-between">
           <div>
-            <div className="text-sm text-szn-text-2">{t?.estimatedMonthly || "Estimated Monthly"}</div>
-            <div className="text-xs text-szn-text-3">
+            <div className="text-sm text-[var(--ink-600)]">{t?.estimatedMonthly || "Estimated Monthly"}</div>
+            <div className="text-xs text-[var(--ink-500)]">
               {t?.basedOn || "Based on"} {dailyQueries.toLocaleString()} {t?.queriesPerDay || "queries/day"}
             </div>
           </div>
-          <div className="text-2xl font-bold text-szn-text-1">
+          <div className="text-2xl font-bold text-[var(--ink-900)]">
             ${monthlyEstimate.toFixed(2)}
           </div>
         </div>

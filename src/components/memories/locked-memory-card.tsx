@@ -47,11 +47,11 @@ function TagIcon({ className }: { className?: string }) {
 function getTypeColor(type: string) {
   switch (type) {
     case "fact": return "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300";
-    case "preference": return "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300";
-    case "experience": return "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300";
+    case "preference": return "bg-[var(--ink-100)] text-[var(--ink-900)] underline dark:bg-[var(--ink-900)]/30 dark:text-[var(--ink-500)]";
+    case "experience": return "bg-[var(--signal-canon-soft)] text-[var(--signal-canon-ink)] dark:bg-[var(--signal-canon-ink)]/30 dark:text-[var(--signal-canon-soft)]";
     case "relationship": return "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300";
-    case "instruction": return "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300";
-    default: return "bg-szn-surface text-szn-text-2";
+    case "instruction": return "bg-[var(--signal-conflict-soft)] text-[var(--signal-conflict-ink)] dark:bg-[var(--signal-conflict)]/30 dark:text-[var(--signal-conflict-soft)]";
+    default: return "bg-[var(--ink-50)] text-[var(--ink-600)]";
   }
 }
 
@@ -59,18 +59,18 @@ function getTypeColor(type: string) {
 
 export function LockedMemoryCard({ memory, onUnlockRequest, footer }: LockedMemoryCardProps) {
   return (
-    <div className="szn-card rounded-lg p-4 hover:border-szn-accent/50 transition-colors">
+    <div className="szn-card rounded-lg p-4 hover:border-[var(--ink-900)]/50 transition-colors">
       <div className="flex items-start gap-4">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-3 mb-3">
-            <div className="w-10 h-10 rounded-xl bg-szn-surface flex items-center justify-center">
-              <LockIcon className="w-5 h-5 text-szn-text-2" />
+            <div className="w-10 h-10 rounded-xl bg-[var(--ink-50)] flex items-center justify-center">
+              <LockIcon className="w-5 h-5 text-[var(--ink-600)]" />
             </div>
             <div className="min-w-0">
-              <p className="text-szn-text-1 font-medium">
+              <p className="text-[var(--ink-900)] font-medium">
                 This memory is encrypted
               </p>
-              <p className="text-sm text-szn-text-2">
+              <p className="text-sm text-[var(--ink-600)]">
                 Enter your PIN to decrypt and view its contents.
               </p>
             </div>
@@ -79,7 +79,7 @@ export function LockedMemoryCard({ memory, onUnlockRequest, footer }: LockedMemo
           <button
             type="button"
             onClick={onUnlockRequest}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-szn-accent to-szn-accent/80 text-white text-sm font-medium hover:from-szn-accent hover:to-szn-accent transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--ink-900)] text-white text-sm font-medium hover:from-[var(--ink-900)] hover:to-[var(--ink-900)] transition-colors"
           >
             <LockIcon className="w-4 h-4" />
             Unlock
@@ -93,25 +93,25 @@ export function LockedMemoryCard({ memory, onUnlockRequest, footer }: LockedMemo
 
             {memory.tags && memory.tags.length > 0 && (
               <div className="flex items-center gap-1">
-                <TagIcon className="w-3 h-3 text-szn-text-3" />
+                <TagIcon className="w-3 h-3 text-[var(--ink-500)]" />
                 {memory.tags.slice(0, 3).map((tag) => (
-                  <span key={tag} className="text-szn-text-2">
+                  <span key={tag} className="text-[var(--ink-600)]">
                     {tag}
                   </span>
                 ))}
                 {memory.tags.length > 3 && (
-                  <span className="text-szn-text-3">+{memory.tags.length - 3}</span>
+                  <span className="text-[var(--ink-500)]">+{memory.tags.length - 3}</span>
                 )}
               </div>
             )}
 
-            <span className="flex items-center gap-1 text-szn-text-3">
+            <span className="flex items-center gap-1 text-[var(--ink-500)]">
               <CalendarIcon className="w-3 h-3" />
               {formatDate(memory.created_at, "long")}
             </span>
 
             {memory.similarity !== undefined && memory.similarity > 0 && (
-              <span className="text-szn-accent">
+              <span className="text-[var(--ink-900)]">
                 {(memory.similarity * 100).toFixed(1)}% match
               </span>
             )}

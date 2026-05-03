@@ -36,16 +36,16 @@ const STATUS_CONFIG = {
 };
 
 const SEVERITY_CONFIG = {
-  critical: { label: "Critical", color: "bg-red-500" },
+  critical: { label: "Critical", color: "bg-[var(--signal-conflict)]" },
   high: { label: "High", color: "bg-orange-500" },
   medium: { label: "Medium", color: "bg-yellow-500" },
   low: { label: "Low", color: "bg-blue-500" },
 };
 
 const EVENT_ICONS: Record<string, React.ReactNode> = {
-  created: <PlusIcon className="w-4 h-4 text-green-500" />,
+  created: <PlusIcon className="w-4 h-4 text-[var(--signal-canon-ink)]" />,
   occurrence: <RefreshIcon className="w-4 h-4 text-blue-500" />,
-  status_change: <ArrowRightIcon className="w-4 h-4 text-purple-500" />,
+  status_change: <ArrowRightIcon className="w-4 h-4 text-[var(--ink-700)] underline" />,
   rca_updated: <BrainIcon className="w-4 h-4 text-indigo-500" />,
   note_added: <NoteIcon className="w-4 h-4 text-gray-500" />,
   merged: <MergeIcon className="w-4 h-4 text-orange-500" />,
@@ -114,7 +114,7 @@ export function IncidentDetail({
               <>
                 <button
                   onClick={() => setShowResolveModal(true)}
-                  className="px-3 py-1.5 text-sm font-medium text-green-700 bg-green-50 border border-green-200 rounded-lg hover:bg-green-100 transition-colors"
+                  className="px-3 py-1.5 text-sm font-medium text-[var(--signal-canon-ink)] bg-[var(--signal-canon-soft)] border border-[var(--signal-canon)] rounded-lg hover:bg-[var(--signal-canon-soft)] transition-colors"
                 >
                   Resolve
                 </button>
@@ -218,7 +218,7 @@ export function IncidentDetail({
                   onResolve?.(resolveNotes || undefined);
                   setShowResolveModal(false);
                 }}
-                className="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors"
+                className="px-4 py-2 text-sm font-medium text-white bg-[var(--signal-canon)] rounded-lg hover:bg-[var(--signal-canon)] transition-colors"
               >
                 Resolve
               </button>
@@ -277,14 +277,14 @@ function OverviewTab({ incident }: { incident: Incident }) {
 
       {/* Resolution Info */}
       {incident.status === "resolved" && incident.resolvedAt && (
-        <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
-          <h4 className="text-sm font-medium text-green-800 mb-2">Resolution</h4>
-          <p className="text-sm text-green-700">
+        <div className="p-4 bg-[var(--signal-canon-soft)] border border-[var(--signal-canon)] rounded-lg">
+          <h4 className="text-sm font-medium text-[var(--signal-canon-ink)] mb-2">Resolution</h4>
+          <p className="text-sm text-[var(--signal-canon-ink)]">
             Resolved on {formatDate(incident.resolvedAt, "long")}
             {incident.resolvedBy && ` by ${incident.resolvedBy}`}
           </p>
           {incident.resolutionNotes && (
-            <p className="text-sm text-green-600 mt-2">
+            <p className="text-sm text-[var(--signal-canon-ink)] mt-2">
               Notes: {incident.resolutionNotes}
             </p>
           )}
@@ -357,7 +357,7 @@ function TracesTab({ traces }: { traces: TraceSnapshot[] }) {
             </span>
             {trace.faithfulness !== undefined && (
               <span className={`text-xs font-medium ${
-                trace.faithfulness >= 0.7 ? "text-green-600" : "text-red-600"
+                trace.faithfulness >= 0.7 ? "text-[var(--signal-canon-ink)]" : "text-[var(--signal-conflict-ink)]"
               }`}>
                 {(trace.faithfulness * 100).toFixed(0)}% faithful
               </span>

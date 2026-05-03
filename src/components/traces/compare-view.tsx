@@ -255,7 +255,7 @@ function formatTokens(tokens: number | undefined): string {
 function getDeltaColor(delta: number, higherIsBetter: boolean = true): string {
   if (delta === 0) return "text-gray-400";
   const isPositive = higherIsBetter ? delta < 0 : delta > 0;
-  return isPositive ? "text-green-500" : "text-red-500";
+  return isPositive ? "text-[var(--signal-canon-ink)]" : "text-[var(--signal-conflict-ink)]";
 }
 
 // ============================================
@@ -284,10 +284,10 @@ function MetricComparisonRow({
     valueA && valueB && valueB !== 0 ? ((valueA - valueB) / valueB) * 100 : 0;
 
   return (
-    <div className="flex items-center justify-between py-3 border-b border-szn-border last:border-0">
+    <div className="flex items-center justify-between py-3 border-b border-[var(--ink-200)] last:border-0">
       <div className="flex items-center gap-2">
         {icon && <span className="text-gray-400">{icon}</span>}
-        <span className="text-sm font-medium text-szn-text-2">{label}</span>
+        <span className="text-sm font-medium text-[var(--ink-600)]">{label}</span>
       </div>
       <div className="flex items-center gap-6">
         {/* Value A */}
@@ -303,7 +303,7 @@ function MetricComparisonRow({
 
         {/* Value B */}
         <div className="text-right min-w-[80px]">
-          <span className="text-sm font-semibold text-purple-600 dark:text-purple-400">
+          <span className="text-sm font-semibold text-[var(--ink-900)] underline dark:text-[var(--ink-700)]">
             {formatter(valueB)}
           </span>
           <span className="text-xs text-gray-400 ml-1">B</span>
@@ -314,10 +314,10 @@ function MetricComparisonRow({
           {delta !== 0 && valueA !== undefined && valueB !== undefined && (
             <span
               className={`inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full ${
-                getDeltaColor(delta, higherIsBetter) === "text-green-500"
-                  ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
-                  : getDeltaColor(delta, higherIsBetter) === "text-red-500"
-                  ? "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
+                getDeltaColor(delta, higherIsBetter) === "text-[var(--signal-canon-ink)]"
+                  ? "bg-[var(--signal-canon-soft)] text-[var(--signal-canon-ink)] dark:bg-[var(--signal-canon-ink)]/30 dark:text-[var(--signal-canon-soft)]"
+                  : getDeltaColor(delta, higherIsBetter) === "text-[var(--signal-conflict-ink)]"
+                  ? "bg-[var(--signal-conflict-soft)] text-[var(--signal-conflict-ink)] dark:bg-[var(--signal-conflict)]/30 dark:text-[var(--signal-conflict-soft)]"
                   : "bg-gray-100 text-gray-600"
               }`}
             >
@@ -341,7 +341,7 @@ interface SummaryCardProps {
 
 function SummaryCard({ label, value, detail, positive, icon }: SummaryCardProps) {
   return (
-    <div className="bg-szn-card rounded-xl p-4 border border-szn-border">
+    <div className="bg-[var(--ink-0)] rounded-xl p-4 border border-[var(--ink-200)]">
       <div className="flex items-center gap-2 mb-2">
         {icon && <span className="text-gray-400">{icon}</span>}
         <span className="text-xs text-gray-500 uppercase tracking-wide">{label}</span>
@@ -349,10 +349,10 @@ function SummaryCard({ label, value, detail, positive, icon }: SummaryCardProps)
       <div
         className={`text-xl font-bold ${
           positive === true
-            ? "text-green-600 dark:text-green-400"
+            ? "text-[var(--signal-canon-ink)] dark:text-[var(--signal-canon-soft)]"
             : positive === false
-            ? "text-red-600 dark:text-red-400"
-            : "text-szn-text-1"
+            ? "text-[var(--signal-conflict-ink)] dark:text-[var(--signal-conflict-soft)]"
+            : "text-[var(--ink-900)]"
         }`}
       >
         {value}
@@ -398,7 +398,7 @@ function StageComparison({ stagesA, stagesB }: StageComparisonProps) {
         return (
           <div key={name} className="space-y-2">
             <div className="flex items-center justify-between text-sm">
-              <span className="font-medium text-szn-text-2 capitalize">
+              <span className="font-medium text-[var(--ink-600)] capitalize">
                 {label.replace(/_/g, " ")}
               </span>
               <span className="text-gray-500">
@@ -407,16 +407,16 @@ function StageComparison({ stagesA, stagesB }: StageComparisonProps) {
             </div>
             <div className="flex gap-2">
               {/* Bar A */}
-              <div className="flex-1 bg-szn-surface rounded-full h-3 overflow-hidden">
+              <div className="flex-1 bg-[var(--ink-50)] rounded-full h-3 overflow-hidden">
                 <div
                   className="h-full bg-blue-500 rounded-full transition-all duration-300"
                   style={{ width: `${widthA}%` }}
                 />
               </div>
               {/* Bar B */}
-              <div className="flex-1 bg-szn-surface rounded-full h-3 overflow-hidden">
+              <div className="flex-1 bg-[var(--ink-50)] rounded-full h-3 overflow-hidden">
                 <div
-                  className="h-full bg-purple-500 rounded-full transition-all duration-300"
+                  className="h-full bg-[var(--ink-900)] rounded-full transition-all duration-300"
                   style={{ width: `${widthB}%` }}
                 />
               </div>
@@ -426,13 +426,13 @@ function StageComparison({ stagesA, stagesB }: StageComparisonProps) {
       })}
 
       {/* Legend */}
-      <div className="flex items-center gap-4 pt-2 border-t border-szn-border">
+      <div className="flex items-center gap-4 pt-2 border-t border-[var(--ink-200)]">
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 rounded-full bg-blue-500" />
           <span className="text-xs text-gray-500">Trace A</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-purple-500" />
+          <div className="w-3 h-3 rounded-full bg-[var(--ink-900)]" />
           <span className="text-xs text-gray-500">Trace B</span>
         </div>
       </div>
@@ -460,13 +460,13 @@ function RankingChangeList({ changes }: RankingChangeListProps) {
           key={change.id}
           className={`flex items-center gap-3 p-3 rounded-lg ${
             change.delta > 0
-              ? "bg-green-50 dark:bg-green-900/20 border-l-3 border-green-500"
+              ? "bg-[var(--signal-canon-soft)] dark:bg-[var(--signal-canon-ink)]/20 border-l-3 border-[var(--signal-canon)]"
               : change.delta < 0
-              ? "bg-red-50 dark:bg-red-900/20 border-l-3 border-red-500"
-              : "bg-szn-surface"
+              ? "bg-[var(--signal-conflict-soft)] dark:bg-[var(--signal-conflict)]/20 border-l-3 border-[var(--signal-conflict)]"
+              : "bg-[var(--ink-50)]"
           }`}
         >
-          <span className="text-sm font-mono text-szn-text-2 flex-1 truncate">
+          <span className="text-sm font-mono text-[var(--ink-600)] flex-1 truncate">
             {change.id}
           </span>
           <div className="flex items-center gap-2">
@@ -478,8 +478,8 @@ function RankingChangeList({ changes }: RankingChangeListProps) {
             <span
               className={`inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full ${
                 change.delta > 0
-                  ? "bg-green-100 text-green-700 dark:bg-green-800 dark:text-green-300"
-                  : "bg-red-100 text-red-700 dark:bg-red-800 dark:text-red-300"
+                  ? "bg-[var(--signal-canon-soft)] text-[var(--signal-canon-ink)] dark:bg-[var(--signal-canon-ink)] dark:text-[var(--signal-canon-soft)]"
+                  : "bg-[var(--signal-conflict-soft)] text-[var(--signal-conflict-ink)] dark:bg-[var(--signal-conflict-ink)] dark:text-[var(--signal-conflict-soft)]"
               }`}
             >
               {change.delta > 0 ? <ArrowUpIcon className="w-3 h-3" /> : <ArrowDownIcon className="w-3 h-3" />}
@@ -514,16 +514,16 @@ function ConfigDiff({ config }: ConfigDiffProps) {
           key={key}
           className={`p-3 rounded-lg ${
             value.changed
-              ? "bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800"
-              : "bg-szn-surface"
+              ? "bg-[var(--signal-pending-soft)] dark:bg-[var(--signal-pending-ink)]/20 border border-[var(--signal-pending)] dark:border-[var(--signal-pending)]"
+              : "bg-[var(--ink-50)]"
           }`}
         >
           <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-szn-text-2">
+            <span className="text-sm font-medium text-[var(--ink-600)]">
               {key.replace(/_/g, " ")}
             </span>
             {value.changed && (
-              <span className="text-xs text-yellow-600 dark:text-yellow-400 font-medium">
+              <span className="text-xs text-[var(--signal-pending-ink)] dark:text-[var(--signal-pending-soft)] font-medium">
                 Changed
               </span>
             )}
@@ -533,7 +533,7 @@ function ConfigDiff({ config }: ConfigDiffProps) {
               {String(value.a ?? "-")}
             </span>
             <ArrowRightIcon className="w-4 h-4 text-gray-300" />
-            <span className="text-sm text-purple-600 dark:text-purple-400">
+            <span className="text-sm text-[var(--ink-900)] underline dark:text-[var(--ink-700)]">
               {String(value.b ?? "-")}
             </span>
           </div>
@@ -803,8 +803,8 @@ export function CompareView({
   }) => {
     if (!active || !payload) return null;
     return (
-      <div className="bg-szn-card border border-szn-border rounded-lg shadow-lg p-3">
-        <p className="font-medium text-szn-text-1 mb-2">{label}</p>
+      <div className="bg-[var(--ink-0)] border border-[var(--ink-200)] rounded-lg shadow-lg p-3">
+        <p className="font-medium text-[var(--ink-900)] mb-2">{label}</p>
         {payload.map((entry, index) => (
           <p key={index} className="text-sm" style={{ color: entry.color }}>
             {entry.name}: {entry.value}ms
@@ -825,9 +825,9 @@ export function CompareView({
 
   if (loading) {
     return (
-      <div className={`bg-szn-bg rounded-lg border shadow-lg p-8 ${className}`}>
+      <div className={`bg-[var(--ink-50)] rounded-lg border shadow-lg p-8 ${className}`}>
         <div className="flex flex-col items-center justify-center">
-          <div className="animate-spin w-8 h-8 border-2 border-emerald-500 border-t-transparent rounded-full" />
+          <div className="animate-spin w-8 h-8 border-2 border-[var(--signal-canon)] border-t-transparent rounded-full" />
           <p className="mt-4 text-gray-500">Loading comparison...</p>
         </div>
       </div>
@@ -836,12 +836,12 @@ export function CompareView({
 
   if (error) {
     return (
-      <div className={`bg-szn-bg rounded-lg border shadow-lg p-8 ${className}`}>
+      <div className={`bg-[var(--ink-50)] rounded-lg border shadow-lg p-8 ${className}`}>
         <div className="text-center">
-          <p className="text-red-500 mb-4">{error}</p>
+          <p className="text-[var(--signal-conflict-ink)] mb-4">{error}</p>
           <button
             onClick={loadComparison}
-            className="px-4 py-2 bg-szn-surface rounded-lg hover:bg-szn-surface-1"
+            className="px-4 py-2 bg-[var(--ink-50)] rounded-lg hover:bg-[var(--ink-50)]"
           >
             Retry
           </button>
@@ -852,7 +852,7 @@ export function CompareView({
 
   if (!computedDiff && mode === "traces") {
     return (
-      <div className={`bg-szn-bg rounded-lg border shadow-lg p-8 ${className}`}>
+      <div className={`bg-[var(--ink-50)] rounded-lg border shadow-lg p-8 ${className}`}>
         <p className="text-center text-gray-500">
           Select two traces to compare
         </p>
@@ -862,13 +862,13 @@ export function CompareView({
 
   return (
     <div
-      className={`bg-szn-bg rounded-lg border border-szn-border shadow-lg overflow-hidden ${className}`}
+      className={`bg-[var(--ink-50)] rounded-lg border border-[var(--ink-200)] shadow-lg overflow-hidden ${className}`}
     >
       {/* Header */}
-      <div className="p-4 bg-gradient-to-r from-blue-500/10 to-purple-500/10 border-b border-szn-border">
+      <div className="p-4 bg-gradient-to-r from-[var(--ink-900)]/10 to-[var(--ink-900)]/10 border-b border-[var(--ink-200)]">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="font-semibold text-szn-text-1">
+            <h3 className="font-semibold text-[var(--ink-900)]">
               {mode === "traces" ? "Trace Comparison" : "Eval Run Comparison"}
             </h3>
             <p className="text-sm text-gray-500 mt-1">
@@ -887,7 +887,7 @@ export function CompareView({
           {onClose && (
             <button
               onClick={onClose}
-              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+              className="p-2 hover:bg-gray-100 dark:hover:bg-[var(--ink-800)] rounded-lg transition-colors"
             >
               <XIcon className="w-5 h-5 text-gray-500" />
             </button>
@@ -902,8 +902,8 @@ export function CompareView({
               onClick={() => setActiveTab(tab.id)}
               className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
                 activeTab === tab.id
-                  ? "bg-szn-card text-blue-600 dark:text-blue-400 shadow-sm"
-                  : "text-gray-500 hover:text-gray-700 hover:bg-white/50 dark:hover:bg-gray-800/50"
+                  ? "bg-[var(--ink-0)] text-blue-600 dark:text-blue-400 shadow-sm"
+                  : "text-gray-500 hover:text-gray-700 hover:bg-white/50 dark:hover:bg-[var(--ink-800)]/50"
               }`}
             >
               {tab.icon}
@@ -945,11 +945,11 @@ export function CompareView({
                 label="Ranking Changes"
                 value={
                   <span className="flex items-center gap-2">
-                    <span className="text-green-500">
+                    <span className="text-[var(--signal-canon-ink)]">
                       <ArrowUpIcon className="w-4 h-4 inline" />
                       {computedDiff.summary.results_improved}
                     </span>
-                    <span className="text-red-500">
+                    <span className="text-[var(--signal-conflict-ink)]">
                       <ArrowDownIcon className="w-4 h-4 inline" />
                       {computedDiff.summary.results_degraded}
                     </span>
@@ -962,8 +962,8 @@ export function CompareView({
             </div>
 
             {/* Quick Metrics */}
-            <div className="bg-szn-surface rounded-xl p-4">
-              <h4 className="font-medium text-szn-text-1 mb-4">
+            <div className="bg-[var(--ink-50)] rounded-xl p-4">
+              <h4 className="font-medium text-[var(--ink-900)] mb-4">
                 Key Metrics Comparison
               </h4>
               <MetricComparisonRow
@@ -1037,8 +1037,8 @@ export function CompareView({
 
             {/* Radar Chart */}
             {evalRadarData.length > 0 && (
-              <div className="bg-szn-surface rounded-xl p-4">
-                <h4 className="font-medium text-szn-text-1 mb-4">
+              <div className="bg-[var(--ink-50)] rounded-xl p-4">
+                <h4 className="font-medium text-[var(--ink-900)] mb-4">
                   Multi-Metric Overview
                 </h4>
                 <div className="h-80">
@@ -1057,8 +1057,8 @@ export function CompareView({
             )}
 
             {/* Metrics Comparison */}
-            <div className="bg-szn-surface rounded-xl p-4">
-              <h4 className="font-medium text-szn-text-1 mb-4">
+            <div className="bg-[var(--ink-50)] rounded-xl p-4">
+              <h4 className="font-medium text-[var(--ink-900)] mb-4">
                 Detailed Metrics
               </h4>
               <MetricComparisonRow
@@ -1118,8 +1118,8 @@ export function CompareView({
         {activeTab === "latency" && computedDiff && (
           <div className="space-y-6">
             {/* Latency Breakdown */}
-            <div className="bg-szn-surface rounded-xl p-4">
-              <h4 className="font-medium text-szn-text-1 mb-4">
+            <div className="bg-[var(--ink-50)] rounded-xl p-4">
+              <h4 className="font-medium text-[var(--ink-900)] mb-4">
                 Latency Breakdown
               </h4>
               <MetricComparisonRow
@@ -1153,8 +1153,8 @@ export function CompareView({
             </div>
 
             {/* Bar Chart */}
-            <div className="bg-szn-surface rounded-xl p-4">
-              <h4 className="font-medium text-szn-text-1 mb-4">
+            <div className="bg-[var(--ink-50)] rounded-xl p-4">
+              <h4 className="font-medium text-[var(--ink-900)] mb-4">
                 Latency Comparison Chart
               </h4>
               <div className="h-64">
@@ -1179,8 +1179,8 @@ export function CompareView({
           <div className="space-y-6">
             {/* Results Summary */}
             <div className="grid grid-cols-3 gap-4">
-              <div className="bg-szn-surface rounded-xl p-4 text-center">
-                <div className="text-2xl font-bold text-szn-text-1">
+              <div className="bg-[var(--ink-50)] rounded-xl p-4 text-center">
+                <div className="text-2xl font-bold text-[var(--ink-900)]">
                   {computedDiff.results.overlap_count}
                 </div>
                 <div className="text-sm text-gray-500">Overlapping Results</div>
@@ -1191,8 +1191,8 @@ export function CompareView({
                 </div>
                 <div className="text-sm text-gray-500">Only in Trace A</div>
               </div>
-              <div className="bg-purple-50 dark:bg-purple-900/20 rounded-xl p-4 text-center">
-                <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
+              <div className="bg-[var(--ink-50)] dark:bg-[var(--ink-900)]/20 rounded-xl p-4 text-center">
+                <div className="text-2xl font-bold text-[var(--ink-900)] underline dark:text-[var(--ink-700)]">
                   {computedDiff.results.only_in_b.length}
                 </div>
                 <div className="text-sm text-gray-500">Only in Trace B</div>
@@ -1200,17 +1200,17 @@ export function CompareView({
             </div>
 
             {/* Ranking Changes */}
-            <div className="bg-szn-surface rounded-xl p-4">
+            <div className="bg-[var(--ink-50)] rounded-xl p-4">
               <div className="flex items-center justify-between mb-4">
-                <h4 className="font-medium text-szn-text-1">
+                <h4 className="font-medium text-[var(--ink-900)]">
                   Ranking Changes
                 </h4>
                 <div className="flex items-center gap-4 text-sm">
-                  <span className="text-green-600 dark:text-green-400">
+                  <span className="text-[var(--signal-canon-ink)] dark:text-[var(--signal-canon-soft)]">
                     <CheckIcon className="w-4 h-4 inline mr-1" />
                     {computedDiff.summary.results_improved} improved
                   </span>
-                  <span className="text-red-600 dark:text-red-400">
+                  <span className="text-[var(--signal-conflict-ink)] dark:text-[var(--signal-conflict-soft)]">
                     <ArrowDownIcon className="w-4 h-4 inline mr-1" />
                     {computedDiff.summary.results_degraded} degraded
                   </span>
@@ -1245,15 +1245,15 @@ export function CompareView({
                 </div>
 
                 {/* Only in B */}
-                <div className="bg-purple-50 dark:bg-purple-900/20 rounded-xl p-4">
-                  <h4 className="font-medium text-purple-900 dark:text-purple-300 mb-3">
+                <div className="bg-[var(--ink-50)] dark:bg-[var(--ink-900)]/20 rounded-xl p-4">
+                  <h4 className="font-medium text-[var(--ink-900)] dark:text-[var(--ink-500)] mb-3">
                     Only in Trace B ({computedDiff.results.only_in_b.length})
                   </h4>
                   <div className="space-y-1 max-h-40 overflow-y-auto">
                     {computedDiff.results.only_in_b.slice(0, 10).map((id) => (
                       <div
                         key={id}
-                        className="text-xs font-mono text-purple-700 dark:text-purple-400 truncate"
+                        className="text-xs font-mono text-[var(--ink-900)] underline dark:text-[var(--ink-700)] truncate"
                       >
                         {id}
                       </div>
@@ -1274,8 +1274,8 @@ export function CompareView({
         {activeTab === "pipeline" && (
           <div className="space-y-6">
             {traceA?.stages && traceB?.stages ? (
-              <div className="bg-szn-surface rounded-xl p-4">
-                <h4 className="font-medium text-szn-text-1 mb-4">
+              <div className="bg-[var(--ink-50)] rounded-xl p-4">
+                <h4 className="font-medium text-[var(--ink-900)] mb-4">
                   Pipeline Stage Comparison
                 </h4>
                 <StageComparison stagesA={traceA.stages} stagesB={traceB.stages} />
@@ -1295,8 +1295,8 @@ export function CompareView({
         {/* Config Tab */}
         {activeTab === "config" && computedDiff && (
           <div className="space-y-6">
-            <div className="bg-szn-surface rounded-xl p-4">
-              <h4 className="font-medium text-szn-text-1 mb-4">
+            <div className="bg-[var(--ink-50)] rounded-xl p-4">
+              <h4 className="font-medium text-[var(--ink-900)] mb-4">
                 Configuration Differences
               </h4>
               <ConfigDiff config={computedDiff.config} />

@@ -101,8 +101,8 @@ export function ReceiptDownload({
           flex items-center gap-2
           ${
             isDownloading && downloadFormat === "json"
-              ? "bg-szn-accent text-white cursor-wait"
-              : "bg-gray-800 hover:bg-gray-700 text-szn-text-2"
+              ? "bg-[var(--ink-900)] text-white cursor-wait"
+              : "bg-[var(--ink-800)] hover:bg-gray-700 text-[var(--ink-600)]"
           }
           disabled:opacity-50 disabled:cursor-not-allowed
         `}
@@ -142,7 +142,7 @@ export function ReceiptDownload({
               />
             </svg>
             <span>JSON</span>
-            <span className="text-xs text-szn-text-2">(.json)</span>
+            <span className="text-xs text-[var(--ink-600)]">(.json)</span>
           </>
         )}
       </button>
@@ -156,8 +156,8 @@ export function ReceiptDownload({
           flex items-center gap-2
           ${
             isDownloading && downloadFormat === "pdf"
-              ? "bg-szn-accent text-white cursor-wait"
-              : "bg-gray-800 hover:bg-gray-700 text-szn-text-2"
+              ? "bg-[var(--ink-900)] text-white cursor-wait"
+              : "bg-[var(--ink-800)] hover:bg-gray-700 text-[var(--ink-600)]"
           }
           disabled:opacity-50 disabled:cursor-not-allowed
         `}
@@ -197,7 +197,7 @@ export function ReceiptDownload({
               />
             </svg>
             <span>PDF</span>
-            <span className="text-xs text-szn-text-2">(.pdf)</span>
+            <span className="text-xs text-[var(--ink-600)]">(.pdf)</span>
           </>
         )}
       </button>
@@ -266,7 +266,7 @@ export function InlineReceiptDownload({
       onClick={handleDownload}
       disabled={isDownloading}
       className={`
-        p-2 rounded hover:bg-gray-800 text-szn-text-3 hover:text-szn-text-1 transition-colors
+        p-2 rounded hover:bg-[var(--ink-800)] text-[var(--ink-500)] hover:text-[var(--ink-900)] transition-colors
         disabled:opacity-50 disabled:cursor-not-allowed
         ${className}
       `}

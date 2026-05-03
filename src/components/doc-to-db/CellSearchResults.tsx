@@ -24,13 +24,13 @@ interface CellSearchResultsProps {
 const dataTypeColors: Record<CellDataType, string> = {
   text: "bg-gray-100 text-gray-600",
   number: "bg-blue-100 text-blue-600",
-  date: "bg-purple-100 text-purple-600",
-  currency: "bg-green-100 text-green-600",
+  date: "bg-[var(--ink-100)] text-[var(--ink-900)] underline",
+  currency: "bg-[var(--signal-canon-soft)] text-[var(--signal-canon-ink)]",
   percentage: "bg-orange-100 text-orange-600",
   boolean: "bg-rose-100 text-rose-600",
-  email: "bg-cyan-100 text-cyan-600",
+  email: "bg-[var(--ink-100)] text-[var(--ink-900)]",
   url: "bg-indigo-100 text-indigo-600",
-  phone: "bg-yellow-100 text-yellow-600",
+  phone: "bg-[var(--signal-pending-soft)] text-[var(--signal-pending-ink)]",
   unknown: "bg-gray-100 text-gray-400",
 };
 
@@ -324,7 +324,7 @@ function HighlightedText({ text, query }: { text: string; query: string }) {
     <>
       {parts.map((part, i) =>
         part.toLowerCase() === query.toLowerCase() ? (
-          <mark key={i} className="bg-yellow-200 text-yellow-900 px-0.5 rounded">
+          <mark key={i} className="bg-yellow-200 text-[var(--signal-pending-ink)] px-0.5 rounded">
             {part}
           </mark>
         ) : (
@@ -339,9 +339,9 @@ function SimilarityBadge({ score }: { score: number }) {
   const percentage = Math.round(score * 100);
   const color =
     percentage >= 80
-      ? "bg-green-100 text-green-700"
+      ? "bg-[var(--signal-canon-soft)] text-[var(--signal-canon-ink)]"
       : percentage >= 60
-        ? "bg-yellow-100 text-yellow-700"
+        ? "bg-[var(--signal-pending-soft)] text-[var(--signal-pending-ink)]"
         : "bg-gray-100 text-gray-600";
 
   return <span className={`px-2 py-0.5 rounded text-xs font-medium ${color}`}>{percentage}%</span>;
@@ -363,7 +363,7 @@ function StructureTypeIcon({ type, size = "md" }: { type: string; size?: "sm" | 
       </svg>
     ),
     list: (
-      <svg className={`${sizeClass} text-green-500`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <svg className={`${sizeClass} text-[var(--signal-canon-ink)]`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -373,7 +373,7 @@ function StructureTypeIcon({ type, size = "md" }: { type: string; size?: "sm" | 
       </svg>
     ),
     key_value: (
-      <svg className={`${sizeClass} text-purple-500`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <svg className={`${sizeClass} text-[var(--ink-700)] underline`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -393,7 +393,7 @@ function StructureTypeIcon({ type, size = "md" }: { type: string; size?: "sm" | 
       </svg>
     ),
     schema: (
-      <svg className={`${sizeClass} text-cyan-500`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <svg className={`${sizeClass} text-[var(--ink-900)]`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path
           strokeLinecap="round"
           strokeLinejoin="round"

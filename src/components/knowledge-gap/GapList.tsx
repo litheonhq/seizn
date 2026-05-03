@@ -119,7 +119,7 @@ export function GapList({
 
   if (error) {
     return (
-      <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700">
+      <div className="bg-[var(--signal-conflict-soft)] border border-[var(--signal-conflict)] rounded-lg p-4 text-[var(--signal-conflict-ink)]">
         <p className="font-medium">Error loading knowledge gaps</p>
         <p className="text-sm mt-1">{error}</p>
         <button
@@ -225,8 +225,8 @@ function StatsSummary({ stats }: { stats: GapStatistics }) {
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
       <StatCard label="Total Gaps" value={stats.totalGaps} colorClass="bg-gray-100" />
-      <StatCard label="Open" value={stats.openGaps} colorClass="bg-yellow-100" />
-      <StatCard label="Resolved" value={stats.resolvedGaps} colorClass="bg-green-100" />
+      <StatCard label="Open" value={stats.openGaps} colorClass="bg-[var(--signal-pending-soft)]" />
+      <StatCard label="Resolved" value={stats.resolvedGaps} colorClass="bg-[var(--signal-canon-soft)]" />
       {stats.avgResolutionTimeHours && (
         <StatCard
           label="Avg Resolution"
@@ -327,7 +327,7 @@ function GapCard({
             {gap.missingEntities.slice(0, 5).map((entity, i) => (
               <span
                 key={i}
-                className="px-2 py-0.5 bg-red-50 text-red-700 text-xs rounded"
+                className="px-2 py-0.5 bg-[var(--signal-conflict-soft)] text-[var(--signal-conflict-ink)] text-xs rounded"
               >
                 {entity.name}
               </span>
@@ -363,7 +363,7 @@ function GapCard({
               e.stopPropagation();
               onResolve(gap.id);
             }}
-            className="flex-1 px-3 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700"
+            className="flex-1 px-3 py-2 text-sm font-medium text-white bg-[var(--signal-canon)] rounded-lg hover:bg-[var(--signal-canon)]"
           >
             Mark Resolved
           </button>
@@ -385,7 +385,7 @@ function GapCard({
 function EmptyState() {
   return (
     <div className="text-center py-12 bg-gray-50 rounded-xl border border-gray-200">
-      <CheckIcon className="w-12 h-12 text-green-500 mx-auto mb-4" />
+      <CheckIcon className="w-12 h-12 text-[var(--signal-canon-ink)] mx-auto mb-4" />
       <h3 className="text-lg font-medium text-gray-900 mb-2">No Knowledge Gaps</h3>
       <p className="text-gray-500">
         Great! Your knowledge base is covering user queries well.

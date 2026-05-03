@@ -79,7 +79,7 @@ function StateBadge({ state }: { state: WorkflowRun["state"] }) {
     idle: "bg-[var(--ink-100)] text-[var(--ink-500)]",
     running: "bg-[var(--ink-900)]/10 text-[var(--ink-900)]",
     paused: "bg-[var(--signal-pending)]/10 text-[var(--signal-pending-soft)]",
-    done: "bg-green-500/10 text-green-400",
+    done: "bg-[var(--signal-canon)]/10 text-green-400",
     failed: "bg-[var(--signal-conflict)]/10 text-[var(--signal-conflict-soft)]",
   };
 

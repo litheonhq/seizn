@@ -277,7 +277,7 @@ export function TraceExplorer({
   // formatRelativeTime imported from @/lib/format-date
 
   return (
-    <div className={`bg-gray-900 rounded-lg border border-gray-800 ${className}`}>
+    <div className={`bg-[var(--ink-900)] rounded-lg border border-gray-800 ${className}`}>
       {/* Header */}
       <div className="p-4 border-b border-gray-800">
         <div className="flex items-center justify-between mb-4">
@@ -288,7 +288,7 @@ export function TraceExplorer({
               className={`p-2 rounded-lg transition-colors ${
                 showFilters
                   ? "bg-blue-600 text-white"
-                  : "bg-gray-800 text-gray-400 hover:text-white"
+                  : "bg-[var(--ink-800)] text-gray-400 hover:text-white"
               }`}
             >
               <FilterIcon className="w-4 h-4" />
@@ -296,7 +296,7 @@ export function TraceExplorer({
             <button
               onClick={fetchTraces}
               disabled={loading}
-              className="p-2 rounded-lg bg-gray-800 text-gray-400 hover:text-white transition-colors disabled:opacity-50"
+              className="p-2 rounded-lg bg-[var(--ink-800)] text-gray-400 hover:text-white transition-colors disabled:opacity-50"
             >
               <RefreshIcon className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
             </button>
@@ -311,7 +311,7 @@ export function TraceExplorer({
             value={filters.search}
             onChange={(e) => setFilters((f) => ({ ...f, search: e.target.value }))}
             placeholder="Search queries..."
-            className="w-full pl-10 pr-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full pl-10 pr-4 py-2 bg-[var(--ink-800)] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
@@ -324,7 +324,7 @@ export function TraceExplorer({
               className={`px-3 py-1 text-xs font-medium rounded-full transition-colors ${
                 filters.dateRange === range
                   ? "bg-blue-600 text-white"
-                  : "bg-gray-800 text-gray-400 hover:text-white"
+                  : "bg-[var(--ink-800)] text-gray-400 hover:text-white"
               }`}
             >
               {range === "all" ? "All" : range.toUpperCase()}
@@ -343,7 +343,7 @@ export function TraceExplorer({
               <select
                 value={filters.searchType}
                 onChange={(e) => setFilters((f) => ({ ...f, searchType: e.target.value }))}
-                className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 bg-[var(--ink-800)] border border-gray-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="">All</option>
                 <option value="semantic">Semantic</option>
@@ -358,7 +358,7 @@ export function TraceExplorer({
               <select
                 value={filters.rerankEnabled}
                 onChange={(e) => setFilters((f) => ({ ...f, rerankEnabled: e.target.value }))}
-                className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 bg-[var(--ink-800)] border border-gray-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="">All</option>
                 <option value="true">Enabled</option>
@@ -372,7 +372,7 @@ export function TraceExplorer({
               <select
                 value={filters.hasError}
                 onChange={(e) => setFilters((f) => ({ ...f, hasError: e.target.value }))}
-                className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 bg-[var(--ink-800)] border border-gray-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="">All</option>
                 <option value="false">Success</option>
@@ -388,7 +388,7 @@ export function TraceExplorer({
                 value={filters.maxLatency}
                 onChange={(e) => setFilters((f) => ({ ...f, maxLatency: e.target.value }))}
                 placeholder="e.g., 500"
-                className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 bg-[var(--ink-800)] border border-gray-700 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
           </div>
@@ -416,8 +416,8 @@ export function TraceExplorer({
 
       {/* Error */}
       {error && (
-        <div className="p-4 border-b border-gray-800 bg-red-900/20">
-          <p className="text-sm text-red-400">{error}</p>
+        <div className="p-4 border-b border-gray-800 bg-[var(--signal-conflict)]/20">
+          <p className="text-sm text-[var(--signal-conflict-soft)]">{error}</p>
         </div>
       )}
 
@@ -439,16 +439,16 @@ export function TraceExplorer({
               className={`w-full p-4 text-left transition-colors ${
                 selectedTraceId === trace.id
                   ? "bg-blue-900/30 border-l-2 border-blue-500"
-                  : "hover:bg-gray-800/50"
+                  : "hover:bg-[var(--ink-800)]/50"
               }`}
             >
               {/* Query */}
               <div className="flex items-start gap-2 mb-2">
                 {trace.has_error && (
-                  <AlertIcon className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
+                  <AlertIcon className="w-4 h-4 text-[var(--signal-conflict-soft)] flex-shrink-0 mt-0.5" />
                 )}
                 {trace.replay_of && (
-                  <ReplayIcon className="w-4 h-4 text-purple-400 flex-shrink-0 mt-0.5" />
+                  <ReplayIcon className="w-4 h-4 text-[var(--ink-700)] flex-shrink-0 mt-0.5" />
                 )}
                 <p className="text-sm text-white line-clamp-2">
                   {trace.query || <span className="text-gray-500 italic">No query text</span>}
@@ -463,7 +463,7 @@ export function TraceExplorer({
                     trace.total_latency_ms > 500
                       ? "text-yellow-400"
                       : trace.total_latency_ms > 1000
-                        ? "text-red-400"
+                        ? "text-[var(--signal-conflict-soft)]"
                         : "text-green-400"
                   }`}
                 >
@@ -478,11 +478,11 @@ export function TraceExplorer({
                 <span className="text-gray-400">{trace.results_count} results</span>
 
                 {/* Config badges */}
-                <span className="px-2 py-0.5 bg-gray-800 text-gray-300 rounded-full">
+                <span className="px-2 py-0.5 bg-[var(--ink-800)] text-gray-300 rounded-full">
                   {trace.config.search_type}
                 </span>
                 {trace.config.rerank_enabled && (
-                  <span className="px-2 py-0.5 bg-purple-900/50 text-purple-300 rounded-full">
+                  <span className="px-2 py-0.5 bg-[var(--ink-900)]/50 text-[var(--ink-500)] rounded-full">
                     rerank
                   </span>
                 )}
@@ -505,14 +505,14 @@ export function TraceExplorer({
             <button
               onClick={() => setPagination((p) => ({ ...p, offset: Math.max(0, p.offset - p.limit) }))}
               disabled={pagination.offset === 0}
-              className="px-3 py-1 text-xs bg-gray-800 text-gray-400 rounded hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-3 py-1 text-xs bg-[var(--ink-800)] text-gray-400 rounded hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Previous
             </button>
             <button
               onClick={() => setPagination((p) => ({ ...p, offset: p.offset + p.limit }))}
               disabled={!pagination.hasMore}
-              className="px-3 py-1 text-xs bg-gray-800 text-gray-400 rounded hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-3 py-1 text-xs bg-[var(--ink-800)] text-gray-400 rounded hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Next
             </button>

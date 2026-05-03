@@ -68,7 +68,7 @@ export function OfflineIndicator({
         !isOnline
           ? 'bg-destructive text-destructive-foreground'
           : showReconnected
-            ? 'bg-green-600 text-white'
+            ? 'bg-[var(--signal-canon)] text-white'
             : 'bg-muted'
       )}
     >
@@ -135,7 +135,7 @@ export function OfflineBadge() {
           ? 'bg-destructive/10 text-destructive'
           : syncStatus.isSyncing
             ? 'bg-blue-100 text-blue-700'
-            : 'bg-yellow-100 text-yellow-700'
+            : 'bg-[var(--signal-pending-soft)] text-[var(--signal-pending-ink)]'
       )}
     >
       {!isOnline ? (

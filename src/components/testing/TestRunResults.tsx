@@ -124,8 +124,8 @@ export function TestRunResults({
 
   if (error) {
     return (
-      <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-        <p className="text-red-800">{error}</p>
+      <div className="bg-[var(--signal-conflict-soft)] border border-[var(--signal-conflict)] rounded-lg p-4">
+        <p className="text-[var(--signal-conflict-ink)]">{error}</p>
       </div>
     );
   }
@@ -174,11 +174,11 @@ export function TestRunResults({
         <div className="h-4 bg-gray-200 rounded-full overflow-hidden mb-4">
           <div className="h-full flex">
             <div
-              className="bg-green-500 transition-all"
+              className="bg-[var(--signal-canon)] transition-all"
               style={{ width: `${passPercent}%` }}
             />
             <div
-              className="bg-red-500 transition-all"
+              className="bg-[var(--signal-conflict)] transition-all"
               style={{ width: `${failPercent}%` }}
             />
             <div
@@ -194,13 +194,13 @@ export function TestRunResults({
             <div className="text-2xl font-bold text-gray-900">{run.total_cases}</div>
             <div className="text-sm text-gray-500">Total</div>
           </div>
-          <div className="text-center p-3 bg-green-50 rounded-lg">
-            <div className="text-2xl font-bold text-green-600">{run.passed}</div>
-            <div className="text-sm text-green-700">Passed</div>
+          <div className="text-center p-3 bg-[var(--signal-canon-soft)] rounded-lg">
+            <div className="text-2xl font-bold text-[var(--signal-canon-ink)]">{run.passed}</div>
+            <div className="text-sm text-[var(--signal-canon-ink)]">Passed</div>
           </div>
-          <div className="text-center p-3 bg-red-50 rounded-lg">
-            <div className="text-2xl font-bold text-red-600">{run.failed}</div>
-            <div className="text-sm text-red-700">Failed</div>
+          <div className="text-center p-3 bg-[var(--signal-conflict-soft)] rounded-lg">
+            <div className="text-2xl font-bold text-[var(--signal-conflict-ink)]">{run.failed}</div>
+            <div className="text-sm text-[var(--signal-conflict-ink)]">Failed</div>
           </div>
           <div className="text-center p-3 bg-gray-50 rounded-lg">
             <div className="text-2xl font-bold text-gray-600">{run.skipped}</div>
@@ -293,7 +293,7 @@ export function TestRunResults({
                 {expandedCase === result.case_id && (
                   <div className="mt-4 pl-4 border-l-2 border-gray-200 space-y-2 text-sm">
                     {result.error_message && (
-                      <div className="text-red-600">
+                      <div className="text-[var(--signal-conflict-ink)]">
                         <strong>Error:</strong> {result.error_message}
                       </div>
                     )}
@@ -312,7 +312,7 @@ export function TestRunResults({
                     {result.matched_keywords && result.matched_keywords.length > 0 && (
                       <div>
                         <strong>Matched:</strong>{' '}
-                        <span className="text-green-600">
+                        <span className="text-[var(--signal-canon-ink)]">
                           {result.matched_keywords.join(', ')}
                         </span>
                       </div>
@@ -320,7 +320,7 @@ export function TestRunResults({
                     {result.missing_keywords && result.missing_keywords.length > 0 && (
                       <div>
                         <strong>Missing:</strong>{' '}
-                        <span className="text-red-600">
+                        <span className="text-[var(--signal-conflict-ink)]">
                           {result.missing_keywords.join(', ')}
                         </span>
                       </div>

@@ -217,7 +217,7 @@ const Navigation = memo(function Navigation({
   t: ExtremeHomeMessages;
 }) {
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-szn-bg/95 backdrop-blur-sm border-b border-szn-border">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-[var(--ink-50)]/95 backdrop-blur-sm border-b border-[var(--ink-200)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
         {/* Left: Logo + Navigation Links */}
         <div className="flex items-center gap-8">
@@ -225,32 +225,32 @@ const Navigation = memo(function Navigation({
             <span aria-label="Seizn" className="w-8 h-8 inline-flex items-center justify-center">
               <SeiznMark size={32} color="var(--ink-900)" />
             </span>
-            <span className="font-semibold text-xl tracking-tight text-szn-text-1">Seizn</span>
+            <span className="font-semibold text-xl tracking-tight text-[var(--ink-900)]">Seizn</span>
           </Link>
 
           {/* Desktop Nav - Links next to logo */}
           <div className="hidden md:flex items-center gap-6">
             <Link
               href={`/${locale}/docs`}
-              className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors"
+              className="text-sm text-[var(--ink-600)] hover:text-[var(--ink-900)] transition-colors"
             >
               {t.nav?.docs || "Docs"}
             </Link>
             <Link
               href={`/${locale}/pricing`}
-              className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors"
+              className="text-sm text-[var(--ink-600)] hover:text-[var(--ink-900)] transition-colors"
             >
               {t.nav?.pricing || "Pricing"}
             </Link>
             <Link
               href={`/${locale}/comparison`}
-              className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors"
+              className="text-sm text-[var(--ink-600)] hover:text-[var(--ink-900)] transition-colors"
             >
               {t.nav?.compare || "Compare"}
             </Link>
             <Link
               href={`/${locale}/enterprise`}
-              className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors"
+              className="text-sm text-[var(--ink-600)] hover:text-[var(--ink-900)] transition-colors"
             >
               {t.nav?.enterprise || "Enterprise"}
             </Link>
@@ -258,13 +258,13 @@ const Navigation = memo(function Navigation({
               href="https://github.com/seizn-ai"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors"
+              className="text-sm text-[var(--ink-600)] hover:text-[var(--ink-900)] transition-colors"
             >
               {t.nav?.github || "GitHub"}
             </a>
             <Link
               href="/status"
-              className="text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors"
+              className="text-sm text-[var(--ink-600)] hover:text-[var(--ink-900)] transition-colors"
             >
               {t.nav?.status || "Status"}
             </Link>
@@ -276,7 +276,7 @@ const Navigation = memo(function Navigation({
           <LanguageSwitcher currentLocale={locale} />
           <Link
             href="/dashboard/keys"
-            className="text-sm bg-gradient-to-r from-szn-accent to-szn-accent-2 text-white px-4 py-2 rounded-full hover:opacity-90 transition-opacity"
+            className="text-sm bg-gradient-to-r from-[var(--ink-900)] to-[var(--ink-700)] text-white px-4 py-2 rounded-full hover:opacity-90 transition-opacity"
           >
             {t.nav?.getApiKey || "Get API Key"}
           </Link>
@@ -284,7 +284,7 @@ const Navigation = memo(function Navigation({
 
         {/* Mobile Menu Button */}
         <button
-          className="md:hidden p-2 text-szn-text-2"
+          className="md:hidden p-2 text-[var(--ink-600)]"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
           aria-expanded={mobileMenuOpen}
@@ -297,33 +297,33 @@ const Navigation = memo(function Navigation({
       {/* Mobile Menu - animated */}
       <div
         id="extreme-home-mobile-menu"
-        className={`md:hidden bg-szn-bg border-t border-szn-border overflow-hidden transition-all duration-300 ease-in-out ${
+        className={`md:hidden bg-[var(--ink-50)] border-t border-[var(--ink-200)] overflow-hidden transition-all duration-300 ease-in-out ${
           mobileMenuOpen ? "max-h-[400px] opacity-100" : "max-h-0 opacity-0"
         }`}
       >
         <div className="px-4 py-4 space-y-3">
-          <Link href={`/${locale}/docs`} className="block py-2.5 text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">
+          <Link href={`/${locale}/docs`} className="block py-2.5 text-sm text-[var(--ink-600)] hover:text-[var(--ink-900)] transition-colors">
             {t.nav?.docs || "Docs"}
           </Link>
-          <Link href={`/${locale}/pricing`} className="block py-2.5 text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">
+          <Link href={`/${locale}/pricing`} className="block py-2.5 text-sm text-[var(--ink-600)] hover:text-[var(--ink-900)] transition-colors">
             {t.nav?.pricing || "Pricing"}
           </Link>
-          <Link href={`/${locale}/comparison`} className="block py-2.5 text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">
+          <Link href={`/${locale}/comparison`} className="block py-2.5 text-sm text-[var(--ink-600)] hover:text-[var(--ink-900)] transition-colors">
             {t.nav?.compare || "Compare"}
           </Link>
-          <Link href={`/${locale}/enterprise`} className="block py-2.5 text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">
+          <Link href={`/${locale}/enterprise`} className="block py-2.5 text-sm text-[var(--ink-600)] hover:text-[var(--ink-900)] transition-colors">
             {t.nav?.enterprise || "Enterprise"}
           </Link>
-          <a href="https://github.com/seizn-ai" target="_blank" rel="noopener noreferrer" className="block py-2.5 text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">
+          <a href="https://github.com/seizn-ai" target="_blank" rel="noopener noreferrer" className="block py-2.5 text-sm text-[var(--ink-600)] hover:text-[var(--ink-900)] transition-colors">
             {t.nav?.github || "GitHub"}
           </a>
-          <Link href="/status" className="block py-2.5 text-sm text-szn-text-2 hover:text-szn-text-1 transition-colors">
+          <Link href="/status" className="block py-2.5 text-sm text-[var(--ink-600)] hover:text-[var(--ink-900)] transition-colors">
             {t.nav?.status || "Status"}
           </Link>
-          <div className="pt-2 border-t border-szn-border">
+          <div className="pt-2 border-t border-[var(--ink-200)]">
             <LanguageSwitcher currentLocale={locale} />
           </div>
-          <Link href="/dashboard/keys" className="block w-full text-center bg-gradient-to-r from-szn-accent to-szn-accent-2 text-white py-3 rounded-full mt-3">
+          <Link href="/dashboard/keys" className="block w-full text-center bg-gradient-to-r from-[var(--ink-900)] to-[var(--ink-700)] text-white py-3 rounded-full mt-3">
             {t.nav?.getApiKey || "Get API Key"}
           </Link>
         </div>
@@ -599,7 +599,7 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
     <>
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-[70] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-gray-900 focus:text-white"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-[70] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-[var(--ink-900)] focus:text-white"
       >
         Skip to main content
       </a>
@@ -646,7 +646,7 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
           </div>
 
           {/* Dark overlay for text readability */}
-          <div className="absolute inset-0 bg-gradient-to-b from-szn-bg/60 via-szn-bg/40 to-szn-bg/80" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[var(--ink-50)]/60 via-szn-bg/40 to-[var(--ink-50)]/80" />
         </div>
 
         {/* Knowledge Graph Animation Layer */}
@@ -658,12 +658,12 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
         <div className="relative z-10 w-full pt-24 lg:pt-32 pb-16 lg:pb-24 px-4 sm:px-6">
           <div className="max-w-4xl mx-auto text-center space-y-8">
             {/* H1 - Category claim */}
-            <h1 className="text-[clamp(36px,4.5vw,60px)] font-semibold tracking-tight text-szn-text-1 leading-[1.08]">
+            <h1 className="text-[clamp(36px,4.5vw,60px)] font-semibold tracking-tight text-[var(--ink-900)] leading-[1.08]">
               {t.heroTitle || "The standard backend for agent runtime persistence."}
             </h1>
 
             {/* Subtitle - Value prop */}
-            <p className="text-lg lg:text-xl text-szn-text-2 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-lg lg:text-xl text-[var(--ink-600)] max-w-2xl mx-auto leading-relaxed">
               {t.heroSubtitle || "MCP server, checkpointer, and policy/trace layer\u2014one SDK to persist, govern, and observe every agent session."}
             </p>
 
@@ -672,7 +672,7 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
               <Link
                 href="/signup"
                 onClick={() => analytics.featureUsed("extreme_home_primary_cta_clicked", { target: "signup" })}
-                className="inline-flex items-center gap-2 px-7 py-3.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium rounded-xl hover:bg-gray-800 dark:hover:bg-gray-100 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+                className="inline-flex items-center gap-2 px-7 py-3.5 bg-[var(--ink-900)] dark:bg-white text-white dark:text-gray-900 font-medium rounded-xl hover:bg-[var(--ink-800)] dark:hover:bg-gray-100 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
               >
                 {t.ctaStart || "Start Building Free"}
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -681,7 +681,7 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
               </Link>
               <button
                 onClick={() => scrollToDemo("hero_cta")}
-                className="inline-flex items-center gap-2 px-7 py-3.5 bg-szn-card/80 backdrop-blur-sm text-szn-text-1 font-medium rounded-xl border border-szn-border/80 hover:border-szn-border hover:bg-szn-card transition-all"
+                className="inline-flex items-center gap-2 px-7 py-3.5 bg-[var(--ink-0)]/80 backdrop-blur-sm text-[var(--ink-900)] font-medium rounded-xl border border-[var(--ink-200)]/80 hover:border-[var(--ink-200)] hover:bg-[var(--ink-0)] transition-all"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
@@ -694,10 +694,10 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
             {/* Social Proof */}
             <div className={`flex items-center justify-center gap-2 pt-4 ${isHeroMotionReady ? "animate-fade-in-up animate-delay-400" : ""}`}>
               <span className="relative flex h-2.5 w-2.5">
-                <span className={`absolute inline-flex h-full w-full rounded-full bg-szn-accent opacity-75 ${isHeroMotionReady ? "animate-ping" : ""}`} />
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-szn-accent" />
+                <span className={`absolute inline-flex h-full w-full rounded-full bg-[var(--ink-900)] opacity-75 ${isHeroMotionReady ? "animate-ping" : ""}`} />
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[var(--ink-900)]" />
               </span>
-              <span className="text-sm text-szn-text-2">
+              <span className="text-sm text-[var(--ink-600)]">
                 {t.socialProof || "Built for game studios scaling from 10 to 10,000 NPCs."}
               </span>
             </div>
@@ -710,36 +710,36 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
         </div>
 
         {/* Bottom gradient fade into next section */}
-        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-szn-bg to-transparent z-10 pointer-events-none" />
+        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[var(--ink-50)] to-transparent z-10 pointer-events-none" />
       </section>
 
       {/* Playground Section - Visually distinct with subtle background */}
-      <section id="demo" className="py-16 px-4 sm:px-6 bg-gradient-to-b from-szn-bg/50 to-szn-bg">
+      <section id="demo" className="py-16 px-4 sm:px-6 bg-gradient-to-b from-[var(--ink-50)]/50 to-[var(--ink-50)]">
         <div className="max-w-7xl mx-auto">
           {/* Playground Header with Mode Toggle */}
           <div className="text-center mb-10">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-szn-surface text-xs font-medium text-szn-text-2 mb-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--ink-50)] text-xs font-medium text-[var(--ink-600)] mb-4">
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
               </svg>
               {t.liveDemo || "Live Demo"}
             </div>
-            <h2 className="text-3xl font-semibold text-szn-text-1 mb-2">
+            <h2 className="text-3xl font-semibold text-[var(--ink-900)] mb-2">
               <span className="theme-gradient-text">{t.playgroundTitle || "Playground"}</span>
             </h2>
-            <p className="text-szn-text-2 mb-6">
+            <p className="text-[var(--ink-600)] mb-6">
               {t.heroTagline || "Try the API live - no signup required"}
             </p>
 
             {/* Mode Toggle */}
             <div className="inline-flex items-center gap-2">
-              <div className="inline-flex items-center gap-1 p-1 bg-szn-surface rounded-xl">
+              <div className="inline-flex items-center gap-1 p-1 bg-[var(--ink-50)] rounded-xl">
                 <button
                   onClick={() => handleModeChange("mock")}
                   className={`px-4 py-1.5 text-sm font-medium rounded-lg transition-all ${
                     mode === "mock"
-                      ? "bg-szn-surface text-szn-text-1 shadow-sm"
-                      : "text-szn-text-2 hover:text-szn-text-1"
+                      ? "bg-[var(--ink-50)] text-[var(--ink-900)] shadow-sm"
+                      : "text-[var(--ink-600)] hover:text-[var(--ink-900)]"
                   }`}
                 >
                   Mock
@@ -748,21 +748,21 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
                   onClick={() => handleModeChange("real")}
                   className={`px-4 py-1.5 text-sm font-medium rounded-lg transition-all ${
                     mode === "real"
-                      ? "bg-szn-surface text-szn-text-1 shadow-sm"
-                      : "text-szn-text-2 hover:text-szn-text-1"
+                      ? "bg-[var(--ink-50)] text-[var(--ink-900)] shadow-sm"
+                      : "text-[var(--ink-600)] hover:text-[var(--ink-900)]"
                   }`}
                 >
                   Real API
                 </button>
               </div>
               {mode === "real" && (
-                <span className="text-xs text-amber-600 bg-amber-50 dark:bg-amber-900/20 px-2.5 py-1 rounded-full">
+                <span className="text-xs text-[var(--signal-pending-ink)] bg-[var(--signal-pending-soft)] dark:bg-[var(--signal-pending)]/20 px-2.5 py-1 rounded-full">
                   Rate limited
                 </span>
               )}
             </div>
             {rateLimitRetryAfter !== null && (
-              <p className="mt-2 text-xs text-amber-600 dark:text-amber-400">
+              <p className="mt-2 text-xs text-[var(--signal-pending-ink)] dark:text-[var(--signal-pending-soft)]">
                 {`Retry available in ${rateLimitRetryAfter}s`}
               </p>
             )}
@@ -772,22 +772,22 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
           {hasRun && (
             <div className="flex items-center justify-center gap-4 mb-6">
               <div className="flex items-center gap-2">
-                <div className="w-6 h-6 rounded-full bg-szn-accent/10 flex items-center justify-center">
-                  <CheckIcon className="w-4 h-4 text-szn-accent" />
+                <div className="w-6 h-6 rounded-full bg-[var(--ink-900)]/10 flex items-center justify-center">
+                  <CheckIcon className="w-4 h-4 text-[var(--ink-900)]" />
                 </div>
-                <span className="text-sm text-szn-text-2">{t.firstRetrievalComplete || "First retrieval complete"}</span>
+                <span className="text-sm text-[var(--ink-600)]">{t.firstRetrievalComplete || "First retrieval complete"}</span>
               </div>
-              <span className="text-szn-text-3">|</span>
-              <span className="text-sm text-szn-text-2">{t.copySnippetHint || "Copy the snippet below to reproduce"}</span>
+              <span className="text-[var(--ink-500)]">|</span>
+              <span className="text-sm text-[var(--ink-600)]">{t.copySnippetHint || "Copy the snippet below to reproduce"}</span>
             </div>
           )}
 
           {/* Live Console - Desktop */}
-          <div className="hidden md:block bg-szn-bg rounded-2xl p-6 border border-szn-border">
+          <div className="hidden md:block bg-[var(--ink-50)] rounded-2xl p-6 border border-[var(--ink-200)]">
             <div className="grid grid-cols-2 gap-6">
               {/* Left: Request Builder */}
-              <div className="bg-szn-card rounded-xl p-6 border border-szn-border">
-                <h3 className="text-sm font-medium text-szn-text-2 mb-4">{(t.requestBuilder as RequestBuilderTranslations)?.title || "Request Builder"}</h3>
+              <div className="bg-[var(--ink-0)] rounded-xl p-6 border border-[var(--ink-200)]">
+                <h3 className="text-sm font-medium text-[var(--ink-600)] mb-4">{(t.requestBuilder as RequestBuilderTranslations)?.title || "Request Builder"}</h3>
                 <RequestBuilder
                   config={config}
                   onConfigChange={setConfig}
@@ -798,7 +798,7 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
               </div>
 
               {/* Right: Results + Trace */}
-              <div className="bg-szn-card rounded-xl p-6 border border-szn-border flex flex-col min-h-[600px]">
+              <div className="bg-[var(--ink-0)] rounded-xl p-6 border border-[var(--ink-200)] flex flex-col min-h-[600px]">
                 {/* Tabs */}
                 <div className="flex items-center gap-2 mb-4">
                   <button
@@ -808,13 +808,13 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
                     }}
                     className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
                       activeTab === "results"
-                        ? "bg-szn-surface text-szn-text-1"
-                        : "text-szn-text-2 hover:text-szn-text-1"
+                        ? "bg-[var(--ink-50)] text-[var(--ink-900)]"
+                        : "text-[var(--ink-600)] hover:text-[var(--ink-900)]"
                     }`}
                   >
                     {t.tabs?.results || "Results"}
                     {results.length > 0 && (
-                      <span className="ml-2 text-xs bg-szn-surface text-szn-text-2 px-1.5 py-0.5 rounded-full">
+                      <span className="ml-2 text-xs bg-[var(--ink-50)] text-[var(--ink-600)] px-1.5 py-0.5 rounded-full">
                         {results.length}
                       </span>
                     )}
@@ -826,13 +826,13 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
                     }}
                     className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
                       activeTab === "trace"
-                        ? "bg-szn-surface text-szn-text-1"
-                        : "text-szn-text-2 hover:text-szn-text-1"
+                        ? "bg-[var(--ink-50)] text-[var(--ink-900)]"
+                        : "text-[var(--ink-600)] hover:text-[var(--ink-900)]"
                     }`}
                   >
                     {t.tabs?.trace || "Trace"}
                     {trace && (
-                      <span className="ml-2 text-xs bg-szn-accent/10 text-szn-accent px-1.5 py-0.5 rounded-full">
+                      <span className="ml-2 text-xs bg-[var(--ink-900)]/10 text-[var(--ink-900)] px-1.5 py-0.5 rounded-full">
                         {trace.totalLatencyMs.toFixed(0)}ms
                       </span>
                     )}
@@ -844,13 +844,13 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
                     }}
                     className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
                       activeTab === "cost"
-                        ? "bg-szn-surface text-szn-text-1"
-                        : "text-szn-text-2 hover:text-szn-text-1"
+                        ? "bg-[var(--ink-50)] text-[var(--ink-900)]"
+                        : "text-[var(--ink-600)] hover:text-[var(--ink-900)]"
                     }`}
                   >
                     {t.tabs?.cost || "Cost"}
                     {cost && (
-                      <span className="ml-2 text-xs bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 px-1.5 py-0.5 rounded-full">
+                      <span className="ml-2 text-xs bg-[var(--signal-pending-soft)] dark:bg-[var(--signal-pending)]/30 text-[var(--signal-pending-ink)] dark:text-[var(--signal-pending-soft)] px-1.5 py-0.5 rounded-full">
                         ${cost.total.toFixed(4)}
                       </span>
                     )}
@@ -905,7 +905,7 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
           </div>
 
           {/* Live Console - Mobile */}
-          <div className="md:hidden bg-szn-bg rounded-2xl p-4 border border-szn-border">
+          <div className="md:hidden bg-[var(--ink-50)] rounded-2xl p-4 border border-[var(--ink-200)]">
             {/* Mobile Tabs */}
             <div className="flex items-center gap-2 mb-4 overflow-x-auto" role="tablist" aria-label="Mobile demo console tabs">
               <button
@@ -915,8 +915,8 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
                 }}
                 className={`px-4 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition-colors ${
                   mobileConsoleTab === "request"
-                    ? "bg-szn-surface text-szn-text-1 shadow-sm"
-                    : "text-szn-text-2"
+                    ? "bg-[var(--ink-50)] text-[var(--ink-900)] shadow-sm"
+                    : "text-[var(--ink-600)]"
                 }`}
               >
                 {(t.requestBuilder as RequestBuilderTranslations)?.title || "Request"}
@@ -928,8 +928,8 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
                 }}
                 className={`px-4 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition-colors ${
                   mobileConsoleTab === "results"
-                    ? "bg-szn-surface text-szn-text-1 shadow-sm"
-                    : "text-szn-text-2"
+                    ? "bg-[var(--ink-50)] text-[var(--ink-900)] shadow-sm"
+                    : "text-[var(--ink-600)]"
                 }`}
               >
                 {t.tabs?.results || "Results"}
@@ -941,8 +941,8 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
                 }}
                 className={`px-4 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition-colors ${
                   mobileConsoleTab === "trace"
-                    ? "bg-szn-surface text-szn-text-1 shadow-sm"
-                    : "text-szn-text-2"
+                    ? "bg-[var(--ink-50)] text-[var(--ink-900)] shadow-sm"
+                    : "text-[var(--ink-600)]"
                 }`}
               >
                 {t.tabs?.trace || "Trace"}
@@ -954,15 +954,15 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
                 }}
                 className={`px-4 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition-colors ${
                   mobileConsoleTab === "cost"
-                    ? "bg-szn-surface text-szn-text-1 shadow-sm"
-                    : "text-szn-text-2"
+                    ? "bg-[var(--ink-50)] text-[var(--ink-900)] shadow-sm"
+                    : "text-[var(--ink-600)]"
                 }`}
               >
                 {t.tabs?.cost || "Cost"}
               </button>
             </div>
 
-            <div className="bg-szn-card rounded-xl p-4 border border-szn-border min-h-[400px]">
+            <div className="bg-[var(--ink-0)] rounded-xl p-4 border border-[var(--ink-200)] min-h-[400px]">
               {mobileConsoleTab === "request" && (
                 <RequestBuilder
                   config={config}
@@ -1010,13 +1010,13 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
       <section className="py-12 px-4 sm:px-6">
         <div className="max-w-4xl mx-auto szn-card rounded-2xl p-8">
           <div className="text-center mb-6">
-            <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-szn-surface mb-3">
-              <svg className="w-5 h-5 text-szn-text-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-[var(--ink-50)] mb-3">
+              <svg className="w-5 h-5 text-[var(--ink-600)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
               </svg>
             </div>
-            <h2 className="text-xl font-semibold text-szn-text-1 mb-2">{t.copySnippetTitle || "Copy this snippet"}</h2>
-            <p className="text-sm text-szn-text-2">
+            <h2 className="text-xl font-semibold text-[var(--ink-900)] mb-2">{t.copySnippetTitle || "Copy this snippet"}</h2>
+            <p className="text-sm text-[var(--ink-600)]">
               {t.copySnippetSubtitle || "Generated from your exact settings above"}
             </p>
           </div>
@@ -1033,8 +1033,8 @@ export function ExtremeHomepageClient({ messages, locale }: ExtremeHomepageClien
 
       {/* Share Trace Toast Notification */}
       {shareToastVisible && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-6 py-3 bg-gray-900 text-white rounded-xl shadow-lg flex items-center gap-3 animate-fade-in-up">
-          <svg className="w-5 h-5 text-szn-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-6 py-3 bg-[var(--ink-900)] text-white rounded-xl shadow-lg flex items-center gap-3 animate-fade-in-up">
+          <svg className="w-5 h-5 text-[var(--ink-900)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
           <span className="text-sm">Trace link copied to clipboard!</span>

@@ -36,39 +36,39 @@ function MetricCard({
 }: MetricCardProps) {
   if (loading) {
     return (
-      <div className="bg-szn-card rounded-xl border border-szn-border p-6 animate-pulse">
+      <div className="bg-[var(--ink-0)] rounded-xl border border-[var(--ink-200)] p-6 animate-pulse">
         <div className="flex items-start justify-between">
           <div className="space-y-3">
-            <div className="h-4 w-24 bg-szn-surface rounded" />
-            <div className="h-8 w-32 bg-szn-surface rounded" />
-            <div className="h-3 w-20 bg-szn-surface rounded" />
+            <div className="h-4 w-24 bg-[var(--ink-50)] rounded" />
+            <div className="h-8 w-32 bg-[var(--ink-50)] rounded" />
+            <div className="h-3 w-20 bg-[var(--ink-50)] rounded" />
           </div>
-          <div className="w-12 h-12 bg-szn-surface rounded-xl" />
+          <div className="w-12 h-12 bg-[var(--ink-50)] rounded-xl" />
         </div>
       </div>
     );
   }
 
   return (
-    <div className="bg-szn-card rounded-xl border border-szn-border p-6 hover:shadow-md transition-shadow">
+    <div className="bg-[var(--ink-0)] rounded-xl border border-[var(--ink-200)] p-6 hover:shadow-md transition-shadow">
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-sm font-medium text-szn-text-2">{title}</p>
-          <p className="text-2xl font-bold text-szn-text-1 mt-1">{value}</p>
+          <p className="text-sm font-medium text-[var(--ink-600)]">{title}</p>
+          <p className="text-2xl font-bold text-[var(--ink-900)] mt-1">{value}</p>
           {subtitle && (
-            <p className="text-sm text-szn-text-2 mt-1">{subtitle}</p>
+            <p className="text-sm text-[var(--ink-600)] mt-1">{subtitle}</p>
           )}
           {trend && (
             <div className="flex items-center mt-2">
               <span
                 className={`text-sm font-medium ${
-                  trend.isPositive ? "text-green-600" : "text-red-600"
+                  trend.isPositive ? "text-[var(--signal-canon-ink)]" : "text-[var(--signal-conflict-ink)]"
                 }`}
               >
                 {trend.isPositive ? "+" : ""}
                 {trend.value.toFixed(1)}%
               </span>
-              <span className="text-xs text-szn-text-2 ml-2">vs last period</span>
+              <span className="text-xs text-[var(--ink-600)] ml-2">vs last period</span>
             </div>
           )}
         </div>
@@ -103,8 +103,8 @@ export function MetricsOverview({ metrics, loading }: MetricsOverviewProps) {
       value: `${p99Latency}ms`,
       subtitle: `P50: ${p50Latency}ms`,
       trend: p99Latency > 500 ? { value: -10, isPositive: false } : undefined,
-      icon: <ClockIcon className="w-6 h-6 text-purple-600" />,
-      colorClass: "bg-purple-100",
+      icon: <ClockIcon className="w-6 h-6 text-[var(--ink-900)] underline" />,
+      colorClass: "bg-[var(--ink-100)]",
       loading,
     },
     {
@@ -112,8 +112,8 @@ export function MetricsOverview({ metrics, loading }: MetricsOverviewProps) {
       value: `${cacheHitRate.toFixed(1)}%`,
       subtitle: `${metrics?.cache?.hits ?? 0} hits`,
       trend: cacheHitRate > 0 ? { value: cacheHitRate > 70 ? 5 : -3, isPositive: cacheHitRate > 70 } : undefined,
-      icon: <CacheIcon className="w-6 h-6 text-green-600" />,
-      colorClass: "bg-green-100",
+      icon: <CacheIcon className="w-6 h-6 text-[var(--signal-canon-ink)]" />,
+      colorClass: "bg-[var(--signal-canon-soft)]",
       loading,
     },
     {
@@ -121,24 +121,24 @@ export function MetricsOverview({ metrics, loading }: MetricsOverviewProps) {
       value: `${errorRate.toFixed(2)}%`,
       subtitle: `${metrics?.errors?.total ?? 0} errors`,
       trend: errorRate > 0 ? { value: -errorRate, isPositive: errorRate < 1 } : undefined,
-      icon: <ErrorIcon className="w-6 h-6 text-red-600" />,
-      colorClass: errorRate > 5 ? "bg-red-100" : "bg-szn-surface",
+      icon: <ErrorIcon className="w-6 h-6 text-[var(--signal-conflict-ink)]" />,
+      colorClass: errorRate > 5 ? "bg-[var(--signal-conflict-soft)]" : "bg-[var(--ink-50)]",
       loading,
     },
     {
       title: "Search Quality (MRR)",
       value: `${mrr.toFixed(1)}%`,
       subtitle: `nDCG: ${ndcg.toFixed(1)}%`,
-      icon: <QualityIcon className="w-6 h-6 text-amber-600" />,
-      colorClass: "bg-amber-100",
+      icon: <QualityIcon className="w-6 h-6 text-[var(--signal-pending-ink)]" />,
+      colorClass: "bg-[var(--signal-pending-soft)]",
       loading,
     },
     {
       title: "Groundedness",
       value: `${((metrics?.quality?.groundedness ?? 0) * 100).toFixed(1)}%`,
       subtitle: "RAG response quality",
-      icon: <ShieldIcon className="w-6 h-6 text-szn-accent" />,
-      colorClass: "bg-szn-accent/10",
+      icon: <ShieldIcon className="w-6 h-6 text-[var(--ink-900)]" />,
+      colorClass: "bg-[var(--ink-900)]/10",
       loading,
     },
   ];

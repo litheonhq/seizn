@@ -30,8 +30,8 @@ const CATEGORY_CONFIG: Record<
   generation: {
     icon: <SparklesIcon className="w-4 h-4" />,
     label: "Generation",
-    bgColor: "bg-purple-50",
-    textColor: "text-purple-700",
+    bgColor: "bg-[var(--ink-50)]",
+    textColor: "text-[var(--ink-900)] underline",
   },
   configuration: {
     icon: <CogIcon className="w-4 h-4" />,
@@ -42,8 +42,8 @@ const CATEGORY_CONFIG: Record<
   data: {
     icon: <DatabaseIcon className="w-4 h-4" />,
     label: "Data",
-    bgColor: "bg-green-50",
-    textColor: "text-green-700",
+    bgColor: "bg-[var(--signal-canon-soft)]",
+    textColor: "text-[var(--signal-canon-ink)]",
   },
   infrastructure: {
     icon: <ServerIcon className="w-4 h-4" />,
@@ -181,7 +181,7 @@ function RCACandidateCard({
             <div
               className={`h-full rounded-full transition-all ${
                 confidencePercent >= 70
-                  ? "bg-green-500"
+                  ? "bg-[var(--signal-canon)]"
                   : confidencePercent >= 40
                   ? "bg-yellow-500"
                   : "bg-gray-400"
@@ -219,7 +219,7 @@ function RCACandidateCard({
       {/* Fix Suggestion */}
       <div className="p-3 bg-gray-50 rounded-lg">
         <div className="flex items-start gap-2">
-          <LightbulbIcon className="w-4 h-4 text-yellow-500 flex-shrink-0 mt-0.5" />
+          <LightbulbIcon className="w-4 h-4 text-[var(--signal-pending-ink)] flex-shrink-0 mt-0.5" />
           <div className="flex-1">
             <p className="text-xs font-medium text-gray-700 mb-1">
               Suggested Fix

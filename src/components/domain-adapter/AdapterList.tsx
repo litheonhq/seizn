@@ -126,7 +126,7 @@ export function AdapterList({ onSelect, onTrain, onDelete }: AdapterListProps) {
 
   if (error) {
     return (
-      <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700">
+      <div className="bg-[var(--signal-conflict-soft)] border border-[var(--signal-conflict)] rounded-lg p-4 text-[var(--signal-conflict-ink)]">
         <p className="font-medium">Error loading adapters</p>
         <p className="text-sm mt-1">{error}</p>
         <button
@@ -202,10 +202,10 @@ function StatsSummary({ stats }: { stats: AdapterStats }) {
   return (
     <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
       <StatCard label="Total" value={stats.total} colorClass="bg-gray-100" />
-      <StatCard label="Ready" value={stats.ready} colorClass="bg-green-100" />
+      <StatCard label="Ready" value={stats.ready} colorClass="bg-[var(--signal-canon-soft)]" />
       <StatCard label="Training" value={stats.training} colorClass="bg-blue-100" />
       <StatCard label="Untrained" value={stats.untrained} colorClass="bg-gray-100" />
-      <StatCard label="Signals" value={stats.totalSignals} colorClass="bg-purple-100" />
+      <StatCard label="Signals" value={stats.totalSignals} colorClass="bg-[var(--ink-100)]" />
     </div>
   );
 }
@@ -301,7 +301,7 @@ function AdapterCard({
             e.stopPropagation();
             onDelete(adapter.id);
           }}
-          className="px-3 py-2 text-sm font-medium text-red-600 border border-red-200 rounded-lg hover:bg-red-50"
+          className="px-3 py-2 text-sm font-medium text-[var(--signal-conflict-ink)] border border-[var(--signal-conflict)] rounded-lg hover:bg-[var(--signal-conflict-soft)]"
         >
           <TrashIcon className="w-4 h-4" />
         </button>

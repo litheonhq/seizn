@@ -69,9 +69,9 @@ function QueryRow({ query, rank }: { query: TopQuery; rank: number }) {
       : "bad";
 
   const latencyStatusColors = {
-    good: "text-green-600 bg-green-50",
-    warn: "text-yellow-600 bg-yellow-50",
-    bad: "text-red-600 bg-red-50",
+    good: "text-[var(--signal-canon-ink)] bg-[var(--signal-canon-soft)]",
+    warn: "text-[var(--signal-pending-ink)] bg-[var(--signal-pending-soft)]",
+    bad: "text-[var(--signal-conflict-ink)] bg-[var(--signal-conflict-soft)]",
   };
 
   const cacheStatus =
@@ -82,9 +82,9 @@ function QueryRow({ query, rank }: { query: TopQuery; rank: number }) {
       : "bad";
 
   const cacheStatusColors = {
-    good: "text-green-600",
-    warn: "text-yellow-600",
-    bad: "text-red-600",
+    good: "text-[var(--signal-canon-ink)]",
+    warn: "text-[var(--signal-pending-ink)]",
+    bad: "text-[var(--signal-conflict-ink)]",
   };
 
   return (

@@ -142,15 +142,15 @@ const FEATURES: {
     key: "semantic-memory",
     icon: DatabaseIcon,
     badgeColor: "emerald",
-    gradient: "from-szn-accent to-szn-accent-2",
-    iconBg: "bg-szn-accent/10",
-    iconColor: "text-szn-accent",
+    gradient: "from-[var(--ink-900)] to-[var(--ink-700)]",
+    iconBg: "bg-[var(--ink-900)]/10",
+    iconColor: "text-[var(--ink-900)]",
   },
   {
     key: "finops",
     icon: AutopilotIcon,
     badgeColor: "blue",
-    gradient: "from-blue-400 to-cyan-500",
+    gradient: "from-[var(--ink-900)] to-[var(--ink-900)]",
     iconBg: "bg-blue-100 dark:bg-blue-900/30",
     iconColor: "text-blue-600 dark:text-blue-400",
   },
@@ -158,7 +158,7 @@ const FEATURES: {
     key: "compliance",
     icon: ComplianceIcon,
     badgeColor: "indigo",
-    gradient: "from-indigo-400 to-indigo-600",
+    gradient: "from-[var(--ink-900)] to-[var(--ink-900)]",
     iconBg: "bg-indigo-100 dark:bg-indigo-900/30",
     iconColor: "text-indigo-600 dark:text-indigo-400",
   },
@@ -166,9 +166,9 @@ const FEATURES: {
     key: "observability",
     icon: TracingIcon,
     badgeColor: "purple",
-    gradient: "from-purple-400 to-purple-600",
-    iconBg: "bg-purple-100 dark:bg-purple-900/30",
-    iconColor: "text-purple-600 dark:text-purple-400",
+    gradient: "from-[var(--ink-900)] to-[var(--ink-900)]",
+    iconBg: "bg-[var(--ink-100)] dark:bg-[var(--ink-900)]/30",
+    iconColor: "text-[var(--ink-900)] underline dark:text-[var(--ink-700)]",
   },
   {
     key: "policy-engine",
@@ -183,18 +183,18 @@ const FEATURES: {
     icon: LessGlueIcon,
     badgeColor: "amber",
     gradient: "from-amber-400 to-amber-600",
-    iconBg: "bg-amber-100 dark:bg-amber-900/30",
-    iconColor: "text-amber-600 dark:text-amber-400",
+    iconBg: "bg-[var(--signal-pending-soft)] dark:bg-[var(--signal-pending)]/30",
+    iconColor: "text-[var(--signal-pending-ink)] dark:text-[var(--signal-pending-soft)]",
   },
 ];
 
 const BADGE_COLORS: Record<string, string> = {
-  emerald: "bg-szn-accent/10 text-szn-accent",
+  emerald: "bg-[var(--ink-900)]/10 text-[var(--ink-900)]",
   rose: "bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-400",
-  purple: "bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400",
+  purple: "bg-[var(--ink-100)] dark:bg-[var(--ink-900)]/30 text-[var(--ink-900)] underline dark:text-[var(--ink-700)]",
   blue: "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400",
   indigo: "bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400",
-  amber: "bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400",
+  amber: "bg-[var(--signal-pending-soft)] dark:bg-[var(--signal-pending)]/30 text-[var(--signal-pending-ink)] dark:text-[var(--signal-pending-soft)]",
 };
 
 function getSectionCopy(locale: Locale) {
@@ -204,17 +204,17 @@ function getSectionCopy(locale: Locale) {
 function FeatureShowcase({ locale }: { locale: Locale }) {
   const copy = getSectionCopy(locale);
   return (
-    <section className="py-20 px-4 sm:px-6 bg-szn-bg/80">
+    <section className="py-20 px-4 sm:px-6 bg-[var(--ink-50)]/80">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-14">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-szn-surface text-xs font-medium text-szn-text-2 mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--ink-50)] text-xs font-medium text-[var(--ink-600)] mb-4">
             <AutopilotIcon className="w-3.5 h-3.5" />
             {copy.platformCapabilities}
           </div>
-          <h2 className="text-3xl font-semibold text-szn-text-1 mb-4">
+          <h2 className="text-3xl font-semibold text-[var(--ink-900)] mb-4">
             {copy.platformTitle}
           </h2>
-          <p className="text-szn-text-2 max-w-2xl mx-auto">
+          <p className="text-[var(--ink-600)] max-w-2xl mx-auto">
             {copy.platformSubtitle}
           </p>
         </div>
@@ -229,8 +229,8 @@ function FeatureShowcase({ locale }: { locale: Locale }) {
                 <div className={`w-12 h-12 ${f.iconBg} rounded-xl flex items-center justify-center mb-4`}>
                   <Icon className={`w-6 h-6 ${f.iconColor}`} />
                 </div>
-                <h3 className="text-lg font-semibold text-szn-text-1 mb-2">{content.title}</h3>
-                <p className="text-szn-text-2 text-sm leading-relaxed">{content.desc}</p>
+                <h3 className="text-lg font-semibold text-[var(--ink-900)] mb-2">{content.title}</h3>
+                <p className="text-[var(--ink-600)] text-sm leading-relaxed">{content.desc}</p>
                 <div className="mt-4">
                   <span className={`text-xs font-medium px-3 py-1 rounded-full ${BADGE_COLORS[f.badgeColor]}`}>{content.badge}</span>
                 </div>
@@ -309,17 +309,17 @@ const MCP_FEATURES: {
 function MCPDeveloperTools({ locale }: { locale: Locale }) {
   const copy = getSectionCopy(locale);
   return (
-    <section className="py-20 px-4 sm:px-6 bg-gradient-to-b from-szn-surface to-szn-bg">
+    <section className="py-20 px-4 sm:px-6 bg-gradient-to-b from-[var(--ink-50)] to-[var(--ink-50)]">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-14">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-szn-accent/10 text-xs font-medium text-szn-accent mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--ink-900)]/10 text-xs font-medium text-[var(--ink-900)] mb-4">
             <TerminalIcon className="w-3.5 h-3.5" />
             {copy.mcpTools}
           </div>
-          <h2 className="text-3xl font-semibold text-szn-text-1 mb-4">
+          <h2 className="text-3xl font-semibold text-[var(--ink-900)] mb-4">
             {copy.mcpTitle}
           </h2>
-          <p className="text-szn-text-2 max-w-2xl mx-auto">
+          <p className="text-[var(--ink-600)] max-w-2xl mx-auto">
             {copy.mcpSubtitle}
           </p>
         </div>
@@ -330,15 +330,15 @@ function MCPDeveloperTools({ locale }: { locale: Locale }) {
             const content = getMCPFeatureContent(locale, f.key);
             return (
               <div key={f.key} className="szn-card szn-card-hover rounded-2xl p-6 overflow-hidden relative">
-                <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-szn-accent to-szn-accent-2" />
-                <div className="w-12 h-12 bg-szn-accent/10 rounded-xl flex items-center justify-center mb-4">
-                  <Icon className="w-6 h-6 text-szn-accent" />
+                <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[var(--ink-900)] to-[var(--ink-700)]" />
+                <div className="w-12 h-12 bg-[var(--ink-900)]/10 rounded-xl flex items-center justify-center mb-4">
+                  <Icon className="w-6 h-6 text-[var(--ink-900)]" />
                 </div>
-                <h3 className="text-lg font-semibold text-szn-text-1 mb-2">{content.title}</h3>
-                <p className="text-szn-text-2 text-sm leading-relaxed mb-4">{content.desc}</p>
+                <h3 className="text-lg font-semibold text-[var(--ink-900)] mb-2">{content.title}</h3>
+                <p className="text-[var(--ink-600)] text-sm leading-relaxed mb-4">{content.desc}</p>
                 <div className="flex flex-wrap gap-1.5">
                   {f.editors.map((e) => (
-                    <span key={e} className="text-xs font-medium px-2 py-0.5 rounded bg-szn-surface text-szn-text-1">{e}</span>
+                    <span key={e} className="text-xs font-medium px-2 py-0.5 rounded bg-[var(--ink-50)] text-[var(--ink-900)]">{e}</span>
                   ))}
                 </div>
               </div>
@@ -350,14 +350,14 @@ function MCPDeveloperTools({ locale }: { locale: Locale }) {
         <div className="mt-10 text-center">
           <Link
             href={`/${locale}/docs/integrations`}
-            className="inline-flex items-center gap-2 px-6 py-3 bg-szn-accent hover:bg-szn-accent/90 text-white font-medium rounded-full transition-colors"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--ink-900)] hover:bg-[var(--ink-900)]/90 text-white font-medium rounded-full transition-colors"
           >
             {copy.setupMcp}
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
             </svg>
           </Link>
-          <p className="mt-3 text-sm text-szn-text-2">
+          <p className="mt-3 text-sm text-[var(--ink-600)]">
             {copy.mcpHint}
           </p>
         </div>
@@ -386,12 +386,12 @@ const TRUST_ITEMS: {
 ];
 
 const TRUST_ICON_STYLES: Record<string, { bg: string; text: string }> = {
-  emerald: { bg: "bg-szn-accent/10", text: "text-szn-accent" },
+  emerald: { bg: "bg-[var(--ink-900)]/10", text: "text-[var(--ink-900)]" },
   rose: { bg: "bg-rose-100 dark:bg-rose-900/30", text: "text-rose-600 dark:text-rose-400" },
   blue: { bg: "bg-blue-100 dark:bg-blue-900/30", text: "text-blue-600 dark:text-blue-400" },
-  purple: { bg: "bg-purple-100 dark:bg-purple-900/30", text: "text-purple-600 dark:text-purple-400" },
+  purple: { bg: "bg-[var(--ink-100)] dark:bg-[var(--ink-900)]/30", text: "text-[var(--ink-900)] underline dark:text-[var(--ink-700)]" },
   indigo: { bg: "bg-indigo-100 dark:bg-indigo-900/30", text: "text-indigo-600 dark:text-indigo-400" },
-  amber: { bg: "bg-amber-100 dark:bg-amber-900/30", text: "text-amber-600 dark:text-amber-400" },
+  amber: { bg: "bg-[var(--signal-pending-soft)] dark:bg-[var(--signal-pending)]/30", text: "text-[var(--signal-pending-ink)] dark:text-[var(--signal-pending-soft)]" },
 };
 
 function TrustAndCompliance({ locale }: { locale: Locale }) {
@@ -400,10 +400,10 @@ function TrustAndCompliance({ locale }: { locale: Locale }) {
     <section className="py-16 px-4 sm:px-6">
       <div className="max-w-5xl mx-auto">
         <div className="text-center mb-10">
-          <h2 className="text-2xl font-semibold text-szn-text-1 mb-2">
+          <h2 className="text-2xl font-semibold text-[var(--ink-900)] mb-2">
             {copy.trustTitle}
           </h2>
-          <p className="text-sm text-szn-text-2">
+          <p className="text-sm text-[var(--ink-600)]">
             {copy.trustSubtitle}
           </p>
         </div>
@@ -418,8 +418,8 @@ function TrustAndCompliance({ locale }: { locale: Locale }) {
                 <div className={`w-10 h-10 rounded-full ${style.bg} flex items-center justify-center mx-auto mb-3`}>
                   <Icon className={`w-5 h-5 ${style.text}`} />
                 </div>
-                <div className="font-medium text-sm text-szn-text-1">{content.title}</div>
-                <div className="text-xs text-szn-text-2 mt-1">{content.desc}</div>
+                <div className="font-medium text-sm text-[var(--ink-900)]">{content.title}</div>
+                <div className="text-xs text-[var(--ink-600)] mt-1">{content.desc}</div>
               </div>
             );
           })}
@@ -438,7 +438,7 @@ function PricingCTA({ locale, t }: { locale: Locale; t: Dictionary }) {
   return (
     <section className="py-20 px-4 sm:px-6 bg-[#0B1220] text-[#EAF0FF] relative overflow-hidden">
       {/* Radial glow accent */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-szn-accent/10 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-[var(--ink-900)]/10 rounded-full blur-[120px] pointer-events-none" />
       <div className="max-w-4xl mx-auto text-center relative">
         <h2 className="text-3xl sm:text-4xl font-semibold mb-4">
           {t.extremeHome?.pricingCta?.title || copy.pricingTitle}
@@ -449,7 +449,7 @@ function PricingCTA({ locale, t }: { locale: Locale; t: Dictionary }) {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <Link
             href={`/${locale}/pricing`}
-            className="px-8 py-3.5 bg-gradient-to-r from-szn-accent to-szn-accent-2 text-white font-medium rounded-full hover:-translate-y-0.5 transition-all shadow-lg shadow-szn-accent/25 hover:shadow-xl hover:shadow-szn-accent/30"
+            className="px-8 py-3.5 bg-gradient-to-r from-[var(--ink-900)] to-[var(--ink-700)] text-white font-medium rounded-full hover:-translate-y-0.5 transition-all shadow-lg shadow-[var(--ink-900)]/25 hover:shadow-xl hover:shadow-[var(--ink-900)]/30"
           >
             {t.extremeHome?.pricingCta?.viewPricing || "See Plans & Pricing"}
           </Link>
@@ -487,34 +487,34 @@ function Footer({ locale, t }: { locale: Locale; t: Dictionary }) {
               <span aria-label="Seizn" className="w-6 h-6 inline-flex items-center justify-center">
                 <SeiznMark size={24} color="var(--ink-900)" />
               </span>
-              <span className="font-semibold text-szn-text-1">Seizn</span>
+              <span className="font-semibold text-[var(--ink-900)]">Seizn</span>
             </Link>
-            <p className="text-sm text-szn-text-2 leading-relaxed">
+            <p className="text-sm text-[var(--ink-600)] leading-relaxed">
               {copy.footerTagline}
             </p>
           </div>
 
           {/* Product */}
           <div>
-            <h4 className="text-xs font-semibold text-szn-text-1 uppercase tracking-wider mb-3">{copy.productLabel}</h4>
+            <h4 className="text-xs font-semibold text-[var(--ink-900)] uppercase tracking-wider mb-3">{copy.productLabel}</h4>
             <ul className="space-y-2.5">
-              <li><Link href={`/${locale}/docs`} className="text-sm text-szn-text-2 hover:text-[color:var(--theme-primary)] transition-colors">{t.extremeHome?.nav?.docs || "Docs"}</Link></li>
-              <li><Link href={`/${locale}/pricing`} className="text-sm text-szn-text-2 hover:text-[color:var(--theme-primary)] transition-colors">{t.extremeHome?.nav?.pricing || "Pricing"}</Link></li>
-              <li><Link href={`/${locale}/comparison`} className="text-sm text-szn-text-2 hover:text-[color:var(--theme-primary)] transition-colors">{t.extremeHome?.nav?.compare || copy.compareLabel}</Link></li>
-              <li><Link href={`/${locale}/docs/limits`} className="text-sm text-szn-text-2 hover:text-[color:var(--theme-primary)] transition-colors">{t.extremeHome?.nav?.limits || "Limits"}</Link></li>
-              <li><Link href={`/${locale}/docs/integrations`} className="text-sm text-szn-text-2 hover:text-[color:var(--theme-primary)] transition-colors">{copy.mcpServerLabel}</Link></li>
-              <li><Link href="/status" className="text-sm text-szn-text-2 hover:text-[color:var(--theme-primary)] transition-colors">{t.extremeHome?.nav?.status || "Status"}</Link></li>
+              <li><Link href={`/${locale}/docs`} className="text-sm text-[var(--ink-600)] hover:text-[color:var(--theme-primary)] transition-colors">{t.extremeHome?.nav?.docs || "Docs"}</Link></li>
+              <li><Link href={`/${locale}/pricing`} className="text-sm text-[var(--ink-600)] hover:text-[color:var(--theme-primary)] transition-colors">{t.extremeHome?.nav?.pricing || "Pricing"}</Link></li>
+              <li><Link href={`/${locale}/comparison`} className="text-sm text-[var(--ink-600)] hover:text-[color:var(--theme-primary)] transition-colors">{t.extremeHome?.nav?.compare || copy.compareLabel}</Link></li>
+              <li><Link href={`/${locale}/docs/limits`} className="text-sm text-[var(--ink-600)] hover:text-[color:var(--theme-primary)] transition-colors">{t.extremeHome?.nav?.limits || "Limits"}</Link></li>
+              <li><Link href={`/${locale}/docs/integrations`} className="text-sm text-[var(--ink-600)] hover:text-[color:var(--theme-primary)] transition-colors">{copy.mcpServerLabel}</Link></li>
+              <li><Link href="/status" className="text-sm text-[var(--ink-600)] hover:text-[color:var(--theme-primary)] transition-colors">{t.extremeHome?.nav?.status || "Status"}</Link></li>
             </ul>
           </div>
 
           {/* Resources */}
           <div>
-            <h4 className="text-xs font-semibold text-szn-text-1 uppercase tracking-wider mb-3">{copy.resourcesLabel}</h4>
+            <h4 className="text-xs font-semibold text-[var(--ink-900)] uppercase tracking-wider mb-3">{copy.resourcesLabel}</h4>
             <ul className="space-y-2.5">
-              <li><Link href={`/${locale}/help`} className="text-sm text-szn-text-2 hover:text-[color:var(--theme-primary)] transition-colors">{t.extremeHome?.nav?.help || "Help"}</Link></li>
-              <li><Link href={`/${locale}/enterprise`} className="text-sm text-szn-text-2 hover:text-[color:var(--theme-primary)] transition-colors">{t.extremeHome?.nav?.enterprise || "Enterprise"}</Link></li>
+              <li><Link href={`/${locale}/help`} className="text-sm text-[var(--ink-600)] hover:text-[color:var(--theme-primary)] transition-colors">{t.extremeHome?.nav?.help || "Help"}</Link></li>
+              <li><Link href={`/${locale}/enterprise`} className="text-sm text-[var(--ink-600)] hover:text-[color:var(--theme-primary)] transition-colors">{t.extremeHome?.nav?.enterprise || "Enterprise"}</Link></li>
               <li>
-                <a href="https://github.com/seizn-ai" target="_blank" rel="noopener noreferrer" className="text-sm text-szn-text-2 hover:text-[color:var(--theme-primary)] transition-colors inline-flex items-center gap-1.5">
+                <a href="https://github.com/seizn-ai" target="_blank" rel="noopener noreferrer" className="text-sm text-[var(--ink-600)] hover:text-[color:var(--theme-primary)] transition-colors inline-flex items-center gap-1.5">
                   <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" /></svg>
                   {copy.githubLabel}
                 </a>
@@ -524,18 +524,18 @@ function Footer({ locale, t }: { locale: Locale; t: Dictionary }) {
 
           {/* Legal */}
           <div>
-            <h4 className="text-xs font-semibold text-szn-text-1 uppercase tracking-wider mb-3">{copy.legalLabel}</h4>
+            <h4 className="text-xs font-semibold text-[var(--ink-900)] uppercase tracking-wider mb-3">{copy.legalLabel}</h4>
             <ul className="space-y-2.5">
-              <li><Link href="/terms" className="text-sm text-szn-text-2 hover:text-[color:var(--theme-primary)] transition-colors">{t.footer?.terms || "Terms"}</Link></li>
-              <li><Link href="/privacy" className="text-sm text-szn-text-2 hover:text-[color:var(--theme-primary)] transition-colors">{t.footer?.privacy || "Privacy"}</Link></li>
-              <li><Link href="/refund" className="text-sm text-szn-text-2 hover:text-[color:var(--theme-primary)] transition-colors">{t.footer?.contact || "Refund"}</Link></li>
+              <li><Link href="/terms" className="text-sm text-[var(--ink-600)] hover:text-[color:var(--theme-primary)] transition-colors">{t.footer?.terms || "Terms"}</Link></li>
+              <li><Link href="/privacy" className="text-sm text-[var(--ink-600)] hover:text-[color:var(--theme-primary)] transition-colors">{t.footer?.privacy || "Privacy"}</Link></li>
+              <li><Link href="/refund" className="text-sm text-[var(--ink-600)] hover:text-[color:var(--theme-primary)] transition-colors">{t.footer?.contact || "Refund"}</Link></li>
             </ul>
           </div>
         </div>
 
         {/* Bottom bar */}
-        <div className="pt-6 border-t border-szn-border">
-          <div className="text-sm text-szn-text-3 text-center">
+        <div className="pt-6 border-t border-[var(--ink-200)]">
+          <div className="text-sm text-[var(--ink-500)] text-center">
             {t.footer?.copyright?.replace('{year}', new Date().getFullYear().toString()) || `\u00A9 ${new Date().getFullYear()} Seizn. All rights reserved.`}
           </div>
         </div>
@@ -555,7 +555,7 @@ interface ExtremeHomepageProps {
 
 export function ExtremeHomepage({ dict, locale }: ExtremeHomepageProps) {
   return (
-    <div className="min-h-screen bg-szn-bg">
+    <div className="min-h-screen bg-[var(--ink-50)]">
       <ExtremeHomepageClient messages={dict.extremeHome} locale={locale} />
       <FeatureShowcase locale={locale} />
       <MCPDeveloperTools locale={locale} />

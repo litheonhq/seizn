@@ -22,13 +22,13 @@ interface StructureViewerProps {
 const dataTypeColors: Record<CellDataType, string> = {
   text: "bg-gray-100 text-gray-600",
   number: "bg-blue-100 text-blue-600",
-  date: "bg-purple-100 text-purple-600",
-  currency: "bg-green-100 text-green-600",
+  date: "bg-[var(--ink-100)] text-[var(--ink-900)] underline",
+  currency: "bg-[var(--signal-canon-soft)] text-[var(--signal-canon-ink)]",
   percentage: "bg-orange-100 text-orange-600",
   boolean: "bg-rose-100 text-rose-600",
-  email: "bg-cyan-100 text-cyan-600",
+  email: "bg-[var(--ink-100)] text-[var(--ink-900)]",
   url: "bg-indigo-100 text-indigo-600",
-  phone: "bg-yellow-100 text-yellow-600",
+  phone: "bg-[var(--signal-pending-soft)] text-[var(--signal-pending-ink)]",
   unknown: "bg-gray-100 text-gray-400",
 };
 
@@ -300,7 +300,7 @@ function SchemaView({
             {field.type}
           </span>
           {field.required && (
-            <span className="px-2 py-0.5 rounded text-xs bg-red-100 text-red-600">required</span>
+            <span className="px-2 py-0.5 rounded text-xs bg-[var(--signal-conflict-soft)] text-[var(--signal-conflict-ink)]">required</span>
           )}
           {field.description && (
             <span className="text-xs text-gray-500">{field.description}</span>
@@ -356,7 +356,7 @@ function CellValue({
   if (dataType === "boolean") {
     const boolValue = value === true || value === "true" || value === "yes" || value === "1";
     return (
-      <span className={boolValue ? "text-green-600" : "text-red-600"}>
+      <span className={boolValue ? "text-[var(--signal-canon-ink)]" : "text-[var(--signal-conflict-ink)]"}>
         {boolValue ? "Yes" : "No"}
       </span>
     );
@@ -382,7 +382,7 @@ function StructureTypeIcon({ type }: { type: string }) {
       </svg>
     ),
     list: (
-      <svg className="w-5 h-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <svg className="w-5 h-5 text-[var(--signal-canon-ink)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -392,7 +392,7 @@ function StructureTypeIcon({ type }: { type: string }) {
       </svg>
     ),
     key_value: (
-      <svg className="w-5 h-5 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <svg className="w-5 h-5 text-[var(--ink-700)] underline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -412,7 +412,7 @@ function StructureTypeIcon({ type }: { type: string }) {
       </svg>
     ),
     schema: (
-      <svg className="w-5 h-5 text-cyan-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <svg className="w-5 h-5 text-[var(--ink-900)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -429,10 +429,10 @@ function StructureTypeIcon({ type }: { type: string }) {
 function StructureTypeBadge({ type }: { type: string }) {
   const colors: Record<string, string> = {
     table: "bg-blue-100 text-blue-700",
-    list: "bg-green-100 text-green-700",
-    key_value: "bg-purple-100 text-purple-700",
+    list: "bg-[var(--signal-canon-soft)] text-[var(--signal-canon-ink)]",
+    key_value: "bg-[var(--ink-100)] text-[var(--ink-900)] underline",
     hierarchy: "bg-orange-100 text-orange-700",
-    schema: "bg-cyan-100 text-cyan-700",
+    schema: "bg-[var(--ink-100)] text-[var(--ink-900)]",
   };
 
   return (

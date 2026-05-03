@@ -25,7 +25,7 @@ interface ResultsPanelProps {
 export function ResultsPanel({ results, isLoading, showRerankDelta, translations: t }: ResultsPanelProps) {
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center h-full min-h-[400px] text-szn-text-3">
+      <div className="flex flex-col items-center justify-center h-full min-h-[400px] text-[var(--ink-500)]">
         <svg className="animate-spin w-8 h-8 mb-4" viewBox="0 0 24 24" fill="none">
           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
@@ -37,7 +37,7 @@ export function ResultsPanel({ results, isLoading, showRerankDelta, translations
 
   if (results.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center h-full min-h-[400px] text-szn-text-3">
+      <div className="flex flex-col items-center justify-center h-full min-h-[400px] text-[var(--ink-500)]">
         <svg className="w-12 h-12 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
         </svg>
@@ -75,27 +75,27 @@ function ResultCard({ result, rank, showRerankDelta, scoreLabel }: ResultCardPro
     : null;
 
   return (
-    <div className="p-4 bg-szn-card border border-szn-border rounded-xl hover:border-szn-border hover:shadow-sm transition-all">
+    <div className="p-4 bg-[var(--ink-0)] border border-[var(--ink-200)] rounded-xl hover:border-[var(--ink-200)] hover:shadow-sm transition-all">
       {/* Header */}
       <div className="flex items-start justify-between mb-2">
         <div className="flex items-center gap-2">
-          <span className="w-6 h-6 bg-szn-surface rounded-full flex items-center justify-center text-xs font-medium text-szn-text-2">
+          <span className="w-6 h-6 bg-[var(--ink-50)] rounded-full flex items-center justify-center text-xs font-medium text-[var(--ink-600)]">
             {rank}
           </span>
-          <h4 className="font-medium text-szn-text-1 text-sm line-clamp-1">
+          <h4 className="font-medium text-[var(--ink-900)] text-sm line-clamp-1">
             {result.title}
           </h4>
         </div>
         <div className="flex items-center gap-2">
           {/* Score Badge */}
           <div className="flex items-center gap-1">
-            <span className="text-xs text-szn-text-2">{scoreLabel || "Score"}:</span>
+            <span className="text-xs text-[var(--ink-600)]">{scoreLabel || "Score"}:</span>
             <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
               scorePercent >= 80
-                ? "bg-szn-accent/10 text-szn-accent"
+                ? "bg-[var(--ink-900)]/10 text-[var(--ink-900)]"
                 : scorePercent >= 60
-                ? "bg-yellow-100 text-yellow-700"
-                : "bg-szn-surface text-szn-text-2"
+                ? "bg-[var(--signal-pending-soft)] text-[var(--signal-pending-ink)]"
+                : "bg-[var(--ink-50)] text-[var(--ink-600)]"
             }`}>
               {scorePercent}%
             </span>
@@ -105,10 +105,10 @@ function ResultCard({ result, rank, showRerankDelta, scoreLabel }: ResultCardPro
           {showRerankDelta && rerankDelta !== null && (
             <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
               rerankDelta > 0
-                ? "bg-szn-accent/10 text-szn-accent"
+                ? "bg-[var(--ink-900)]/10 text-[var(--ink-900)]"
                 : rerankDelta < 0
-                ? "bg-red-50 text-red-600"
-                : "bg-szn-bg text-szn-text-2"
+                ? "bg-[var(--signal-conflict-soft)] text-[var(--signal-conflict-ink)]"
+                : "bg-[var(--ink-50)] text-[var(--ink-600)]"
             }`}>
               {rerankDelta > 0 ? "+" : ""}{rerankDelta}%
             </span>
@@ -117,18 +117,18 @@ function ResultCard({ result, rank, showRerankDelta, scoreLabel }: ResultCardPro
       </div>
 
       {/* Content Preview */}
-      <p className="text-sm text-szn-text-2 line-clamp-3 leading-relaxed">
+      <p className="text-sm text-[var(--ink-600)] line-clamp-3 leading-relaxed">
         {result.content}
       </p>
 
       {/* Metadata */}
       {result.metadata && Object.keys(result.metadata).length > 0 && (
-        <div className="mt-3 pt-3 border-t border-szn-border">
+        <div className="mt-3 pt-3 border-t border-[var(--ink-200)]">
           <div className="flex flex-wrap gap-2">
             {Object.entries(result.metadata).slice(0, 3).map(([key, value]) => (
               <span
                 key={key}
-                className="text-xs bg-szn-bg text-szn-text-2 px-2 py-1 rounded"
+                className="text-xs bg-[var(--ink-50)] text-[var(--ink-600)] px-2 py-1 rounded"
               >
                 {key}: {String(value)}
               </span>

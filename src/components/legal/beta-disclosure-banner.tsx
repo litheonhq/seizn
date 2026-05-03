@@ -56,7 +56,7 @@ export function BetaDisclosureBanner({ betaUntil, now }: BetaDisclosureBannerPro
   if (dismissed || !isBetaDisclosureActive(betaUntil, now)) return null;
 
   return (
-    <div className="border-b border-amber-300 bg-amber-50 px-4 py-3 text-amber-950" role="status">
+    <div className="border-b border-[var(--signal-pending)] bg-[var(--signal-pending-soft)] px-4 py-3 text-[var(--signal-pending-ink)]" role="status">
       <div className="mx-auto flex max-w-7xl flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div>
           <p className="text-sm font-semibold">{copy.title}</p>
@@ -71,7 +71,7 @@ export function BetaDisclosureBanner({ betaUntil, now }: BetaDisclosureBannerPro
         <div className="flex flex-wrap items-center gap-3">
           <Link
             href={getLegalPath(locale, "beta-disclosure")}
-            className="rounded-lg bg-amber-900 px-3 py-2 text-sm font-medium text-white hover:bg-amber-800"
+            className="rounded-lg bg-[var(--signal-pending-ink)] px-3 py-2 text-sm font-medium text-white hover:bg-[var(--signal-pending)]"
           >
             {copy.link}
           </Link>
@@ -81,7 +81,7 @@ export function BetaDisclosureBanner({ betaUntil, now }: BetaDisclosureBannerPro
               document.cookie = `${COOKIE_NAME}=1; Max-Age=${ONE_YEAR_SECONDS}; Path=/; SameSite=Lax`;
               setDismissedInSession(true);
             }}
-            className="rounded-lg border border-amber-600 px-3 py-2 text-sm font-medium text-amber-950 hover:bg-amber-100"
+            className="rounded-lg border border-[var(--signal-pending)] px-3 py-2 text-sm font-medium text-[var(--signal-pending-ink)] hover:bg-[var(--signal-pending-soft)]"
           >
             {copy.dismiss}
           </button>
