@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getRequestUser, type RequestUser } from '@/lib/api/request-user';
 import { ensureCsrfCookie, verifyCsrfToken } from '@/lib/csrf';
+import { AuthorLlmError } from '@/lib/author/llm/types';
 import {
   AuthorUiNotFoundError,
   AuthorUiValidationError,
@@ -43,7 +44,18 @@ export async function withAuthorUiService(
     if (error instanceof AuthorUiNotFoundError) {
       return ensureCsrfCookie(request, NextResponse.json({ error: error.message }, { status: 404 }));
     }
-    throw error;
+    if (error instanceof AuthorLlmError) {
+      const status = error.status ?? 500;
+      return ensureCsrfCookie(
+        request,
+        NextResponse.json({ error: error.message, code: error.code }, { status })
+      );
+    }
+    const message = error instanceof Error ? error.message : 'Internal error';
+    return ensureCsrfCookie(
+      request,
+      NextResponse.json({ error: message }, { status: 500 })
+    );
   }
 }
 
