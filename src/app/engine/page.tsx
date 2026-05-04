@@ -74,6 +74,11 @@ export default function EngineHoldingPage() {
             description="Model Context Protocol server. Claude·OpenAI tool use 호환."
             href="https://www.npmjs.com/package/@seizn/mcp"
           />
+          <SdkCard
+            name="create-seizn-app"
+            description="Project scaffolder. NPC SDK 통합·메모리 schema·Vercel 배포 템플릿."
+            href="https://www.npmjs.com/package/create-seizn-app"
+          />
         </div>
       </section>
 
