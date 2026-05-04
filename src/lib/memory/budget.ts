@@ -782,6 +782,7 @@ export async function runTierDemotionBatch(
     demotedIds: [],
   };
   const planCache = new Map<string, string>();
+  const demotedThisBatch = new Set<string>();
 
   for (const rule of rules) {
     const remaining = batchSize - result.processed;
@@ -799,6 +800,12 @@ export async function runTierDemotionBatch(
         return result;
       }
 
+      // Skip memories already demoted in this batch (e.g., hot→warm in rule 1
+      // shouldn't trigger warm→cold in rule 2 within the same cron run).
+      if (demotedThisBatch.has(candidate.id)) {
+        continue;
+      }
+
       result.processed += 1;
       let plan = planCache.get(candidate.organizationId);
       if (!plan) {
@@ -814,6 +821,7 @@ export async function runTierDemotionBatch(
       await demoteScheduledMemory(supabase, candidate, rule.toTier, nowIso, plan);
       result.demoted += 1;
       result.demotedIds.push(candidate.id);
+      demotedThisBatch.add(candidate.id);
       if (rule.fromTier === 'hot') {
         result.hotToWarm += 1;
       } else {
