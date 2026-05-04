@@ -98,8 +98,8 @@ export default function EngineHoldingPage() {
             description="Model Context Protocol server. Claude·OpenAI tool use 호환."
           />
           <SdkCard
-            name="@seizn/cli"
-            description="Command-line interface. 메모리 저장·검색·내보내기 자동화."
+            name="create-seizn-app"
+            description="Project scaffolder. NPC SDK 통합·메모리 schema·Vercel 배포 템플릿."
           />
         </div>
         <p
