@@ -49,8 +49,6 @@ export function SectionFooter({ copy, locale }: { copy: AuthorLandingCopy; local
             title={copy.footer.developers}
             links={[
               { label: copy.footer.links.engine, href: ENGINE_SURFACE_URL, external: true },
-              { label: copy.footer.links.sdk, href: "https://www.npmjs.com/package/@seizn/sdk-js", external: true },
-              { label: copy.footer.links.mcp, href: "https://www.npmjs.com/package/@seizn/mcp", external: true },
             ]}
           />
         </div>
