@@ -286,8 +286,8 @@ export function DriftDashboard({
 
       {/* Error Message */}
       {data.error && (
-        <div className="p-4 rounded-lg bg-red-50 border border-red-200">
-          <p className="text-sm text-red-700">{data.error}</p>
+        <div className="p-4 rounded-lg bg-[var(--signal-conflict-soft)] border border-[var(--signal-conflict)]">
+          <p className="text-sm text-[var(--signal-conflict-ink)]">{data.error}</p>
         </div>
       )}
 
@@ -313,7 +313,7 @@ export function DriftDashboard({
           </div>
         ) : data.alerts.filter((a) => a.status === "active").length === 0 ? (
           <div className="text-center py-8">
-            <HealthyIcon className="w-12 h-12 mx-auto text-green-500" />
+            <HealthyIcon className="w-12 h-12 mx-auto text-[var(--signal-canon-ink)]" />
             <p className="text-sm text-gray-500 mt-2">No active drift alerts</p>
           </div>
         ) : (
@@ -406,16 +406,16 @@ function HealthSummary({
   }
 
   const healthColors = {
-    healthy: "bg-green-50 border-green-200 text-green-700",
-    warning: "bg-yellow-50 border-yellow-200 text-yellow-700",
+    healthy: "bg-[var(--signal-canon-soft)] border-[var(--signal-canon)] text-[var(--signal-canon-ink)]",
+    warning: "bg-[var(--signal-pending-soft)] border-[var(--signal-pending)] text-[var(--signal-pending-ink)]",
     degraded: "bg-orange-50 border-orange-200 text-orange-700",
-    critical: "bg-red-50 border-red-200 text-red-700",
+    critical: "bg-[var(--signal-conflict-soft)] border-[var(--signal-conflict)] text-[var(--signal-conflict-ink)]",
   };
 
   const trendIcons = {
-    improving: "text-green-500",
+    improving: "text-[var(--signal-canon-ink)]",
     stable: "text-gray-500",
-    degrading: "text-red-500",
+    degrading: "text-[var(--signal-conflict-ink)]",
   };
 
   return (
@@ -470,11 +470,11 @@ function DriftBadge({ value }: { value?: number }) {
   }
 
   const pct = value * 100;
-  let colorClass = "bg-green-100 text-green-700";
+  let colorClass = "bg-[var(--signal-canon-soft)] text-[var(--signal-canon-ink)]";
   if (pct >= 10) {
-    colorClass = "bg-red-100 text-red-700";
+    colorClass = "bg-[var(--signal-conflict-soft)] text-[var(--signal-conflict-ink)]";
   } else if (pct >= 5) {
-    colorClass = "bg-yellow-100 text-yellow-700";
+    colorClass = "bg-[var(--signal-pending-soft)] text-[var(--signal-pending-ink)]";
   }
 
   return (

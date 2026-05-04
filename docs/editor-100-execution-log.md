@@ -82,3 +82,185 @@ Scope: Memory v1 internal replacement to Spring v4 bridge
 | `npx playwright test e2e/core-pages.spec.ts --project=chromium --workers=1` | Pass (11/11) |
 | `npx playwright test e2e/spring-memory-crud.spec.ts --project=chromium --workers=1` | Pass (9/9) |
 | `$env:PLAYWRIGHT_DISABLE_TURNSTILE='1'; $env:E2E_ALLOW_AUTO_PROVISION='1'; npx playwright test e2e/core-pages.spec.ts e2e/dashboard-smoke.spec.ts e2e/dashboard-auth-smoke.spec.ts e2e/spring-memory-crud.spec.ts e2e/api-key.spec.ts --project=chromium --workers=1` | Pass (30/30) |
+
+## 7) Author Memory v3 LLM Integration - Phase 1 (2026-05-02)
+
+### Scope
+
+- Implemented file persistence and parsing for Author Memory v3 imports.
+- Added R2 object storage adapter, md/docx/pdf/txt parser pipeline, `author_imports_text` migration, route byte pass-through, and dashboard Inbox upload wiring.
+- Updated Author UI contracts/query bindings and `.github/TECH_STACK.md`.
+
+### Validation Gates
+
+| Command | Result |
+|---|---|
+| `node scripts/run-migration-file.mjs supabase/migrations/20260502003_author_imports_text.sql` | Pass; migration applied and post-verification passed |
+| R2 + `author_imports_text` smoke | Pass; put/get plus insert/select verified, then smoke artifacts cleaned up |
+| `npm run test:run -- src/__tests__/author/parser/author-parser.test.ts src/__tests__/author-ui/author-ui-service.test.ts src/__tests__/author-ui/author-ui-route.test.ts src/__tests__/author-memory-v3/author-artifacts.test.ts` | Pass (23/23) |
+| `npm run test:run` | Pass (1011/1011, 16 skipped) |
+| `npm ci --dry-run` | Pass |
+| `npm audit --omit=dev --audit-level=moderate` | Pass |
+| `npm run typecheck` | Pass |
+| `npm run lint` | Pass |
+| `npm run build` | Pass |
+| `git diff --check` | Pass |
+
+### Residual Risk
+
+- Phase 2-6 remain out of this commit by sequential phase rules.
+- Browser-level authenticated upload Playwright coverage is still pending; current coverage is parser/service/route/full unit/build/live R2+DB smoke.
+
+## 8) Author Memory v3 LLM Integration - Phase 2 (2026-05-02)
+
+### Scope
+
+- Added Anthropic SDK runtime for Author Memory v3 with BYOK-first key resolution, production fail-closed behavior, non-production managed-key fallback, 429 retry backoff, and JSON response schema validation.
+- Persisted Author LLM token usage in `model_usage` and exposed monthly totals through `/api/account/usage`.
+- Integrated `/api/account/byok` with encrypted provider-key storage and masked status reads.
+- Aligned `provider_keys` and `provider_keys_audit` user IDs with `profiles.id TEXT` so Author BYOK follows the current Seizn identity model.
+
+### Validation Gates
+
+| Command | Result |
+|---|---|
+| `node scripts/run-migration-file.mjs supabase/migrations/20260502004_model_usage.sql` | Pass; migration applied and post-verification passed |
+| `node scripts/run-migration-file.mjs supabase/migrations/20260502005_provider_keys_profile_user_id.sql` | Pass; migration applied and post-verification passed |
+| `model_usage` + `provider_keys` DB smoke | Pass; profile-ID insert/select verified in a transaction and rolled back |
+| `node -e "JSON.parse(...author_ui_data_contracts.json); JSON.parse(...author_ui_query_bindings.json)"` | Pass |
+| `npm run test:run -- src/__tests__/author/llm/byok-resolver.test.ts src/__tests__/author/llm/anthropic-client.test.ts` | Pass (9/9) |
+| `npm run test:run -- src/__tests__/author/llm/byok-resolver.test.ts src/__tests__/author/llm/anthropic-client.test.ts src/__tests__/author-ui/author-ui-service.test.ts src/__tests__/author-ui/author-ui-route.test.ts src/__tests__/author-memory-v3/author-artifacts.test.ts` | Pass (26/26) |
+| `npm run test:run` | Pass (1020/1020, 16 skipped) |
+| `npm ci --dry-run` | Pass |
+| `npm audit --omit=dev --audit-level=moderate` | Pass |
+| `npm run typecheck` | Pass |
+| `npm run lint` | Pass |
+| `npm run build` | Pass |
+| `git diff --check` | Pass |
+| Secret scan over git diff | Pass; no non-empty key material matched |
+
+### Residual Risk
+
+- Phase 3 extraction prompts, validator harness, candidate persistence wiring, and eval-seed scoring are intentionally not included in this Phase 2 commit.
+- Live Anthropic paid-call smoke is not required for this commit because the SDK wrapper is covered by mocked response, retry, BYOK, JSON, and DB persistence tests.
+
+## 9) Author Memory v3 LLM Integration - Phase 3 (2026-05-02)
+
+### Scope
+
+- Added structured Author extraction runtime under `src/lib/author/extraction/`.
+- Added five prompt files and five JSON schemas for character, world-rule, event, relationship, and voice-sample candidates.
+- Added machine-readable canon authority rules for KNOT short1 scope.
+- Refactored Author import upload flow so parsed source text now creates review candidates instead of leaving extraction queued.
+- Added eval seed v3 harness coverage for all 100 cases, 7/7 main character registry matching, and 8+ supporting character heading extraction.
+
+### Validation Gates
+
+| Command | Result |
+|---|---|
+| `npm run test:run -- src/__tests__/author/extraction/eval-seed-v3.test.ts src/__tests__/author-ui/author-ui-service.test.ts src/__tests__/author-ui/author-ui-route.test.ts` | Pass (19/19) |
+| `npm run test:run -- src/__tests__/author src/__tests__/author-ui src/__tests__/author-memory-v3` | Pass (87/87) |
+| `npx ts-node -r tsconfig-paths/register --project tsconfig.node.json -e "...extract short1-characters.md + short1-characters-supporting.md..."` | Pass; local KNOT main produced 7 character candidates and supporting produced 9 character candidates |
+| `node -e "JSON.parse(...author_ui_data_contracts.json); JSON.parse(...author_ui_query_bindings.json); JSON.parse(...canon_authority_rules_machine.json); JSON.parse(...knot_author_eval_seed_v3.json)"` | Pass |
+| `npm run test:run` | Pass (1026/1026, 16 skipped) |
+| `npm ci --dry-run` | Pass |
+| `npm audit --omit=dev --audit-level=moderate` | Pass |
+| `npm run typecheck` | Pass |
+| `npm run lint` | Pass |
+| `npm run build` | Pass |
+| `git diff --check` | Pass |
+
+### Residual Risk
+
+- Live paid Anthropic extraction was not executed; the LLM path is covered by mocked JSON-schema tests and the non-production upload path uses deterministic heuristic extraction.
+- Phase 4 backlog generation, Phase 5 audit/replay hardening, and Phase 6 Litheon migration remain outside this Phase 3 commit by the sequential phase plan.
+
+## 10) Author Memory v3 LLM Integration - Phase 4 (2026-05-02)
+
+### Scope
+
+- Added character backlog generation prompt and runtime support for four categories: 좋아하는 것, 싫어하는 것, 작은 보상, 작은 짜증.
+- Added `POST /api/projects/{projectId}/characters/{characterId}/backlog`.
+- Added SWR mutation hook and Character screen Generate backlog control with inline preview.
+- Backlog generation now inserts candidates into the Review Queue and returns `export_markdown` for detail-guide §X.6 manual sync/export.
+- Added KNOT five-character dogfood regression coverage for 소리, 레이카, 나나, 룰루, 유이.
+
+### Validation Gates
+
+| Command | Result |
+|---|---|
+| `npm run test:run -- src/__tests__/author/extraction/generate-backlog.test.ts src/__tests__/author/extraction/eval-seed-v3.test.ts src/__tests__/author-ui/author-ui-service.test.ts src/__tests__/author-ui/author-ui-route.test.ts` | Pass (24/24) |
+| `npm run test:run -- src/__tests__/author src/__tests__/author-ui src/__tests__/author-memory-v3` | Pass (92/92) |
+| `npm run test:run` | Pass (1031 passed, 16 skipped) |
+| `npm ci --dry-run` | Pass |
+| `npm audit --omit=dev --audit-level=moderate` | Pass (0 vulnerabilities) |
+| `npm run typecheck` | Pass |
+| `npm run lint` | Pass |
+| `npm run build` | Pass |
+| `git diff --check` | Pass |
+| `node -e "JSON.parse(...)"` for Author UI and KNOT JSON artifacts | Pass |
+| Added-line and Author Memory v3 secret scans | Pass; no matches |
+
+### Residual Risk
+
+- Live paid Anthropic backlog generation was not executed in this phase. The LLM branch is covered by mocked JSON-schema prompt tests; deterministic heuristic generation covers local and CI behavior.
+- Automatic write-back into `short1-character-detail-guide.md` remains intentionally off. The Phase 4 API returns export markdown for manual sync; persistent audit and replay remain Phase 5.
+
+## 11) Author Memory v3 LLM Integration - Phase 5 (2026-05-02)
+
+### Scope
+
+- Added `author_audit_log` Supabase migration with RLS, decision IDs, parent chain IDs, payload, LLM metadata, and source spans.
+- Added `src/lib/author/audit/` logger, sanitizer, search store, and deterministic replay chain hashing.
+- Wired Author UI mutations, backlog generation, BYOK updates, import parse/extract, and scene simulation into audit events.
+- Added `GET /api/projects/{projectId}/audit` for audit search and `replay=1&decision_id=...` deterministic replay.
+- Added dashboard Audit screen plus SWR hooks for audit list and replay preview.
+- Added regression tests for replay chains, route search/replay, mutation audit logging, and raw secret redaction.
+
+### Validation Gates
+
+| Command | Result |
+|---|---|
+| `npm run typecheck` | Pass |
+| `npm run test:run -- src/__tests__/author/audit/replay.test.ts src/__tests__/author-ui/author-ui-service.test.ts src/__tests__/author-ui/author-ui-route.test.ts` | Pass (19/19) |
+| `npm run test:run -- src/__tests__/author-memory-v3/author-artifacts.test.ts src/__tests__/author/audit/replay.test.ts src/__tests__/author-ui/author-ui-service.test.ts src/__tests__/author-ui/author-ui-route.test.ts` | Pass (23/23) |
+| `npm run test:run -- src/__tests__/author src/__tests__/author-ui src/__tests__/author-memory-v3` | Pass (96/96) |
+| `npm run test:run` | Pass (1035 passed, 16 skipped) |
+| `npm ci --dry-run` | Pass |
+| `npm audit --omit=dev --audit-level=moderate` | Pass (0 vulnerabilities) |
+| `npm run lint` | Pass |
+| `npm run build` | Pass |
+| `node -e "JSON.parse(...author_ui_data_contracts.json); JSON.parse(...author_ui_query_bindings.json)"` | Pass |
+| `git diff --check` | Pass |
+| Added-line and Author Memory v3 secret scans | Pass; no matches |
+| `node scripts/run-migration-file.mjs supabase/migrations/20260502006_author_audit_log.sql` | Blocked; available `POSTGRES_URL_NON_POOLING` fails password authentication for `postgres` |
+
+### Residual Risk
+
+- The dashboard audit viewer is intentionally a Phase 5 list view; timeline/graph audit visualization remains a later UI cycle.
+- Live Supabase migration apply is blocked until the Litheon Supabase non-pooling Postgres credential is corrected or rotated. SQL is committed and covered by local schema review/tests.
+
+## 12) Author Memory v3 Litheon R2 Migration Preflight (2026-05-02)
+
+### Scope
+
+- Added `scripts/migrate-r2-to-litheon.sh`, a dry-run-first rclone wrapper for copying Author Memory v3 R2 objects from the temporary bucket to the Litheon-owned target bucket.
+- Added `scripts/verify-r2-integrity.ts`, a SHA256 source/target object verifier with optional JSON report output and no credential reporting.
+- Added Phase 6 target env placeholders to `.env.example`.
+- Added `docs/migrations/20260502-r2-litheon-migration.md` as the execution, rollback, and accounting runbook.
+- Ignored generated `docs/migrations/r2-integrity-report*.json` reports so object-key evidence is not accidentally committed.
+- Updated `.github/TECH_STACK.md` and the issue map with the Phase 6 preflight status.
+
+### Validation Gates
+
+| Command | Result |
+|---|---|
+| `bash -n scripts/migrate-r2-to-litheon.sh` | Pass |
+| `npx tsc --noEmit --target ES2022 --module commonjs --moduleResolution node --esModuleInterop --strict --skipLibCheck --types node scripts/verify-r2-integrity.ts` | Pass |
+| `npx ts-node --project tsconfig.node.json scripts/verify-r2-integrity.ts --help` | Pass |
+| `git diff --check` | Pass |
+
+### Residual Risk
+
+- The script has not copied production objects. Execution remains blocked until the Litheon-owned R2 bucket and target credentials are available.
+- Runtime R2 env/code still points at the temporary bucket by design until a verified copy and smoke test pass.

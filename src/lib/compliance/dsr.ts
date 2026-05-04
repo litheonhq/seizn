@@ -1,4 +1,4 @@
-import crypto from 'crypto';
+import { createHmac, timingSafeEqual, randomUUID } from 'node:crypto';
 import type { createServerClient } from '@/lib/supabase';
 import { logAuditEvent } from '@/lib/audit/logger';
 import { logTamperEvidentEvent, sha256 } from '@/lib/audit/tamper-evident';
@@ -140,8 +140,7 @@ function sortForCanonicalJson(value: unknown): unknown {
 }
 
 export function signCompliancePayload(payload: unknown, secret = signingSecret()): string {
-  return crypto
-    .createHmac('sha256', secret)
+  return createHmac('sha256', secret)
     .update(canonicalizeForCompliance(payload), 'utf8')
     .digest('hex');
 }
@@ -157,7 +156,7 @@ export function verifyComplianceSignature(
   if (expectedBuffer.length !== signatureBuffer.length) {
     return false;
   }
-  return crypto.timingSafeEqual(expectedBuffer, signatureBuffer);
+  return timingSafeEqual(expectedBuffer, signatureBuffer);
 }
 
 export function buildSignedArtifactUrl(params: {
@@ -384,7 +383,7 @@ export async function createDsrExport(
     auditLogs,
     interactions,
   });
-  const jobId = crypto.randomUUID();
+  const jobId = randomUUID();
   const artifactUrl = buildSignedArtifactUrl({
     jobId,
     expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
@@ -483,7 +482,7 @@ export async function createDsrDeletion(
     if (error) throw error;
   }
 
-  const jobId = crypto.randomUUID();
+  const jobId = randomUUID();
   const deletedAt = new Date().toISOString();
   const certificate = buildDeletionCertificate({
     jobId,

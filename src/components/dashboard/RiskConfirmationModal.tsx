@@ -51,7 +51,7 @@ export function RiskConfirmationModal({
             type="checkbox"
             checked={checked}
             onChange={(e) => setChecked(e.target.checked)}
-            className="w-4 h-4 rounded accent-szn-accent"
+            className="w-4 h-4 rounded accent-[var(--ink-900)]"
           />
           <span className="text-sm">I understand the impact of this action.</span>
         </label>

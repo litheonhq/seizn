@@ -392,7 +392,6 @@
     "nav": {
       "overview": "نظرة عامة",
       "memories": "الكيانات",
-      "memoryEditor": "محرر الذاكرة",
       "mindMap": "رسم بياني للعلاقات",
       "candidates": "صندوق الأحداث",
       "devTools": "أدوات التطوير",
@@ -406,6 +405,7 @@
       "usage": "الاستخدام",
       "budget": "الميزانية",
       "reports": "التقارير",
+      "calculator": "تقدير التكلفة",
       "apiKeys": "مفاتيح API",
       "integrations": "إضافات المحرك",
       "webhooks": "Webhooks",
@@ -414,10 +414,15 @@
       "settings": "الإعدادات",
       "groups": {
         "memory": "ذاكرة NPC",
+        "observe": "المراقبة",
+        "govern": "السياسات",
+        "finops": "الاستخدام والتكلفة",
+        "connect": "التكامل",
         "system": "مساحة العمل",
         "build": "البناء",
         "integrate": "التكامل"
-      }
+      },
+      "memoryEditor": "محرر الذاكرة"
     },
     "pinSidebar": "تثبيت الشريط الجانبي",
     "unpinSidebar": "طي الشريط الجانبي",
@@ -1406,6 +1411,50 @@
       "recentDecisions": "القرارات الأخيرة",
       "noLogs": "لا توجد سجلات قرارات حتى الآن"
     },
+    "calculator": {
+      "title": "حاسبة الاستخدام",
+      "subtitle": "تقدير تكاليفك الشهرية بناءً على الاستخدام المتوقع",
+      "stats": {
+        "apiCalls": "استدعاءات API",
+        "memories": "الذكريات",
+        "extractions": "الاستخراجات",
+        "estimated": "التكلفة المقدرة"
+      },
+      "presets": {
+        "title": "إعدادات سريعة",
+        "startup": "شركة ناشئة",
+        "growing": "نامية",
+        "scale": "توسع",
+        "enterprise": "مؤسسية"
+      },
+      "customize": {
+        "title": "تخصيص الاستخدام"
+      },
+      "labels": {
+        "apiCalls": "استدعاءات API الشهرية",
+        "memories": "الذكريات المخزنة",
+        "extractions": "الاستخراجات"
+      },
+      "recommended": {
+        "title": "الخطة الموصى بها",
+        "base": "السعر الأساسي",
+        "overage": "التجاوز",
+        "cta": "البدء"
+      },
+      "comparison": {
+        "title": "جميع الخطط",
+        "best": "أفضل قيمة"
+      },
+      "details": {
+        "title": "تفصيل الأسعار التفصيلي",
+        "plan": "الخطة",
+        "base": "السعر الأساسي",
+        "includedCalls": "الاستدعاءات المضمنة",
+        "overageRate": "معدل التجاوز",
+        "yourOverage": "تجاوزك",
+        "total": "الإجمالي"
+      }
+    },
     "webhooks": {
       "title": "Webhooks",
       "subtitle": "تكوين استدعاءات HTTP للإشعارات الفورية بالأحداث",
@@ -1606,12 +1655,98 @@
       "contactUs": "تواصل معنا على"
     }
   },
+  "serviceSelector": {
+    "title": "اختر تجربتك",
+    "subtitle": "طريقتان لتسخير قوة ذاكرة الذكاء الاصطناعي",
+    "spring": {
+      "name": "Spring",
+      "icon": "🌿",
+      "tagline": "دردشة متعددة AI",
+      "description": "دردش مع GPT-4، Claude، Gemini والمزيد — كلهم بذاكرة دائمة تتذكرك.",
+      "features": [
+        "الوصول إلى جميع نماذج AI الرئيسية في مكان واحد",
+        "تفضيلاتك محفوظة عبر الجلسات",
+        "تبديل سياق سلس بين النماذج"
+      ],
+      "cta": "جرب Spring",
+      "badge": ""
+    },
+    "summer": {
+      "name": "Summer",
+      "icon": "☀️",
+      "tagline": "API الذاكرة",
+      "description": "امنح تطبيقات AI الخاصة بك ذاكرة دائمة مع API الموجه للمطورين.",
+      "features": [
+        "REST API و SDKs بسيطة",
+        "وقت استرداد أقل من 50ms",
+        "أمان على مستوى المؤسسات"
+      ],
+      "cta": "استكشف API",
+      "badge": "متاح الآن"
+    },
+    "footer": "جزء من مواسم Seizn — ذاكرة AI لكل حاجة"
+  },
+  "springPage": {
+    "badge": "",
+    "title": "دردشة واحدة.",
+    "titleHighlight": "كل AI.",
+    "subtitle": "بغض النظر عن اختيارك،\nكلهم يتذكرونك.",
+    "startChatting": "ابدأ الدردشة",
+    "viewPricing": "عرض الأسعار",
+    "features": {
+      "title": "لماذا Spring؟",
+      "subtitle": "أفضل ما في كل AI، موحد.",
+      "multiModel": {
+        "title": "وصول متعدد النماذج",
+        "description": "تبديل بين GPT-4، Claude، Gemini، Llama والمزيد. اختر أفضل نموذج لكل مهمة."
+      },
+      "persistentMemory": {
+        "title": "ذاكرة دائمة",
+        "description": "تفضيلاتك وسياقك وتاريخك محفوظ عبر كل محادثة وكل نموذج."
+      },
+      "freeGenerosity": {
+        "title": "طبقة مجانية بمستوى Cursor",
+        "description": "استخدام مجاني سخي. معظم المستخدمين لا يحتاجون للدفع أبداً. Pro بـ $9.99/شهر للمستخدمين المحترفين."
+      }
+    },
+    "pricing": {
+      "title": "أسعار بسيطة",
+      "free": {
+        "name": "مجاني",
+        "price": "$0",
+        "period": "للأبد",
+        "features": [
+          "جميع نماذج AI",
+          "ذاكرة عبر الجلسات",
+          "تطبيقات الويب والجوال"
+        ],
+        "cta": "ابدأ مجاناً"
+      },
+      "pro": {
+        "name": "برو",
+        "price": "$9.99",
+        "period": "شهرياً",
+        "badge": "أفضل قيمة",
+        "features": [
+          "كل شيء في المجاني",
+          "وصول أولوية",
+          "تحكم متقدم بالذاكرة",
+          "وصول API"
+        ],
+        "cta": "ترقية إلى Pro"
+      }
+    }
+  },
   "extremeHome": {
     "heroTitle": "ذاكرة لشخصيات NPC بالذكاء الاصطناعي.",
     "heroSubtitle": "تكامل مع Inworld أو Convai أو LLM الخاص بك. يمنح Seizn شخصيات NPC الخاصة بك ذاكرة دائمة وعلاقات وذاكرة عبر الأجيال — تسعير بحسب الكيان، لا بحسب المقعد.",
     "ctaStart": "اقرأ الوثائق",
     "ctaDemo": "العب smallgod",
     "socialProof": "مصمم لاستوديوهات الألعاب من 10 إلى 10,000 شخصية NPC.",
+    "liveDemo": "عرض مباشر",
+    "heroTagline": "العب smallgod — لعبتنا المرجعية المبنية على Seizn. بلا تسجيل أو تثبيت.",
+    "firstRetrievalComplete": "اكتمل الاسترجاع الأول",
+    "copySnippetHint": "انسخ المقتطف أدناه للتكرار",
     "copySnippetTitle": "تكامل في Unity أو Unreal أو أي محرك",
     "copySnippetSubtitle": "غلاف HTTP + إضافات C#/C++ رسمية. لا حاجة لبنية تحتية مخصصة.",
     "whySeizn": {
@@ -1655,6 +1790,89 @@
       "status": "الحالة",
       "help": "المساعدة",
       "github": "OSS"
+    },
+    "requestBuilder": {
+      "title": "منشئ الطلبات",
+      "query": "استعلام",
+      "queryPlaceholder": "أدخل استعلام البحث الخاص بك...",
+      "tryExamples": "جرب الأمثلة",
+      "dataset": "Dataset",
+      "latencyBudget": "ميزانية زمن الاستجابة",
+      "fast": "fast",
+      "thorough": "thorough",
+      "topK": "Top K",
+      "results": "نتائج",
+      "features": "الميزات",
+      "hybridSearch": "بحث هجين",
+      "hybridSearchDesc": "دمج البحث المتجهي + الكلمات المفتاحية",
+      "rerank": "Rerank",
+      "rerankDesc": "إعادة التسجيل باستخدام cross-encoder",
+      "answerContract": "Answer Contract",
+      "answerContractDesc": "التحقق من جودة الإجابة",
+      "running": "جارٍ التشغيل...",
+      "runQuery": "تنفيذ الاستعلام",
+      "datasets": {
+        "techDocs": "وثائق تقنية",
+        "legalContracts": "عقود قانونية",
+        "researchPapers": "أوراق بحثية"
+      },
+      "advanced": "متقدم"
+    },
+    "resultsPanel": {
+      "searching": "جارٍ البحث...",
+      "noResults": "شغّل استعلامًا لرؤية النتائج",
+      "score": "الدرجة"
+    },
+    "tracePanel": {
+      "tracing": "تتبع خط الأنابيب...",
+      "noTrace": "شغّل استعلامًا لرؤية التتبع",
+      "latency": "زمن الاستجابة",
+      "cost": "التكلفة",
+      "tokens": "الرموز",
+      "vectorOps": "Vector Ops",
+      "cached": "cached",
+      "model": "النموذج",
+      "input": "الإدخال",
+      "output": "الإخراج"
+    },
+    "tabs": {
+      "results": "النتائج",
+      "trace": "تتبع",
+      "cost": "التكلفة"
+    },
+    "chips": {
+      "trace": "الكيانات",
+      "eval": "العلاقات",
+      "policy": "الأحداث"
+    },
+    "playgroundTitle": "Try it now",
+    "costPanel": {
+      "calculating": "Calculating costs...",
+      "noCost": "Run a query to see cost breakdown",
+      "costBreakdown": "Cost Breakdown",
+      "component": "Component",
+      "cost": "التكلفة",
+      "embedding": "Embedding",
+      "vectorSearch": "Vector Search",
+      "rerank": "Rerank",
+      "answerContract": "Answer Contract",
+      "total": "Total Cost",
+      "usage": "الاستخدام",
+      "tokensIn": "Tokens In",
+      "tokensOut": "Tokens Out",
+      "queryUnits": "Query Units",
+      "estimatedMonthly": "Estimated Monthly",
+      "basedOn": "Based on",
+      "queriesPerDay": "queries/day"
+    },
+    "errorDisplay": {
+      "error": "خطأ",
+      "errorCode": "الرمز",
+      "traceId": "تتبع",
+      "hint": "Hint",
+      "tryAgain": "Try Again",
+      "copyTraceId": "Copy trace ID",
+      "copied": "تم النسخ!"
     }
   },
   "docs": {
@@ -2564,6 +2782,42 @@
       }
     }
   },
+  "demoQuery": {
+    "title": "عرض تجريبي مباشر",
+    "subtitle": "جرّب خط أنابيب الاسترجاع في Seizn مع تتبع كامل وشفافية التكاليف.",
+    "tryItNow": "جرّبه الآن - بدون تسجيل",
+    "queryPlaceholder": "استعلام البحث",
+    "runDemo": "تشغيل العرض",
+    "running": "جارٍ التشغيل...",
+    "results": "النتائج",
+    "trace": "تتبع",
+    "cost": "التكلفة",
+    "noResults": "قم بتشغيل العرض لرؤية النتائج",
+    "errorTitle": "خطأ",
+    "rateLimitError": "تم تجاوز حد المعدل. يرجى الانتظار.",
+    "retryIn": "إعادة المحاولة خلال",
+    "seconds": "ثوانٍ",
+    "score": "النقاط",
+    "rerankScore": "إعادة الترتيب",
+    "latency": "زمن الاستجابة",
+    "tokens": "الرموز",
+    "cached": "مخزّن مؤقتاً",
+    "model": "النموذج",
+    "input": "الإدخال",
+    "output": "الإخراج",
+    "costBreakdown": "التفصيل",
+    "total": "التكلفة الإجمالية",
+    "embedding": "Embedding",
+    "vectorSearch": "بحث متجهي",
+    "rerank": "إعادة الترتيب",
+    "answerContract": "عقد الإجابة",
+    "tokensIn": "رموز الإدخال",
+    "tokensOut": "رموز الإخراج",
+    "queryUnits": "وحدات الاستعلام",
+    "prefilledQueries": [
+      "جرّب الأمثلة"
+    ]
+  },
   "publicTrace": {
     "title": "تتبع مشترك",
     "subtitle": "عرض تفاصيل التتبع المشترك",
@@ -2939,25 +3193,8 @@
     }
   },
   "status": {
-    "metadataTitle": "Seizn Status",
-    "metadataDescription": "Current Seizn API availability and public incident history.",
-    "eyebrow": "STATUS",
     "title": "System Status",
     "subtitle": "Real-time system status and incident history",
-    "currentStatusLabel": "Current status",
-    "measuredScope": "Measured scope: api.seizn.com/v1/*",
-    "uptimeLabel": "Last 30 days uptime",
-    "uptimeWindow": "Calculated from public incident windows in the last 30 days.",
-    "incidentsEyebrow": "INCIDENTS",
-    "recentIncidentsTitle": "Recent incidents",
-    "noRecentIncidents": "No recent incidents",
-    "noRecentIncidentsBody": "The public incident ledger is empty for this period.",
-    "slaLink": "Read the SLA",
-    "states": {
-      "operational": "operational",
-      "degraded": "degraded",
-      "outage": "outage"
-    },
     "lastUpdated": "Last updated",
     "overall": {
       "operational": "All Systems Operational",
@@ -3005,6 +3242,23 @@
       "title": "Subscribe to Updates",
       "rss": "RSS Feed",
       "email": "Email Notifications"
+    },
+    "metadataTitle": "Seizn Status",
+    "metadataDescription": "Current Seizn API availability and public incident history.",
+    "eyebrow": "STATUS",
+    "currentStatusLabel": "Current status",
+    "measuredScope": "Measured scope: api.seizn.com/v1/*",
+    "uptimeLabel": "Last 30 days uptime",
+    "uptimeWindow": "Calculated from public incident windows in the last 30 days.",
+    "incidentsEyebrow": "INCIDENTS",
+    "recentIncidentsTitle": "Recent incidents",
+    "noRecentIncidents": "No recent incidents",
+    "noRecentIncidentsBody": "The public incident ledger is empty for this period.",
+    "slaLink": "Read the SLA",
+    "states": {
+      "operational": "operational",
+      "degraded": "degraded",
+      "outage": "outage"
     }
   },
   "sla": {

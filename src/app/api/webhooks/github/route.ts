@@ -18,6 +18,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createHmac, timingSafeEqual } from 'crypto';
 import { createServerClient } from '@/lib/supabase';
+import type { SupabaseClient } from '@supabase/supabase-js';
 import { createCodeFixer, DEFAULT_AUTOPILOT_CONFIG } from '@/lib/autopilot';
 import type { AutopilotConfig, PRStatus, WebhookPayload, GitHubWebhookEvent } from '@/lib/autopilot';
 import { extractCheckSuiteHeadBranch, extractCheckSuitePRNumbers } from '@/lib/autopilot/github-webhook';
@@ -64,8 +65,7 @@ function verifySignature(payload: string, signature: string): boolean {
 }
 
 async function findAutopilotPrByNumber(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  supabase: any,
+  supabase: SupabaseClient,
   prNumber: number,
   repoFullName: string
 ): Promise<AutopilotPrRow | null> {
@@ -518,8 +518,7 @@ async function cleanupAfterMerge(
   prData: AutopilotPrRow,
   owner: string,
   repo: string,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  supabase: any,
+  supabase: SupabaseClient,
   headBranchOverride?: string
 ): Promise<void> {
   // Get user's config

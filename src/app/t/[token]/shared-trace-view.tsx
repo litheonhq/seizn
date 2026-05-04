@@ -25,9 +25,9 @@ interface TraceEvent {
 
 const STAGE_COLORS: Record<string, { bg: string; text: string; border: string }> = {
   embed: { bg: "bg-blue-50", text: "text-blue-700", border: "border-blue-200" },
-  search: { bg: "bg-purple-50", text: "text-purple-700", border: "border-purple-200" },
-  rerank: { bg: "bg-amber-50", text: "text-amber-700", border: "border-amber-200" },
-  generate: { bg: "bg-emerald-50", text: "text-emerald-700", border: "border-emerald-200" },
+  search: { bg: "bg-[var(--ink-50)]", text: "text-[var(--ink-900)] underline", border: "border-[var(--ink-900)]" },
+  rerank: { bg: "bg-[var(--signal-pending-soft)]", text: "text-[var(--signal-pending-ink)]", border: "border-[var(--signal-pending)]" },
+  generate: { bg: "bg-[var(--signal-canon-soft)]", text: "text-[var(--signal-canon-ink)]", border: "border-[var(--signal-canon)]" },
   validate: { bg: "bg-rose-50", text: "text-rose-700", border: "border-rose-200" },
 };
 
@@ -62,10 +62,10 @@ export function SharedTraceView({ token }: SharedTraceViewProps) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-szn-bg flex items-center justify-center">
+      <div className="min-h-screen bg-[var(--ink-50)] flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin w-8 h-8 border-2 border-szn-accent border-t-transparent rounded-full mx-auto mb-4" />
-          <p className="text-szn-text-2">Loading shared trace...</p>
+          <div className="animate-spin w-8 h-8 border-2 border-[var(--ink-900)] border-t-transparent rounded-full mx-auto mb-4" />
+          <p className="text-[var(--ink-600)]">Loading shared trace...</p>
         </div>
       </div>
     );
@@ -73,10 +73,10 @@ export function SharedTraceView({ token }: SharedTraceViewProps) {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-szn-bg flex items-center justify-center">
-        <div className="bg-szn-card rounded-2xl shadow-lg p-8 max-w-md text-center">
+      <div className="min-h-screen bg-[var(--ink-50)] flex items-center justify-center">
+        <div className="bg-[var(--ink-0)] rounded-2xl shadow-lg p-8 max-w-md text-center">
           <svg
-            className="w-16 h-16 text-red-400 mx-auto mb-4"
+            className="w-16 h-16 text-[var(--signal-conflict-soft)] mx-auto mb-4"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -88,15 +88,15 @@ export function SharedTraceView({ token }: SharedTraceViewProps) {
               d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
             />
           </svg>
-          <h2 className="text-xl font-semibold text-szn-text-1 mb-2">
+          <h2 className="text-xl font-semibold text-[var(--ink-900)] mb-2">
             {error === "This shared trace has expired"
               ? "Trace Expired"
               : "Trace Not Found"}
           </h2>
-          <p className="text-szn-text-2 mb-6">{error}</p>
+          <p className="text-[var(--ink-600)] mb-6">{error}</p>
           <Link
             href="/"
-            className="inline-block px-6 py-3 bg-szn-accent text-white rounded-xl hover:bg-szn-accent/80 transition-colors"
+            className="inline-block px-6 py-3 bg-[var(--ink-900)] text-white rounded-xl hover:bg-[var(--ink-900)]/80 transition-colors"
           >
             Go to Seizn
           </Link>
@@ -116,16 +116,16 @@ export function SharedTraceView({ token }: SharedTraceViewProps) {
   );
 
   return (
-    <div className="min-h-screen bg-szn-bg">
+    <div className="min-h-screen bg-[var(--ink-50)]">
       {/* Header */}
-      <header className="bg-szn-card border-b">
+      <header className="bg-[var(--ink-0)] border-b">
         <div className="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <span className="text-xl font-bold text-szn-accent">Seizn</span>
-            <span className="text-szn-text-3">/</span>
-            <span className="text-szn-text-2">Shared Trace</span>
+            <span className="text-xl font-bold text-[var(--ink-900)]">Seizn</span>
+            <span className="text-[var(--ink-500)]">/</span>
+            <span className="text-[var(--ink-600)]">Shared Trace</span>
           </Link>
-          <div className="flex items-center gap-4 text-sm text-szn-text-2">
+          <div className="flex items-center gap-4 text-sm text-[var(--ink-600)]">
             <span>{trace.view_count} views</span>
             <span>Shared {formatDate(trace.shared_at)}</span>
           </div>
@@ -136,10 +136,10 @@ export function SharedTraceView({ token }: SharedTraceViewProps) {
       <main className="max-w-5xl mx-auto px-4 py-8">
         {/* Redaction Notice */}
         {redactionProfile && (
-          <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+          <div className="mb-6 p-4 bg-[var(--signal-pending-soft)] border border-[var(--signal-pending)] rounded-xl">
             <div className="flex items-start gap-3">
               <svg
-                className="w-5 h-5 text-amber-600 mt-0.5"
+                className="w-5 h-5 text-[var(--signal-pending-ink)] mt-0.5"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -152,10 +152,10 @@ export function SharedTraceView({ token }: SharedTraceViewProps) {
                 />
               </svg>
               <div>
-                <h3 className="font-medium text-amber-800">
+                <h3 className="font-medium text-[var(--signal-pending-ink)]">
                   Privacy Protection Applied
                 </h3>
-                <p className="text-sm text-amber-700 mt-1">
+                <p className="text-sm text-[var(--signal-pending-ink)] mt-1">
                   This trace has been redacted for privacy.
                   {redactionProfile.pii && " Personal information has been masked."}
                   {redactionProfile.secrets && " API keys and secrets have been hidden."}
@@ -167,17 +167,17 @@ export function SharedTraceView({ token }: SharedTraceViewProps) {
         )}
 
         {/* Summary Card */}
-        <div className="bg-szn-card rounded-2xl shadow-sm border p-6 mb-6">
+        <div className="bg-[var(--ink-0)] rounded-2xl shadow-sm border p-6 mb-6">
           <div className="flex items-center justify-between mb-4">
-            <h1 className="text-lg font-semibold text-szn-text-1">
+            <h1 className="text-lg font-semibold text-[var(--ink-900)]">
               Trace Overview
             </h1>
             {trace.error ? (
-              <span className="px-3 py-1 bg-red-100 text-red-700 text-sm rounded-full">
+              <span className="px-3 py-1 bg-[var(--signal-conflict-soft)] text-[var(--signal-conflict-ink)] text-sm rounded-full">
                 Error
               </span>
             ) : (
-              <span className="px-3 py-1 bg-green-100 text-green-700 text-sm rounded-full">
+              <span className="px-3 py-1 bg-[var(--signal-canon-soft)] text-[var(--signal-canon-ink)] text-sm rounded-full">
                 Success
               </span>
             )}
@@ -185,9 +185,9 @@ export function SharedTraceView({ token }: SharedTraceViewProps) {
 
           {/* Query */}
           {trace.query_text && (
-            <div className="mb-4 p-4 bg-szn-bg rounded-xl">
-              <div className="text-xs text-szn-text-2 mb-1">Query</div>
-              <div className="text-szn-text-1 font-mono text-sm">
+            <div className="mb-4 p-4 bg-[var(--ink-50)] rounded-xl">
+              <div className="text-xs text-[var(--ink-600)] mb-1">Query</div>
+              <div className="text-[var(--ink-900)] font-mono text-sm">
                 {trace.query_text}
               </div>
             </div>
@@ -195,27 +195,27 @@ export function SharedTraceView({ token }: SharedTraceViewProps) {
 
           {/* Stats Grid */}
           <div className="grid grid-cols-4 gap-4">
-            <div className="p-4 bg-szn-bg rounded-xl">
-              <div className="text-xs text-szn-text-2 mb-1">Total Latency</div>
-              <div className="text-xl font-semibold text-szn-text-1">
+            <div className="p-4 bg-[var(--ink-50)] rounded-xl">
+              <div className="text-xs text-[var(--ink-600)] mb-1">Total Latency</div>
+              <div className="text-xl font-semibold text-[var(--ink-900)]">
                 {totalLatency.toFixed(0)}ms
               </div>
             </div>
-            <div className="p-4 bg-szn-bg rounded-xl">
-              <div className="text-xs text-szn-text-2 mb-1">Results</div>
-              <div className="text-xl font-semibold text-szn-text-1">
+            <div className="p-4 bg-[var(--ink-50)] rounded-xl">
+              <div className="text-xs text-[var(--ink-600)] mb-1">Results</div>
+              <div className="text-xl font-semibold text-[var(--ink-900)]">
                 {trace.results_count}
               </div>
             </div>
-            <div className="p-4 bg-szn-bg rounded-xl">
-              <div className="text-xs text-szn-text-2 mb-1">Plan</div>
-              <div className="text-xl font-semibold text-szn-text-1 capitalize">
+            <div className="p-4 bg-[var(--ink-50)] rounded-xl">
+              <div className="text-xs text-[var(--ink-600)] mb-1">Plan</div>
+              <div className="text-xl font-semibold text-[var(--ink-900)] capitalize">
                 {trace.plan}
               </div>
             </div>
-            <div className="p-4 bg-szn-bg rounded-xl">
-              <div className="text-xs text-szn-text-2 mb-1">Created</div>
-              <div className="text-sm font-semibold text-szn-text-1">
+            <div className="p-4 bg-[var(--ink-50)] rounded-xl">
+              <div className="text-xs text-[var(--ink-600)] mb-1">Created</div>
+              <div className="text-sm font-semibold text-[var(--ink-900)]">
                 {new Date(trace.created_at).toLocaleString()}
               </div>
             </div>
@@ -223,9 +223,9 @@ export function SharedTraceView({ token }: SharedTraceViewProps) {
 
           {/* Error Message */}
           {trace.error && (
-            <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-xl">
-              <div className="text-xs text-red-600 mb-1">Error</div>
-              <div className="text-red-800 font-mono text-sm">
+            <div className="mt-4 p-4 bg-[var(--signal-conflict-soft)] border border-[var(--signal-conflict)] rounded-xl">
+              <div className="text-xs text-[var(--signal-conflict-ink)] mb-1">Error</div>
+              <div className="text-[var(--signal-conflict-ink)] font-mono text-sm">
                 {getErrorMessage(trace.error)}
               </div>
             </div>
@@ -234,12 +234,12 @@ export function SharedTraceView({ token }: SharedTraceViewProps) {
 
         {/* Timeline */}
         {events.length > 0 && (
-          <div className="bg-szn-card rounded-2xl shadow-sm border p-6">
-            <h2 className="text-lg font-semibold text-szn-text-1 mb-4">
+          <div className="bg-[var(--ink-0)] rounded-2xl shadow-sm border p-6">
+            <h2 className="text-lg font-semibold text-[var(--ink-900)] mb-4">
               Pipeline Timeline
             </h2>
             <div className="relative">
-              <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-szn-border" />
+              <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-[var(--ink-200)]" />
               <div className="space-y-3">
                 {events.map((event, index) => {
                   const colors = STAGE_COLORS[event.stage] || STAGE_COLORS.validate;
@@ -261,7 +261,7 @@ export function SharedTraceView({ token }: SharedTraceViewProps) {
                         className={`w-full text-left p-4 rounded-xl border transition-all ${
                           isExpanded
                             ? `${colors.bg} ${colors.border}`
-                            : "bg-szn-card border-szn-border hover:border-szn-border"
+                            : "bg-[var(--ink-0)] border-[var(--ink-200)] hover:border-[var(--ink-200)]"
                         }`}
                       >
                         <div className="flex items-center justify-between mb-2">
@@ -271,26 +271,26 @@ export function SharedTraceView({ token }: SharedTraceViewProps) {
                             >
                               {event.stage}
                             </span>
-                            <span className="font-medium text-szn-text-1 text-sm">
+                            <span className="font-medium text-[var(--ink-900)] text-sm">
                               {event.name}
                             </span>
                             {event.cached && (
-                              <span className="text-xs bg-szn-accent/10 text-szn-accent px-2 py-0.5 rounded-full">
+                              <span className="text-xs bg-[var(--ink-900)]/10 text-[var(--ink-900)] px-2 py-0.5 rounded-full">
                                 cached
                               </span>
                             )}
                           </div>
                           <div className="flex items-center gap-3">
-                            <span className="text-sm text-szn-text-2 font-medium">
+                            <span className="text-sm text-[var(--ink-600)] font-medium">
                               {duration.toFixed(0)}ms
                             </span>
                             {event.cost !== undefined && (
-                              <span className="text-xs text-szn-text-3">
+                              <span className="text-xs text-[var(--ink-500)]">
                                 ${event.cost.toFixed(5)}
                               </span>
                             )}
                             <svg
-                              className={`w-4 h-4 text-szn-text-3 transition-transform ${
+                              className={`w-4 h-4 text-[var(--ink-500)] transition-transform ${
                                 isExpanded ? "rotate-180" : ""
                               }`}
                               fill="none"
@@ -308,7 +308,7 @@ export function SharedTraceView({ token }: SharedTraceViewProps) {
                         </div>
 
                         {/* Meta Info */}
-                        <div className="flex items-center gap-4 text-xs text-szn-text-2">
+                        <div className="flex items-center gap-4 text-xs text-[var(--ink-600)]">
                           {event.model && <span>Model: {event.model}</span>}
                           {event.input !== undefined && (
                             <span>Input: {event.input}</span>
@@ -320,8 +320,8 @@ export function SharedTraceView({ token }: SharedTraceViewProps) {
 
                         {/* Expanded Details */}
                         {isExpanded && event.details && (
-                          <div className="mt-4 pt-4 border-t border-szn-border">
-                            <pre className="text-xs text-szn-text-2 bg-szn-bg p-3 rounded-lg overflow-auto max-h-40">
+                          <div className="mt-4 pt-4 border-t border-[var(--ink-200)]">
+                            <pre className="text-xs text-[var(--ink-600)] bg-[var(--ink-50)] p-3 rounded-lg overflow-auto max-h-40">
                               {JSON.stringify(event.details, null, 2)}
                             </pre>
                           </div>
@@ -338,11 +338,11 @@ export function SharedTraceView({ token }: SharedTraceViewProps) {
         {/* Config Section */}
         {trace.effective_config &&
           Object.keys(trace.effective_config).length > 0 && (
-            <div className="bg-szn-card rounded-2xl shadow-sm border p-6 mt-6">
-              <h2 className="text-lg font-semibold text-szn-text-1 mb-4">
+            <div className="bg-[var(--ink-0)] rounded-2xl shadow-sm border p-6 mt-6">
+              <h2 className="text-lg font-semibold text-[var(--ink-900)] mb-4">
                 Configuration
               </h2>
-              <pre className="text-xs text-szn-text-2 bg-szn-bg p-4 rounded-xl overflow-auto max-h-60">
+              <pre className="text-xs text-[var(--ink-600)] bg-[var(--ink-50)] p-4 rounded-xl overflow-auto max-h-60">
                 {JSON.stringify(trace.effective_config, null, 2)}
               </pre>
             </div>
@@ -350,11 +350,11 @@ export function SharedTraceView({ token }: SharedTraceViewProps) {
       </main>
 
       {/* Footer */}
-      <footer className="border-t bg-szn-card mt-12">
+      <footer className="border-t bg-[var(--ink-0)] mt-12">
         <div className="max-w-5xl mx-auto px-4 py-6 text-center">
-          <p className="text-sm text-szn-text-2">
+          <p className="text-sm text-[var(--ink-600)]">
             Powered by{" "}
-            <Link href="/" className="text-szn-accent hover:underline">
+            <Link href="/" className="text-[var(--ink-900)] hover:underline">
               Seizn
             </Link>{" "}
             - AI Memory Platform

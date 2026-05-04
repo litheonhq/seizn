@@ -12,6 +12,7 @@
 
 import { createHash } from 'crypto';
 import { createServerClient } from '@/lib/supabase';
+import { applySafeStatePatch } from '@/lib/fall/patch-safety';
 
 // ============================================
 // Types
@@ -548,23 +549,7 @@ export class TimeTravelDebugger {
   }
 
   private applyPatch(state: CheckpointState, patch: Record<string, unknown>): CheckpointState {
-    const result = JSON.parse(JSON.stringify(state)) as CheckpointState;
-
-    for (const [key, value] of Object.entries(patch)) {
-      if (key === 'messages' && Array.isArray(value)) {
-        result.messages = value as Message[];
-      } else if (key === 'context' && typeof value === 'object') {
-        result.context = { ...result.context, ...(value as Record<string, unknown>) };
-      } else if (key === 'memory' && typeof value === 'object') {
-        result.memory = { ...result.memory, ...(value as Record<string, unknown>) };
-      } else if (key === 'toolCalls' && Array.isArray(value)) {
-        result.toolCalls = value as ToolCall[];
-      } else if (key in result) {
-        (result as unknown as Record<string, unknown>)[key] = value;
-      }
-    }
-
-    return result;
+    return applySafeStatePatch(state, patch);
   }
 
   private deepDiff(

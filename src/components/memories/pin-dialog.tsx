@@ -147,16 +147,16 @@ export function PinDialog({
       />
 
       {/* Modal */}
-      <div className="relative bg-szn-card rounded-lg shadow-xl max-w-md w-full mx-4 border border-szn-border overflow-hidden">
+      <div className="relative bg-[var(--ink-0)] rounded-lg shadow-xl max-w-md w-full mx-4 border border-[var(--ink-200)] overflow-hidden">
         {/* Header */}
-        <div className="px-6 py-4 border-b border-szn-border bg-szn-accent/10">
+        <div className="px-6 py-4 border-b border-[var(--ink-200)] bg-[var(--ink-900)]/10">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-szn-accent/10 flex items-center justify-center">
-              <LockIcon className="w-5 h-5 text-szn-accent" />
+            <div className="w-10 h-10 rounded-xl bg-[var(--ink-900)]/10 flex items-center justify-center">
+              <LockIcon className="w-5 h-5 text-[var(--ink-900)]" />
             </div>
             <div className="min-w-0">
-              <h2 className="text-lg font-semibold text-szn-text-1">{title}</h2>
-              <p className="text-sm text-szn-text-2">{subtitle}</p>
+              <h2 className="text-lg font-semibold text-[var(--ink-900)]">{title}</h2>
+              <p className="text-sm text-[var(--ink-600)]">{subtitle}</p>
             </div>
           </div>
         </div>
@@ -165,28 +165,28 @@ export function PinDialog({
         <div className="p-6 space-y-4">
           {/* Warning */}
           {mode === "setup" && (
-            <div className="p-4 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800">
-              <p className="text-sm text-amber-800 dark:text-amber-200">
+            <div className="p-4 rounded-xl bg-[var(--signal-pending-soft)] dark:bg-[var(--signal-pending)]/20 border border-[var(--signal-pending)] dark:border-[var(--signal-pending)]">
+              <p className="text-sm text-[var(--signal-pending-ink)] dark:text-[var(--signal-pending-soft)]">
                 <strong>Important:</strong> This PIN cannot be recovered. If you forget it, encrypted memories are permanently lost.
               </p>
             </div>
           )}
 
           {mode === "unlock" && (
-            <div className="p-4 rounded-xl bg-szn-surface border border-szn-border">
-              <p className="text-sm text-szn-text-2">
+            <div className="p-4 rounded-xl bg-[var(--ink-50)] border border-[var(--ink-200)]">
+              <p className="text-sm text-[var(--ink-600)]">
                 This unlock only lasts for the current session. Refreshing the page will lock again.
               </p>
-              <div className="mt-2 text-xs text-szn-text-2">
+              <div className="mt-2 text-xs text-[var(--ink-600)]">
                 Attempts: {Math.min(securityState.failedAttempts, 3)}/3
-                {isCooldown && <span className="ml-2 text-red-600 dark:text-red-400">Cooldown: {cooldownSeconds}s</span>}
+                {isCooldown && <span className="ml-2 text-[var(--signal-conflict-ink)] dark:text-[var(--signal-conflict-soft)]">Cooldown: {cooldownSeconds}s</span>}
               </div>
             </div>
           )}
 
           {/* PIN input */}
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-szn-text-2">
+            <label className="block text-sm font-medium text-[var(--ink-600)]">
               PIN (4-6 digits)
             </label>
             <input
@@ -196,14 +196,14 @@ export function PinDialog({
               value={pin}
               onChange={(e) => setPin(digitsOnly(e.target.value).slice(0, 6))}
               disabled={loading || isCooldown}
-              className="w-full px-4 py-2 rounded-xl border border-szn-border bg-szn-card text-szn-text-1 placeholder:text-szn-text-3 focus:outline-none focus:ring-2 focus:ring-szn-accent disabled:opacity-60"
+              className="w-full px-4 py-2 rounded-xl border border-[var(--ink-200)] bg-[var(--ink-0)] text-[var(--ink-900)] placeholder:text-[var(--ink-500)] focus:outline-none focus:ring-2 focus:ring-[var(--ink-900)] disabled:opacity-60"
               placeholder="1234"
             />
           </div>
 
           {mode === "setup" && (
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-szn-text-2">
+              <label className="block text-sm font-medium text-[var(--ink-600)]">
                 Confirm PIN
               </label>
               <input
@@ -213,20 +213,20 @@ export function PinDialog({
                 value={confirmPin}
                 onChange={(e) => setConfirmPin(digitsOnly(e.target.value).slice(0, 6))}
                 disabled={loading}
-                className="w-full px-4 py-2 rounded-xl border border-szn-border bg-szn-card text-szn-text-1 placeholder:text-szn-text-3 focus:outline-none focus:ring-2 focus:ring-szn-accent disabled:opacity-60"
+                className="w-full px-4 py-2 rounded-xl border border-[var(--ink-200)] bg-[var(--ink-0)] text-[var(--ink-900)] placeholder:text-[var(--ink-500)] focus:outline-none focus:ring-2 focus:ring-[var(--ink-900)] disabled:opacity-60"
                 placeholder="1234"
               />
             </div>
           )}
 
           {error && (
-            <div className="p-3 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-sm text-red-700 dark:text-red-300">
+            <div className="p-3 rounded-xl bg-[var(--signal-conflict-soft)] dark:bg-[var(--signal-conflict)]/20 border border-[var(--signal-conflict)] dark:border-[var(--signal-conflict)] text-sm text-[var(--signal-conflict-ink)] dark:text-[var(--signal-conflict-soft)]">
               {error}
             </div>
           )}
 
           {isCooldown && (
-            <div className="text-sm text-szn-text-2">
+            <div className="text-sm text-[var(--ink-600)]">
               Please wait {cooldownSeconds}s before trying again.
             </div>
           )}
@@ -237,7 +237,7 @@ export function PinDialog({
               type="button"
               onClick={onClose}
               disabled={loading}
-              className="flex-1 py-2.5 rounded-xl border border-szn-border text-szn-text-2 font-medium hover:bg-szn-surface-1 disabled:opacity-60 transition-colors"
+              className="flex-1 py-2.5 rounded-xl border border-[var(--ink-200)] text-[var(--ink-600)] font-medium hover:bg-[var(--ink-50)] disabled:opacity-60 transition-colors"
             >
               {mode === "unlock" ? "Continue locked" : "Cancel"}
             </button>
@@ -245,7 +245,7 @@ export function PinDialog({
               type="button"
               onClick={handleSubmit}
               disabled={!canSubmit}
-              className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-szn-accent to-szn-accent/80 text-white font-medium hover:from-szn-accent hover:to-szn-accent disabled:opacity-50 disabled:cursor-not-allowed transition-all inline-flex items-center justify-center gap-2"
+              className="flex-1 py-2.5 rounded-xl bg-[var(--ink-900)] text-white font-medium hover:from-[var(--ink-900)] hover:to-[var(--ink-900)] disabled:opacity-50 disabled:cursor-not-allowed transition-all inline-flex items-center justify-center gap-2"
             >
               {loading ? (
                 <>

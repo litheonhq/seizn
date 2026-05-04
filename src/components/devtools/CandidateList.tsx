@@ -87,21 +87,21 @@ export function CandidateList({
 
   if (candidates.length === 0) {
     return (
-      <div className={`bg-gray-900 rounded-lg border border-gray-800 p-6 ${className}`}>
+      <div className={`bg-[var(--ink-900)] rounded-lg border border-gray-800 p-6 ${className}`}>
         <p className="text-center text-gray-500">No candidates available</p>
       </div>
     );
   }
 
   return (
-    <div className={`bg-gray-900 rounded-lg border border-gray-800 ${className}`}>
+    <div className={`bg-[var(--ink-900)] rounded-lg border border-gray-800 ${className}`}>
       {/* Header */}
       <div className="p-4 border-b border-gray-800">
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-semibold text-white">{title}</h3>
           <div className="flex items-center gap-2">
             {/* View Mode Toggle */}
-            <div className="flex bg-gray-800 rounded-lg p-1">
+            <div className="flex bg-[var(--ink-800)] rounded-lg p-1">
               <button
                 onClick={() => setViewMode("list")}
                 className={`px-3 py-1 text-xs font-medium rounded transition-colors ${
@@ -128,7 +128,7 @@ export function CandidateList({
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as "rank" | "score")}
-              className="px-3 py-1 bg-gray-800 border border-gray-700 rounded-lg text-xs text-white focus:outline-none"
+              className="px-3 py-1 bg-[var(--ink-800)] border border-gray-700 rounded-lg text-xs text-white focus:outline-none"
             >
               <option value="rank">By Rank</option>
               <option value="score">By Score</option>
@@ -205,7 +205,7 @@ export function CandidateList({
             {sortedCandidates.map((candidate) => (
               <div
                 key={candidate.id}
-                className="flex items-center gap-4 p-3 rounded-lg bg-gray-800/50 hover:bg-gray-800 transition-colors"
+                className="flex items-center gap-4 p-3 rounded-lg bg-[var(--ink-800)]/50 hover:bg-[var(--ink-800)] transition-colors"
               >
                 {/* Rank */}
                 <div className="w-10 text-center">
@@ -213,7 +213,7 @@ export function CandidateList({
                   {showRankDelta && candidate.rank_delta !== undefined && candidate.rank_delta !== 0 && (
                     <div
                       className={`text-xs ${
-                        candidate.rank_delta > 0 ? "text-green-400" : "text-red-400"
+                        candidate.rank_delta > 0 ? "text-green-400" : "text-[var(--signal-conflict-soft)]"
                       }`}
                     >
                       {candidate.rank_delta > 0 ? "+" : ""}
@@ -248,7 +248,7 @@ export function CandidateList({
                   {showRankDelta && candidate.score_delta !== undefined && (
                     <div
                       className={`text-xs ${
-                        candidate.score_delta > 0 ? "text-green-400" : "text-red-400"
+                        candidate.score_delta > 0 ? "text-green-400" : "text-[var(--signal-conflict-soft)]"
                       }`}
                     >
                       {candidate.score_delta > 0 ? "+" : ""}

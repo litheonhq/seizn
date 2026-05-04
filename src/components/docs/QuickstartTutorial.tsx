@@ -223,16 +223,16 @@ response = openai.chat.completions.create(
       {/* Hero */}
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-4">
-          <span className="px-3 py-1 bg-szn-accent/10 text-szn-accent text-sm font-medium rounded-full">
+          <span className="px-3 py-1 bg-[var(--ink-900)]/10 text-[var(--ink-900)] text-sm font-medium rounded-full">
             {t("docs.quickstartTutorial.badge")}
           </span>
-          <span className="text-szn-text-3">•</span>
-          <span className="text-szn-text-2 text-sm">{t("docs.quickstartTutorial.noCreditCard")}</span>
+          <span className="text-[var(--ink-500)]">•</span>
+          <span className="text-[var(--ink-600)] text-sm">{t("docs.quickstartTutorial.noCreditCard")}</span>
         </div>
-        <h2 className="text-3xl font-bold text-szn-text-1 mb-4">
+        <h2 className="text-3xl font-bold text-[var(--ink-900)] mb-4">
           {t("docs.quickstartTutorial.title")}
         </h2>
-        <p className="text-lg text-szn-text-2 max-w-2xl">
+        <p className="text-lg text-[var(--ink-600)] max-w-2xl">
           {t("docs.quickstartTutorial.subtitle")}
         </p>
       </div>
@@ -240,12 +240,12 @@ response = openai.chat.completions.create(
       {/* Progress Bar */}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-sm text-szn-text-2">{t("docs.quickstartTutorial.progress")}</span>
-          <span className="text-sm text-szn-text-2">{completedSteps.size} / {steps.length} {t("docs.quickstartTutorial.steps")}</span>
+          <span className="text-sm text-[var(--ink-600)]">{t("docs.quickstartTutorial.progress")}</span>
+          <span className="text-sm text-[var(--ink-600)]">{completedSteps.size} / {steps.length} {t("docs.quickstartTutorial.steps")}</span>
         </div>
-        <div className="w-full h-2 bg-szn-surface rounded-full overflow-hidden">
+        <div className="w-full h-2 bg-[var(--ink-50)] rounded-full overflow-hidden">
           <div
-            className="h-full bg-gradient-to-r from-szn-accent to-szn-accent-2 transition-all duration-300"
+            className="h-full bg-gradient-to-r from-[var(--ink-900)] to-[var(--ink-700)] transition-all duration-300"
             style={{ width: `${progress}%` }}
           />
         </div>
@@ -258,8 +258,8 @@ response = openai.chat.completions.create(
             key={index}
             className={`border rounded-xl transition-colors ${
               completedSteps.has(index)
-                ? "bg-szn-accent/5 border-szn-accent/30"
-                : "bg-szn-card border-szn-border"
+                ? "bg-[var(--ink-900)]/5 border-[var(--ink-900)]/30"
+                : "bg-[var(--ink-0)] border-[var(--ink-200)]"
             }`}
           >
             {/* Step Header */}
@@ -270,8 +270,8 @@ response = openai.chat.completions.create(
               <div
                 className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-colors ${
                   completedSteps.has(index)
-                    ? "bg-szn-accent text-szn-text-1"
-                    : "bg-szn-surface text-szn-text-2"
+                    ? "bg-[var(--ink-900)] text-[var(--ink-900)]"
+                    : "bg-[var(--ink-50)] text-[var(--ink-600)]"
                 }`}
               >
                 {completedSteps.has(index) ? (
@@ -284,12 +284,12 @@ response = openai.chat.completions.create(
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-3 mb-1">
-                  <h3 className="text-lg font-semibold text-szn-text-1">{step.title}</h3>
-                  <span className="text-xs text-szn-text-3 bg-szn-surface px-2 py-0.5 rounded-full">
+                  <h3 className="text-lg font-semibold text-[var(--ink-900)]">{step.title}</h3>
+                  <span className="text-xs text-[var(--ink-500)] bg-[var(--ink-50)] px-2 py-0.5 rounded-full">
                     {step.time}
                   </span>
                 </div>
-                <p className="text-szn-text-2 text-sm">{step.description}</p>
+                <p className="text-[var(--ink-600)] text-sm">{step.description}</p>
               </div>
             </button>
 
@@ -298,7 +298,7 @@ response = openai.chat.completions.create(
               {step.action && (
                 <Link
                   href={step.action.href}
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-szn-accent to-szn-accent-2 text-white hover:opacity-90 font-medium rounded-lg transition-colors text-sm"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[var(--ink-900)] to-[var(--ink-700)] text-white hover:opacity-90 font-medium rounded-lg transition-colors text-sm"
                 >
                   {step.action.label}
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -308,18 +308,18 @@ response = openai.chat.completions.create(
               )}
 
               {step.code && (
-                <div className="bg-szn-surface rounded-lg overflow-hidden">
+                <div className="bg-[var(--ink-50)] rounded-lg overflow-hidden">
                   {/* Code Tabs */}
                   {step.code.tabs.length > 1 && (
-                    <div className="flex border-b border-szn-border">
+                    <div className="flex border-b border-[var(--ink-200)]">
                       {step.code.tabs.map((tab, tabIndex) => (
                         <button
                           key={tabIndex}
                           onClick={() => setTabIndex(index, tabIndex)}
                           className={`px-4 py-2 text-sm font-medium transition-colors ${
                             getTabIndex(index) === tabIndex
-                              ? "text-szn-accent border-b-2 border-szn-accent -mb-px"
-                              : "text-szn-text-2 hover:text-szn-text-1"
+                              ? "text-[var(--ink-900)] border-b-2 border-[var(--ink-900)] -mb-px"
+                              : "text-[var(--ink-600)] hover:text-[var(--ink-900)]"
                           }`}
                         >
                           {tab.lang}
@@ -331,11 +331,11 @@ response = openai.chat.completions.create(
                   {/* Code Block */}
                   <div className="p-4 relative">
                     {step.code.tabs.length === 1 && (
-                      <div className="absolute top-3 right-3 text-xs text-szn-text-3">
+                      <div className="absolute top-3 right-3 text-xs text-[var(--ink-500)]">
                         {step.code.tabs[0].lang}
                       </div>
                     )}
-                    <pre className="text-sm text-szn-text-1 overflow-x-auto">
+                    <pre className="text-sm text-[var(--ink-900)] overflow-x-auto">
                       <code>{step.code.tabs[getTabIndex(index)].code}</code>
                     </pre>
                   </div>
@@ -348,26 +348,26 @@ response = openai.chat.completions.create(
 
       {/* Completion */}
       {progress === 100 && (
-        <div className="mt-8 p-8 bg-gradient-to-br from-szn-accent/10 to-szn-accent-2/10 border border-szn-accent/30 rounded-lg text-center">
-          <div className="w-16 h-16 bg-szn-accent rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-szn-text-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="mt-8 p-8 bg-gradient-to-br from-[var(--ink-900)]/10 to-[var(--ink-700)]/10 border border-[var(--ink-900)]/30 rounded-lg text-center">
+          <div className="w-16 h-16 bg-[var(--ink-900)] rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg className="w-8 h-8 text-[var(--ink-900)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h2 className="text-2xl font-bold text-szn-text-1 mb-2">{t("docs.quickstartTutorial.congratulations")}</h2>
-          <p className="text-szn-text-2 mb-6">
+          <h2 className="text-2xl font-bold text-[var(--ink-900)] mb-2">{t("docs.quickstartTutorial.congratulations")}</h2>
+          <p className="text-[var(--ink-600)] mb-6">
             {t("docs.quickstartTutorial.completionText")}
           </p>
           <div className="flex items-center justify-center gap-4">
             <a
               href="#authentication"
-              className="px-6 py-3 bg-szn-surface hover:bg-szn-surface-1 text-szn-text-1 font-medium rounded-lg transition-colors"
+              className="px-6 py-3 bg-[var(--ink-50)] hover:bg-[var(--ink-50)] text-[var(--ink-900)] font-medium rounded-lg transition-colors"
             >
               {t("docs.quickstartTutorial.continueReading")}
             </a>
             <Link
               href="/dashboard"
-              className="px-6 py-3 bg-gradient-to-r from-szn-accent to-szn-accent-2 text-white hover:opacity-90 font-medium rounded-lg transition-colors"
+              className="px-6 py-3 bg-gradient-to-r from-[var(--ink-900)] to-[var(--ink-700)] text-white hover:opacity-90 font-medium rounded-lg transition-colors"
             >
               {t("docs.quickstartTutorial.goToDashboard")}
             </Link>

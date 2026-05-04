@@ -176,7 +176,7 @@ export function DashboardClient({ user }: { user: User }) {
       <header className="border-b border-zinc-800">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link href="/" className="text-xl font-bold text-white">
-            Seizn<span className="text-szn-accent">.</span>
+            Seizn<span className="text-[var(--ink-900)]">.</span>
           </Link>
           <div className="flex items-center gap-6">
             <nav className="flex items-center gap-4">
@@ -222,7 +222,7 @@ export function DashboardClient({ user }: { user: User }) {
         </div>
 
         {loadError && (
-          <div className="mb-6 rounded-lg border border-amber-400/30 bg-amber-400/10 p-4 text-sm text-amber-100">
+          <div className="mb-6 rounded-lg border border-[var(--signal-pending)]/30 bg-[var(--signal-pending)]/10 p-4 text-sm text-[var(--signal-pending-soft)]">
             {loadError}
           </div>
         )}
@@ -257,12 +257,12 @@ export function DashboardClient({ user }: { user: User }) {
           </div>
           <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
             <p className="text-zinc-400 text-sm mb-1">Plan</p>
-            <p className="text-3xl font-bold text-szn-accent">
+            <p className="text-3xl font-bold text-[var(--ink-900)]">
               {stats?.planDisplay || "Free"}
             </p>
             <Link
               href="/pricing"
-              className="text-szn-accent text-sm hover:underline mt-1 inline-block"
+              className="text-[var(--ink-900)] text-sm hover:underline mt-1 inline-block"
             >
               Upgrade
             </Link>
@@ -280,15 +280,15 @@ export function DashboardClient({ user }: { user: User }) {
 
           {/* Error Message */}
           {error && (
-            <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm">
+            <div className="mb-6 p-4 bg-[var(--signal-conflict)]/10 border border-[var(--signal-conflict)]/20 rounded-lg text-[var(--signal-conflict-soft)] text-sm">
               {error}
             </div>
           )}
 
           {/* New Key Created */}
           {newKey && (
-            <div className="mb-6 p-4 bg-szn-accent/10 border border-szn-accent/20 rounded-lg">
-              <p className="text-szn-accent font-medium mb-2">
+            <div className="mb-6 p-4 bg-[var(--ink-900)]/10 border border-[var(--ink-900)]/20 rounded-lg">
+              <p className="text-[var(--ink-900)] font-medium mb-2">
                 New API Key Created
               </p>
               <p className="text-zinc-300 text-sm mb-2">
@@ -299,7 +299,7 @@ export function DashboardClient({ user }: { user: User }) {
               </code>
               <button
                 onClick={() => copyToClipboard(newKey)}
-                className="mt-3 text-sm text-szn-accent hover:text-szn-accent/80"
+                className="mt-3 text-sm text-[var(--ink-900)] hover:text-[var(--ink-900)]/80"
               >
                 {copied ? "Copied!" : "Copy to clipboard"}
               </button>
@@ -313,13 +313,13 @@ export function DashboardClient({ user }: { user: User }) {
               value={newKeyName}
               onChange={(e) => setNewKeyName(e.target.value)}
               placeholder="Key name (e.g., Production)"
-              className="flex-1 px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-szn-accent"
+              className="flex-1 px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-[var(--ink-900)]"
               onKeyDown={(e) => e.key === "Enter" && createApiKey()}
             />
             <button
               onClick={createApiKey}
               disabled={isLoading || !newKeyName.trim()}
-              className="px-4 py-2 bg-szn-accent hover:bg-szn-accent/80 text-white font-medium rounded-lg transition-colors disabled:opacity-50"
+              className="px-4 py-2 bg-[var(--ink-900)] hover:bg-[var(--ink-900)]/80 text-white font-medium rounded-lg transition-colors disabled:opacity-50"
             >
               {isLoading ? "Creating..." : "Create Key"}
             </button>
@@ -357,7 +357,7 @@ export function DashboardClient({ user }: { user: User }) {
                     </div>
                     <button
                       onClick={() => revokeApiKey(key.id)}
-                      className="text-red-400 hover:text-red-300 text-sm"
+                      className="text-[var(--signal-conflict-soft)] hover:text-[var(--signal-conflict-soft)] text-sm"
                     >
                       Revoke
                     </button>
@@ -393,7 +393,7 @@ curl -X POST https://seizn.com/api/extract \\
           <div className="mt-4">
             <Link
               href="/docs"
-              className="text-szn-accent hover:text-szn-accent/80 text-sm"
+              className="text-[var(--ink-900)] hover:text-[var(--ink-900)]/80 text-sm"
             >
               View full documentation →
             </Link>

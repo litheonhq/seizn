@@ -45,32 +45,32 @@ export function ApiReferenceClient({ locale, dictionary }: Props) {
   }, [isLoaded]);
 
   return (
-    <div className="min-h-screen bg-szn-bg flex flex-col">
+    <div className="min-h-screen bg-[var(--ink-50)] flex flex-col">
       {/* Header */}
-      <header className="border-b border-szn-border sticky top-0 bg-szn-bg/80 backdrop-blur-sm z-50">
+      <header className="border-b border-[var(--ink-200)] sticky top-0 bg-[var(--ink-50)]/80 backdrop-blur-sm z-50">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link href={`/${locale}`} className="text-xl font-bold text-white">
-              Seizn<span className="text-szn-accent">.</span>
+              Seizn<span className="text-[var(--ink-900)]">.</span>
             </Link>
-            <span className="text-szn-text-3">/</span>
-            <Link href={`/${locale}/docs`} className="text-szn-text-2 hover:text-white transition-colors">
+            <span className="text-[var(--ink-500)]">/</span>
+            <Link href={`/${locale}/docs`} className="text-[var(--ink-600)] hover:text-white transition-colors">
               {t("nav.docs") === "nav.docs" ? "Docs" : t("nav.docs")}
             </Link>
-            <span className="text-szn-text-3">/</span>
+            <span className="text-[var(--ink-500)]">/</span>
             <span className="text-white">API Reference</span>
           </div>
           <nav className="flex items-center gap-4">
             <LanguageSwitcher currentLocale={locale} />
             <Link
               href={`/${locale}/dashboard`}
-              className="text-szn-text-2 hover:text-white transition-colors"
+              className="text-[var(--ink-600)] hover:text-white transition-colors"
             >
               Dashboard
             </Link>
             <Link
               href={`/${locale}/login`}
-              className="px-4 py-2 bg-szn-accent hover:bg-szn-accent/80 text-white font-medium rounded-lg transition-colors"
+              className="px-4 py-2 bg-[var(--ink-900)] hover:bg-[var(--ink-900)]/80 text-white font-medium rounded-lg transition-colors"
             >
               {t("nav.getStarted") === "nav.getStarted" ? "Get Started" : t("nav.getStarted")}
             </Link>

@@ -170,4 +170,60 @@ describe('request user helpers', () => {
     await expect(getSupabaseUserFromBearer(request)).resolves.toBeNull();
     expect(getUser).toHaveBeenCalledTimes(1);
   });
+
+  it('normalizes bearer-auth Supabase users to profile ids for app data access', async () => {
+    vi.mocked(auth).mockResolvedValueOnce(null);
+    const getUser = vi.fn().mockResolvedValueOnce({
+      data: {
+        user: {
+          id: 'auth-user-bearer',
+          email: 'bearer@example.com',
+          user_metadata: { name: 'Token User' },
+          last_sign_in_at: '2026-05-02T00:00:00.000Z',
+        },
+      },
+      error: null,
+    });
+    vi.mocked(createRequestAuthClient).mockReturnValueOnce({
+      auth: { getUser },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any);
+    vi.mocked(createServerClient).mockReturnValueOnce({
+      from: vi.fn(() => ({
+        select: vi.fn().mockReturnThis(),
+        eq: vi.fn((column: string, value: string) => ({
+          single: vi.fn().mockResolvedValue(
+            column === 'id' && value === 'auth-user-bearer'
+              ? {
+                  data: null,
+                  error: {
+                    code: 'PGRST116',
+                    message: 'JSON object requested, multiple (or no) rows returned',
+                  },
+                }
+              : {
+                  data: { id: 'profile-bearer' },
+                  error: null,
+                }
+          ),
+        })),
+      })),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any);
+
+    const request = new NextRequest('https://example.com/api/test', {
+      headers: {
+        Authorization: ['Bearer', 'token-123'].join(' '),
+      },
+    });
+
+    await expect(getRequestUser(request)).resolves.toEqual({
+      id: 'profile-bearer',
+      email: 'bearer@example.com',
+      name: 'Token User',
+      lastSignInAt: '2026-05-02T00:00:00.000Z',
+      organizationId: null,
+      organizationSelection: null,
+    });
+  });
 });

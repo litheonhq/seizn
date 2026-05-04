@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createServerClient } from '@/lib/supabase';
 import type { ExperimentArm } from './types';
 
@@ -29,7 +28,7 @@ export async function pickBanditArm(params: {
     .eq('experiment_id', params.experimentId);
 
   if (armsErr) throw armsErr;
-  const armRows = (arms ?? []) as any[];
+  const armRows = (arms ?? []) as ExperimentArm[];
   if (armRows.length === 0) throw new Error('No experiment arms');
 
   // Aggregate outcomes as successes/trials
@@ -43,7 +42,7 @@ export async function pickBanditArm(params: {
   const statsByArm = new Map<string, { successes: number; trials: number }>();
   for (const a of armRows) statsByArm.set(a.id, { successes: 0, trials: 0 });
 
-  for (const o of (outcomes ?? []) as any[]) {
+  for (const o of (outcomes ?? []) as Array<{ arm_id: string; event_type: string; value: number }>) {
     const armId = String(o.arm_id);
     const rec = statsByArm.get(armId);
     if (!rec) continue;

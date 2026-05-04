@@ -101,11 +101,11 @@ export function TestSuiteList({
 
   if (error) {
     return (
-      <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-        <p className="text-red-800">{error}</p>
+      <div className="bg-[var(--signal-conflict-soft)] border border-[var(--signal-conflict)] rounded-lg p-4">
+        <p className="text-[var(--signal-conflict-ink)]">{error}</p>
         <button
           onClick={fetchSuites}
-          className="mt-2 text-red-600 hover:text-red-800 text-sm underline"
+          className="mt-2 text-[var(--signal-conflict-ink)] hover:text-[var(--signal-conflict-ink)] text-sm underline"
         >
           Retry
         </button>

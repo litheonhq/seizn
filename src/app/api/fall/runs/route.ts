@@ -6,15 +6,14 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { validateApiKey } from '@/lib/auth/api-key';
+import { requireApiScope } from '@/lib/auth/api-scope';
 import { createServerClient } from '@/lib/supabase';
 
 export async function POST(request: NextRequest) {
   try {
-    const auth = await validateApiKey(request);
-    if (!auth.valid) {
-      return NextResponse.json({ error: 'Unauthorized', message: auth.error }, { status: 401 });
-    }
+    const authResult = await requireApiScope(request, 'fall:write');
+    if (authResult.response) return authResult.response;
+    const { auth } = authResult;
 
     const body = await request.json();
     const {
@@ -72,10 +71,9 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
-    const auth = await validateApiKey(request);
-    if (!auth.valid) {
-      return NextResponse.json({ error: 'Unauthorized', message: auth.error }, { status: 401 });
-    }
+    const authResult = await requireApiScope(request, 'fall:read');
+    if (authResult.response) return authResult.response;
+    const { auth } = authResult;
 
     const { searchParams } = new URL(request.url);
     const status = searchParams.get('status');

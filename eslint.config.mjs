@@ -9,6 +9,7 @@ const eslintConfig = [
       ".next/**/*",
       "node_modules/**/*",
       "mcp-server/**/*",
+      "docs/architecture/designer-round-2-1/project/**/*",
       "scripts/**/*",
       "sdks/**/*",
       "packages/**/*",

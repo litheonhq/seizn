@@ -1,0 +1,676 @@
+{
+  "version": "v1",
+  "generated_at": "2026-05-02",
+  "applies_to": "Seizn Author UI ↔ backend 데이터 계약",
+  "contract_principle": "각 화면이 어떤 데이터를 받고·어떤 액션을 발신하는지 명시. JSON Schema-style.",
+  "screens": {
+    "dashboard": {
+      "GET /api/projects": {
+        "response": {
+          "projects": [
+            {
+              "id": "string",
+              "name": "string",
+              "description": "string",
+              "scope": ["string"],
+              "entity_count": "number",
+              "candidate_count": "number",
+              "conflict_count": "number",
+              "last_updated": "ISO8601",
+              "phase": "string",
+              "trial_status": {"is_trial": "boolean", "days_remaining": "number"}
+            }
+          ]
+        }
+      },
+      "POST /api/projects": {
+        "request": {"name": "string", "description": "string", "initial_scope": "string"},
+        "response": {"project_id": "string"}
+      }
+    },
+    "inbox": {
+      "GET /api/projects/{id}/imports": {
+        "response": {
+          "imports": [
+            {
+              "id": "string",
+              "file_name": "string",
+              "file_size": "number",
+              "file_type": "md|docx|pdf|txt|json|notion_export|obsidian_md",
+              "upload_at": "ISO8601",
+              "parse_status": "queued|parsing|parsed|failed",
+              "parse_progress": "0-100",
+              "extract_status": "queued|extracting|extracted|failed",
+              "extract_progress": "0-100",
+              "candidate_count": "number",
+              "error_message": "string?",
+              "storage_key": "string?",
+              "parsed_text_preview": "string?",
+              "parser_version": "string?",
+              "source_role": "canon|character|scene|reference|visual",
+              "a_or_d_mode": "extract|raw_keep"
+            }
+          ],
+          "summary": {
+            "total": "number",
+            "parsing": "number",
+            "extracting": "number",
+            "ready_for_review": "number",
+            "failed": "number"
+          }
+        }
+      },
+      "POST /api/projects/{id}/imports": {
+        "request_form_data": {
+          "file": "binary",
+          "source_role": "canon|character|scene|reference|visual",
+          "a_or_d_mode": "extract|raw_keep"
+        },
+        "response": {"import_id": "string"}
+      },
+      "POST /api/projects/{id}/imports/{import_id}/retry": {
+        "response": {"status": "queued"}
+      },
+      "DELETE /api/projects/{id}/imports/{import_id}": {
+        "response": {"deleted": "boolean"}
+      }
+    },
+    "review_queue": {
+      "GET /api/projects/{id}/candidates": {
+        "query": {
+          "status": "candidate[,canon,...]",
+          "scope": "global|short1|short2|short3|main",
+          "tier": "1|2|3",
+          "confidence_min": "0.0-1.0",
+          "source_id": "string?",
+          "type": "character|world_rule|event|relationship|voice_sample|fact",
+          "sort": "priority|date|confidence|source_order",
+          "page": "number",
+          "page_size": "number"
+        },
+        "response": {
+          "candidates": [
+            {
+              "id": "string",
+              "content": "string",
+              "type": "string",
+              "status": "string",
+              "confidence": "0.0-1.0",
+              "suggested_status": "string",
+              "tags": ["string"],
+              "source": {
+                "document_id": "string",
+                "file_path": "string",
+                "span": {
+                  "start_line": "number",
+                  "end_line": "number",
+                  "start_char": "number",
+                  "end_char": "number"
+                },
+                "excerpt": "string"
+              },
+              "related_existing": [
+                {
+                  "entity_id": "string",
+                  "entity_type": "string",
+                  "relationship": "duplicate|similar|conflicts"
+                }
+              ],
+              "extracted_at": "ISO8601"
+            }
+          ],
+          "total": "number",
+          "page": "number"
+        }
+      },
+      "GET /api/projects/{id}/candidates/{candidate_id}": {
+        "response": {
+          "candidate": {
+            "id": "string",
+            "content": "string",
+            "type": "character|world_rule|event|relationship|voice_sample|fact",
+            "status": "FactStatus",
+            "confidence": "0.0-1.0",
+            "suggested_status": "FactStatus",
+            "tags": ["string"],
+            "source": {
+              "document_id": "string",
+              "file_path": "string",
+              "span": {"start_line": "number", "end_line": "number", "start_char": "number", "end_char": "number"},
+              "excerpt": "string"
+            },
+            "related_existing": [{"entity_id": "string", "relationship": "duplicate|similar|conflicts"}],
+            "extracted_at": "ISO8601"
+          }
+        }
+      },
+      "POST /api/projects/{id}/candidates": {
+        "description": "수동 candidate 생성 또는 simulation promote",
+        "request": {
+          "content": "string",
+          "type": "string",
+          "suggested_status": "FactStatus",
+          "tags": ["string"],
+          "source": "object?",
+          "from_simulation_id": "string?",
+          "from_simulation_candidate_index": "number?"
+        },
+        "response": {"candidate_id": "string"}
+      },
+      "POST /api/projects/{id}/candidates/{candidate_id}/decide": {
+        "request": {
+          "action": "approve|reject|retire|past_only|merge|split|assign_knowledge|author_only|change_scope|escalate_conflict",
+          "params": {
+            "merge_with_id": "string?",
+            "split_into": ["string"],
+            "assigned_characters": ["string"],
+            "new_scope": "string?",
+            "new_tier": "string?",
+            "valid_at": "ISO8601?",
+            "invalid_at": "ISO8601?"
+          }
+        },
+        "response": {
+          "candidate_id": "string",
+          "new_status": "string",
+          "promoted_entity_id": "string?",
+          "side_effects": [
+            {"type": "graph_updated|memory_added|conflict_detected", "details": "object"}
+          ]
+        }
+      },
+      "POST /api/projects/{id}/candidates/batch_decide": {
+        "request": {
+          "candidate_ids": ["string"],
+          "action": "string",
+          "params": "object"
+        }
+      }
+    },
+    "character_card": {
+      "GET /api/projects/{id}/characters": {
+        "response": {
+          "characters": [
+            {
+              "id": "string",
+              "name": "string",
+              "aliases": ["string"],
+              "scope": ["string"],
+              "summary": "string"
+            }
+          ]
+        }
+      },
+      "GET /api/projects/{id}/characters/{character_id}": {
+        "response": {
+          "character": {
+            "id": "string",
+            "name": "string",
+            "aliases": ["string"],
+            "scope": ["string"],
+            "archetype": "string",
+            "voice": {
+              "speech_pattern": "string",
+              "vocabulary": "string",
+              "signature_expressions": ["string"],
+              "taboo_words": ["string"]
+            },
+            "persona": {
+              "traits": ["string"],
+              "desires": ["string"],
+              "vulnerabilities": ["string"]
+            },
+            "appearance": "object",
+            "background": "object (author_only가능)",
+            "knowledge_state": {
+              "known_facts": [
+                {
+                  "fact_id": "string",
+                  "content_summary": "string",
+                  "learned_at": "string (Day 또는 timestamp)",
+                  "source_event_id": "string"
+                }
+              ],
+              "unknown_facts": [
+                {"fact_id": "string", "reason": "string"}
+              ],
+              "hidden_facts": [
+                {"fact_id": "string", "hidden_from": ["character_id"]}
+              ],
+              "author_only_facts": [
+                {"fact_id": "string"}
+              ],
+              "misunderstandings": [
+                {"correct_fact_id": "string", "what_char_thinks": "string"}
+              ]
+            },
+            "relationships": [
+              {
+                "to_character_id": "string",
+                "type": "string",
+                "current_dimensions": "object",
+                "recent_events": ["event_id"]
+              }
+            ],
+            "recent_important_memories": [
+              {
+                "memory_id": "string",
+                "salience": "0.0-1.0",
+                "summary": "string",
+                "day": "string"
+              }
+            ],
+            "voice_samples": [
+              {"source_event_id": "string", "dialogue_text": "string"}
+            ],
+            "current_arc_phase": "string"
+          }
+        }
+      },
+      "PATCH /api/projects/{id}/characters/{character_id}": {
+        "request": {"field": "string", "value": "any"},
+        "response": {"updated": "boolean", "review_required": "boolean", "candidate_id": "string?"}
+      },
+      "POST /api/projects/{id}/characters/{character_id}/backlog": {
+        "request": {
+          "categories": ["좋아하는 것|싫어하는 것|작은 보상|작은 짜증"],
+          "items_per_category": "5..7",
+          "existing_entries": ["string?"],
+          "principles": "string?"
+        },
+        "response": {
+          "character_id": "string",
+          "character_name": "string",
+          "candidate_ids": ["string"],
+          "candidates": [
+            {
+              "category": "좋아하는 것|싫어하는 것|작은 보상|작은 짜증",
+              "content": "string",
+              "rationale": "string",
+              "tier": "1",
+              "scope": "short1"
+            }
+          ],
+          "rejected": [
+            {"candidate": "object", "reasons": ["string"]}
+          ],
+          "conflicts_detected": "number",
+          "export_markdown": "string",
+          "metrics": "object"
+        }
+      }
+    },
+    "relationship_graph": {
+      "GET /api/projects/{id}/graph": {
+        "query": {
+          "time_state": "ISO8601 또는 Day",
+          "scope": "string",
+          "type": "string?",
+          "tier": "number?"
+        },
+        "response": {
+          "nodes": [
+            {
+              "id": "string",
+              "type": "person|organization|location|event|concept",
+              "label": "string",
+              "importance": "0.0-1.0",
+              "color_group": "string",
+              "scope": "string"
+            }
+          ],
+          "edges": [
+            {
+              "id": "string",
+              "from": "node_id",
+              "to": "node_id",
+              "type": "string",
+              "intensity": "-1.0-1.0",
+              "valid_at": "ISO8601",
+              "invalid_at": "ISO8601?",
+              "sources": ["source_id"]
+            }
+          ]
+        }
+      }
+    },
+    "timeline": {
+      "GET /api/projects/{id}/timeline": {
+        "query": {
+          "phase": "1|2|3?",
+          "day_range": "[start,end]?",
+          "character_ids": "[]?"
+        },
+        "response": {
+          "events": [
+            {
+              "id": "string",
+              "day": "string",
+              "date": "string",
+              "scene_id": "string?",
+              "where": "string",
+              "who": ["character_id"],
+              "what": "string",
+              "knowledge_partition": "object",
+              "tags": ["string"]
+            }
+          ],
+          "phase_markers": [
+            {"phase": "string", "day_range": "[start,end]"}
+          ]
+        }
+      }
+    },
+    "conflict_inbox": {
+      "GET /api/projects/{id}/conflicts": {
+        "query": {
+          "severity": "critical|high|medium|low?",
+          "status": "open|resolved?"
+        },
+        "response": {
+          "conflicts": [
+            {
+              "id": "string",
+              "severity": "string",
+              "detected_at": "ISO8601",
+              "existing_fact": {
+                "entity_id": "string",
+                "content": "string",
+                "valid_at": "ISO8601",
+                "source": "object",
+                "confidence": "number",
+                "status": "string"
+              },
+              "new_fact": {
+                "content": "string",
+                "source": "object",
+                "confidence": "number",
+                "suggested_relationship": "supersedes|contradicts|scope_diff|time_diff"
+              },
+              "llm_analysis": "string",
+              "impact_summary": "string",
+              "affected_entities": ["entity_id"]
+            }
+          ]
+        }
+      },
+      "POST /api/projects/{id}/conflicts/{conflict_id}/resolve": {
+        "request": {
+          "decision": "keep_existing|keep_new|both_with_scope|both_with_time|merge|defer",
+          "params": "object"
+        },
+        "response": {
+          "resolved": "boolean",
+          "side_effects": ["string"]
+        }
+      }
+    },
+    "scene_simulation": {
+      "POST /api/projects/{id}/simulate": {
+        "request": {
+          "scene_input": {
+            "text": "string",
+            "setting": {
+              "location": "string",
+              "time": "string",
+              "weather": "string?",
+              "mood": "string?"
+            },
+            "characters_present": ["character_id"],
+            "timepoint": {
+              "day": "number 또는 string",
+              "scene_position": "start|middle|end"
+            },
+            "pressure": "string",
+            "perspective": "character_id",
+            "candidate_count": "number (default 5)"
+          }
+        },
+        "response": {
+          "simulation_id": "string",
+          "status": "queued|running",
+          "stream_url": "string?"
+        },
+        "response_streaming": "see author_scene_simulation_output_contract.json"
+      },
+      "GET /api/projects/{id}/simulations/{simulation_id}": {
+        "response": "see author_scene_simulation_output_contract.json"
+      },
+      "POST /api/projects/{id}/simulations/{simulation_id}/replay": {
+        "response": {
+          "replay_status": "deterministic|drifted|cache_miss",
+          "outputs": "see contract"
+        }
+      }
+    },
+    "settings": {
+      "GET /api/projects/{id}/settings": {
+        "response": {
+          "sync": {
+            "obsidian_enabled": "boolean",
+            "obsidian_vault_path": "string?",
+            "notion_enabled": "boolean",
+            "notion_workspace_id": "string?",
+            "sync_direction": "bidirectional|to_seizn|from_seizn",
+            "sync_frequency": "realtime|N_minutes|manual",
+            "conflict_resolution": "soft|hard"
+          },
+          "byok": {
+            "enabled": "boolean",
+            "provider": "anthropic|google|openai",
+            "key_last_4": "string?"
+          },
+          "usage": {
+            "tokens_used_month": "number",
+            "tokens_cap_month": "number",
+            "overage_charges": "number USD"
+          },
+          "tier": "Author|Pro|Studio|Enterprise|Trial"
+        }
+      },
+      "PATCH /api/projects/{id}/settings": {
+        "request": {"field": "string", "value": "any"}
+      },
+      "POST /api/account/byok": {
+        "request": {
+          "provider": "anthropic",
+          "api_key": "string (provider-specific key format)"
+        },
+        "response": {
+          "valid": "boolean",
+          "key_last_4": "string",
+          "byok_discount": {
+            "applied": "boolean",
+            "removed": "boolean?",
+            "coupon": "string",
+            "status": "inactive|pending|applied|error",
+            "reason": "missing_billing_customer|pending_subscription|stripe_not_configured|stripe_sync_failed?",
+            "error": "string?"
+          }
+        }
+      },
+      "DELETE /api/account/byok": {
+        "response": {
+          "enabled": "false",
+          "provider": "null",
+          "status": "missing",
+          "byok_discount": {
+            "applied": "boolean",
+            "removed": "boolean?",
+            "coupon": "string",
+            "status": "inactive|pending|applied|error",
+            "reason": "missing_billing_customer|pending_subscription|stripe_not_configured|stripe_sync_failed?",
+            "error": "string?"
+          }
+        }
+      },
+      "GET /api/account/byok": {
+        "response": {
+          "enabled": "boolean",
+          "provider": "anthropic|null",
+          "key_last_4": "string?",
+          "verified_at": "ISO8601?",
+          "status": "active|invalid|missing"
+        }
+      },
+      "GET /api/account/usage": {
+        "response": {
+          "tokens_used_month": "number",
+          "tokens_cap_month": "number|null",
+          "overage_tokens": "number",
+          "overage_charges_usd": "number",
+          "tier": "Author|Pro|Studio|Enterprise|Trial",
+          "trial_days_remaining": "number?",
+          "byok_active": "boolean",
+          "model_usage": {
+            "tokens_in": "number",
+            "tokens_out": "number",
+            "total_tokens": "number",
+            "request_count": "number",
+            "byok_active": "boolean"
+          }
+        }
+      },
+      "GET /api/account/subscription": {
+        "response": {
+          "plan": "free|indie|pro|studio|enterprise",
+          "tier": "indie|pro|studio|enterprise|null",
+          "tier_label": "string",
+          "status": "active|trialing|past_due|cancelled|inactive|string",
+          "stripe_status": "string|null",
+          "stripe_customer_id_present": "boolean",
+          "stripe_subscription_id_present": "boolean",
+          "stripe_price_id": "string|null",
+          "current_period_start": "ISO8601|null",
+          "current_period_end": "ISO8601|null",
+          "renews_at": "ISO8601|null",
+          "ends_at": "ISO8601|null",
+          "trial_ends_at": "ISO8601|null",
+          "trial_days_remaining": "number|null",
+          "cancel_at_period_end": "boolean",
+          "payment_failed": "boolean",
+          "payment_failed_at": "ISO8601|null",
+          "byok_active": "boolean",
+          "byok_discount_active": "boolean",
+          "byok_discount_status": "inactive|pending|applied|error",
+          "byok_discount_error": "string|null",
+          "price_lock_version": "v7",
+          "usage": {
+            "tokens_used_month": "number",
+            "tokens_cap_month": "number|null",
+            "request_count": "number",
+            "byok_active": "boolean"
+          }
+        }
+      },
+      "POST /api/account/subscription": {
+        "request": {
+          "action": "portal|cancel|resume"
+        },
+        "response": {
+          "url": "string? portal action only",
+          "ok": "boolean? cancel/resume only",
+          "action": "portal|cancel|resume?",
+          "cancel_at_period_end": "boolean?",
+          "status": "string?",
+          "current_period_end": "ISO8601|null?"
+        }
+      }
+    },
+    "audit": {
+      "GET /api/projects/{id}/audit": {
+        "query": {
+          "event_type": "comma-separated event type filter?",
+          "decision_id": "decision UUID?",
+          "q": "text search?",
+          "since": "ISO8601?",
+          "until": "ISO8601?",
+          "limit": "number?",
+          "replay": "1 enables replay response for decision_id"
+        },
+        "response": {
+          "audit_logs": [
+            {
+              "id": "uuid",
+              "project_id": "string",
+              "user_id": "profile id",
+              "event_type": "AuthorAuditEventType",
+              "payload": "redacted JSON",
+              "llm_meta": "provider/model/tokens/request_id/prompt_hash object?",
+              "source_span": "document/file/span object?",
+              "decision_id": "uuid",
+              "parent_decision_id": "uuid?",
+              "created_at": "ISO8601"
+            }
+          ],
+          "total": "number",
+          "replay_available": "boolean"
+        },
+        "replay_response": {
+          "decisionId": "uuid",
+          "replayStatus": "deterministic|not_found|drift_risk",
+          "chainLength": "number",
+          "payloadHash": "sha256?",
+          "llmMetaHash": "sha256?",
+          "warnings": "string[]"
+        }
+      }
+    }
+  },
+  "common_models": {
+    "FactStatus": "candidate|canon|rejected|retired|past_only|contradicted|invalidated|author_only|character_known|character_unknown",
+    "Scope": "global|short1|short2|short3|main",
+    "Tier": "1|2|3",
+    "Severity": "critical|high|medium|low",
+    "TemporalFields": {
+      "valid_at": "ISO8601",
+      "invalid_at": "ISO8601?",
+      "source_id": "string",
+      "source_span": "object",
+      "confidence": "0.0-1.0",
+      "status": "FactStatus",
+      "supersedes_id": "string?",
+      "invalidates_id": "string?",
+      "reviewed_by": "user_id?",
+      "reviewed_at": "ISO8601?"
+    }
+  },
+  "optional_auxiliary_contracts": {
+    "GET /api/projects/{id}/sync/status": {
+      "status": "optional",
+      "reason": "settings response already contains sync state; expose separately only if polling needs a lighter payload",
+      "response": {
+        "direction": "bidirectional|to_seizn|from_seizn",
+        "last_sync": "ISO8601?",
+        "error": "string?"
+      }
+    },
+    "GET /api/projects/{id}/search": {
+      "status": "optional",
+      "query": {"q": "string"},
+      "response": {
+        "results": [
+          {"id": "string", "type": "string", "label": "string", "snippet": "string"}
+        ]
+      }
+    },
+    "POST /api/telemetry/event": {
+      "status": "optional",
+      "request": {"event": "string", "payload": "object"},
+      "privacy": "raw story text must not be sent"
+    }
+  },
+  "websocket_events": {
+    "namespace": "/projects/{id}/ws",
+    "events": {
+      "candidate.added": "{candidate_id, type, source_id}",
+      "candidate.status_changed": "{candidate_id, old_status, new_status, type, target_entity_id?, ack_token?}",
+      "conflict.detected": "{conflict_id, severity}",
+      "import.parsed": "{import_id, candidate_count}",
+      "import.failed": "{import_id, error}",
+      "simulation.progress": "{simulation_id, progress}",
+      "simulation.complete": "{simulation_id, candidate_count}",
+      "sync.status": "{direction, last_sync, error?}"
+    }
+  }
+}

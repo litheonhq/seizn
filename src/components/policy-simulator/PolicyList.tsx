@@ -157,11 +157,11 @@ export function PolicyList({
   // Get policy type badge color
   const getTypeBadgeColor = (type: string) => {
     const colors: Record<string, string> = {
-      pii_masking: 'bg-purple-100 text-purple-800',
+      pii_masking: 'bg-[var(--ink-100)] text-[var(--ink-900)]',
       access_control: 'bg-blue-100 text-blue-800',
-      ttl: 'bg-green-100 text-green-800',
-      scope: 'bg-yellow-100 text-yellow-800',
-      content_filter: 'bg-red-100 text-red-800',
+      ttl: 'bg-[var(--signal-canon-soft)] text-[var(--signal-canon-ink)]',
+      scope: 'bg-[var(--signal-pending-soft)] text-[var(--signal-pending-ink)]',
+      content_filter: 'bg-[var(--signal-conflict-soft)] text-[var(--signal-conflict-ink)]',
     };
     return colors[type] || 'bg-gray-100 text-gray-800';
   };
@@ -176,11 +176,11 @@ export function PolicyList({
 
   if (error) {
     return (
-      <div className="p-4 bg-red-50 rounded-lg">
-        <p className="text-red-600">{error}</p>
+      <div className="p-4 bg-[var(--signal-conflict-soft)] rounded-lg">
+        <p className="text-[var(--signal-conflict-ink)]">{error}</p>
         <button
           onClick={fetchPolicies}
-          className="mt-2 text-sm text-red-600 hover:text-red-800 underline"
+          className="mt-2 text-sm text-[var(--signal-conflict-ink)] hover:text-[var(--signal-conflict-ink)] underline"
         >
           Retry
         </button>
@@ -224,7 +224,7 @@ export function PolicyList({
                   {policy.policyType.replace('_', ' ')}
                 </span>
                 {policy.isActive && (
-                  <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
+                  <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-[var(--signal-canon-soft)] text-[var(--signal-canon-ink)]">
                     Active
                   </span>
                 )}
@@ -254,7 +254,7 @@ export function PolicyList({
                       handleActivate(policy.id);
                     }}
                     disabled={actionLoading === policy.id}
-                    className="text-xs px-2 py-1 rounded bg-green-100 text-green-700 hover:bg-green-200 disabled:opacity-50"
+                    className="text-xs px-2 py-1 rounded bg-[var(--signal-canon-soft)] text-[var(--signal-canon-ink)] hover:bg-green-200 disabled:opacity-50"
                   >
                     {actionLoading === policy.id ? '...' : 'Activate'}
                   </button>
@@ -266,7 +266,7 @@ export function PolicyList({
                       handleDelete(policy.id);
                     }}
                     disabled={actionLoading === policy.id}
-                    className="text-xs px-2 py-1 rounded bg-red-100 text-red-700 hover:bg-red-200 disabled:opacity-50"
+                    className="text-xs px-2 py-1 rounded bg-[var(--signal-conflict-soft)] text-[var(--signal-conflict-ink)] hover:bg-[var(--signal-conflict-soft)] disabled:opacity-50"
                   >
                     {actionLoading === policy.id ? '...' : 'Delete'}
                   </button>

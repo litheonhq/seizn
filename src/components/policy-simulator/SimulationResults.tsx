@@ -184,9 +184,9 @@ export function SimulationResults({ apiKey, simulationId }: SimulationResultsPro
 
   // Get impact badge color
   const getImpactColor = (score: number): string => {
-    if (score >= 0.6) return 'bg-red-100 text-red-800';
+    if (score >= 0.6) return 'bg-[var(--signal-conflict-soft)] text-[var(--signal-conflict-ink)]';
     if (score >= 0.3) return 'bg-orange-100 text-orange-800';
-    if (score >= 0.1) return 'bg-yellow-100 text-yellow-800';
+    if (score >= 0.1) return 'bg-[var(--signal-pending-soft)] text-[var(--signal-pending-ink)]';
     if (score > 0) return 'bg-blue-100 text-blue-800';
     return 'bg-gray-100 text-gray-800';
   };
@@ -201,11 +201,11 @@ export function SimulationResults({ apiKey, simulationId }: SimulationResultsPro
 
   if (error) {
     return (
-      <div className="p-4 bg-red-50 rounded-lg">
-        <p className="text-red-600">{error}</p>
+      <div className="p-4 bg-[var(--signal-conflict-soft)] rounded-lg">
+        <p className="text-[var(--signal-conflict-ink)]">{error}</p>
         <button
           onClick={fetchData}
-          className="mt-2 text-sm text-red-600 hover:text-red-800 underline"
+          className="mt-2 text-sm text-[var(--signal-conflict-ink)] hover:text-[var(--signal-conflict-ink)] underline"
         >
           Retry
         </button>
@@ -227,9 +227,9 @@ export function SimulationResults({ apiKey, simulationId }: SimulationResultsPro
     <div className="space-y-6">
       {/* Status Banner */}
       {simulation.status === 'failed' && (
-        <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-          <p className="text-red-600 font-medium">Simulation Failed</p>
-          <p className="text-red-500 text-sm mt-1">{simulation.errorMessage}</p>
+        <div className="p-4 bg-[var(--signal-conflict-soft)] border border-[var(--signal-conflict)] rounded-lg">
+          <p className="text-[var(--signal-conflict-ink)] font-medium">Simulation Failed</p>
+          <p className="text-[var(--signal-conflict-ink)] text-sm mt-1">{simulation.errorMessage}</p>
         </div>
       )}
 
@@ -315,17 +315,17 @@ export function SimulationResults({ apiKey, simulationId }: SimulationResultsPro
                       </p>
                       <div className="mt-1 flex items-center gap-4 text-xs">
                         {result.newlyBlockedCount > 0 && (
-                          <span className="text-red-600">
+                          <span className="text-[var(--signal-conflict-ink)]">
                             +{result.newlyBlockedCount} blocked
                           </span>
                         )}
                         {result.newlyAllowedCount > 0 && (
-                          <span className="text-green-600">
+                          <span className="text-[var(--signal-canon-ink)]">
                             +{result.newlyAllowedCount} allowed
                           </span>
                         )}
                         {result.maskingChangedCount > 0 && (
-                          <span className="text-yellow-600">
+                          <span className="text-[var(--signal-pending-ink)]">
                             {result.maskingChangedCount} masking changed
                           </span>
                         )}
@@ -461,15 +461,15 @@ function ChunkSection({
   color: 'red' | 'green' | 'yellow';
 }) {
   const colorClasses = {
-    red: 'bg-red-50 border-red-200',
-    green: 'bg-green-50 border-green-200',
-    yellow: 'bg-yellow-50 border-yellow-200',
+    red: 'bg-[var(--signal-conflict-soft)] border-[var(--signal-conflict)]',
+    green: 'bg-[var(--signal-canon-soft)] border-[var(--signal-canon)]',
+    yellow: 'bg-[var(--signal-pending-soft)] border-[var(--signal-pending)]',
   };
 
   const textClasses = {
-    red: 'text-red-800',
-    green: 'text-green-800',
-    yellow: 'text-yellow-800',
+    red: 'text-[var(--signal-conflict-ink)]',
+    green: 'text-[var(--signal-canon-ink)]',
+    yellow: 'text-[var(--signal-pending-ink)]',
   };
 
   return (

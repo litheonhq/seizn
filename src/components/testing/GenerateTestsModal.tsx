@@ -255,9 +255,9 @@ export function GenerateTestsModal({
             <div className="py-8 text-center">
               {result.error ? (
                 <>
-                  <div className="mx-auto w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
+                  <div className="mx-auto w-12 h-12 rounded-full bg-[var(--signal-conflict-soft)] flex items-center justify-center">
                     <svg
-                      className="w-6 h-6 text-red-600"
+                      className="w-6 h-6 text-[var(--signal-conflict-ink)]"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -271,13 +271,13 @@ export function GenerateTestsModal({
                     </svg>
                   </div>
                   <h3 className="mt-4 text-lg font-medium text-gray-900">Generation Failed</h3>
-                  <p className="mt-2 text-sm text-red-600">{result.error}</p>
+                  <p className="mt-2 text-sm text-[var(--signal-conflict-ink)]">{result.error}</p>
                 </>
               ) : (
                 <>
-                  <div className="mx-auto w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
+                  <div className="mx-auto w-12 h-12 rounded-full bg-[var(--signal-canon-soft)] flex items-center justify-center">
                     <svg
-                      className="w-6 h-6 text-green-600"
+                      className="w-6 h-6 text-[var(--signal-canon-ink)]"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -296,7 +296,7 @@ export function GenerateTestsModal({
                       <span className="font-medium">{result.saved}</span> test cases saved
                     </p>
                     {result.invalid > 0 && (
-                      <p className="text-yellow-600">
+                      <p className="text-[var(--signal-pending-ink)]">
                         {result.invalid} invalid tests were skipped
                       </p>
                     )}

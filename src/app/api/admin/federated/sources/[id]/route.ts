@@ -185,7 +185,7 @@ export async function PATCH(
         },
         context
       );
-      return NextResponse.json({ error: error.message }, { status: 400 });
+      return NextResponse.json({ error: 'Federated source operation failed' }, { status: 400 });
     }
 
     // Log success
@@ -293,7 +293,7 @@ export async function DELETE(
         },
         context
       );
-      return NextResponse.json({ error: error.message }, { status: 400 });
+      return NextResponse.json({ error: 'Federated source operation failed' }, { status: 400 });
     }
 
     // Log success

@@ -323,7 +323,6 @@
     "nav": {
       "overview": "अवलोकन",
       "memories": "Entities",
-      "memoryEditor": "मेमोरी एडिटर",
       "mindMap": "Relation graph",
       "candidates": "Event inbox",
       "devTools": "Dev tools",
@@ -337,6 +336,7 @@
       "usage": "उपयोग",
       "budget": "Budget",
       "reports": "Reports",
+      "calculator": "Cost estimator",
       "apiKeys": "API keys",
       "integrations": "Engine plugins",
       "webhooks": "Webhooks",
@@ -345,10 +345,15 @@
       "settings": "सेटिंग्स",
       "groups": {
         "memory": "NPC MEMORY",
+        "observe": "OBSERVE",
+        "govern": "POLICIES",
+        "finops": "USAGE & COST",
+        "connect": "INTEGRATE",
         "system": "WORKSPACE",
         "build": "निर्माण",
         "integrate": "एकीकरण"
-      }
+      },
+      "memoryEditor": "मेमोरी एडिटर"
     },
     "pinSidebar": "साइडबार पिन करें",
     "unpinSidebar": "साइडबार छोटा करें",
@@ -1436,6 +1441,50 @@
       "recentDecisions": "हाल के निर्णय",
       "noLogs": "अभी तक कोई निर्णय लॉग नहीं"
     },
+    "calculator": {
+      "title": "उपयोग कैलकुलेटर",
+      "subtitle": "अपेक्षित उपयोग के आधार पर अपनी मासिक लागत का अनुमान लगाएं",
+      "stats": {
+        "apiCalls": "API कॉल",
+        "memories": "मेमोरी",
+        "extractions": "निष्कर्षण",
+        "estimated": "अनुमानित लागत"
+      },
+      "presets": {
+        "title": "त्वरित प्रीसेट",
+        "startup": "स्टार्टअप",
+        "growing": "बढ़ता हुआ",
+        "scale": "स्केल",
+        "enterprise": "एंटरप्राइज़"
+      },
+      "customize": {
+        "title": "उपयोग अनुकूलित करें"
+      },
+      "labels": {
+        "apiCalls": "मासिक API कॉल",
+        "memories": "संग्रहीत मेमोरी",
+        "extractions": "निष्कर्षण"
+      },
+      "recommended": {
+        "title": "अनुशंसित योजना",
+        "base": "मूल मूल्य",
+        "overage": "अधिक उपयोग",
+        "cta": "शुरू करें"
+      },
+      "comparison": {
+        "title": "सभी योजनाएं",
+        "best": "सर्वोत्तम मूल्य"
+      },
+      "details": {
+        "title": "विस्तृत मूल्य निर्धारण विवरण",
+        "plan": "योजना",
+        "base": "मूल मूल्य",
+        "includedCalls": "शामिल कॉल",
+        "overageRate": "अधिक उपयोग दर",
+        "yourOverage": "आपका अधिक उपयोग",
+        "total": "कुल"
+      }
+    },
     "webhooks": {
       "title": "Webhooks",
       "subtitle": "रीयल-टाइम इवेंट सूचनाओं के लिए HTTP callbacks कॉन्फ़िगर करें",
@@ -1606,12 +1655,98 @@
       "contactUs": "हमसे संपर्क करें"
     }
   },
+  "serviceSelector": {
+    "title": "अपना अनुभव चुनें",
+    "subtitle": "AI मेमोरी की शक्ति का उपयोग करने के दो तरीके",
+    "spring": {
+      "name": "Spring",
+      "icon": "🌿",
+      "tagline": "मल्टी-AI चैट",
+      "description": "GPT-4, Claude, Gemini और अधिक के साथ चैट करें - सभी स्थायी मेमोरी के साथ जो आपको याद रखती है।",
+      "features": [
+        "एक ही स्थान पर सभी प्रमुख AI मॉडल तक पहुंच",
+        "आपकी प्राथमिकताएं सत्रों में याद रखी जाती हैं",
+        "मॉडलों के बीच सहज संदर्भ स्विचिंग"
+      ],
+      "cta": "Spring आज़माएं",
+      "badge": ""
+    },
+    "summer": {
+      "name": "Summer",
+      "icon": "☀️",
+      "tagline": "मेमोरी API",
+      "description": "डेवलपर-अनुकूल API के साथ अपने AI एप्लिकेशन को स्थायी मेमोरी दें।",
+      "features": [
+        "सरल REST API और SDK",
+        "50ms से कम पुनर्प्राप्ति समय",
+        "एंटरप्राइज़-ग्रेड सुरक्षा"
+      ],
+      "cta": "API खोजें",
+      "badge": "अभी उपलब्ध"
+    },
+    "footer": "Seizn सीज़न का हिस्सा - हर ज़रूरत के लिए AI मेमोरी"
+  },
+  "springPage": {
+    "badge": "",
+    "title": "एक चैट।",
+    "titleHighlight": "हर AI।",
+    "subtitle": "आप जो भी AI चुनें,\nसभी आपको याद रखते हैं।",
+    "startChatting": "चैट शुरू करें",
+    "viewPricing": "मूल्य देखें",
+    "features": {
+      "title": "Spring क्यों चुनें?",
+      "subtitle": "हर AI का सर्वश्रेष्ठ, एकीकृत।",
+      "multiModel": {
+        "title": "मल्टी-मॉडल एक्सेस",
+        "description": "GPT-4, Claude, Gemini, Llama और अधिक के बीच स्विच करें। प्रत्येक कार्य के लिए सबसे अच्छा मॉडल चुनें।"
+      },
+      "persistentMemory": {
+        "title": "स्थायी मेमोरी",
+        "description": "आपकी प्राथमिकताएं, संदर्भ और इतिहास हर बातचीत और हर मॉडल में संरक्षित रहते हैं।"
+      },
+      "freeGenerosity": {
+        "title": "Cursor-स्तर का मुफ्त प्लान",
+        "description": "उदार मुफ्त उपयोग। अधिकांश उपयोगकर्ताओं को भुगतान करने की आवश्यकता नहीं होती। पावर उपयोगकर्ताओं के लिए $9.99/माह पर Pro।"
+      }
+    },
+    "pricing": {
+      "title": "सरल मूल्य निर्धारण",
+      "free": {
+        "name": "मुफ्त",
+        "price": "$0",
+        "period": "हमेशा",
+        "features": [
+          "सभी AI मॉडल",
+          "सत्रों में मेमोरी",
+          "वेब और मोबाइल ऐप"
+        ],
+        "cta": "मुफ्त में शुरू करें"
+      },
+      "pro": {
+        "name": "Pro",
+        "price": "$9.99",
+        "period": "प्रति माह",
+        "badge": "सर्वोत्तम मूल्य",
+        "features": [
+          "मुफ्त में सब कुछ",
+          "प्राथमिकता पहुंच",
+          "उन्नत मेमोरी नियंत्रण",
+          "API पहुंच"
+        ],
+        "cta": "Pro में अपग्रेड करें"
+      }
+    }
+  },
   "extremeHome": {
     "heroTitle": "AI NPC के लिए Memory।",
     "heroSubtitle": "Inworld, Convai, या अपने LLM से जोड़ें। Seizn आपके NPC को persistent memory, relationships और cross-generation recall देता है — graph-priced, per-seat नहीं।",
     "ctaStart": "Docs पढ़ें",
     "ctaDemo": "smallgod खेलें",
     "socialProof": "Game studios के लिए बना — 10 से 10,000 NPC तक।",
+    "liveDemo": "Live demo",
+    "heroTagline": "smallgod खेलें — Seizn पर बना हमारा reference god-game। Sign-up और install की ज़रूरत नहीं।",
+    "firstRetrievalComplete": "पहली retrieval पूर्ण",
+    "copySnippetHint": "नीचे दिया snippet copy करें",
     "copySnippetTitle": "Unity, Unreal या किसी भी runtime में जोड़ें",
     "copySnippetSubtitle": "HTTP wrapper + official C#/C++ plugins। कोई custom infrastructure नहीं।",
     "whySeizn": {
@@ -1655,6 +1790,89 @@
       "status": "Status",
       "help": "Help",
       "github": "OSS"
+    },
+    "requestBuilder": {
+      "title": "अनुरोध बिल्डर",
+      "query": "क्वेरी",
+      "queryPlaceholder": "अपनी खोज क्वेरी दर्ज करें...",
+      "tryExamples": "उदाहरण आज़माएं",
+      "dataset": "डेटासेट",
+      "latencyBudget": "विलंबता बजट",
+      "fast": "तेज़",
+      "thorough": "गहन",
+      "topK": "टॉप K",
+      "results": "परिणाम",
+      "features": "विशेषताएं",
+      "hybridSearch": "हाइब्रिड खोज",
+      "hybridSearchDesc": "वेक्टर + कीवर्ड संयोजित करें",
+      "rerank": "पुनः रैंक",
+      "rerankDesc": "क्रॉस-एनकोडर के साथ पुनः स्कोर करें",
+      "answerContract": "उत्तर अनुबंध",
+      "answerContractDesc": "उत्तर गुणवत्ता सत्यापित करें",
+      "running": "चल रहा है...",
+      "runQuery": "क्वेरी चलाएं",
+      "datasets": {
+        "techDocs": "तकनीकी दस्तावेज़",
+        "legalContracts": "कानूनी अनुबंध",
+        "researchPapers": "शोध पत्र"
+      },
+      "advanced": "उन्नत"
+    },
+    "resultsPanel": {
+      "searching": "खोज रहा है...",
+      "noResults": "परिणाम देखने के लिए क्वेरी चलाएं",
+      "score": "स्कोर"
+    },
+    "tracePanel": {
+      "tracing": "पाइपलाइन ट्रेस कर रहा है...",
+      "noTrace": "ट्रेस देखने के लिए क्वेरी चलाएं",
+      "latency": "विलंबता",
+      "cost": "लागत",
+      "tokens": "टोकन",
+      "vectorOps": "वेक्टर ऑप्स",
+      "cached": "कैश्ड",
+      "model": "मॉडल",
+      "input": "इनपुट",
+      "output": "आउटपुट"
+    },
+    "tabs": {
+      "results": "परिणाम",
+      "trace": "ट्रेस",
+      "cost": "लागत"
+    },
+    "chips": {
+      "trace": "Entities",
+      "eval": "Relations",
+      "policy": "Events"
+    },
+    "playgroundTitle": "अभी आज़माएं",
+    "costPanel": {
+      "calculating": "लागत की गणना हो रही है...",
+      "noCost": "लागत विवरण देखने के लिए क्वेरी चलाएं",
+      "costBreakdown": "लागत विवरण",
+      "component": "घटक",
+      "cost": "लागत",
+      "embedding": "एम्बेडिंग",
+      "vectorSearch": "वेक्टर खोज",
+      "rerank": "पुनः रैंक",
+      "answerContract": "उत्तर अनुबंध",
+      "total": "कुल लागत",
+      "usage": "उपयोग",
+      "tokensIn": "टोकन इन",
+      "tokensOut": "टोकन आउट",
+      "queryUnits": "क्वेरी यूनिट",
+      "estimatedMonthly": "अनुमानित मासिक",
+      "basedOn": "आधारित",
+      "queriesPerDay": "क्वेरी/दिन"
+    },
+    "errorDisplay": {
+      "error": "त्रुटि",
+      "errorCode": "कोड",
+      "traceId": "ट्रेस",
+      "hint": "संकेत",
+      "tryAgain": "पुनः प्रयास करें",
+      "copyTraceId": "ट्रेस ID कॉपी करें",
+      "copied": "कॉपी हो गया!"
     }
   },
   "docs": {
@@ -2604,6 +2822,42 @@
       }
     }
   },
+  "demoQuery": {
+    "title": "लाइव डेमो",
+    "subtitle": "पूर्ण ट्रेसिंग और लागत पारदर्शिता के साथ Seizn की पुनर्प्राप्ति पाइपलाइन का अनुभव करें।",
+    "tryItNow": "अभी आज़माएँ - साइनअप की ज़रूरत नहीं",
+    "queryPlaceholder": "खोज क्वेरी",
+    "runDemo": "डेमो चलाएँ",
+    "running": "चल रहा है...",
+    "results": "परिणाम",
+    "trace": "ट्रेस",
+    "cost": "लागत",
+    "noResults": "परिणाम देखने के लिए डेमो चलाएँ",
+    "errorTitle": "त्रुटि",
+    "rateLimitError": "दर सीमा पार हो गई। कृपया प्रतीक्षा करें।",
+    "retryIn": "पुनः प्रयास",
+    "seconds": "सेकंड",
+    "score": "स्कोर",
+    "rerankScore": "री-रैंक",
+    "latency": "विलंबता",
+    "tokens": "टोकन",
+    "cached": "कैश",
+    "model": "मॉडल",
+    "input": "इनपुट",
+    "output": "आउटपुट",
+    "costBreakdown": "विवरण",
+    "total": "कुल लागत",
+    "embedding": "एम्बेडिंग",
+    "vectorSearch": "वेक्टर खोज",
+    "rerank": "री-रैंकिंग",
+    "answerContract": "उत्तर अनुबंध",
+    "tokensIn": "इनपुट टोकन",
+    "tokensOut": "आउटपुट टोकन",
+    "queryUnits": "क्वेरी इकाइयाँ",
+    "prefilledQueries": [
+      "उदाहरण आज़माएँ"
+    ]
+  },
   "publicTrace": {
     "title": "साझा ट्रेस",
     "subtitle": "साझा रिट्रीवल ट्रेस विवरण देखें",
@@ -2979,25 +3233,8 @@
     }
   },
   "status": {
-    "metadataTitle": "Seizn Status",
-    "metadataDescription": "Current Seizn API availability and public incident history.",
-    "eyebrow": "STATUS",
     "title": "सिस्टम स्थिति",
     "subtitle": "रीयल-टाइम सिस्टम स्थिति और घटना इतिहास",
-    "currentStatusLabel": "Current status",
-    "measuredScope": "Measured scope: api.seizn.com/v1/*",
-    "uptimeLabel": "Last 30 days uptime",
-    "uptimeWindow": "Calculated from public incident windows in the last 30 days.",
-    "incidentsEyebrow": "INCIDENTS",
-    "recentIncidentsTitle": "Recent incidents",
-    "noRecentIncidents": "No recent incidents",
-    "noRecentIncidentsBody": "The public incident ledger is empty for this period.",
-    "slaLink": "Read the SLA",
-    "states": {
-      "operational": "operational",
-      "degraded": "degraded",
-      "outage": "outage"
-    },
     "lastUpdated": "अंतिम अपडेट",
     "overall": {
       "operational": "सभी सिस्टम सक्रिय",
@@ -3045,6 +3282,23 @@
       "title": "अपडेट की सदस्यता लें",
       "rss": "RSS फ़ीड",
       "email": "ईमेल सूचनाएं"
+    },
+    "metadataTitle": "Seizn Status",
+    "metadataDescription": "Current Seizn API availability and public incident history.",
+    "eyebrow": "STATUS",
+    "currentStatusLabel": "Current status",
+    "measuredScope": "Measured scope: api.seizn.com/v1/*",
+    "uptimeLabel": "Last 30 days uptime",
+    "uptimeWindow": "Calculated from public incident windows in the last 30 days.",
+    "incidentsEyebrow": "INCIDENTS",
+    "recentIncidentsTitle": "Recent incidents",
+    "noRecentIncidents": "No recent incidents",
+    "noRecentIncidentsBody": "The public incident ledger is empty for this period.",
+    "slaLink": "Read the SLA",
+    "states": {
+      "operational": "operational",
+      "degraded": "degraded",
+      "outage": "outage"
     }
   },
   "sla": {

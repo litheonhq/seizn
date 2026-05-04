@@ -7,7 +7,8 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { validateApiKey } from '@/lib/auth/api-key';
+import { requireApiScope } from '@/lib/auth/api-scope';
+import { applySafeStatePatch, isPatchRecord, UnsafePatchError } from '@/lib/fall/patch-safety';
 import { createServerClient } from '@/lib/supabase';
 
 interface RouteParams {
@@ -16,10 +17,9 @@ interface RouteParams {
 
 export async function POST(request: NextRequest, { params }: RouteParams) {
   try {
-    const auth = await validateApiKey(request);
-    if (!auth.valid) {
-      return NextResponse.json({ error: 'Unauthorized', message: auth.error }, { status: 401 });
-    }
+    const authResult = await requireApiScope(request, 'fall:write');
+    if (authResult.response) return authResult.response;
+    const { auth } = authResult;
 
     const { runId } = await params;
     const body = await request.json();
@@ -59,8 +59,19 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     let state = startCheckpoint.state_json;
     if (patches && Array.isArray(patches)) {
       for (const patch of patches) {
-        state = applyPatch(state, patch);
+        if (!isPatchRecord(patch)) {
+          return NextResponse.json(
+            { error: 'Bad Request', message: 'each patch must be an object' },
+            { status: 400 }
+          );
+        }
+        state = applySafeStatePatch(state, patch);
       }
+    } else if (patches !== undefined) {
+      return NextResponse.json(
+        { error: 'Bad Request', message: 'patches must be an array' },
+        { status: 400 }
+      );
     }
 
     // Get checkpoints in range if to_step specified
@@ -93,27 +104,13 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       },
     });
   } catch (error) {
+    if (error instanceof UnsafePatchError) {
+      return NextResponse.json(
+        { error: 'Bad Request', message: error.message },
+        { status: 400 }
+      );
+    }
     console.error('[FallReplay] POST error:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
-}
-
-function applyPatch(state: Record<string, unknown>, patch: Record<string, unknown>): Record<string, unknown> {
-  const result = JSON.parse(JSON.stringify(state));
-
-  for (const [key, value] of Object.entries(patch)) {
-    if (key === 'messages' && Array.isArray(value)) {
-      result.messages = value;
-    } else if (key === 'context' && typeof value === 'object' && value !== null) {
-      result.context = { ...result.context, ...value };
-    } else if (key === 'memory' && typeof value === 'object' && value !== null) {
-      result.memory = { ...result.memory, ...value };
-    } else if (key === 'toolCalls' && Array.isArray(value)) {
-      result.toolCalls = value;
-    } else {
-      result[key] = value;
-    }
-  }
-
-  return result;
 }

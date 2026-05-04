@@ -49,14 +49,14 @@ export function CompressionToggle({
   );
 
   return (
-    <div className={`rounded-lg border border-gray-800 bg-gray-900/50 p-4 ${className}`}>
+    <div className={`rounded-lg border border-gray-800 bg-[var(--ink-900)]/50 p-4 ${className}`}>
       {/* Toggle Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           {/* Compression Icon */}
-          <div className={`p-2 rounded-lg ${enabled ? "bg-violet-500/20" : "bg-gray-800"}`}>
+          <div className={`p-2 rounded-lg ${enabled ? "bg-[var(--ink-900)]/20" : "bg-[var(--ink-800)]"}`}>
             <svg
-              className={`w-5 h-5 ${enabled ? "text-violet-400" : "text-gray-500"}`}
+              className={`w-5 h-5 ${enabled ? "text-[var(--ink-900)]" : "text-gray-500"}`}
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -83,7 +83,7 @@ export function CompressionToggle({
           disabled={disabled}
           className={`relative w-12 h-6 rounded-full transition-colors ${
             disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
-          } ${enabled ? "bg-violet-600" : "bg-gray-700"}`}
+          } ${enabled ? "bg-[var(--ink-900)]" : "bg-gray-700"}`}
           role="switch"
           aria-checked={enabled}
           aria-label="Toggle context compression"
@@ -101,7 +101,7 @@ export function CompressionToggle({
         <div className="mt-4 pt-4 border-t border-gray-800">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs text-gray-400">Target Compression Ratio</span>
-            <span className="text-xs font-mono text-violet-400">
+            <span className="text-xs font-mono text-[var(--ink-900)]">
               {Math.round(localRatio * 100)}%
             </span>
           </div>
@@ -118,7 +118,7 @@ export function CompressionToggle({
                        [&::-webkit-slider-thumb]:w-3
                        [&::-webkit-slider-thumb]:h-3
                        [&::-webkit-slider-thumb]:rounded-full
-                       [&::-webkit-slider-thumb]:bg-violet-500
+                       [&::-webkit-slider-thumb]:bg-[var(--ink-900)]
                        [&::-webkit-slider-thumb]:cursor-pointer
                        [&::-webkit-slider-thumb]:transition-transform
                        [&::-webkit-slider-thumb]:hover:scale-125"
@@ -129,10 +129,10 @@ export function CompressionToggle({
           </div>
 
           {/* Ratio Explanation */}
-          <div className="mt-3 p-2 rounded bg-gray-800/50 text-xs text-gray-400">
+          <div className="mt-3 p-2 rounded bg-[var(--ink-800)]/50 text-xs text-gray-400">
             {localRatio < 0.3 && (
               <p>
-                <span className="text-amber-400">Aggressive compression:</span> May lose some
+                <span className="text-[var(--signal-pending-soft)]">Aggressive compression:</span> May lose some
                 context but significantly reduces tokens.
               </p>
             )}

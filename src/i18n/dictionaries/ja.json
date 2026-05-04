@@ -396,7 +396,6 @@
     "nav": {
       "overview": "概要",
       "memories": "メモリ",
-      "memoryEditor": "メモリーエディター",
       "mindMap": "マインドマップ",
       "candidates": "候補",
       "devTools": "開発ツール",
@@ -410,6 +409,7 @@
       "usage": "使用量",
       "budget": "予算",
       "reports": "レポート",
+      "calculator": "計算機",
       "apiKeys": "APIキー",
       "integrations": "統合",
       "webhooks": "Webhook",
@@ -418,10 +418,15 @@
       "settings": "設定",
       "groups": {
         "memory": "メモリ",
+        "observe": "モニタリング",
+        "govern": "ガバナンス",
+        "finops": "コスト管理",
+        "connect": "接続",
         "system": "システム",
         "build": "開発",
         "integrate": "連携"
-      }
+      },
+      "memoryEditor": "メモリーエディター"
     },
     "pinSidebar": "サイドバーを固定",
     "unpinSidebar": "サイドバーを折りたたむ",
@@ -1362,6 +1367,50 @@
       "recentDecisions": "最近の決定",
       "noLogs": "まだ決定ログがありません"
     },
+    "calculator": {
+      "title": "使用量計算ツール",
+      "subtitle": "予想される使用量に基づいて月額コストを見積もる",
+      "stats": {
+        "apiCalls": "API呼び出し",
+        "memories": "メモリ",
+        "extractions": "抽出",
+        "estimated": "推定コスト"
+      },
+      "presets": {
+        "title": "クイックプリセット",
+        "startup": "スタートアップ",
+        "growing": "成長中",
+        "scale": "スケール",
+        "enterprise": "エンタープライズ"
+      },
+      "customize": {
+        "title": "使用量をカスタマイズ"
+      },
+      "labels": {
+        "apiCalls": "月間API呼び出し数",
+        "memories": "保存されたメモリ",
+        "extractions": "抽出"
+      },
+      "recommended": {
+        "title": "推奨プラン",
+        "base": "基本料金",
+        "overage": "超過料金",
+        "cta": "始める"
+      },
+      "comparison": {
+        "title": "すべてのプラン",
+        "best": "最もお得"
+      },
+      "details": {
+        "title": "詳細な料金内訳",
+        "plan": "プラン",
+        "base": "基本料金",
+        "includedCalls": "含まれる呼び出し",
+        "overageRate": "超過料金率",
+        "yourOverage": "超過分",
+        "total": "合計"
+      }
+    },
     "webhooks": {
       "title": "Webhook",
       "subtitle": "リアルタイムイベント通知のHTTPコールバックを設定",
@@ -1510,12 +1559,98 @@
       "contactUs": "お問い合わせ"
     }
   },
+  "serviceSelector": {
+    "title": "体験を選択",
+    "subtitle": "AIメモリを活用する2つの方法",
+    "spring": {
+      "name": "Spring",
+      "icon": "🌿",
+      "tagline": "マルチAIチャット",
+      "description": "GPT-4、Claude、Geminiなど — あなたを覚える永続メモリと共に。",
+      "features": [
+        "一箇所ですべての主要AIモデルにアクセス",
+        "セッション間で好みを記憶",
+        "モデル間のシームレスなコンテキスト切り替え"
+      ],
+      "cta": "Springを試す",
+      "badge": ""
+    },
+    "summer": {
+      "name": "Summer",
+      "icon": "☀️",
+      "tagline": "メモリAPI",
+      "description": "開発者フレンドリーなAPIでAIアプリに永続メモリを。",
+      "features": [
+        "シンプルなREST APIとSDK",
+        "50ms以下の検索速度",
+        "エンタープライズグレードのセキュリティ"
+      ],
+      "cta": "APIを探索",
+      "badge": "利用可能"
+    },
+    "footer": "Seiznの四季 — あらゆるニーズのためのAIメモリ"
+  },
+  "springPage": {
+    "badge": "",
+    "title": "一つのチャット。",
+    "titleHighlight": "すべてのAI。",
+    "subtitle": "どれを選んでも、\nすべてがあなたを覚えています。",
+    "startChatting": "今すぐ始める",
+    "viewPricing": "料金プランを見る",
+    "features": {
+      "title": "なぜSpring？",
+      "subtitle": "すべてのAIの長所を一つに。",
+      "multiModel": {
+        "title": "マルチモデルアクセス",
+        "description": "GPT-4、Claude、Gemini、Llamaなどを自由に切り替え。各タスクに最適なモデルを選択。"
+      },
+      "persistentMemory": {
+        "title": "永続メモリ",
+        "description": "好み、コンテキスト、履歴がすべての会話とモデルで維持されます。"
+      },
+      "freeGenerosity": {
+        "title": "Cursor級の無料枠",
+        "description": "豊富な無料使用量。ほとんどのユーザーは課金不要。パワーユーザー向けProは月額$9.99。"
+      }
+    },
+    "pricing": {
+      "title": "シンプルな価格",
+      "free": {
+        "name": "Free",
+        "price": "$0",
+        "period": "永久",
+        "features": [
+          "全AIモデル",
+          "セッション間メモリ",
+          "Web＆モバイルアプリ"
+        ],
+        "cta": "無料で始める"
+      },
+      "pro": {
+        "name": "Pro",
+        "price": "$9.99",
+        "period": "月額",
+        "badge": "最もお得",
+        "features": [
+          "Freeのすべて",
+          "優先アクセス",
+          "高度なメモリ制御",
+          "APIアクセス"
+        ],
+        "cta": "Proにアップグレード"
+      }
+    }
+  },
   "extremeHome": {
     "heroTitle": "AI NPCのためのメモリ。",
     "heroSubtitle": "Inworld、Convai、または独自LLMに接続してください。SeiznはNPCに永続記憶・関係・世代を超えた想起を提供します — シートではなくグラフ単位の課金。",
     "ctaStart": "ドキュメントを読む",
     "ctaDemo": "smallgodをプレイ",
     "socialProof": "10から10,000 NPCにスケールするゲームスタジオのために構築。",
+    "liveDemo": "ライブデモ",
+    "heroTagline": "smallgodをプレイ — Seizn上に構築されたリファレンスゴッドゲーム。サインアップ・インストール不要。",
+    "firstRetrievalComplete": "最初の検索が完了しました",
+    "copySnippetHint": "以下のスニペットをコピーして再現してください",
     "copySnippetTitle": "Unity、Unreal、またはあらゆるランタイムに即適用",
     "copySnippetSubtitle": "HTTPラッパー + 公式C#/C++プラグイン。独自インフラ構築は不要。",
     "whySeizn": {
@@ -1556,6 +1691,89 @@
       "compare": "連携",
       "limits": "制限",
       "help": "ヘルプ"
+    },
+    "requestBuilder": {
+      "title": "リクエストビルダー",
+      "query": "クエリ",
+      "queryPlaceholder": "検索クエリを入力...",
+      "tryExamples": "例を試す",
+      "dataset": "データセット",
+      "latencyBudget": "レイテンシ予算",
+      "fast": "高速",
+      "thorough": "詳細",
+      "topK": "上位K",
+      "results": "件",
+      "features": "機能",
+      "hybridSearch": "ハイブリッド検索",
+      "hybridSearchDesc": "ベクトル+キーワード結合",
+      "rerank": "再ランキング",
+      "rerankDesc": "クロスエンコーダで再スコア",
+      "answerContract": "回答契約",
+      "answerContractDesc": "回答品質の検証",
+      "running": "実行中...",
+      "runQuery": "クエリ実行",
+      "datasets": {
+        "techDocs": "技術ドキュメント",
+        "legalContracts": "法的契約書",
+        "researchPapers": "研究論文"
+      },
+      "advanced": "詳細設定"
+    },
+    "resultsPanel": {
+      "searching": "検索中...",
+      "noResults": "クエリを実行して結果を表示",
+      "score": "スコア"
+    },
+    "tracePanel": {
+      "tracing": "パイプライン追跡中...",
+      "noTrace": "クエリを実行してトレースを表示",
+      "latency": "レイテンシ",
+      "cost": "コスト",
+      "tokens": "トークン",
+      "vectorOps": "ベクター操作",
+      "cached": "キャッシュ",
+      "model": "モデル",
+      "input": "入力",
+      "output": "出力"
+    },
+    "tabs": {
+      "results": "結果",
+      "trace": "トレース",
+      "cost": "コスト"
+    },
+    "chips": {
+      "trace": "エンティティ",
+      "eval": "関係",
+      "policy": "イベント"
+    },
+    "playgroundTitle": "今すぐ試す",
+    "costPanel": {
+      "calculating": "コストを計算中...",
+      "noCost": "クエリを実行してコスト内訳を表示",
+      "costBreakdown": "コスト内訳",
+      "component": "コンポーネント",
+      "cost": "コスト",
+      "embedding": "埋め込み",
+      "vectorSearch": "ベクトル検索",
+      "rerank": "リランク",
+      "answerContract": "回答検証",
+      "total": "合計コスト",
+      "usage": "使用量",
+      "tokensIn": "入力トークン",
+      "tokensOut": "出力トークン",
+      "queryUnits": "クエリ単位",
+      "estimatedMonthly": "月間見積もり",
+      "basedOn": "基準",
+      "queriesPerDay": "クエリ/日"
+    },
+    "errorDisplay": {
+      "error": "エラー",
+      "errorCode": "コード",
+      "traceId": "トレースID",
+      "hint": "ヒント",
+      "tryAgain": "再試行",
+      "copyTraceId": "トレースIDをコピー",
+      "copied": "コピーしました！"
     }
   },
   "docs": {
@@ -2498,6 +2716,42 @@
       }
     }
   },
+  "demoQuery": {
+    "title": "ライブデモ",
+    "subtitle": "フルトレーシングとコスト透明性を備えたSeiznの検索パイプラインを体験してください。",
+    "tryItNow": "今すぐお試しください - 登録不要",
+    "queryPlaceholder": "検索クエリ",
+    "runDemo": "デモを実行",
+    "running": "実行中...",
+    "results": "結果",
+    "trace": "トレース",
+    "cost": "コスト",
+    "noResults": "デモを実行して結果を確認してください",
+    "errorTitle": "エラー",
+    "rateLimitError": "レート制限を超過しました。しばらくお待ちください。",
+    "retryIn": "再試行まで",
+    "seconds": "秒",
+    "score": "スコア",
+    "rerankScore": "再ランク",
+    "latency": "レイテンシ",
+    "tokens": "トークン",
+    "cached": "キャッシュ済み",
+    "model": "モデル",
+    "input": "入力",
+    "output": "出力",
+    "costBreakdown": "内訳",
+    "total": "合計コスト",
+    "embedding": "埋め込み",
+    "vectorSearch": "ベクトル検索",
+    "rerank": "再ランク",
+    "answerContract": "回答検証",
+    "tokensIn": "入力トークン",
+    "tokensOut": "出力トークン",
+    "queryUnits": "クエリユニット",
+    "prefilledQueries": [
+      "例を見る"
+    ]
+  },
   "publicTrace": {
     "title": "共有トレース",
     "subtitle": "共有された検索トレースの詳細を表示",
@@ -2873,25 +3127,8 @@
     }
   },
   "status": {
-    "metadataTitle": "Seizn Status",
-    "metadataDescription": "Current Seizn API availability and public incident history.",
-    "eyebrow": "STATUS",
     "title": "システムステータス",
     "subtitle": "リアルタイムのシステムステータスとインシデント履歴",
-    "currentStatusLabel": "Current status",
-    "measuredScope": "Measured scope: api.seizn.com/v1/*",
-    "uptimeLabel": "Last 30 days uptime",
-    "uptimeWindow": "Calculated from public incident windows in the last 30 days.",
-    "incidentsEyebrow": "INCIDENTS",
-    "recentIncidentsTitle": "Recent incidents",
-    "noRecentIncidents": "No recent incidents",
-    "noRecentIncidentsBody": "The public incident ledger is empty for this period.",
-    "slaLink": "Read the SLA",
-    "states": {
-      "operational": "operational",
-      "degraded": "degraded",
-      "outage": "outage"
-    },
     "lastUpdated": "最終更新日",
     "overall": {
       "operational": "すべてのシステムが正常稼働中",
@@ -2939,6 +3176,23 @@
       "title": "更新を購読",
       "rss": "RSSフィード",
       "email": "メール通知"
+    },
+    "metadataTitle": "Seizn Status",
+    "metadataDescription": "Current Seizn API availability and public incident history.",
+    "eyebrow": "STATUS",
+    "currentStatusLabel": "Current status",
+    "measuredScope": "Measured scope: api.seizn.com/v1/*",
+    "uptimeLabel": "Last 30 days uptime",
+    "uptimeWindow": "Calculated from public incident windows in the last 30 days.",
+    "incidentsEyebrow": "INCIDENTS",
+    "recentIncidentsTitle": "Recent incidents",
+    "noRecentIncidents": "No recent incidents",
+    "noRecentIncidentsBody": "The public incident ledger is empty for this period.",
+    "slaLink": "Read the SLA",
+    "states": {
+      "operational": "operational",
+      "degraded": "degraded",
+      "outage": "outage"
     }
   },
   "sla": {

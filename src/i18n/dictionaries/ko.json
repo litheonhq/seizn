@@ -287,12 +287,8 @@
     "nav": {
       "overview": "개요",
       "memories": "메모리",
-      "memoryEditor": "메모리 에디터",
       "mindMap": "마인드맵",
       "candidates": "후보",
-      "replay": "Replay",
-      "branches": "브랜치",
-      "provenance": "출처",
       "devTools": "개발자 도구",
       "playground": "플레이그라운드",
       "evals": "평가",
@@ -304,6 +300,7 @@
       "usage": "사용량",
       "budget": "예산",
       "reports": "리포트",
+      "calculator": "계산기",
       "apiKeys": "API 키",
       "integrations": "통합",
       "webhooks": "웹훅",
@@ -312,10 +309,39 @@
       "settings": "설정",
       "groups": {
         "memory": "메모리",
+        "observe": "모니터링",
+        "govern": "거버넌스",
+        "finops": "비용관리",
+        "connect": "연동",
         "system": "시스템",
         "build": "개발",
         "integrate": "연동"
       },
+      "memory": {
+        "author_memory": "작가 메모리"
+      },
+      "author": {
+        "workspace": "작가 작업실",
+        "groups": {
+          "work": "작업",
+          "account": "계정"
+        },
+        "inbox": "받은 자료",
+        "review": "검토 대기",
+        "characters": "인물",
+        "graph": "관계도",
+        "timeline": "시간축",
+        "conflicts": "충돌",
+        "simulate": "장면 미리보기",
+        "audit": "결정 기록",
+        "usage": "사용량",
+        "byok": "내 AI 키",
+        "settings": "설정"
+      },
+      "memoryEditor": "메모리 에디터",
+      "replay": "Replay",
+      "branches": "브랜치",
+      "provenance": "출처",
       "compliance": "Compliance"
     },
     "pinSidebar": "사이드바 고정",
@@ -866,6 +892,50 @@
       "close": "닫기",
       "viewDocs": "문서 보기"
     },
+    "calculator": {
+      "title": "사용량 계산기",
+      "subtitle": "예상 사용량을 기반으로 월 비용을 계산합니다",
+      "stats": {
+        "apiCalls": "API 호출",
+        "memories": "메모리",
+        "extractions": "추출",
+        "estimated": "예상 비용"
+      },
+      "presets": {
+        "title": "빠른 프리셋",
+        "startup": "스타트업",
+        "growing": "성장",
+        "scale": "스케일",
+        "enterprise": "엔터프라이즈"
+      },
+      "customize": {
+        "title": "사용량 설정"
+      },
+      "labels": {
+        "apiCalls": "월간 API 호출",
+        "memories": "저장된 메모리",
+        "extractions": "추출 횟수"
+      },
+      "recommended": {
+        "title": "추천 플랜",
+        "base": "기본 가격",
+        "overage": "초과 요금",
+        "cta": "시작하기"
+      },
+      "comparison": {
+        "title": "전체 플랜",
+        "best": "최적 가치"
+      },
+      "details": {
+        "title": "상세 가격 내역",
+        "plan": "플랜",
+        "base": "기본 가격",
+        "includedCalls": "포함 호출",
+        "overageRate": "초과 요율",
+        "yourOverage": "초과 요금",
+        "total": "합계"
+      }
+    },
     "webhooks": {
       "title": "웹훅",
       "subtitle": "실시간 이벤트 알림을 위한 HTTP 콜백 설정",
@@ -1098,15 +1168,15 @@
       "imported": "가져옴",
       "skipped": "건너뜀",
       "failed": "실패",
+      "afterDate": "이후",
+      "beforeDate": "이전",
+      "sortImportance": "중요도순",
       "memoriesTab": "메모리",
       "budgetTab": "예산",
       "beliefTab": "믿음 그래프",
       "decayTab": "감쇠",
       "branchTab": "브랜치",
-      "provenanceTab": "출처",
-      "afterDate": "이후",
-      "beforeDate": "이전",
-      "sortImportance": "중요도순"
+      "provenanceTab": "출처"
     },
     "budgetPage": {
       "title": "예산 및 비용 관리",
@@ -1349,54 +1419,6 @@
         "addCustom": "사용자 정의 정책 추가"
       }
     },
-    "personas": {
-      "_draftReview": "DRAFT - KR copy reviewed against ai-writing-patterns-guide-ko.md",
-      "title": "한국 NPC 페르소나 시드",
-      "subtitle": "Nemotron-Personas-Korea 행을 미리 보고, 장면에 맞는 인물만 골라 합성 graph entity로 넣습니다.",
-      "planBadge": "현재 플랜 - 배치당 최대 {limit}명",
-      "planBadgeUnlimited": "현재 플랜 - 배치 제한 없음",
-      "filters": {
-        "region": "지역",
-        "occupation": "직업",
-        "occupationPlaceholder": "디자이너, 상점 주인, 교사",
-        "lifeStage": "생애 단계",
-        "ageRange": "나이 범위",
-        "count": "배치 크기",
-        "preview": "페르소나 미리보기"
-      },
-      "lifeStages": {
-        "all": "전체",
-        "young_adult": "청년",
-        "adult": "성인",
-        "middle": "중년",
-        "senior": "노년"
-      },
-      "modes": {
-        "hybrid": "선택 검토",
-        "auto": "자동",
-        "manual": "수동"
-      },
-      "actions": {
-        "autoAcceptAll": "모두 자동 승인",
-        "manualReviewEach": "하나씩 검토",
-        "seedSelected": "{count}명 시드",
-        "previewOnly": "미리보기만",
-        "loading": "처리 중..."
-      },
-      "list": {
-        "title": "미리보기 목록",
-        "empty": "불러온 페르소나가 없습니다.",
-        "accepted": "승인",
-        "skipped": "건너뜀"
-      },
-      "status": {
-        "inserted": "graph entity {count}개를 시드했습니다.",
-        "previewLoaded": "페르소나 {count}명을 불러왔습니다.",
-        "failed": "페르소나 시드에 실패했습니다."
-      },
-      "attribution": "Powered by Nemotron-Personas-Korea (NVIDIA, CC BY 4.0)",
-      "attributionUrlLabel": "데이터셋 카드"
-    },
     "reportsPage": {
       "title": "ROI 리포트",
       "generated": "생성일",
@@ -1521,6 +1543,54 @@
         "note4": "삭제 인증서는 암호화된 증명을 제공합니다"
       }
     },
+    "personas": {
+      "_draftReview": "DRAFT - KR copy reviewed against ai-writing-patterns-guide-ko.md",
+      "title": "한국 NPC 페르소나 시드",
+      "subtitle": "Nemotron-Personas-Korea 행을 미리 보고, 장면에 맞는 인물만 골라 합성 graph entity로 넣습니다.",
+      "planBadge": "현재 플랜 - 배치당 최대 {limit}명",
+      "planBadgeUnlimited": "현재 플랜 - 배치 제한 없음",
+      "filters": {
+        "region": "지역",
+        "occupation": "직업",
+        "occupationPlaceholder": "디자이너, 상점 주인, 교사",
+        "lifeStage": "생애 단계",
+        "ageRange": "나이 범위",
+        "count": "배치 크기",
+        "preview": "페르소나 미리보기"
+      },
+      "lifeStages": {
+        "all": "전체",
+        "young_adult": "청년",
+        "adult": "성인",
+        "middle": "중년",
+        "senior": "노년"
+      },
+      "modes": {
+        "hybrid": "선택 검토",
+        "auto": "자동",
+        "manual": "수동"
+      },
+      "actions": {
+        "autoAcceptAll": "모두 자동 승인",
+        "manualReviewEach": "하나씩 검토",
+        "seedSelected": "{count}명 시드",
+        "previewOnly": "미리보기만",
+        "loading": "처리 중..."
+      },
+      "list": {
+        "title": "미리보기 목록",
+        "empty": "불러온 페르소나가 없습니다.",
+        "accepted": "승인",
+        "skipped": "건너뜀"
+      },
+      "status": {
+        "inserted": "graph entity {count}개를 시드했습니다.",
+        "previewLoaded": "페르소나 {count}명을 불러왔습니다.",
+        "failed": "페르소나 시드에 실패했습니다."
+      },
+      "attribution": "Powered by Nemotron-Personas-Korea (NVIDIA, CC BY 4.0)",
+      "attributionUrlLabel": "데이터셋 카드"
+    },
     "northStar": {
       "subtitle": "NPC 메모리 신뢰성 핵심 지표"
     }
@@ -1569,12 +1639,98 @@
       "contactUs": "문의하기"
     }
   },
+  "serviceSelector": {
+    "title": "경험을 선택하세요",
+    "subtitle": "AI 메모리를 활용하는 두 가지 방법",
+    "spring": {
+      "name": "Spring",
+      "icon": "🌿",
+      "tagline": "멀티 AI 채팅",
+      "description": "GPT-4, Claude, Gemini 등 모든 AI와 대화하세요 — 당신을 기억하는 AI와 함께.",
+      "features": [
+        "한 곳에서 모든 주요 AI 모델 사용",
+        "세션 간 선호도 기억",
+        "모델 간 매끄러운 컨텍스트 전환"
+      ],
+      "cta": "Spring 시작하기",
+      "badge": ""
+    },
+    "summer": {
+      "name": "Summer",
+      "icon": "☀️",
+      "tagline": "메모리 API",
+      "description": "개발자 친화적 API로 AI 앱에 지속적인 기억력을 더하세요.",
+      "features": [
+        "간단한 REST API와 SDK",
+        "50ms 이하 검색 속도",
+        "엔터프라이즈급 보안"
+      ],
+      "cta": "API 살펴보기",
+      "badge": "지금 이용 가능"
+    },
+    "footer": "Seizn의 사계절 — 모든 필요를 위한 AI 메모리"
+  },
+  "springPage": {
+    "badge": "",
+    "title": "하나의 채팅.",
+    "titleHighlight": "모든 AI.",
+    "subtitle": "무엇을 선택해도,\n모두가 당신을 기억합니다.",
+    "startChatting": "지금 시작하기",
+    "viewPricing": "요금제 보기",
+    "features": {
+      "title": "왜 Spring인가요?",
+      "subtitle": "모든 AI의 장점을 하나로.",
+      "multiModel": {
+        "title": "멀티 모델 접근",
+        "description": "GPT-4, Claude, Gemini, Llama 등을 자유롭게 전환. 각 작업에 최적의 모델을 선택하세요."
+      },
+      "persistentMemory": {
+        "title": "지속적인 기억",
+        "description": "선호도, 컨텍스트, 히스토리가 모든 대화와 모든 모델에서 유지됩니다."
+      },
+      "freeGenerosity": {
+        "title": "Cursor급 무료 제공",
+        "description": "넉넉한 무료 사용량. 대부분의 사용자는 결제가 필요 없습니다. 파워 유저를 위한 Pro는 월 $9.99."
+      }
+    },
+    "pricing": {
+      "title": "심플한 가격",
+      "free": {
+        "name": "Free",
+        "price": "$0",
+        "period": "영원히",
+        "features": [
+          "모든 AI 모델",
+          "세션 간 메모리",
+          "웹 & 모바일 앱"
+        ],
+        "cta": "무료로 시작"
+      },
+      "pro": {
+        "name": "Pro",
+        "price": "$9.99",
+        "period": "월",
+        "badge": "최고 가치",
+        "features": [
+          "Free의 모든 기능",
+          "우선 접근",
+          "고급 메모리 제어",
+          "API 접근"
+        ],
+        "cta": "Pro 업그레이드"
+      }
+    }
+  },
   "extremeHome": {
     "heroTitle": "AI NPC의 기억.",
     "heroSubtitle": "Inworld, Convai, 자체 LLM 어디에든 붙습니다. NPC가 기억과 관계, 캐릭터를 넘는 맥락을 잃지 않습니다. 사용자 수가 아니라 그래프 크기로 청구합니다.",
     "ctaStart": "문서 읽기",
     "ctaDemo": "smallgod 플레이",
     "socialProof": "NPC 10개에서 10,000개까지 확장하는 게임 스튜디오를 위해 만든",
+    "liveDemo": "라이브 데모",
+    "heroTagline": "smallgod 플레이 — Seizn 위에 만든 레퍼런스 갓게임. 가입도 설치도 불필요.",
+    "firstRetrievalComplete": "첫 번째 검색 완료",
+    "copySnippetHint": "아래 코드를 복사해 재현하세요",
     "copySnippetTitle": "Unity, Unreal, 또는 모든 런타임에 바로 적용",
     "copySnippetSubtitle": "HTTP 래퍼 + 공식 C#/C++ 플러그인. 별도 인프라 구축 불필요.",
     "whySeizn": {
@@ -1615,7 +1771,90 @@
       "status": "상태",
       "help": "도움말",
       "github": "OSS"
-    }
+    },
+    "requestBuilder": {
+      "title": "요청 빌더",
+      "query": "쿼리",
+      "queryPlaceholder": "검색어를 입력하세요...",
+      "tryExamples": "예시 보기",
+      "dataset": "데이터셋",
+      "latencyBudget": "지연 시간 예산",
+      "fast": "빠름",
+      "thorough": "정밀",
+      "topK": "상위 K",
+      "results": "개 결과",
+      "features": "기능",
+      "hybridSearch": "하이브리드 검색",
+      "hybridSearchDesc": "벡터 + 키워드 결합",
+      "rerank": "재순위",
+      "rerankDesc": "크로스 인코더로 재점수화",
+      "answerContract": "답변 계약",
+      "answerContractDesc": "답변 품질 검증",
+      "running": "실행 중...",
+      "runQuery": "쿼리 실행",
+      "datasets": {
+        "techDocs": "기술 문서",
+        "legalContracts": "법률 계약서",
+        "researchPapers": "연구 논문"
+      },
+      "advanced": "상세 설정"
+    },
+    "resultsPanel": {
+      "searching": "검색 중...",
+      "noResults": "쿼리를 실행하여 결과 확인",
+      "score": "점수"
+    },
+    "tracePanel": {
+      "tracing": "파이프라인 추적 중...",
+      "noTrace": "쿼리를 실행하여 트레이스 확인",
+      "latency": "지연 시간",
+      "cost": "비용",
+      "tokens": "토큰",
+      "vectorOps": "벡터 연산",
+      "cached": "캐시됨",
+      "model": "모델",
+      "input": "입력",
+      "output": "출력"
+    },
+    "tabs": {
+      "results": "결과",
+      "trace": "트레이스",
+      "cost": "비용"
+    },
+    "costPanel": {
+      "calculating": "비용 계산 중...",
+      "noCost": "쿼리를 실행하면 비용 내역을 확인할 수 있습니다",
+      "costBreakdown": "비용 분석",
+      "component": "구성 요소",
+      "cost": "비용",
+      "embedding": "임베딩",
+      "vectorSearch": "벡터 검색",
+      "rerank": "재순위화",
+      "answerContract": "응답 검증",
+      "total": "총 비용",
+      "usage": "사용량",
+      "tokensIn": "입력 토큰",
+      "tokensOut": "출력 토큰",
+      "queryUnits": "쿼리 단위",
+      "estimatedMonthly": "월간 예상",
+      "basedOn": "기준",
+      "queriesPerDay": "일 쿼리"
+    },
+    "errorDisplay": {
+      "error": "오류",
+      "errorCode": "코드",
+      "traceId": "추적 ID",
+      "hint": "힌트",
+      "tryAgain": "다시 시도",
+      "copyTraceId": "추적 ID 복사",
+      "copied": "복사됨!"
+    },
+    "chips": {
+      "trace": "엔티티",
+      "eval": "관계",
+      "policy": "이벤트"
+    },
+    "playgroundTitle": "지금 체험하기"
   },
   "docs": {
     "nav": {
@@ -2770,6 +3009,42 @@
       }
     }
   },
+  "demoQuery": {
+    "title": "라이브 데모",
+    "subtitle": "전체 추적 및 비용 투명성을 갖춘 Seizn의 검색 파이프라인을 체험하세요.",
+    "tryItNow": "지금 사용해 보세요 - 가입 불필요",
+    "queryPlaceholder": "검색 쿼리",
+    "runDemo": "데모 실행",
+    "running": "실행 중...",
+    "results": "결과",
+    "trace": "추적",
+    "cost": "비용",
+    "noResults": "데모를 실행하여 결과를 확인하세요",
+    "errorTitle": "오류",
+    "rateLimitError": "요청 한도 초과. 잠시 기다려 주세요.",
+    "retryIn": "재시도",
+    "seconds": "초 후",
+    "score": "점수",
+    "rerankScore": "재순위",
+    "latency": "지연 시간",
+    "tokens": "토큰",
+    "cached": "캐시됨",
+    "model": "모델",
+    "input": "입력",
+    "output": "출력",
+    "costBreakdown": "상세 내역",
+    "total": "총 비용",
+    "embedding": "임베딩",
+    "vectorSearch": "벡터 검색",
+    "rerank": "재순위",
+    "answerContract": "응답 검증",
+    "tokensIn": "입력 토큰",
+    "tokensOut": "출력 토큰",
+    "queryUnits": "쿼리 단위",
+    "prefilledQueries": [
+      "예시 보기"
+    ]
+  },
   "publicTrace": {
     "title": "공유된 트레이스",
     "subtitle": "공유된 검색 트레이스 상세 보기",
@@ -2957,126 +3232,9 @@
       "cta": "지원 문의"
     }
   },
-  "consent": {
-    "_draft": "DRAFT - legal review pending 2026-04-22",
-    "metadataTitle": "Seizn 동의 관리",
-    "metadataDescription": "주체별 메모리 저장, AI 학습, 페르소나 시드 동의 범위를 관리합니다.",
-    "eyebrow": "동의",
-    "title": "주체 동의",
-    "subtitle": "규제 대상 메모리를 저장하거나 한국 NPC 페르소나를 시드하기 전에 필요한 동의를 기록합니다.",
-    "subjectLabel": "주체 ID",
-    "subjectPlaceholder": "player-123",
-    "ageTitle": "연령 구간",
-    "ageOptions": [
-      {
-        "value": "unknown",
-        "label": "알 수 없음"
-      },
-      {
-        "value": "minor_under_13",
-        "label": "만 13세 미만"
-      },
-      {
-        "value": "minor_13_17",
-        "label": "만 13세 이상 17세 이하"
-      },
-      {
-        "value": "adult",
-        "label": "성인"
-      }
-    ],
-    "scopesTitle": "동의 범위",
-    "scopes": [
-      {
-        "value": "memory_storage",
-        "label": "메모리 저장",
-        "description": "게임 개인화에 쓰는 주체별 메모리를 저장합니다."
-      },
-      {
-        "value": "ai_training",
-        "label": "AI 학습",
-        "description": "모델, 평가기, 검색 품질 개선에 주체 데이터를 사용합니다."
-      },
-      {
-        "value": "analytics",
-        "label": "분석",
-        "description": "제품 품질 지표와 집계 분석에 주체 이벤트를 사용합니다."
-      },
-      {
-        "value": "persona_seeding",
-        "label": "페르소나 시드(한국 스튜디오)",
-        "description": "Nemotron-Personas-Korea 기반 합성 NPC 인물을 스튜디오 워크스페이스에 넣습니다."
-      }
-    ],
-    "personaDisclosure": {
-      "title": "페르소나 시드 고지",
-      "en": {
-        "heading": "Processor disclosure",
-        "items": [
-          {
-            "label": "Controller",
-            "value": "Litheon LLC"
-          },
-          {
-            "label": "Purpose",
-            "value": "NPC persona seed generation for studio workspaces"
-          },
-          {
-            "label": "Retention",
-            "value": "Until the studio deletes the seeded entity or revokes consent"
-          },
-          {
-            "label": "Processing region",
-            "value": "United States by default; Seoul intent is tracked when enabled"
-          }
-        ],
-        "note": "Synthetic dataset provenance remains attached to every seeded graph entity."
-      },
-      "kr": {
-        "heading": "PIPA 위탁처리 고지",
-        "items": [
-          {
-            "label": "개인정보 처리자",
-            "value": "Litheon LLC"
-          },
-          {
-            "label": "목적",
-            "value": "스튜디오 워크스페이스용 NPC 페르소나 시드 생성"
-          },
-          {
-            "label": "보유 기간",
-            "value": "스튜디오가 시드된 entity를 삭제하거나 동의를 철회할 때까지"
-          },
-          {
-            "label": "수탁자 지역",
-            "value": "기본값은 미국이며, 서울 리전 의사는 별도로 기록됩니다."
-          }
-        ],
-        "note": "시드된 모든 graph entity에는 합성 데이터셋 출처와 라이선스가 함께 저장됩니다."
-      }
-    },
-    "submit": "동의 기록"
-  },
   "status": {
-    "metadataTitle": "Seizn Status",
-    "metadataDescription": "Current Seizn API availability and public incident history.",
-    "eyebrow": "STATUS",
     "title": "시스템 상태",
     "subtitle": "실시간 시스템 상태 및 인시던트 기록",
-    "currentStatusLabel": "Current status",
-    "measuredScope": "Measured scope: api.seizn.com/v1/*",
-    "uptimeLabel": "Last 30 days uptime",
-    "uptimeWindow": "Calculated from public incident windows in the last 30 days.",
-    "incidentsEyebrow": "INCIDENTS",
-    "recentIncidentsTitle": "Recent incidents",
-    "noRecentIncidents": "No recent incidents",
-    "noRecentIncidentsBody": "The public incident ledger is empty for this period.",
-    "slaLink": "Read the SLA",
-    "states": {
-      "operational": "operational",
-      "degraded": "degraded",
-      "outage": "outage"
-    },
     "lastUpdated": "마지막 업데이트",
     "overall": {
       "operational": "모든 시스템 정상",
@@ -3124,6 +3282,23 @@
       "title": "업데이트 구독",
       "rss": "RSS 피드",
       "email": "이메일 알림"
+    },
+    "metadataTitle": "Seizn Status",
+    "metadataDescription": "Current Seizn API availability and public incident history.",
+    "eyebrow": "STATUS",
+    "currentStatusLabel": "Current status",
+    "measuredScope": "Measured scope: api.seizn.com/v1/*",
+    "uptimeLabel": "Last 30 days uptime",
+    "uptimeWindow": "Calculated from public incident windows in the last 30 days.",
+    "incidentsEyebrow": "INCIDENTS",
+    "recentIncidentsTitle": "Recent incidents",
+    "noRecentIncidents": "No recent incidents",
+    "noRecentIncidentsBody": "The public incident ledger is empty for this period.",
+    "slaLink": "Read the SLA",
+    "states": {
+      "operational": "operational",
+      "degraded": "degraded",
+      "outage": "outage"
     }
   },
   "trustPage": {
@@ -3312,6 +3487,362 @@
       "description": "보안 관련 질문에 기꺼이 답변드립니다.",
       "email": "security@seizn.com"
     }
+  },
+  "author": {
+    "tabs": {
+      "inbox": "받은 자료",
+      "review": "검토 대기",
+      "characters": "인물",
+      "graph": "관계도",
+      "timeline": "시간축",
+      "conflicts": "충돌",
+      "simulate": "장면 미리보기",
+      "audit": "결정 기록"
+    },
+    "cards": {
+      "imports": "받은 자료",
+      "candidates": "검토 후보",
+      "characters": "등록 인물",
+      "conflicts": "충돌 건수",
+      "edges": "관계 연결",
+      "events": "사건 수"
+    },
+    "table": {
+      "imports": {
+        "columns": {
+          "file_name": "파일 이름",
+          "source_role": "자료 분류",
+          "parse_status": "분석 상태",
+          "extract_status": "추출 상태",
+          "candidate_count": "추출된 후보 수",
+          "parsed_text_preview": "본문 미리보기",
+          "error_message": "오류 메시지"
+        },
+        "parse_status": {
+          "queued": "대기",
+          "parsing": "분석 중",
+          "parsed": "완료",
+          "failed": "실패"
+        },
+        "extract_status": {
+          "queued": "대기",
+          "extracting": "추출 중",
+          "extracted": "완료",
+          "failed": "실패"
+        },
+        "source_role": {
+          "canon": "캐논",
+          "character": "인물",
+          "scene": "장면",
+          "reference": "참고",
+          "visual": "비주얼"
+        }
+      },
+      "candidates": {
+        "columns": {
+          "type": "종류",
+          "status": "상태",
+          "confidence": "신뢰도",
+          "content": "내용",
+          "id": "자세히"
+        },
+        "type": {
+          "character": "인물",
+          "world_rule": "세계 규칙",
+          "event": "사건",
+          "relationship": "관계",
+          "voice_sample": "대사 샘플",
+          "fact": "사실"
+        },
+        "status": {
+          "candidate": "검토 중",
+          "canon": "캐논 채택",
+          "rejected": "반려",
+          "retired": "퇴장",
+          "past_only": "과거 한정",
+          "contradicted": "모순",
+          "invalidated": "무효",
+          "author_only": "작가 전용",
+          "character_known": "인물 인지",
+          "character_unknown": "인물 비인지"
+        }
+      },
+      "characters": {
+        "columns": {
+          "name": "이름",
+          "summary": "한 줄 소개",
+          "scope": "등장 범위",
+          "aliases": "다른 이름"
+        }
+      },
+      "graph": {
+        "columns": {
+          "from_name": "출발 인물",
+          "relation": "관계",
+          "to_name": "도착 인물",
+          "intensity_band": "관계 강도",
+          "valid_at": "시작 시점"
+        }
+      },
+      "timeline": {
+        "columns": {
+          "day": "Day",
+          "date": "날짜",
+          "where": "장소",
+          "what": "일어난 일"
+        }
+      },
+      "audit": {
+        "columns": {
+          "event": "결정 종류",
+          "created": "시각",
+          "decision": "결정 ID",
+          "llm": "LLM 정보",
+          "payload": "자세한 내용",
+          "replay": "재생"
+        }
+      }
+    },
+    "empty": {
+      "inbox": {
+        "title": "받은 자료가 아직 없어요",
+        "body": "원고와 설정 자료를 업로드하면 자동으로 분석하고 검토 대기로 넘겨요.",
+        "cta": "자료 업로드",
+        "parsing": {
+          "title": "자료를 읽는 중이에요",
+          "body": "큰 파일은 1~2분 정도 걸릴 수 있어요. 끝나면 후보 사실을 자동으로 정리해요.",
+          "cta": ""
+        }
+      },
+      "inbox_parsing": {
+        "title": "자료를 읽는 중이에요",
+        "body": "큰 파일은 1~2분 정도 걸릴 수 있어요. 끝나면 후보 사실을 자동으로 정리해요.",
+        "cta": ""
+      },
+      "review": {
+        "title": "검토할 후보가 없어요",
+        "body": "새 자료를 업로드하거나 인물 화면에서 백로그를 생성하면 후보를 채울 수 있어요.",
+        "cta": "백로그 생성"
+      },
+      "characters": {
+        "title": "등록된 인물이 없어요",
+        "body": "첫 자료가 들어오면 후보로 열린 인물을 캐논으로 채택할 수 있어요.",
+        "cta": "자료 업로드"
+      },
+      "character_detail": {
+        "title": "아직 비어 있는 인물이에요",
+        "body": "백로그를 생성하면 좋아하는 것과 싫어하는 것 같은 작은 결을 빠르게 채울 수 있어요.",
+        "cta": "백로그 생성"
+      },
+      "graph": {
+        "title": "관계도가 비어 있어요",
+        "body": "인물이 두 명 이상 등록되고 관계가 열리면 여기에서 한눈에 볼 수 있어요.",
+        "cta": ""
+      },
+      "timeline": {
+        "title": "시간축이 비어 있어요",
+        "body": "사건이 들어오면 Day 단위로 정리해요. 사건은 자료에서 자동으로 추출하거나 직접 추가할 수 있어요.",
+        "cta": "사건 추가"
+      },
+      "conflicts": {
+        "title": "충돌이 없어요",
+        "body": "캐논과 부딪히는 새 사실이 생기면 여기로 모여요. 지금은 깨끗해요.",
+        "cta": ""
+      },
+      "simulate": {
+        "title": "장면을 아직 돌려보지 않았어요",
+        "body": "인물 두 명을 고르고 장면 입력을 적으면 그 인물이 무엇을 느끼고 어떻게 말할지 미리 보여줘요.",
+        "cta": "장면 만들기"
+      },
+      "audit": {
+        "title": "기록된 결정이 아직 없어요",
+        "body": "후보를 채택하거나 충돌을 해결하면 결정이 시간 순서로 쌓여요.",
+        "cta": ""
+      }
+    },
+    "graph": {
+      "bands": {
+        "very_strong_positive": "매우 강한 호감",
+        "positive": "호감",
+        "weak_positive": "약한 호감",
+        "neutral": "중립",
+        "weak_negative": "약한 거리감",
+        "negative": "거리감",
+        "very_strong_negative": "매우 강한 적대"
+      },
+      "relation": {
+        "best_friend": "단짝",
+        "co_lead": "공동 주역",
+        "senior_mentor": "선배·멘토",
+        "family": "가족",
+        "informant": "정보원",
+        "crush": "호감 대상",
+        "rival": "라이벌",
+        "acquaintance": "지인",
+        "unknown": "정해지지 않음"
+      },
+      "view": {
+        "diagram": "그림으로 보기",
+        "table": "표로 보기"
+      },
+      "unknown_name": "이 인물의 이름이 아직 등록되지 않았어요.",
+      "unknown_relation": "등록되지 않은 관계 종류입니다. 추가 등록이 필요할 수 있어요."
+    },
+    "conflict": {
+      "severity": {
+        "high": "심각",
+        "medium": "중요",
+        "low": "낮음"
+      },
+      "status": {
+        "unresolved": "미해결",
+        "resolved": "해결됨",
+        "deferred": "보류"
+      },
+      "actions": {
+        "keep_existing": "기존 캐논 유지",
+        "replace_with_new": "새 사실로 교체",
+        "defer_both": "둘 다 보류",
+        "custom": "직접 수정"
+      },
+      "title": "충돌",
+      "reasoning_title": "충돌 근거",
+      "impact_title": "영향",
+      "impact_fallback": "이 결정이 다른 캐논에 미칠 영향은 작습니다.",
+      "undo": "되돌리기"
+    },
+    "events": {
+      "project.created": "프로젝트 생성",
+      "import.upload": "자료 업로드",
+      "import.parsed": "자료 분석 완료",
+      "import.failed": "자료 분석 실패",
+      "import.retried": "자료 재시도",
+      "import.deleted": "자료 삭제",
+      "candidate.added": "후보 추가",
+      "candidate.decided": "후보 결정",
+      "candidate.batch_decided": "후보 일괄 결정",
+      "character.updated": "인물 수정",
+      "conflict.resolved": "충돌 해결",
+      "simulation.run": "장면 실행",
+      "simulation.replay": "장면 재생",
+      "backlog.generated": "백로그 생성",
+      "settings.updated": "설정 수정",
+      "byok.updated": "BYOK 수정"
+    },
+    "actions": {
+      "generate_backlog": "백로그 생성",
+      "run_scene": "장면 돌리기",
+      "upload": "업로드"
+    },
+    "toasts": {
+      "review_queue_updated": "검토 대기 새로고침 완료",
+      "uploading": "업로드 중…",
+      "ai_generating": "AI가 생성 중이에요…"
+    },
+    "panels": {
+      "inbox": "받은 자료함",
+      "review": "검토 대기"
+    }
+  },
+  "consent": {
+    "_draft": "DRAFT - legal review pending 2026-04-22",
+    "metadataTitle": "Seizn 동의 관리",
+    "metadataDescription": "주체별 메모리 저장, AI 학습, 페르소나 시드 동의 범위를 관리합니다.",
+    "eyebrow": "동의",
+    "title": "주체 동의",
+    "subtitle": "규제 대상 메모리를 저장하거나 한국 NPC 페르소나를 시드하기 전에 필요한 동의를 기록합니다.",
+    "subjectLabel": "주체 ID",
+    "subjectPlaceholder": "player-123",
+    "ageTitle": "연령 구간",
+    "ageOptions": [
+      {
+        "value": "unknown",
+        "label": "알 수 없음"
+      },
+      {
+        "value": "minor_under_13",
+        "label": "만 13세 미만"
+      },
+      {
+        "value": "minor_13_17",
+        "label": "만 13세 이상 17세 이하"
+      },
+      {
+        "value": "adult",
+        "label": "성인"
+      }
+    ],
+    "scopesTitle": "동의 범위",
+    "scopes": [
+      {
+        "value": "memory_storage",
+        "label": "메모리 저장",
+        "description": "게임 개인화에 쓰는 주체별 메모리를 저장합니다."
+      },
+      {
+        "value": "ai_training",
+        "label": "AI 학습",
+        "description": "모델, 평가기, 검색 품질 개선에 주체 데이터를 사용합니다."
+      },
+      {
+        "value": "analytics",
+        "label": "분석",
+        "description": "제품 품질 지표와 집계 분석에 주체 이벤트를 사용합니다."
+      },
+      {
+        "value": "persona_seeding",
+        "label": "페르소나 시드(한국 스튜디오)",
+        "description": "Nemotron-Personas-Korea 기반 합성 NPC 인물을 스튜디오 워크스페이스에 넣습니다."
+      }
+    ],
+    "personaDisclosure": {
+      "title": "페르소나 시드 고지",
+      "en": {
+        "heading": "Processor disclosure",
+        "items": [
+          {
+            "label": "Controller",
+            "value": "Litheon LLC"
+          },
+          {
+            "label": "Purpose",
+            "value": "NPC persona seed generation for studio workspaces"
+          },
+          {
+            "label": "Retention",
+            "value": "Until the studio deletes the seeded entity or revokes consent"
+          },
+          {
+            "label": "Processing region",
+            "value": "United States by default; Seoul intent is tracked when enabled"
+          }
+        ],
+        "note": "Synthetic dataset provenance remains attached to every seeded graph entity."
+      },
+      "kr": {
+        "heading": "PIPA 위탁처리 고지",
+        "items": [
+          {
+            "label": "개인정보 처리자",
+            "value": "Litheon LLC"
+          },
+          {
+            "label": "목적",
+            "value": "스튜디오 워크스페이스용 NPC 페르소나 시드 생성"
+          },
+          {
+            "label": "보유 기간",
+            "value": "스튜디오가 시드된 entity를 삭제하거나 동의를 철회할 때까지"
+          },
+          {
+            "label": "수탁자 지역",
+            "value": "기본값은 미국이며, 서울 리전 의사는 별도로 기록됩니다."
+          }
+        ],
+        "note": "시드된 모든 graph entity에는 합성 데이터셋 출처와 라이선스가 함께 저장됩니다."
+      }
+    },
+    "submit": "동의 기록"
   },
   "sla": {
     "metadataTitle": "Seizn Service Level Agreement",

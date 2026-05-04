@@ -166,9 +166,9 @@ export function StructureList({
   // Render error state
   if (state.error) {
     return (
-      <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+      <div className="bg-[var(--signal-conflict-soft)] border border-[var(--signal-conflict)] rounded-lg p-6 text-center">
         <svg
-          className="w-12 h-12 text-red-400 mx-auto mb-3"
+          className="w-12 h-12 text-[var(--signal-conflict-soft)] mx-auto mb-3"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -180,10 +180,10 @@ export function StructureList({
             d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
           />
         </svg>
-        <p className="text-red-700 font-medium">{state.error}</p>
+        <p className="text-[var(--signal-conflict-ink)] font-medium">{state.error}</p>
         <button
           onClick={() => setFilters({ ...filters })}
-          className="mt-3 px-4 py-2 text-sm bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors"
+          className="mt-3 px-4 py-2 text-sm bg-[var(--signal-conflict-soft)] text-[var(--signal-conflict-ink)] rounded-lg hover:bg-[var(--signal-conflict-soft)] transition-colors"
         >
           Retry
         </button>
@@ -319,7 +319,7 @@ function StructureFilters({
           onClick={() => onChange(type.value)}
           className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
             value === type.value
-              ? "bg-gray-900 text-white"
+              ? "bg-[var(--ink-900)] text-white"
               : "bg-gray-100 text-gray-600 hover:bg-gray-200"
           }`}
         >
@@ -414,7 +414,7 @@ function StructureTypeIcon({ type }: { type: string }) {
       </svg>
     ),
     list: (
-      <svg className="w-5 h-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <svg className="w-5 h-5 text-[var(--signal-canon-ink)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -424,7 +424,7 @@ function StructureTypeIcon({ type }: { type: string }) {
       </svg>
     ),
     key_value: (
-      <svg className="w-5 h-5 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <svg className="w-5 h-5 text-[var(--ink-700)] underline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -444,7 +444,7 @@ function StructureTypeIcon({ type }: { type: string }) {
       </svg>
     ),
     schema: (
-      <svg className="w-5 h-5 text-cyan-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <svg className="w-5 h-5 text-[var(--ink-900)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -461,10 +461,10 @@ function StructureTypeIcon({ type }: { type: string }) {
 function StructureTypeBadge({ type }: { type: string }) {
   const colors: Record<string, string> = {
     table: "bg-blue-100 text-blue-700",
-    list: "bg-green-100 text-green-700",
-    key_value: "bg-purple-100 text-purple-700",
+    list: "bg-[var(--signal-canon-soft)] text-[var(--signal-canon-ink)]",
+    key_value: "bg-[var(--ink-100)] text-[var(--ink-900)] underline",
     hierarchy: "bg-orange-100 text-orange-700",
-    schema: "bg-cyan-100 text-cyan-700",
+    schema: "bg-[var(--ink-100)] text-[var(--ink-900)]",
   };
 
   return (

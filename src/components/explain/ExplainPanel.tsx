@@ -140,16 +140,16 @@ export function ExplainPanel({
 
   return (
     <div
-      className={`bg-szn-bg rounded-xl shadow-lg border border-szn-border overflow-hidden ${className}`}
+      className={`bg-[var(--ink-50)] rounded-xl shadow-lg border border-[var(--ink-200)] overflow-hidden ${className}`}
     >
       {/* Header */}
-      <div className="px-6 py-4 border-b border-szn-border bg-szn-surface">
+      <div className="px-6 py-4 border-b border-[var(--ink-200)] bg-[var(--ink-50)]">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-lg font-semibold text-szn-text-1">
+            <h3 className="text-lg font-semibold text-[var(--ink-900)]">
               Explain Result #{result.rank}
             </h3>
-            <p className="text-sm text-szn-text-2 mt-1">
+            <p className="text-sm text-[var(--ink-600)] mt-1">
               Score: {(scoreBreakdown.finalScore * 100).toFixed(1)}% |{" "}
               {searchConfig.searchType} search
             </p>
@@ -157,7 +157,7 @@ export function ExplainPanel({
           {onClose && (
             <button
               onClick={onClose}
-              className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors rounded-lg hover:bg-szn-surface-1"
+              className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors rounded-lg hover:bg-[var(--ink-50)]"
             >
               <CloseIcon className="w-5 h-5" />
             </button>
@@ -173,7 +173,7 @@ export function ExplainPanel({
       </div>
 
       {/* Tabs */}
-      <div className="border-b border-szn-border">
+      <div className="border-b border-[var(--ink-200)]">
         <nav className="flex -mb-px overflow-x-auto">
           {TABS.map((tab) => (
             <button
@@ -228,8 +228,8 @@ export function ExplainPanel({
       </div>
 
       {/* Footer */}
-      <div className="px-6 py-3 border-t border-szn-border bg-szn-surface">
-        <div className="flex items-center justify-between text-xs text-szn-text-2">
+      <div className="px-6 py-3 border-t border-[var(--ink-200)] bg-[var(--ink-50)]">
+        <div className="flex items-center justify-between text-xs text-[var(--ink-600)]">
           <span>
             Document: {attribution.documentTitle || attribution.documentId}
           </span>
@@ -265,7 +265,7 @@ interface RankingFlowViewProps {
 function RankingFlowView({ rankingFlow, searchConfig }: RankingFlowViewProps) {
   if (!rankingFlow || rankingFlow.length === 0) {
     return (
-      <div className="text-center py-8 text-szn-text-2">
+      <div className="text-center py-8 text-[var(--ink-600)]">
         No ranking flow data available
       </div>
     );
@@ -274,36 +274,36 @@ function RankingFlowView({ rankingFlow, searchConfig }: RankingFlowViewProps) {
   return (
     <div className="space-y-6">
       {/* Search Config Summary */}
-      <div className="p-4 bg-szn-surface rounded-lg">
-        <h4 className="text-sm font-medium text-szn-text-2 mb-2">
+      <div className="p-4 bg-[var(--ink-50)] rounded-lg">
+        <h4 className="text-sm font-medium text-[var(--ink-600)] mb-2">
           Search Configuration
         </h4>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
           <div>
-            <span className="text-szn-text-2">Type:</span>
-            <span className="ml-2 font-medium text-szn-text-1 capitalize">
+            <span className="text-[var(--ink-600)]">Type:</span>
+            <span className="ml-2 font-medium text-[var(--ink-900)] capitalize">
               {searchConfig.searchType}
             </span>
           </div>
           <div>
-            <span className="text-szn-text-2">Top K:</span>
-            <span className="ml-2 font-medium text-szn-text-1">
+            <span className="text-[var(--ink-600)]">Top K:</span>
+            <span className="ml-2 font-medium text-[var(--ink-900)]">
               {searchConfig.topK}
             </span>
           </div>
           {searchConfig.hybridAlpha !== undefined && (
             <div>
-              <span className="text-szn-text-2">
+              <span className="text-[var(--ink-600)]">
                 Hybrid Alpha:
               </span>
-              <span className="ml-2 font-medium text-szn-text-1">
+              <span className="ml-2 font-medium text-[var(--ink-900)]">
                 {searchConfig.hybridAlpha}
               </span>
             </div>
           )}
           <div>
-            <span className="text-szn-text-2">Rerank:</span>
-            <span className="ml-2 font-medium text-szn-text-1">
+            <span className="text-[var(--ink-600)]">Rerank:</span>
+            <span className="ml-2 font-medium text-[var(--ink-900)]">
               {searchConfig.rerankEnabled ? "Enabled" : "Disabled"}
             </span>
           </div>
@@ -312,7 +312,7 @@ function RankingFlowView({ rankingFlow, searchConfig }: RankingFlowViewProps) {
 
       {/* Flow Visualization */}
       <div className="relative">
-        <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-szn-surface" />
+        <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-[var(--ink-50)]" />
 
         <div className="space-y-4">
           {rankingFlow.map((stage, index) => (
@@ -320,28 +320,28 @@ function RankingFlowView({ rankingFlow, searchConfig }: RankingFlowViewProps) {
               {/* Stage Dot */}
               <div
                 className={`
-                  absolute left-2 w-4 h-4 rounded-full border-2 bg-szn-bg
+                  absolute left-2 w-4 h-4 rounded-full border-2 bg-[var(--ink-50)]
                   ${
                     stage.eliminated
-                      ? "border-red-500"
+                      ? "border-[var(--signal-conflict)]"
                       : index === rankingFlow.length - 1
-                        ? "border-green-500"
+                        ? "border-[var(--signal-canon)]"
                         : "border-blue-500"
                   }
                 `}
               />
 
               {/* Stage Card */}
-              <div className="p-4 bg-szn-card rounded-lg border border-szn-border">
+              <div className="p-4 bg-[var(--ink-0)] rounded-lg border border-[var(--ink-200)]">
                 <div className="flex items-center justify-between">
-                  <h5 className="font-medium text-szn-text-1">
+                  <h5 className="font-medium text-[var(--ink-900)]">
                     {stage.stage}
                   </h5>
                   <div className="flex items-center gap-4 text-sm">
-                    <span className="text-szn-text-2">
+                    <span className="text-[var(--ink-600)]">
                       Rank: <span className="font-medium">#{stage.rank}</span>
                     </span>
-                    <span className="text-szn-text-2">
+                    <span className="text-[var(--ink-600)]">
                       Score:{" "}
                       <span className="font-medium">
                         {(stage.score * 100).toFixed(1)}%
@@ -351,13 +351,13 @@ function RankingFlowView({ rankingFlow, searchConfig }: RankingFlowViewProps) {
                 </div>
 
                 {/* Progress Bar */}
-                <div className="mt-2 h-2 bg-szn-surface rounded-full overflow-hidden">
+                <div className="mt-2 h-2 bg-[var(--ink-50)] rounded-full overflow-hidden">
                   <div
                     className={`h-full rounded-full transition-all ${
                       stage.eliminated
-                        ? "bg-red-500"
+                        ? "bg-[var(--signal-conflict)]"
                         : index === rankingFlow.length - 1
-                          ? "bg-green-500"
+                          ? "bg-[var(--signal-canon)]"
                           : "bg-blue-500"
                     }`}
                     style={{ width: `${stage.score * 100}%` }}

@@ -207,3 +207,9 @@ Use this mode when the user asks for "끝까지", "100%", "완료될 때까지",
 - Validation commands and pass/fail status
 - Commit hash and push status
 - Updated documentation paths
+
+<!-- BEGIN:nextjs-agent-rules -->
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
+<!-- END:nextjs-agent-rules -->

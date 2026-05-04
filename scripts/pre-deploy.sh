@@ -7,6 +7,11 @@ set -e
 echo "Seizn Pre-Deploy Check"
 echo "========================="
 
+# 0. Verify public demo and marketing surfaces do not leak internal-only IP terms
+echo ""
+echo "Running KNOT separation guard..."
+npm run verify:knot-separation
+
 # 1. Check tsconfig.json excludes mcp-server
 if grep -q '"mcp-server"' tsconfig.json; then
   echo "OK tsconfig.json: mcp-server excluded"

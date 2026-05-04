@@ -121,6 +121,17 @@ export async function authenticateRequest(
     'unknown';
   const authFailCheck = await checkAuthFailRateLimit(clientIp);
 
+  // If too many recent auth failures from this IP, reject early (before any key processing)
+  if (!authFailCheck.allowed) {
+    return {
+      authError: {
+        code: ErrorCodes.RATE_LIMIT_EXCEEDED,
+        error: 'Too many failed authentication attempts. Try again later.',
+        status: 429,
+      },
+    };
+  }
+
   if (!apiKey) {
     // Log auth failure (no key provided)
     await Promise.allSettled([
@@ -135,17 +146,6 @@ export async function authenticateRequest(
         headers: {
           'WWW-Authenticate': 'Bearer realm="Seizn API", charset="UTF-8"',
         },
-      },
-    };
-  }
-
-  // If too many recent auth failures from this IP, reject early
-  if (!authFailCheck.allowed) {
-    return {
-      authError: {
-        code: ErrorCodes.RATE_LIMIT_EXCEEDED,
-        error: 'Too many failed authentication attempts. Try again later.',
-        status: 429,
       },
     };
   }
