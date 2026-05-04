@@ -178,10 +178,22 @@ async function handleReviewToken(
 
 // Engine surface (engine.seizn.com) — rewrite to /engine/* before i18n redirect
 const ENGINE_HOST = 'engine.seizn.com';
+const AUTHOR_FLAGSHIP_ORIGIN = 'https://www.seizn.com';
 
-function isEngineInternalPath(pathname: string): boolean {
+// Author-only entry points: redirect to seizn.com when accessed from engine surface
+const AUTHOR_ONLY_PREFIXES = [
+  '/dashboard',
+  '/login',
+  '/signup',
+  '/device',
+  '/invite',
+  '/t/',
+  '/trace/',
+];
+
+// Shared infra: pass through on both surfaces
+function isSharedInfraPath(pathname: string): boolean {
   return (
-    pathname.startsWith('/engine') ||
     pathname.startsWith('/api') ||
     pathname.startsWith('/_next') ||
     pathname.startsWith('/monitoring') ||
@@ -198,7 +210,19 @@ export async function proxy(request: NextRequest) {
   const host = (request.headers.get('host') || '').toLowerCase();
 
   // Engine surface routing (must run before i18n redirect)
-  if (host === ENGINE_HOST && !isEngineInternalPath(pathname)) {
+  if (host === ENGINE_HOST) {
+    // Author-only entry: cross-domain redirect to seizn.com (308 — preserves method)
+    if (AUTHOR_ONLY_PREFIXES.some((p) => pathname.startsWith(p))) {
+      return NextResponse.redirect(
+        `${AUTHOR_FLAGSHIP_ORIGIN}${pathname}${request.nextUrl.search}`,
+        308
+      );
+    }
+    // /engine/* and shared infra: pass through
+    if (pathname.startsWith('/engine') || isSharedInfraPath(pathname)) {
+      return NextResponse.next();
+    }
+    // Everything else: rewrite to /engine/*
     const url = request.nextUrl.clone();
     url.pathname = pathname === '/' ? '/engine' : `/engine${pathname}`;
     return NextResponse.rewrite(url);
