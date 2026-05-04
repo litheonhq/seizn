@@ -82,7 +82,9 @@ describe("Author flagship landing", () => {
     expect(isAuthorEngineSurfaceLive("false")).toBe(false);
     expect(isAuthorEngineSurfaceLive("true")).toBe(true);
     expect(isAuthorEngineSurfaceLive(" TRUE ")).toBe(true);
-    expect(renderToStaticMarkup(createElement(AuthorFlagshipLanding, { data, locale: "en" }))).not.toContain("https://engine.seizn.com");
+    // Footer cross-link는 항상 노출 (양방향 dual-surface 정책, 2026-05-05 v118)
+    // Engine tease 배너만 NEXT_PUBLIC_ENGINE_SURFACE_LIVE 게이트
+    expect(renderToStaticMarkup(createElement(AuthorFlagshipLanding, { data, locale: "en" }))).not.toContain("engine-tease");
 
     process.env.NEXT_PUBLIC_ENGINE_SURFACE_LIVE = "1";
     expect(isAuthorEngineSurfaceLive()).toBe(true);
