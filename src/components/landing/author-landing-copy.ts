@@ -81,6 +81,7 @@ export interface AuthorLandingCopy {
     product: string;
     company: string;
     tools: string;
+    developers: string;
     links: {
       workflow: string;
       demo: string;
@@ -97,6 +98,9 @@ export interface AuthorLandingCopy {
       replay: string;
       byok: string;
       changelog: string;
+      engine: string;
+      sdk: string;
+      mcp: string;
     };
     entity: string;
     version: string;
@@ -315,6 +319,7 @@ export const AUTHOR_LANDING_COPY: AuthorLandingCopy = {
     product: "Product",
     company: "Company",
     tools: "Author tools",
+    developers: "For developers",
     links: {
       workflow: "Workflow",
       demo: "Demo",
@@ -331,6 +336,9 @@ export const AUTHOR_LANDING_COPY: AuthorLandingCopy = {
       replay: "Replay",
       byok: "BYOK guide",
       changelog: "Changelog",
+      engine: "Engine \u2192",
+      sdk: "@seizn/sdk-js",
+      mcp: "@seizn/mcp",
     },
     entity: "\u00a9 2026 Seizn by Litheon LLC \u00b7 Wyoming",
     version: "v1.0 \u00b7 saebyeok demo is synthetic data",
