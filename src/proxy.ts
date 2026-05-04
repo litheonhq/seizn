@@ -176,8 +176,33 @@ async function handleReviewToken(
   return addDashboardSecurityHeaders(response);
 }
 
+// Engine surface (engine.seizn.com) — rewrite to /engine/* before i18n redirect
+const ENGINE_HOST = 'engine.seizn.com';
+
+function isEngineInternalPath(pathname: string): boolean {
+  return (
+    pathname.startsWith('/engine') ||
+    pathname.startsWith('/api') ||
+    pathname.startsWith('/_next') ||
+    pathname.startsWith('/monitoring') ||
+    pathname.startsWith('/favicon') ||
+    pathname.startsWith('/apple-touch-icon') ||
+    pathname.startsWith('/og-image') ||
+    pathname.startsWith('/robots.txt') ||
+    pathname.startsWith('/sitemap.xml')
+  );
+}
+
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const host = (request.headers.get('host') || '').toLowerCase();
+
+  // Engine surface routing (must run before i18n redirect)
+  if (host === ENGINE_HOST && !isEngineInternalPath(pathname)) {
+    const url = request.nextUrl.clone();
+    url.pathname = pathname === '/' ? '/engine' : `/engine${pathname}`;
+    return NextResponse.rewrite(url);
+  }
 
   // Skip public paths (API routes, static files, etc.)
   // But still apply security headers for dashboard routes

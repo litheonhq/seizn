@@ -1,6 +1,8 @@
 {
   "ignoreCommand": "npm run vercel:ignore-build",
-  "regions": ["hnd1"],
+  "regions": [
+    "hnd1"
+  ],
   "redirects": [
     {
       "source": "/:path*",
@@ -12,28 +14,6 @@
       ],
       "destination": "https://www.seizn.com/:path*",
       "permanent": true
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/",
-      "has": [
-        {
-          "type": "host",
-          "value": "engine.seizn.com"
-        }
-      ],
-      "destination": "/engine"
-    },
-    {
-      "source": "/:path((?!engine|api|_next|favicon|apple-touch-icon|og-image|monitoring).*)",
-      "has": [
-        {
-          "type": "host",
-          "value": "engine.seizn.com"
-        }
-      ],
-      "destination": "/engine/:path"
     }
   ],
   "crons": [
