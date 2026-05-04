@@ -30,7 +30,8 @@ jobs:
           registry-url: https://registry.npmjs.org
 
       - name: Install dependencies
-        run: npm ci --prefix packages/seizn-sdk-js
+        # workspace package without its own lockfile — use install (publish-sdk.yml pattern)
+        run: npm install --prefix packages/seizn-sdk-js
 
       - name: Build
         run: npm run build --prefix packages/seizn-sdk-js
