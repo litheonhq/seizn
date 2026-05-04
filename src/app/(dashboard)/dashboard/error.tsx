@@ -21,13 +21,13 @@ export default function DashboardError({
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
         </svg>
       </div>
-      <h2 className="text-xl font-bold text-szn-text-1 mb-2">
+      <h2 className="text-xl font-bold text-[var(--ink-900)] mb-2">
         Something went wrong
       </h2>
-      <p className="text-szn-text-2 mb-6 max-w-md">
+      <p className="text-[var(--ink-600)] mb-6 max-w-md">
         An unexpected error occurred while loading this page.
         {error.digest && (
-          <span className="block mt-1 text-xs text-szn-text-3">
+          <span className="block mt-1 text-xs text-[var(--ink-500)]">
             Error ID: {error.digest}
           </span>
         )}
@@ -35,13 +35,13 @@ export default function DashboardError({
       <div className="flex items-center gap-3">
         <button
           onClick={reset}
-          className="px-6 py-2.5 bg-gradient-to-r from-szn-accent to-szn-accent/80 text-white rounded-xl font-medium hover:opacity-90 transition-colors"
+          className="px-6 py-2.5 bg-[var(--ink-900)] text-white rounded-xl font-medium hover:opacity-90 transition-colors"
         >
           Try Again
         </button>
         <Link
           href="/dashboard"
-          className="px-6 py-2.5 border border-szn-border text-szn-text-1 rounded-xl font-medium hover:bg-szn-surface-1 transition-colors"
+          className="px-6 py-2.5 border border-[var(--ink-200)] text-[var(--ink-900)] rounded-xl font-medium hover:bg-[var(--ink-50)] transition-colors"
         >
           Back to Dashboard
         </Link>

@@ -45,14 +45,14 @@ export function ThemeToggle({ className = "", variant = "dropdown" }: ThemeToggl
     return (
       <button
         onClick={cycleTheme}
-        className={`p-2 rounded-xl hover:bg-szn-surface-2 transition-colors ${className}`}
+        className={`p-2 rounded-xl hover:bg-[var(--ink-100)] transition-colors ${className}`}
         aria-label={t("theme.toggle")}
         title={`${t("theme.toggle")}: ${currentTheme.label}`}
       >
         {resolvedTheme === "dark" ? (
-          <MoonIcon className="w-5 h-5 text-szn-text-2" />
+          <MoonIcon className="w-5 h-5 text-[var(--ink-600)]" />
         ) : (
-          <SunIcon className="w-5 h-5 text-szn-text-2" />
+          <SunIcon className="w-5 h-5 text-[var(--ink-600)]" />
         )}
       </button>
     );
@@ -67,15 +67,15 @@ export function ThemeToggle({ className = "", variant = "dropdown" }: ThemeToggl
     return (
       <button
         onClick={toggleTheme}
-        className={`flex items-center gap-2 px-3 py-2 rounded-xl bg-szn-surface-1 hover:bg-szn-surface-2 border border-szn-border transition-colors ${className}`}
+        className={`flex items-center gap-2 px-3 py-2 rounded-xl bg-[var(--ink-50)] hover:bg-[var(--ink-100)] border border-[var(--ink-200)] transition-colors ${className}`}
         aria-label={t("theme.toggle")}
       >
         {resolvedTheme === "dark" ? (
-          <MoonIcon className="w-4 h-4 text-szn-text-2" />
+          <MoonIcon className="w-4 h-4 text-[var(--ink-600)]" />
         ) : (
-          <SunIcon className="w-4 h-4 text-szn-text-2" />
+          <SunIcon className="w-4 h-4 text-[var(--ink-600)]" />
         )}
-        <span className="text-sm text-szn-text-1">{currentTheme.label}</span>
+        <span className="text-sm text-[var(--ink-900)]">{currentTheme.label}</span>
       </button>
     );
   }
@@ -85,23 +85,23 @@ export function ThemeToggle({ className = "", variant = "dropdown" }: ThemeToggl
     <div ref={dropdownRef} className={`relative ${className}`}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-3 py-2 rounded-xl bg-szn-surface-1 hover:bg-szn-surface-2 border border-szn-border transition-colors"
+        className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[var(--ink-50)] hover:bg-[var(--ink-100)] border border-[var(--ink-200)] transition-colors"
         aria-label={t("theme.toggle")}
         aria-expanded={isOpen}
       >
         {resolvedTheme === "dark" ? (
-          <MoonIcon className="w-4 h-4 text-szn-text-2" />
+          <MoonIcon className="w-4 h-4 text-[var(--ink-600)]" />
         ) : (
-          <SunIcon className="w-4 h-4 text-szn-text-2" />
+          <SunIcon className="w-4 h-4 text-[var(--ink-600)]" />
         )}
-        <span className="text-sm text-szn-text-1">{currentTheme.label}</span>
+        <span className="text-sm text-[var(--ink-900)]">{currentTheme.label}</span>
         <ChevronDownIcon
-          className={`w-4 h-4 text-szn-text-3 transition-transform ${isOpen ? "rotate-180" : ""}`}
+          className={`w-4 h-4 text-[var(--ink-500)] transition-transform ${isOpen ? "rotate-180" : ""}`}
         />
       </button>
 
       {isOpen && (
-        <div className="absolute top-full left-0 mt-1 w-40 bg-szn-card rounded-xl shadow-lg border border-szn-border py-1 z-50 animate-fade-in">
+        <div className="absolute top-full left-0 mt-1 w-40 bg-[var(--ink-0)] rounded-xl shadow-lg border border-[var(--ink-200)] py-1 z-50 animate-fade-in">
           {themes.map((item) => (
             <button
               key={item.value}
@@ -111,8 +111,8 @@ export function ThemeToggle({ className = "", variant = "dropdown" }: ThemeToggl
               }}
               className={`w-full flex items-center gap-2 px-4 py-2 text-sm transition-colors ${
                 theme === item.value
-                  ? "bg-szn-accent/10 text-szn-accent"
-                  : "text-szn-text-1 hover:bg-szn-surface-1"
+                  ? "bg-[var(--ink-900)]/10 text-[var(--ink-900)]"
+                  : "text-[var(--ink-900)] hover:bg-[var(--ink-50)]"
               }`}
             >
               {item.icon}
@@ -154,12 +154,12 @@ export function ThemeToggleSidebar({ expanded = false }: { expanded?: boolean })
       title={`${t("theme.toggle")}: ${getThemeLabel()}`}
       className={`group flex items-center rounded-xl text-sm font-medium transition-all duration-300 ease-out overflow-hidden ${
         expanded ? "gap-3 px-4 py-3" : "justify-center w-full h-10"
-      } text-szn-text-2 hover:bg-szn-surface-2 hover:text-szn-text-1`}
+      } text-[var(--ink-600)] hover:bg-[var(--ink-100)] hover:text-[var(--ink-900)]`}
     >
       {resolvedTheme === "dark" ? (
-        <MoonIcon className="w-5 h-5 flex-shrink-0 transition-transform duration-200 group-hover:scale-110 text-szn-text-3 group-hover:text-szn-text-2" />
+        <MoonIcon className="w-5 h-5 flex-shrink-0 transition-transform duration-200 group-hover:scale-110 text-[var(--ink-500)] group-hover:text-[var(--ink-600)]" />
       ) : (
-        <SunIcon className="w-5 h-5 flex-shrink-0 transition-transform duration-200 group-hover:scale-110 text-szn-text-3 group-hover:text-szn-text-2" />
+        <SunIcon className="w-5 h-5 flex-shrink-0 transition-transform duration-200 group-hover:scale-110 text-[var(--ink-500)] group-hover:text-[var(--ink-600)]" />
       )}
       <span
         className={`truncate whitespace-nowrap transition-all duration-300 ease-out ${

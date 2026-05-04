@@ -69,7 +69,7 @@ export function CompressionTab({ traceId, className = "" }: CompressionTabProps)
     return (
       <div className={`flex items-center justify-center p-12 ${className}`}>
         <div className="text-center">
-          <div className="animate-spin w-8 h-8 border-2 border-violet-500 border-t-transparent rounded-full mx-auto mb-4" />
+          <div className="animate-spin w-8 h-8 border-2 border-[var(--ink-900)] border-t-transparent rounded-full mx-auto mb-4" />
           <p className="text-sm text-gray-400">Loading compression data...</p>
         </div>
       </div>
@@ -79,10 +79,10 @@ export function CompressionTab({ traceId, className = "" }: CompressionTabProps)
   if (error) {
     return (
       <div className={`p-6 ${className}`}>
-        <div className="bg-red-900/20 border border-red-800/50 rounded-lg p-4">
+        <div className="bg-[var(--signal-conflict)]/20 border border-[var(--signal-conflict)]/50 rounded-lg p-4">
           <div className="flex items-center gap-2">
             <svg
-              className="w-5 h-5 text-red-400"
+              className="w-5 h-5 text-[var(--signal-conflict-soft)]"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -94,11 +94,11 @@ export function CompressionTab({ traceId, className = "" }: CompressionTabProps)
                 d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            <span className="text-red-400">{error}</span>
+            <span className="text-[var(--signal-conflict-soft)]">{error}</span>
           </div>
           <button
             onClick={fetchCompressionData}
-            className="mt-3 text-sm text-red-400 hover:text-red-300 underline"
+            className="mt-3 text-sm text-[var(--signal-conflict-soft)] hover:text-[var(--signal-conflict-soft)] underline"
           >
             Try again
           </button>
@@ -110,7 +110,7 @@ export function CompressionTab({ traceId, className = "" }: CompressionTabProps)
   if (!data) {
     return (
       <div className={`p-6 ${className}`}>
-        <div className="bg-gray-800/50 rounded-lg p-6 text-center">
+        <div className="bg-[var(--ink-800)]/50 rounded-lg p-6 text-center">
           <svg
             className="w-12 h-12 text-gray-600 mx-auto mb-3"
             fill="none"
@@ -139,19 +139,19 @@ export function CompressionTab({ traceId, className = "" }: CompressionTabProps)
       <div className="px-4 pt-4 pb-2">
         <div className="grid grid-cols-4 gap-4 mb-4">
           {/* Total Original Tokens */}
-          <div className="bg-gray-800/50 rounded-lg p-3">
+          <div className="bg-[var(--ink-800)]/50 rounded-lg p-3">
             <p className="text-xs text-gray-500 mb-1">Original Tokens</p>
             <p className="text-lg font-mono text-white">{data.stats.original_tokens}</p>
           </div>
 
           {/* Total Compressed Tokens */}
-          <div className="bg-gray-800/50 rounded-lg p-3">
+          <div className="bg-[var(--ink-800)]/50 rounded-lg p-3">
             <p className="text-xs text-gray-500 mb-1">Compressed Tokens</p>
-            <p className="text-lg font-mono text-violet-400">{data.stats.compressed_tokens}</p>
+            <p className="text-lg font-mono text-[var(--ink-900)]">{data.stats.compressed_tokens}</p>
           </div>
 
           {/* Tokens Saved */}
-          <div className="bg-gray-800/50 rounded-lg p-3">
+          <div className="bg-[var(--ink-800)]/50 rounded-lg p-3">
             <p className="text-xs text-gray-500 mb-1">Tokens Saved</p>
             <p className="text-lg font-mono text-green-400">
               {data.stats.original_tokens - data.stats.compressed_tokens}
@@ -159,7 +159,7 @@ export function CompressionTab({ traceId, className = "" }: CompressionTabProps)
           </div>
 
           {/* Overall Ratio */}
-          <div className="bg-gray-800/50 rounded-lg p-3">
+          <div className="bg-[var(--ink-800)]/50 rounded-lg p-3">
             <p className="text-xs text-gray-500 mb-1">Compression Ratio</p>
             <p className="text-lg font-mono text-white">
               {(data.stats.ratio * 100).toFixed(1)}%

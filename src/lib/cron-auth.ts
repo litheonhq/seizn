@@ -6,7 +6,7 @@
  */
 
 import { NextRequest } from 'next/server';
-import { timingSafeEqual } from 'crypto';
+import { timingSafeEqual } from 'node:crypto';
 
 /**
  * Verify cron job authorization.

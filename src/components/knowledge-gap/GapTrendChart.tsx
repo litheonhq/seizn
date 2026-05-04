@@ -61,7 +61,7 @@ export function GapTrendChart({ className }: GapTrendChartProps) {
 
   if (error) {
     return (
-      <div className={`bg-red-50 rounded-xl p-4 text-red-700 ${className}`}>
+      <div className={`bg-[var(--signal-conflict-soft)] rounded-xl p-4 text-[var(--signal-conflict-ink)] ${className}`}>
         Error loading trend data: {error}
       </div>
     );
@@ -83,8 +83,8 @@ export function GapTrendChart({ className }: GapTrendChartProps) {
       <div className="p-5">
         {/* Legend */}
         <div className="flex gap-6 mb-6">
-          <LegendItem color="bg-red-500" label="New Gaps" />
-          <LegendItem color="bg-green-500" label="Resolved" />
+          <LegendItem color="bg-[var(--signal-conflict)]" label="New Gaps" />
+          <LegendItem color="bg-[var(--signal-canon)]" label="Resolved" />
           <LegendItem color="bg-blue-500" label="Occurrences" />
         </div>
 
@@ -96,13 +96,13 @@ export function GapTrendChart({ className }: GapTrendChartProps) {
                 <Bar
                   value={day.newGaps}
                   maxValue={maxValue}
-                  color="bg-red-500"
+                  color="bg-[var(--signal-conflict)]"
                   label={day.newGaps}
                 />
                 <Bar
                   value={day.resolvedGaps}
                   maxValue={maxValue}
-                  color="bg-green-500"
+                  color="bg-[var(--signal-canon)]"
                   label={day.resolvedGaps}
                 />
                 <Bar
@@ -192,9 +192,9 @@ function GapTypeDistribution({ counts }: { counts: Record<GapType, number> }) {
 
   const typeColors: Record<GapType, string> = {
     missing_entity: "bg-orange-500",
-    missing_table: "bg-purple-500",
+    missing_table: "bg-[var(--ink-900)]",
     outdated_doc: "bg-yellow-500",
-    permission_denied: "bg-red-500",
+    permission_denied: "bg-[var(--signal-conflict)]",
     coverage_gap: "bg-blue-500",
     domain_mismatch: "bg-gray-500",
   };

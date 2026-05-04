@@ -187,18 +187,18 @@ export function WhyNotPanel({ traceId, className = "" }: WhyNotPanelProps) {
     return passed ? (
       <CheckIcon className="w-4 h-4 text-green-400" />
     ) : (
-      <XIcon className="w-4 h-4 text-red-400" />
+      <XIcon className="w-4 h-4 text-[var(--signal-conflict-soft)]" />
     );
   };
 
   // Get stage status color
   const getStageStatusClass = (passed: boolean | undefined) => {
     if (passed === undefined) return "text-gray-500";
-    return passed ? "text-green-400" : "text-red-400";
+    return passed ? "text-green-400" : "text-[var(--signal-conflict-soft)]";
   };
 
   return (
-    <div className={`bg-gray-900 rounded-lg border border-gray-800 ${className}`}>
+    <div className={`bg-[var(--ink-900)] rounded-lg border border-gray-800 ${className}`}>
       {/* Header */}
       <div className="p-4 border-b border-gray-800">
         <div className="flex items-center gap-2 mb-2">
@@ -221,7 +221,7 @@ export function WhyNotPanel({ traceId, className = "" }: WhyNotPanelProps) {
               onChange={(e) => setDocumentId(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleAnalyze()}
               placeholder="Enter document or chunk ID..."
-              className="w-full pl-10 pr-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full pl-10 pr-4 py-2 bg-[var(--ink-800)] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <button
@@ -244,7 +244,7 @@ export function WhyNotPanel({ traceId, className = "" }: WhyNotPanelProps) {
           {results && (
             <button
               onClick={handleClear}
-              className="px-3 py-2 bg-gray-800 text-gray-400 rounded-lg hover:text-white transition-colors"
+              className="px-3 py-2 bg-[var(--ink-800)] text-gray-400 rounded-lg hover:text-white transition-colors"
             >
               Clear
             </button>
@@ -258,9 +258,9 @@ export function WhyNotPanel({ traceId, className = "" }: WhyNotPanelProps) {
       {/* Error */}
       {error && (
         <div className="p-4 border-b border-gray-800">
-          <div className="p-3 bg-red-900/20 border border-red-800 rounded-lg flex items-start gap-2">
-            <ExclamationIcon className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
-            <p className="text-sm text-red-400">{error}</p>
+          <div className="p-3 bg-[var(--signal-conflict)]/20 border border-[var(--signal-conflict)] rounded-lg flex items-start gap-2">
+            <ExclamationIcon className="w-5 h-5 text-[var(--signal-conflict-soft)] flex-shrink-0 mt-0.5" />
+            <p className="text-sm text-[var(--signal-conflict-soft)]">{error}</p>
           </div>
         </div>
       )}
@@ -274,16 +274,16 @@ export function WhyNotPanel({ traceId, className = "" }: WhyNotPanelProps) {
               <div className="flex items-start justify-between mb-4">
                 <div>
                   <div className="flex items-center gap-2">
-                    <code className="text-sm text-blue-400 bg-gray-800 px-2 py-1 rounded">
+                    <code className="text-sm text-blue-400 bg-[var(--ink-800)] px-2 py-1 rounded">
                       {result.document_id.slice(0, 16)}...
                     </code>
                     {result.found ? (
-                      <span className="flex items-center gap-1 px-2 py-1 text-xs bg-green-900/30 text-green-400 rounded">
+                      <span className="flex items-center gap-1 px-2 py-1 text-xs bg-[var(--signal-canon-ink)]/30 text-green-400 rounded">
                         <CheckIcon className="w-3 h-3" />
                         Found in results
                       </span>
                     ) : (
-                      <span className="flex items-center gap-1 px-2 py-1 text-xs bg-red-900/30 text-red-400 rounded">
+                      <span className="flex items-center gap-1 px-2 py-1 text-xs bg-[var(--signal-conflict)]/30 text-[var(--signal-conflict-soft)] rounded">
                         <XIcon className="w-3 h-3" />
                         Not in results
                       </span>
@@ -320,7 +320,7 @@ export function WhyNotPanel({ traceId, className = "" }: WhyNotPanelProps) {
                         <div
                           key={stage}
                           className={`flex items-center gap-2 p-2 rounded-lg ${
-                            passed === false ? "bg-red-900/20" : "bg-gray-800/50"
+                            passed === false ? "bg-[var(--signal-conflict)]/20" : "bg-[var(--ink-800)]/50"
                           }`}
                         >
                           {getStageIcon(passed)}
@@ -348,23 +348,23 @@ export function WhyNotPanel({ traceId, className = "" }: WhyNotPanelProps) {
                     {result.blockers.map((blocker, idx) => (
                       <div
                         key={idx}
-                        className="p-3 bg-red-900/20 border border-red-800/50 rounded-lg"
+                        className="p-3 bg-[var(--signal-conflict)]/20 border border-[var(--signal-conflict)]/50 rounded-lg"
                       >
                         <div className="flex items-start gap-2">
-                          <ExclamationIcon className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
+                          <ExclamationIcon className="w-4 h-4 text-[var(--signal-conflict-soft)] flex-shrink-0 mt-0.5" />
                           <div className="flex-1">
                             <div className="flex items-center gap-2">
-                              <span className="text-xs font-medium text-red-300 uppercase">
+                              <span className="text-xs font-medium text-[var(--signal-conflict-soft)] uppercase">
                                 {STAGE_CONFIG[blocker.stage]?.label || blocker.stage}
                               </span>
                             </div>
-                            <p className="text-sm text-red-400 mt-1">{blocker.reason}</p>
+                            <p className="text-sm text-[var(--signal-conflict-soft)] mt-1">{blocker.reason}</p>
                             {Object.keys(blocker.details).length > 0 && (
                               <details className="mt-2">
                                 <summary className="text-xs text-gray-500 cursor-pointer hover:text-gray-400">
                                   Show details
                                 </summary>
-                                <pre className="mt-1 text-xs text-gray-400 bg-gray-800/50 p-2 rounded overflow-x-auto">
+                                <pre className="mt-1 text-xs text-gray-400 bg-[var(--ink-800)]/50 p-2 rounded overflow-x-auto">
                                   {JSON.stringify(blocker.details, null, 2)}
                                 </pre>
                               </details>

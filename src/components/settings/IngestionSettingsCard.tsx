@@ -121,11 +121,11 @@ export function IngestionSettingsCard() {
 
   if (isLoading) {
     return (
-      <div className="bg-szn-card rounded-lg border border-szn-border p-6">
+      <div className="bg-[var(--ink-0)] rounded-lg border border-[var(--ink-200)] p-6">
         <div className="animate-pulse space-y-4">
-          <div className="h-6 bg-szn-surface rounded w-1/3" />
-          <div className="h-4 bg-szn-surface rounded w-2/3" />
-          <div className="h-10 bg-szn-surface rounded" />
+          <div className="h-6 bg-[var(--ink-50)] rounded w-1/3" />
+          <div className="h-4 bg-[var(--ink-50)] rounded w-2/3" />
+          <div className="h-10 bg-[var(--ink-50)] rounded" />
         </div>
       </div>
     );
@@ -133,25 +133,25 @@ export function IngestionSettingsCard() {
 
   if (error || !localSettings) {
     return (
-      <div className="bg-szn-card rounded-lg border border-szn-border p-6">
-        <p className="text-red-500">Failed to load ingestion settings</p>
+      <div className="bg-[var(--ink-0)] rounded-lg border border-[var(--ink-200)] p-6">
+        <p className="text-[var(--signal-conflict-ink)]">Failed to load ingestion settings</p>
       </div>
     );
   }
 
   return (
-    <div className="bg-szn-card rounded-lg border border-szn-border overflow-hidden">
+    <div className="bg-[var(--ink-0)] rounded-lg border border-[var(--ink-200)] overflow-hidden">
       {/* Header */}
-      <div className="p-6 border-b border-szn-border">
+      <div className="p-6 border-b border-[var(--ink-200)]">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-szn-accent/10 rounded-xl">
-            <SparklesIcon className="w-5 h-5 text-szn-accent" />
+          <div className="p-2 bg-[var(--ink-900)]/10 rounded-xl">
+            <SparklesIcon className="w-5 h-5 text-[var(--ink-900)]" />
           </div>
           <div>
-            <h3 className="font-semibold text-szn-text-1">
+            <h3 className="font-semibold text-[var(--ink-900)]">
               Memory Ingestion Controls
             </h3>
-            <p className="text-sm text-szn-text-2">
+            <p className="text-sm text-[var(--ink-600)]">
               Control what gets remembered and how
             </p>
           </div>
@@ -163,8 +163,8 @@ export function IngestionSettingsCard() {
         {/* Auto-save Toggle */}
         <div className="flex items-center justify-between">
           <div>
-            <p className="font-medium text-szn-text-1">Auto-save memories</p>
-            <p className="text-sm text-szn-text-2">
+            <p className="font-medium text-[var(--ink-900)]">Auto-save memories</p>
+            <p className="text-sm text-[var(--ink-600)]">
               Automatically extract and store memories from conversations
             </p>
           </div>
@@ -173,7 +173,7 @@ export function IngestionSettingsCard() {
               setLocalSettings({ ...localSettings, autoSaveEnabled: !localSettings.autoSaveEnabled })
             }
             className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-              localSettings.autoSaveEnabled ? "bg-szn-accent" : "bg-gray-300 dark:bg-gray-600"
+              localSettings.autoSaveEnabled ? "bg-[var(--ink-900)]" : "bg-gray-300 dark:bg-gray-600"
             }`}
           >
             <span
@@ -187,8 +187,8 @@ export function IngestionSettingsCard() {
         {/* Candidate Mode Toggle */}
         <div className="flex items-center justify-between">
           <div>
-            <p className="font-medium text-szn-text-1">Review before saving</p>
-            <p className="text-sm text-szn-text-2">
+            <p className="font-medium text-[var(--ink-900)]">Review before saving</p>
+            <p className="text-sm text-[var(--ink-600)]">
               Send extracted memories to candidate queue for approval
             </p>
           </div>
@@ -200,7 +200,7 @@ export function IngestionSettingsCard() {
               })
             }
             className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-              localSettings.candidateModeEnabled ? "bg-szn-accent" : "bg-gray-300 dark:bg-gray-600"
+              localSettings.candidateModeEnabled ? "bg-[var(--ink-900)]" : "bg-gray-300 dark:bg-gray-600"
             }`}
           >
             <span
@@ -214,8 +214,8 @@ export function IngestionSettingsCard() {
         {/* Strictness Level */}
         <div className="space-y-3">
           <div>
-            <p className="font-medium text-szn-text-1">Extraction strictness</p>
-            <p className="text-sm text-szn-text-2">
+            <p className="font-medium text-[var(--ink-900)]">Extraction strictness</p>
+            <p className="text-sm text-[var(--ink-600)]">
               How confident should the AI be before storing a memory?
             </p>
           </div>
@@ -232,20 +232,20 @@ export function IngestionSettingsCard() {
                 }
                 className={`p-3 rounded-xl border text-center transition-colors ${
                   localSettings.strictness === level.value
-                    ? "border-szn-accent bg-szn-accent/10"
-                    : "border-szn-border hover:border-szn-border"
+                    ? "border-[var(--ink-900)] bg-[var(--ink-900)]/10"
+                    : "border-[var(--ink-200)] hover:border-[var(--ink-200)]"
                 }`}
               >
                 <p
                   className={`font-medium text-sm ${
                     localSettings.strictness === level.value
-                      ? "text-szn-accent"
-                      : "text-szn-text-1"
+                      ? "text-[var(--ink-900)]"
+                      : "text-[var(--ink-900)]"
                   }`}
                 >
                   {level.label}
                 </p>
-                <p className="text-xs text-szn-text-2 mt-1">
+                <p className="text-xs text-[var(--ink-600)] mt-1">
                   {Math.round(level.threshold * 100)}%
                 </p>
               </button>
@@ -256,8 +256,8 @@ export function IngestionSettingsCard() {
         {/* Blocked Categories */}
         <div className="space-y-3">
           <div>
-            <p className="font-medium text-szn-text-1">Never store these topics</p>
-            <p className="text-sm text-szn-text-2">
+            <p className="font-medium text-[var(--ink-900)]">Never store these topics</p>
+            <p className="text-sm text-[var(--ink-600)]">
               Block memories containing sensitive categories
             </p>
           </div>
@@ -268,8 +268,8 @@ export function IngestionSettingsCard() {
                 onClick={() => toggleCategory(cat.id, "blocked")}
                 className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
                   localSettings.blockedCategories.includes(cat.id)
-                    ? "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 border border-red-300 dark:border-red-700"
-                    : "bg-szn-surface text-szn-text-2 border border-transparent"
+                    ? "bg-[var(--signal-conflict-soft)] dark:bg-[var(--signal-conflict-ink)]/30 text-[var(--signal-conflict-ink)] dark:text-[var(--signal-conflict-soft)] border border-[var(--signal-conflict)] dark:border-[var(--signal-conflict)]"
+                    : "bg-[var(--ink-50)] text-[var(--ink-600)] border border-transparent"
                 }`}
               >
                 {cat.label}
@@ -279,16 +279,16 @@ export function IngestionSettingsCard() {
         </div>
 
         {/* Sensitive Capsule */}
-        <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-xl border border-yellow-200 dark:border-yellow-800 space-y-3">
+        <div className="p-4 bg-[var(--signal-pending-soft)] dark:bg-[var(--signal-pending-ink)]/20 rounded-xl border border-[var(--signal-pending)] dark:border-[var(--signal-pending)] space-y-3">
           <div className="flex items-center gap-2">
-            <ShieldIcon className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
-            <p className="font-medium text-yellow-800 dark:text-yellow-200">Sensitive Capsule</p>
+            <ShieldIcon className="w-5 h-5 text-[var(--signal-pending-ink)] dark:text-[var(--signal-pending-soft)]" />
+            <p className="font-medium text-[var(--signal-pending-ink)] dark:text-[var(--signal-pending-soft)]">Sensitive Capsule</p>
           </div>
-          <p className="text-sm text-yellow-700 dark:text-yellow-300">
+          <p className="text-sm text-[var(--signal-pending-ink)] dark:text-[var(--signal-pending-soft)]">
             Memories with these categories will be stored in a protected capsule with extra encryption.
           </p>
           <div className="flex items-center justify-between">
-            <span className="text-sm text-yellow-700 dark:text-yellow-300">Enable capsule</span>
+            <span className="text-sm text-[var(--signal-pending-ink)] dark:text-[var(--signal-pending-soft)]">Enable capsule</span>
             <button
               onClick={() =>
                 setLocalSettings({
@@ -317,8 +317,8 @@ export function IngestionSettingsCard() {
                   onClick={() => toggleCategory(cat.id, "sensitive")}
                   className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
                     localSettings.sensitiveCategories.includes(cat.id)
-                      ? "bg-yellow-200 dark:bg-yellow-800 text-yellow-800 dark:text-yellow-200 border border-yellow-400 dark:border-yellow-600"
-                      : "bg-yellow-100/50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 border border-transparent"
+                      ? "bg-yellow-200 dark:bg-[var(--signal-pending-ink)] text-[var(--signal-pending-ink)] dark:text-[var(--signal-pending-soft)] border border-[var(--signal-pending)] dark:border-[var(--signal-pending)]"
+                      : "bg-[var(--signal-pending-soft)]/50 dark:bg-[var(--signal-pending-ink)]/30 text-[var(--signal-pending-ink)] dark:text-[var(--signal-pending-soft)] border border-transparent"
                   }`}
                 >
                   {cat.label}
@@ -330,19 +330,19 @@ export function IngestionSettingsCard() {
       </div>
 
       {/* Footer */}
-      <div className="p-6 border-t border-szn-border flex items-center justify-between">
-        <div className="text-sm text-szn-text-2">
+      <div className="p-6 border-t border-[var(--ink-200)] flex items-center justify-between">
+        <div className="text-sm text-[var(--ink-600)]">
           {saveStatus === "success" && (
-            <span className="text-green-600 dark:text-green-400">Settings saved!</span>
+            <span className="text-[var(--signal-canon-ink)] dark:text-[var(--signal-canon-soft)]">Settings saved!</span>
           )}
           {saveStatus === "error" && (
-            <span className="text-red-600 dark:text-red-400">Failed to save</span>
+            <span className="text-[var(--signal-conflict-ink)] dark:text-[var(--signal-conflict-soft)]">Failed to save</span>
           )}
         </div>
         <button
           onClick={handleSave}
           disabled={saving}
-          className="px-4 py-2 bg-szn-accent hover:bg-szn-accent/90 disabled:bg-szn-accent/50 text-white rounded-lg text-sm font-medium transition-colors"
+          className="px-4 py-2 bg-[var(--ink-900)] hover:bg-[var(--ink-900)]/90 disabled:bg-[var(--ink-900)]/50 text-white rounded-lg text-sm font-medium transition-colors"
         >
           {saving ? "Saving..." : "Save Changes"}
         </button>

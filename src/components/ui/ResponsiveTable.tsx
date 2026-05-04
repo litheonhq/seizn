@@ -40,17 +40,17 @@ export function ResponsiveTable<T extends Record<string, unknown>>({
         {/* Desktop skeleton */}
         <div className="hidden md:block">
           <div className="animate-pulse space-y-3">
-            <div className="h-12 bg-szn-surface-2 rounded-lg" />
-            <div className="h-16 bg-szn-surface-1 rounded-lg" />
-            <div className="h-16 bg-szn-surface-1 rounded-lg" />
-            <div className="h-16 bg-szn-surface-1 rounded-lg" />
+            <div className="h-12 bg-[var(--ink-100)] rounded-lg" />
+            <div className="h-16 bg-[var(--ink-50)] rounded-lg" />
+            <div className="h-16 bg-[var(--ink-50)] rounded-lg" />
+            <div className="h-16 bg-[var(--ink-50)] rounded-lg" />
           </div>
         </div>
         {/* Mobile skeleton */}
         <div className="md:hidden space-y-3">
-          <div className="animate-pulse h-32 bg-szn-surface-1 rounded-lg" />
-          <div className="animate-pulse h-32 bg-szn-surface-1 rounded-lg" />
-          <div className="animate-pulse h-32 bg-szn-surface-1 rounded-lg" />
+          <div className="animate-pulse h-32 bg-[var(--ink-50)] rounded-lg" />
+          <div className="animate-pulse h-32 bg-[var(--ink-50)] rounded-lg" />
+          <div className="animate-pulse h-32 bg-[var(--ink-50)] rounded-lg" />
         </div>
       </div>
     );
@@ -58,7 +58,7 @@ export function ResponsiveTable<T extends Record<string, unknown>>({
 
   if (data.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-12 text-szn-text-2">
+      <div className="flex flex-col items-center justify-center py-12 text-[var(--ink-600)]">
         {emptyIcon && <div className="mb-4">{emptyIcon}</div>}
         <p className="text-sm sm:text-base">{emptyMessage}</p>
       </div>
@@ -83,11 +83,11 @@ export function ResponsiveTable<T extends Record<string, unknown>>({
       <div className="hidden md:block overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-szn-border">
+            <tr className="border-b border-[var(--ink-200)]">
               {columns.map((col) => (
                 <th
                   key={String(col.key)}
-                  className={`text-left py-3 px-4 text-sm font-semibold text-szn-text-2 ${col.className || ""}`}
+                  className={`text-left py-3 px-4 text-sm font-semibold text-[var(--ink-600)] ${col.className || ""}`}
                 >
                   {col.header}
                 </th>
@@ -99,7 +99,7 @@ export function ResponsiveTable<T extends Record<string, unknown>>({
               <tr
                 key={keyExtractor(item)}
                 onClick={() => onRowClick?.(item)}
-                className={`border-b border-szn-border/50 hover:bg-szn-surface-1 transition-colors ${
+                className={`border-b border-[var(--ink-200)]/50 hover:bg-[var(--ink-50)] transition-colors ${
                   onRowClick ? "cursor-pointer" : ""
                 }`}
               >
@@ -138,7 +138,7 @@ export function ResponsiveTable<T extends Record<string, unknown>>({
               // First item is usually the title/name - render it prominently
               if (index === 0) {
                 return (
-                  <div key={String(col.key)} className="font-semibold text-szn-text-1">
+                  <div key={String(col.key)} className="font-semibold text-[var(--ink-900)]">
                     {content}
                   </div>
                 );
@@ -149,8 +149,8 @@ export function ResponsiveTable<T extends Record<string, unknown>>({
                   key={String(col.key)}
                   className="flex items-center justify-between text-sm"
                 >
-                  <span className="text-szn-text-2">{label}</span>
-                  <span className="text-szn-text-1 font-medium">{content}</span>
+                  <span className="text-[var(--ink-600)]">{label}</span>
+                  <span className="text-[var(--ink-900)] font-medium">{content}</span>
                 </div>
               );
             })}
@@ -181,9 +181,9 @@ export function TableAction({
     "p-2 min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 md:p-1.5 flex items-center justify-center rounded-lg transition-colors";
 
   const variantClasses = {
-    default: "text-szn-text-3 hover:text-szn-text-2 hover:bg-szn-surface",
-    danger: "text-red-400 hover:text-red-600 hover:bg-red-50",
-    primary: "text-szn-accent hover:text-szn-accent hover:bg-szn-accent/10",
+    default: "text-[var(--ink-500)] hover:text-[var(--ink-600)] hover:bg-[var(--ink-50)]",
+    danger: "text-[var(--signal-conflict-soft)] hover:text-[var(--signal-conflict-ink)] hover:bg-[var(--signal-conflict-soft)]",
+    primary: "text-[var(--ink-900)] hover:text-[var(--ink-900)] hover:bg-[var(--ink-900)]/10",
   };
 
   return (

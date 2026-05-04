@@ -67,7 +67,7 @@ export function RelayRequestLog({
     return (
       <div className="animate-pulse space-y-2">
         {[1, 2, 3, 4, 5].map((i) => (
-          <div key={i} className="h-12 bg-szn-surface rounded" />
+          <div key={i} className="h-12 bg-[var(--ink-50)] rounded" />
         ))}
       </div>
     );
@@ -75,15 +75,15 @@ export function RelayRequestLog({
 
   if (error) {
     return (
-      <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-        <p className="text-red-600 dark:text-red-400">{error}</p>
+      <div className="p-4 bg-[var(--signal-conflict-soft)] dark:bg-[var(--signal-conflict)]/20 border border-[var(--signal-conflict)] dark:border-[var(--signal-conflict)] rounded-lg">
+        <p className="text-[var(--signal-conflict-ink)] dark:text-[var(--signal-conflict-soft)]">{error}</p>
       </div>
     );
   }
 
   if (requests.length === 0) {
     return (
-      <div className="text-center py-8 text-szn-text-2">
+      <div className="text-center py-8 text-[var(--ink-600)]">
         <svg
           className="mx-auto h-12 w-12 text-gray-400"
           fill="none"
@@ -104,54 +104,54 @@ export function RelayRequestLog({
   }
 
   return (
-    <div className="overflow-hidden border border-szn-border rounded-lg">
-      <table className="min-w-full divide-y divide-szn-border">
-        <thead className="bg-szn-surface">
+    <div className="overflow-hidden border border-[var(--ink-200)] rounded-lg">
+      <table className="min-w-full divide-y divide-[var(--ink-200)]">
+        <thead className="bg-[var(--ink-50)]">
           <tr>
-            <th className="px-4 py-3 text-left text-xs font-medium text-szn-text-2 uppercase tracking-wider">
+            <th className="px-4 py-3 text-left text-xs font-medium text-[var(--ink-600)] uppercase tracking-wider">
               Request ID
             </th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-szn-text-2 uppercase tracking-wider">
+            <th className="px-4 py-3 text-left text-xs font-medium text-[var(--ink-600)] uppercase tracking-wider">
               Collection
             </th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-szn-text-2 uppercase tracking-wider">
+            <th className="px-4 py-3 text-left text-xs font-medium text-[var(--ink-600)] uppercase tracking-wider">
               Status
             </th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-szn-text-2 uppercase tracking-wider">
+            <th className="px-4 py-3 text-left text-xs font-medium text-[var(--ink-600)] uppercase tracking-wider">
               Results
             </th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-szn-text-2 uppercase tracking-wider">
+            <th className="px-4 py-3 text-left text-xs font-medium text-[var(--ink-600)] uppercase tracking-wider">
               Latency
             </th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-szn-text-2 uppercase tracking-wider">
+            <th className="px-4 py-3 text-left text-xs font-medium text-[var(--ink-600)] uppercase tracking-wider">
               Time
             </th>
           </tr>
         </thead>
-        <tbody className="bg-szn-bg divide-y divide-szn-border">
+        <tbody className="bg-[var(--ink-50)] divide-y divide-[var(--ink-200)]">
           {requests.map((request) => (
             <tr
               key={request.id}
-              className="hover:bg-szn-surface-1 transition-colors"
+              className="hover:bg-[var(--ink-50)] transition-colors"
             >
               <td className="px-4 py-3 whitespace-nowrap">
-                <code className="text-xs text-szn-text-2 font-mono">
+                <code className="text-xs text-[var(--ink-600)] font-mono">
                   {request.requestId.substring(0, 16)}...
                 </code>
               </td>
-              <td className="px-4 py-3 whitespace-nowrap text-sm text-szn-text-1">
+              <td className="px-4 py-3 whitespace-nowrap text-sm text-[var(--ink-900)]">
                 {request.collectionId || '-'}
               </td>
               <td className="px-4 py-3 whitespace-nowrap">
                 <RequestStatusBadge status={request.status} />
               </td>
-              <td className="px-4 py-3 whitespace-nowrap text-sm text-szn-text-2">
+              <td className="px-4 py-3 whitespace-nowrap text-sm text-[var(--ink-600)]">
                 {request.resultCount ?? '-'}
               </td>
-              <td className="px-4 py-3 whitespace-nowrap text-sm text-szn-text-2">
+              <td className="px-4 py-3 whitespace-nowrap text-sm text-[var(--ink-600)]">
                 {request.latencyMs ? `${Math.round(request.latencyMs)}ms` : '-'}
               </td>
-              <td className="px-4 py-3 whitespace-nowrap text-sm text-szn-text-2">
+              <td className="px-4 py-3 whitespace-nowrap text-sm text-[var(--ink-600)]">
                 {formatTime(request.createdAt)}
               </td>
             </tr>
@@ -166,10 +166,10 @@ type RequestStatus = 'pending' | 'processing' | 'completed' | 'error' | 'timeout
 
 function RequestStatusBadge({ status }: { status: RequestStatus }) {
   const styles: Record<RequestStatus, string> = {
-    pending: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
+    pending: 'bg-[var(--signal-pending-soft)] text-[var(--signal-pending-ink)] dark:bg-[var(--signal-pending-ink)]/30 dark:text-[var(--signal-pending-soft)]',
     processing: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
-    completed: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
-    error: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
+    completed: 'bg-[var(--signal-canon-soft)] text-[var(--signal-canon-ink)] dark:bg-[var(--signal-canon-ink)]/30 dark:text-[var(--signal-canon-soft)]',
+    error: 'bg-[var(--signal-conflict-soft)] text-[var(--signal-conflict-ink)] dark:bg-[var(--signal-conflict)]/30 dark:text-[var(--signal-conflict-soft)]',
     timeout: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400',
   };
 

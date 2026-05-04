@@ -104,8 +104,8 @@ export function TraceDiff({ traceIdA, traceIdB, onClose }: TraceDiffProps) {
   if (loading) {
     return (
       <div className="p-8 text-center">
-        <div className="animate-spin w-8 h-8 border-2 border-szn-accent border-t-transparent rounded-full mx-auto" />
-        <p className="mt-4 text-szn-text-2">Comparing traces...</p>
+        <div className="animate-spin w-8 h-8 border-2 border-[var(--ink-900)] border-t-transparent rounded-full mx-auto" />
+        <p className="mt-4 text-[var(--ink-600)]">Comparing traces...</p>
       </div>
     );
   }
@@ -113,10 +113,10 @@ export function TraceDiff({ traceIdA, traceIdB, onClose }: TraceDiffProps) {
   if (error) {
     return (
       <div className="p-8 text-center">
-        <p className="text-red-500">{error}</p>
+        <p className="text-[var(--signal-conflict-ink)]">{error}</p>
         <button
           onClick={loadDiff}
-          className="mt-4 px-4 py-2 bg-szn-surface rounded-lg hover:bg-szn-surface-1"
+          className="mt-4 px-4 py-2 bg-[var(--ink-50)] rounded-lg hover:bg-[var(--ink-50)]"
         >
           Retry
         </button>
@@ -129,19 +129,19 @@ export function TraceDiff({ traceIdA, traceIdB, onClose }: TraceDiffProps) {
   }
 
   return (
-    <div className="bg-szn-card rounded-lg border border-szn-border shadow-lg overflow-hidden">
+    <div className="bg-[var(--ink-0)] rounded-lg border border-[var(--ink-200)] shadow-lg overflow-hidden">
       {/* Header */}
-      <div className="p-4 bg-gradient-to-r from-blue-500/10 to-purple-500/10 border-b border-szn-border flex items-center justify-between">
+      <div className="p-4 bg-gradient-to-r from-[var(--ink-900)]/10 to-[var(--ink-900)]/10 border-b border-[var(--ink-200)] flex items-center justify-between">
         <div>
-          <h3 className="font-semibold text-szn-text-1">Trace Comparison</h3>
-          <p className="text-sm text-szn-text-2">
+          <h3 className="font-semibold text-[var(--ink-900)]">Trace Comparison</h3>
+          <p className="text-sm text-[var(--ink-600)]">
             {traceIdA.slice(0, 8)}... vs {traceIdB.slice(0, 8)}...
           </p>
         </div>
         {onClose && (
           <button
             onClick={onClose}
-            className="p-2 hover:bg-szn-surface-1 rounded-lg"
+            className="p-2 hover:bg-[var(--ink-50)] rounded-lg"
           >
             <XIcon className="w-5 h-5" />
           </button>
@@ -149,7 +149,7 @@ export function TraceDiff({ traceIdA, traceIdB, onClose }: TraceDiffProps) {
       </div>
 
       {/* Summary */}
-      <div className="p-4 border-b border-szn-border bg-szn-bg">
+      <div className="p-4 border-b border-[var(--ink-200)] bg-[var(--ink-50)]">
         <div className="grid grid-cols-4 gap-4">
           <SummaryCard
             label="Results Overlap"
@@ -179,36 +179,36 @@ export function TraceDiff({ traceIdA, traceIdB, onClose }: TraceDiffProps) {
       </div>
 
       {/* Ranking Changes */}
-      <div className="p-4 border-b border-szn-border">
-        <h4 className="font-medium text-szn-text-1 mb-3">Ranking Changes</h4>
+      <div className="p-4 border-b border-[var(--ink-200)]">
+        <h4 className="font-medium text-[var(--ink-900)] mb-3">Ranking Changes</h4>
         <div className="space-y-2">
           {diff.results.ranking_changes.map((change) => (
             <div
               key={change.id}
-              className="flex items-center gap-3 p-2 bg-szn-bg rounded-lg"
+              className="flex items-center gap-3 p-2 bg-[var(--ink-50)] rounded-lg"
             >
-              <span className="text-sm font-mono text-szn-text-2 w-24 truncate">
+              <span className="text-sm font-mono text-[var(--ink-600)] w-24 truncate">
                 {change.id}
               </span>
               <div className="flex items-center gap-2">
-                <span className="text-sm text-szn-text-2">#{change.rank_a}</span>
+                <span className="text-sm text-[var(--ink-600)]">#{change.rank_a}</span>
                 <ArrowIcon
                   className={`w-4 h-4 ${
                     change.delta > 0
-                      ? "text-green-500"
+                      ? "text-[var(--signal-canon-ink)]"
                       : change.delta < 0
-                      ? "text-red-500"
-                      : "text-szn-text-3"
+                      ? "text-[var(--signal-conflict-ink)]"
+                      : "text-[var(--ink-500)]"
                   }`}
                 />
-                <span className="text-sm text-szn-text-2">#{change.rank_b}</span>
+                <span className="text-sm text-[var(--ink-600)]">#{change.rank_b}</span>
               </div>
               {change.delta !== 0 && (
                 <span
                   className={`text-xs font-medium px-2 py-0.5 rounded ${
                     change.delta > 0
-                      ? "bg-green-100 text-green-700"
-                      : "bg-red-100 text-red-700"
+                      ? "bg-[var(--signal-canon-soft)] text-[var(--signal-canon-ink)]"
+                      : "bg-[var(--signal-conflict-soft)] text-[var(--signal-conflict-ink)]"
                   }`}
                 >
                   {change.delta > 0 ? "↑" : "↓"} {Math.abs(change.delta)}
@@ -220,8 +220,8 @@ export function TraceDiff({ traceIdA, traceIdB, onClose }: TraceDiffProps) {
       </div>
 
       {/* Latency Breakdown */}
-      <div className="p-4 border-b border-szn-border">
-        <h4 className="font-medium text-szn-text-1 mb-3">Latency Breakdown</h4>
+      <div className="p-4 border-b border-[var(--ink-200)]">
+        <h4 className="font-medium text-[var(--ink-900)] mb-3">Latency Breakdown</h4>
         <div className="space-y-3">
           <LatencyBar
             label="Embedding"
@@ -245,21 +245,21 @@ export function TraceDiff({ traceIdA, traceIdB, onClose }: TraceDiffProps) {
 
       {/* Config Changes */}
       <div className="p-4">
-        <h4 className="font-medium text-szn-text-1 mb-3">Config Changes</h4>
+        <h4 className="font-medium text-[var(--ink-900)] mb-3">Config Changes</h4>
         <div className="grid grid-cols-2 gap-2">
           {Object.entries(diff.config).map(([key, value]) => (
             <div
               key={key}
               className={`p-2 rounded-lg text-sm ${
-                value.changed ? "bg-yellow-50 border border-yellow-200" : "bg-szn-bg"
+                value.changed ? "bg-[var(--signal-pending-soft)] border border-[var(--signal-pending)]" : "bg-[var(--ink-50)]"
               }`}
             >
-              <span className="font-medium text-szn-text-1">{key}:</span>{" "}
-              <span className="text-szn-text-2">
+              <span className="font-medium text-[var(--ink-900)]">{key}:</span>{" "}
+              <span className="text-[var(--ink-600)]">
                 {String(value.a)} → {String(value.b)}
               </span>
               {value.changed && (
-                <span className="ml-2 text-xs text-yellow-600">changed</span>
+                <span className="ml-2 text-xs text-[var(--signal-pending-ink)]">changed</span>
               )}
             </div>
           ))}
@@ -282,15 +282,15 @@ function SummaryCard({
 }) {
   return (
     <div className="text-center">
-      <p className="text-xs text-szn-text-2 uppercase tracking-wide">{label}</p>
+      <p className="text-xs text-[var(--ink-600)] uppercase tracking-wide">{label}</p>
       <p
         className={`text-lg font-bold ${
-          positive ? "text-green-600" : "text-red-600"
+          positive ? "text-[var(--signal-canon-ink)]" : "text-[var(--signal-conflict-ink)]"
         }`}
       >
         {value}
       </p>
-      <p className="text-xs text-szn-text-3">{detail}</p>
+      <p className="text-xs text-[var(--ink-500)]">{detail}</p>
     </div>
   );
 }
@@ -310,22 +310,22 @@ function LatencyBar({
 
   return (
     <div>
-      <div className="flex justify-between text-xs text-szn-text-2 mb-1">
+      <div className="flex justify-between text-xs text-[var(--ink-600)] mb-1">
         <span>{label}</span>
         <span>
           {valueA}ms vs {valueB}ms
         </span>
       </div>
       <div className="flex gap-1">
-        <div className="flex-1 bg-szn-surface rounded-full h-2">
+        <div className="flex-1 bg-[var(--ink-50)] rounded-full h-2">
           <div
             className="bg-blue-500 h-2 rounded-full"
             style={{ width: `${widthA}%` }}
           />
         </div>
-        <div className="flex-1 bg-szn-surface rounded-full h-2">
+        <div className="flex-1 bg-[var(--ink-50)] rounded-full h-2">
           <div
-            className="bg-purple-500 h-2 rounded-full"
+            className="bg-[var(--ink-900)] h-2 rounded-full"
             style={{ width: `${widthB}%` }}
           />
         </div>

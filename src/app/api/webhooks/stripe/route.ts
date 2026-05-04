@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as crypto from "crypto";
 import { createServerClient } from "@/lib/supabase";
-import { getPlanFromStripePriceId } from "@/lib/stripe-config";
+import {
+  AUTHOR_PRICE_LOCK_VERSION,
+  getPlanFromStripePriceId,
+  mapStripeSubscriptionStatus,
+} from "@/lib/stripe-config";
 import { ensureMeteredPriceAttached } from "@/lib/stripe-metered";
 import { sendEmail, paymentFailedEmail } from "@/lib/email";
 
@@ -150,6 +154,38 @@ function verifyStripeSignature(
 function extractPriceId(items?: { data: StripeSubscriptionItem[] }): string | null {
   if (!items || items.data.length === 0) return null;
   return items.data[0]?.price?.id || null;
+}
+
+function stripeTimestampToIso(value?: number | null): string | null {
+  return value ? new Date(value * 1000).toISOString() : null;
+}
+
+function buildSubscriptionProfileUpdates(eventData: StripeEventObject): Record<string, unknown> {
+  const priceId = extractPriceId(eventData.items);
+  const plan = priceId ? getPlanFromStripePriceId(priceId) : null;
+  const periodEnd = stripeTimestampToIso(eventData.current_period_end);
+  const cancelAtPeriodEnd = eventData.cancel_at_period_end === true;
+  const updates: Record<string, unknown> = {
+    stripe_subscription_id: eventData.id,
+    stripe_subscription_status: eventData.status ?? null,
+    subscription_status: mapStripeSubscriptionStatus(eventData.status),
+    stripe_price_id: priceId,
+    stripe_current_period_start: stripeTimestampToIso(eventData.current_period_start),
+    stripe_current_period_end: periodEnd,
+    subscription_ends_at: periodEnd,
+    subscription_renews_at: cancelAtPeriodEnd ? null : periodEnd,
+    subscription_trial_ends_at: stripeTimestampToIso(eventData.trial_end),
+    subscription_cancelled: cancelAtPeriodEnd || eventData.status === "canceled",
+    subscription_payment_failed: eventData.status === "past_due" || eventData.status === "unpaid",
+    price_lock_version: AUTHOR_PRICE_LOCK_VERSION,
+  };
+
+  if (plan) {
+    updates.plan = plan;
+    updates.plan_updated_at = new Date().toISOString();
+  }
+
+  return updates;
 }
 
 /**
@@ -306,6 +342,8 @@ export async function POST(request: NextRequest) {
             .update({
               stripe_customer_id: customerId,
               stripe_subscription_id: subscriptionId,
+              stripe_subscription_status: eventData.status ?? null,
+              price_lock_version: eventData.metadata?.price_lock_version ?? AUTHOR_PRICE_LOCK_VERSION,
               plan_updated_at: new Date().toISOString(),
             })
             .eq("id", user.id);
@@ -361,17 +399,8 @@ export async function POST(request: NextRequest) {
           const { error } = await supabase
             .from("profiles")
             .update({
-              plan: plan,
-              plan_updated_at: new Date().toISOString(),
+              ...buildSubscriptionProfileUpdates(eventData),
               stripe_customer_id: customerId,
-              stripe_subscription_id: subscriptionId,
-              subscription_ends_at: eventData.current_period_end
-                ? new Date(eventData.current_period_end * 1000).toISOString()
-                : null,
-              subscription_renews_at: eventData.current_period_end && !eventData.cancel_at_period_end
-                ? new Date(eventData.current_period_end * 1000).toISOString()
-                : null,
-              subscription_cancelled: false,
             })
             .eq("id", user.id);
 
@@ -422,32 +451,7 @@ export async function POST(request: NextRequest) {
           break;
         }
 
-        const updates: Record<string, unknown> = {
-          stripe_subscription_id: subscriptionId,
-          subscription_ends_at: eventData.current_period_end
-            ? new Date(eventData.current_period_end * 1000).toISOString()
-            : null,
-        };
-
-        // Check for scheduled cancellation
-        if (eventData.cancel_at_period_end) {
-          updates.subscription_cancelled = true;
-          updates.subscription_renews_at = null;
-        } else {
-          updates.subscription_cancelled = false;
-          updates.subscription_renews_at = eventData.current_period_end
-            ? new Date(eventData.current_period_end * 1000).toISOString()
-            : null;
-        }
-
-        // Update plan if price changed
-        if (priceId) {
-          const plan = getPlanFromStripePriceId(priceId);
-          if (plan) {
-            updates.plan = plan;
-            updates.plan_updated_at = new Date().toISOString();
-          }
-        }
+        const updates = buildSubscriptionProfileUpdates(eventData);
 
         const { error } = await supabase
           .from("profiles")
@@ -457,7 +461,7 @@ export async function POST(request: NextRequest) {
         if (error) {
           console.error("Failed to update subscription:", error);
           await logBillingEvent(supabase, user.id, "subscription_updated", {
-            subscription_id: subscriptionId,
+            subscription_id: eventData.id,
             updates,
           }, "failed", error.message);
         } else {
@@ -466,7 +470,7 @@ export async function POST(request: NextRequest) {
             await attachMeteredOverageItems(subscriptionId, updates.plan);
           }
           await logBillingEvent(supabase, user.id, "subscription_updated", {
-            subscription_id: subscriptionId,
+            subscription_id: eventData.id,
             cancel_at_period_end: eventData.cancel_at_period_end,
             status: eventData.status,
             price_id: priceId,
@@ -498,10 +502,12 @@ export async function POST(request: NextRequest) {
               plan: "free",
               plan_updated_at: new Date().toISOString(),
               stripe_subscription_id: null,
+              stripe_subscription_status: "canceled",
+              subscription_status: "cancelled",
+              stripe_price_id: null,
+              stripe_current_period_end: stripeTimestampToIso(eventData.ended_at) ?? new Date().toISOString(),
               subscription_cancelled: true,
-              subscription_ends_at: eventData.ended_at
-                ? new Date(eventData.ended_at * 1000).toISOString()
-                : new Date().toISOString(),
+              subscription_ends_at: stripeTimestampToIso(eventData.ended_at) ?? new Date().toISOString(),
               subscription_renews_at: null,
             })
             .eq("id", user.id);

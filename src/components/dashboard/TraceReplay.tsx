@@ -176,8 +176,8 @@ export function TraceReplay({
 
         {/* Changes indicator */}
         {hasChanges && (
-          <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-            <p className="text-sm text-yellow-700">
+          <div className="p-3 bg-[var(--signal-pending-soft)] border border-[var(--signal-pending)] rounded-lg">
+            <p className="text-sm text-[var(--signal-pending-ink)]">
               <span className="font-medium">Config changed.</span> The replay
               will use modified settings.
             </p>
@@ -208,10 +208,10 @@ export function TraceReplay({
 
       {/* Result */}
       {result && (
-        <div className="p-4 border-t bg-green-50">
+        <div className="p-4 border-t bg-[var(--signal-canon-soft)]">
           <div className="flex items-center gap-2 mb-2">
-            <CheckIcon className="w-5 h-5 text-green-600" />
-            <span className="font-medium text-green-800">Replay Complete</span>
+            <CheckIcon className="w-5 h-5 text-[var(--signal-canon-ink)]" />
+            <span className="font-medium text-[var(--signal-canon-ink)]">Replay Complete</span>
           </div>
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div>
@@ -246,8 +246,8 @@ export function TraceReplay({
 
       {/* Error */}
       {error && (
-        <div className="p-4 border-t bg-red-50">
-          <p className="text-red-600 text-sm">{error}</p>
+        <div className="p-4 border-t bg-[var(--signal-conflict-soft)]">
+          <p className="text-[var(--signal-conflict-ink)] text-sm">{error}</p>
         </div>
       )}
     </div>

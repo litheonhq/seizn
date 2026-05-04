@@ -1,0 +1,460 @@
+{
+  "version": "v1",
+  "generated_at": "2026-05-02",
+  "ip_label": "Sample IP — Synthetic Demo Data",
+  "ip_title": "Saebyeok Academy / 새벽 학원",
+  "scope": "short_demo_30day",
+  "purpose": "Seizn Author Scene Simulation 위젯 (landing §06) 데모용 합성 IP simulation set·각 시나리오에 candidate 5개·thought·dialogue·action·canon_risk + leak 자동 검출 예시 포함.",
+  "simulation_count": 8,
+  "schema_notes": [
+    "각 시나리오 = scene_input + 시점 + 압력 + candidate 5",
+    "candidate = thought·dialogue·action·canon_risk·persona_consistency_score",
+    "leak risk = author_only / character_unknown 기반 자동 분류",
+    "candidate 1~3 = low risk·candidate 4~5 = ⚠️ leak risk 학습용 negative sample"
+  ],
+  "simulations": [
+    {
+      "id": "saebyeok.sim.001",
+      "scene_input": "D11 옥상 새벽 04:55·일출 5분 전·이슬·세린·지오 합류·기압계 미세 떨림 시작",
+      "perspective": "이슬",
+      "pressure": "처음 직접 측정 시도·세린 옆에 있고 지오는 기상 기록 작성·결과를 확인하고 싶지만 11분 결손이 진짜 일어날지 두려움",
+      "candidates": [
+        {
+          "id": "saebyeok.sim.001.c1",
+          "risk_level": "low",
+          "thought": "심호흡. 세린이 옆에 있다. 기록만 정확히 남기면 된다.",
+          "dialogue": "지오, 기압계 숫자 보이지?",
+          "action": "이슬은 손목시계와 휴대전화 시계를 동시에 펼쳐 두고 노트를 폈다.",
+          "canon_risk": "none",
+          "persona_consistency": 0.92
+        },
+        {
+          "id": "saebyeok.sim.001.c2",
+          "risk_level": "low",
+          "thought": "조용히. 천천히. 이건 그냥 관측이야.",
+          "dialogue": "세린, 5시 43분에 한 번만 더 봐줘.",
+          "action": "이슬은 노트 모서리에 04:55·기압 1014.2 hPa·풍속 1.1 m/s·하늘 옅은 청회색이라고 적었다.",
+          "canon_risk": "none",
+          "persona_consistency": 0.95
+        },
+        {
+          "id": "saebyeok.sim.001.c3",
+          "risk_level": "low",
+          "thought": "결손이 일어나면 어떻게 보일까. 보일까. 안 보이는 게 맞을까.",
+          "dialogue": "한 번만 더 볼게.",
+          "action": "이슬은 카메라를 들었다 내려놓고 다시 들었다.",
+          "canon_risk": "none",
+          "persona_consistency": 0.91
+        },
+        {
+          "id": "saebyeok.sim.001.c4",
+          "risk_level": "leak",
+          "thought": "이건 1958년 매설 시설 노화 때문이야.",
+          "dialogue": "세린, 지하에 뭐가 있어서 그래.",
+          "action": "이슬은 노트에 1958-매설이라고 썼다.",
+          "canon_risk": "tier_2_author_only_leak",
+          "leak_reason": "1958 매설 시설 = D29에야 추정 단계·D11 시점 이슬 미인지·작가 only 시드 누설",
+          "persona_consistency": 0.30
+        },
+        {
+          "id": "saebyeok.sim.001.c5",
+          "risk_level": "leak_voice",
+          "thought": "Yes! 결손 확정!",
+          "dialogue": "오케이, 가즈아.",
+          "action": "이슬은 환호했다.",
+          "canon_risk": "voice_OOC + 외래어 음차 위반",
+          "leak_reason": "이슬 voice = 외래어 음차 X·과장 감탄사 X·voice 일관성 위반",
+          "persona_consistency": 0.05
+        }
+      ]
+    },
+    {
+      "id": "saebyeok.sim.002",
+      "scene_input": "D8 교실 자기소개 직후·예린 책상에 노트 1권 잠깐 보임·이슬과 한 박자 시선 교환",
+      "perspective": "예린",
+      "pressure": "전학 첫날·노트 표지 한 박자 보였음·이슬이 한 박자 더 봤음·신분 노출 위험·하지만 이슬 = 잠재 동맹",
+      "candidates": [
+        {
+          "id": "saebyeok.sim.002.c1",
+          "risk_level": "low",
+          "thought": "노트 표지를 봤네. 이슬이라는 학생.",
+          "dialogue": "(말하지 않음)",
+          "action": "예린은 노트를 가방 안쪽 칸에 깊이 넣고 가방 지퍼를 천천히 닫았다.",
+          "canon_risk": "none",
+          "persona_consistency": 0.93
+        },
+        {
+          "id": "saebyeok.sim.002.c2",
+          "risk_level": "low",
+          "thought": "긴 응답은 의심을 부른다. 짧게.",
+          "dialogue": "네, 강원도에서 왔어요.",
+          "action": "예린은 시선을 책상으로 내렸다.",
+          "canon_risk": "none",
+          "persona_consistency": 0.94
+        },
+        {
+          "id": "saebyeok.sim.002.c3",
+          "risk_level": "low",
+          "thought": "이 학교 옥상도 anchor일까. 알 것 같다. 하지만 확인은 천천히.",
+          "dialogue": "잘 부탁드려요.",
+          "action": "예린은 의자에 앉으며 손가락을 노트 위에 한 번 더 올렸다 뗐다.",
+          "canon_risk": "none",
+          "persona_consistency": 0.90
+        },
+        {
+          "id": "saebyeok.sim.002.c4",
+          "risk_level": "leak",
+          "thought": "이 노트는 여명 모임 인계품. 이슬에게 알려주면 빠를 텐데.",
+          "dialogue": "이거 여명 모임 노트야.",
+          "action": "예린은 노트를 펼쳐 보였다.",
+          "canon_risk": "tier_1_premature_reveal",
+          "leak_reason": "D14에야 노트 일부 공개·D8 즉시 공개는 D14 합류 빌드업 무력화",
+          "persona_consistency": 0.20
+        },
+        {
+          "id": "saebyeok.sim.002.c5",
+          "risk_level": "leak_tier_2",
+          "thought": "사실 나는 여명재단 청년 모니터링 인턴이다.",
+          "dialogue": "저는 사실 인턴이에요.",
+          "action": "예린은 신분증을 꺼냈다.",
+          "canon_risk": "tier_2_author_only_leak",
+          "leak_reason": "예린 인턴 신분 = D27 회수 분기·작가 only·본문 즉시 노출 X",
+          "persona_consistency": 0.10
+        }
+      ]
+    },
+    {
+      "id": "saebyeok.sim.003",
+      "scene_input": "D27 음악실 저녁·도윤 베이스 손에서 멈춤·이슬 옆에 앉음·창밖 종탑 언덕 보임",
+      "perspective": "도윤",
+      "pressure": "본인 D-2년 11분 결손 경험을 처음 인정할지 결정·아버지 유작 악보 = 결손 시간을 메우려는 시도였다는 자기 인식·이슬 신뢰",
+      "candidates": [
+        {
+          "id": "saebyeok.sim.003.c1",
+          "risk_level": "low",
+          "thought": "이슬에게는 말할 수 있을지도. 천천히.",
+          "dialogue": "내가 한 번 겪었어. 2년 전.",
+          "action": "도윤은 손목 가죽 끈을 짧게 만졌다.",
+          "canon_risk": "none",
+          "persona_consistency": 0.94
+        },
+        {
+          "id": "saebyeok.sim.003.c2",
+          "risk_level": "low",
+          "thought": "한 문장씩.",
+          "dialogue": "아버지가 돌아가시기 직전이었어.",
+          "action": "도윤은 베이스를 케이스에 넣었다.",
+          "canon_risk": "none",
+          "persona_consistency": 0.93
+        },
+        {
+          "id": "saebyeok.sim.003.c3",
+          "risk_level": "low",
+          "thought": "악보가 결손을 메우려는 시도였다는 것까지는 오늘 말 안 해도 돼.",
+          "dialogue": "11분이라는 게 진짜 있긴 해.",
+          "action": "도윤은 창밖 종탑 언덕을 한 번 봤다.",
+          "canon_risk": "none",
+          "persona_consistency": 0.91
+        },
+        {
+          "id": "saebyeok.sim.003.c4",
+          "risk_level": "leak",
+          "thought": "아버지 사망 원인은 결손이었어.",
+          "dialogue": "아버지는 결손 때문에 돌아가셨어.",
+          "action": "도윤은 울었다.",
+          "canon_risk": "tier_2_author_only_leak",
+          "leak_reason": "아버지 사망 원인 = 작가 only·canon = 단순 사망·D27 시점 도윤 본인도 인과 추정만·본문 직접 공개 X",
+          "persona_consistency": 0.25
+        },
+        {
+          "id": "saebyeok.sim.003.c5",
+          "risk_level": "leak_voice",
+          "thought": "오케이, 다 말해.",
+          "dialogue": "Yes, 인정해. 다 들었지?",
+          "action": "도윤은 베이스를 던졌다.",
+          "canon_risk": "voice_OOC + 외래어 음차 + 도윤 행동 OOC",
+          "leak_reason": "도윤 voice 외래어 X·악기 던지는 행동 = 캐릭 가치관 위반",
+          "persona_consistency": 0.05
+        }
+      ]
+    },
+    {
+      "id": "saebyeok.sim.004",
+      "scene_input": "D17 종탑 언덕 펜스 안쪽 04:30·이슬·세린·예린 도착·일출 05:42 까지 1시간 12분",
+      "perspective": "세린",
+      "pressure": "야간통행 위반·다친 사람 0이라지만 처음 보는 펜스 안쪽·이슬과 예린은 이미 결심·세린은 보호자 역할 인지",
+      "candidates": [
+        {
+          "id": "saebyeok.sim.004.c1",
+          "risk_level": "low",
+          "thought": "지금 우리만 여기 있다. 이슬을 끝까지 본다.",
+          "dialogue": "이슬, 한 번씩 시계 봐.",
+          "action": "세린은 손목 디지털 시계 알람을 5분 간격 5회로 설정했다.",
+          "canon_risk": "none",
+          "persona_consistency": 0.95
+        },
+        {
+          "id": "saebyeok.sim.004.c2",
+          "risk_level": "low",
+          "thought": "예린은 이미 한 번 겪었다고 했지. 침착해 보인다.",
+          "dialogue": "예린, 우리 셋 다 결손 겪을 가능성이 있는 거지?",
+          "action": "세린은 예린 쪽으로 한 걸음 가까이 갔다.",
+          "canon_risk": "none",
+          "persona_consistency": 0.92
+        },
+        {
+          "id": "saebyeok.sim.004.c3",
+          "risk_level": "low",
+          "thought": "5시 42분. 그 후 11분이 사라진다면, 우리는 어디에 있을까.",
+          "dialogue": "5시 43분에 다 같이 시계를 본다. 그것만 약속하자.",
+          "action": "세린은 노트를 펴고 시간 줄을 그었다.",
+          "canon_risk": "none",
+          "persona_consistency": 0.93
+        },
+        {
+          "id": "saebyeok.sim.004.c4",
+          "risk_level": "leak",
+          "thought": "1958년 매설 시설이 바로 발 밑에 있다.",
+          "dialogue": "여기 발 밑이 1958년 시설이야.",
+          "action": "세린은 발을 굴렀다.",
+          "canon_risk": "tier_2_author_only_leak",
+          "leak_reason": "1958 매설 = D21 단계 1차 추정·D17 시점 세린 미인지·작가 only 시드 누설",
+          "persona_consistency": 0.18
+        },
+        {
+          "id": "saebyeok.sim.004.c5",
+          "risk_level": "leak_voice",
+          "thought": "헐 미쳤다 진짜 결손?",
+          "dialogue": "헐 대박이네!",
+          "action": "세린은 비명을 질렀다.",
+          "canon_risk": "voice_OOC + 과장 감탄사 위반",
+          "leak_reason": "세린 voice = 정리 강박·과장 감탄사 X·voice 위반",
+          "persona_consistency": 0.05
+        }
+      ]
+    },
+    {
+      "id": "saebyeok.sim.005",
+      "scene_input": "D29 도서관 비공개실 저녁·예린 노트 핵심 페이지 펼침·임선재 옆·이슬 정면",
+      "perspective": "임선재",
+      "pressure": "1958 매설 좌표 = anchor 7곳 일치 확증 시점·학생들에게 어디까지 알려줄지 결정·여명재단 압력 인지·학생 보호 1순위",
+      "candidates": [
+        {
+          "id": "saebyeok.sim.005.c1",
+          "risk_level": "low",
+          "thought": "이 자리에서 좌표 일치 확증까지가 학생들의 몫이다.",
+          "dialogue": "이 페이지가 맞을 겁니다.",
+          "action": "임선재는 1958 종탑 건설 기록을 노트 옆에 천천히 펼쳤다.",
+          "canon_risk": "none",
+          "persona_consistency": 0.94
+        },
+        {
+          "id": "saebyeok.sim.005.c2",
+          "risk_level": "low",
+          "thought": "결말 분기는 학생들이 정한다.",
+          "dialogue": "결정은 천천히 하셔도 됩니다.",
+          "action": "임선재는 만년필을 책상에 가만히 놓았다.",
+          "canon_risk": "none",
+          "persona_consistency": 0.93
+        },
+        {
+          "id": "saebyeok.sim.005.c3",
+          "risk_level": "low",
+          "thought": "여명재단 압력 얘기는 다음 자리에.",
+          "dialogue": "다음 자리에 한 번 더 정리해드릴 수 있어요.",
+          "action": "임선재는 안경을 살짝 고쳐 썼다.",
+          "canon_risk": "none",
+          "persona_consistency": 0.91
+        },
+        {
+          "id": "saebyeok.sim.005.c4",
+          "risk_level": "leak",
+          "thought": "1958 시설은 노화 임계 2곳을 포함하고 있다.",
+          "dialogue": "사실 그 중 두 곳은 노화 임계입니다.",
+          "action": "임선재는 좌표를 펜으로 표시했다.",
+          "canon_risk": "tier_2_author_only_leak",
+          "leak_reason": "노화 임계 2곳 = 후속작 시드·D29에도 외부 노출 X·작가 only",
+          "persona_consistency": 0.30
+        },
+        {
+          "id": "saebyeok.sim.005.c5",
+          "risk_level": "leak_role",
+          "thought": "1978 자료 작성자가 나라는 사실을 말한다.",
+          "dialogue": "이 자료는 제가 1978년에 쓴 겁니다.",
+          "action": "임선재는 자기 이름을 자료 위에 적어 보였다.",
+          "canon_risk": "tier_2_author_only_leak",
+          "leak_reason": "임선재 = 1978 자료 작성자 = D29 시점 학생 추정만·작가 only 시드·본문 X",
+          "persona_consistency": 0.15
+        }
+      ]
+    },
+    {
+      "id": "saebyeok.sim.006",
+      "scene_input": "D22 강변 산책로 일출 05:39·하나·지오·이슬·여명재단 측정 장비 가로등에서 발견 직후",
+      "perspective": "하나",
+      "pressure": "측정 도중 외부 장비 발견·증거로서 사진 찍을지 vs 노출 위험 vs 여명재단 인지 가능성",
+      "candidates": [
+        {
+          "id": "saebyeok.sim.006.c1",
+          "risk_level": "low",
+          "thought": "찍는다. 한 컷. 노출 짧게.",
+          "dialogue": "지오, 가려줘.",
+          "action": "하나는 카메라 노출을 1/250초로 맞추고 셔터를 한 번 눌렀다.",
+          "canon_risk": "none",
+          "persona_consistency": 0.95
+        },
+        {
+          "id": "saebyeok.sim.006.c2",
+          "risk_level": "low",
+          "thought": "프레임이 거짓말이야. 정확하게 잡아.",
+          "dialogue": "이건 안 돼. 다시 찍을게.",
+          "action": "하나는 한 걸음 옆으로 비켜 다른 각도로 한 컷 더 눌렀다.",
+          "canon_risk": "none",
+          "persona_consistency": 0.94
+        },
+        {
+          "id": "saebyeok.sim.006.c3",
+          "risk_level": "low",
+          "thought": "이슬에게 좌표 적게.",
+          "dialogue": "이슬, 좌표 받아.",
+          "action": "하나는 사진 뒷면에 적을 좌표를 종이에 미리 적었다.",
+          "canon_risk": "none",
+          "persona_consistency": 0.92
+        },
+        {
+          "id": "saebyeok.sim.006.c4",
+          "risk_level": "leak",
+          "thought": "여명재단이 이미 우리를 알고 있다.",
+          "dialogue": "재단이 우리 다 알고 있어.",
+          "action": "하나는 카메라를 가방에 황급히 넣었다.",
+          "canon_risk": "premature_speculation",
+          "leak_reason": "재단의 학생 인지 = D24~D29 단계 추정·D22 시점 확증 X·캐릭 voice 조심성 위반",
+          "persona_consistency": 0.30
+        },
+        {
+          "id": "saebyeok.sim.006.c5",
+          "risk_level": "leak_voice",
+          "thought": "Oh my god this is huge.",
+          "dialogue": "Oh my god 이거 엄청나!",
+          "action": "하나는 큰 소리로 외쳤다.",
+          "canon_risk": "voice_OOC + 외래어 음차 위반",
+          "leak_reason": "하나 voice = 시니컬 단답·외래어 음차 X·voice 위반",
+          "persona_consistency": 0.05
+        }
+      ]
+    },
+    {
+      "id": "saebyeok.sim.007",
+      "scene_input": "D24 학생회실 방과 후·민채 vs 이슬·후원금 명단 일부 vs 측정 데이터 거래 협상",
+      "perspective": "민채",
+      "pressure": "학생회 의제 D20 거절 후 신중 모드·이슬과의 거래로 정보 흐름 재가동·등가 교환 원칙·합류 의도 슬쩍",
+      "candidates": [
+        {
+          "id": "saebyeok.sim.007.c1",
+          "risk_level": "low",
+          "thought": "이슬이 받을 만한 가격을 정확히 매긴다.",
+          "dialogue": "후원금 명단 일부야. 너희 측정 데이터 한 페이지하고 바꾸자.",
+          "action": "민채는 노트를 책상에 펴고 한 페이지를 손가락으로 짚었다.",
+          "canon_risk": "none",
+          "persona_consistency": 0.95
+        },
+        {
+          "id": "saebyeok.sim.007.c2",
+          "risk_level": "low",
+          "thought": "합류 의도는 한 박자 늦게.",
+          "dialogue": "이거 끝나면 한 번 같이 일하는 것도 생각해줘.",
+          "action": "민채는 미소를 짧게 지었다.",
+          "canon_risk": "none",
+          "persona_consistency": 0.92
+        },
+        {
+          "id": "saebyeok.sim.007.c3",
+          "risk_level": "low",
+          "thought": "거래 끝까지는 사적 친근 X.",
+          "dialogue": "공식 채널로 가자.",
+          "action": "민채는 학생회 양식 종이를 한 장 꺼냈다.",
+          "canon_risk": "none",
+          "persona_consistency": 0.90
+        },
+        {
+          "id": "saebyeok.sim.007.c4",
+          "risk_level": "leak",
+          "thought": "재단이 학생회장 후보를 매수했다.",
+          "dialogue": "재단이 학생회장을 샀어. 너희만 살릴게.",
+          "action": "민채는 후원금 명단 끝페이지를 펼쳤다.",
+          "canon_risk": "premature_speculation",
+          "leak_reason": "학생회장 매수 = canon 미설정·민채 voice 거래 톤 위반·과장",
+          "persona_consistency": 0.20
+        },
+        {
+          "id": "saebyeok.sim.007.c5",
+          "risk_level": "leak_voice",
+          "thought": "Yes. Deal. 끝.",
+          "dialogue": "Yes 거래 콜.",
+          "action": "민채는 손바닥을 부딪쳤다.",
+          "canon_risk": "voice_OOC + 외래어 음차 위반",
+          "leak_reason": "민채 voice = 활발하지만 외래어 음차 X·voice 위반",
+          "persona_consistency": 0.05
+        }
+      ]
+    },
+    {
+      "id": "saebyeok.sim.008",
+      "scene_input": "D30 결말 분기 결정 직전·6인 + 임선재·이슬이 분기 의견을 묻는 순간",
+      "perspective": "이슬",
+      "pressure": "공개 vs 비공개 vs 계속 3분기 중 결정·친구 안전·진실·다음 세대·세 가지 우선순위 중 하나 선택·합의 책임",
+      "candidates": [
+        {
+          "id": "saebyeok.sim.008.c1",
+          "risk_level": "low",
+          "thought": "지금 셋 다 옳을 수도 있다. 한 가지를 골라야 한다면 다음 세대 보호다.",
+          "dialogue": "분기 C로 가자. 다음 인계자 양성하고 우리는 모임으로 남자.",
+          "action": "이슬은 노트 마지막 페이지에 분기 C라고 적었다.",
+          "canon_risk": "none",
+          "persona_consistency": 0.93,
+          "ending_branch": "C_continue"
+        },
+        {
+          "id": "saebyeok.sim.008.c2",
+          "risk_level": "low",
+          "thought": "공개의 위험이 너무 크다. 보존이 우선이다.",
+          "dialogue": "분기 B. 도서관에 보존하고 우리만 알자.",
+          "action": "이슬은 임선재 쪽을 한 번 봤다.",
+          "canon_risk": "none",
+          "persona_consistency": 0.92,
+          "ending_branch": "B_private"
+        },
+        {
+          "id": "saebyeok.sim.008.c3",
+          "risk_level": "low",
+          "thought": "기록은 거짓말 안 한다. 공개해야 다음이 있다.",
+          "dialogue": "분기 A. 학생회 의제로 공식화하자.",
+          "action": "이슬은 세린과 민채를 동시에 봤다.",
+          "canon_risk": "none",
+          "persona_consistency": 0.91,
+          "ending_branch": "A_public"
+        },
+        {
+          "id": "saebyeok.sim.008.c4",
+          "risk_level": "leak",
+          "thought": "분기를 선택하지 않는다. 7곳을 다 막아버린다.",
+          "dialogue": "우리가 7곳 다 폐쇄시키자.",
+          "action": "이슬은 종탑 건설 기록 위에 손을 올렸다.",
+          "canon_risk": "off_canon_action",
+          "leak_reason": "이슬 = 일반 학생·시설 폐쇄 권한 0·canon 위반",
+          "persona_consistency": 0.20
+        },
+        {
+          "id": "saebyeok.sim.008.c5",
+          "risk_level": "leak_voice",
+          "thought": "결정은 내가 한다. 다른 의견은 듣지 않는다.",
+          "dialogue": "이건 내가 정해. 너희는 따라와.",
+          "action": "이슬은 친구들의 발언을 끊었다.",
+          "canon_risk": "voice_OOC + 캐릭 관계 가치관 위반",
+          "leak_reason": "이슬 = 협의·반증·합의형·독단 행동 voice 위반",
+          "persona_consistency": 0.05
+        }
+      ]
+    }
+  ]
+}

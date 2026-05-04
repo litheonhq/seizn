@@ -148,8 +148,8 @@ export function TestCaseEditor({
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-          <p className="text-red-800">{error}</p>
+        <div className="bg-[var(--signal-conflict-soft)] border border-[var(--signal-conflict)] rounded-lg p-4">
+          <p className="text-[var(--signal-conflict-ink)]">{error}</p>
         </div>
       )}
 
@@ -170,7 +170,7 @@ export function TestCaseEditor({
       {/* Query */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Query <span className="text-red-500">*</span>
+          Query <span className="text-[var(--signal-conflict-ink)]">*</span>
         </label>
         <textarea
           value={formData.query}
@@ -235,13 +235,13 @@ export function TestCaseEditor({
           {formData.expected_keywords.map((kw) => (
             <span
               key={kw}
-              className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-800 text-sm rounded"
+              className="inline-flex items-center gap-1 px-2 py-1 bg-[var(--signal-canon-soft)] text-[var(--signal-canon-ink)] text-sm rounded"
             >
               {kw}
               <button
                 type="button"
                 onClick={() => removeKeyword('expected', kw)}
-                className="text-green-600 hover:text-green-800"
+                className="text-[var(--signal-canon-ink)] hover:text-[var(--signal-canon-ink)]"
               >
                 &times;
               </button>
@@ -268,7 +268,7 @@ export function TestCaseEditor({
             <button
               type="button"
               onClick={() => addKeyword('not')}
-              className="px-3 py-2 bg-red-100 text-red-700 rounded-md hover:bg-red-200 text-sm"
+              className="px-3 py-2 bg-[var(--signal-conflict-soft)] text-[var(--signal-conflict-ink)] rounded-md hover:bg-[var(--signal-conflict-soft)] text-sm"
             >
               Add
             </button>
@@ -277,13 +277,13 @@ export function TestCaseEditor({
             {formData.expected_not_keywords.map((kw) => (
               <span
                 key={kw}
-                className="inline-flex items-center gap-1 px-2 py-1 bg-red-100 text-red-800 text-sm rounded"
+                className="inline-flex items-center gap-1 px-2 py-1 bg-[var(--signal-conflict-soft)] text-[var(--signal-conflict-ink)] text-sm rounded"
               >
                 {kw}
                 <button
                   type="button"
                   onClick={() => removeKeyword('not', kw)}
-                  className="text-red-600 hover:text-red-800"
+                  className="text-[var(--signal-conflict-ink)] hover:text-[var(--signal-conflict-ink)]"
                 >
                   &times;
                 </button>

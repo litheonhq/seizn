@@ -204,7 +204,7 @@ export function DebugBundleExport({ traceId, onExported }: DebugBundleExportProp
       {/* Trigger Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="flex items-center gap-2 px-3 py-2 bg-gray-800 text-gray-300 hover:text-white hover:bg-gray-700 rounded-lg transition-colors"
+        className="flex items-center gap-2 px-3 py-2 bg-[var(--ink-800)] text-gray-300 hover:text-white hover:bg-gray-700 rounded-lg transition-colors"
         title="Export Debug Bundle"
       >
         <DownloadIcon className="w-4 h-4" />
@@ -214,7 +214,7 @@ export function DebugBundleExport({ traceId, onExported }: DebugBundleExportProp
       {/* Modal */}
       {isOpen && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-          <div className="bg-gray-900 rounded-lg shadow-2xl max-w-lg w-full max-h-[90vh] overflow-auto border border-gray-800">
+          <div className="bg-[var(--ink-900)] rounded-lg shadow-2xl max-w-lg w-full max-h-[90vh] overflow-auto border border-gray-800">
             {/* Header */}
             <div className="flex items-center justify-between p-6 border-b border-gray-800">
               <h2 className="text-xl font-semibold text-white">Export Debug Bundle</h2>
@@ -269,14 +269,14 @@ export function DebugBundleExport({ traceId, onExported }: DebugBundleExportProp
             <div className="p-6 space-y-6">
               {/* Error display */}
               {error && (
-                <div className="bg-red-500/10 border border-red-500/50 text-red-400 p-4 rounded-lg text-sm">
+                <div className="bg-[var(--signal-conflict)]/10 border border-[var(--signal-conflict)]/50 text-[var(--signal-conflict-soft)] p-4 rounded-lg text-sm">
                   {error}
                 </div>
               )}
 
               {/* Share URL Success */}
               {shareUrl && activeTab === "share" && (
-                <div className="bg-green-500/10 border border-green-500/50 rounded-xl p-4">
+                <div className="bg-[var(--signal-canon)]/10 border border-[var(--signal-canon)]/50 rounded-xl p-4">
                   <div className="flex items-center gap-2 text-green-400 mb-3">
                     <CheckIcon className="w-5 h-5" />
                     <span className="font-medium">Share link created!</span>
@@ -286,11 +286,11 @@ export function DebugBundleExport({ traceId, onExported }: DebugBundleExportProp
                       type="text"
                       value={shareUrl}
                       readOnly
-                      className="flex-1 px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-sm font-mono text-gray-300"
+                      className="flex-1 px-3 py-2 bg-[var(--ink-800)] border border-gray-700 rounded-lg text-sm font-mono text-gray-300"
                     />
                     <button
                       onClick={handleCopy}
-                      className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm font-medium flex items-center gap-2"
+                      className="px-4 py-2 bg-[var(--signal-canon)] text-white rounded-lg hover:bg-[var(--signal-canon)] text-sm font-medium flex items-center gap-2"
                     >
                       {copied ? (
                         <>
@@ -317,21 +317,21 @@ export function DebugBundleExport({ traceId, onExported }: DebugBundleExportProp
               <div>
                 <h3 className="text-sm font-medium text-gray-300 mb-3">Bundle Contents</h3>
                 <div className="grid grid-cols-2 gap-3">
-                  <div className="flex items-center gap-3 p-3 bg-gray-800/50 rounded-lg">
+                  <div className="flex items-center gap-3 p-3 bg-[var(--ink-800)]/50 rounded-lg">
                     <DocumentIcon className="w-5 h-5 text-blue-400" />
                     <div>
                       <div className="text-sm text-white">Trace Snapshot</div>
                       <div className="text-xs text-gray-500">Redacted JSON</div>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3 p-3 bg-gray-800/50 rounded-lg">
-                    <CodeIcon className="w-5 h-5 text-purple-400" />
+                  <div className="flex items-center gap-3 p-3 bg-[var(--ink-800)]/50 rounded-lg">
+                    <CodeIcon className="w-5 h-5 text-[var(--ink-700)]" />
                     <div>
                       <div className="text-sm text-white">Replay Commands</div>
                       <div className="text-xs text-gray-500">curl/JS/Python</div>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3 p-3 bg-gray-800/50 rounded-lg">
+                  <div className="flex items-center gap-3 p-3 bg-[var(--ink-800)]/50 rounded-lg">
                     <svg className="w-5 h-5 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
@@ -340,7 +340,7 @@ export function DebugBundleExport({ traceId, onExported }: DebugBundleExportProp
                       <div className="text-xs text-gray-500">Versions & config</div>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3 p-3 bg-gray-800/50 rounded-lg">
+                  <div className="flex items-center gap-3 p-3 bg-[var(--ink-800)]/50 rounded-lg">
                     <svg className="w-5 h-5 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                     </svg>
@@ -362,7 +362,7 @@ export function DebugBundleExport({ traceId, onExported }: DebugBundleExportProp
                       className={`flex-1 py-3 px-4 rounded-lg border text-sm font-medium transition-colors ${
                         format === "json"
                           ? "bg-blue-600/20 border-blue-500 text-blue-400"
-                          : "bg-gray-800 border-gray-700 text-gray-400 hover:border-gray-600"
+                          : "bg-[var(--ink-800)] border-gray-700 text-gray-400 hover:border-gray-600"
                       }`}
                     >
                       JSON
@@ -372,7 +372,7 @@ export function DebugBundleExport({ traceId, onExported }: DebugBundleExportProp
                       className={`flex-1 py-3 px-4 rounded-lg border text-sm font-medium transition-colors ${
                         format === "markdown"
                           ? "bg-blue-600/20 border-blue-500 text-blue-400"
-                          : "bg-gray-800 border-gray-700 text-gray-400 hover:border-gray-600"
+                          : "bg-[var(--ink-800)] border-gray-700 text-gray-400 hover:border-gray-600"
                       }`}
                     >
                       Markdown
@@ -398,7 +398,7 @@ export function DebugBundleExport({ traceId, onExported }: DebugBundleExportProp
                         className={`flex-1 py-2 px-3 rounded-lg border text-sm font-medium transition-colors ${
                           expiresIn === option.value
                             ? "bg-blue-600/20 border-blue-500 text-blue-400"
-                            : "bg-gray-800 border-gray-700 text-gray-400 hover:border-gray-600"
+                            : "bg-[var(--ink-800)] border-gray-700 text-gray-400 hover:border-gray-600"
                         }`}
                       >
                         {option.label}
@@ -418,7 +418,7 @@ export function DebugBundleExport({ traceId, onExported }: DebugBundleExportProp
                         type="checkbox"
                         checked={maskPii}
                         onChange={(e) => setMaskPii(e.target.checked)}
-                        className="w-4 h-4 rounded border-gray-600 text-blue-600 focus:ring-blue-500 bg-gray-800"
+                        className="w-4 h-4 rounded border-gray-600 text-blue-600 focus:ring-blue-500 bg-[var(--ink-800)]"
                       />
                       <div>
                         <span className="text-sm text-white">Mask PII</span>
@@ -431,7 +431,7 @@ export function DebugBundleExport({ traceId, onExported }: DebugBundleExportProp
                         type="checkbox"
                         checked={maskSecrets}
                         onChange={(e) => setMaskSecrets(e.target.checked)}
-                        className="w-4 h-4 rounded border-gray-600 text-blue-600 focus:ring-blue-500 bg-gray-800"
+                        className="w-4 h-4 rounded border-gray-600 text-blue-600 focus:ring-blue-500 bg-[var(--ink-800)]"
                       />
                       <div>
                         <span className="text-sm text-white">Mask Secrets</span>
@@ -444,7 +444,7 @@ export function DebugBundleExport({ traceId, onExported }: DebugBundleExportProp
                         type="checkbox"
                         checked={hideRawContent}
                         onChange={(e) => setHideRawContent(e.target.checked)}
-                        className="w-4 h-4 rounded border-gray-600 text-blue-600 focus:ring-blue-500 bg-gray-800"
+                        className="w-4 h-4 rounded border-gray-600 text-blue-600 focus:ring-blue-500 bg-[var(--ink-800)]"
                       />
                       <div>
                         <span className="text-sm text-white">Hide Raw Content</span>
@@ -483,7 +483,7 @@ export function DebugBundleExport({ traceId, onExported }: DebugBundleExportProp
             </div>
 
             {/* Footer */}
-            <div className="p-4 border-t border-gray-800 bg-gray-900/50">
+            <div className="p-4 border-t border-gray-800 bg-[var(--ink-900)]/50">
               <p className="text-xs text-gray-500 text-center">
                 Debug bundles contain trace data with sensitive information automatically redacted.
               </p>

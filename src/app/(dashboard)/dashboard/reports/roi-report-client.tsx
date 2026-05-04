@@ -59,8 +59,8 @@ export function ROIReportClient() {
     return (
       <div className="max-w-6xl mx-auto px-4 py-8">
         <div className="animate-pulse space-y-4">
-          <div className="h-8 bg-szn-surface rounded w-48" />
-          <div className="h-64 bg-szn-surface rounded" />
+          <div className="h-8 bg-[var(--ink-50)] rounded w-48" />
+          <div className="h-64 bg-[var(--ink-50)] rounded" />
         </div>
       </div>
     );
@@ -69,7 +69,7 @@ export function ROIReportClient() {
   if (!report) {
     return (
       <div className="max-w-6xl mx-auto px-4 py-8">
-        <p className="text-szn-text-2">{t("dashboard.reportsPage.loadError")}</p>
+        <p className="text-[var(--ink-600)]">{t("dashboard.reportsPage.loadError")}</p>
       </div>
     );
   }
@@ -79,8 +79,8 @@ export function ROIReportClient() {
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-szn-text-1">{t("dashboard.reportsPage.title")}</h1>
-          <p className="text-szn-text-2 mt-1">
+          <h1 className="text-2xl font-bold text-[var(--ink-900)]">{t("dashboard.reportsPage.title")}</h1>
+          <p className="text-[var(--ink-600)] mt-1">
             {t("dashboard.reportsPage.generated")} {new Date(report.generated_at).toLocaleString()}
           </p>
         </div>
@@ -96,7 +96,7 @@ export function ROIReportClient() {
           </select>
           <button
             onClick={() => window.print()}
-            className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800"
+            className="px-4 py-2 bg-[var(--ink-900)] text-white rounded-lg hover:bg-[var(--ink-800)]"
           >
             {t("dashboard.reportsPage.exportPdf")}
           </button>
@@ -128,7 +128,7 @@ export function ROIReportClient() {
       </div>
 
       {/* Projections Banner */}
-      <div className="bg-gradient-to-r from-szn-accent to-szn-accent/80 rounded-lg p-6 mb-8 text-white">
+      <div className="bg-[var(--ink-900)] rounded-lg p-6 mb-8 text-white">
         <div className="grid grid-cols-3 gap-8">
           <div>
             <p className="text-white/80 text-sm">{t("dashboard.reportsPage.estAnnualCost")}</p>
@@ -154,8 +154,8 @@ export function ROIReportClient() {
       {/* Comparisons Grid */}
       <div className="grid grid-cols-2 gap-6 mb-8">
         {/* Rerank Comparison */}
-        <div className="bg-szn-card rounded-lg border border-szn-border p-6">
-          <h3 className="font-semibold text-szn-text-1 mb-4">{t("dashboard.reportsPage.rerankImpact")}</h3>
+        <div className="bg-[var(--ink-0)] rounded-lg border border-[var(--ink-200)] p-6">
+          <h3 className="font-semibold text-[var(--ink-900)] mb-4">{t("dashboard.reportsPage.rerankImpact")}</h3>
 
           <div className="space-y-4">
             <ComparisonRow
@@ -181,9 +181,9 @@ export function ROIReportClient() {
             />
           </div>
 
-          <div className="mt-4 pt-4 border-t border-szn-border">
-            <p className="text-sm text-szn-text-2">
-              <span className="font-medium text-szn-text-1">{t("dashboard.reportsPage.queries")}</span>{" "}
+          <div className="mt-4 pt-4 border-t border-[var(--ink-200)]">
+            <p className="text-sm text-[var(--ink-600)]">
+              <span className="font-medium text-[var(--ink-900)]">{t("dashboard.reportsPage.queries")}</span>{" "}
               {report.rerank_comparison.disabled.count} {t("dashboard.reportsPage.without")} /{" "}
               {report.rerank_comparison.enabled.count} {t("dashboard.reportsPage.withRerank")}
             </p>
@@ -191,8 +191,8 @@ export function ROIReportClient() {
         </div>
 
         {/* Autopilot Comparison */}
-        <div className="bg-szn-card rounded-lg border border-szn-border p-6">
-          <h3 className="font-semibold text-szn-text-1 mb-4">{t("dashboard.reportsPage.autopilotSavings")}</h3>
+        <div className="bg-[var(--ink-0)] rounded-lg border border-[var(--ink-200)] p-6">
+          <h3 className="font-semibold text-[var(--ink-900)] mb-4">{t("dashboard.reportsPage.autopilotSavings")}</h3>
 
           <div className="space-y-4">
             <ComparisonRow
@@ -211,18 +211,18 @@ export function ROIReportClient() {
             />
           </div>
 
-          <div className="mt-6 p-4 bg-szn-accent/10 rounded-xl">
-            <p className="text-sm text-szn-accent">
-              <span className="font-bold text-szn-accent">
+          <div className="mt-6 p-4 bg-[var(--ink-900)]/10 rounded-xl">
+            <p className="text-sm text-[var(--ink-900)]">
+              <span className="font-bold text-[var(--ink-900)]">
                 ${report.autopilot_comparison.savings.cost_saved_usd.toFixed(2)}
               </span>{" "}
               {t("dashboard.reportsPage.savedThisPeriod")}
             </p>
           </div>
 
-          <div className="mt-4 pt-4 border-t border-szn-border">
-            <p className="text-sm text-szn-text-2">
-              <span className="font-medium text-szn-text-1">{t("dashboard.reportsPage.queries")}</span>{" "}
+          <div className="mt-4 pt-4 border-t border-[var(--ink-200)]">
+            <p className="text-sm text-[var(--ink-600)]">
+              <span className="font-medium text-[var(--ink-900)]">{t("dashboard.reportsPage.queries")}</span>{" "}
               {report.autopilot_comparison.disabled.count} {t("dashboard.reportsPage.without")} /{" "}
               {report.autopilot_comparison.enabled.count} {t("dashboard.reportsPage.withAutopilot")}
             </p>
@@ -231,8 +231,8 @@ export function ROIReportClient() {
       </div>
 
       {/* Recommendations */}
-      <div className="bg-szn-card rounded-lg border border-szn-border p-6">
-        <h3 className="font-semibold text-szn-text-1 mb-4">{t("dashboard.reportsPage.recommendations")}</h3>
+      <div className="bg-[var(--ink-0)] rounded-lg border border-[var(--ink-200)] p-6">
+        <h3 className="font-semibold text-[var(--ink-900)] mb-4">{t("dashboard.reportsPage.recommendations")}</h3>
         <div className="space-y-3">
           {report.recommendations.map((rec, i) => (
             <div
@@ -259,12 +259,12 @@ function SummaryCard({
   icon: string;
 }) {
   return (
-    <div className="bg-szn-card rounded-xl border border-szn-border p-4">
+    <div className="bg-[var(--ink-0)] rounded-xl border border-[var(--ink-200)] p-4">
       <div className="flex items-center gap-2 mb-2">
         <span className="text-lg">{icon}</span>
-        <span className="text-sm text-szn-text-2">{label}</span>
+        <span className="text-sm text-[var(--ink-600)]">{label}</span>
       </div>
-      <p className="text-2xl font-bold text-szn-text-1">{value}</p>
+      <p className="text-2xl font-bold text-[var(--ink-900)]">{value}</p>
     </div>
   );
 }
@@ -284,16 +284,16 @@ function ComparisonRow({
 }) {
   return (
     <div className="flex items-center justify-between">
-      <span className="text-sm text-szn-text-2">{label}</span>
+      <span className="text-sm text-[var(--ink-600)]">{label}</span>
       <div className="flex items-center gap-4">
-        <span className="text-sm font-mono text-szn-text-3">{valueA}</span>
-        <span className="text-szn-text-3">→</span>
-        <span className="text-sm font-mono text-szn-text-1">{valueB}</span>
+        <span className="text-sm font-mono text-[var(--ink-500)]">{valueA}</span>
+        <span className="text-[var(--ink-500)]">→</span>
+        <span className="text-sm font-mono text-[var(--ink-900)]">{valueB}</span>
         <span
           className={`text-xs font-medium px-2 py-0.5 rounded ${
             deltaPositive
-              ? "bg-green-100 text-green-700"
-              : "bg-red-100 text-red-700"
+              ? "bg-[var(--signal-canon-soft)] text-[var(--signal-canon-ink)]"
+              : "bg-[var(--signal-conflict-soft)] text-[var(--signal-conflict-ink)]"
           }`}
         >
           {delta}

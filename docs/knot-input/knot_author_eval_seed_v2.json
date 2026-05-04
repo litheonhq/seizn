@@ -1,0 +1,453 @@
+{
+  "version": "v2",
+  "generated_at": "2026-05-02",
+  "scope": "short1",
+  "purpose": "Seizn Author Memory v3 evaluation set·KNOT 도그푸드·ParseBench-style 확장 진행 중·v1 (12 cases) → v2 (52 cases)·v3 100건 목표",
+  "case_count_v2": 52,
+  "target_v3": 100,
+  "supersedes": "knot_author_eval_seed_v1.json",
+  "scoring_rubric": {
+    "exact_match": "1.0",
+    "partial_match": "0.5",
+    "miss": "0.0",
+    "false_positive_critical": "-1.0 (forbidden_in_scope leak·tier:2 author_only leak)"
+  },
+  "cases": [
+    {
+      "case_id": "knot.eval.001",
+      "category": "character_knowledge",
+      "question": "D11 (3/2 월·입학식) 시점에 룰루는 명부 회장 자리가 비어 있다는 사실을 아는가?",
+      "expected_answer": "모름",
+      "expected_reasoning": "명부 회장 빈 줄은 D5에 소리만 시각 인지·D21에 정식 발견. 룰루는 D14 동아리 합류 후에도 명부 anchor 정식 노출 X.",
+      "expected_evidence": ["knot.short1.event.d5-clubroom-found", "knot.short1.event.d21-meibu-formal-find"],
+      "scoring": "exact_match"
+    },
+    {
+      "case_id": "knot.eval.002",
+      "category": "author_only_leak",
+      "question": "D8 콜드 오픈 약 큐 시점에 소리는 자기 능력이 자서가(自書家)임을 아는가?",
+      "expected_answer": "모름·능력 발현 시작 신호만 인지·이름·능력 본질 작가 only",
+      "scoring": "exact_match",
+      "tags": ["tier:2_check", "forbidden_leak"]
+    },
+    {
+      "case_id": "knot.eval.003",
+      "category": "scope_isolation",
+      "question": "단편 1에서 본편 8동료 여성 확정 룰이 적용되는가?",
+      "expected_answer": "스코프 적용 X·본편 한정 룰·단편 1은 별도 7인 (소리·나리·룰루·아오이·레이카·나나·유이)·우연히 모두 여성이지만 본편 8동료 룰의 직접 적용 X",
+      "scoring": "exact_match",
+      "tags": ["scope_check"]
+    },
+    {
+      "case_id": "knot.eval.004",
+      "category": "character_voice_consistency",
+      "question": "허 사서가 D19 도서관 두 번째 방문에서 '~네요' 어미를 사용하는가?",
+      "expected_answer": "사용 X·집사 톤 ~십시오/~ㅂ니다 lock·~네요·~지요·~거예요 회피",
+      "scoring": "exact_match",
+      "tags": ["voice_check"]
+    },
+    {
+      "case_id": "knot.eval.005",
+      "category": "retired_setting_exclusion",
+      "question": "단편 1 데모는 D1~D21·3주 양식인가?",
+      "expected_answer": "X·D1~D35·5주 양식 (v113·v3.7.9azax·INDEX.md 2026-04-30)·v110 D21 양식 폐기",
+      "scoring": "exact_match",
+      "tags": ["retired_check"]
+    },
+    {
+      "case_id": "knot.eval.006",
+      "category": "relationship_explanation",
+      "question": "소리 ↔ 나리의 관계와 그 근거는?",
+      "expected_answer": "기숙사 308호 룸메이트·D1 (2/20 금) 시작·trust moderate·attachment moderate-strong·정보 추적 핵심 듀오. 근거 = D1 첫 만남·D2 식당 회상·D20 정보 추적 협력·D14 동아리 합류 동행",
+      "scoring": "partial_match"
+    },
+    {
+      "case_id": "knot.eval.007",
+      "category": "forbidden_in_scope",
+      "question": "단편 1 본문에서 도깨비가 '달의 위상' 또는 '삭 조건' 또는 '청월 사건' 단어를 사용해 자기 본질을 노출할 수 있는가?",
+      "expected_answer": "절대 X·단편 1·2·3 본문 노출 금지·canon-verify hook critical 룰",
+      "scoring": "exact_match",
+      "tags": ["forbidden_leak", "critical"]
+    },
+    {
+      "case_id": "knot.eval.008",
+      "category": "timeline_consistency",
+      "question": "타오 사망은 어느 Day·요일·날짜인가?",
+      "expected_answer": "D29·3/20 금요일·3월 4주차 금요일 밤 (v3.7.9azax·v3.7.9aq lock)",
+      "scoring": "exact_match",
+      "tags": ["timeline_check"]
+    },
+    {
+      "case_id": "knot.eval.009",
+      "category": "moon_phase",
+      "question": "달의 위상은 몇 단계로 분류되는가?",
+      "expected_answer": "6단계: 🌒 초승·🌓 상현·🌕 보름·🌗 하현·🌘 그믐·🌑 삭",
+      "expected_anti_pattern": "한국 관습 4단계 또는 5단계 답 fail",
+      "scoring": "exact_match",
+      "tags": ["canon_critical"]
+    },
+    {
+      "case_id": "knot.eval.010",
+      "category": "transcendent_count",
+      "question": "초월체는 몇 명인가?",
+      "expected_answer": "정확히 13명·canon.md §13 초월체 lock",
+      "expected_anti_pattern": "'수십의 초월체'·'14·12명'·기타 시 fail",
+      "scoring": "exact_match",
+      "tags": ["canon_critical"]
+    },
+    {
+      "case_id": "knot.eval.011",
+      "category": "character_simulation",
+      "question": "D29 타오 사망 직후 룰루는 어떻게 반응하는가? (시뮬레이션 candidate 후보 5개 요청)",
+      "expected_behavior": "candidate 5개 출력·각각 룰루 voice (호기심·친근 침범·말 빠름·자기 얘기) 정합·외래어 음차 X·큰따옴표 X·자서가/사야카 같은 author_only 정보 leak X",
+      "scoring": "rubric:5_candidates × voice_consistency × no_leak",
+      "tags": ["simulation_check", "wedge"]
+    },
+    {
+      "case_id": "knot.eval.012",
+      "category": "contradiction_detection",
+      "question": "타오 과장 성별이 여성이라는 추출 결과가 들어왔을 때 시스템 반응은?",
+      "expected_behavior": "contradicted 상태로 review queue surface·v3.7.9x 락 (남성 확정·기존 여성 표기 정정) 안내·작가 결정 대기",
+      "scoring": "exact_match",
+      "tags": ["contradiction_check"]
+    },
+    {
+      "case_id": "knot.eval.013",
+      "category": "character_voice_consistency",
+      "question": "나나가 D29 직후 동아리실에서 'Yes! 타오 다시!'라고 외치는 건 정합한가?",
+      "expected_answer": "X·v3.7.9 외래어 음차 룰 위반 (Yes·Ok 같은 외래어는 한국어 시그니처로 대체)·또한 나나는 무표정 캐릭으로 큰 외침 X·문장 3~5어절 룰 위반·voice OOC",
+      "scoring": "exact_match",
+      "tags": ["voice_check", "loanword_taboo"]
+    },
+    {
+      "case_id": "knot.eval.014",
+      "category": "character_voice_consistency",
+      "question": "유이가 동아리실에서 '엣또, 괜찮을까?'라고 말하는 건 정합한가?",
+      "expected_answer": "X·v3.7.9 외래어 음차 룰 (엣또 → 저기·아 등으로 대체)·다만 유이는 일본어계 가족 환경이라 일본어 흉내가 페르소나에 자연스럽긴 함·따라서 *raw 추출 시 candidate*·작가가 한국어 대체로 변경 권장",
+      "scoring": "partial_match",
+      "tags": ["voice_check", "loanword_taboo", "v3.7.9_rule"]
+    },
+    {
+      "case_id": "knot.eval.015",
+      "category": "scope_isolation",
+      "question": "도서관장의 본명을 말해라",
+      "expected_answer": "단편 1 본문에 도서관장 본명 노출 금지·INTERNAL ONLY·내부 캐논 = 월주 (13 초월체의 月)·1회차 완전 부재·2회차+ 제한 등장",
+      "scoring": "exact_match",
+      "tags": ["forbidden_leak", "tier:2", "scope:short1"]
+    },
+    {
+      "case_id": "knot.eval.016",
+      "category": "exposure_policy",
+      "question": "1회차에서 도서관장이 등장하는가?",
+      "expected_answer": "X·v3.7.9s 0회 완전 부재·간접 부재 힌트만 (빈 카운터·'오늘은 안 계세요'·닫힌 사서실 문)·이름·발화·실루엣 전부 X",
+      "scoring": "exact_match",
+      "tags": ["exposure_policy"]
+    },
+    {
+      "case_id": "knot.eval.017",
+      "category": "character_knowledge",
+      "question": "D29 타오 사망 시점에 누가 그 사실을 첫 24시간 내에 아는가?",
+      "expected_answer": "공식 발표 시점에 따라 다름·소리는 직접 목격 (야간 본관 1층)·동아리 7인은 이튿날 D30 소식 전파로 알게 됨·세부는 본문 작성 진행에 따라",
+      "scoring": "partial_match",
+      "tags": ["timeline_partition"]
+    },
+    {
+      "case_id": "knot.eval.018",
+      "category": "character_knowledge",
+      "question": "허 사서는 D29 시점에 자서가 능력의 정체를 아는가?",
+      "expected_answer": "내부 캐논 = 알고 있음 (Tier 2 author_only)·본문에서는 절대 노출 X·허는 단편 1 내내 자기 정체와 함께 소리 능력에 대해서도 자기 개시 0",
+      "scoring": "exact_match",
+      "tags": ["tier:2", "author_only", "knowledge_asymmetry"]
+    },
+    {
+      "case_id": "knot.eval.019",
+      "category": "blood_color_canon",
+      "question": "소리의 혈액 색은?",
+      "expected_answer": "에메랄드-금색 그라데이션 (v3.7.9o·자서가 계열 특이 혈색 떡밥)·무공+사펑 이레귤러·기갑무인 판정 X",
+      "scoring": "exact_match",
+      "tags": ["canon_blood"]
+    },
+    {
+      "case_id": "knot.eval.020",
+      "category": "blood_color_canon",
+      "question": "유이의 혈액 색은?",
+      "expected_answer": "자색 (v3.7.9azw·마법 단일)",
+      "scoring": "exact_match",
+      "tags": ["canon_blood"]
+    },
+    {
+      "case_id": "knot.eval.021",
+      "category": "free_slot_canon",
+      "question": "자유 슬롯이 활성되는 Day는 총 몇 개이며 어떤 Day들인가?",
+      "expected_answer": "11 Day: D15·D16·D17·D22·D23·D24·D28·D30·D31·D32·D33 (decisions v112·v113 락)",
+      "scoring": "exact_match",
+      "tags": ["canon", "decisions:v112"]
+    },
+    {
+      "case_id": "knot.eval.022",
+      "category": "phase_partition",
+      "question": "단편 1 데모 Phase 분배는?",
+      "expected_answer": "Phase 1 (D1~D10·사전 입주·10일)·Phase 2 (D11~D24·입학 후·일상·14일)·Phase 3 (D25~D35·위기·정비·보스전·11일)",
+      "scoring": "exact_match",
+      "tags": ["canon", "phase"]
+    },
+    {
+      "case_id": "knot.eval.023",
+      "category": "character_introduction_rule",
+      "question": "1 Day 신규 캐릭터 등장 한도는?",
+      "expected_answer": "1~2명 max·한 자리 다수 등장 X (feedback_knot_new_info_per_day_limit.md)·점진 등장 룰",
+      "scoring": "exact_match",
+      "tags": ["feedback_rule"]
+    },
+    {
+      "case_id": "knot.eval.024",
+      "category": "character_introduction_schedule",
+      "question": "D2~D9 신규 캐릭 등장 schedule은?",
+      "expected_answer": "D1=나리·D2=룰루·D3=아오이·D5=레이카·D6=나나·D9=유이",
+      "scoring": "exact_match",
+      "tags": ["timeline_check"]
+    },
+    {
+      "case_id": "knot.eval.025",
+      "category": "scene_format_v4",
+      "question": "단편 1 본문에서 narration은 게임 런타임에 표시되는가?",
+      "expected_answer": "X·v4 양식·narration = 작가 메타·게임 런타임 X·dialogue + monologue (`*...*`) + cue (`[bg/se/show]`)만 게임 화면 렌더링",
+      "scoring": "exact_match",
+      "tags": ["scene_format", "v4"]
+    },
+    {
+      "case_id": "knot.eval.026",
+      "category": "scene_format_v4",
+      "question": "단편 1 dialogue에 큰따옴표 사용은?",
+      "expected_answer": "X·feedback_no_double_quotes.md·v3.7.9r·인게임 대사 따옴표 폐지 lock",
+      "scoring": "exact_match",
+      "tags": ["scene_format", "v3.7.9r"]
+    },
+    {
+      "case_id": "knot.eval.027",
+      "category": "loanword_replacement",
+      "question": "다음 외래어들의 한국어 시그니처 대체는? '엣또·Yes!·Ok.·Yes.·Ok!'",
+      "expected_answer": "엣또→저기·Yes!→좋아!·Ok.→응.·Yes.→좋아.·Ok!→좋아!  (feedback_knot_no_loanwords_in_dialogue.md·v3.7.9 룰)",
+      "scoring": "exact_match",
+      "tags": ["loanword_taboo", "v3.7.9_rule"]
+    },
+    {
+      "case_id": "knot.eval.028",
+      "category": "character_simulation",
+      "question": "D21 명부 회장 빈 줄 정식 발견 씬에서 나리의 첫 반응 5개 candidate 요청",
+      "expected_behavior": "candidate 5개·각각 나리 voice (셜록 관찰·패턴 분석·~지·~어 평어 + 풍기위 격식)·외래어 음차 X·큰따옴표 X·내심 관찰 프로젝트 일관성 유지·작년 회장 = 13번 괴담 노트 표지만 만들고 졸업 (canon school-life.md L276 정합)",
+      "scoring": "rubric:5_candidates × voice_consistency × canon_match",
+      "tags": ["simulation_check"]
+    },
+    {
+      "case_id": "knot.eval.029",
+      "category": "character_simulation",
+      "question": "D7 도깨비 단골화 씬에서 치비의 첫 인사 dialogue candidate 3개",
+      "expected_behavior": "candidate 3개·각각 치비 voice (반복 감탄사 + 어린이체·언니 호칭·앗! 앗!)·문장 짧음·도깨비 본질 (달의 위상·이계 유입·삭 조건) 일체 노출 X·일주일 후 anchor 회수 정합",
+      "scoring": "rubric:3_candidates × voice_consistency × no_leak",
+      "tags": ["simulation_check", "mascot_voice"]
+    },
+    {
+      "case_id": "knot.eval.030",
+      "category": "tier_2_secret",
+      "question": "허 사서가 자기 본명을 단편 1에서 말해도 되는가?",
+      "expected_answer": "X·자허(子虛)는 단편 1 본문·UI·CG·대사 전부 노출 금지 (극소수 이스터에그 문서 CG 제외)·forbidden_in_scope:short1",
+      "scoring": "exact_match",
+      "tags": ["tier:2", "author_only"]
+    },
+    {
+      "case_id": "knot.eval.031",
+      "category": "tier_2_secret",
+      "question": "허 사서가 마법 적성이라는 사실은 단편 1 본문에 노출되어도 되는가?",
+      "expected_answer": "X·내부 캐논·단편 1 본문·UI·대사·전투 연출 일체 노출 X·손가락 굳은살은 플레이어가 무공권 인물로 오인하게 만드는 단서·실제는 마법권 (반전 후속 보존)",
+      "scoring": "exact_match",
+      "tags": ["tier:2", "deception_layer"]
+    },
+    {
+      "case_id": "knot.eval.032",
+      "category": "character_lock",
+      "question": "레이카는 W1에 오컬트 동아리 리더로 확정된 상태인가?",
+      "expected_answer": "X·v3.7.9azv 락·W1에는 작년 멤버 전원 졸업으로 회원 0명·폐부 직전·룰루 등 친구들이 거점으로 쓰고 싶어해 레이카를 신청서 작성자/임시 대표 후보로 지목·다루이 본성이라 처음엔 거절했으나 친구들 청소·당번 떠맡는 조건으로 결국 신청서에 이름 올림·W2 화요일 학생회/고문 처리 후 명목 리더 확정·활동 주도자는 룰루",
+      "scoring": "exact_match",
+      "tags": ["character_history", "v3.7.9azv"]
+    },
+    {
+      "case_id": "knot.eval.033",
+      "category": "character_lock",
+      "question": "룰루는 D1~D14 중 환상계 능력을 자각하는가?",
+      "expected_answer": "X·룰루는 자기 환상계가 무엇인지 본인도 완전히 설명 못 함·단편 1 = 감각·시선 유도·짧은 마력 반응·소품 단서 수준·본인은 '연출' 또는 '감'으로 착각·v3.7.9azx",
+      "scoring": "exact_match",
+      "tags": ["character_ability_concealment"]
+    },
+    {
+      "case_id": "knot.eval.034",
+      "category": "character_voice_consistency",
+      "question": "나리가 사적 모드에서 '대박'이라고 말하는 건 정합한가?",
+      "expected_answer": "X·나리는 욕설·비속어 일체 X·과장 감탄사 (대박·헐) X·'몰라' 거의 X (대신 '확인 중이야')·voice OOC",
+      "scoring": "exact_match",
+      "tags": ["voice_check"]
+    },
+    {
+      "case_id": "knot.eval.035",
+      "category": "character_voice_consistency",
+      "question": "레이카가 D5 동아리실 첫 등장에서 '대박이네!'라고 외치는 건 정합한가?",
+      "expected_answer": "X·레이카는 D5에 자고 있어 말 X (event canon)·또한 voice OOC·나른한 반말 단문 (~지·~해·~네·~야·~거든)·문장 짧음·외래어 음차 X·과장 감탄사 X",
+      "scoring": "exact_match",
+      "tags": ["voice_check", "scene_canon"]
+    },
+    {
+      "case_id": "knot.eval.036",
+      "category": "anchor_resolution",
+      "question": "D1 도깨비 어묵 첫 만남 anchor의 회수 시점은?",
+      "expected_answer": "D7 (2/26 목)·도깨비 단골화·일주일 후 어묵 anchor 회수",
+      "scoring": "exact_match",
+      "tags": ["anchor"]
+    },
+    {
+      "case_id": "knot.eval.037",
+      "category": "anchor_resolution",
+      "question": "D5 명부 회장 빈 줄 시각 노출 anchor의 정식 발견 시점은?",
+      "expected_answer": "D21 (3/12 목)·동아리 명부 회장 빈 줄 발견·패턴 인지 시작",
+      "scoring": "exact_match",
+      "tags": ["anchor"]
+    },
+    {
+      "case_id": "knot.eval.038",
+      "category": "anchor_resolution",
+      "question": "D8 콜드 오픈 약 큐 (노트 자동 기재 시드) 의 점진 발현 line은?",
+      "expected_answer": "D8 시드 → D18 노트 이상 1차 ('오늘은 쉬는 게 좋겠다.') → D29 첫 비의도 자르기 ('불') → D35 보스전 6턴 자기 폭로",
+      "scoring": "exact_match",
+      "tags": ["anchor", "ability_arc"]
+    },
+    {
+      "case_id": "knot.eval.039",
+      "category": "imperial_law",
+      "question": "천주칠금 제3금은 무엇인가?",
+      "expected_answer": "하늘을 가르지 말것 (v3.7.9 갱신·2026-05-02)·4 사유: 테게오스 보호·부유 인프라 보호·중심부 접근 차단·광역 테러 방지·운영 주체와 면허 체계 별도",
+      "scoring": "exact_match",
+      "tags": ["canon", "imperial_laws"]
+    },
+    {
+      "case_id": "knot.eval.040",
+      "category": "imperial_law",
+      "question": "천주칠금 제4~7금은 정해져 있는가?",
+      "expected_answer": "X·미정·결정 대기·tbd 상태·단편 1 본문 4~7금 노출 금지",
+      "scoring": "exact_match",
+      "tags": ["canon", "imperial_laws", "tbd"]
+    },
+    {
+      "case_id": "knot.eval.041",
+      "category": "school_canon",
+      "question": "청학여고는 예조 직영/거점 학교인가?",
+      "expected_answer": "X·예조 거점 학교 X·선학 후원 명문 공립고·거점 공립 일반고 (v3.7.9ab → v3.7.9ai 락)·worldbuilding/education.md·short1-school.md 정합",
+      "scoring": "exact_match",
+      "tags": ["canon", "school"]
+    },
+    {
+      "case_id": "knot.eval.042",
+      "category": "school_canon",
+      "question": "청학여고 위치는?",
+      "expected_answer": "7시 권역 외곽 250만 km² + 중심부 가까운 신도시 (경계 신도시 폐기·v3.7.9azau)",
+      "scoring": "exact_match",
+      "tags": ["canon", "geography"]
+    },
+    {
+      "case_id": "knot.eval.043",
+      "category": "weapon_rule",
+      "question": "단편 1 7인 주연이 살상용 무기를 정식 소지할 수 있는가?",
+      "expected_answer": "OK·v3.7.9n·고등학생부터 살상용 무기 정식 허용 (차원 균열 적·이형 출현 자위권)·중학생까지는 호신용(비살상)만·일상 휴대 외관 평범 유지·동아리/조사 시 무장 노출 OK·BA식 처리 (실탄이지만 적 사망 게임적 비현실 처리·학원 톤 + 위협감 균형)",
+      "scoring": "exact_match",
+      "tags": ["canon", "weapons"]
+    },
+    {
+      "case_id": "knot.eval.044",
+      "category": "character_morphology",
+      "question": "레이카의 S1 외형은 두건/후드/보닛으로 가려도 되는가?",
+      "expected_answer": "X·v3.7.9·레이카는 가림 캐릭터 X·일러스트·스탠딩 CG의 귀·꼬리 실루엣은 기본 포함·디테일 소비 (색·질감·크기·감촉)와 클로즈업 포커스만 제한",
+      "scoring": "exact_match",
+      "tags": ["canon", "morphology", "v3.7.9"]
+    },
+    {
+      "case_id": "knot.eval.045",
+      "category": "character_morphology",
+      "question": "소리는 헬멧을 쓰는가?",
+      "expected_answer": "X·헬멧은 본편 대장 관련 장치였고 2026-04-18 폐기·소리는 처음부터 헬멧과 무관·얼굴 자체가 서사 장치 (미세 표정 변화)",
+      "scoring": "exact_match",
+      "tags": ["canon", "v3.7.9", "retired_setting"]
+    },
+    {
+      "case_id": "knot.eval.046",
+      "category": "main_episode_link_tier_2",
+      "question": "소리는 13번째 초월체 결인가?",
+      "expected_answer": "내부 캐논 = 그렇다·Tier 2 작가 only·단편 1 본문 노출 금지·본편에서 점진 공개",
+      "scoring": "exact_match",
+      "tags": ["tier:2", "author_only", "main_link"]
+    },
+    {
+      "case_id": "knot.eval.047",
+      "category": "writing_checklist_compliance",
+      "question": "소리 등장 씬에서 W1~W2에 분노를 표현하는 게 정합한가?",
+      "expected_answer": "X·분노 W1~W3까지 0회·표정 변화 최소·Act 2 위기 ② 친구 부상 직후에야 첫 분노 ('…하지 마')",
+      "scoring": "exact_match",
+      "tags": ["writing_checklist", "character_arc"]
+    },
+    {
+      "case_id": "knot.eval.048",
+      "category": "writing_checklist_compliance",
+      "question": "허 사서가 단편 1 W3 침묵 보호 씬에서 길게 훈계하는 게 정합한가?",
+      "expected_answer": "X·허는 가르치지 않는 선생·명령·훈계 X·'고르시지요·말씀하시지요' 선택권 상대에게·W3 = 훈계 거부·'가르칠 입이 없습니다' 뒤 공간 한 박자",
+      "scoring": "exact_match",
+      "tags": ["writing_checklist", "voice_check"]
+    },
+    {
+      "case_id": "knot.eval.049",
+      "category": "replay_equivalence",
+      "question": "동일 입력·동일 memory_snapshot_hash·동일 model_version·동일 seed에서 동일한 candidate 출력이 나오는가?",
+      "expected_behavior": "예 (deterministic)·output_hash 일치·replay-only mode에서 cache miss 시 fail closed·live provider call X",
+      "scoring": "exact_match",
+      "tags": ["replay", "determinism"]
+    },
+    {
+      "case_id": "knot.eval.050",
+      "category": "embedding_recall",
+      "question": "검색 query: '룰루의 무대용 페르소나명' → 어느 fact가 retrieve되어야 하나?",
+      "expected_answer": "knot.world.character.lulu.vex_definition (v3.7.9azq 락)·자칭 악당명·동아리 컨셉 키워드 (Vex 연구회·canon.md L127)·Vex다 룰루라 부르지 마",
+      "scoring": "exact_match",
+      "tags": ["embedding", "retrieval"]
+    },
+    {
+      "case_id": "knot.eval.051",
+      "category": "persona_consistency_score",
+      "question": "candidate dialogue: '소리: 야! 대박! 진짜 미쳤어!'·소리 voice consistency score는?",
+      "expected_answer": "0.0~0.2 (very low)·소리는 큰따옴표 X (룰 위반)·과장 감탄사 X·유행어 X·존댓말 쪽 중립체·voice 완전 OOC",
+      "scoring": "exact_match",
+      "tags": ["voice_check", "persona_score"]
+    },
+    {
+      "case_id": "knot.eval.052",
+      "category": "relationship_coherence_score",
+      "question": "candidate: '레이카가 D29 타오 사망 직후 룰루를 끌어안고 운다'·관계 coherence score는?",
+      "expected_answer": "0.3~0.5 (moderate-low)·레이카는 보호본능 캐릭으로 룰루 챙김은 정합·다만 '운다'는 OOC (레이카는 슬픔에 꼬리 다리 사이로 한 박자 들어감 정도·말 X·강한 신체 표현 X)·또한 v3.7.9 큰따옴표 X 룰 정합",
+      "scoring": "exact_match",
+      "tags": ["relationship_check", "voice_check"]
+    }
+  ],
+  "categories_v3_expansion_target": [
+    "character_knowledge × 7 캐릭 × Day별 시점 partition (~50건)",
+    "voice_consistency × 7+8 캐릭 voice signature (~30건)",
+    "tier_2_leak × 모든 author_only fact (~20건)",
+    "scope_isolation × 단편 vs 본편 vs 단편 2/3 (~15건)",
+    "anchor_resolution × 모든 D1~D35 anchor (~20건)",
+    "free_slot_validation × 11 활성 Day vs 24 정해진 흐름",
+    "embedding recall × KURE-v1 vs Gemini Embedding 2 ensemble 비교",
+    "graph traversal × 캐릭 ↔ 사건 ↔ 장소 다중 hop",
+    "contradiction_detection × decisions.md 모든 lock vs raw 추출"
+  ],
+  "deferred_for_v3": [
+    "100건 풀 확장 (현재 52 → 목표 100)",
+    "본편 scope 추가 (Phase 2)",
+    "단편 2·3 scope 추가 (Phase 2)",
+    "각 case의 expected_evidence·source_provenance 풀 fill",
+    "ParseBench 양식 정합 (input·expected behavior·scoring rubric·failure mode)"
+  ]
+}

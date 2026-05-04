@@ -26,24 +26,24 @@ const verdictConfig: Record<
   pass: {
     label: "Grounded",
     description: "Answer is well-supported by evidence",
-    bgColor: "bg-green-100",
-    textColor: "text-green-800",
+    bgColor: "bg-[var(--signal-canon-soft)]",
+    textColor: "text-[var(--signal-canon-ink)]",
     badge: "szn-badge szn-badge-success",
     icon: "check-circle",
   },
   partial: {
     label: "Partially Grounded",
     description: "Some claims lack sufficient evidence",
-    bgColor: "bg-yellow-100",
-    textColor: "text-yellow-800",
+    bgColor: "bg-[var(--signal-pending-soft)]",
+    textColor: "text-[var(--signal-pending-ink)]",
     badge: "szn-badge szn-badge-warning",
     icon: "alert-circle",
   },
   fail: {
     label: "Not Grounded",
     description: "Answer is not sufficiently supported",
-    bgColor: "bg-red-100",
-    textColor: "text-red-800",
+    bgColor: "bg-[var(--signal-conflict-soft)]",
+    textColor: "text-[var(--signal-conflict-ink)]",
     badge: "szn-badge szn-badge-error",
     icon: "x-circle",
   },
@@ -76,14 +76,14 @@ function ScoreBar({
     <div className="space-y-1">
       <div className="flex justify-between text-xs">
         <span className="text-gray-600">{label}</span>
-        <span className={isAboveThreshold ? "text-gray-900" : "text-red-600"}>
+        <span className={isAboveThreshold ? "text-gray-900" : "text-[var(--signal-conflict-ink)]"}>
           {percentage}%
         </span>
       </div>
       <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
         <div
           className={`h-full rounded-full transition-all duration-500 ${
-            isAboveThreshold ? "bg-green-500" : "bg-red-400"
+            isAboveThreshold ? "bg-[var(--signal-canon)]" : "bg-[var(--signal-conflict)]"
           }`}
           style={{ width: `${percentage}%` }}
         />
@@ -212,10 +212,10 @@ export default function ContractVerdict({
         <div className="flex items-center justify-between text-sm">
           <span className="text-gray-600">Claims Analysis</span>
           <div className="flex items-center gap-3">
-            <span className="text-green-600">
+            <span className="text-[var(--signal-canon-ink)]">
               {result.claims.filter((c) => c.supported).length} supported
             </span>
-            <span className="text-red-600">{result.unsupportedClaims.length} unsupported</span>
+            <span className="text-[var(--signal-conflict-ink)]">{result.unsupportedClaims.length} unsupported</span>
             {result.contradictions.length > 0 && (
               <span className="text-orange-600">{result.contradictions.length} contradictions</span>
             )}
@@ -253,9 +253,9 @@ export default function ContractVerdict({
 
               {/* Adjusted answer preview */}
               {adjustedAnswer && verdict !== "pass" && (
-                <div className="mt-3 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
-                  <h4 className="text-xs font-medium text-yellow-800 mb-1">Adjusted Response</h4>
-                  <p className="text-sm text-yellow-900">{adjustedAnswer.slice(0, 200)}...</p>
+                <div className="mt-3 p-3 bg-[var(--signal-pending-soft)] rounded-lg border border-[var(--signal-pending)]">
+                  <h4 className="text-xs font-medium text-[var(--signal-pending-ink)] mb-1">Adjusted Response</h4>
+                  <p className="text-sm text-[var(--signal-pending-ink)]">{adjustedAnswer.slice(0, 200)}...</p>
                 </div>
               )}
 

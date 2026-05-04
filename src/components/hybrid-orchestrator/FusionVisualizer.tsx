@@ -16,8 +16,8 @@ interface FusionVisualizerProps {
 
 const STRATEGY_COLORS: Record<StrategyType, string> = {
   vector: 'bg-blue-500',
-  keyword: 'bg-green-500',
-  multi_query: 'bg-purple-500',
+  keyword: 'bg-[var(--signal-canon)]',
+  multi_query: 'bg-[var(--ink-900)]',
 };
 
 const STRATEGY_LABELS: Record<StrategyType, string> = {
@@ -74,13 +74,13 @@ export function FusionVisualizer({
           {Object.entries(STRATEGY_COLORS).map(([strategy, color]) => (
             <div key={strategy} className="flex items-center gap-2">
               <div className={`w-3 h-3 rounded-full ${color}`} />
-              <span className="text-sm text-szn-text-2">
+              <span className="text-sm text-[var(--ink-600)]">
                 {STRATEGY_LABELS[strategy as StrategyType]}
               </span>
             </div>
           ))}
         </div>
-        <span className="text-sm text-szn-text-2">
+        <span className="text-sm text-[var(--ink-600)]">
           Fusion: {fusionMethod.toUpperCase()}
         </span>
       </div>
@@ -127,11 +127,11 @@ function FusionResultRow({
   const normalizedScore = (result.finalScore / maxScore) * 100;
 
   return (
-    <div className="p-4 border border-szn-border rounded-lg hover:border-blue-300 dark:hover:border-blue-700 transition-colors">
+    <div className="p-4 border border-[var(--ink-200)] rounded-lg hover:border-blue-300 dark:hover:border-blue-700 transition-colors">
       <div className="flex items-start gap-4">
         {/* Rank Badge */}
-        <div className="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-szn-surface rounded-full">
-          <span className="text-sm font-bold text-szn-text-2">
+        <div className="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-[var(--ink-50)] rounded-full">
+          <span className="text-sm font-bold text-[var(--ink-600)]">
             {rank}
           </span>
         </div>
@@ -154,20 +154,20 @@ function FusionResultRow({
 
           {/* Score Bar */}
           <div className="flex items-center gap-3 mb-2">
-            <div className="flex-1 h-2 bg-szn-surface rounded-full overflow-hidden">
+            <div className="flex-1 h-2 bg-[var(--ink-50)] rounded-full overflow-hidden">
               <div
-                className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full transition-all duration-300"
+                className="h-full bg-gradient-to-r from-[var(--ink-900)] to-[var(--ink-900)] rounded-full transition-all duration-300"
                 style={{ width: `${normalizedScore}%` }}
               />
             </div>
-            <span className="text-sm font-medium text-szn-text-2 w-16 text-right">
+            <span className="text-sm font-medium text-[var(--ink-600)] w-16 text-right">
               {result.finalScore.toFixed(4)}
             </span>
           </div>
 
           {/* Result Text */}
           {result.data?.text && (
-            <p className="text-sm text-szn-text-2 line-clamp-2">
+            <p className="text-sm text-[var(--ink-600)] line-clamp-2">
               {result.data.text}
             </p>
           )}
@@ -182,7 +182,7 @@ function FusionResultRow({
                       STRATEGY_COLORS[strategy as StrategyType]
                     }`}
                   />
-                  <span className="text-xs text-szn-text-2">
+                  <span className="text-xs text-[var(--ink-600)]">
                     {score.toFixed(3)}
                   </span>
                 </div>
@@ -196,8 +196,8 @@ function FusionResultRow({
           <span
             className={`px-2 py-1 text-xs font-medium rounded ${
               result.sourceStrategies.length > 1
-                ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
-                : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400'
+                ? 'bg-[var(--signal-canon-soft)] text-[var(--signal-canon-ink)] dark:bg-[var(--signal-canon-ink)]/30 dark:text-[var(--signal-canon-soft)]'
+                : 'bg-gray-100 text-gray-700 dark:bg-[var(--ink-800)] dark:text-gray-400'
             }`}
           >
             {result.sourceStrategies.length} source
@@ -291,7 +291,7 @@ export function FusionFlowDiagram({ strategies, fusionMethod }: FusionFlowProps)
       </div>
 
       {/* Fusion Node */}
-      <div className="px-4 py-3 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg text-white">
+      <div className="px-4 py-3 bg-gradient-to-r from-[var(--ink-900)] to-[var(--ink-900)] rounded-lg text-white">
         <div className="text-xs opacity-75">Fusion</div>
         <div className="text-sm font-medium">{fusionMethod.toUpperCase()}</div>
       </div>
@@ -315,9 +315,9 @@ export function FusionFlowDiagram({ strategies, fusionMethod }: FusionFlowProps)
       </div>
 
       {/* Results Node */}
-      <div className="px-4 py-3 border-2 border-szn-border rounded-lg">
-        <div className="text-xs text-szn-text-2">Fused</div>
-        <div className="text-sm font-medium text-szn-text-2">
+      <div className="px-4 py-3 border-2 border-[var(--ink-200)] rounded-lg">
+        <div className="text-xs text-[var(--ink-600)]">Fused</div>
+        <div className="text-sm font-medium text-[var(--ink-600)]">
           Results
         </div>
       </div>

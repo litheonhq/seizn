@@ -1,0 +1,5026 @@
+{
+  "version": 1,
+  "generatedBy": "scripts/verify-api-auth-surface.mjs",
+  "routeCount": 481,
+  "routes": [
+    {
+      "route": "/api",
+      "methods": [],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/account/billing-portal",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/account/byok",
+      "methods": [
+        "DELETE",
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/account/subscription",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/account/usage",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/adapters",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/adapters/[id]",
+      "methods": [
+        "DELETE",
+        "GET",
+        "PATCH"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/adapters/[id]/apply",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/adapters/[id]/signals",
+      "methods": [
+        "DELETE",
+        "GET",
+        "POST",
+        "PUT"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/adapters/[id]/train",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/admin/audit",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/admin/federated/access",
+      "methods": [
+        "DELETE",
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/admin/federated/audit",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/admin/federated/sources",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/admin/federated/sources/[id]",
+      "methods": [
+        "DELETE",
+        "GET",
+        "PATCH"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/annotations/items",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/annotations/items/[id]",
+      "methods": [
+        "GET",
+        "PATCH"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/annotations/items/[id]/annotate",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/annotations/queues",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/answer-contract/history",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/answer-contract/policies",
+      "methods": [
+        "DELETE",
+        "GET",
+        "POST",
+        "PUT"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/answer-contract/verify",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/audit-logs",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/auth/[...nextauth]",
+      "methods": [],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/auth/device",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/auth/device/approve",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/auth/device/token",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/auth/device/verify",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/auth/oidc/[connectionId]",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/auth/oidc/callback",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/auth/signup",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/author/memory-v3/eval",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/auto-pr/analyze",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/auto-pr/create-pr",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/auto-pr/suggest",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/autopilot/analyze",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/autopilot/config",
+      "methods": [
+        "DELETE",
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/autopilot/decide",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/autopilot/feedback",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/autopilot/fix",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/autopilot/pr",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/autopilot/stats",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/autopilot/status/[prId]",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/billing/checkout",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "csrf",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/billing/portal",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "csrf",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/budget",
+      "methods": [
+        "GET",
+        "PATCH"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/budget/alerts",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/budget/degrade-events",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/budget/estimate",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/budget/optimize",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/budget/settings",
+      "methods": [
+        "GET",
+        "PUT"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/budget/stats",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/budget/usage",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/byok/kms",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/byok/kms/[id]",
+      "methods": [
+        "DELETE",
+        "GET",
+        "PATCH"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/byok/kms/[id]/rotate",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/canary/action",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/canary/deploy",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/ci/report",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/ci/tests/[traceId]",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/ci/traces",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/compression/compress",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/compression/expand",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/config-sync",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/connectors",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/connectors/[type]/auth",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "csrf",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/connectors/[type]/callback",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/connectors/[type]/status",
+      "methods": [
+        "DELETE",
+        "GET"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/connectors/[type]/sync",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "csrf",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/context",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/control-tower/alerts",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/control-tower/alerts/[id]",
+      "methods": [
+        "PATCH"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/control-tower/alerts/rules",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/control-tower/alerts/rules/[id]",
+      "methods": [
+        "DELETE",
+        "PATCH"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/control-tower/costs",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/control-tower/health",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/control-tower/metrics",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/control-tower/overview",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/control-tower/signals",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/cost-engineering/optimize",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/cost-engineering/recommendations",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/cost-engineering/stats",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/cron/audit-batch",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "cronSecret"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/cron/drift-analysis",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "cronSecret",
+        "webhookSignature"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/cron/monthly-reset",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "cronSecret"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/cron/spring/beyond-mem0",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "cronSecret"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/cron/spring/jobs/process",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "cronSecret"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/cron/subscription-expiry",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "cronSecret"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/cron/usage-alerts",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "cronSecret"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/cron/usage-cleanup",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "cronSecret"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/cron/weekly-summary",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "cronSecret"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/cron/winter/rtbf/process-queue",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "cronSecret"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/cron/winter/rtbf/verify-pending",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "cronSecret",
+        "webhookSignature"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/dashboard/activity",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/dashboard/analytics",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/dashboard/keys",
+      "methods": [
+        "DELETE",
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/dashboard/keys/rotate",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/dashboard/keys/scoped",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/dashboard/keys/scoped/[id]",
+      "methods": [
+        "DELETE",
+        "GET",
+        "PATCH"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/dashboard/keys/scoped/[id]/rotate",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/dashboard/keys/scoped/organization/[orgId]",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/dashboard/north-star",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/dashboard/organizations",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/dashboard/stats",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/dashboard/usage",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/demo/query",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/demo/session",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/doc-to-db/extract",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/doc-to-db/search",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/doc-to-db/structures",
+      "methods": [
+        "DELETE",
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/doc-to-db/structures/[id]",
+      "methods": [
+        "DELETE",
+        "GET",
+        "PATCH"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/drift/alerts",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/drift/alerts/[id]/acknowledge",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/drift/analyze",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/drift/snapshots",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/ecl/models",
+      "methods": [
+        "DELETE",
+        "GET",
+        "PATCH",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/ecl/train",
+      "methods": [
+        "DELETE",
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/ecl/translate",
+      "methods": [
+        "GET",
+        "HEAD",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/enterprise",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/enterprise/sso",
+      "methods": [
+        "DELETE",
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey",
+        "csrf",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/eval/config",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/eval/runs",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/eval/runs/[id]",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/eval/trigger",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/extract",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/extract/image",
+      "methods": [
+        "POST",
+        "PUT"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/fall/contracts",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/fall/contracts/[id]",
+      "methods": [
+        "DELETE",
+        "GET",
+        "PATCH"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/fall/contracts/validate",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/fall/eval/datasets",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/fall/eval/datasets/[id]",
+      "methods": [
+        "DELETE",
+        "GET",
+        "PATCH",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/fall/eval/generate-from-traffic",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/fall/eval/results/[id]",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/fall/eval/run",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey",
+        "webhookSignature"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/fall/eval/runs",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/fall/experiments",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/fall/experiments/[id]/guardrails",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/fall/experiments/[id]/rollout",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/fall/experiments/[id]/winner",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/fall/healing/analyze",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/fall/healing/fix",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/fall/healing/history",
+      "methods": [
+        "DELETE",
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/fall/runs",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiScope"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/fall/runs/[runId]",
+      "methods": [
+        "DELETE",
+        "GET",
+        "PATCH"
+      ],
+      "authMarkers": [
+        "apiScope"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/fall/runs/[runId]/checkpoints",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiScope"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/fall/runs/[runId]/diff",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiScope"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/fall/runs/[runId]/fork",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiScope"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/fall/runs/[runId]/replay",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiScope"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/fall/runs/[runId]/verify",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiScope"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/fall/traces",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/fall/tuning/hnsw",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/fall/tuning/hnsw/apply",
+      "methods": [
+        "DELETE",
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/federated",
+      "methods": [
+        "DELETE",
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/feedback",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/firewall/scan",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/gateway/chat",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/gateway/embed",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/gateway/proxy",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/gateway/tool",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/graph-rag/extract",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/graph-rag/search",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/healing/dlq",
+      "methods": [
+        "DELETE",
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/healing/health",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/healing/jobs",
+      "methods": [
+        "DELETE",
+        "GET",
+        "PATCH",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/healing/rules",
+      "methods": [
+        "DELETE",
+        "GET",
+        "PATCH",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/healing/scan",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/health",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/hybrid/compare",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/hybrid/config",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/hybrid/config/[id]",
+      "methods": [
+        "DELETE",
+        "GET",
+        "PATCH"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/hybrid/retrieve",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/internal/autopilot",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "cronSecret",
+        "webhookSignature"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/internal/eval-processor",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "cronSecret"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/internal/optimize",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "cronSecret"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/internal/seed-demo",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/internal/webhooks",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "cronSecret",
+        "webhookSignature"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/keys",
+      "methods": [
+        "DELETE",
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/knowledge-gaps",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/knowledge-gaps/[id]",
+      "methods": [
+        "DELETE",
+        "GET",
+        "PATCH"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/knowledge-gaps/[id]/actions",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/knowledge-gaps/analyze",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/mcp/control-plane",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/me",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/memories",
+      "methods": [
+        "DELETE",
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey",
+        "csrf",
+        "sessionUser",
+        "webhookSignature"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/memories/[id]",
+      "methods": [
+        "DELETE",
+        "GET",
+        "PATCH"
+      ],
+      "authMarkers": [
+        "apiKey",
+        "csrf",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/memories/[id]/explain",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/memories/analytics",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/memories/compact",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/memories/export",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/memories/flush",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/memories/import",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/memories/profile",
+      "methods": [
+        "DELETE",
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/memories/search_v4",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/memories/slots",
+      "methods": [
+        "DELETE",
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/monitoring/slo",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/multimodal/blocks",
+      "methods": [
+        "DELETE",
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/multimodal/parse",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/multimodal/search",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/network-learning/consent",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/network-learning/insights",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/network-learning/policy",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/onboarding/analyze",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/organizations",
+      "methods": [
+        "DELETE",
+        "GET",
+        "PATCH",
+        "POST"
+      ],
+      "authMarkers": [
+        "csrf",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/organizations/[orgId]/region",
+      "methods": [
+        "GET",
+        "PATCH",
+        "POST"
+      ],
+      "authMarkers": [
+        "csrf",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/organizations/[orgId]/scim",
+      "methods": [
+        "DELETE",
+        "GET",
+        "POST",
+        "PUT"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/organizations/[orgId]/scim/token",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/organizations/[orgId]/sso",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "csrf",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/organizations/[orgId]/sso/[connectionId]",
+      "methods": [
+        "DELETE",
+        "GET",
+        "PATCH"
+      ],
+      "authMarkers": [
+        "csrf",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/organizations/[orgId]/sso/domains",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "csrf",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/organizations/[orgId]/sso/domains/[verificationId]",
+      "methods": [
+        "DELETE",
+        "POST"
+      ],
+      "authMarkers": [
+        "csrf",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/organizations/invite/accept",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/organizations/invites",
+      "methods": [
+        "DELETE",
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "csrf",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/organizations/members",
+      "methods": [
+        "DELETE",
+        "GET",
+        "PATCH",
+        "POST"
+      ],
+      "authMarkers": [
+        "csrf",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/organizations/usage",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/pcr/create",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey",
+        "webhookSignature"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/pcr/export",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey",
+        "webhookSignature"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/planner/optimize",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/planner/plans",
+      "methods": [
+        "DELETE",
+        "GET",
+        "POST",
+        "PUT"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/planner/select",
+      "methods": [
+        "POST",
+        "PUT"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/plans",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/playground/query",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/playground/replay",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/policies",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/policies/[id]",
+      "methods": [
+        "DELETE",
+        "GET",
+        "PATCH"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/policies/simulate",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/policies/simulations/[id]",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/policies/validate",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/policy-packs",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/policy-packs/[id]",
+      "methods": [
+        "GET",
+        "PATCH"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/policy-packs/[id]/versions",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/policy-packs/audit",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/policy-packs/installations",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/policy-packs/installations/[id]",
+      "methods": [
+        "DELETE",
+        "GET",
+        "PATCH"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/profile/e2e",
+      "methods": [
+        "GET",
+        "PUT"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/profile/language",
+      "methods": [
+        "GET",
+        "PATCH"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/profile/organization",
+      "methods": [
+        "GET",
+        "PATCH"
+      ],
+      "authMarkers": [
+        "csrf",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/projects",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/projects/[projectId]/audit",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/projects/[projectId]/candidates",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/projects/[projectId]/candidates/[candidateId]",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/projects/[projectId]/candidates/[candidateId]/decide",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/projects/[projectId]/candidates/batch_decide",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/projects/[projectId]/characters",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/projects/[projectId]/characters/[characterId]",
+      "methods": [
+        "GET",
+        "PATCH"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/projects/[projectId]/characters/[characterId]/backlog",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/projects/[projectId]/conflicts",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/projects/[projectId]/conflicts/[conflictId]/resolve",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/projects/[projectId]/graph",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/projects/[projectId]/imports",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/projects/[projectId]/imports/[importId]",
+      "methods": [
+        "DELETE"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/projects/[projectId]/imports/[importId]/retry",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/projects/[projectId]/search",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/projects/[projectId]/settings",
+      "methods": [
+        "GET",
+        "PATCH"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/projects/[projectId]/simulate",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/projects/[projectId]/simulations/[simulationId]",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/projects/[projectId]/simulations/[simulationId]/replay",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/projects/[projectId]/sync/status",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/projects/[projectId]/timeline",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/public/demo-search",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/query",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/quota",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/rag/collections",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/rag/collections/[collectionId]",
+      "methods": [
+        "DELETE",
+        "GET",
+        "PUT"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/rag/collections/[collectionId]/documents",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/rag/index",
+      "methods": [
+        "DELETE",
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/rag/retrieve",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/relay/agents",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/relay/agents/[id]",
+      "methods": [
+        "DELETE",
+        "GET",
+        "PATCH"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/relay/agents/[id]/key",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/relay/callback",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "webhookSignature"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/relay/health",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/reports/roi",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/rerank",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/residency",
+      "methods": [
+        "GET",
+        "PUT"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/retention/execute",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/retention/holds",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/retention/holds/[id]",
+      "methods": [
+        "DELETE",
+        "GET",
+        "PATCH"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/retention/schedules",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/retention/schedules/[id]",
+      "methods": [
+        "DELETE",
+        "GET",
+        "PATCH"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/retrieval/replay/[id]",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/retrieval/traces",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/retrieval/traces/[id]",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/retrieval/traces/[id]/receipt",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/retrieval/traces/[id]/receipt/download",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/retrieval/traces/[id]/share",
+      "methods": [
+        "DELETE",
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/retrieval/traces/[id]/why-not",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/retrieval/why-not",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/review-token",
+      "methods": [
+        "DELETE",
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "webhookSignature"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/reviews/requests",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/reviews/requests/[id]",
+      "methods": [
+        "GET",
+        "PATCH"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/reviews/workflows",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "sessionUser",
+        "webhookSignature"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/rum",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/scim/v2/Groups",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "scim"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/scim/v2/Groups/[id]",
+      "methods": [
+        "DELETE",
+        "GET",
+        "PATCH",
+        "PUT"
+      ],
+      "authMarkers": [
+        "scim"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/scim/v2/ResourceTypes",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/scim/v2/ResourceTypes/[id]",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/scim/v2/Schemas",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/scim/v2/Schemas/[id]",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/scim/v2/ServiceProviderConfig",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/scim/v2/Users",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "scim"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/scim/v2/Users/[id]",
+      "methods": [
+        "DELETE",
+        "GET",
+        "PATCH",
+        "PUT"
+      ],
+      "authMarkers": [
+        "scim"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/security/audit",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/sentry/incidents",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/sentry/incidents/[id]",
+      "methods": [
+        "DELETE",
+        "GET",
+        "PATCH"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/sentry/incidents/[id]/ignore",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/sentry/incidents/[id]/resolve",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/sentry/trigger",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/settings/provider-keys",
+      "methods": [
+        "DELETE",
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/spring/candidates",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/spring/candidates/[id]",
+      "methods": [
+        "DELETE",
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/spring/delete-by-filter",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/spring/edges",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/spring/edges/[id]",
+      "methods": [
+        "DELETE",
+        "GET",
+        "PATCH"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/spring/export",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/spring/graph/neighborhood",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/spring/ingest-multimodal",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/spring/ingestion/rules",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/spring/ingestion/rules/[id]",
+      "methods": [
+        "DELETE",
+        "GET",
+        "PATCH"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/spring/ingestion/settings",
+      "methods": [
+        "GET",
+        "PATCH"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/spring/jobs",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/spring/jobs/[id]",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/spring/mcp/tools",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/spring/memory",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/spring/memory/[noteId]",
+      "methods": [
+        "DELETE",
+        "GET",
+        "PATCH"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/spring/memory/[noteId]/explain",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/spring/memory/[noteId]/provenance",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/spring/memory/[noteId]/usage",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/spring/memory/candidates",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/spring/memory/candidates/[candidateId]",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/spring/memory/edges",
+      "methods": [
+        "DELETE",
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/spring/mindmap",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/spring/mindmap/expand",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/spring/mindmap/layout",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/spring/mindmap/search",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/spring/search-v3",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/spring/temporal/changes",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/spring/temporal/history/[factId]",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/spring/temporal/search",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/spring/temporal/status",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/spring/temporal/timeline",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/spring/update",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/sso/initiate",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/sso/saml/[orgSlug]/acs",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/sso/saml/[orgSlug]/metadata",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/status",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/summarize",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/summer/cache",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/summer/cache/invalidate",
+      "methods": [
+        "DELETE",
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/summer/cache/query",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/summer/cache/stats",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/summer/collections",
+      "methods": [
+        "DELETE",
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/summer/explain",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/summer/explain/[queryId]",
+      "methods": [
+        "DELETE",
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/summer/feedback",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/summer/index",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/summer/rag",
+      "methods": [
+        "OPTIONS",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/summer/rerank",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/summer/rerank/batch",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/summer/rerank/estimate",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/summer/retops/alerts",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/summer/retops/alerts/[alertId]/acknowledge",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/summer/retops/alerts/[alertId]/resolve",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/summer/retops/metrics",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/summer/retops/quality",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/summer/retops/stats",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/summer/retrieve",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/summer/search",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/summer/versions",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/summer/versions/[id]",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/summer/versions/[id]/diff/[compareId]",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/summer/versions/[id]/restore",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/t/[token]",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/teams/[id]/audit-logs",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/telemetry/config",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/telemetry/event",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/tenant-policy",
+      "methods": [
+        "DELETE",
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "csrf",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/tenant-policy/enforce",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/testing/cases",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/testing/cases/[id]",
+      "methods": [
+        "DELETE",
+        "GET",
+        "PATCH"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/testing/suites",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/testing/suites/[id]",
+      "methods": [
+        "DELETE",
+        "GET",
+        "PATCH"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/testing/suites/[id]/generate",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/testing/suites/[id]/results",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/testing/suites/[id]/run",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/tool-approvals",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/tool-approvals/[id]",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/tool-tokens",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/tool-tokens/[id]",
+      "methods": [
+        "DELETE",
+        "GET"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/tools",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/tools/[id]",
+      "methods": [
+        "GET",
+        "PATCH"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/traces",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/traces/[id]",
+      "methods": [
+        "DELETE",
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/traces/[id]/export-bundle",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/traces/[id]/share",
+      "methods": [
+        "DELETE",
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/traces/compare",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/traces/replay",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/traces/share",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/traces/share/[shareId]",
+      "methods": [
+        "DELETE",
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/traces/shared/[shareId]",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/v1/audit/batch",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/v1/audit/log",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/v1/audit/verify",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/v1/eval/ragas",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/v1/evidence",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey",
+        "webhookSignature"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/v1/evidence/[id]",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey",
+        "webhookSignature"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/v1/evidence/[id]/export",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey",
+        "webhookSignature"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/v1/evidence/[id]/trace/[entityId]",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/v1/evidence/[id]/verify",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey",
+        "webhookSignature"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/v1/graph",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiScope"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/v1/graph/[graphId]",
+      "methods": [
+        "DELETE"
+      ],
+      "authMarkers": [
+        "apiScope"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/v1/graph/[graphId]/context",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiScope"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/v1/graph/[graphId]/entities",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiScope"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/v1/graph/[graphId]/entities/[entityId]",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiScope"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/v1/graph/[graphId]/entities/by-external-id/[externalId]",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiScope"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/v1/graph/[graphId]/extract",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiScope"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/v1/graph/[graphId]/relationships",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiScope"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/v1/graph/[graphId]/search",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiScope"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/v1/memories",
+      "methods": [
+        "DELETE",
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey",
+        "sessionUser",
+        "webhookSignature"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/v1/memories/[id]",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/v1/memories/feedback",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey",
+        "csrf",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/v1/memories/graph",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/v1/memories/history",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/v1/memories/namespaces",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/v1/memories/personalization",
+      "methods": [
+        "DELETE",
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey",
+        "csrf",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/v1/memories/stream",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/v1/memories/trace",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/v1/policy/simulate",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/v1/policy/test",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/v1/profile",
+      "methods": [
+        "GET",
+        "PUT"
+      ],
+      "authMarkers": [
+        "apiKey",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/v1/profile/derive",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/v1/proxy/chat/completions",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/v1/retrieval/hybrid",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/v1/secure",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/v1/secure/retrieve",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/v1/security/red-team",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/v1/security/red-team/[runId]",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/v1/security/red-team/[runId]/report",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/v1/security/scan",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey",
+        "webhookSignature"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/v1/tools/execute",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/v1/tools/executions",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/v1/tools/permissions",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/v1/tools/policies",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/v1/vector/optimize",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/waitlist",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/webhooks",
+      "methods": [
+        "DELETE",
+        "GET",
+        "PATCH",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey",
+        "webhookSignature"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/webhooks/deliveries",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey",
+        "webhookSignature"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/webhooks/github",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "webhookSignature"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/webhooks/lemonsqueezy",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "webhookSignature"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/webhooks/stripe",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "webhookSignature"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/winter/cleanup",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/winter/forget",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/winter/graph/data",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/winter/graph/federated/query",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/winter/graph/permissions/[nodeId]",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/winter/org",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/winter/org/[orgId]",
+      "methods": [
+        "DELETE",
+        "GET",
+        "PATCH"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/winter/org/[orgId]/audit",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/winter/org/[orgId]/evidence-pack",
+      "methods": [
+        "POST",
+        "PUT"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/winter/org/[orgId]/members",
+      "methods": [
+        "DELETE",
+        "GET",
+        "PATCH",
+        "POST"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/winter/org/[orgId]/policies",
+      "methods": [
+        "DELETE",
+        "GET",
+        "PATCH",
+        "POST"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/winter/org/[orgId]/policies/versions",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/winter/org/[orgId]/policies/versions/[versionId]",
+      "methods": [
+        "DELETE",
+        "GET",
+        "PATCH"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/winter/org/[orgId]/policies/versions/compare",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/winter/org/[orgId]/policies/versions/history",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/winter/org/[orgId]/policies/versions/rollback",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/winter/org/[orgId]/reports",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/winter/org/[orgId]/roles",
+      "methods": [
+        "DELETE",
+        "GET",
+        "PATCH",
+        "POST"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/winter/policy/opa",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/winter/policy/opa/[id]",
+      "methods": [
+        "DELETE",
+        "GET",
+        "PATCH"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/winter/policy/opa/create",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/winter/policy/simulate",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/winter/rtbf",
+      "methods": [
+        "DELETE",
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/winter/rtbf/[requestId]",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/winter/rtbf/[requestId]/certificate",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/winter/rtbf/[requestId]/compliance",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/winter/rtbf/[requestId]/execute",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey",
+        "webhookSignature"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/winter/rtbf/[requestId]/verify",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/winter/rtbf/audit",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/winter/rtbf/request",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/winter/transparency",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/winter/transparency/report",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    }
+  ]
+}

@@ -36,11 +36,35 @@ const nextConfig: NextConfig = {
       key: 'Cache-Control',
       value: 'public, max-age=31536000, immutable',
     };
+    const isProduction = process.env.NODE_ENV === 'production';
+    const contentSecurityPolicy = [
+      "default-src 'self'",
+      "base-uri 'self'",
+      "object-src 'none'",
+      "frame-ancestors 'none'",
+      "form-action 'self'",
+      "img-src 'self' data: blob: https:",
+      "font-src 'self' data: https://cdn.jsdelivr.net",
+      "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net",
+      [
+        "script-src 'self' 'unsafe-inline'",
+        isProduction ? '' : "'unsafe-eval'",
+        'https://challenges.cloudflare.com',
+        'https://js.stripe.com',
+      ].filter(Boolean).join(' '),
+      "connect-src 'self' https: wss:",
+      "frame-src 'self' https://challenges.cloudflare.com https://js.stripe.com https://checkout.stripe.com",
+      "worker-src 'self' blob:",
+      "upgrade-insecure-requests",
+    ].join('; ');
 
     // Security headers for all routes
     const securityHeaders = [
+      { key: 'Content-Security-Policy', value: contentSecurityPolicy },
       { key: 'X-Content-Type-Options', value: 'nosniff' },
+      { key: 'X-DNS-Prefetch-Control', value: 'off' },
       { key: 'X-Frame-Options', value: 'DENY' },
+      { key: 'Origin-Agent-Cluster', value: '?1' },
       { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
       {
         key: 'Strict-Transport-Security',
@@ -54,9 +78,12 @@ const nextConfig: NextConfig = {
 
     // Dashboard-specific security headers (stricter Referrer-Policy to protect review_token)
     const dashboardSecurityHeaders = [
+      { key: 'Content-Security-Policy', value: contentSecurityPolicy },
       { key: 'Referrer-Policy', value: 'no-referrer' },
       { key: 'X-Content-Type-Options', value: 'nosniff' },
+      { key: 'X-DNS-Prefetch-Control', value: 'off' },
       { key: 'X-Frame-Options', value: 'DENY' },
+      { key: 'Origin-Agent-Cluster', value: '?1' },
     ];
 
     return [
@@ -85,6 +112,7 @@ const nextConfig: NextConfig = {
       { source: '/:path*.ico', headers: [cacheHeader] },
       { source: '/:path*.woff', headers: [cacheHeader] },
       { source: '/:path*.woff2', headers: [cacheHeader] },
+      { source: '/:path*.ttf', headers: [cacheHeader] },
     ];
   },
 

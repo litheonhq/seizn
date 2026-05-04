@@ -81,7 +81,7 @@ export async function GET(
   } catch (error) {
     logServerError('Connector OAuth start failed', error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'OAuth start failed' },
+      { error: 'OAuth start failed' },
       { status: 500 }
     );
   }

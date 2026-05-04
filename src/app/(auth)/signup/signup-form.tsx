@@ -113,7 +113,7 @@ export default function SignupForm() {
       });
 
       if (result?.error) {
-        router.push("/login?message=Account created. Please sign in.");
+        router.push(callbackUrl ? `/login?message=Account+created.+Please+sign+in.&callbackUrl=${encodeURIComponent(callbackUrl)}` : "/login?message=Account created. Please sign in.");
       } else {
         router.push(callbackUrl);
       }
@@ -397,7 +397,7 @@ export default function SignupForm() {
               {/* Sign In Link */}
               <p className="mt-6 text-center text-szn-text-2 text-sm">
                 Already have an account?{" "}
-                <Link href="/login" className="text-szn-accent hover:text-szn-accent/80 font-medium transition-colors">
+                <Link href={callbackUrl ? `/login?callbackUrl=${encodeURIComponent(callbackUrl)}` : "/login"} className="text-szn-accent hover:text-szn-accent/80 font-medium transition-colors">
                   Sign in
                 </Link>
               </p>

@@ -38,11 +38,11 @@ const SCORE_COLORS: Record<string, string> = {
 
 const SCORE_BG_COLORS: Record<string, string> = {
   cosine: "bg-blue-500",
-  bm25: "bg-green-500",
-  hybrid_rrf: "bg-purple-500",
-  rerank: "bg-amber-500",
+  bm25: "bg-[var(--signal-canon)]",
+  hybrid_rrf: "bg-[var(--ink-900)]",
+  rerank: "bg-[var(--signal-pending)]",
   semantic: "bg-rose-500",
-  keyword_match: "bg-cyan-500",
+  keyword_match: "bg-[var(--ink-900)]",
 };
 
 // ============================================
@@ -62,11 +62,11 @@ function ScoreBar({ component, maxValue, color }: ScoreBarProps) {
             className={`w-3 h-3 rounded-full ${bgColor}`}
             style={{ backgroundColor: color }}
           />
-          <span className="text-sm font-medium text-szn-text-2">
+          <span className="text-sm font-medium text-[var(--ink-600)]">
             {component.label}
           </span>
         </div>
-        <div className="text-sm text-szn-text-2">
+        <div className="text-sm text-[var(--ink-600)]">
           {(component.normalizedValue * 100).toFixed(1)}%
           {component.weight < 1 && (
             <span className="text-xs ml-1">
@@ -77,7 +77,7 @@ function ScoreBar({ component, maxValue, color }: ScoreBarProps) {
       </div>
 
       {/* Bar */}
-      <div className="relative h-6 bg-szn-surface rounded-lg overflow-hidden">
+      <div className="relative h-6 bg-[var(--ink-50)] rounded-lg overflow-hidden">
         {/* Base bar (normalized value) */}
         <div
           className="absolute inset-y-0 left-0 bg-opacity-30 rounded-lg"
@@ -104,7 +104,7 @@ function ScoreBar({ component, maxValue, color }: ScoreBarProps) {
       </div>
 
       {/* Description */}
-      <p className="text-xs text-szn-text-2 leading-relaxed">
+      <p className="text-xs text-[var(--ink-600)] leading-relaxed">
         {component.description}
       </p>
     </div>
@@ -129,35 +129,35 @@ export function ScoreBreakdownChart({
   return (
     <div className={`space-y-6 ${className}`}>
       {/* Final Score Header */}
-      <div className="p-4 bg-szn-surface border border-szn-border rounded-lg">
+      <div className="p-4 bg-[var(--ink-50)] border border-[var(--ink-200)] rounded-lg">
         <div className="flex items-center justify-between">
           <div>
-            <h4 className="text-sm font-medium text-szn-text-2">Final Score</h4>
-            <div className="text-3xl font-bold text-szn-text-1 mt-1">
+            <h4 className="text-sm font-medium text-[var(--ink-600)]">Final Score</h4>
+            <div className="text-3xl font-bold text-[var(--ink-900)] mt-1">
               {(scoreBreakdown.finalScore * 100).toFixed(1)}%
             </div>
           </div>
           <div className="text-right">
-            <div className="text-sm text-szn-text-2">Rank</div>
-            <div className="text-3xl font-bold text-szn-text-1 mt-1">#{scoreBreakdown.rank}</div>
+            <div className="text-sm text-[var(--ink-600)]">Rank</div>
+            <div className="text-3xl font-bold text-[var(--ink-900)] mt-1">#{scoreBreakdown.rank}</div>
           </div>
         </div>
 
         {/* Combination Method Badge */}
-        <div className="mt-3 inline-flex items-center gap-2 px-3 py-1 bg-szn-surface-1 border border-szn-border rounded-full text-sm text-szn-text-2">
+        <div className="mt-3 inline-flex items-center gap-2 px-3 py-1 bg-[var(--ink-50)] border border-[var(--ink-200)] rounded-full text-sm text-[var(--ink-600)]">
           <span>Method:</span>
           <span className="font-medium capitalize">
             {scoreBreakdown.combinationMethod.replace(/_/g, " ")}
           </span>
           {scoreBreakdown.rrfK && (
-            <span className="text-xs text-szn-text-3">(k={scoreBreakdown.rrfK})</span>
+            <span className="text-xs text-[var(--ink-500)]">(k={scoreBreakdown.rrfK})</span>
           )}
         </div>
       </div>
 
       {/* Score Components */}
       <div className="space-y-6">
-        <h4 className="text-sm font-semibold text-szn-text-1">
+        <h4 className="text-sm font-semibold text-[var(--ink-900)]">
           Score Components
         </h4>
 
@@ -172,22 +172,22 @@ export function ScoreBreakdownChart({
       </div>
 
       {/* Relative Score Indicator */}
-      <div className="p-4 bg-szn-surface rounded-lg">
+      <div className="p-4 bg-[var(--ink-50)] rounded-lg">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-sm text-szn-text-2">
+          <span className="text-sm text-[var(--ink-600)]">
             Relative to Best Result
           </span>
-          <span className="text-sm font-medium text-szn-text-1">
+          <span className="text-sm font-medium text-[var(--ink-900)]">
             {(scoreBreakdown.relativeScore * 100).toFixed(0)}%
           </span>
         </div>
-        <div className="h-2 bg-szn-surface rounded-full overflow-hidden">
+        <div className="h-2 bg-[var(--ink-50)] rounded-full overflow-hidden">
           <div
-            className="h-full bg-szn-accent rounded-full"
+            className="h-full bg-[var(--ink-900)] rounded-full"
             style={{ width: `${scoreBreakdown.relativeScore * 100}%` }}
           />
         </div>
-        <p className="mt-2 text-xs text-szn-text-2">
+        <p className="mt-2 text-xs text-[var(--ink-600)]">
           {scoreBreakdown.rank === 1
             ? "This is the highest-scoring result"
             : `This result scored ${((1 - scoreBreakdown.relativeScore) * 100).toFixed(0)}% lower than the top result`}
@@ -195,8 +195,8 @@ export function ScoreBreakdownChart({
       </div>
 
       {/* Legend */}
-      <div className="pt-4 border-t border-szn-border">
-        <h4 className="text-xs font-semibold text-szn-text-2 uppercase tracking-wide mb-3">
+      <div className="pt-4 border-t border-[var(--ink-200)]">
+        <h4 className="text-xs font-semibold text-[var(--ink-600)] uppercase tracking-wide mb-3">
           Score Types Legend
         </h4>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
@@ -208,7 +208,7 @@ export function ScoreBreakdownChart({
                   backgroundColor: SCORE_COLORS[component.type] || "#6b7280",
                 }}
               />
-              <span className="text-xs text-szn-text-2">
+              <span className="text-xs text-[var(--ink-600)]">
                 {component.label}
               </span>
             </div>

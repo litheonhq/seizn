@@ -33,7 +33,7 @@ function getQualityRating(rmse: number, cosine?: number): QualityRating {
     return {
       level: "excellent",
       label: "Excellent",
-      color: "text-green-700",
+      color: "text-[var(--signal-canon-ink)]",
       badge: "szn-badge szn-badge-success",
     };
   }
@@ -49,14 +49,14 @@ function getQualityRating(rmse: number, cosine?: number): QualityRating {
     return {
       level: "fair",
       label: "Fair",
-      color: "text-yellow-700",
+      color: "text-[var(--signal-pending-ink)]",
       badge: "szn-badge szn-badge-warning",
     };
   }
   return {
     level: "poor",
     label: "Poor",
-    color: "text-red-700",
+    color: "text-[var(--signal-conflict-ink)]",
     badge: "szn-badge szn-badge-error",
   };
 }
@@ -128,9 +128,9 @@ interface MetricRowProps {
 
 function MetricRow({ label, value, unit, quality, tooltip }: MetricRowProps) {
   const valueColors = {
-    good: "text-green-600",
+    good: "text-[var(--signal-canon-ink)]",
     neutral: "text-gray-900",
-    bad: "text-red-600",
+    bad: "text-[var(--signal-conflict-ink)]",
   };
 
   return (
@@ -141,7 +141,7 @@ function MetricRow({ label, value, unit, quality, tooltip }: MetricRowProps) {
           <div className="relative group">
             <InfoIcon />
             <div className="absolute left-0 bottom-full mb-1 hidden group-hover:block z-10">
-              <div className="bg-gray-900 text-white text-xs rounded px-2 py-1 whitespace-nowrap">
+              <div className="bg-[var(--ink-900)] text-white text-xs rounded px-2 py-1 whitespace-nowrap">
                 {tooltip}
               </div>
             </div>
@@ -172,16 +172,16 @@ interface RecommendationProps {
 function Recommendation({ type, message }: RecommendationProps) {
   const styles = {
     improvement: {
-      bg: "bg-green-50",
-      border: "border-green-200",
+      bg: "bg-[var(--signal-canon-soft)]",
+      border: "border-[var(--signal-canon)]",
       icon: <ArrowUpIcon />,
-      iconColor: "text-green-500",
+      iconColor: "text-[var(--signal-canon-ink)]",
     },
     warning: {
-      bg: "bg-yellow-50",
-      border: "border-yellow-200",
+      bg: "bg-[var(--signal-pending-soft)]",
+      border: "border-[var(--signal-pending)]",
       icon: <ExclamationIcon />,
-      iconColor: "text-yellow-500",
+      iconColor: "text-[var(--signal-pending-ink)]",
     },
     info: {
       bg: "bg-blue-50",

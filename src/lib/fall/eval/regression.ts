@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createServerClient } from '@/lib/supabase';
+import { normalizeOutboundWebhookUrl } from '@/lib/security/outbound-webhook';
 
 // ============================================
 // Types
@@ -83,7 +84,7 @@ export async function detectRegression(params: RegressionCheckParams): Promise<R
     return { isRegression: false };
   }
 
-  const [latest, previous] = runs as any[];
+  const [latest, previous] = runs;
 
   const candidateValue = Number(latest?.summary_metrics?.[params.metricKey]);
   const baselineValue = Number(previous?.summary_metrics?.[params.metricKey]);
@@ -374,7 +375,12 @@ export async function sendSlackNotification(params: SlackNotificationParams): Pr
   };
 
   try {
-    const response = await fetch(webhookUrl, {
+    const safeWebhookUrl = await normalizeOutboundWebhookUrl(webhookUrl, {
+      label: 'Fall eval Slack webhook',
+    });
+    if (!safeWebhookUrl) return false;
+
+    const response = await fetch(safeWebhookUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),

@@ -154,7 +154,7 @@ export function AdapterTrainingCard({
         <div className="px-6 py-4 bg-gray-50 border-b border-gray-100">
           <div className="flex items-center justify-between">
             <span className="text-sm text-gray-600">Current MRR</span>
-            <span className="text-lg font-bold text-green-600">
+            <span className="text-lg font-bold text-[var(--signal-canon-ink)]">
               {(currentMrr * 100).toFixed(1)}%
             </span>
           </div>
@@ -211,7 +211,7 @@ export function AdapterTrainingCard({
           </div>
 
           {error && (
-            <div className="text-sm text-red-600 bg-red-50 p-3 rounded-lg">
+            <div className="text-sm text-[var(--signal-conflict-ink)] bg-[var(--signal-conflict-soft)] p-3 rounded-lg">
               {error}
             </div>
           )}
@@ -312,11 +312,11 @@ function RunHistoryItem({ run }: { run: TrainingRun }) {
       </div>
       <div className="text-sm">
         {run.final_mrr ? (
-          <span className="font-medium text-green-600">
+          <span className="font-medium text-[var(--signal-canon-ink)]">
             MRR: {(run.final_mrr * 100).toFixed(1)}%
           </span>
         ) : run.error ? (
-          <span className="text-red-500 text-xs truncate max-w-[150px]">
+          <span className="text-[var(--signal-conflict-ink)] text-xs truncate max-w-[150px]">
             {run.error}
           </span>
         ) : (

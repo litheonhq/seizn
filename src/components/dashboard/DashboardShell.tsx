@@ -12,7 +12,7 @@ import TopBar from "./TopBar";
 import CommandPalette from "./CommandPalette";
 import { ChevronDownIcon, LogoutIcon, MenuIcon } from "./dashboard-icons";
 import {
-  buildNavigationGroups, getSeason, seasonConfig,
+  buildAuthorNavigationGroups, buildNavigationGroups, getSeason, seasonConfig,
   type NavGroup,
 } from "./navigation";
 
@@ -27,7 +27,13 @@ export default function DashboardShell({ children }: { children: React.ReactNode
   const { data: session, status } = useSession();
   const router = useRouter();
   const { t } = useDashboardTranslation();
-  const navigationGroups = useMemo(() => buildNavigationGroups(t), [t]);
+  const isAuthorSurface = pathname.startsWith('/dashboard/author')
+    || pathname.startsWith('/dashboard/settings/author')
+    || pathname.startsWith('/dashboard/settings/byok');
+  const navigationGroups = useMemo(
+    () => isAuthorSurface ? buildAuthorNavigationGroups(t) : buildNavigationGroups(t),
+    [isAuthorSurface, t]
+  );
 
   const handleSignOut = async () => {
     router.refresh();

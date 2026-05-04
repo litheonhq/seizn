@@ -300,7 +300,7 @@ export function FillActionModal({
 
             {/* Error */}
             {error && (
-              <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+              <div className="p-3 bg-[var(--signal-conflict-soft)] border border-[var(--signal-conflict)] rounded-lg text-[var(--signal-conflict-ink)] text-sm">
                 {error}
               </div>
             )}

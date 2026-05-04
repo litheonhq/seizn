@@ -150,7 +150,7 @@ export function GapAnalysisCard({
           <div className="p-5 bg-gray-50 border-t border-gray-200 flex gap-3">
             <button
               onClick={() => onResolve?.(gap.id)}
-              className="flex-1 px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700"
+              className="flex-1 px-4 py-2 text-sm font-medium text-white bg-[var(--signal-canon)] rounded-lg hover:bg-[var(--signal-canon)]"
             >
               Mark as Resolved
             </button>
@@ -394,7 +394,7 @@ function RelatedDocsTab({ docs }: { docs: RelatedDoc[] }) {
                 {doc.presentAspects.map((aspect, j) => (
                   <span
                     key={j}
-                    className="px-2 py-0.5 bg-green-50 text-green-700 text-xs rounded"
+                    className="px-2 py-0.5 bg-[var(--signal-canon-soft)] text-[var(--signal-canon-ink)] text-xs rounded"
                   >
                     {aspect}
                   </span>
@@ -407,7 +407,7 @@ function RelatedDocsTab({ docs }: { docs: RelatedDoc[] }) {
                 {doc.missingAspects.map((aspect, j) => (
                   <span
                     key={j}
-                    className="px-2 py-0.5 bg-red-50 text-red-700 text-xs rounded"
+                    className="px-2 py-0.5 bg-[var(--signal-conflict-soft)] text-[var(--signal-conflict-ink)] text-xs rounded"
                   >
                     {aspect}
                   </span>

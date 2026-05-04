@@ -334,20 +334,20 @@ export function SettingsClient() {
   return (
     <div className="space-y-6">
       {isSessionLoading && (
-        <div className="text-sm text-szn-text-2">{t("dashboard.settingsPage.loading")}</div>
+        <div className="text-sm text-[var(--ink-600)]">{t("dashboard.settingsPage.loading")}</div>
       )}
       {isUnauthenticated && (
-        <div className="rounded-lg border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20 p-3 sm:p-4">
+        <div className="rounded-lg border border-[var(--signal-conflict)] dark:border-[var(--signal-conflict)] bg-[var(--signal-conflict-soft)] dark:bg-[var(--signal-conflict-ink)]/20 p-3 sm:p-4">
           <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-start gap-3">
-              <div className="mt-0.5 flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400 flex-shrink-0">
+              <div className="mt-0.5 flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full bg-[var(--signal-conflict-soft)] dark:bg-[var(--signal-conflict-ink)]/40 text-[var(--signal-conflict-ink)] dark:text-[var(--signal-conflict-soft)] flex-shrink-0">
                 <UserIcon className="h-4 w-4 sm:h-5 sm:w-5" />
               </div>
               <div className="min-w-0">
-                <p className="text-sm font-medium text-red-800 dark:text-red-300">
+                <p className="text-sm font-medium text-[var(--signal-conflict-ink)] dark:text-[var(--signal-conflict-soft)]">
                   {t("dashboard.settingsPage.loginRequired") || "Login required"}
                 </p>
-                <p className="text-xs text-red-700 dark:text-red-400 mt-1">
+                <p className="text-xs text-[var(--signal-conflict-ink)] dark:text-[var(--signal-conflict-soft)] mt-1">
                   {t("auth.login.subtitle")}
                 </p>
               </div>
@@ -355,7 +355,7 @@ export function SettingsClient() {
             <button
               type="button"
               onClick={() => signIn(undefined, { callbackUrl: "/dashboard/settings" })}
-              className="inline-flex items-center justify-center self-start rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 transition-colors"
+              className="inline-flex items-center justify-center self-start rounded-lg bg-[var(--signal-conflict)] px-4 py-2 text-sm font-medium text-white hover:bg-[var(--signal-conflict)] transition-colors"
             >
               {t("auth.login.submit")}
             </button>
@@ -366,30 +366,30 @@ export function SettingsClient() {
       {/* Header */}
       <header className="flex items-center justify-between gap-3">
         <div>
-          <p className="text-sm text-szn-text-2">{t("dashboard.settingsPage.title")}</p>
-          <h1 className="text-2xl font-semibold text-szn-text-1">{t("dashboard.settingsPage.subtitle")}</h1>
+          <p className="text-sm text-[var(--ink-600)]">{t("dashboard.settingsPage.title")}</p>
+          <h1 className="text-2xl font-semibold text-[var(--ink-900)]">{t("dashboard.settingsPage.subtitle")}</h1>
         </div>
-        {saveStatus === "saving" && <span className="text-sm text-szn-text-2">{t("dashboard.settingsPage.saving")}</span>}
-        {saveStatus === "saved" && <span className="text-sm text-szn-success">{t("dashboard.settingsPage.saved")}</span>}
-        {saveStatus === "error" && <span className="text-sm text-red-600">{t("dashboard.settingsPage.saveFailed")}</span>}
+        {saveStatus === "saving" && <span className="text-sm text-[var(--ink-600)]">{t("dashboard.settingsPage.saving")}</span>}
+        {saveStatus === "saved" && <span className="text-sm text-[var(--signal-canon)]">{t("dashboard.settingsPage.saved")}</span>}
+        {saveStatus === "error" && <span className="text-sm text-[var(--signal-conflict-ink)]">{t("dashboard.settingsPage.saveFailed")}</span>}
       </header>
 
       {loadError && (
-        <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-200">
+        <div className="rounded-lg border border-[var(--signal-pending)] bg-[var(--signal-pending-soft)] px-4 py-3 text-sm text-[var(--signal-pending-ink)] dark:border-[var(--signal-pending)]/60 dark:bg-[var(--signal-pending-ink)]/30 dark:text-[var(--signal-pending-soft)]">
           {loadError}
         </div>
       )}
 
       {/* Tabs */}
-      <div className="grid grid-cols-2 gap-1 p-1 bg-szn-surface rounded-xl sm:flex sm:gap-1 sm:overflow-x-auto">
+      <div className="grid grid-cols-2 gap-1 p-1 bg-[var(--ink-50)] rounded-xl sm:flex sm:gap-1 sm:overflow-x-auto">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             className={`flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors sm:justify-start sm:px-4 ${
               activeTab === tab.id
-                ? "bg-szn-card text-szn-text-1 shadow-sm"
-                : "text-szn-text-2 hover:text-szn-text-1"
+                ? "bg-[var(--ink-0)] text-[var(--ink-900)] shadow-sm"
+                : "text-[var(--ink-600)] hover:text-[var(--ink-900)]"
             }`}
           >
             {tab.icon}
@@ -399,44 +399,44 @@ export function SettingsClient() {
       </div>
 
       {/* Tab Content */}
-      <div className="szn-card border border-szn-border rounded-lg p-4 sm:p-6">
+      <div className="szn-card border border-[var(--ink-200)] rounded-lg p-4 sm:p-6">
         {/* Profile Tab */}
         {activeTab === "profile" && (
           <div className="space-y-6">
             <div>
-              <h2 className="text-lg font-semibold text-szn-text-1 mb-4">
+              <h2 className="text-lg font-semibold text-[var(--ink-900)] mb-4">
                 {t("dashboard.settingsPage.account")}
               </h2>
               <div className="grid gap-4 md:grid-cols-2">
                 <div>
-                  <label className="block text-sm font-medium text-szn-text-2 mb-1">
+                  <label className="block text-sm font-medium text-[var(--ink-600)] mb-1">
                     {t("dashboard.settingsPage.email")}
                   </label>
                   <input
                     type="email"
                     value={profile.email || ""}
                     disabled
-                    className="w-full px-4 py-2 rounded-xl border border-szn-border bg-szn-bg text-szn-text-1"
+                    className="w-full px-4 py-2 rounded-xl border border-[var(--ink-200)] bg-[var(--ink-50)] text-[var(--ink-900)]"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-szn-text-2 mb-1">
+                  <label className="block text-sm font-medium text-[var(--ink-600)] mb-1">
                     {t("dashboard.settingsPage.name")}
                   </label>
                   <input
                     type="text"
                     value={profile.name || ""}
                     disabled
-                    className="w-full px-4 py-2 rounded-xl border border-szn-border bg-szn-bg text-szn-text-1"
+                    className="w-full px-4 py-2 rounded-xl border border-[var(--ink-200)] bg-[var(--ink-50)] text-[var(--ink-900)]"
                   />
                 </div>
               </div>
             </div>
 
-            <div className="pt-4 border-t border-szn-border">
+            <div className="pt-4 border-t border-[var(--ink-200)]">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-base font-medium text-szn-text-1">{t("dashboard.language")}</h3>
-                <span className="text-xs text-szn-text-2">{t("dashboard.settingsPage.languageHint")}</span>
+                <h3 className="text-base font-medium text-[var(--ink-900)]">{t("dashboard.language")}</h3>
+                <span className="text-xs text-[var(--ink-600)]">{t("dashboard.settingsPage.languageHint")}</span>
               </div>
               <select
                 value={language}
@@ -445,7 +445,7 @@ export function SettingsClient() {
                   setLanguage(lang);
                   saveLanguage(lang);
                 }}
-                className="w-full max-w-xs rounded-xl border border-szn-border px-4 py-2 text-sm text-szn-text-2 bg-szn-card focus:outline-none focus:ring-2 focus:ring-szn-accent"
+                className="w-full max-w-xs rounded-xl border border-[var(--ink-200)] px-4 py-2 text-sm text-[var(--ink-600)] bg-[var(--ink-0)] focus:outline-none focus:ring-2 focus:ring-[var(--ink-900)]"
               >
                 {locales.map((l) => (
                   <option key={l} value={l}>
@@ -454,9 +454,9 @@ export function SettingsClient() {
                 ))}
               </select>
             </div>
-            <div className="pt-4 border-t border-szn-border">
+            <div className="pt-4 border-t border-[var(--ink-200)]">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-base font-medium text-szn-text-1">{t("dashboard.theme.toggle")}</h3>
+                <h3 className="text-base font-medium text-[var(--ink-900)]">{t("dashboard.theme.toggle")}</h3>
               </div>
               <ThemeToggle variant="dropdown" />
             </div>
@@ -467,35 +467,35 @@ export function SettingsClient() {
         {activeTab === "billing" && (
           <div className="space-y-6">
             <div>
-              <h2 className="text-lg font-semibold text-szn-text-1 mb-2">
+              <h2 className="text-lg font-semibold text-[var(--ink-900)] mb-2">
                 {t("dashboard.settingsPage.billing.title") || "Billing & Quota"}
               </h2>
-              <p className="text-sm text-szn-text-2 mb-6">
+              <p className="text-sm text-[var(--ink-600)] mb-6">
                 {t("dashboard.settingsPage.billing.subtitle") || "Manage your subscription and usage limits"}
               </p>
             </div>
 
             {quotaLoading ? (
-              <div className="py-12 text-center text-szn-text-2">
+              <div className="py-12 text-center text-[var(--ink-600)]">
                 {t("dashboard.settingsPage.loading")}
               </div>
             ) : (
               <>
                 {/* Quota Warning Banner */}
                 {hasQuotaCritical && (
-                  <div className="p-4 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 mb-6">
+                  <div className="p-4 rounded-xl bg-[var(--signal-pending-soft)] dark:bg-[var(--signal-pending-ink)]/20 border border-[var(--signal-pending)] dark:border-[var(--signal-pending)] mb-6">
                     <div className="flex items-start gap-3">
-                      <ExclamationIcon className="w-5 h-5 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" />
+                      <ExclamationIcon className="w-5 h-5 text-[var(--signal-pending-ink)] dark:text-[var(--signal-pending-soft)] mt-0.5 flex-shrink-0" />
                       <div className="flex-1">
-                        <h4 className="text-sm font-medium text-amber-800 dark:text-amber-300">
+                        <h4 className="text-sm font-medium text-[var(--signal-pending-ink)] dark:text-[var(--signal-pending-soft)]">
                           {t("dashboard.settingsPage.billing.quotaWarningTitle") || "Approaching quota limit"}
                         </h4>
-                        <p className="text-xs text-amber-700 dark:text-amber-400 mt-1">
+                        <p className="text-xs text-[var(--signal-pending-ink)] dark:text-[var(--signal-pending-soft)] mt-1">
                           {t("dashboard.settingsPage.billing.quotaWarningDesc") || "You are approaching your plan limits. Consider upgrading for more capacity."}
                         </p>
                         <Link
                           href="/pricing"
-                          className="inline-flex items-center gap-1 mt-2 text-sm font-medium text-amber-700 dark:text-amber-300 hover:text-amber-800 dark:hover:text-amber-200"
+                          className="inline-flex items-center gap-1 mt-2 text-sm font-medium text-[var(--signal-pending-ink)] dark:text-[var(--signal-pending-soft)] hover:text-[var(--signal-pending-ink)] dark:hover:text-[var(--signal-pending-soft)]"
                         >
                           {t("dashboard.settingsPage.billing.upgradeNow") || "Upgrade now"}
                           <ChevronRightIcon className="w-4 h-4" />
@@ -506,7 +506,7 @@ export function SettingsClient() {
                 )}
 
                 {/* Current Plan Card */}
-                <div className="p-5 rounded-xl bg-gradient-to-r from-szn-accent to-szn-accent/80 text-white">
+                <div className="p-5 rounded-xl bg-[var(--ink-900)] text-white">
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-sm opacity-90">{t("dashboard.settingsPage.billing.currentPlan") || "Current Plan"}</p>
@@ -580,14 +580,14 @@ export function SettingsClient() {
                 </div>
 
                 {/* Plan Comparison */}
-                <div className="pt-6 border-t border-szn-border">
-                  <h3 className="text-base font-medium text-szn-text-1 mb-4">
+                <div className="pt-6 border-t border-[var(--ink-200)]">
+                  <h3 className="text-base font-medium text-[var(--ink-900)] mb-4">
                     {t("dashboard.settingsPage.billing.planComparison") || "Plan Comparison"}
                   </h3>
                   <div className="overflow-x-auto">
                     <table className="w-full text-sm">
                       <thead>
-                        <tr className="text-left text-szn-text-2 border-b border-szn-border">
+                        <tr className="text-left text-[var(--ink-600)] border-b border-[var(--ink-200)]">
                           <th className="pb-3 font-medium">{t("dashboard.settingsPage.billing.feature") || "Feature"}</th>
                           <th className="pb-3 font-medium">Free</th>
                           <th className="pb-3 font-medium">Indie</th>
@@ -596,8 +596,8 @@ export function SettingsClient() {
                           <th className="pb-3 font-medium">Enterprise</th>
                         </tr>
                       </thead>
-                      <tbody className="text-szn-text-2">
-                        <tr className="border-b border-szn-border">
+                      <tbody className="text-[var(--ink-600)]">
+                        <tr className="border-b border-[var(--ink-200)]">
                           <td className="py-3">{t("dashboard.settingsPage.billing.memoriesLabel") || "Memories"}</td>
                           <td className="py-3">10,000</td>
                           <td className="py-3">100,000</td>
@@ -605,7 +605,7 @@ export function SettingsClient() {
                           <td className="py-3">5,000,000</td>
                           <td className="py-3">{t("dashboard.settingsPage.billing.unlimited") || "Unlimited"}</td>
                         </tr>
-                        <tr className="border-b border-szn-border">
+                        <tr className="border-b border-[var(--ink-200)]">
                           <td className="py-3">{t("dashboard.settingsPage.billing.apiCallsLabel") || "API Calls/mo"}</td>
                           <td className="py-3">10,000</td>
                           <td className="py-3">100,000</td>
@@ -613,7 +613,7 @@ export function SettingsClient() {
                           <td className="py-3">{t("dashboard.settingsPage.billing.unlimited") || "Unlimited"}</td>
                           <td className="py-3">{t("dashboard.settingsPage.billing.unlimited") || "Unlimited"}</td>
                         </tr>
-                        <tr className="border-b border-szn-border">
+                        <tr className="border-b border-[var(--ink-200)]">
                           <td className="py-3">{t("dashboard.settingsPage.billing.apiKeysLabel") || "API Keys"}</td>
                           <td className="py-3">2</td>
                           <td className="py-3">3</td>
@@ -642,16 +642,16 @@ export function SettingsClient() {
         {activeTab === "budget" && (
           <div className="space-y-6">
             <div>
-              <h2 className="text-lg font-semibold text-szn-text-1 mb-2">
+              <h2 className="text-lg font-semibold text-[var(--ink-900)] mb-2">
                 {t("dashboard.settingsPage.budget.title")}
               </h2>
-              <p className="text-sm text-szn-text-2 mb-6">
+              <p className="text-sm text-[var(--ink-600)] mb-6">
                 {t("dashboard.settingsPage.budget.subtitle")}
               </p>
             </div>
 
             {budgetLoading ? (
-              <div className="py-12 text-center text-szn-text-2">
+              <div className="py-12 text-center text-[var(--ink-600)]">
                 {t("dashboard.settingsPage.loading")}
               </div>
             ) : (
@@ -659,11 +659,11 @@ export function SettingsClient() {
                 {/* Budget Limits */}
                 <div className="grid gap-4 md:grid-cols-2">
                   <div>
-                    <label className="block text-sm font-medium text-szn-text-2 mb-1">
+                    <label className="block text-sm font-medium text-[var(--ink-600)] mb-1">
                       {t("dashboard.settingsPage.budget.dailyLimit")}
                     </label>
                     <div className="relative">
-                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-szn-text-3">$</span>
+                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--ink-500)]">$</span>
                       <input
                         type="number"
                         min={0}
@@ -673,16 +673,16 @@ export function SettingsClient() {
                           ...prev,
                           dailyBudgetUsd: parseFloat(e.target.value) || 0
                         }))}
-                        className="w-full pl-8 pr-4 py-2 rounded-xl border border-szn-border bg-szn-card text-szn-text-1 focus:outline-none focus:ring-2 focus:ring-szn-accent"
+                        className="w-full pl-8 pr-4 py-2 rounded-xl border border-[var(--ink-200)] bg-[var(--ink-0)] text-[var(--ink-900)] focus:outline-none focus:ring-2 focus:ring-[var(--ink-900)]"
                       />
                     </div>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-szn-text-2 mb-1">
+                    <label className="block text-sm font-medium text-[var(--ink-600)] mb-1">
                       {t("dashboard.settingsPage.budget.monthlyLimit")}
                     </label>
                     <div className="relative">
-                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-szn-text-3">$</span>
+                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--ink-500)]">$</span>
                       <input
                         type="number"
                         min={0}
@@ -692,7 +692,7 @@ export function SettingsClient() {
                           ...prev,
                           monthlyBudgetUsd: parseFloat(e.target.value) || 0
                         }))}
-                        className="w-full pl-8 pr-4 py-2 rounded-xl border border-szn-border bg-szn-card text-szn-text-1 focus:outline-none focus:ring-2 focus:ring-szn-accent"
+                        className="w-full pl-8 pr-4 py-2 rounded-xl border border-[var(--ink-200)] bg-[var(--ink-0)] text-[var(--ink-900)] focus:outline-none focus:ring-2 focus:ring-[var(--ink-900)]"
                       />
                     </div>
                   </div>
@@ -700,11 +700,11 @@ export function SettingsClient() {
 
                 {/* Per-Query Limit */}
                 <div>
-                  <label className="block text-sm font-medium text-szn-text-2 mb-1">
+                  <label className="block text-sm font-medium text-[var(--ink-600)] mb-1">
                     {t("dashboard.settingsPage.budget.perQueryMax")}
                   </label>
                   <div className="relative max-w-xs">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-szn-text-3">$</span>
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--ink-500)]">$</span>
                     <input
                       type="number"
                       min={0}
@@ -714,14 +714,14 @@ export function SettingsClient() {
                         ...prev,
                         perQueryMaxUsd: parseFloat(e.target.value) || 0
                       }))}
-                      className="w-full pl-8 pr-4 py-2 rounded-xl border border-szn-border bg-szn-card text-szn-text-1 focus:outline-none focus:ring-2 focus:ring-szn-accent"
+                      className="w-full pl-8 pr-4 py-2 rounded-xl border border-[var(--ink-200)] bg-[var(--ink-0)] text-[var(--ink-900)] focus:outline-none focus:ring-2 focus:ring-[var(--ink-900)]"
                     />
                   </div>
                 </div>
 
                 {/* Alert Threshold */}
                 <div>
-                  <label className="block text-sm font-medium text-szn-text-2 mb-1">
+                  <label className="block text-sm font-medium text-[var(--ink-600)] mb-1">
                     {t("dashboard.settingsPage.budget.alertThreshold")}
                   </label>
                   <div className="flex items-center gap-4">
@@ -735,20 +735,20 @@ export function SettingsClient() {
                         ...prev,
                         alertAtPercent: parseInt(e.target.value)
                       }))}
-                      className="flex-1 h-2 bg-szn-surface rounded-lg appearance-none cursor-pointer accent-szn-accent"
+                      className="flex-1 h-2 bg-[var(--ink-50)] rounded-lg appearance-none cursor-pointer accent-[var(--ink-900)]"
                     />
-                    <span className="text-sm font-medium text-szn-text-2 w-12 text-right">
+                    <span className="text-sm font-medium text-[var(--ink-600)] w-12 text-right">
                       {budgetSettings.alertAtPercent}%
                     </span>
                   </div>
-                  <p className="text-xs text-szn-text-2 mt-1">
+                  <p className="text-xs text-[var(--ink-600)] mt-1">
                     {t("dashboard.settingsPage.budget.alertThresholdHint")}
                   </p>
                 </div>
 
                 {/* Budget Mode */}
                 <div>
-                  <label className="block text-sm font-medium text-szn-text-2 mb-2">
+                  <label className="block text-sm font-medium text-[var(--ink-600)] mb-2">
                     {t("dashboard.settingsPage.budget.budgetMode")}
                   </label>
                   <div className="flex gap-4">
@@ -759,13 +759,13 @@ export function SettingsClient() {
                         value="soft"
                         checked={budgetSettings.mode === "soft"}
                         onChange={() => setBudgetSettings(prev => ({ ...prev, mode: "soft" }))}
-                        className="w-4 h-4 text-szn-accent focus:ring-szn-accent"
+                        className="w-4 h-4 text-[var(--ink-900)] focus:ring-[var(--ink-900)]"
                       />
                       <div>
-                        <span className="text-sm font-medium text-szn-text-2">
+                        <span className="text-sm font-medium text-[var(--ink-600)]">
                           {t("dashboard.settingsPage.budget.soft")}
                         </span>
-                        <p className="text-xs text-szn-text-2">
+                        <p className="text-xs text-[var(--ink-600)]">
                           {t("dashboard.settingsPage.budget.softDesc")}
                         </p>
                       </div>
@@ -777,13 +777,13 @@ export function SettingsClient() {
                         value="hard"
                         checked={budgetSettings.mode === "hard"}
                         onChange={() => setBudgetSettings(prev => ({ ...prev, mode: "hard" }))}
-                        className="w-4 h-4 text-szn-accent focus:ring-szn-accent"
+                        className="w-4 h-4 text-[var(--ink-900)] focus:ring-[var(--ink-900)]"
                       />
                       <div>
-                        <span className="text-sm font-medium text-szn-text-2">
+                        <span className="text-sm font-medium text-[var(--ink-600)]">
                           {t("dashboard.settingsPage.budget.hard")}
                         </span>
-                        <p className="text-xs text-szn-text-2">
+                        <p className="text-xs text-[var(--ink-600)]">
                           {t("dashboard.settingsPage.budget.hardDesc")}
                         </p>
                       </div>
@@ -793,7 +793,7 @@ export function SettingsClient() {
 
                 {/* Fallback Strategy */}
                 <div>
-                  <label className="block text-sm font-medium text-szn-text-2 mb-2">
+                  <label className="block text-sm font-medium text-[var(--ink-600)] mb-2">
                     {t("dashboard.settingsPage.budget.fallbackStrategy")}
                   </label>
                   <select
@@ -802,7 +802,7 @@ export function SettingsClient() {
                       ...prev,
                       fallbackStrategy: e.target.value as "degrade" | "reject" | "queue"
                     }))}
-                    className="w-full max-w-xs rounded-xl border border-szn-border px-4 py-2 text-sm bg-szn-card text-szn-text-1 focus:outline-none focus:ring-2 focus:ring-szn-accent"
+                    className="w-full max-w-xs rounded-xl border border-[var(--ink-200)] px-4 py-2 text-sm bg-[var(--ink-0)] text-[var(--ink-900)] focus:outline-none focus:ring-2 focus:ring-[var(--ink-900)]"
                   >
                     <option value="degrade">{t("dashboard.settingsPage.budget.degrade")}</option>
                     <option value="reject">{t("dashboard.settingsPage.budget.reject")}</option>
@@ -811,11 +811,11 @@ export function SettingsClient() {
                 </div>
 
                 {/* Save Button */}
-                <div className="pt-4 border-t border-szn-border">
+                <div className="pt-4 border-t border-[var(--ink-200)]">
                   <button
                     onClick={saveBudgetSettings}
                     disabled={saveStatus === "saving"}
-                    className="px-6 py-2 rounded-xl bg-gradient-to-r from-szn-accent to-szn-accent/80 text-white font-medium hover:from-szn-accent/90 hover:to-szn-accent/70 disabled:opacity-50 transition-all"
+                    className="px-6 py-2 rounded-xl bg-[var(--ink-900)] text-white font-medium hover:from-[var(--ink-900)]/90 hover:to-[var(--ink-900)]/70 disabled:opacity-50 transition-all"
                   >
                     {saveStatus === "saving" ? t("dashboard.settingsPage.saving") : t("dashboard.settingsPage.save")}
                   </button>
@@ -829,10 +829,10 @@ export function SettingsClient() {
         {activeTab === "notifications" && (
           <div className="space-y-6">
             <div>
-              <h2 className="text-lg font-semibold text-szn-text-1 mb-2">
+              <h2 className="text-lg font-semibold text-[var(--ink-900)] mb-2">
                 {t("dashboard.settingsPage.notifications.title")}
               </h2>
-              <p className="text-sm text-szn-text-2 mb-6">
+              <p className="text-sm text-[var(--ink-600)] mb-6">
                 {t("dashboard.settingsPage.notifications.subtitle")}
               </p>
             </div>
@@ -865,23 +865,23 @@ export function SettingsClient() {
             </div>
 
             {/* Telegram Connection (Future) */}
-            <div className="pt-4 border-t border-szn-border">
-              <h3 className="text-base font-medium text-szn-text-1 mb-3">
+            <div className="pt-4 border-t border-[var(--ink-200)]">
+              <h3 className="text-base font-medium text-[var(--ink-900)] mb-3">
                 {t("dashboard.settingsPage.notifications.integrations")}
               </h3>
-              <div className="flex items-center justify-between p-4 rounded-xl bg-szn-bg border border-szn-border">
+              <div className="flex items-center justify-between p-4 rounded-xl bg-[var(--ink-50)] border border-[var(--ink-200)]">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-blue-500 flex items-center justify-center">
                     <TelegramIcon className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-szn-text-1">Telegram</p>
-                    <p className="text-xs text-szn-text-2">{t("dashboard.settingsPage.notifications.telegramDesc")}</p>
+                    <p className="text-sm font-medium text-[var(--ink-900)]">Telegram</p>
+                    <p className="text-xs text-[var(--ink-600)]">{t("dashboard.settingsPage.notifications.telegramDesc")}</p>
                   </div>
                 </div>
                 <button
                   disabled
-                  className="px-4 py-2 rounded-lg bg-szn-surface text-szn-text-2 text-sm font-medium cursor-not-allowed"
+                  className="px-4 py-2 rounded-lg bg-[var(--ink-50)] text-[var(--ink-600)] text-sm font-medium cursor-not-allowed"
                 >
                   {t("dashboard.settingsPage.notifications.comingSoon")}
                 </button>
@@ -894,28 +894,28 @@ export function SettingsClient() {
         {activeTab === "security" && (
           <div className="space-y-6">
             <div>
-              <h2 className="text-lg font-semibold text-szn-text-1 mb-2">
+              <h2 className="text-lg font-semibold text-[var(--ink-900)] mb-2">
                 {t("dashboard.settingsPage.security.title")}
               </h2>
-              <p className="text-sm text-szn-text-2 mb-6">
+              <p className="text-sm text-[var(--ink-600)] mb-6">
                 {t("dashboard.settingsPage.security.subtitle")}
               </p>
             </div>
 
             {/* Password Change */}
-            <div className="p-4 rounded-xl bg-szn-bg border border-szn-border">
+            <div className="p-4 rounded-xl bg-[var(--ink-50)] border border-[var(--ink-200)]">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-szn-text-1">
+                  <p className="text-sm font-medium text-[var(--ink-900)]">
                     {t("dashboard.settingsPage.security.changePassword")}
                   </p>
-                  <p className="text-xs text-szn-text-2">
+                  <p className="text-xs text-[var(--ink-600)]">
                     {t("dashboard.settingsPage.security.changePasswordDesc")}
                   </p>
                 </div>
                 <button
                   disabled
-                  className="px-4 py-2 rounded-lg bg-szn-surface text-szn-text-2 text-sm font-medium cursor-not-allowed"
+                  className="px-4 py-2 rounded-lg bg-[var(--ink-50)] text-[var(--ink-600)] text-sm font-medium cursor-not-allowed"
                 >
                   {t("dashboard.settingsPage.notifications.comingSoon")}
                 </button>
@@ -923,19 +923,19 @@ export function SettingsClient() {
             </div>
 
             {/* Two-Factor Auth */}
-            <div className="p-4 rounded-xl bg-szn-bg border border-szn-border">
+            <div className="p-4 rounded-xl bg-[var(--ink-50)] border border-[var(--ink-200)]">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-szn-text-1">
+                  <p className="text-sm font-medium text-[var(--ink-900)]">
                     {t("dashboard.settingsPage.security.twoFactor")}
                   </p>
-                  <p className="text-xs text-szn-text-2">
+                  <p className="text-xs text-[var(--ink-600)]">
                     {t("dashboard.settingsPage.security.twoFactorDesc")}
                   </p>
                 </div>
                 <button
                   disabled
-                  className="px-4 py-2 rounded-lg bg-szn-surface text-szn-text-2 text-sm font-medium cursor-not-allowed"
+                  className="px-4 py-2 rounded-lg bg-[var(--ink-50)] text-[var(--ink-600)] text-sm font-medium cursor-not-allowed"
                 >
                   {t("dashboard.settingsPage.notifications.comingSoon")}
                 </button>
@@ -943,19 +943,19 @@ export function SettingsClient() {
             </div>
 
             {/* Session Management */}
-            <div className="p-4 rounded-xl bg-szn-bg border border-szn-border">
+            <div className="p-4 rounded-xl bg-[var(--ink-50)] border border-[var(--ink-200)]">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-szn-text-1">
+                  <p className="text-sm font-medium text-[var(--ink-900)]">
                     {t("dashboard.settingsPage.security.sessions")}
                   </p>
-                  <p className="text-xs text-szn-text-2">
+                  <p className="text-xs text-[var(--ink-600)]">
                     {t("dashboard.settingsPage.security.sessionsDesc")}
                   </p>
                 </div>
                 <button
                   disabled
-                  className="px-4 py-2 rounded-lg bg-szn-surface text-szn-text-2 text-sm font-medium cursor-not-allowed"
+                  className="px-4 py-2 rounded-lg bg-[var(--ink-50)] text-[var(--ink-600)] text-sm font-medium cursor-not-allowed"
                 >
                   {t("dashboard.settingsPage.notifications.comingSoon")}
                 </button>
@@ -968,28 +968,28 @@ export function SettingsClient() {
         {activeTab === "danger" && (
           <div className="space-y-6">
             <div>
-              <h2 className="text-lg font-semibold text-red-600 mb-2">
+              <h2 className="text-lg font-semibold text-[var(--signal-conflict-ink)] mb-2">
                 {t("dashboard.settingsPage.dangerZone.title")}
               </h2>
-              <p className="text-sm text-szn-text-2 mb-6">
+              <p className="text-sm text-[var(--ink-600)] mb-6">
                 {t("dashboard.settingsPage.dangerZone.titleDesc")}
               </p>
             </div>
 
             {/* Export Data */}
-            <div className="p-4 rounded-xl border border-szn-border">
+            <div className="p-4 rounded-xl border border-[var(--ink-200)]">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-szn-text-1">
+                  <p className="text-sm font-medium text-[var(--ink-900)]">
                     {t("dashboard.settingsPage.dangerZone.exportData")}
                   </p>
-                  <p className="text-xs text-szn-text-2">
+                  <p className="text-xs text-[var(--ink-600)]">
                     {t("dashboard.settingsPage.dangerZone.exportDataDesc")}
                   </p>
                 </div>
                 <button
                   onClick={() => setShowExportModal(true)}
-                  className="px-4 py-2 rounded-lg bg-szn-surface text-szn-text-2 text-sm font-medium hover:bg-szn-surface-1 transition-colors"
+                  className="px-4 py-2 rounded-lg bg-[var(--ink-50)] text-[var(--ink-600)] text-sm font-medium hover:bg-[var(--ink-50)] transition-colors"
                 >
                   {t("dashboard.settingsPage.dangerZone.exportData")}
                 </button>
@@ -997,19 +997,19 @@ export function SettingsClient() {
             </div>
 
             {/* Delete All Memories */}
-            <div className="p-4 rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20">
+            <div className="p-4 rounded-xl border border-[var(--signal-conflict)] dark:border-[var(--signal-conflict)] bg-[var(--signal-conflict-soft)] dark:bg-[var(--signal-conflict-ink)]/20">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-red-700 dark:text-red-400">
+                  <p className="text-sm font-medium text-[var(--signal-conflict-ink)] dark:text-[var(--signal-conflict-soft)]">
                     {t("dashboard.settingsPage.dangerZone.deleteMemories")}
                   </p>
-                  <p className="text-xs text-red-600 dark:text-red-500">
+                  <p className="text-xs text-[var(--signal-conflict-ink)] dark:text-[var(--signal-conflict-ink)]">
                     {t("dashboard.settingsPage.dangerZone.deleteMemoriesDesc")}
                   </p>
                 </div>
                 <button
                   onClick={() => setShowDeleteMemoriesModal(true)}
-                  className="px-4 py-2 rounded-lg bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-400 text-sm font-medium hover:bg-red-200 dark:hover:bg-red-900/60 transition-colors"
+                  className="px-4 py-2 rounded-lg bg-[var(--signal-conflict-soft)] dark:bg-[var(--signal-conflict-ink)]/40 text-[var(--signal-conflict-ink)] dark:text-[var(--signal-conflict-soft)] text-sm font-medium hover:bg-[var(--signal-conflict-soft)] dark:hover:bg-[var(--signal-conflict-ink)]/60 transition-colors"
                 >
                   {t("dashboard.settingsPage.dangerZone.deleteMemories")}
                 </button>
@@ -1017,19 +1017,19 @@ export function SettingsClient() {
             </div>
 
             {/* Delete Account */}
-            <div className="p-4 rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20">
+            <div className="p-4 rounded-xl border border-[var(--signal-conflict)] dark:border-[var(--signal-conflict)] bg-[var(--signal-conflict-soft)] dark:bg-[var(--signal-conflict-ink)]/20">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-red-700 dark:text-red-400">
+                  <p className="text-sm font-medium text-[var(--signal-conflict-ink)] dark:text-[var(--signal-conflict-soft)]">
                     {t("dashboard.settingsPage.dangerZone.deleteAccount")}
                   </p>
-                  <p className="text-xs text-red-600 dark:text-red-500">
+                  <p className="text-xs text-[var(--signal-conflict-ink)] dark:text-[var(--signal-conflict-ink)]">
                     {t("dashboard.settingsPage.dangerZone.deleteAccountDesc")}
                   </p>
                 </div>
                 <button
                   onClick={() => setShowDeleteAccountModal(true)}
-                  className="px-4 py-2 rounded-lg bg-red-600 text-white text-sm font-medium hover:bg-red-700 transition-colors"
+                  className="px-4 py-2 rounded-lg bg-[var(--signal-conflict)] text-white text-sm font-medium hover:bg-[var(--signal-conflict)] transition-colors"
                 >
                   {t("dashboard.settingsPage.dangerZone.deleteAccount")}
                 </button>
@@ -1130,30 +1130,30 @@ function UsageCard({
   return (
     <div className={`p-4 rounded-xl border ${
       critical
-        ? "border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20"
+        ? "border-[var(--signal-conflict)] dark:border-[var(--signal-conflict)] bg-[var(--signal-conflict-soft)] dark:bg-[var(--signal-conflict-ink)]/20"
         : warning
-        ? "border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/20"
-        : "border-szn-border bg-szn-bg"
+        ? "border-[var(--signal-pending)] dark:border-[var(--signal-pending)] bg-[var(--signal-pending-soft)] dark:bg-[var(--signal-pending-ink)]/20"
+        : "border-[var(--ink-200)] bg-[var(--ink-50)]"
     }`}>
       <div className="flex items-center gap-2 mb-3">
-        <span className={critical ? "text-red-600 dark:text-red-400" : warning ? "text-amber-600 dark:text-amber-400" : "text-szn-text-2"}>
+        <span className={critical ? "text-[var(--signal-conflict-ink)] dark:text-[var(--signal-conflict-soft)]" : warning ? "text-[var(--signal-pending-ink)] dark:text-[var(--signal-pending-soft)]" : "text-[var(--ink-600)]"}>
           {icon}
         </span>
-        <span className="text-sm font-medium text-szn-text-1">{title}</span>
+        <span className="text-sm font-medium text-[var(--ink-900)]">{title}</span>
       </div>
       <div className="flex items-end justify-between mb-2">
-        <span className="text-2xl font-bold text-szn-text-1">
+        <span className="text-2xl font-bold text-[var(--ink-900)]">
           {used.toLocaleString()}
         </span>
-        <span className="text-sm text-szn-text-2">
+        <span className="text-sm text-[var(--ink-600)]">
           / {limit === -1 ? (t("dashboard.settingsPage.billing.unlimited") || "Unlimited") : limit.toLocaleString()}
         </span>
       </div>
       {limit !== -1 && (
-        <div className="w-full h-2 bg-szn-surface rounded-full overflow-hidden">
+        <div className="w-full h-2 bg-[var(--ink-50)] rounded-full overflow-hidden">
           <div
             className={`h-full rounded-full transition-all ${
-              critical ? "bg-red-500" : warning ? "bg-amber-500" : "bg-szn-accent"
+              critical ? "bg-[var(--signal-conflict)]" : warning ? "bg-[var(--signal-pending)]" : "bg-[var(--ink-900)]"
             }`}
             style={{ width: `${percent}%` }}
           />
@@ -1175,15 +1175,15 @@ function NotificationToggle({
   onChange: (checked: boolean) => void;
 }) {
   return (
-    <div className="flex items-center justify-between p-4 rounded-xl bg-szn-bg border border-szn-border">
+    <div className="flex items-center justify-between p-4 rounded-xl bg-[var(--ink-50)] border border-[var(--ink-200)]">
       <div>
-        <p className="text-sm font-medium text-szn-text-1">{title}</p>
-        <p className="text-xs text-szn-text-2">{description}</p>
+        <p className="text-sm font-medium text-[var(--ink-900)]">{title}</p>
+        <p className="text-xs text-[var(--ink-600)]">{description}</p>
       </div>
       <button
         onClick={() => onChange(!checked)}
         className={`relative w-11 h-6 rounded-full transition-colors ${
-          checked ? "bg-szn-accent" : "bg-szn-surface"
+          checked ? "bg-[var(--ink-900)]" : "bg-[var(--ink-50)]"
         }`}
       >
         <span

@@ -31,7 +31,7 @@ interface TrainingState {
 function CheckIcon() {
   return (
     <svg
-      className="w-5 h-5 text-green-500"
+      className="w-5 h-5 text-[var(--signal-canon-ink)]"
       fill="currentColor"
       viewBox="0 0 20 20"
     >
@@ -67,7 +67,7 @@ function SpinnerIcon() {
 
 function XCircleIcon() {
   return (
-    <svg className="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+    <svg className="w-5 h-5 text-[var(--signal-conflict-ink)]" fill="currentColor" viewBox="0 0 20 20">
       <path
         fillRule="evenodd"
         d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
@@ -340,9 +340,9 @@ export function TrainingProgress({
           <span
             className={`text-sm font-medium ${
               state.status === "completed"
-                ? "text-green-600"
+                ? "text-[var(--signal-canon-ink)]"
                 : state.status === "failed"
-                  ? "text-red-600"
+                  ? "text-[var(--signal-conflict-ink)]"
                   : state.status === "training"
                     ? "text-blue-600"
                     : "text-gray-600"
@@ -373,7 +373,7 @@ export function TrainingProgress({
           <p className="text-xs text-gray-500">Minimum Required</p>
           <p
             className={`text-lg font-semibold ${
-              pairCount >= 10 ? "text-green-600" : "text-red-600"
+              pairCount >= 10 ? "text-[var(--signal-canon-ink)]" : "text-[var(--signal-conflict-ink)]"
             }`}
           >
             10
@@ -399,18 +399,18 @@ export function TrainingProgress({
 
       {/* Error Message */}
       {state.error && (
-        <div className="p-3 rounded-lg bg-red-50 border border-red-200">
-          <p className="text-sm text-red-700">{state.message}</p>
+        <div className="p-3 rounded-lg bg-[var(--signal-conflict-soft)] border border-[var(--signal-conflict)]">
+          <p className="text-sm text-[var(--signal-conflict-ink)]">{state.message}</p>
           {state.error && (
-            <p className="text-xs text-red-500 mt-1">{state.error}</p>
+            <p className="text-xs text-[var(--signal-conflict-ink)] mt-1">{state.error}</p>
           )}
         </div>
       )}
 
       {/* Success Message */}
       {state.status === "completed" && (
-        <div className="p-3 rounded-lg bg-green-50 border border-green-200">
-          <p className="text-sm text-green-700">{state.message}</p>
+        <div className="p-3 rounded-lg bg-[var(--signal-canon-soft)] border border-[var(--signal-canon)]">
+          <p className="text-sm text-[var(--signal-canon-ink)]">{state.message}</p>
         </div>
       )}
 
