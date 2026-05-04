@@ -1,0 +1,52 @@
+{
+  "name": "@seizn/cli",
+  "version": "0.9.0-beta.1",
+  "description": "Command-line interface for Seizn — save, search, and export AI memories",
+  "type": "module",
+  "bin": {
+    "seizn": "./dist/index.js"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsc -p tsconfig.json --watch",
+    "start": "node dist/index.js",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "seizn",
+    "cli",
+    "memory",
+    "ai",
+    "rag"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/litheonhq/seizn.git",
+    "directory": "packages/seizn-cli"
+  },
+  "homepage": "https://engine.seizn.com",
+  "bugs": {
+    "url": "https://github.com/litheonhq/seizn/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "commander": "^12.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
