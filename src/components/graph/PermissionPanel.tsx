@@ -313,7 +313,7 @@ function PermissionCard({ permission }: { permission: Permission }) {
             {permission.conditions.map((condition, idx) => (
               <span
                 key={idx}
-                className="text-xs px-2 py-0.5 bg-yellow-50 text-yellow-700 rounded-full"
+                className="text-xs px-2 py-0.5 bg-[var(--signal-pending-soft)] text-[var(--signal-pending-ink)] rounded-full"
               >
                 {condition.type}
               </span>

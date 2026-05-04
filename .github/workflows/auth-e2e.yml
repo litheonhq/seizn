@@ -1,0 +1,95 @@
+name: Auth E2E Smoke
+
+on:
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'src/app/(auth)/**'
+      - 'src/components/auth/**'
+      - 'src/app/globals.css'
+      - 'src/styles/tokens.css'
+      - 'e2e/auth-v1-token-smoke.spec.ts'
+      - 'playwright.config.ts'
+      - 'package.json'
+      - 'package-lock.json'
+  push:
+    branches: [main, develop]
+    paths:
+      - 'src/app/(auth)/**'
+      - 'src/components/auth/**'
+      - 'src/app/globals.css'
+      - 'src/styles/tokens.css'
+      - 'e2e/auth-v1-token-smoke.spec.ts'
+      - 'playwright.config.ts'
+      - 'package.json'
+      - 'package-lock.json'
+  workflow_dispatch:
+
+concurrency:
+  group: auth-e2e-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: '20'
+  PLAYWRIGHT_BASE_URL: 'http://127.0.0.1:3000'
+  PLAYWRIGHT_DISABLE_TURNSTILE: '1'
+  NEXT_PUBLIC_E2E_MODE: 'true'
+  SKIP_ENV_VALIDATION: 'true'
+  AUTH_SECRET: 'seizn-ci-auth-secret-minimum-32-chars'
+  NEXTAUTH_SECRET: 'seizn-ci-auth-secret-minimum-32-chars'
+  NEXT_PUBLIC_SUPABASE_URL: 'https://placeholder.supabase.co'
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: 'placeholder-anon-key'
+  NEXT_PUBLIC_TURNSTILE_SITE_KEY: ''
+  TURNSTILE_SECRET_KEY: ''
+
+jobs:
+  auth-e2e:
+    name: Auth E2E Smoke (chromium)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Build application
+        run: npm run build
+
+      - name: Start server
+        run: npm run start -- --port 3000 &
+
+      - name: Wait for server
+        run: npx wait-on http://127.0.0.1:3000 --timeout 60000
+
+      - name: Run auth smoke
+        run: npm run test:e2e:auth -- --project=chromium
+        env:
+          CI: 'true'
+
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: auth-e2e-playwright-report
+          path: playwright-report/
+          retention-days: 7
+
+      - name: Upload screenshots on failure
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: auth-e2e-test-results
+          path: test-results/
+          retention-days: 7

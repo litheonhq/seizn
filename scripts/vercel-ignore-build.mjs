@@ -6,6 +6,7 @@ const BUILD_TRIGGER_PATTERNS = [
   /^src\//,
   /^public\//,
   /^supabase\/migrations\//,
+  /^scripts\//,
   /^app\//,
   /^next\.config\./,
   /^package\.json$/,
@@ -26,7 +27,9 @@ function getRange() {
     return { base: previous, head };
   }
 
-  return { base: `${head}^`, head };
+  // No previous deployment for this branch — always build to avoid missing
+  // code changes that landed in earlier commits but not in the latest one.
+  return null;
 }
 
 function getChangedFiles(base, head) {
@@ -61,7 +64,12 @@ function main() {
       process.exit(0);
     }
 
-    const { base, head } = getRange();
+    const range = getRange();
+    if (!range) {
+      console.log('[vercel-ignore] No previous deployment found. Proceeding with build.');
+      process.exit(1);
+    }
+    const { base, head } = range;
     const changedFiles = getChangedFiles(base, head);
 
     if (changedFiles.length === 0) {

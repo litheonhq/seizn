@@ -775,31 +775,31 @@ function PropTable({ props }: { props: PropDoc[] }) {
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
         <thead>
-          <tr className="border-b border-szn-border">
-            <th className="text-left py-3 px-4 font-semibold text-szn-text-1">{t("propName")}</th>
-            <th className="text-left py-3 px-4 font-semibold text-szn-text-1">{t("propType")}</th>
-            <th className="text-left py-3 px-4 font-semibold text-szn-text-1">{t("propDefault")}</th>
-            <th className="text-left py-3 px-4 font-semibold text-szn-text-1">{t("propDescription")}</th>
+          <tr className="border-b border-[var(--ink-200)]">
+            <th className="text-left py-3 px-4 font-semibold text-[var(--ink-900)]">{t("propName")}</th>
+            <th className="text-left py-3 px-4 font-semibold text-[var(--ink-900)]">{t("propType")}</th>
+            <th className="text-left py-3 px-4 font-semibold text-[var(--ink-900)]">{t("propDefault")}</th>
+            <th className="text-left py-3 px-4 font-semibold text-[var(--ink-900)]">{t("propDescription")}</th>
           </tr>
         </thead>
         <tbody>
           {props.map((prop) => (
-            <tr key={prop.name} className="border-b border-szn-border">
+            <tr key={prop.name} className="border-b border-[var(--ink-200)]">
               <td className="py-3 px-4">
                 <code className="text-indigo-600 dark:text-indigo-400 font-mono text-xs">
                   {prop.name}
-                  {prop.required && <span className="text-red-500 ml-1">*</span>}
+                  {prop.required && <span className="text-[var(--signal-conflict-ink)] ml-1">*</span>}
                 </code>
               </td>
               <td className="py-3 px-4">
-                <code className="text-szn-text-2 font-mono text-xs bg-szn-surface px-2 py-0.5 rounded">
+                <code className="text-[var(--ink-600)] font-mono text-xs bg-[var(--ink-50)] px-2 py-0.5 rounded">
                   {prop.type}
                 </code>
               </td>
-              <td className="py-3 px-4 text-szn-text-2 text-xs">
+              <td className="py-3 px-4 text-[var(--ink-600)] text-xs">
                 {prop.default || "-"}
               </td>
-              <td className="py-3 px-4 text-szn-text-2 text-xs">
+              <td className="py-3 px-4 text-[var(--ink-600)] text-xs">
                 {prop.description}
               </td>
             </tr>
@@ -824,11 +824,11 @@ function CodeBlock({ code, language = "tsx" }: { code: string; language?: string
     <div className="relative">
       <button
         onClick={handleCopy}
-        className="absolute top-3 right-3 px-2 py-1 text-xs font-medium text-szn-text-2 bg-szn-surface rounded hover:bg-szn-surface-1 transition-colors"
+        className="absolute top-3 right-3 px-2 py-1 text-xs font-medium text-[var(--ink-600)] bg-[var(--ink-50)] rounded hover:bg-[var(--ink-50)] transition-colors"
       >
         {copied ? t("copied") : t("copy")}
       </button>
-      <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm">
+      <pre className="bg-[var(--ink-900)] text-gray-100 p-4 rounded-lg overflow-x-auto text-sm">
         <code className={`language-${language}`}>{code}</code>
       </pre>
     </div>
@@ -842,24 +842,24 @@ function ComponentCard({ doc }: { doc: ComponentDoc }) {
   return (
     <div
       id={doc.id}
-      className="bg-szn-card border border-szn-border rounded-xl overflow-hidden scroll-mt-24"
+      className="bg-[var(--ink-0)] border border-[var(--ink-200)] rounded-xl overflow-hidden scroll-mt-24"
     >
       {/* Header */}
       <div
-        className="p-6 cursor-pointer hover:bg-szn-surface-1 transition-colors"
+        className="p-6 cursor-pointer hover:bg-[var(--ink-50)] transition-colors"
         onClick={() => setIsExpanded(!isExpanded)}
       >
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-xl font-bold text-szn-text-1">
+            <h3 className="text-xl font-bold text-[var(--ink-900)]">
               {doc.name}
             </h3>
-            <p className="text-sm text-szn-text-2 mt-1 font-mono">
+            <p className="text-sm text-[var(--ink-600)] mt-1 font-mono">
               {doc.path}
             </p>
           </div>
           <svg
-            className={`w-6 h-6 text-szn-text-3 transition-transform ${isExpanded ? "rotate-180" : ""}`}
+            className={`w-6 h-6 text-[var(--ink-500)] transition-transform ${isExpanded ? "rotate-180" : ""}`}
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -872,10 +872,10 @@ function ComponentCard({ doc }: { doc: ComponentDoc }) {
 
       {/* Expanded Content */}
       {isExpanded && (
-        <div className="border-t border-szn-border">
+        <div className="border-t border-[var(--ink-200)]">
           {/* Props */}
           <div className="p-6">
-            <h4 className="text-lg font-semibold text-szn-text-1 mb-4">
+            <h4 className="text-lg font-semibold text-[var(--ink-900)] mb-4">
               {t("props")}
             </h4>
             <PropTable props={doc.props} />
@@ -883,8 +883,8 @@ function ComponentCard({ doc }: { doc: ComponentDoc }) {
 
           {/* Usage Example */}
           {codeExamples[doc.id] && (
-            <div className="p-6 border-t border-szn-border bg-szn-surface">
-              <h4 className="text-lg font-semibold text-szn-text-1 mb-4">
+            <div className="p-6 border-t border-[var(--ink-200)] bg-[var(--ink-50)]">
+              <h4 className="text-lg font-semibold text-[var(--ink-900)] mb-4">
                 {t("usage")}
               </h4>
               <CodeBlock code={codeExamples[doc.id]} />
@@ -909,21 +909,21 @@ export default function ComponentsPage() {
     : componentDocs;
 
   return (
-    <div className="min-h-screen bg-szn-bg">
+    <div className="min-h-screen bg-[var(--ink-50)]">
       {/* Header */}
-      <div className="bg-szn-card border-b border-szn-border">
+      <div className="bg-[var(--ink-0)] border-b border-[var(--ink-200)]">
         <div className="max-w-6xl mx-auto px-4 py-12">
-          <nav className="text-sm text-szn-text-2 mb-4">
-            <Link href="/docs" className="hover:text-szn-text-1">
+          <nav className="text-sm text-[var(--ink-600)] mb-4">
+            <Link href="/docs" className="hover:text-[var(--ink-900)]">
               Docs
             </Link>
             <span className="mx-2">/</span>
-            <span className="text-szn-text-1">{t("title")}</span>
+            <span className="text-[var(--ink-900)]">{t("title")}</span>
           </nav>
-          <h1 className="text-4xl font-bold text-szn-text-1">
+          <h1 className="text-4xl font-bold text-[var(--ink-900)]">
             {t("title")}
           </h1>
-          <p className="text-lg text-szn-text-2 mt-4 max-w-3xl">
+          <p className="text-lg text-[var(--ink-600)] mt-4 max-w-3xl">
             {t("subtitle")}
           </p>
         </div>
@@ -938,7 +938,7 @@ export default function ComponentsPage() {
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
               activeCategory === null
                 ? "bg-indigo-600 text-white"
-                : "bg-szn-card text-szn-text-1 border border-szn-border hover:bg-szn-surface-1"
+                : "bg-[var(--ink-0)] text-[var(--ink-900)] border border-[var(--ink-200)] hover:bg-[var(--ink-50)]"
             }`}
           >
             {t("all")}
@@ -950,12 +950,12 @@ export default function ComponentsPage() {
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 ${
                 activeCategory === cat.id
                   ? "bg-indigo-600 text-white"
-                  : "bg-szn-card text-szn-text-1 border border-szn-border hover:bg-szn-surface-1"
+                  : "bg-[var(--ink-0)] text-[var(--ink-900)] border border-[var(--ink-200)] hover:bg-[var(--ink-50)]"
               }`}
             >
               <CategoryIcon path={cat.icon} />
               {cat.label}
-              <span className="ml-1 px-1.5 py-0.5 text-xs rounded-full bg-szn-surface text-szn-text-2">
+              <span className="ml-1 px-1.5 py-0.5 text-xs rounded-full bg-[var(--ink-50)] text-[var(--ink-600)]">
                 {componentDocs.filter((d) => d.category === cat.id).length}
               </span>
             </button>
@@ -975,7 +975,7 @@ export default function ComponentsPage() {
                   <div className="p-2 rounded-lg bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400">
                     <CategoryIcon path={category.icon} />
                   </div>
-                  <h2 className="text-2xl font-bold text-szn-text-1">
+                  <h2 className="text-2xl font-bold text-[var(--ink-900)]">
                     {category.label} {t("components")}
                   </h2>
                 </div>

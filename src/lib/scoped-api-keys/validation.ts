@@ -82,6 +82,41 @@ export async function validateScopedApiKey(
 
   // Parse scope configuration (support both old scopes array and new scope_config)
   const scopeConfig: ApiKeyScope = keyData.scope_config || parseLegacyScopes(keyData.scopes);
+  const scopeValidation = validateScopeConfig(scopeConfig);
+  if (!scopeValidation.valid) {
+    return {
+      valid: false,
+      failureReason: `Invalid API key scope: ${scopeValidation.errors.join(', ')}`,
+    };
+  }
+
+  const scopedOrganizationId =
+    scopeConfig.level === 'organization' || scopeConfig.level === 'project'
+      ? scopeConfig.organizationId
+      : undefined;
+
+  if (keyData.organization_id && keyData.organization_id !== scopedOrganizationId) {
+    return {
+      valid: false,
+      failureReason: 'API key organization binding does not match its scope',
+    };
+  }
+
+  if (scopedOrganizationId) {
+    const { data: membership, error: membershipError } = await supabase
+      .from('organization_members')
+      .select('role')
+      .eq('organization_id', scopedOrganizationId)
+      .eq('user_id', keyData.user_id)
+      .maybeSingle();
+
+    if (membershipError || !membership) {
+      return {
+        valid: false,
+        failureReason: 'API key is not authorized for its organization',
+      };
+    }
+  }
 
   // Check IP restriction
   const ipRestriction = keyData.ip_restriction as IpRestriction | undefined;
@@ -124,7 +159,7 @@ export async function validateScopedApiKey(
     valid: true,
     key: scopedKey,
     userId: keyData.user_id,
-    orgId: keyData.organization_id || scopeConfig.organizationId,
+    orgId: scopedOrganizationId,
     effectivePermissions,
     ipRestrictionApplied,
   };
@@ -482,6 +517,15 @@ export function validateScopeConfig(scope: ApiKeyScope): { valid: boolean; error
 
   if (scope.level === 'organization' && !scope.organizationId) {
     errors.push('Organization ID is required for organization-level scope');
+  }
+
+  if (scope.level === 'user') {
+    if (scope.organizationId) {
+      errors.push('User-level scope cannot include an organization ID');
+    }
+    if (scope.projectIds?.length) {
+      errors.push('User-level scope cannot include project IDs');
+    }
   }
 
   if (scope.level === 'project') {

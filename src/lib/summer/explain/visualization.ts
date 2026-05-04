@@ -28,10 +28,10 @@ const SCORE_COLORS = {
 };
 
 const HIGHLIGHT_COLORS = {
-  exact_match: 'bg-green-200 dark:bg-green-900',
-  semantic_match: 'bg-amber-200 dark:bg-amber-900',
-  keyword: 'bg-blue-200 dark:bg-blue-900',
-  entity: 'bg-purple-200 dark:bg-purple-900',
+  exact_match: 'bg-[var(--signal-canon-soft)] dark:bg-[var(--signal-canon-ink)]',
+  semantic_match: 'bg-[var(--signal-pending-soft)] dark:bg-[var(--signal-pending-ink)]',
+  keyword: 'bg-[var(--ink-100)] dark:bg-[var(--ink-700)]',
+  entity: 'bg-[var(--ink-100)] dark:bg-[var(--ink-700)]',
 };
 
 const RANKING_STAGE_COLORS = {

@@ -5,7 +5,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { validateApiKey } from '@/lib/auth/api-key';
+import { requireApiScope } from '@/lib/auth/api-scope';
 import { createServerClient } from '@/lib/supabase';
 import { createGraphRAGRetriever } from '@/lib/graph/graphrag';
 import { logServerError } from '@/lib/server/logger';
@@ -23,10 +23,9 @@ interface ContextRequest {
 
 export async function POST(request: NextRequest, { params }: RouteParams) {
   try {
-    const auth = await validateApiKey(request);
-    if (!auth.valid) {
-      return NextResponse.json({ error: 'Unauthorized', message: auth.error }, { status: 401 });
-    }
+    const authResult = await requireApiScope(request, 'graph:read');
+    if (authResult.response) return authResult.response;
+    const { auth } = authResult;
 
     const { graphId } = await params;
     const body = (await request.json()) as ContextRequest;

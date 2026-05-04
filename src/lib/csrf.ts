@@ -8,7 +8,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { randomBytes, timingSafeEqual } from 'crypto';
+import { randomBytes, timingSafeEqual } from 'node:crypto';
 
 const LOCAL_ALLOWED_ORIGINS = [
   'http://localhost:3000',
@@ -19,11 +19,18 @@ const LOCAL_ALLOWED_ORIGINS = [
   'http://127.0.0.1:3100',
 ];
 
+function vercelUrl(value: string | undefined): string | undefined {
+  return value ? `https://${value}` : undefined;
+}
+
 const ALLOWED_ORIGINS = new Set([
   process.env.NEXT_PUBLIC_SITE_URL,
   process.env.NEXT_PUBLIC_APP_URL,
   process.env.NEXTAUTH_URL,
   process.env.PLAYWRIGHT_BASE_URL,
+  vercelUrl(process.env.VERCEL_PROJECT_PRODUCTION_URL),
+  vercelUrl(process.env.VERCEL_BRANCH_URL),
+  vercelUrl(process.env.VERCEL_URL),
   ...LOCAL_ALLOWED_ORIGINS,
 ].filter(Boolean) as string[]);
 const CSRF_TOKEN_BYTES = 32;
@@ -86,9 +93,24 @@ export function verifyCsrf(request: NextRequest): NextResponse | null {
     );
   }
 
-  // No Origin or Referer — this can happen with same-origin requests in some
-  // browsers or non-browser clients. Allow it (defense-in-depth: cookie SameSite
-  // attribute provides additional protection).
+  // No Origin or Referer — require double-submit CSRF token to prevent
+  // CSRF attacks via cURL or non-browser clients with cookies.
+  return verifyDoubleSubmitToken(request);
+}
+
+/**
+ * Verify the double-submit CSRF token (cookie vs header).
+ * Extracted to avoid circular calls between verifyCsrf/verifyCsrfToken.
+ */
+function verifyDoubleSubmitToken(request: NextRequest): NextResponse | null {
+  const cookieToken = request.cookies.get(CSRF_COOKIE_NAME)?.value ?? '';
+  const headerToken = request.headers.get(CSRF_HEADER_NAME) ?? '';
+  if (!cookieToken || !headerToken || !safeTokenEquals(cookieToken, headerToken)) {
+    return NextResponse.json(
+      { error: 'CSRF validation failed: token mismatch' },
+      { status: 403 },
+    );
+  }
   return null;
 }
 
@@ -126,14 +148,5 @@ export function verifyCsrfToken(request: NextRequest): NextResponse | null {
   if (['GET', 'HEAD', 'OPTIONS'].includes(method)) return null;
   if (isApiKeyAuthenticatedRequest(request)) return null;
 
-  const cookieToken = request.cookies.get(CSRF_COOKIE_NAME)?.value ?? '';
-  const headerToken = request.headers.get(CSRF_HEADER_NAME) ?? '';
-  if (!cookieToken || !headerToken || !safeTokenEquals(cookieToken, headerToken)) {
-    return NextResponse.json(
-      { error: 'CSRF validation failed: token mismatch' },
-      { status: 403 },
-    );
-  }
-
-  return null;
+  return verifyDoubleSubmitToken(request);
 }

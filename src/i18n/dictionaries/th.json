@@ -323,7 +323,6 @@
     "nav": {
       "overview": "ภาพรวม",
       "memories": "เอนทิตี",
-      "memoryEditor": "ตัวแก้ไขหน่วยความจำ",
       "mindMap": "กราฟความสัมพันธ์",
       "candidates": "กล่องรับ Event",
       "devTools": "เครื่องมือพัฒนา",
@@ -337,6 +336,7 @@
       "usage": "การใช้งาน",
       "budget": "งบประมาณ",
       "reports": "รายงาน",
+      "calculator": "ประมาณต้นทุน",
       "apiKeys": "คีย์ API",
       "integrations": "ปลั๊กอิน Engine",
       "webhooks": "Webhooks",
@@ -345,10 +345,15 @@
       "settings": "การตั้งค่า",
       "groups": {
         "memory": "NPC MEMORY",
+        "observe": "การเฝ้าระวัง",
+        "govern": "POLICIES",
+        "finops": "USAGE & COST",
+        "connect": "INTEGRATE",
         "system": "WORKSPACE",
         "build": "พัฒนา",
         "integrate": "เชื่อมต่อ"
-      }
+      },
+      "memoryEditor": "ตัวแก้ไขหน่วยความจำ"
     },
     "pinSidebar": "ปักหมุดแถบด้านข้าง",
     "unpinSidebar": "ยุบแถบด้านข้าง",
@@ -1436,6 +1441,50 @@
       "recentDecisions": "การตัดสินใจล่าสุด",
       "noLogs": "ยังไม่มีล็อกการตัดสินใจ"
     },
+    "calculator": {
+      "title": "ประมาณต้นทุน",
+      "subtitle": "ประมาณต้นทุนรายเดือนจากจำนวนเอนทิตีและปริมาณ event",
+      "stats": {
+        "apiCalls": "การเรียก API",
+        "memories": "หน่วยความจำ",
+        "extractions": "การดึงข้อมูล",
+        "estimated": "ค่าใช้จ่ายประมาณการ"
+      },
+      "presets": {
+        "title": "ค่าที่ตั้งไว้ล่วงหน้า",
+        "startup": "สตาร์ทอัพ",
+        "growing": "กำลังเติบโต",
+        "scale": "ขยายขนาด",
+        "enterprise": "องค์กรขนาดใหญ่"
+      },
+      "customize": {
+        "title": "ปรับแต่งการใช้งาน"
+      },
+      "labels": {
+        "apiCalls": "การเรียก API รายเดือน",
+        "memories": "หน่วยความจำที่เก็บไว้",
+        "extractions": "การดึงข้อมูล"
+      },
+      "recommended": {
+        "title": "แผนที่แนะนำ",
+        "base": "ราคาพื้นฐาน",
+        "overage": "ค่าเกิน",
+        "cta": "เริ่มต้นใช้งาน"
+      },
+      "comparison": {
+        "title": "แผนทั้งหมด",
+        "best": "คุ้มค่าที่สุด"
+      },
+      "details": {
+        "title": "รายละเอียดการกำหนดราคา",
+        "plan": "แผน",
+        "base": "ราคาพื้นฐาน",
+        "includedCalls": "การเรียกที่รวมอยู่",
+        "overageRate": "อัตราค่าเกิน",
+        "yourOverage": "ค่าเกินของคุณ",
+        "total": "รวม"
+      }
+    },
     "webhooks": {
       "title": "Webhooks",
       "subtitle": "กำหนดค่า HTTP callbacks สำหรับการอัปเดตเอนทิตี/event แบบเรียลไทม์",
@@ -1606,12 +1655,98 @@
       "contactUs": "ติดต่อเราได้ที่"
     }
   },
+  "serviceSelector": {
+    "title": "เลือกประสบการณ์ของคุณ",
+    "subtitle": "สองวิธีในการใช้พลังของหน่วยความจำ AI",
+    "spring": {
+      "name": "Spring",
+      "icon": "🌿",
+      "tagline": "แชท Multi-AI",
+      "description": "แชทกับ GPT-4, Claude, Gemini และอีกมากมาย - ทั้งหมดพร้อมหน่วยความจำถาวรที่จดจำคุณ",
+      "features": [
+        "เข้าถึงโมเดล AI ชั้นนำทั้งหมดในที่เดียว",
+        "ความชอบของคุณถูกจดจำข้ามเซสชัน",
+        "สลับบริบทอย่างราบรื่นระหว่างโมเดล"
+      ],
+      "cta": "ลอง Spring",
+      "badge": ""
+    },
+    "summer": {
+      "name": "Summer",
+      "icon": "☀️",
+      "tagline": "Memory API",
+      "description": "มอบหน่วยความจำถาวรให้กับแอปพลิเคชัน AI ของคุณด้วย API ที่เป็นมิตรกับนักพัฒนา",
+      "features": [
+        "REST API และ SDK ที่เรียบง่าย",
+        "เวลาเรียกค้นต่ำกว่า 50ms",
+        "ความปลอดภัยระดับองค์กร"
+      ],
+      "cta": "สำรวจ API",
+      "badge": "พร้อมใช้งาน"
+    },
+    "footer": "ส่วนหนึ่งของ Seizn Seasons - หน่วยความจำ AI สำหรับทุกความต้องการ"
+  },
+  "springPage": {
+    "badge": "",
+    "title": "หนึ่งแชท",
+    "titleHighlight": "ทุก AI",
+    "subtitle": "ไม่ว่าคุณจะเลือก AI ใด\nทั้งหมดจดจำคุณ",
+    "startChatting": "เริ่มแชท",
+    "viewPricing": "ดูราคา",
+    "features": {
+      "title": "ทำไมต้องเลือก Spring?",
+      "subtitle": "สิ่งที่ดีที่สุดจากทุก AI รวมเป็นหนึ่ง",
+      "multiModel": {
+        "title": "เข้าถึงหลายโมเดล",
+        "description": "สลับระหว่าง GPT-4, Claude, Gemini, Llama และอื่นๆ เลือกโมเดลที่ดีที่สุดสำหรับแต่ละงาน"
+      },
+      "persistentMemory": {
+        "title": "หน่วยความจำถาวร",
+        "description": "ความชอบ บริบท และประวัติของคุณถูกเก็บไว้ในทุกการสนทนาและทุกโมเดล"
+      },
+      "freeGenerosity": {
+        "title": "แผนฟรีระดับ Cursor",
+        "description": "การใช้งานฟรีอย่างใจกว้าง ผู้ใช้ส่วนใหญ่ไม่ต้องจ่ายเงิน Pro ราคา $9.99/เดือนสำหรับผู้ใช้ระดับสูง"
+      }
+    },
+    "pricing": {
+      "title": "ราคาเรียบง่าย",
+      "free": {
+        "name": "ฟรี",
+        "price": "$0",
+        "period": "ตลอดไป",
+        "features": [
+          "โมเดล AI ทั้งหมด",
+          "หน่วยความจำข้ามเซสชัน",
+          "แอปเว็บและมือถือ"
+        ],
+        "cta": "เริ่มต้นฟรี"
+      },
+      "pro": {
+        "name": "Pro",
+        "price": "$9.99",
+        "period": "ต่อเดือน",
+        "badge": "คุ้มค่าที่สุด",
+        "features": [
+          "ทุกอย่างในแผนฟรี",
+          "การเข้าถึงลำดับความสำคัญ",
+          "การควบคุมหน่วยความจำขั้นสูง",
+          "การเข้าถึง API"
+        ],
+        "cta": "อัพเกรดเป็น Pro"
+      }
+    }
+  },
   "extremeHome": {
     "heroTitle": "หน่วยความจำสำหรับ NPC พลัง AI.",
     "heroSubtitle": "เชื่อมต่อกับ Inworld, Convai หรือ LLM ของคุณ Seizn มอบหน่วยความจำถาวร ความสัมพันธ์ และการจดจำข้ามรุ่นให้กับ NPC ของคุณ — ราคาต่อกราฟ ไม่ใช่ต่อที่นั่ง",
     "ctaStart": "อ่านเอกสาร",
     "ctaDemo": "เล่น smallgod",
     "socialProof": "สร้างมาเพื่อ game studio ที่ขยายจาก 10 ถึง 10,000 NPC",
+    "liveDemo": "Demo สด",
+    "heroTagline": "เล่น smallgod — god-game อ้างอิงของเราที่สร้างบน Seizn ไม่ต้องสมัคร ไม่ต้องติดตั้ง",
+    "firstRetrievalComplete": "การเรียกค้นแรกเสร็จสิ้น",
+    "copySnippetHint": "คัดลอกโค้ดด้านล่างเพื่อทำซ้ำ",
     "copySnippetTitle": "ใส่ใน Unity, Unreal หรือ runtime ใดก็ได้",
     "copySnippetSubtitle": "HTTP wrapper + ปลั๊กอิน C#/C++ อย่างเป็นทางการ ไม่ต้องสร้าง infrastructure เอง",
     "whySeizn": {
@@ -1652,6 +1787,89 @@
       "status": "สถานะ",
       "help": "ช่วยเหลือ",
       "github": "OSS"
+    },
+    "requestBuilder": {
+      "title": "ตัวสร้างคำขอ",
+      "query": "คำค้นหา",
+      "queryPlaceholder": "ป้อนคำค้นหาของคุณ...",
+      "tryExamples": "ลองตัวอย่าง",
+      "dataset": "ชุดข้อมูล",
+      "latencyBudget": "งบประมาณ Latency",
+      "fast": "เร็ว",
+      "thorough": "ละเอียด",
+      "topK": "Top K",
+      "results": "ผลลัพธ์",
+      "features": "ฟีเจอร์",
+      "hybridSearch": "การค้นหาแบบไฮบริด",
+      "hybridSearchDesc": "รวม vector + keyword",
+      "rerank": "จัดอันดับใหม่",
+      "rerankDesc": "ให้คะแนนใหม่ด้วย cross-encoder",
+      "answerContract": "สัญญาคำตอบ",
+      "answerContractDesc": "ตรวจสอบคุณภาพคำตอบ",
+      "running": "กำลังรัน...",
+      "runQuery": "รันคำค้นหา",
+      "datasets": {
+        "techDocs": "เอกสารเทคนิค",
+        "legalContracts": "สัญญาทางกฎหมาย",
+        "researchPapers": "เอกสารวิจัย"
+      },
+      "advanced": "ขั้นสูง"
+    },
+    "resultsPanel": {
+      "searching": "กำลังค้นหา...",
+      "noResults": "รันคำค้นหาเพื่อดูผลลัพธ์",
+      "score": "คะแนน"
+    },
+    "tracePanel": {
+      "tracing": "กำลังติดตาม pipeline...",
+      "noTrace": "รันคำค้นหาเพื่อดูการติดตาม",
+      "latency": "เวลาแฝง",
+      "cost": "ค่าใช้จ่าย",
+      "tokens": "Token",
+      "vectorOps": "Vector Ops",
+      "cached": "แคช",
+      "model": "โมเดล",
+      "input": "อินพุต",
+      "output": "เอาต์พุต"
+    },
+    "tabs": {
+      "results": "ผลลัพธ์",
+      "trace": "การติดตาม",
+      "cost": "ต้นทุน"
+    },
+    "chips": {
+      "trace": "เอนทิตี",
+      "eval": "ความสัมพันธ์",
+      "policy": "Event"
+    },
+    "playgroundTitle": "ลองใช้เลย",
+    "costPanel": {
+      "calculating": "กำลังคำนวณต้นทุน...",
+      "noCost": "เรียกใช้คำค้นหาเพื่อดูรายละเอียดต้นทุน",
+      "costBreakdown": "รายละเอียดต้นทุน",
+      "component": "ส่วนประกอบ",
+      "cost": "ต้นทุน",
+      "embedding": "Embedding",
+      "vectorSearch": "ค้นหาเวกเตอร์",
+      "rerank": "จัดอันดับใหม่",
+      "answerContract": "สัญญาคำตอบ",
+      "total": "ต้นทุนรวม",
+      "usage": "การใช้งาน",
+      "tokensIn": "โทเค็นเข้า",
+      "tokensOut": "โทเค็นออก",
+      "queryUnits": "หน่วยคำค้นหา",
+      "estimatedMonthly": "ประมาณการรายเดือน",
+      "basedOn": "อ้างอิงจาก",
+      "queriesPerDay": "คำค้นหา/วัน"
+    },
+    "errorDisplay": {
+      "error": "ข้อผิดพลาด",
+      "errorCode": "รหัส",
+      "traceId": "การติดตาม",
+      "hint": "คำแนะนำ",
+      "tryAgain": "ลองอีกครั้ง",
+      "copyTraceId": "คัดลอก Trace ID",
+      "copied": "คัดลอกแล้ว!"
     }
   },
   "docs": {
@@ -2561,6 +2779,42 @@
       }
     }
   },
+  "demoQuery": {
+    "title": "ตัวอย่างสด",
+    "subtitle": "สัมผัสท่อส่งการค้นคืนของ Seizn พร้อมการติดตามเต็มรูปแบบและความโปร่งใสด้านค่าใช้จ่าย",
+    "tryItNow": "ลองตอนนี้ - ไม่ต้องสมัครสมาชิก",
+    "queryPlaceholder": "คำค้นหา",
+    "runDemo": "รันเดโม",
+    "running": "กำลังรัน...",
+    "results": "ผลลัพธ์",
+    "trace": "ร่องรอย",
+    "cost": "ค่าใช้จ่าย",
+    "noResults": "รันเดโมเพื่อดูผลลัพธ์",
+    "errorTitle": "ข้อผิดพลาด",
+    "rateLimitError": "เกินขีดจำกัดอัตรา กรุณารอสักครู่",
+    "retryIn": "ลองใหม่ใน",
+    "seconds": "วินาที",
+    "score": "คะแนน",
+    "rerankScore": "จัดอันดับใหม่",
+    "latency": "เวลาตอบสนอง",
+    "tokens": "โทเค็น",
+    "cached": "แคช",
+    "model": "โมเดล",
+    "input": "อินพุต",
+    "output": "เอาต์พุต",
+    "costBreakdown": "รายละเอียด",
+    "total": "ค่าใช้จ่ายรวม",
+    "embedding": "Embedding",
+    "vectorSearch": "ค้นหาเวกเตอร์",
+    "rerank": "จัดอันดับใหม่",
+    "answerContract": "สัญญาคำตอบ",
+    "tokensIn": "โทเค็นขาเข้า",
+    "tokensOut": "โทเค็นขาออก",
+    "queryUnits": "หน่วยคำค้น",
+    "prefilledQueries": [
+      "ลองตัวอย่าง"
+    ]
+  },
   "publicTrace": {
     "title": "แชร์ร่องรอย",
     "subtitle": "ดูรายละเอียดร่องรอยการค้นคืนที่แชร์",
@@ -2936,25 +3190,8 @@
     }
   },
   "status": {
-    "metadataTitle": "Seizn Status",
-    "metadataDescription": "Current Seizn API availability and public incident history.",
-    "eyebrow": "STATUS",
     "title": "สถานะระบบ",
     "subtitle": "สถานะระบบแบบเรียลไทม์และประวัติเหตุการณ์",
-    "currentStatusLabel": "Current status",
-    "measuredScope": "Measured scope: api.seizn.com/v1/*",
-    "uptimeLabel": "Last 30 days uptime",
-    "uptimeWindow": "Calculated from public incident windows in the last 30 days.",
-    "incidentsEyebrow": "INCIDENTS",
-    "recentIncidentsTitle": "Recent incidents",
-    "noRecentIncidents": "No recent incidents",
-    "noRecentIncidentsBody": "The public incident ledger is empty for this period.",
-    "slaLink": "Read the SLA",
-    "states": {
-      "operational": "operational",
-      "degraded": "degraded",
-      "outage": "outage"
-    },
     "lastUpdated": "อัปเดตล่าสุด",
     "overall": {
       "operational": "ระบบทั้งหมดทำงานปกติ",
@@ -3002,6 +3239,23 @@
       "title": "รับการแจ้งเตือน",
       "rss": "RSS Feed",
       "email": "การแจ้งเตือนทางอีเมล"
+    },
+    "metadataTitle": "Seizn Status",
+    "metadataDescription": "Current Seizn API availability and public incident history.",
+    "eyebrow": "STATUS",
+    "currentStatusLabel": "Current status",
+    "measuredScope": "Measured scope: api.seizn.com/v1/*",
+    "uptimeLabel": "Last 30 days uptime",
+    "uptimeWindow": "Calculated from public incident windows in the last 30 days.",
+    "incidentsEyebrow": "INCIDENTS",
+    "recentIncidentsTitle": "Recent incidents",
+    "noRecentIncidents": "No recent incidents",
+    "noRecentIncidentsBody": "The public incident ledger is empty for this period.",
+    "slaLink": "Read the SLA",
+    "states": {
+      "operational": "operational",
+      "degraded": "degraded",
+      "outage": "outage"
     }
   },
   "sla": {

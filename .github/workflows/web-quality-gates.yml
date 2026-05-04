@@ -1,0 +1,76 @@
+name: Web Quality Gates
+
+on:
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'src/app/robots.ts'
+      - 'src/app/sitemap.ts'
+      - 'src/components/rum/**'
+      - 'src/hooks/useTelemetry.ts'
+      - 'src/lib/telemetry/**'
+      - 'src/proxy.ts'
+      - 'scripts/verify-api-auth-surface.mjs'
+      - 'scripts/verify-security-headers.mjs'
+      - 'scripts/verify-telemetry-privacy.mjs'
+      - 'docs/security/**'
+      - 'next.config.ts'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/web-quality-gates.yml'
+  push:
+    branches: [main, develop]
+    paths:
+      - 'src/app/robots.ts'
+      - 'src/app/sitemap.ts'
+      - 'src/components/rum/**'
+      - 'src/hooks/useTelemetry.ts'
+      - 'src/lib/telemetry/**'
+      - 'src/proxy.ts'
+      - 'scripts/verify-api-auth-surface.mjs'
+      - 'scripts/verify-security-headers.mjs'
+      - 'scripts/verify-telemetry-privacy.mjs'
+      - 'docs/security/**'
+      - 'next.config.ts'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/web-quality-gates.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: web-quality-gates-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: '20'
+
+jobs:
+  web-quality-gates:
+    name: SEO, Headers, Telemetry, and API Surface
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Verify SEO surface
+        run: npm run verify:seo-surface
+
+      - name: Verify security headers
+        run: npm run verify:security-headers
+
+      - name: Verify telemetry privacy
+        run: npm run verify:telemetry-privacy
+
+      - name: Verify API auth surface
+        run: npm run verify:api-auth-surface

@@ -8,6 +8,7 @@ import {
   updateProfileOrganizationId,
 } from '@/lib/profile/organization';
 import { createAuthJsSessionToken } from '@/lib/auth/session-token';
+import { CSRF_COOKIE_NAME, CSRF_HEADER_NAME } from '@/lib/csrf';
 import { GET, PATCH } from '@/app/api/profile/organization/route';
 
 vi.mock('@/lib/auth', () => ({
@@ -38,6 +39,19 @@ vi.mock('@/lib/auth/session-token', () => ({
     maxAge: 60,
   })),
 }));
+
+function createPatchRequest(body: Record<string, unknown>): NextRequest {
+  const csrfToken = 'test-csrf-token';
+  return new NextRequest('https://example.com/api/profile/organization', {
+    method: 'PATCH',
+    headers: {
+      'content-type': 'application/json',
+      cookie: `${CSRF_COOKIE_NAME}=${csrfToken}`,
+      [CSRF_HEADER_NAME]: csrfToken,
+    },
+    body: JSON.stringify(body),
+  });
+}
 
 describe('profile organization route', () => {
   beforeEach(() => {
@@ -155,11 +169,7 @@ describe('profile organization route', () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any);
 
-    const request = new NextRequest('https://example.com/api/profile/organization', {
-      method: 'PATCH',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ organizationId: 'org-denied' }),
-    });
+    const request = createPatchRequest({ organizationId: 'org-denied' });
 
     const response = await PATCH(request);
     const body = await response.json();
@@ -214,11 +224,7 @@ describe('profile organization route', () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any);
 
-    const request = new NextRequest('https://example.com/api/profile/organization', {
-      method: 'PATCH',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ organizationId: 'org-2' }),
-    });
+    const request = createPatchRequest({ organizationId: 'org-2' });
 
     const response = await PATCH(request);
     const body = await response.json();
@@ -278,11 +284,7 @@ describe('profile organization route', () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any);
 
-    const request = new NextRequest('https://example.com/api/profile/organization', {
-      method: 'PATCH',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ organizationId: null }),
-    });
+    const request = createPatchRequest({ organizationId: null });
 
     const response = await PATCH(request);
     const body = await response.json();
@@ -340,11 +342,7 @@ describe('profile organization route', () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any);
 
-    const request = new NextRequest('https://example.com/api/profile/organization', {
-      method: 'PATCH',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ organizationId: 'org-3' }),
-    });
+    const request = createPatchRequest({ organizationId: 'org-3' });
 
     const response = await PATCH(request);
     const body = await response.json();

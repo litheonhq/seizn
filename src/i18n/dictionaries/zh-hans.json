@@ -392,7 +392,6 @@
     "nav": {
       "overview": "概览",
       "memories": "记忆",
-      "memoryEditor": "记忆编辑器",
       "mindMap": "思维导图",
       "candidates": "候选",
       "devTools": "开发工具",
@@ -406,6 +405,7 @@
       "usage": "用量",
       "budget": "预算",
       "reports": "报告",
+      "calculator": "计算器",
       "apiKeys": "API密钥",
       "integrations": "集成",
       "webhooks": "Webhook",
@@ -414,10 +414,15 @@
       "settings": "设置",
       "groups": {
         "memory": "记忆",
+        "observe": "监控",
+        "govern": "治理",
+        "finops": "费用管理",
+        "connect": "连接",
         "system": "系统",
         "build": "开发",
         "integrate": "集成"
-      }
+      },
+      "memoryEditor": "记忆编辑器"
     },
     "pinSidebar": "固定侧边栏",
     "unpinSidebar": "折叠侧边栏",
@@ -1436,6 +1441,50 @@
       "recentDecisions": "最近决策",
       "noLogs": "暂无决策日志"
     },
+    "calculator": {
+      "title": "使用量计算器",
+      "subtitle": "根据预期使用量估算您的月度费用",
+      "stats": {
+        "apiCalls": "API 调用",
+        "memories": "记忆",
+        "extractions": "提取",
+        "estimated": "预估费用"
+      },
+      "presets": {
+        "title": "快速预设",
+        "startup": "初创",
+        "growing": "成长",
+        "scale": "规模化",
+        "enterprise": "企业"
+      },
+      "customize": {
+        "title": "自定义使用量"
+      },
+      "labels": {
+        "apiCalls": "月度 API 调用",
+        "memories": "存储的记忆",
+        "extractions": "提取"
+      },
+      "recommended": {
+        "title": "推荐计划",
+        "base": "基础价格",
+        "overage": "超额",
+        "cta": "开始使用"
+      },
+      "comparison": {
+        "title": "所有计划",
+        "best": "最佳性价比"
+      },
+      "details": {
+        "title": "详细价格明细",
+        "plan": "计划",
+        "base": "基础价格",
+        "includedCalls": "包含调用",
+        "overageRate": "超额费率",
+        "yourOverage": "您的超额",
+        "total": "总计"
+      }
+    },
     "webhooks": {
       "title": "Webhooks",
       "subtitle": "配置HTTP回调以接收实时事件通知",
@@ -1606,12 +1655,97 @@
       "contactUs": "联系我们"
     }
   },
+  "serviceSelector": {
+    "title": "选择您的体验",
+    "subtitle": "两种方式利用AI记忆的力量",
+    "spring": {
+      "name": "Spring",
+      "icon": "🌿",
+      "tagline": "多AI聊天",
+      "description": "与GPT-4、Claude、Gemini等对话——都具有记住您的持久记忆。",
+      "features": [
+        "在一个地方访问所有主流AI模型",
+        "您的偏好跨会话记忆",
+        "模型间无缝上下文切换"
+      ],
+      "cta": "试用Spring",
+      "badge": ""
+    },
+    "summer": {
+      "name": "Summer",
+      "icon": "☀️",
+      "tagline": "记忆API",
+      "description": "通过我们开发者优先的API为您的AI应用程序提供持久记忆。",
+      "features": [
+        "简单的REST API和SDK",
+        "低于50毫秒的检索时间",
+        "企业级安全"
+      ],
+      "cta": "探索API",
+      "badge": "现已可用"
+    },
+    "footer": "Seizn四季系列的一部分——满足各种需求的AI记忆"
+  },
+  "springPage": {
+    "badge": "",
+    "title": "一个聊天。",
+    "titleHighlight": "所有AI。",
+    "subtitle": "无论您选择哪个，\n它们都会记住您。",
+    "startChatting": "开始聊天",
+    "viewPricing": "查看定价",
+    "features": {
+      "title": "为什么选择Spring？",
+      "subtitle": "每个AI的精华，统一呈现。",
+      "multiModel": {
+        "title": "多模型访问",
+        "description": "在GPT-4、Claude、Gemini、Llama等之间切换。为每个任务选择最佳模型。"
+      },
+      "persistentMemory": {
+        "title": "持久记忆",
+        "description": "您的偏好、上下文和历史记录在每次对话和每个模型中保持。"
+      },
+      "freeGenerosity": {
+        "title": "Cursor级别的免费层",
+        "description": "慷慨的免费使用。大多数用户无需付费。专业版每月$9.99，适合高级用户。"
+      }
+    },
+    "pricing": {
+      "title": "简单定价",
+      "free": {
+        "name": "免费版",
+        "price": "$0",
+        "period": "永久",
+        "features": [
+          "所有AI模型",
+          "跨会话记忆",
+          "网页和移动应用"
+        ],
+        "cta": "免费开始"
+      },
+      "pro": {
+        "name": "专业版",
+        "price": "$9.99",
+        "period": "每月",
+        "badge": "最佳价值",
+        "features": [
+          "免费版所有功能",
+          "优先访问",
+          "高级记忆控制",
+          "API访问"
+        ],
+        "cta": "升级到专业版"
+      }
+    }
+  },
   "extremeHome": {
     "heroTitle": "AI NPC 的记忆层。",
     "heroSubtitle": "接入 Inworld、Convai，或您自己的 LLM。Seizn 为 NPC 提供持久记忆、关系，以及跨世代回忆 — 以图谱计费，而非按席位收费。",
     "ctaStart": "查看文档",
     "ctaDemo": "试玩 smallgod",
     "socialProof": "为 NPC 规模从 10 到 10,000 的游戏工作室打造。",
+    "liveDemo": "在线演示",
+    "heroTagline": "试玩 smallgod — 以 Seizn 构建的参考神明游戏。无需注册，无需安装。",
+    "copySnippetHint": "复制以下代码片段以重现",
     "copySnippetTitle": "直接嵌入 Unity、Unreal 或任何运行时",
     "copySnippetSubtitle": "HTTP 封装器＋官方 C#/C++ 插件。无需自建基础设施。",
     "whySeizn": {
@@ -1652,6 +1786,90 @@
       "status": "状态",
       "help": "帮助",
       "github": "开源"
+    },
+    "requestBuilder": {
+      "title": "请求构建器",
+      "query": "查询",
+      "queryPlaceholder": "输入搜索查询...",
+      "tryExamples": "试试示例",
+      "dataset": "数据集",
+      "latencyBudget": "延迟预算",
+      "fast": "快速",
+      "thorough": "详细",
+      "topK": "前K个",
+      "results": "个结果",
+      "features": "功能",
+      "hybridSearch": "混合搜索",
+      "hybridSearchDesc": "向量+关键词结合",
+      "rerank": "重新排序",
+      "rerankDesc": "交叉编码器重新评分",
+      "answerContract": "答案契约",
+      "answerContractDesc": "验证答案质量",
+      "running": "运行中...",
+      "runQuery": "执行查询",
+      "datasets": {
+        "techDocs": "技术文档",
+        "legalContracts": "法律合同",
+        "researchPapers": "研究论文"
+      },
+      "advanced": "高级选项"
+    },
+    "resultsPanel": {
+      "searching": "搜索中...",
+      "noResults": "运行查询以查看结果",
+      "score": "得分"
+    },
+    "tracePanel": {
+      "tracing": "追踪管道中...",
+      "noTrace": "运行查询以查看追踪",
+      "latency": "延迟",
+      "cost": "成本",
+      "tokens": "令牌",
+      "vectorOps": "向量操作",
+      "cached": "已缓存",
+      "model": "模型",
+      "input": "输入",
+      "output": "输出"
+    },
+    "tabs": {
+      "results": "结果",
+      "trace": "追踪",
+      "cost": "费用"
+    },
+    "chips": {
+      "trace": "实体",
+      "eval": "关系",
+      "policy": "事件"
+    },
+    "playgroundTitle": "立即体验",
+    "firstRetrievalComplete": "首次检索完成",
+    "costPanel": {
+      "calculating": "正在计算费用...",
+      "noCost": "运行查询以查看费用明细",
+      "costBreakdown": "费用明细",
+      "component": "组件",
+      "cost": "费用",
+      "embedding": "嵌入",
+      "vectorSearch": "向量搜索",
+      "rerank": "重排序",
+      "answerContract": "回答契约",
+      "total": "总费用",
+      "usage": "使用量",
+      "tokensIn": "输入Token",
+      "tokensOut": "输出Token",
+      "queryUnits": "查询单位",
+      "estimatedMonthly": "预计月费",
+      "basedOn": "基于",
+      "queriesPerDay": "次查询/天"
+    },
+    "errorDisplay": {
+      "error": "错误",
+      "errorCode": "错误代码",
+      "traceId": "追踪ID",
+      "hint": "提示",
+      "tryAgain": "重试",
+      "copyTraceId": "复制追踪ID",
+      "copied": "已复制！"
     }
   },
   "docs": {
@@ -2601,6 +2819,42 @@
       }
     }
   },
+  "demoQuery": {
+    "title": "在线演示",
+    "subtitle": "体验Seizn的检索管道，包含完整的追踪和费用透明度。",
+    "tryItNow": "立即体验 - 无需注册",
+    "queryPlaceholder": "搜索查询",
+    "runDemo": "运行演示",
+    "running": "运行中...",
+    "results": "结果",
+    "trace": "追踪",
+    "cost": "费用",
+    "noResults": "运行演示以查看结果",
+    "errorTitle": "错误",
+    "rateLimitError": "超出速率限制，请稍候。",
+    "retryIn": "重试",
+    "seconds": "秒",
+    "score": "分数",
+    "rerankScore": "重排序",
+    "latency": "延迟",
+    "tokens": "Token",
+    "cached": "缓存",
+    "model": "模型",
+    "input": "输入",
+    "output": "输出",
+    "costBreakdown": "明细",
+    "total": "总费用",
+    "embedding": "嵌入",
+    "vectorSearch": "向量搜索",
+    "rerank": "重排序",
+    "answerContract": "回答契约",
+    "tokensIn": "输入Token",
+    "tokensOut": "输出Token",
+    "queryUnits": "查询单位",
+    "prefilledQueries": [
+      "试试这些示例"
+    ]
+  },
   "publicTrace": {
     "title": "共享追踪",
     "subtitle": "查看共享的检索追踪详情",
@@ -2976,25 +3230,8 @@
     }
   },
   "status": {
-    "metadataTitle": "Seizn Status",
-    "metadataDescription": "Current Seizn API availability and public incident history.",
-    "eyebrow": "STATUS",
     "title": "系统状态",
     "subtitle": "实时系统状态和事件历史",
-    "currentStatusLabel": "Current status",
-    "measuredScope": "Measured scope: api.seizn.com/v1/*",
-    "uptimeLabel": "Last 30 days uptime",
-    "uptimeWindow": "Calculated from public incident windows in the last 30 days.",
-    "incidentsEyebrow": "INCIDENTS",
-    "recentIncidentsTitle": "Recent incidents",
-    "noRecentIncidents": "No recent incidents",
-    "noRecentIncidentsBody": "The public incident ledger is empty for this period.",
-    "slaLink": "Read the SLA",
-    "states": {
-      "operational": "operational",
-      "degraded": "degraded",
-      "outage": "outage"
-    },
     "lastUpdated": "最后更新",
     "overall": {
       "operational": "所有系统正常运行",
@@ -3042,6 +3279,23 @@
       "title": "订阅更新",
       "rss": "RSS订阅",
       "email": "邮件通知"
+    },
+    "metadataTitle": "Seizn Status",
+    "metadataDescription": "Current Seizn API availability and public incident history.",
+    "eyebrow": "STATUS",
+    "currentStatusLabel": "Current status",
+    "measuredScope": "Measured scope: api.seizn.com/v1/*",
+    "uptimeLabel": "Last 30 days uptime",
+    "uptimeWindow": "Calculated from public incident windows in the last 30 days.",
+    "incidentsEyebrow": "INCIDENTS",
+    "recentIncidentsTitle": "Recent incidents",
+    "noRecentIncidents": "No recent incidents",
+    "noRecentIncidentsBody": "The public incident ledger is empty for this period.",
+    "slaLink": "Read the SLA",
+    "states": {
+      "operational": "operational",
+      "degraded": "degraded",
+      "outage": "outage"
     }
   },
   "sla": {

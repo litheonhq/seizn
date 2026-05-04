@@ -287,10 +287,59 @@
     "nav": {
       "overview": "Overview",
       "memories": "Entities",
-      "memoryEditor": "Memory Editor",
-      "import": "Import",
       "mindMap": "Relation graph",
       "candidates": "Event inbox",
+      "devTools": "Dev tools",
+      "playground": "Playground",
+      "evals": "Scenario tests",
+      "analytics": "Analytics",
+      "governance": "Content policy",
+      "privacy": "Privacy",
+      "security": "Security",
+      "enterprise": "For studios",
+      "usage": "Usage",
+      "budget": "Budget",
+      "reports": "Reports",
+      "calculator": "Cost estimator",
+      "apiKeys": "API keys",
+      "integrations": "Engine plugins",
+      "webhooks": "Webhooks",
+      "docs": "Docs",
+      "organizations": "Projects",
+      "settings": "Settings",
+      "groups": {
+        "memory": "NPC MEMORY",
+        "observe": "OBSERVE",
+        "govern": "POLICIES",
+        "finops": "USAGE & COST",
+        "connect": "INTEGRATE",
+        "system": "WORKSPACE",
+        "build": "Build",
+        "integrate": "Integrate"
+      },
+      "memory": {
+        "author_memory": "Author Memory"
+      },
+      "author": {
+        "workspace": "Author Workspace",
+        "groups": {
+          "work": "Work",
+          "account": "Account"
+        },
+        "inbox": "Inbox",
+        "review": "Review",
+        "characters": "Characters",
+        "graph": "Graph",
+        "timeline": "Timeline",
+        "conflicts": "Conflicts",
+        "simulate": "Simulate",
+        "audit": "Audit",
+        "usage": "Usage",
+        "byok": "BYOK",
+        "settings": "Settings"
+      },
+      "memoryEditor": "Memory Editor",
+      "import": "Import",
       "replay": "Replay",
       "canon": "Canon Lock",
       "chaos": "Chaos Monkey",
@@ -298,31 +347,8 @@
       "postMortem": "Post-Mortem",
       "branches": "Branches",
       "provenance": "Provenance",
-      "devTools": "Dev tools",
-      "playground": "Playground",
-      "evals": "Scenario tests",
-      "analytics": "Analytics",
-      "governance": "Content policy",
-      "privacy": "Privacy",
       "compliance": "Compliance",
-      "security": "Security",
-      "enterprise": "For studios",
-      "usage": "Usage",
-      "budget": "Budget",
-      "reports": "Reports",
-      "apiKeys": "API keys",
-      "integrations": "Engine plugins",
-      "webhooks": "Webhooks",
-      "docs": "Docs",
-      "organizations": "Projects",
-      "moderation": "Moderation",
-      "settings": "Settings",
-      "groups": {
-        "memory": "NPC MEMORY",
-        "system": "WORKSPACE",
-        "build": "Build",
-        "integrate": "Integrate"
-      }
+      "moderation": "Moderation"
     },
     "pinSidebar": "Pin sidebar",
     "unpinSidebar": "Collapse sidebar",
@@ -654,7 +680,6 @@
         "perQueryMax": "Per Query Max",
         "alertThreshold": "Alert Threshold",
         "alertThresholdDesc": "Get alerted when usage reaches this percentage",
-        "alertThresholdHint": "Warn when usage reaches this percentage of your budget.",
         "budgetMode": "Budget Mode",
         "soft": "Soft Limit",
         "softDesc": "Warn but allow overages",
@@ -665,7 +690,8 @@
         "reject": "Reject Request",
         "cache": "Return Cached",
         "degrade": "Degrade Quality",
-        "queue": "Queue Request"
+        "queue": "Queue Request",
+        "alertThresholdHint": "Warn when usage reaches this percentage of your budget."
       },
       "notifications": {
         "title": "Notification Settings",
@@ -688,7 +714,6 @@
         "subtitle": "Manage account and API access security",
         "changePassword": "Change Password",
         "passwordDesc": "Manage your password security",
-        "changePasswordDesc": "Password changes are managed by your sign-in provider.",
         "save": "Save Changes",
         "currentPassword": "Current Password",
         "newPassword": "New Password",
@@ -699,12 +724,12 @@
         "enable2FA": "Enable 2FA",
         "sessions": "Active Sessions",
         "sessionsDesc": "Manage your active sessions",
-        "viewSessions": "View Sessions"
+        "viewSessions": "View Sessions",
+        "changePasswordDesc": "Password changes are managed by your sign-in provider."
       },
       "dangerZone": {
         "title": "Data Management",
         "subtitle": "Manage and delete your account data",
-        "titleDesc": "Export data, delete stored memories, or close the account.",
         "exportData": "Export Data",
         "exportDataDesc": "Download all your data",
         "exportButton": "Export All Data",
@@ -714,7 +739,8 @@
         "deleteAccount": "Delete Account",
         "deleteAccountDesc": "Permanently delete your account and all data",
         "deleteAccountButton": "Delete Account",
-        "confirmDelete": "Type DELETE to confirm"
+        "confirmDelete": "Type DELETE to confirm",
+        "titleDesc": "Export data, delete stored memories, or close the account."
       },
       "billing": {
         "title": "Billing & Usage",
@@ -1041,6 +1067,50 @@
       "close": "Close",
       "viewDocs": "View Documentation"
     },
+    "calculator": {
+      "title": "Cost estimator",
+      "subtitle": "Estimate monthly costs from entity count and event throughput.",
+      "stats": {
+        "apiCalls": "API Calls",
+        "memories": "Memories",
+        "extractions": "Extractions",
+        "estimated": "Estimated Cost"
+      },
+      "presets": {
+        "title": "Quick Presets",
+        "startup": "Startup",
+        "growing": "Growing",
+        "scale": "Scale",
+        "enterprise": "Enterprise"
+      },
+      "customize": {
+        "title": "Customize Usage"
+      },
+      "labels": {
+        "apiCalls": "Monthly API Calls",
+        "memories": "Memories Stored",
+        "extractions": "Extractions"
+      },
+      "recommended": {
+        "title": "Recommended Plan",
+        "base": "Base Price",
+        "overage": "Overage",
+        "cta": "Get Started"
+      },
+      "comparison": {
+        "title": "All Plans",
+        "best": "Best Value"
+      },
+      "details": {
+        "title": "Detailed Pricing Breakdown",
+        "plan": "Plan",
+        "base": "Base Price",
+        "includedCalls": "Included Calls",
+        "overageRate": "Overage Rate",
+        "yourOverage": "Your Overage",
+        "total": "Total"
+      }
+    },
     "webhooks": {
       "title": "Webhooks",
       "subtitle": "Configure HTTP callbacks for entity/event updates in real time.",
@@ -1179,33 +1249,20 @@
       "memoryTypes": "Entity types",
       "tags": "Tags",
       "noTags": "No tags available",
-      "filters": "Filters",
-      "dateRange": "Date range",
-      "after": "After",
-      "before": "Before",
       "clearFilters": "Clear Filters",
       "showing": "Showing",
       "of": "of",
       "results": "results",
-      "sortBy": "Sort entities",
       "sortNewest": "Newest First",
       "sortOldest": "Oldest First",
       "sortRelevance": "Most Relevant",
       "activeFilters": "Active filters",
       "loading": "Loading entities...",
-      "fetchError": "Failed to load entities",
       "noMemories": "No entities yet",
       "noMatchingMemories": "No entities match your filters",
       "noMemoriesHint": "Create NPCs, factions, or events via the API to see them here",
       "match": "match",
       "loadMore": "Load More",
-      "retry": "Retry",
-      "memoriesTab": "Memories",
-      "budgetTab": "Budget",
-      "beliefTab": "Belief graph",
-      "decayTab": "Decay",
-      "branchTab": "Branches",
-      "provenanceTab": "Provenance",
       "export": "Export",
       "import": "Import",
       "imported": "imported",
@@ -1213,60 +1270,20 @@
       "failed": "failed",
       "afterDate": "After",
       "beforeDate": "Before",
-      "sortImportance": "By Importance"
-    },
-    "northStar": {
-      "title": "North Star Metrics",
-      "subtitle": "Key indicators for NPC memory reliability",
-      "refresh": "Refresh",
-      "improving": "Improving",
-      "declining": "Declining",
-      "stable": "Stable",
-      "insufficientData": "Insufficient data",
-      "blocked": "Blocked",
-      "regressions": "Regressions",
-      "target": "Target",
-      "average": "Avg",
-      "saved": "Saved",
-      "blockRate": "block rate",
-      "rolledBack": "rolled back",
-      "detectionRate": "detection rate",
-      "lastUpdated": "Last updated",
-      "last30Days": "Last 30 days",
-      "ttft": {
-        "title": "Time to First Trace",
-        "subtitle": "Signup to first trace (p75)"
-      },
-      "ttd": {
-        "title": "Time to Debug",
-        "subtitle": "Incident to root cause"
-      },
-      "cost": {
-        "title": "Cost Predictability",
-        "subtitle": "Budget overruns blocked"
-      },
-      "regression": {
-        "title": "Regression Rate",
-        "subtitle": "Eval drops detected"
-      }
-    },
-    "traceComparePage": {
-      "title": "Compare Traces",
-      "subtitle": "Analyze differences between two trace executions",
-      "selectTitle": "Select traces to compare",
-      "traceABaseline": "Trace A (baseline)",
-      "traceBComparison": "Trace B (comparison)",
-      "selectTrace": "Select a trace...",
-      "pasteTraceId": "Or paste a trace ID:",
-      "traceIdPlaceholder": "Trace ID...",
-      "compareButton": "Compare traces",
-      "replayTraceA": "Replay trace A",
-      "cancel": "Cancel",
-      "helpTitle": "How to use trace diff",
-      "helpLine1": "Select two traces to compare their results, latency, and cost.",
-      "helpLine2": "Use replay to run a trace again with a modified config.",
-      "helpLine3": "Compare the original and replayed runs to see the impact of config changes.",
-      "helpLine4": "Ranking changes show how results moved between runs."
+      "sortImportance": "By Importance",
+      "filters": "Filters",
+      "dateRange": "Date range",
+      "after": "After",
+      "before": "Before",
+      "sortBy": "Sort entities",
+      "fetchError": "Failed to load entities",
+      "retry": "Retry",
+      "memoriesTab": "Memories",
+      "budgetTab": "Budget",
+      "beliefTab": "Belief graph",
+      "decayTab": "Decay",
+      "branchTab": "Branches",
+      "provenanceTab": "Provenance"
     },
     "budgetPage": {
       "title": "Budget & Cost Controls",
@@ -1509,6 +1526,85 @@
         "addCustom": "Add Custom Policy"
       }
     },
+    "reportsPage": {
+      "title": "Usage report",
+      "generated": "Generated",
+      "period7d": "Last 7 days",
+      "period30d": "Last 30 days",
+      "period90d": "Last 90 days",
+      "exportPdf": "Export PDF",
+      "loadError": "Failed to load report",
+      "totalQueries": "Total Queries",
+      "totalCost": "Total Cost",
+      "avgLatency": "Avg Latency",
+      "costPerQuery": "Cost/Query",
+      "estAnnualCost": "Estimated Annual Cost",
+      "projAnnualSavings": "Projected Annual Savings",
+      "savingsRate": "Savings Rate",
+      "rerankImpact": "Rerank Impact",
+      "mrrScore": "MRR Score",
+      "without": "without",
+      "withRerank": "with rerank",
+      "autopilotSavings": "Autopilot Savings",
+      "savedThisPeriod": "saved this period with Autopilot",
+      "withAutopilot": "with autopilot",
+      "recommendations": "Recommendations",
+      "queries": "Queries:",
+      "avgCost": "Avg Cost"
+    },
+    "northStar": {
+      "title": "North Star Metrics",
+      "subtitle": "Key indicators for NPC memory reliability",
+      "refresh": "Refresh",
+      "improving": "Improving",
+      "declining": "Declining",
+      "stable": "Stable",
+      "insufficientData": "Insufficient data",
+      "blocked": "Blocked",
+      "regressions": "Regressions",
+      "target": "Target",
+      "average": "Avg",
+      "saved": "Saved",
+      "blockRate": "block rate",
+      "rolledBack": "rolled back",
+      "detectionRate": "detection rate",
+      "lastUpdated": "Last updated",
+      "last30Days": "Last 30 days",
+      "ttft": {
+        "title": "Time to First Trace",
+        "subtitle": "Signup to first trace (p75)"
+      },
+      "ttd": {
+        "title": "Time to Debug",
+        "subtitle": "Incident to root cause"
+      },
+      "cost": {
+        "title": "Cost Predictability",
+        "subtitle": "Budget overruns blocked"
+      },
+      "regression": {
+        "title": "Regression Rate",
+        "subtitle": "Eval drops detected"
+      }
+    },
+    "traceComparePage": {
+      "title": "Compare Traces",
+      "subtitle": "Analyze differences between two trace executions",
+      "selectTitle": "Select traces to compare",
+      "traceABaseline": "Trace A (baseline)",
+      "traceBComparison": "Trace B (comparison)",
+      "selectTrace": "Select a trace...",
+      "pasteTraceId": "Or paste a trace ID:",
+      "traceIdPlaceholder": "Trace ID...",
+      "compareButton": "Compare traces",
+      "replayTraceA": "Replay trace A",
+      "cancel": "Cancel",
+      "helpTitle": "How to use trace diff",
+      "helpLine1": "Select two traces to compare their results, latency, and cost.",
+      "helpLine2": "Use replay to run a trace again with a modified config.",
+      "helpLine3": "Compare the original and replayed runs to see the impact of config changes.",
+      "helpLine4": "Ranking changes show how results moved between runs."
+    },
     "personas": {
       "_draftReview": "DRAFT - KR copy reviewed against ai-writing-patterns-guide-ko.md",
       "title": "Korean NPC persona seeding",
@@ -1556,32 +1652,6 @@
       },
       "attribution": "Powered by Nemotron-Personas-Korea (NVIDIA, CC BY 4.0)",
       "attributionUrlLabel": "Dataset card"
-    },
-    "reportsPage": {
-      "title": "Usage report",
-      "generated": "Generated",
-      "period7d": "Last 7 days",
-      "period30d": "Last 30 days",
-      "period90d": "Last 90 days",
-      "exportPdf": "Export PDF",
-      "loadError": "Failed to load report",
-      "totalQueries": "Total Queries",
-      "totalCost": "Total Cost",
-      "avgLatency": "Avg Latency",
-      "costPerQuery": "Cost/Query",
-      "estAnnualCost": "Estimated Annual Cost",
-      "projAnnualSavings": "Projected Annual Savings",
-      "savingsRate": "Savings Rate",
-      "rerankImpact": "Rerank Impact",
-      "mrrScore": "MRR Score",
-      "without": "without",
-      "withRerank": "with rerank",
-      "autopilotSavings": "Autopilot Savings",
-      "savedThisPeriod": "saved this period with Autopilot",
-      "withAutopilot": "with autopilot",
-      "recommendations": "Recommendations",
-      "queries": "Queries:",
-      "avgCost": "Avg Cost"
     }
   },
   "pricingPage": {
@@ -1628,14 +1698,150 @@
       "contactUs": "Contact us at"
     }
   },
+  "serviceSelector": {
+    "title": "Choose Your Experience",
+    "subtitle": "Two ways to harness the power of AI memory",
+    "spring": {
+      "name": "Spring",
+      "icon": "🌿",
+      "tagline": "Multi-AI Chat",
+      "description": "Chat with GPT-4, Claude, Gemini, and more — all with persistent memory that remembers you.",
+      "features": [
+        "Access all major AI models in one place",
+        "Your preferences remembered across sessions",
+        "Seamless context switching between models"
+      ],
+      "cta": "Try Spring",
+      "badge": ""
+    },
+    "summer": {
+      "name": "Summer",
+      "icon": "☀️",
+      "tagline": "Memory API",
+      "description": "Give your AI applications persistent memory with our developer-first API.",
+      "features": [
+        "Simple REST API and SDKs",
+        "Under 50ms retrieval time",
+        "Enterprise-grade security"
+      ],
+      "cta": "Explore API",
+      "badge": "Available Now"
+    },
+    "footer": "Part of the Seizn seasons — AI memory for every need"
+  },
+  "springPage": {
+    "badge": "",
+    "title": "One Chat.",
+    "titleHighlight": "Every AI.",
+    "subtitle": "No matter which you choose,\nthey all remember you.",
+    "startChatting": "Start Chatting",
+    "viewPricing": "View Pricing",
+    "features": {
+      "title": "Why Spring?",
+      "subtitle": "The best of every AI, unified.",
+      "multiModel": {
+        "title": "Multi-Model Access",
+        "description": "Switch between GPT-4, Claude, Gemini, Llama and more. Pick the best model for each task."
+      },
+      "persistentMemory": {
+        "title": "Persistent Memory",
+        "description": "Your preferences, context, and history carried across every conversation and every model."
+      },
+      "freeGenerosity": {
+        "title": "Cursor-Level Free Tier",
+        "description": "Generous free usage. Most users never need to pay. Pro at $9.99/month for power users."
+      }
+    },
+    "pricing": {
+      "title": "Simple Pricing",
+      "free": {
+        "name": "Free",
+        "price": "$0",
+        "period": "Forever",
+        "features": [
+          "All AI models",
+          "Memory across sessions",
+          "Web & mobile apps"
+        ],
+        "cta": "Get Started Free"
+      },
+      "pro": {
+        "name": "Pro",
+        "price": "$9.99",
+        "period": "per month",
+        "badge": "Best Value",
+        "features": [
+          "Everything in Free",
+          "Priority access",
+          "Advanced memory controls",
+          "API access"
+        ],
+        "cta": "Upgrade to Pro"
+      }
+    }
+  },
   "extremeHome": {
     "heroTitle": "Memory for AI NPCs.",
     "heroSubtitle": "Plug into Inworld, Convai, or your own LLM. Seizn gives your NPCs persistent memory, relationships, and cross-generation recall — graph-priced, not per-seat.",
     "ctaStart": "Read the docs",
     "ctaDemo": "Play smallgod",
     "socialProof": "Built for game studios scaling from 10 to 10,000 NPCs.",
+    "liveDemo": "Live demo",
+    "heroTagline": "Play smallgod — our reference god-game built on Seizn. No signup, no install.",
+    "chips": {
+      "trace": "Entities",
+      "eval": "Relations",
+      "policy": "Events"
+    },
+    "playgroundTitle": "Try it now",
+    "firstRetrievalComplete": "First retrieval complete",
+    "copySnippetHint": "Copy the snippet below to reproduce",
     "copySnippetTitle": "Drop into Unity, Unreal, or any runtime",
     "copySnippetSubtitle": "HTTP wrapper + official C#/C++ plugins. No custom infrastructure needed.",
+    "requestBuilder": {
+      "title": "Request Builder",
+      "query": "Query",
+      "queryPlaceholder": "Enter your search query...",
+      "tryExamples": "Try examples",
+      "advanced": "Advanced",
+      "dataset": "Dataset",
+      "latencyBudget": "Latency Budget",
+      "fast": "fast",
+      "thorough": "thorough",
+      "topK": "Top K",
+      "results": "results",
+      "features": "Features",
+      "hybridSearch": "Hybrid Search",
+      "hybridSearchDesc": "Combine vector + keyword",
+      "rerank": "Rerank",
+      "rerankDesc": "Re-score with cross-encoder",
+      "answerContract": "Answer Contract",
+      "answerContractDesc": "Validate answer quality",
+      "running": "Running...",
+      "runQuery": "Run Query",
+      "datasets": {
+        "techDocs": "Tech Documentation",
+        "legalContracts": "Legal Contracts",
+        "researchPapers": "Research Papers"
+      }
+    },
+    "resultsPanel": {
+      "searching": "Searching...",
+      "noResults": "Run a query to see results",
+      "score": "Score"
+    },
+    "tracePanel": {
+      "tracing": "Tracing pipeline...",
+      "noTrace": "Run a query to see the trace",
+      "latency": "Latency",
+      "cost": "Cost",
+      "tokens": "Tokens",
+      "vectorOps": "Vector Ops",
+      "cached": "cached",
+      "model": "Model",
+      "input": "Input",
+      "output": "Output"
+    },
     "whySeizn": {
       "title": "Why Seizn vs Inworld / Convai alone?",
       "subtitle": "Dialogue engines do voices and personality brilliantly. None of them solve persistent memory at scale. Seizn plugs in as the memory layer.",
@@ -1674,6 +1880,39 @@
       "status": "Status",
       "help": "Help",
       "github": "OSS"
+    },
+    "tabs": {
+      "results": "Results",
+      "trace": "Trace",
+      "cost": "Cost"
+    },
+    "costPanel": {
+      "calculating": "Calculating costs...",
+      "noCost": "Run a query to see cost breakdown",
+      "costBreakdown": "Cost Breakdown",
+      "component": "Component",
+      "cost": "Cost",
+      "embedding": "Embedding",
+      "vectorSearch": "Vector Search",
+      "rerank": "Rerank",
+      "answerContract": "Answer Contract",
+      "total": "Total Cost",
+      "usage": "Usage",
+      "tokensIn": "Tokens In",
+      "tokensOut": "Tokens Out",
+      "queryUnits": "Query Units",
+      "estimatedMonthly": "Estimated Monthly",
+      "basedOn": "Based on",
+      "queriesPerDay": "queries/day"
+    },
+    "errorDisplay": {
+      "error": "Error",
+      "errorCode": "Code",
+      "traceId": "Trace",
+      "hint": "Hint",
+      "tryAgain": "Try Again",
+      "copyTraceId": "Copy trace ID",
+      "copied": "Copied!"
     }
   },
   "docs": {
@@ -2691,6 +2930,42 @@
       }
     }
   },
+  "demoQuery": {
+    "title": "Live Demo",
+    "subtitle": "Experience Seizn's retrieval pipeline with full tracing and cost transparency.",
+    "tryItNow": "Try it now - No signup required",
+    "queryPlaceholder": "Search Query",
+    "runDemo": "Run Demo",
+    "running": "Running...",
+    "results": "Results",
+    "trace": "Trace",
+    "cost": "Cost",
+    "noResults": "Run the demo to see results",
+    "errorTitle": "Error",
+    "rateLimitError": "Rate limit exceeded. Please wait.",
+    "retryIn": "Retry in",
+    "seconds": "seconds",
+    "score": "Score",
+    "rerankScore": "Rerank",
+    "latency": "Latency",
+    "tokens": "Tokens",
+    "cached": "cached",
+    "model": "Model",
+    "input": "Input",
+    "output": "Output",
+    "costBreakdown": "Breakdown",
+    "total": "Total Cost",
+    "embedding": "Embedding",
+    "vectorSearch": "Vector Search",
+    "rerank": "Rerank",
+    "answerContract": "Answer Contract",
+    "tokensIn": "Tokens In",
+    "tokensOut": "Tokens Out",
+    "queryUnits": "Query Units",
+    "prefilledQueries": [
+      "Try examples"
+    ]
+  },
   "publicTrace": {
     "title": "Shared Trace",
     "subtitle": "View shared retrieval trace details",
@@ -3065,6 +3340,331 @@
       "cta": "Contact Support"
     }
   },
+  "status": {
+    "title": "System Status",
+    "subtitle": "Real-time system status and incident history",
+    "lastUpdated": "Last updated",
+    "overall": {
+      "operational": "All Systems Operational",
+      "degraded": "Degraded Performance",
+      "partialOutage": "Partial System Outage",
+      "majorOutage": "Major System Outage"
+    },
+    "uptime": {
+      "title": "Uptime",
+      "24h": "24 hours",
+      "7d": "7 days",
+      "30d": "30 days",
+      "90d": "90 days"
+    },
+    "services": {
+      "title": "Service Status",
+      "operational": "Operational",
+      "degraded": "Degraded",
+      "down": "Down"
+    },
+    "incidents": {
+      "active": "Active Incidents",
+      "history": "Incident History",
+      "noActive": "No active incidents",
+      "noHistory": "No past incidents",
+      "status": {
+        "investigating": "Investigating",
+        "identified": "Identified",
+        "monitoring": "Monitoring",
+        "resolved": "Resolved"
+      },
+      "severity": {
+        "minor": "Minor",
+        "major": "Major",
+        "critical": "Critical"
+      },
+      "affected": "Affected Services",
+      "timeline": "Timeline",
+      "started": "Started",
+      "resolved": "Resolved",
+      "duration": "Duration",
+      "viewDetails": "View Details"
+    },
+    "subscribe": {
+      "title": "Subscribe to Updates",
+      "rss": "RSS Feed",
+      "email": "Email Notifications"
+    },
+    "metadataTitle": "Seizn Status",
+    "metadataDescription": "Current Seizn API availability and public incident history.",
+    "eyebrow": "STATUS",
+    "currentStatusLabel": "Current status",
+    "measuredScope": "Measured scope: api.seizn.com/v1/*",
+    "uptimeLabel": "Last 30 days uptime",
+    "uptimeWindow": "Calculated from public incident windows in the last 30 days.",
+    "incidentsEyebrow": "INCIDENTS",
+    "recentIncidentsTitle": "Recent incidents",
+    "noRecentIncidents": "No recent incidents",
+    "noRecentIncidentsBody": "The public incident ledger is empty for this period.",
+    "slaLink": "Read the SLA",
+    "states": {
+      "operational": "operational",
+      "degraded": "degraded",
+      "outage": "outage"
+    }
+  },
+  "author": {
+    "tabs": {
+      "inbox": "Inbox",
+      "review": "Review",
+      "characters": "Characters",
+      "graph": "Graph",
+      "timeline": "Timeline",
+      "conflicts": "Conflicts",
+      "simulate": "Simulate",
+      "audit": "Audit"
+    },
+    "cards": {
+      "imports": "Imports",
+      "candidates": "Candidates",
+      "characters": "Characters",
+      "conflicts": "Conflicts",
+      "edges": "Edges",
+      "events": "Events"
+    },
+    "table": {
+      "imports": {
+        "columns": {
+          "file_name": "File name",
+          "source_role": "Source role",
+          "parse_status": "Parse status",
+          "extract_status": "Extract status",
+          "candidate_count": "Candidates",
+          "parsed_text_preview": "Text preview",
+          "error_message": "Error message"
+        },
+        "parse_status": {
+          "queued": "Queued",
+          "parsing": "Parsing",
+          "parsed": "Parsed",
+          "failed": "Failed"
+        },
+        "extract_status": {
+          "queued": "Queued",
+          "extracting": "Extracting",
+          "extracted": "Extracted",
+          "failed": "Failed"
+        },
+        "source_role": {
+          "canon": "Canon",
+          "character": "Character",
+          "scene": "Scene",
+          "reference": "Reference",
+          "visual": "Visual"
+        }
+      },
+      "candidates": {
+        "columns": {
+          "type": "Type",
+          "status": "Status",
+          "confidence": "Confidence",
+          "content": "Content",
+          "id": "Details"
+        },
+        "type": {
+          "character": "Character",
+          "world_rule": "World rule",
+          "event": "Event",
+          "relationship": "Relationship",
+          "voice_sample": "Voice sample",
+          "fact": "Fact"
+        },
+        "status": {
+          "candidate": "In review",
+          "canon": "Canon",
+          "rejected": "Rejected",
+          "retired": "Retired",
+          "past_only": "Past only",
+          "contradicted": "Contradicted",
+          "invalidated": "Invalidated",
+          "author_only": "Author only",
+          "character_known": "Character known",
+          "character_unknown": "Character unknown"
+        }
+      },
+      "characters": {
+        "columns": {
+          "name": "Name",
+          "summary": "Summary",
+          "scope": "Scope",
+          "aliases": "Aliases"
+        }
+      },
+      "graph": {
+        "columns": {
+          "from_name": "From",
+          "relation": "Relation",
+          "to_name": "To",
+          "intensity_band": "Intensity",
+          "valid_at": "Valid at"
+        }
+      },
+      "timeline": {
+        "columns": {
+          "day": "Day",
+          "date": "Date",
+          "where": "Where",
+          "what": "What"
+        }
+      },
+      "audit": {
+        "columns": {
+          "event": "Event",
+          "created": "Created",
+          "decision": "Decision ID",
+          "llm": "LLM",
+          "payload": "Payload",
+          "replay": "Replay"
+        }
+      }
+    },
+    "empty": {
+      "inbox": {
+        "title": "No source files yet",
+        "body": "Upload a manuscript or reference file and Seizn will parse it into review candidates.",
+        "cta": "Upload file",
+        "parsing": {
+          "title": "Reading your files",
+          "body": "Large files can take a minute or two. Candidates appear here when parsing finishes.",
+          "cta": ""
+        }
+      },
+      "inbox_parsing": {
+        "title": "Reading your files",
+        "body": "Large files can take a minute or two. Candidates appear here when parsing finishes.",
+        "cta": ""
+      },
+      "review": {
+        "title": "No candidates to review",
+        "body": "Upload new material or generate a backlog from a character to fill the queue.",
+        "cta": "Generate backlog"
+      },
+      "characters": {
+        "title": "No characters registered yet",
+        "body": "Once material is imported, character candidates can be accepted into canon.",
+        "cta": "Upload file"
+      },
+      "character_detail": {
+        "title": "This character is still empty",
+        "body": "Generate a backlog to quickly fill small texture such as likes, dislikes, and habits.",
+        "cta": "Generate backlog"
+      },
+      "graph": {
+        "title": "No relationship graph yet",
+        "body": "When two or more characters and their relationships exist, the map appears here.",
+        "cta": ""
+      },
+      "timeline": {
+        "title": "No timeline events yet",
+        "body": "Events are arranged by day after they are extracted from source files or added manually.",
+        "cta": "Add event"
+      },
+      "conflicts": {
+        "title": "No conflicts",
+        "body": "New facts that collide with canon will gather here. For now, everything is clean.",
+        "cta": ""
+      },
+      "simulate": {
+        "title": "No scene has been run yet",
+        "body": "Choose characters and write a scene prompt to preview what they might feel and say.",
+        "cta": "Create scene"
+      },
+      "audit": {
+        "title": "No decisions recorded yet",
+        "body": "Accepted candidates and resolved conflicts appear here in chronological order.",
+        "cta": ""
+      }
+    },
+    "graph": {
+      "bands": {
+        "very_strong_positive": "Very strong affinity",
+        "positive": "Affinity",
+        "weak_positive": "Weak affinity",
+        "neutral": "Neutral",
+        "weak_negative": "Weak distance",
+        "negative": "Distance",
+        "very_strong_negative": "Very strong hostility"
+      },
+      "relation": {
+        "best_friend": "Best friend",
+        "co_lead": "Co-lead",
+        "senior_mentor": "Senior mentor",
+        "family": "Family",
+        "informant": "Informant",
+        "crush": "Crush",
+        "rival": "Rival",
+        "acquaintance": "Acquaintance",
+        "unknown": "Unknown"
+      },
+      "view": {
+        "diagram": "Diagram view",
+        "table": "Table view"
+      },
+      "unknown_name": "This character name has not been registered yet.",
+      "unknown_relation": "This relationship type has not been registered yet."
+    },
+    "conflict": {
+      "severity": {
+        "high": "High",
+        "medium": "Medium",
+        "low": "Low"
+      },
+      "status": {
+        "unresolved": "Unresolved",
+        "resolved": "Resolved",
+        "deferred": "Deferred"
+      },
+      "actions": {
+        "keep_existing": "Keep existing canon",
+        "replace_with_new": "Replace with new fact",
+        "defer_both": "Defer both",
+        "custom": "Edit manually"
+      },
+      "title": "Conflict",
+      "reasoning_title": "Reasoning",
+      "impact_title": "Impact",
+      "impact_fallback": "This decision has limited impact on other canon.",
+      "undo": "Undo"
+    },
+    "events": {
+      "project.created": "Project created",
+      "import.upload": "Import uploaded",
+      "import.parsed": "Import parsed",
+      "import.failed": "Import failed",
+      "import.retried": "Import retried",
+      "import.deleted": "Import deleted",
+      "candidate.added": "Candidate added",
+      "candidate.decided": "Candidate decided",
+      "candidate.batch_decided": "Candidates batch decided",
+      "character.updated": "Character updated",
+      "conflict.resolved": "Conflict resolved",
+      "simulation.run": "Simulation run",
+      "simulation.replay": "Simulation replay",
+      "backlog.generated": "Backlog generated",
+      "settings.updated": "Settings updated",
+      "byok.updated": "BYOK updated"
+    },
+    "actions": {
+      "generate_backlog": "Generate backlog",
+      "run_scene": "Run Scene",
+      "upload": "Upload"
+    },
+    "toasts": {
+      "review_queue_updated": "Review Queue updated",
+      "uploading": "Uploading…",
+      "ai_generating": "AI is generating…"
+    },
+    "panels": {
+      "inbox": "Document Inbox",
+      "review": "Review Queue"
+    }
+  },
   "consent": {
     "_draft": "DRAFT - legal review pending 2026-04-22",
     "metadataTitle": "Seizn Consent",
@@ -3164,75 +3764,6 @@
       }
     },
     "submit": "Record consent"
-  },
-  "status": {
-    "metadataTitle": "Seizn Status",
-    "metadataDescription": "Current Seizn API availability and public incident history.",
-    "eyebrow": "STATUS",
-    "title": "System Status",
-    "subtitle": "Real-time system status and incident history",
-    "currentStatusLabel": "Current status",
-    "measuredScope": "Measured scope: api.seizn.com/v1/*",
-    "uptimeLabel": "Last 30 days uptime",
-    "uptimeWindow": "Calculated from public incident windows in the last 30 days.",
-    "incidentsEyebrow": "INCIDENTS",
-    "recentIncidentsTitle": "Recent incidents",
-    "noRecentIncidents": "No recent incidents",
-    "noRecentIncidentsBody": "The public incident ledger is empty for this period.",
-    "slaLink": "Read the SLA",
-    "states": {
-      "operational": "operational",
-      "degraded": "degraded",
-      "outage": "outage"
-    },
-    "lastUpdated": "Last updated",
-    "overall": {
-      "operational": "All Systems Operational",
-      "degraded": "Degraded Performance",
-      "partialOutage": "Partial System Outage",
-      "majorOutage": "Major System Outage"
-    },
-    "uptime": {
-      "title": "Uptime",
-      "24h": "24 hours",
-      "7d": "7 days",
-      "30d": "30 days",
-      "90d": "90 days"
-    },
-    "services": {
-      "title": "Service Status",
-      "operational": "Operational",
-      "degraded": "Degraded",
-      "down": "Down"
-    },
-    "incidents": {
-      "active": "Active Incidents",
-      "history": "Incident History",
-      "noActive": "No active incidents",
-      "noHistory": "No past incidents",
-      "status": {
-        "investigating": "Investigating",
-        "identified": "Identified",
-        "monitoring": "Monitoring",
-        "resolved": "Resolved"
-      },
-      "severity": {
-        "minor": "Minor",
-        "major": "Major",
-        "critical": "Critical"
-      },
-      "affected": "Affected Services",
-      "timeline": "Timeline",
-      "started": "Started",
-      "resolved": "Resolved",
-      "duration": "Duration",
-      "viewDetails": "View Details"
-    },
-    "subscribe": {
-      "title": "Subscribe to Updates",
-      "rss": "RSS Feed",
-      "email": "Email Notifications"
-    }
   },
   "sla": {
     "metadataTitle": "Seizn Service Level Agreement",

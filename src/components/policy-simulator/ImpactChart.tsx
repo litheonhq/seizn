@@ -46,10 +46,10 @@ export function ImpactChart({
 
   // Get impact level color
   const getImpactLevelColor = (score: number) => {
-    if (score >= 0.6) return 'text-red-600';
+    if (score >= 0.6) return 'text-[var(--signal-conflict-ink)]';
     if (score >= 0.3) return 'text-orange-600';
-    if (score >= 0.1) return 'text-yellow-600';
-    return 'text-green-600';
+    if (score >= 0.1) return 'text-[var(--signal-pending-ink)]';
+    return 'text-[var(--signal-canon-ink)]';
   };
 
   // Get impact level label
@@ -97,11 +97,11 @@ export function ImpactChart({
         <div className="space-y-1">
           <div className="flex items-center justify-between text-xs">
             <span className="text-gray-600">Newly Blocked</span>
-            <span className="text-red-600 font-medium">{blocked}</span>
+            <span className="text-[var(--signal-conflict-ink)] font-medium">{blocked}</span>
           </div>
           <div className="h-4 bg-gray-100 rounded-full overflow-hidden">
             <div
-              className="h-full bg-red-500 rounded-full transition-all duration-500"
+              className="h-full bg-[var(--signal-conflict)] rounded-full transition-all duration-500"
               style={{ width: `${blockedWidth}%` }}
             />
           </div>
@@ -111,11 +111,11 @@ export function ImpactChart({
         <div className="space-y-1">
           <div className="flex items-center justify-between text-xs">
             <span className="text-gray-600">Newly Allowed</span>
-            <span className="text-green-600 font-medium">{allowed}</span>
+            <span className="text-[var(--signal-canon-ink)] font-medium">{allowed}</span>
           </div>
           <div className="h-4 bg-gray-100 rounded-full overflow-hidden">
             <div
-              className="h-full bg-green-500 rounded-full transition-all duration-500"
+              className="h-full bg-[var(--signal-canon)] rounded-full transition-all duration-500"
               style={{ width: `${allowedWidth}%` }}
             />
           </div>
@@ -125,7 +125,7 @@ export function ImpactChart({
         <div className="space-y-1">
           <div className="flex items-center justify-between text-xs">
             <span className="text-gray-600">Masking Changed</span>
-            <span className="text-yellow-600 font-medium">{maskingChanged}</span>
+            <span className="text-[var(--signal-pending-ink)] font-medium">{maskingChanged}</span>
           </div>
           <div className="h-4 bg-gray-100 rounded-full overflow-hidden">
             <div
@@ -149,13 +149,13 @@ export function ImpactChart({
         <div className="flex items-center justify-center pt-2">
           <div className="flex items-center gap-4 text-xs">
             <div className="flex items-center gap-1">
-              <div className="w-3 h-3 bg-red-500 rounded-sm" />
+              <div className="w-3 h-3 bg-[var(--signal-conflict)] rounded-sm" />
               <span className="text-gray-600">
                 Blocked ({((blocked / total) * 100).toFixed(0)}%)
               </span>
             </div>
             <div className="flex items-center gap-1">
-              <div className="w-3 h-3 bg-green-500 rounded-sm" />
+              <div className="w-3 h-3 bg-[var(--signal-canon)] rounded-sm" />
               <span className="text-gray-600">
                 Allowed ({((allowed / total) * 100).toFixed(0)}%)
               </span>

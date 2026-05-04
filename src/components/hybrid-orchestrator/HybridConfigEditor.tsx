@@ -224,28 +224,28 @@ export function HybridConfigEditor({
   if (loadingConfig) {
     return (
       <div className="animate-pulse space-y-4 p-6">
-        <div className="h-8 bg-szn-surface rounded w-1/3" />
-        <div className="h-32 bg-szn-surface rounded" />
-        <div className="h-32 bg-szn-surface rounded" />
+        <div className="h-8 bg-[var(--ink-50)] rounded w-1/3" />
+        <div className="h-32 bg-[var(--ink-50)] rounded" />
+        <div className="h-32 bg-[var(--ink-50)] rounded" />
       </div>
     );
   }
 
   return (
-    <div className="space-y-6 p-6 bg-szn-card rounded-lg border border-szn-border">
-      <h2 className="text-xl font-semibold text-szn-text-1">
+    <div className="space-y-6 p-6 bg-[var(--ink-0)] rounded-lg border border-[var(--ink-200)]">
+      <h2 className="text-xl font-semibold text-[var(--ink-900)]">
         {configId ? 'Edit Hybrid Config' : 'Create Hybrid Config'}
       </h2>
 
       {error && (
-        <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-          <p className="text-red-600 dark:text-red-400 text-sm">{error}</p>
+        <div className="p-3 bg-[var(--signal-conflict-soft)] dark:bg-[var(--signal-conflict)]/20 border border-[var(--signal-conflict)] dark:border-[var(--signal-conflict)] rounded-lg">
+          <p className="text-[var(--signal-conflict-ink)] dark:text-[var(--signal-conflict-soft)] text-sm">{error}</p>
         </div>
       )}
 
       {/* Name */}
       <div>
-        <label className="block text-sm font-medium text-szn-text-2 mb-1">
+        <label className="block text-sm font-medium text-[var(--ink-600)] mb-1">
           Config Name
         </label>
         <input
@@ -253,14 +253,14 @@ export function HybridConfigEditor({
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="e.g., High Recall Config"
-          className="w-full px-3 py-2 border border-szn-border rounded-lg bg-szn-surface text-szn-text-1"
+          className="w-full px-3 py-2 border border-[var(--ink-200)] rounded-lg bg-[var(--ink-50)] text-[var(--ink-900)]"
         />
       </div>
 
       {/* Strategies */}
       <div>
         <div className="flex items-center justify-between mb-2">
-          <label className="block text-sm font-medium text-szn-text-2">
+          <label className="block text-sm font-medium text-[var(--ink-600)]">
             Retrieval Strategies
           </label>
           <div className="flex gap-2">
@@ -273,7 +273,7 @@ export function HybridConfigEditor({
             {strategies.length < STRATEGY_TYPES.length && (
               <button
                 onClick={addStrategy}
-                className="text-xs text-green-600 dark:text-green-400 hover:underline"
+                className="text-xs text-[var(--signal-canon-ink)] dark:text-[var(--signal-canon-soft)] hover:underline"
               >
                 + Add strategy
               </button>
@@ -296,7 +296,7 @@ export function HybridConfigEditor({
 
       {/* Fusion Method */}
       <div>
-        <label className="block text-sm font-medium text-szn-text-2 mb-2">
+        <label className="block text-sm font-medium text-[var(--ink-600)] mb-2">
           Fusion Method
         </label>
         <div className="grid grid-cols-2 gap-3">
@@ -307,13 +307,13 @@ export function HybridConfigEditor({
               className={`p-3 text-left border rounded-lg transition-colors ${
                 fusionMethod === method.value
                   ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                  : 'border-szn-border hover:border-gray-300'
+                  : 'border-[var(--ink-200)] hover:border-gray-300'
               }`}
             >
-              <div className="font-medium text-szn-text-1 text-sm">
+              <div className="font-medium text-[var(--ink-900)] text-sm">
                 {method.label}
               </div>
-              <div className="text-xs text-szn-text-2 mt-1">
+              <div className="text-xs text-[var(--ink-600)] mt-1">
                 {method.description}
               </div>
             </button>
@@ -324,7 +324,7 @@ export function HybridConfigEditor({
       {/* Fusion Parameters */}
       {fusionMethod === 'rrf' && (
         <div>
-          <label className="block text-sm font-medium text-szn-text-2 mb-1">
+          <label className="block text-sm font-medium text-[var(--ink-600)] mb-1">
             RRF K Parameter
           </label>
           <div className="flex items-center gap-3">
@@ -336,11 +336,11 @@ export function HybridConfigEditor({
               onChange={(e) => setRrfK(parseInt(e.target.value))}
               className="flex-1"
             />
-            <span className="text-sm text-szn-text-2 w-12">
+            <span className="text-sm text-[var(--ink-600)] w-12">
               {rrfK}
             </span>
           </div>
-          <p className="text-xs text-szn-text-2 mt-1">
+          <p className="text-xs text-[var(--ink-600)] mt-1">
             Higher values smooth out ranking differences (typical: 60)
           </p>
         </div>
@@ -348,7 +348,7 @@ export function HybridConfigEditor({
 
       {fusionMethod === 'cascade' && (
         <div>
-          <label className="block text-sm font-medium text-szn-text-2 mb-1">
+          <label className="block text-sm font-medium text-[var(--ink-600)] mb-1">
             Cascade Threshold
           </label>
           <div className="flex items-center gap-3">
@@ -361,18 +361,18 @@ export function HybridConfigEditor({
               onChange={(e) => setCascadeThreshold(parseFloat(e.target.value))}
               className="flex-1"
             />
-            <span className="text-sm text-szn-text-2 w-12">
+            <span className="text-sm text-[var(--ink-600)] w-12">
               {cascadeThreshold.toFixed(2)}
             </span>
           </div>
-          <p className="text-xs text-szn-text-2 mt-1">
+          <p className="text-xs text-[var(--ink-600)] mt-1">
             Skip fallback strategies if top result score exceeds this
           </p>
         </div>
       )}
 
       {/* Actions */}
-      <div className="flex gap-3 pt-4 border-t border-szn-border">
+      <div className="flex gap-3 pt-4 border-t border-[var(--ink-200)]">
         <button
           onClick={handleSave}
           disabled={loading}
@@ -383,7 +383,7 @@ export function HybridConfigEditor({
         {onCancel && (
           <button
             onClick={onCancel}
-            className="px-4 py-2 border border-szn-border rounded-lg text-szn-text-2 hover:bg-szn-surface-1"
+            className="px-4 py-2 border border-[var(--ink-200)] rounded-lg text-[var(--ink-600)] hover:bg-[var(--ink-50)]"
           >
             Cancel
           </button>
@@ -413,20 +413,20 @@ function StrategyEditor({
   const strategyInfo = STRATEGY_TYPES.find((t) => t.value === strategy.type);
 
   return (
-    <div className="p-4 border border-szn-border rounded-lg">
+    <div className="p-4 border border-[var(--ink-200)] rounded-lg">
       <div className="flex items-start justify-between mb-3">
         <div>
-          <span className="font-medium text-szn-text-1">
+          <span className="font-medium text-[var(--ink-900)]">
             {strategyInfo?.label ?? strategy.type}
           </span>
-          <p className="text-xs text-szn-text-2">
+          <p className="text-xs text-[var(--ink-600)]">
             {strategyInfo?.description}
           </p>
         </div>
         {canRemove && (
           <button
             onClick={onRemove}
-            className="text-gray-400 hover:text-red-500"
+            className="text-gray-400 hover:text-[var(--signal-conflict-ink)]"
             title="Remove strategy"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -439,7 +439,7 @@ function StrategyEditor({
       <div className="grid grid-cols-2 gap-4">
         {/* Weight */}
         <div>
-          <label className="block text-xs text-szn-text-2 mb-1">
+          <label className="block text-xs text-[var(--ink-600)] mb-1">
             Weight
           </label>
           <div className="flex items-center gap-2">
@@ -452,7 +452,7 @@ function StrategyEditor({
               onChange={(e) => onChange({ weight: parseFloat(e.target.value) })}
               className="flex-1"
             />
-            <span className="text-sm text-szn-text-2 w-10">
+            <span className="text-sm text-[var(--ink-600)] w-10">
               {strategy.weight.toFixed(1)}
             </span>
           </div>
@@ -460,7 +460,7 @@ function StrategyEditor({
 
         {/* Top K */}
         <div>
-          <label className="block text-xs text-szn-text-2 mb-1">
+          <label className="block text-xs text-[var(--ink-600)] mb-1">
             Top K
           </label>
           <input
@@ -473,14 +473,14 @@ function StrategyEditor({
                 params: { ...strategy.params, top_k: parseInt(e.target.value) },
               })
             }
-            className="w-full px-2 py-1 text-sm border border-szn-border rounded bg-szn-surface text-szn-text-1"
+            className="w-full px-2 py-1 text-sm border border-[var(--ink-200)] rounded bg-[var(--ink-50)] text-[var(--ink-900)]"
           />
         </div>
 
         {/* Vector-specific: Threshold */}
         {strategy.type === 'vector' && (
           <div>
-            <label className="block text-xs text-szn-text-2 mb-1">
+            <label className="block text-xs text-[var(--ink-600)] mb-1">
               Threshold
             </label>
             <input
@@ -494,7 +494,7 @@ function StrategyEditor({
                   params: { ...strategy.params, threshold: parseFloat(e.target.value) },
                 })
               }
-              className="w-full px-2 py-1 text-sm border border-szn-border rounded bg-szn-surface text-szn-text-1"
+              className="w-full px-2 py-1 text-sm border border-[var(--ink-200)] rounded bg-[var(--ink-50)] text-[var(--ink-900)]"
             />
           </div>
         )}
@@ -503,7 +503,7 @@ function StrategyEditor({
         {strategy.type === 'multi_query' && (
           <>
             <div>
-              <label className="block text-xs text-szn-text-2 mb-1">
+              <label className="block text-xs text-[var(--ink-600)] mb-1">
                 Expansions
               </label>
               <input
@@ -521,11 +521,11 @@ function StrategyEditor({
                     },
                   })
                 }
-                className="w-full px-2 py-1 text-sm border border-szn-border rounded bg-szn-surface text-szn-text-1"
+                className="w-full px-2 py-1 text-sm border border-[var(--ink-200)] rounded bg-[var(--ink-50)] text-[var(--ink-900)]"
               />
             </div>
             <div>
-              <label className="block text-xs text-szn-text-2 mb-1">
+              <label className="block text-xs text-[var(--ink-600)] mb-1">
                 Method
               </label>
               <select
@@ -538,7 +538,7 @@ function StrategyEditor({
                     params: { ...strategy.params, expansion_method: e.target.value as 'llm' | 'synonyms' | 'embedding_nn' },
                   })
                 }
-                className="w-full px-2 py-1 text-sm border border-szn-border rounded bg-szn-surface text-szn-text-1"
+                className="w-full px-2 py-1 text-sm border border-[var(--ink-200)] rounded bg-[var(--ink-50)] text-[var(--ink-900)]"
               >
                 <option value="synonyms">Synonyms</option>
                 <option value="llm">LLM</option>

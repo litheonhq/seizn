@@ -1,0 +1,123 @@
+{
+  "generatedAt": "2026-05-02T23:38:36.306Z",
+  "checks": [
+    {
+      "viewport": "1440",
+      "screenshot": "reports/phaseD-double-prime-landing-en-1440.png",
+      "scrollWidth": 1440,
+      "clientWidth": 1440,
+      "bodyScrollWidth": 1440,
+      "overflowX": 0,
+      "engineTeaseVisible": false,
+      "detectorVisible": true,
+      "planPickerVisible": true,
+      "characterStripVisible": false,
+      "faviconLinks": [
+        {
+          "href": "/favicon.ico?favicon.3jn7f63vkpaep.ico",
+          "sizes": "16x16",
+          "type": "image/x-icon"
+        },
+        {
+          "href": "/icons/seizn-mark.svg",
+          "sizes": null,
+          "type": "image/svg+xml"
+        },
+        {
+          "href": "/icons/seizn-mark-16.svg",
+          "sizes": "16x16",
+          "type": "image/svg+xml"
+        },
+        {
+          "href": "/favicon-32.png",
+          "sizes": "32x32",
+          "type": "image/png"
+        },
+        {
+          "href": "/favicon-16.png",
+          "sizes": "16x16",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "viewport": "768",
+      "screenshot": "reports/phaseD-double-prime-landing-en-768.png",
+      "scrollWidth": 768,
+      "clientWidth": 768,
+      "bodyScrollWidth": 768,
+      "overflowX": 0,
+      "engineTeaseVisible": false,
+      "detectorVisible": true,
+      "planPickerVisible": true,
+      "characterStripVisible": true,
+      "faviconLinks": [
+        {
+          "href": "/favicon.ico?favicon.3jn7f63vkpaep.ico",
+          "sizes": "16x16",
+          "type": "image/x-icon"
+        },
+        {
+          "href": "/icons/seizn-mark.svg",
+          "sizes": null,
+          "type": "image/svg+xml"
+        },
+        {
+          "href": "/icons/seizn-mark-16.svg",
+          "sizes": "16x16",
+          "type": "image/svg+xml"
+        },
+        {
+          "href": "/favicon-32.png",
+          "sizes": "32x32",
+          "type": "image/png"
+        },
+        {
+          "href": "/favicon-16.png",
+          "sizes": "16x16",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "viewport": "360",
+      "screenshot": "reports/phaseD-double-prime-landing-en-360.png",
+      "scrollWidth": 360,
+      "clientWidth": 360,
+      "bodyScrollWidth": 360,
+      "overflowX": 0,
+      "engineTeaseVisible": false,
+      "detectorVisible": true,
+      "planPickerVisible": true,
+      "characterStripVisible": true,
+      "faviconLinks": [
+        {
+          "href": "/favicon.ico?favicon.3jn7f63vkpaep.ico",
+          "sizes": "16x16",
+          "type": "image/x-icon"
+        },
+        {
+          "href": "/icons/seizn-mark.svg",
+          "sizes": null,
+          "type": "image/svg+xml"
+        },
+        {
+          "href": "/icons/seizn-mark-16.svg",
+          "sizes": "16x16",
+          "type": "image/svg+xml"
+        },
+        {
+          "href": "/favicon-32.png",
+          "sizes": "32x32",
+          "type": "image/png"
+        },
+        {
+          "href": "/favicon-16.png",
+          "sizes": "16x16",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  "faviconScaleScreenshot": "reports/phaseD-double-prime-favicon-scale.png"
+}

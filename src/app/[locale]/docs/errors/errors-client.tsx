@@ -259,40 +259,40 @@ export function ErrorDocsClient({ locale }: Props) {
   };
 
   const getHttpStatusColor = (status: number) => {
-    if (status === 400) return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400";
-    if (status === 401) return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400";
+    if (status === 400) return "bg-[var(--signal-pending-soft)] text-[var(--signal-pending-ink)] dark:bg-yellow-900/30 dark:text-yellow-400";
+    if (status === 401) return "bg-[var(--signal-conflict-soft)] text-[var(--signal-conflict-ink)] dark:bg-[var(--signal-conflict)]/30 dark:text-[var(--signal-conflict-soft)]";
     if (status === 404) return "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400";
-    if (status === 429) return "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400";
-    if (status === 500) return "bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400";
-    return "bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400";
+    if (status === 429) return "bg-[var(--ink-100)] text-[var(--ink-900)] dark:bg-[var(--ink-900)]/30 dark:text-[var(--ink-700)]";
+    if (status === 500) return "bg-gray-100 text-gray-800 dark:bg-[var(--ink-900)]/30 dark:text-gray-400";
+    return "bg-gray-100 text-gray-800 dark:bg-[var(--ink-900)]/30 dark:text-gray-400";
   };
 
   return (
-    <div className="min-h-screen bg-szn-bg">
+    <div className="min-h-screen bg-[var(--ink-50)]">
       {/* Header */}
-      <div className="bg-szn-card border-b border-szn-border">
+      <div className="bg-[var(--ink-0)] border-b border-[var(--ink-200)]">
         <div className="max-w-6xl mx-auto px-6 py-8">
           <Link
             href={`/${locale}/docs`}
-            className="inline-flex items-center gap-2 text-sm text-szn-text-3 hover:text-szn-text-1 mb-4"
+            className="inline-flex items-center gap-2 text-sm text-[var(--ink-500)] hover:text-[var(--ink-900)] mb-4"
           >
             <ArrowLeftIcon className="w-4 h-4" />
             {t.backToDocs}
           </Link>
-          <h1 className="text-3xl font-bold text-szn-text-1">{t.title}</h1>
-          <p className="text-szn-text-2 mt-2">{t.subtitle}</p>
+          <h1 className="text-3xl font-bold text-[var(--ink-900)]">{t.title}</h1>
+          <p className="text-[var(--ink-600)] mt-2">{t.subtitle}</p>
 
           {/* Search and Filter */}
           <div className="mt-6 flex flex-col sm:flex-row gap-4">
             {/* Search */}
             <div className="relative flex-1">
-              <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-szn-text-3" />
+              <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--ink-500)]" />
               <input
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder={t.searchPlaceholder}
-                className="w-full pl-10 pr-4 py-2 border border-szn-border rounded-lg focus:outline-none focus:ring-2 focus:ring-szn-accent bg-szn-surface text-szn-text-1"
+                className="w-full pl-10 pr-4 py-2 border border-[var(--ink-200)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--ink-900)] bg-[var(--ink-50)] text-[var(--ink-900)]"
               />
             </div>
 
@@ -300,7 +300,7 @@ export function ErrorDocsClient({ locale }: Props) {
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value as CategoryKey | "all")}
-              className="px-4 py-2 border border-szn-border rounded-lg focus:outline-none focus:ring-2 focus:ring-szn-accent bg-szn-surface text-szn-text-1"
+              className="px-4 py-2 border border-[var(--ink-200)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--ink-900)] bg-[var(--ink-50)] text-[var(--ink-900)]"
             >
               <option value="all">{t.allCategories}</option>
               {(Object.keys(CATEGORIES) as CategoryKey[]).map((key) => (
@@ -312,7 +312,7 @@ export function ErrorDocsClient({ locale }: Props) {
           </div>
 
           {/* Stats */}
-          <p className="text-sm text-szn-text-2 mt-4">
+          <p className="text-sm text-[var(--ink-600)] mt-4">
             {t.showing} {filteredErrors.length} {t.of} {ERROR_DATA.length} {t.errorCodes}
           </p>
         </div>
@@ -321,10 +321,10 @@ export function ErrorDocsClient({ locale }: Props) {
       {/* Content */}
       <div className="max-w-6xl mx-auto px-6 py-8">
         {/* Error Response Format */}
-        <div className="bg-szn-card rounded-xl border border-szn-border p-6 mb-8">
-          <h2 className="text-lg font-semibold text-szn-text-1 mb-4">{t.errorFormat}</h2>
-          <p className="text-szn-text-2 mb-4">{t.errorFormatDesc}</p>
-          <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm">
+        <div className="bg-[var(--ink-0)] rounded-xl border border-[var(--ink-200)] p-6 mb-8">
+          <h2 className="text-lg font-semibold text-[var(--ink-900)] mb-4">{t.errorFormat}</h2>
+          <p className="text-[var(--ink-600)] mb-4">{t.errorFormatDesc}</p>
+          <pre className="bg-[var(--ink-900)] text-gray-100 p-4 rounded-lg overflow-x-auto text-sm">
 {`{
   "error": {
     "code": "AUTH_INVALID_KEY",
@@ -336,7 +336,7 @@ export function ErrorDocsClient({ locale }: Props) {
   }
 }`}
           </pre>
-          <p className="text-sm text-szn-text-2 mt-4">
+          <p className="text-sm text-[var(--ink-600)] mt-4">
             {t.traceIdNote}
           </p>
         </div>
@@ -350,10 +350,10 @@ export function ErrorDocsClient({ locale }: Props) {
 
           return (
             <div key={categoryKey} className="mb-10">
-              <h2 className="text-xl font-semibold text-szn-text-1 mb-2">
+              <h2 className="text-xl font-semibold text-[var(--ink-900)] mb-2">
                 {isKo ? category.titleKo : category.title}
               </h2>
-              <p className="text-szn-text-2 mb-4">
+              <p className="text-[var(--ink-600)] mb-4">
                 {isKo ? category.descriptionKo : category.description}
               </p>
 
@@ -362,12 +362,12 @@ export function ErrorDocsClient({ locale }: Props) {
                   <div
                     key={error.code}
                     id={error.code}
-                    className="bg-szn-card rounded-xl border border-szn-border p-5 hover:border-szn-border transition-colors"
+                    className="bg-[var(--ink-0)] rounded-xl border border-[var(--ink-200)] p-5 hover:border-[var(--ink-200)] transition-colors"
                   >
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-2">
-                          <code className="text-lg font-mono font-bold text-szn-text-1">
+                          <code className="text-lg font-mono font-bold text-[var(--ink-900)]">
                             {error.code}
                           </code>
                           <span className={`px-2 py-0.5 text-xs font-medium rounded ${getHttpStatusColor(error.httpStatus)}`}>
@@ -375,19 +375,19 @@ export function ErrorDocsClient({ locale }: Props) {
                           </span>
                           <button
                             onClick={() => handleCopy(error.code)}
-                            className="p-1 text-szn-text-3 hover:text-szn-text-1"
+                            className="p-1 text-[var(--ink-500)] hover:text-[var(--ink-900)]"
                             title="Copy error code"
                           >
                             <ClipboardIcon className="w-4 h-4" />
                           </button>
                           {copiedCode === error.code && (
-                            <span className="text-xs text-szn-accent">Copied!</span>
+                            <span className="text-xs text-[var(--ink-900)]">Copied!</span>
                           )}
                         </div>
-                        <p className="text-sm font-medium text-szn-text-1 mb-2">
+                        <p className="text-sm font-medium text-[var(--ink-900)] mb-2">
                           {error.name}
                         </p>
-                        <p className="text-sm text-szn-text-2">
+                        <p className="text-sm text-[var(--ink-600)]">
                           <span className="font-medium">{t.suggestedFix}:</span> {error.suggestedFix}
                         </p>
                       </div>
@@ -402,13 +402,13 @@ export function ErrorDocsClient({ locale }: Props) {
         {/* No Results */}
         {filteredErrors.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-szn-text-2">{t.noResults}</p>
+            <p className="text-[var(--ink-600)]">{t.noResults}</p>
             <button
               onClick={() => {
                 setSearch("");
                 setSelectedCategory("all");
               }}
-              className="mt-4 text-szn-accent hover:text-szn-accent/80"
+              className="mt-4 text-[var(--ink-900)] hover:text-[var(--ink-900)]/80"
             >
               {t.clearFilters}
             </button>
@@ -416,9 +416,9 @@ export function ErrorDocsClient({ locale }: Props) {
         )}
 
         {/* Getting Help */}
-        <div className="mt-12 bg-szn-success/10 border border-szn-accent rounded-xl p-6">
-          <h2 className="text-lg font-semibold text-szn-text-1 mb-2">{t.needHelp}</h2>
-          <ul className="text-szn-text-2 space-y-2">
+        <div className="mt-12 bg-[var(--signal-canon)]/10 border border-[var(--ink-900)] rounded-xl p-6">
+          <h2 className="text-lg font-semibold text-[var(--ink-900)] mb-2">{t.needHelp}</h2>
+          <ul className="text-[var(--ink-600)] space-y-2">
             {t.helpItems.map((item: string, index: number) => (
               <li key={index}>{item}</li>
             ))}

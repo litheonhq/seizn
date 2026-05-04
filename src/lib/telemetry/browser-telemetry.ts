@@ -51,6 +51,65 @@ export interface PerformanceMetric {
   attributes?: Record<string, unknown>;
 }
 
+const MAX_TELEMETRY_STRING_LENGTH = 500;
+const MAX_TELEMETRY_ARRAY_ITEMS = 10;
+const MAX_TELEMETRY_OBJECT_KEYS = 24;
+const MAX_TELEMETRY_DEPTH = 4;
+const SENSITIVE_ATTRIBUTE_KEY = /(authorization|cookie|password|secret|token|api[_-]?key|jwt|session)/i;
+const URL_LIKE_VALUE = /(https?:\/\/[^\s)]+|\/[A-Za-z0-9._~!$&'()*+,;=:@/%-]+\?[^\s)]*)/g;
+const SENSITIVE_QUERY_VALUE = /\b(token|api[_-]?key|key|secret|password|authorization|session|jwt)=([^&#\s)]+)/gi;
+
+export function sanitizeTelemetryAttributes(attributes: Record<string, unknown> = {}): Record<string, unknown> {
+  return sanitizeTelemetryValue(attributes) as Record<string, unknown>;
+}
+
+function sanitizeTelemetryValue(value: unknown, depth = 0): unknown {
+  if (value == null) return value;
+  if (typeof value === 'string') return sanitizeTelemetryString(value);
+  if (typeof value === 'number') return Number.isFinite(value) ? value : undefined;
+  if (typeof value === 'boolean') return value;
+  if (depth >= MAX_TELEMETRY_DEPTH) return undefined;
+
+  if (Array.isArray(value)) {
+    return value
+      .slice(0, MAX_TELEMETRY_ARRAY_ITEMS)
+      .map((item) => sanitizeTelemetryValue(item, depth + 1))
+      .filter((item) => item !== undefined);
+  }
+
+  if (typeof value === 'object') {
+    return Object.fromEntries(
+      Object.entries(value as Record<string, unknown>)
+        .slice(0, MAX_TELEMETRY_OBJECT_KEYS)
+        .map(([key, entryValue]) => [
+          sanitizeTelemetryString(key),
+          SENSITIVE_ATTRIBUTE_KEY.test(key) ? '[redacted]' : sanitizeTelemetryValue(entryValue, depth + 1),
+        ])
+        .filter(([, entryValue]) => entryValue !== undefined)
+    );
+  }
+
+  return undefined;
+}
+
+function sanitizeTelemetryString(value: string): string {
+  return value
+    .replace(SENSITIVE_QUERY_VALUE, '$1=[redacted]')
+    .replace(URL_LIKE_VALUE, (rawUrl) => stripUrlQuery(rawUrl))
+    .slice(0, MAX_TELEMETRY_STRING_LENGTH);
+}
+
+function stripUrlQuery(value: string): string {
+  try {
+    const parsedUrl = new URL(value, 'https://www.seizn.com');
+    return value.startsWith('/')
+      ? parsedUrl.pathname
+      : `${parsedUrl.origin}${parsedUrl.pathname}`;
+  } catch {
+    return value.split('?')[0].split('#')[0];
+  }
+}
+
 // =============================================================================
 // Browser Telemetry Class
 // =============================================================================
@@ -116,7 +175,7 @@ class BrowserTelemetry {
     const span: Span = {
       name,
       startTime: performance.now(),
-      attributes: { ...this.config.customAttributes, ...attributes },
+      attributes: sanitizeTelemetryAttributes({ ...this.config.customAttributes, ...attributes }),
       events: [],
       status: 'unset',
     };
@@ -149,7 +208,7 @@ class BrowserTelemetry {
     span.events.push({
       name,
       timestamp: performance.now(),
-      attributes,
+      attributes: attributes ? sanitizeTelemetryAttributes(attributes) : undefined,
     });
   }
 
@@ -169,7 +228,7 @@ class BrowserTelemetry {
       value,
       unit,
       timestamp: Date.now(),
-      attributes: { ...this.config.customAttributes, ...attributes },
+      attributes: sanitizeTelemetryAttributes({ ...this.config.customAttributes, ...attributes }),
     });
   }
 

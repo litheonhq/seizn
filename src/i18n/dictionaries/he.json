@@ -323,7 +323,6 @@
     "nav": {
       "overview": "סקירה",
       "memories": "ישויות",
-      "memoryEditor": "עורך זיכרון",
       "mindMap": "גרף קשרים",
       "candidates": "תיבת אירועים",
       "devTools": "כלי פיתוח",
@@ -337,6 +336,7 @@
       "usage": "שימוש",
       "budget": "תקציב",
       "reports": "דוחות",
+      "calculator": "הערכת עלויות",
       "apiKeys": "מפתחות API",
       "integrations": "תוספי מנוע",
       "webhooks": "Webhooks",
@@ -345,10 +345,15 @@
       "settings": "הגדרות",
       "groups": {
         "memory": "זיכרון NPC",
+        "observe": "ניטור",
+        "govern": "מדיניות",
+        "finops": "שימוש ועלות",
+        "connect": "אינטגרציה",
         "system": "סביבת עבודה",
         "build": "בנייה",
         "integrate": "שילוב"
-      }
+      },
+      "memoryEditor": "עורך זיכרון"
     },
     "pinSidebar": "הצמד סרגל צד",
     "unpinSidebar": "כווץ סרגל צד",
@@ -1406,6 +1411,50 @@
       "recentDecisions": "החלטות אחרונות",
       "noLogs": "אין יומני החלטות עדיין"
     },
+    "calculator": {
+      "title": "מחשבון שימוש",
+      "subtitle": "הערך את העלויות החודשיות שלך על בסיס שימוש צפוי",
+      "stats": {
+        "apiCalls": "קריאות API",
+        "memories": "זיכרונות",
+        "extractions": "חילוצים",
+        "estimated": "עלות משוערת"
+      },
+      "presets": {
+        "title": "הגדרות מוכנות",
+        "startup": "סטארטאפ",
+        "growing": "צומח",
+        "scale": "קנה מידה",
+        "enterprise": "ארגוני"
+      },
+      "customize": {
+        "title": "התאם שימוש"
+      },
+      "labels": {
+        "apiCalls": "קריאות API חודשיות",
+        "memories": "זיכרונות מאוחסנים",
+        "extractions": "חילוצים"
+      },
+      "recommended": {
+        "title": "תוכנית מומלצת",
+        "base": "מחיר בסיס",
+        "overage": "חריגה",
+        "cta": "התחל"
+      },
+      "comparison": {
+        "title": "כל התוכניות",
+        "best": "הערך הטוב ביותר"
+      },
+      "details": {
+        "title": "פירוט מחירים מפורט",
+        "plan": "תוכנית",
+        "base": "מחיר בסיס",
+        "includedCalls": "קריאות כלולות",
+        "overageRate": "שיעור חריגה",
+        "yourOverage": "החריגה שלך",
+        "total": "סה\"כ"
+      }
+    },
     "webhooks": {
       "title": "Webhooks",
       "subtitle": "הגדר קריאות HTTP עבור התראות אירועים בזמן אמת",
@@ -1606,12 +1655,98 @@
       "contactUs": "צרו איתנו קשר ב"
     }
   },
+  "serviceSelector": {
+    "title": "בחר את החוויה שלך",
+    "subtitle": "שתי דרכים לרתום את כוח זיכרון ה-AI",
+    "spring": {
+      "name": "Spring",
+      "icon": "🌿",
+      "tagline": "צ'אט רב-AI",
+      "description": "שוחח עם GPT-4, Claude, Gemini ועוד — כולם עם זיכרון מתמשך שזוכר אותך.",
+      "features": [
+        "גישה לכל מודלי ה-AI המובילים במקום אחד",
+        "ההעדפות שלך נזכרות בין סשנים",
+        "החלפת הקשר חלקה בין מודלים"
+      ],
+      "cta": "נסה את Spring",
+      "badge": ""
+    },
+    "summer": {
+      "name": "Summer",
+      "icon": "☀️",
+      "tagline": "API זיכרון",
+      "description": "תנו ליישומי ה-AI שלכם זיכרון מתמשך עם ה-API הידידותי למפתחים שלנו.",
+      "features": [
+        "REST API ו-SDKs פשוטים",
+        "זמן אחזור מתחת ל-50ms",
+        "אבטחה ברמה ארגונית"
+      ],
+      "cta": "חקור את ה-API",
+      "badge": "זמין עכשיו"
+    },
+    "footer": "חלק מעונות Seizn — זיכרון AI לכל צורך"
+  },
+  "springPage": {
+    "badge": "",
+    "title": "צ'אט אחד.",
+    "titleHighlight": "כל ה-AI.",
+    "subtitle": "לא משנה איזה תבחר,\nכולם זוכרים אותך.",
+    "startChatting": "התחל לשוחח",
+    "viewPricing": "צפה במחירים",
+    "features": {
+      "title": "למה Spring?",
+      "subtitle": "הטוב ביותר מכל AI, מאוחד.",
+      "multiModel": {
+        "title": "גישה רב-מודלית",
+        "description": "עבור בין GPT-4, Claude, Gemini, Llama ועוד. בחר את המודל הטוב ביותר לכל משימה."
+      },
+      "persistentMemory": {
+        "title": "זיכרון מתמשך",
+        "description": "ההעדפות, ההקשר וההיסטוריה שלך נשמרים בכל שיחה ובכל מודל."
+      },
+      "freeGenerosity": {
+        "title": "שכבה חינמית ברמת Cursor",
+        "description": "שימוש חינמי נדיב. רוב המשתמשים אף פעם לא צריכים לשלם. Pro ב-$9.99/חודש למשתמשי כוח."
+      }
+    },
+    "pricing": {
+      "title": "תמחור פשוט",
+      "free": {
+        "name": "חינם",
+        "price": "$0",
+        "period": "לנצח",
+        "features": [
+          "כל מודלי ה-AI",
+          "זיכרון בין סשנים",
+          "אפליקציות ווב ומובייל"
+        ],
+        "cta": "התחל בחינם"
+      },
+      "pro": {
+        "name": "פרו",
+        "price": "$9.99",
+        "period": "לחודש",
+        "badge": "ערך מיטבי",
+        "features": [
+          "הכל בחינם",
+          "גישה עדיפה",
+          "בקרות זיכרון מתקדמות",
+          "גישת API"
+        ],
+        "cta": "שדרג לפרו"
+      }
+    }
+  },
   "extremeHome": {
     "heroTitle": "זיכרון לדמויות NPC בינה מלאכותית.",
     "heroSubtitle": "התחברו ל-Inworld, Convai, או ה-LLM שלכם. Seizn מעניק לדמויות NPC שלכם זיכרון מתמשך, קשרים וזיכרון בין-דורי — תמחור לפי ישות, לא לפי מושב.",
     "ctaStart": "קראו את התיעוד",
     "ctaDemo": "שחקו smallgod",
     "socialProof": "מיועד לסטודיות משחקים המתרחבות מ-10 ל-10,000 דמויות NPC.",
+    "liveDemo": "הדגמה חיה",
+    "heroTagline": "שחקו smallgod — משחק ה-god-game המרפרנסי שלנו הבנוי על Seizn. ללא הרשמה או התקנה.",
+    "firstRetrievalComplete": "אחזור ראשון הושלם",
+    "copySnippetHint": "העתק את קטע הקוד למטה כדי לשחזר",
     "copySnippetTitle": "אינטגרציה ב-Unity, Unreal, או כל runtime",
     "copySnippetSubtitle": "עטיפת HTTP + תוספי C#/C++ רשמיים. ללא תשתית מותאמת אישית.",
     "whySeizn": {
@@ -1655,6 +1790,89 @@
       "status": "סטטוס",
       "help": "עזרה",
       "github": "OSS"
+    },
+    "requestBuilder": {
+      "title": "בונה בקשות",
+      "query": "שאילתה",
+      "queryPlaceholder": "הזן את שאילתת החיפוש שלך...",
+      "tryExamples": "נסה דוגמאות",
+      "dataset": "Dataset",
+      "latencyBudget": "תקציב זמן תגובה",
+      "fast": "fast",
+      "thorough": "thorough",
+      "topK": "Top K",
+      "results": "תוצאות",
+      "features": "תכונות",
+      "hybridSearch": "חיפוש היברידי",
+      "hybridSearchDesc": "שילוב וקטור + מילות מפתח",
+      "rerank": "Rerank",
+      "rerankDesc": "ניקוד מחדש עם cross-encoder",
+      "answerContract": "Answer Contract",
+      "answerContractDesc": "אמת את איכות התשובה",
+      "running": "מריץ...",
+      "runQuery": "הרץ שאילתה",
+      "datasets": {
+        "techDocs": "תיעוד טכני",
+        "legalContracts": "חוזים משפטיים",
+        "researchPapers": "מאמרי מחקר"
+      },
+      "advanced": "מתקדם"
+    },
+    "resultsPanel": {
+      "searching": "מחפש...",
+      "noResults": "הרץ שאילתה כדי לראות תוצאות",
+      "score": "ציון"
+    },
+    "tracePanel": {
+      "tracing": "עוקב אחר צינור...",
+      "noTrace": "הרץ שאילתה כדי לראות את המעקב",
+      "latency": "זמן תגובה",
+      "cost": "עלות",
+      "tokens": "טוקנים",
+      "vectorOps": "Vector Ops",
+      "cached": "cached",
+      "model": "מודל",
+      "input": "קלט",
+      "output": "פלט"
+    },
+    "tabs": {
+      "results": "תוצאות",
+      "trace": "מעקב",
+      "cost": "עלות"
+    },
+    "chips": {
+      "trace": "ישויות",
+      "eval": "קשרים",
+      "policy": "אירועים"
+    },
+    "playgroundTitle": "Try it now",
+    "costPanel": {
+      "calculating": "Calculating costs...",
+      "noCost": "Run a query to see cost breakdown",
+      "costBreakdown": "Cost Breakdown",
+      "component": "Component",
+      "cost": "עלות",
+      "embedding": "Embedding",
+      "vectorSearch": "Vector Search",
+      "rerank": "Rerank",
+      "answerContract": "Answer Contract",
+      "total": "Total Cost",
+      "usage": "שימוש",
+      "tokensIn": "Tokens In",
+      "tokensOut": "Tokens Out",
+      "queryUnits": "Query Units",
+      "estimatedMonthly": "Estimated Monthly",
+      "basedOn": "Based on",
+      "queriesPerDay": "queries/day"
+    },
+    "errorDisplay": {
+      "error": "שגיאה",
+      "errorCode": "קוד",
+      "traceId": "מעקב",
+      "hint": "Hint",
+      "tryAgain": "Try Again",
+      "copyTraceId": "Copy trace ID",
+      "copied": "הועתק!"
     }
   },
   "docs": {
@@ -2564,6 +2782,42 @@
       }
     }
   },
+  "demoQuery": {
+    "title": "הדגמה חיה",
+    "subtitle": "חווה את צינור האחזור של Seizn עם מעקב מלא ושקיפות עלויות.",
+    "tryItNow": "נסה עכשיו - ללא הרשמה",
+    "queryPlaceholder": "שאילתת חיפוש",
+    "runDemo": "הפעל הדגמה",
+    "running": "מריץ...",
+    "results": "תוצאות",
+    "trace": "מעקב",
+    "cost": "עלות",
+    "noResults": "הפעל את ההדגמה כדי לראות תוצאות",
+    "errorTitle": "שגיאה",
+    "rateLimitError": "חריגה ממגבלת קצב. אנא המתן.",
+    "retryIn": "נסה שוב בעוד",
+    "seconds": "שניות",
+    "score": "ציון",
+    "rerankScore": "דירוג מחדש",
+    "latency": "השהיה",
+    "tokens": "טוקנים",
+    "cached": "מטמון",
+    "model": "מודל",
+    "input": "קלט",
+    "output": "פלט",
+    "costBreakdown": "פירוט",
+    "total": "עלות כוללת",
+    "embedding": "Embedding",
+    "vectorSearch": "חיפוש וקטורי",
+    "rerank": "דירוג מחדש",
+    "answerContract": "חוזה תשובה",
+    "tokensIn": "טוקנים נכנסים",
+    "tokensOut": "טוקנים יוצאים",
+    "queryUnits": "יחידות שאילתה",
+    "prefilledQueries": [
+      "נסה דוגמאות"
+    ]
+  },
   "publicTrace": {
     "title": "מעקב משותף",
     "subtitle": "צפה בפרטי מעקב אחזור משותף",
@@ -2939,25 +3193,8 @@
     }
   },
   "status": {
-    "metadataTitle": "Seizn Status",
-    "metadataDescription": "Current Seizn API availability and public incident history.",
-    "eyebrow": "STATUS",
     "title": "System Status",
     "subtitle": "Real-time system status and incident history",
-    "currentStatusLabel": "Current status",
-    "measuredScope": "Measured scope: api.seizn.com/v1/*",
-    "uptimeLabel": "Last 30 days uptime",
-    "uptimeWindow": "Calculated from public incident windows in the last 30 days.",
-    "incidentsEyebrow": "INCIDENTS",
-    "recentIncidentsTitle": "Recent incidents",
-    "noRecentIncidents": "No recent incidents",
-    "noRecentIncidentsBody": "The public incident ledger is empty for this period.",
-    "slaLink": "Read the SLA",
-    "states": {
-      "operational": "operational",
-      "degraded": "degraded",
-      "outage": "outage"
-    },
     "lastUpdated": "Last updated",
     "overall": {
       "operational": "All Systems Operational",
@@ -3005,6 +3242,23 @@
       "title": "Subscribe to Updates",
       "rss": "RSS Feed",
       "email": "Email Notifications"
+    },
+    "metadataTitle": "Seizn Status",
+    "metadataDescription": "Current Seizn API availability and public incident history.",
+    "eyebrow": "STATUS",
+    "currentStatusLabel": "Current status",
+    "measuredScope": "Measured scope: api.seizn.com/v1/*",
+    "uptimeLabel": "Last 30 days uptime",
+    "uptimeWindow": "Calculated from public incident windows in the last 30 days.",
+    "incidentsEyebrow": "INCIDENTS",
+    "recentIncidentsTitle": "Recent incidents",
+    "noRecentIncidents": "No recent incidents",
+    "noRecentIncidentsBody": "The public incident ledger is empty for this period.",
+    "slaLink": "Read the SLA",
+    "states": {
+      "operational": "operational",
+      "degraded": "degraded",
+      "outage": "outage"
     }
   },
   "sla": {

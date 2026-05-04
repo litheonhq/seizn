@@ -60,25 +60,25 @@ export function PlaygroundTutorial({ onTryExample }: Props) {
   const tip = tips[currentTip];
 
   return (
-    <div className="mb-6 szn-card border-2 border-szn-accent/20 rounded-lg overflow-hidden">
+    <div className="mb-6 szn-card border-2 border-[var(--ink-900)]/20 rounded-lg overflow-hidden">
       {/* Header */}
-      <div className="p-4 bg-gradient-to-r from-szn-accent/10 to-szn-accent/5 flex items-center justify-between">
+      <div className="p-4 bg-[var(--ink-900)]/10 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-szn-accent to-szn-accent/80 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-full bg-[var(--ink-900)] flex items-center justify-center">
             <SparklesIcon className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h3 className="font-semibold text-szn-text-1">
+            <h3 className="font-semibold text-[var(--ink-900)]">
               {t("dashboard.playgroundTutorial.title")}
             </h3>
-            <p className="text-sm text-szn-text-2">
+            <p className="text-sm text-[var(--ink-600)]">
               {t("dashboard.playgroundTutorial.subtitle")}
             </p>
           </div>
         </div>
         <button
           onClick={handleDismiss}
-          className="text-szn-text-3 hover:text-szn-text-2 p-1"
+          className="text-[var(--ink-500)] hover:text-[var(--ink-600)] p-1"
           title={t("dashboard.playgroundTutorial.dismiss")}
         >
           <XIcon className="w-5 h-5" />
@@ -88,14 +88,14 @@ export function PlaygroundTutorial({ onTryExample }: Props) {
       {/* Content */}
       <div className="p-4">
         {/* Tip Carousel */}
-        <div className="bg-szn-bg rounded-xl p-4 mb-4">
+        <div className="bg-[var(--ink-50)] rounded-xl p-4 mb-4">
           <div className="flex items-start gap-3">
-            <TipIcon type={tip.icon} className="w-6 h-6 text-szn-accent flex-shrink-0 mt-0.5" />
+            <TipIcon type={tip.icon} className="w-6 h-6 text-[var(--ink-900)] flex-shrink-0 mt-0.5" />
             <div>
-              <h4 className="font-medium text-szn-text-1 mb-1">
+              <h4 className="font-medium text-[var(--ink-900)] mb-1">
                 {t(tip.titleKey)}
               </h4>
-              <p className="text-sm text-szn-text-2">
+              <p className="text-sm text-[var(--ink-600)]">
                 {t(tip.descriptionKey)}
               </p>
             </div>
@@ -107,7 +107,7 @@ export function PlaygroundTutorial({ onTryExample }: Props) {
                 key={index}
                 onClick={() => setCurrentTip(index)}
                 className={`w-2 h-2 rounded-full transition-colors ${
-                  index === currentTip ? "bg-szn-accent" : "bg-szn-border"
+                  index === currentTip ? "bg-[var(--ink-900)]" : "bg-[var(--ink-200)]"
                 }`}
               />
             ))}
@@ -116,7 +116,7 @@ export function PlaygroundTutorial({ onTryExample }: Props) {
 
         {/* Example Queries */}
         <div>
-          <p className="text-sm font-medium text-szn-text-1 mb-2">
+          <p className="text-sm font-medium text-[var(--ink-900)] mb-2">
             {t("dashboard.playgroundTutorial.tryExamples")}
           </p>
           <div className="flex flex-wrap gap-2">
@@ -124,7 +124,7 @@ export function PlaygroundTutorial({ onTryExample }: Props) {
               <button
                 key={index}
                 onClick={() => handleTryExample(query)}
-                className="px-3 py-1.5 bg-szn-surface hover:bg-szn-accent/10 hover:text-szn-accent text-sm text-szn-text-2 rounded-lg transition-colors flex items-center gap-1.5"
+                className="px-3 py-1.5 bg-[var(--ink-50)] hover:bg-[var(--ink-900)]/10 hover:text-[var(--ink-900)] text-sm text-[var(--ink-600)] rounded-lg transition-colors flex items-center gap-1.5"
               >
                 <SearchIcon className="w-4 h-4" />
                 {query.length > 30 ? query.slice(0, 30) + "..." : query}
@@ -135,13 +135,13 @@ export function PlaygroundTutorial({ onTryExample }: Props) {
       </div>
 
       {/* Footer */}
-      <div className="px-4 py-3 bg-szn-bg border-t border-szn-border flex items-center justify-between">
-        <span className="text-xs text-szn-text-2">
+      <div className="px-4 py-3 bg-[var(--ink-50)] border-t border-[var(--ink-200)] flex items-center justify-between">
+        <span className="text-xs text-[var(--ink-600)]">
           {t("dashboard.playgroundTutorial.hint")}
         </span>
         <button
           onClick={handleDismiss}
-          className="text-sm text-szn-text-2 hover:text-szn-text-1"
+          className="text-sm text-[var(--ink-600)] hover:text-[var(--ink-900)]"
         >
           {t("dashboard.playgroundTutorial.gotIt")}
         </button>

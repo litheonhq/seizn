@@ -17,13 +17,65 @@ Scope: v1 memory API internal engine replacement (legacy contract preserved)
 | M-100-07 | Combined E2E runs could attach to the wrong local project and produce false failures | Playwright reused an existing `localhost:3000` server from another repo | Defaulted Playwright to isolated `127.0.0.1:3100`, made server reuse opt-in, and aligned client E2E env injection | Closed |
 | M-100-08 | Docs/pricing smoke checks were brittle and quickstart deep links 404ed | Missing `main` landmarks on localized pages and no `/docs/quickstart` route target | Added `main` landmarks in docs/pricing and created localized quickstart redirect page | Closed |
 | M-100-09 | Homepage quality audits showed unnecessary first-load work around hero/LCP | Decorative motion mounted immediately and GA loaded in non-production validation runs | Deferred hero motion until idle, removed hero text entry animation, and disabled GA outside production/E2E | Closed |
+| AMV3-P1-01 | Author imports did not persist uploaded source files | Existing fixture-backed upload path only created in-memory import records | Added Cloudflare R2 object persistence for Author imports | Closed |
+| AMV3-P1-02 | Author imports did not extract real md/docx/pdf/txt content | `uploadImport` did not receive file bytes or call document parsers | Added parser router and format-specific parsers with heading/page span metadata | Closed |
+| AMV3-P1-03 | Parsed Author import text had no durable table | No `author_imports_text` persistence layer existed | Added Supabase migration and store for parsed text plus source object metadata | Closed |
+| AMV3-P1-04 | Author Inbox could not initiate real uploads from the dashboard surface | Dashboard Author page rendered import rows but no upload control | Wired existing upload mutation into the Inbox panel | Closed |
+| AMV3-P2-01 | Author Memory v3 had no reusable Anthropic runtime for real extraction calls | LLM calls were still fixture-oriented and not routed through BYOK | Added `src/lib/author/llm/` with Anthropic client, BYOK resolver, JSON schema validation, 429 backoff, and usage recording | Closed |
+| AMV3-P2-02 | Production Author LLM calls could accidentally depend on managed keys | Existing generic provider fallback allowed managed keys broadly | Author resolver now requires Anthropic BYOK in production and allows managed fallback only outside production | Closed |
+| AMV3-P2-03 | Author LLM token usage was not persisted for account usage or audit | No `model_usage` ledger existed | Added `model_usage` migration, usage store, and account usage merge path | Closed |
+| AMV3-P2-04 | BYOK provider keys could fail for NextAuth profile IDs | `provider_keys.user_id` still followed the older `auth.users` UUID model | Added profile-ID alignment migration for `provider_keys` and `provider_keys_audit` | Closed |
+| AMV3-P3-01 | Author imports parsed source text but did not create real review candidates | Upload flow stopped at parsed text and kept extraction as a queued fixture state | Added `src/lib/author/extraction/` orchestrator and wired `uploadImport` to create candidates from parsed text | Closed |
+| AMV3-P3-02 | Extraction prompts and response schemas were not locked for repeatable LLM calls | Phase 2 runtime had no Author-specific structured prompt catalog | Added five prompt files and five JSON schemas for character, world rule, event, relationship, and voice-sample extraction | Closed |
+| AMV3-P3-03 | KNOT canon authority rules were only human-readable | Validator could not machine-enforce forbidden short1 leaks, tier tags, status, scope, or duplicate candidates | Added `docs/knot-input/canon_authority_rules_machine.json` and validator enforcement with regression tests | Closed |
+| AMV3-P3-04 | Eval seed v3 coverage and KNOT character extraction thresholds were not automated | The 100-case seed and short1 character thresholds were docs-only artifacts | Added Phase 3 test harness covering 100 eval cases, 7/7 main character match threshold, and 8 supporting character heading extraction | Closed |
+| AMV3-P4-01 | Character Card could not generate likes/dislikes/reward/irritation backlog candidates | No backlog prompt, API, or service method existed | Added `generateBacklogForCharacter()`, `POST /characters/{id}/backlog`, and Review Queue insertion | Closed |
+| AMV3-P4-02 | Author UI had no control or preview for character backlog generation | Character screen only rendered a read-only table | Added character selector, Generate backlog button, and inline preview on the Author dashboard | Closed |
+| AMV3-P4-03 | Generated backlog had no export path for detail-guide §X.6 | Candidate generation returned review items only | Added `export_markdown` to the backlog API response for manual detail-guide sync/export | Closed |
+| AMV3-P4-04 | Cross-character backlog duplication was not regression-tested | Backlog generation acceptance lived only in the task pack | Added KNOT five-character dogfood test: 20 candidates each, four categories, zero duplicate content | Closed |
+| AMV3-P5-01 | Author Memory v3 decisions had no persistent audit schema | Phase 1-4 mutations only updated runtime state and docs | Added `author_audit_log` migration with RLS, decision chain IDs, payload, LLM meta, and source span columns | Closed |
+| AMV3-P5-02 | Mutation and simulation decisions could not be replayed by decision ID | No audit logger or replay chain utility existed | Added `src/lib/author/audit/` logger, sanitizer, search, and replay chain hashing | Closed |
+| AMV3-P5-03 | Author dashboard had no audit log surface | Author UI nav stopped at simulation and conflict views | Added `/api/projects/{id}/audit`, SWR hooks, and an Audit screen with deterministic replay preview | Closed |
+| AMV3-P5-04 | Raw provider keys could leak into trace payloads | Mutation logs had no centralized redaction step | Added audit JSON sanitizer and regression tests covering secret-field redaction | Closed |
+| AMV3-P5-05 | Live `author_audit_log` table is not applied yet | Available Litheon `POSTGRES_URL_NON_POOLING` fails password authentication for `postgres` | Correct or rotate the Supabase non-pooling Postgres credential, then rerun `node scripts/run-migration-file.mjs supabase/migrations/20260502006_author_audit_log.sql` | Blocked |
+| AMV3-P6-01 | Litheon R2 migration had no executable preflight tooling | Phase 6 was documented as an SOP only | Added dry-run-first rclone migration wrapper, SHA256 integrity verifier, target env template, and migration runbook | Closed |
 
 ## Files Changed
 
 - `src/app/api/v1/memories/route.ts`
 - `src/lib/memory/v1-spring-bridge.ts`
+- `src/lib/author/storage/r2-store.ts`
+- `src/lib/author/storage/import-text-store.ts`
+- `src/lib/author/parser/`
+- `src/app/api/projects/[projectId]/imports/route.ts`
+- `src/app/(dashboard)/dashboard/author/author-memory-v3-client.tsx`
+- `supabase/migrations/20260502003_author_imports_text.sql`
+- `src/lib/author/llm/`
+- `src/lib/author/extraction/`
+- `src/app/api/account/byok/route.ts`
+- `src/app/api/account/usage/route.ts`
+- `src/lib/byok/index.ts`
+- `supabase/migrations/20260502004_model_usage.sql`
+- `supabase/migrations/20260502005_provider_keys_profile_user_id.sql`
+- `docs/knot-input/canon_authority_rules_machine.json`
+- `src/__tests__/author/extraction/eval-seed-v3.test.ts`
+- `src/app/api/projects/[projectId]/characters/[characterId]/backlog/route.ts`
+- `src/app/api/projects/[projectId]/audit/route.ts`
+- `src/hooks/useAuthorMemoryV3.ts`
+- `src/app/(dashboard)/dashboard/author/author-memory-v3-client.tsx`
+- `src/app/(dashboard)/dashboard/author/audit-log-view.tsx`
+- `src/__tests__/author/extraction/generate-backlog.test.ts`
+- `src/lib/author/audit/`
+- `src/__tests__/author/audit/replay.test.ts`
+- `supabase/migrations/20260502006_author_audit_log.sql`
+- `scripts/migrate-r2-to-litheon.sh`
+- `scripts/verify-r2-integrity.ts`
+- `docs/migrations/20260502-r2-litheon-migration.md`
+- `.gitignore`
 
 ## Follow-up Notes
 
 1. Authenticated dashboard and API-key smoke are now verified via local auto-provision (`PLAYWRIGHT_DISABLE_TURNSTILE=1`, `E2E_ALLOW_AUTO_PROVISION=1`).
 2. Playwright local server reuse is now opt-in via `PLAYWRIGHT_REUSE_SERVER=1`; default behavior is isolated startup on `127.0.0.1:3100`.
+3. Author Memory v3 Phase 5 now records mutation/simulation/backlog/BYOK audit events with replay chain search; live SQL apply is blocked on the Supabase Postgres credential.
+4. Phase 6 R2 migration copy/verify tooling is ready, but execution remains blocked on Litheon-owned bucket and target credentials.

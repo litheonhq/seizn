@@ -28,7 +28,7 @@ function CandidatesSkeleton() {
         {[...Array(5)].map((_, i) => (
           <div
             key={i}
-            className="h-32 bg-gray-100 dark:bg-gray-800 rounded-xl animate-pulse"
+            className="h-32 bg-gray-100 dark:bg-[var(--ink-800)] rounded-xl animate-pulse"
           />
         ))}
       </div>

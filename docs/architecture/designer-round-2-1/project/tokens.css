@@ -1,0 +1,157 @@
+/* Seizn Author — design tokens (V1 candidate) */
+
+:root {
+  /* — Type stack — */
+  --font-sans: 'Pretendard', 'Pretendard Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-serif: 'Source Serif 4', 'GT Sectra', 'Charter', 'Iowan Old Style', Georgia, serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+  /* — Monochrome scale (slate-leaning, single hue) — */
+  --ink-0: oklch(0.99 0.003 250);   /* page bg light */
+  --ink-50: oklch(0.975 0.005 250);
+  --ink-100: oklch(0.95 0.006 250);
+  --ink-200: oklch(0.90 0.008 250);
+  --ink-300: oklch(0.80 0.01 250);
+  --ink-400: oklch(0.65 0.012 250);
+  --ink-500: oklch(0.50 0.014 250);
+  --ink-600: oklch(0.38 0.016 250);
+  --ink-700: oklch(0.28 0.016 250);
+  --ink-800: oklch(0.20 0.014 250);  /* dark surface */
+  --ink-900: oklch(0.14 0.012 250);  /* hero dark */
+  --ink-950: oklch(0.09 0.010 250);  /* deepest */
+
+  /* — Semantic signals — */
+  --signal-canon: oklch(0.62 0.16 148);       /* validated / canon-true */
+  --signal-canon-soft: oklch(0.94 0.05 148);
+  --signal-canon-ink: oklch(0.32 0.10 148);
+
+  --signal-conflict: oklch(0.60 0.21 27);     /* conflict / canon-broken */
+  --signal-conflict-soft: oklch(0.96 0.04 27);
+  --signal-conflict-ink: oklch(0.36 0.16 27);
+
+  --signal-pending: oklch(0.72 0.13 85);      /* needs review */
+  --signal-pending-soft: oklch(0.96 0.05 85);
+
+  /* — Spacing & shape — */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+
+  --shadow-sm: 0 1px 2px oklch(0.14 0.012 250 / 0.06), 0 1px 1px oklch(0.14 0.012 250 / 0.04);
+  --shadow-md: 0 4px 12px oklch(0.14 0.012 250 / 0.06), 0 1px 3px oklch(0.14 0.012 250 / 0.04);
+  --shadow-lg: 0 18px 40px oklch(0.14 0.012 250 / 0.10), 0 2px 6px oklch(0.14 0.012 250 / 0.04);
+
+  /* — Type scale — */
+  --t-display: clamp(44px, 5.6vw, 84px);
+  --t-h1: clamp(36px, 4.2vw, 60px);
+  --t-h2: clamp(28px, 3vw, 40px);
+  --t-h3: 22px;
+  --t-body: 16px;
+  --t-small: 14px;
+  --t-eyebrow: 12px;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: var(--font-sans);
+  color: var(--ink-900);
+  background: var(--ink-0);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'ss01', 'cv11';
+}
+
+/* Editorial heading */
+.serif {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  letter-spacing: -0.015em;
+  line-height: 1.05;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-500);
+}
+
+.mono { font-family: var(--font-mono); }
+
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; border: none; background: none; }
+a { color: inherit; text-decoration: none; }
+
+/* — Buttons — */
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 20px;
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  font-size: 15px;
+  letter-spacing: -0.005em;
+  transition: transform 120ms ease, background 160ms ease, color 160ms ease, border-color 160ms ease;
+  white-space: nowrap;
+}
+.btn-primary {
+  background: var(--ink-0);
+  color: var(--ink-900);
+  border: 1px solid var(--ink-0);
+}
+.btn-primary:hover { background: var(--ink-100); transform: translateY(-1px); }
+
+.btn-primary-dark {
+  background: var(--ink-900);
+  color: var(--ink-0);
+  border: 1px solid var(--ink-900);
+}
+.btn-primary-dark:hover { background: var(--ink-800); transform: translateY(-1px); }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--ink-0);
+  border: 1px solid oklch(1 0 0 / 0.18);
+}
+.btn-ghost:hover { background: oklch(1 0 0 / 0.06); border-color: oklch(1 0 0 / 0.28); }
+
+.btn-ghost-dark {
+  background: transparent;
+  color: var(--ink-800);
+  border: 1px solid var(--ink-200);
+}
+.btn-ghost-dark:hover { background: var(--ink-50); border-color: var(--ink-300); }
+
+/* — Cards — */
+.card {
+  background: var(--ink-0);
+  border: 1px solid var(--ink-100);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+/* — Status badges — */
+.badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+.badge-canon { background: var(--signal-canon-soft); color: var(--signal-canon-ink); }
+.badge-conflict { background: var(--signal-conflict-soft); color: var(--signal-conflict-ink); }
+.badge-pending { background: var(--signal-pending-soft); color: oklch(0.40 0.12 85); }
+.badge-neutral { background: var(--ink-100); color: var(--ink-700); }
+.badge-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; opacity: 0.85; }
+
+/* — Focus rings (accessibility) — */
+:focus-visible {
+  outline: 2px solid var(--signal-canon);
+  outline-offset: 2px;
+  border-radius: 6px;
+}

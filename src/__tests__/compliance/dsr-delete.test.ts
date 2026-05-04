@@ -8,9 +8,9 @@ vi.mock('@/lib/audit/logger', () => ({
 }));
 
 vi.mock('@/lib/audit/tamper-evident', async () => {
-  const crypto = await vi.importActual<typeof import('crypto')>('crypto');
+  const { createHash } = await vi.importActual<typeof import('node:crypto')>('node:crypto');
   return {
-    sha256: (value: string) => crypto.createHash('sha256').update(value).digest('hex'),
+    sha256: (value: string) => createHash('sha256').update(value).digest('hex'),
     logTamperEvidentEvent: logTamperEvidentEventMock,
   };
 });

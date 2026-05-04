@@ -8,6 +8,7 @@
  * - Regression detection
  */
 import { createServerClient } from '@/lib/supabase';
+import { normalizeOutboundWebhookUrl } from '@/lib/security/outbound-webhook';
 import type {
   GuardrailCheck,
   GuardrailConfig,
@@ -378,6 +379,11 @@ export async function sendGuardrailAlert(
   if (report.alerts.length === 0) return true;
 
   try {
+    const safeWebhookUrl = await normalizeOutboundWebhookUrl(webhookUrl, {
+      label: 'Fall guardrail webhook',
+    });
+    if (!safeWebhookUrl) return false;
+
     const payload = {
       text: `🚨 Experiment Guardrail Alert`,
       blocks: [
@@ -411,7 +417,7 @@ export async function sendGuardrailAlert(
       ],
     };
 
-    const res = await fetch(webhookUrl, {
+    const res = await fetch(safeWebhookUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),

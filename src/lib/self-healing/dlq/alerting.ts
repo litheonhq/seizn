@@ -9,6 +9,7 @@
  */
 
 import { createServerClient } from '@/lib/supabase';
+import { normalizeOutboundWebhookUrl } from '@/lib/security/outbound-webhook';
 import { generateSignature } from '@/lib/webhook';
 import { sendEmail } from '@/lib/email';
 import type { DLQEntry, DLQStats, DLQAlertPayload, DLQAlertConfig } from './types';
@@ -295,10 +296,15 @@ async function sendWebhookAlert(
   }
 
   try {
+    const safeWebhookUrl = await normalizeOutboundWebhookUrl(webhookUrl, {
+      label: 'DLQ alert webhook',
+    });
+    if (!safeWebhookUrl) return;
+
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 10000);
 
-    const response = await fetch(webhookUrl, {
+    const response = await fetch(safeWebhookUrl, {
       method: 'POST',
       headers,
       body: payloadString,

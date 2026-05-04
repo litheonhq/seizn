@@ -109,7 +109,7 @@ function SegmentView({ segment, isExpanded, onToggleExpand }: SegmentViewProps) 
       onClick={onToggleExpand}
       className={`cursor-pointer transition-all rounded px-0.5 ${
         isExpanded
-          ? "bg-violet-500/20 text-violet-200 border-b border-violet-500/50"
+          ? "bg-[var(--ink-900)]/20 text-[var(--ink-900)] border-b border-[var(--ink-900)]/50"
           : "hover:bg-gray-700/50 text-gray-200 border-b border-dashed border-gray-600"
       }`}
       title={isExpanded ? "Click to collapse" : "Click to expand to original"}
@@ -151,7 +151,7 @@ function ChunkView({ chunk, index, expandedSentences, onToggleExpand }: ChunkVie
   return (
     <div className="border border-gray-800 rounded-lg overflow-hidden">
       {/* Chunk Header */}
-      <div className="px-4 py-2 bg-gray-800/50 border-b border-gray-800 flex items-center justify-between">
+      <div className="px-4 py-2 bg-[var(--ink-800)]/50 border-b border-gray-800 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="text-xs text-gray-500">Chunk {index + 1}</span>
           <span className="text-xs text-gray-600">|</span>
@@ -172,14 +172,14 @@ function ChunkView({ chunk, index, expandedSentences, onToggleExpand }: ChunkVie
 
       {/* Stats Panel */}
       {showStats && (
-        <div className="px-4 py-3 bg-gray-900/50 border-b border-gray-800 grid grid-cols-4 gap-4 text-xs">
+        <div className="px-4 py-3 bg-[var(--ink-900)]/50 border-b border-gray-800 grid grid-cols-4 gap-4 text-xs">
           <div>
             <p className="text-gray-500 mb-1">Original Tokens</p>
             <p className="font-mono text-white">{(chunk.tokens?.original ?? 0)}</p>
           </div>
           <div>
             <p className="text-gray-500 mb-1">Compressed Tokens</p>
-            <p className="font-mono text-violet-400">{(chunk.tokens?.compressed ?? 0)}</p>
+            <p className="font-mono text-[var(--ink-900)]">{(chunk.tokens?.compressed ?? 0)}</p>
           </div>
           <div>
             <p className="text-gray-500 mb-1">Compression Ratio</p>
@@ -259,7 +259,7 @@ export function CompressedView({ chunks, className = "" }: CompressedViewProps) 
   if (chunks.length === 0) {
     return (
       <div className={`p-6 ${className}`}>
-        <div className="bg-gray-800/50 rounded-lg p-6 text-center">
+        <div className="bg-[var(--ink-800)]/50 rounded-lg p-6 text-center">
           <svg
             className="w-12 h-12 text-gray-600 mx-auto mb-3"
             fill="none"
@@ -286,12 +286,12 @@ export function CompressedView({ chunks, className = "" }: CompressedViewProps) 
       <div className="flex items-center justify-between mb-4 px-4 pt-4">
         <div className="flex items-center gap-4">
           {/* View Mode Toggle */}
-          <div className="flex items-center gap-1 bg-gray-800 rounded-lg p-1">
+          <div className="flex items-center gap-1 bg-[var(--ink-800)] rounded-lg p-1">
             <button
               onClick={() => setViewMode("compressed")}
               className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
                 viewMode === "compressed"
-                  ? "bg-violet-600 text-white"
+                  ? "bg-[var(--ink-900)] text-white"
                   : "text-gray-400 hover:text-white"
               }`}
             >
@@ -301,7 +301,7 @@ export function CompressedView({ chunks, className = "" }: CompressedViewProps) 
               onClick={() => setViewMode("original")}
               className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
                 viewMode === "original"
-                  ? "bg-violet-600 text-white"
+                  ? "bg-[var(--ink-900)] text-white"
                   : "text-gray-400 hover:text-white"
               }`}
             >
@@ -314,14 +314,14 @@ export function CompressedView({ chunks, className = "" }: CompressedViewProps) 
             <div className="flex items-center gap-2">
               <button
                 onClick={handleExpandAll}
-                className="text-xs text-gray-500 hover:text-violet-400 transition-colors"
+                className="text-xs text-gray-500 hover:text-[var(--ink-900)] transition-colors"
               >
                 Expand All
               </button>
               <span className="text-gray-700">|</span>
               <button
                 onClick={handleCollapseAll}
-                className="text-xs text-gray-500 hover:text-violet-400 transition-colors"
+                className="text-xs text-gray-500 hover:text-[var(--ink-900)] transition-colors"
               >
                 Collapse All
               </button>
@@ -338,7 +338,7 @@ export function CompressedView({ chunks, className = "" }: CompressedViewProps) 
             <span className="text-green-400 font-mono">{savedTokens}</span> tokens saved
           </div>
           <div className="text-gray-500">
-            <span className="text-violet-400 font-mono">
+            <span className="text-[var(--ink-900)] font-mono">
               {((1 - overallRatio) * 100).toFixed(0)}%
             </span>{" "}
             reduction
@@ -348,9 +348,9 @@ export function CompressedView({ chunks, className = "" }: CompressedViewProps) 
 
       {/* Progress Bar */}
       <div className="px-4 mb-4">
-        <div className="h-2 bg-gray-800 rounded-full overflow-hidden">
+        <div className="h-2 bg-[var(--ink-800)] rounded-full overflow-hidden">
           <div
-            className="h-full bg-gradient-to-r from-violet-600 to-violet-400 transition-all duration-500"
+            className="h-full bg-gradient-to-r from-[var(--ink-900)] to-[var(--ink-900)] transition-all duration-500"
             style={{ width: `${overallRatio * 100}%` }}
           />
         </div>
@@ -377,7 +377,7 @@ export function CompressedView({ chunks, className = "" }: CompressedViewProps) 
           <div className="space-y-4">
             {chunks.map((chunk, i) => (
               <div key={chunk.chunk_id} className="border border-gray-800 rounded-lg overflow-hidden">
-                <div className="px-4 py-2 bg-gray-800/50 border-b border-gray-800 flex items-center justify-between">
+                <div className="px-4 py-2 bg-[var(--ink-800)]/50 border-b border-gray-800 flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <span className="text-xs text-gray-500">Chunk {i + 1}</span>
                     <span className="text-xs text-gray-600">|</span>

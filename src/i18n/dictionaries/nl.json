@@ -323,7 +323,6 @@
     "nav": {
       "overview": "Overzicht",
       "memories": "Entiteiten",
-      "memoryEditor": "Geheugeneditor",
       "mindMap": "Relatiegraph",
       "candidates": "Event-inbox",
       "devTools": "DevTools",
@@ -337,6 +336,7 @@
       "usage": "Gebruik",
       "budget": "Budget",
       "reports": "Rapporten",
+      "calculator": "Kostenschatting",
       "apiKeys": "API-sleutels",
       "integrations": "Engine-plugins",
       "webhooks": "Webhooks",
@@ -345,10 +345,15 @@
       "settings": "Instellingen",
       "groups": {
         "memory": "NPC-GEHEUGEN",
+        "observe": "MONITOREN",
+        "govern": "BELEID",
+        "finops": "GEBRUIK & KOSTEN",
+        "connect": "INTEGREREN",
         "system": "WERKRUIMTE",
         "build": "Bouwen",
         "integrate": "Integreren"
-      }
+      },
+      "memoryEditor": "Geheugeneditor"
     },
     "pinSidebar": "Zijbalk vastzetten",
     "unpinSidebar": "Zijbalk inklappen",
@@ -1436,6 +1441,50 @@
       "recentDecisions": "Recente Beslissingen",
       "noLogs": "Nog geen beslissingslogboeken"
     },
+    "calculator": {
+      "title": "Gebruikscalculator",
+      "subtitle": "Schat uw maandelijkse kosten op basis van verwacht gebruik",
+      "stats": {
+        "apiCalls": "API-aanroepen",
+        "memories": "Herinneringen",
+        "extractions": "Extracties",
+        "estimated": "Geschatte Kosten"
+      },
+      "presets": {
+        "title": "Snelle Voorinstellingen",
+        "startup": "Startup",
+        "growing": "Groeiend",
+        "scale": "Schaal",
+        "enterprise": "Enterprise"
+      },
+      "customize": {
+        "title": "Gebruik Aanpassen"
+      },
+      "labels": {
+        "apiCalls": "Maandelijkse API-aanroepen",
+        "memories": "Opgeslagen Herinneringen",
+        "extractions": "Extracties"
+      },
+      "recommended": {
+        "title": "Aanbevolen Abonnement",
+        "base": "Basisprijs",
+        "overage": "Overschrijding",
+        "cta": "Aan de Slag"
+      },
+      "comparison": {
+        "title": "Alle Abonnementen",
+        "best": "Beste Waarde"
+      },
+      "details": {
+        "title": "Gedetailleerde Prijsuitsplitsing",
+        "plan": "Abonnement",
+        "base": "Basisprijs",
+        "includedCalls": "Inbegrepen Aanroepen",
+        "overageRate": "Overschrijdingstarief",
+        "yourOverage": "Uw Overschrijding",
+        "total": "Totaal"
+      }
+    },
     "webhooks": {
       "title": "Webhooks",
       "subtitle": "Configureer HTTP-callbacks voor realtime gebeurtenismeldingen",
@@ -1606,12 +1655,101 @@
       "contactUs": "Neem contact met ons op via"
     }
   },
+  "serviceSelector": {
+    "title": "Kies uw ervaring",
+    "subtitle": "Twee manieren om de kracht van AI-geheugen te benutten",
+    "spring": {
+      "name": "Spring",
+      "icon": "🌿",
+      "tagline": "Multi-AI Chat",
+      "description": "Chat met GPT-4, Claude, Gemini en meer — allemaal met blijvend geheugen dat u onthoudt.",
+      "features": [
+        "Toegang tot alle grote AI-modellen op één plek",
+        "Uw voorkeuren worden onthouden tussen sessies",
+        "Naadloze contextwisseling tussen modellen"
+      ],
+      "cta": "Probeer Spring",
+      "badge": ""
+    },
+    "summer": {
+      "name": "Summer",
+      "icon": "☀️",
+      "tagline": "Geheugen-API",
+      "description": "Geef uw AI-toepassingen blijvend geheugen met onze ontwikkelaarsvriendelijke API.",
+      "features": [
+        "Eenvoudige REST API en SDK's",
+        "Ophaaltijd onder 50ms",
+        "Enterprise-grade beveiliging"
+      ],
+      "cta": "Verken API",
+      "badge": "Nu beschikbaar"
+    },
+    "footer": "Onderdeel van de Seizn-seizoenen — AI-geheugen voor elke behoefte"
+  },
+  "springPage": {
+    "badge": "",
+    "title": "Eén chat.",
+    "titleHighlight": "Alle AI's.",
+    "subtitle": "Welke u ook kiest,\nze onthouden u allemaal.",
+    "startChatting": "Begin met chatten",
+    "viewPricing": "Bekijk prijzen",
+    "features": {
+      "title": "Waarom Spring?",
+      "subtitle": "Het beste van elke AI, verenigd.",
+      "multiModel": {
+        "title": "Multi-model toegang",
+        "description": "Wissel tussen GPT-4, Claude, Gemini, Llama en meer. Kies het beste model voor elke taak."
+      },
+      "persistentMemory": {
+        "title": "Blijvend geheugen",
+        "description": "Uw voorkeuren, context en geschiedenis worden bewaard in elk gesprek en elk model."
+      },
+      "freeGenerosity": {
+        "title": "Cursor-niveau gratis tier",
+        "description": "Royaal gratis gebruik. De meeste gebruikers hoeven nooit te betalen. Pro voor $9,99/maand voor powergebruikers."
+      }
+    },
+    "pricing": {
+      "title": "Eenvoudige prijzen",
+      "free": {
+        "name": "Gratis",
+        "price": "$0",
+        "period": "Voor altijd",
+        "features": [
+          "Alle AI-modellen",
+          "Geheugen tussen sessies",
+          "Web- en mobiele apps"
+        ],
+        "cta": "Gratis beginnen"
+      },
+      "pro": {
+        "name": "Pro",
+        "price": "$9,99",
+        "period": "per maand",
+        "badge": "Beste waarde",
+        "features": [
+          "Alles in Gratis",
+          "Prioriteitstoegang",
+          "Geavanceerde geheugencontroles",
+          "API-toegang"
+        ],
+        "cta": "Upgrade naar Pro"
+      }
+    }
+  },
   "extremeHome": {
     "heroTitle": "Geheugen voor AI-NPC's.",
     "heroSubtitle": "Koppel aan Inworld, Convai of je eigen LLM. Seizn geeft je NPC's persistent geheugen, relaties en generatieoverschrijdende herinnering — prijs per entiteit, niet per seat.",
     "ctaStart": "Docs lezen",
     "ctaDemo": "smallgod spelen",
     "socialProof": "Gebouwd voor game studios die schalen van 10 naar 10.000 NPC's.",
+    "liveDemo": "Live demo",
+    "heroTagline": "Speel smallgod — ons referentie god-game gebouwd op Seizn. Geen registratie, geen installatie.",
+    "chips": {
+      "trace": "Trace",
+      "eval": "Evaluatie",
+      "policy": "Beleid"
+    },
     "copySnippetTitle": "Integreer in Unity, Unreal of elke runtime",
     "copySnippetSubtitle": "HTTP-wrapper + officiële C#/C++-plugins. Geen eigen infrastructuur nodig.",
     "whySeizn": {
@@ -1652,6 +1790,84 @@
       "status": "Status",
       "help": "Help",
       "github": "OSS"
+    },
+    "requestBuilder": {
+      "title": "Verzoekenbouwer",
+      "query": "Query",
+      "queryPlaceholder": "Voer uw zoekopdracht in...",
+      "tryExamples": "Voorbeelden proberen",
+      "dataset": "Dataset",
+      "latencyBudget": "Latentiebudget",
+      "fast": "fast",
+      "thorough": "thorough",
+      "topK": "Top K",
+      "results": "resultaten",
+      "features": "Functies",
+      "hybridSearch": "Hybride zoekopdracht",
+      "hybridSearchDesc": "Combineer vector + trefwoord",
+      "rerank": "Rerank",
+      "rerankDesc": "Opnieuw scoren met cross-encoder",
+      "answerContract": "Answer Contract",
+      "answerContractDesc": "Antwoordkwaliteit valideren",
+      "running": "Uitvoeren...",
+      "runQuery": "Query uitvoeren",
+      "datasets": {
+        "techDocs": "Technische documentatie",
+        "legalContracts": "Juridische contracten",
+        "researchPapers": "Onderzoekspapers"
+      },
+      "advanced": "Geavanceerd"
+    },
+    "resultsPanel": {
+      "searching": "Zoeken...",
+      "noResults": "Voer een query uit om resultaten te zien",
+      "score": "Score"
+    },
+    "tracePanel": {
+      "tracing": "Pipeline traceren...",
+      "noTrace": "Voer een query uit om de trace te zien",
+      "latency": "Latentie",
+      "cost": "Kosten",
+      "tokens": "Tokens",
+      "vectorOps": "Vector Ops",
+      "cached": "cached",
+      "model": "Model",
+      "input": "Invoer",
+      "output": "Uitvoer"
+    },
+    "tabs": {
+      "results": "Resultaten",
+      "trace": "Trace",
+      "cost": "Kosten"
+    },
+    "playgroundTitle": "Probeer het nu",
+    "costPanel": {
+      "calculating": "Kosten berekenen...",
+      "noCost": "Voer een query uit om de kostenspecificatie te zien",
+      "costBreakdown": "Kostenspecificatie",
+      "component": "Component",
+      "cost": "Kosten",
+      "embedding": "Embedding",
+      "vectorSearch": "Vectorzoekopdracht",
+      "rerank": "Herordening",
+      "answerContract": "Antwoordcontract",
+      "total": "Totale Kosten",
+      "usage": "Gebruik",
+      "tokensIn": "Tokens In",
+      "tokensOut": "Tokens Uit",
+      "queryUnits": "Query-eenheden",
+      "estimatedMonthly": "Geschat Maandelijks",
+      "basedOn": "Gebaseerd op",
+      "queriesPerDay": "queries/dag"
+    },
+    "errorDisplay": {
+      "error": "Fout",
+      "errorCode": "Code",
+      "traceId": "Trace",
+      "hint": "Hint",
+      "tryAgain": "Opnieuw Proberen",
+      "copyTraceId": "Trace-ID kopiëren",
+      "copied": "Gekopieerd!"
     }
   },
   "docs": {
@@ -2561,6 +2777,42 @@
       }
     }
   },
+  "demoQuery": {
+    "title": "Live demo",
+    "subtitle": "Ervaar Seizns ophaal-pipeline met volledige tracering en kostentransparantie.",
+    "tryItNow": "Probeer het nu - Geen registratie nodig",
+    "queryPlaceholder": "Zoekopdracht",
+    "runDemo": "Demo uitvoeren",
+    "running": "Bezig...",
+    "results": "Resultaten",
+    "trace": "Trace",
+    "cost": "Kosten",
+    "noResults": "Voer de demo uit om resultaten te zien",
+    "errorTitle": "Fout",
+    "rateLimitError": "Snelheidslimiet overschreden. Even geduld.",
+    "retryIn": "Opnieuw proberen over",
+    "seconds": "seconden",
+    "score": "Score",
+    "rerankScore": "Herrangschikking",
+    "latency": "Latentie",
+    "tokens": "Tokens",
+    "cached": "gecacht",
+    "model": "Model",
+    "input": "Invoer",
+    "output": "Uitvoer",
+    "costBreakdown": "Specificatie",
+    "total": "Totale kosten",
+    "embedding": "Embedding",
+    "vectorSearch": "Vectorzoekopdracht",
+    "rerank": "Herrangschikking",
+    "answerContract": "Antwoordcontract",
+    "tokensIn": "Tokens in",
+    "tokensOut": "Tokens uit",
+    "queryUnits": "Query-eenheden",
+    "prefilledQueries": [
+      "Voorbeelden proberen"
+    ]
+  },
   "publicTrace": {
     "title": "Gedeelde trace",
     "subtitle": "Bekijk gedeelde ophaal-trace details",
@@ -2936,25 +3188,8 @@
     }
   },
   "status": {
-    "metadataTitle": "Seizn Status",
-    "metadataDescription": "Current Seizn API availability and public incident history.",
-    "eyebrow": "STATUS",
     "title": "Systeemstatus",
     "subtitle": "Realtime systeemstatus en incidentgeschiedenis",
-    "currentStatusLabel": "Current status",
-    "measuredScope": "Measured scope: api.seizn.com/v1/*",
-    "uptimeLabel": "Last 30 days uptime",
-    "uptimeWindow": "Calculated from public incident windows in the last 30 days.",
-    "incidentsEyebrow": "INCIDENTS",
-    "recentIncidentsTitle": "Recent incidents",
-    "noRecentIncidents": "No recent incidents",
-    "noRecentIncidentsBody": "The public incident ledger is empty for this period.",
-    "slaLink": "Read the SLA",
-    "states": {
-      "operational": "operational",
-      "degraded": "degraded",
-      "outage": "outage"
-    },
     "lastUpdated": "Laatst bijgewerkt",
     "overall": {
       "operational": "Alle Systemen Operationeel",
@@ -3002,6 +3237,23 @@
       "title": "Abonneer op Updates",
       "rss": "RSS-feed",
       "email": "E-mailmeldingen"
+    },
+    "metadataTitle": "Seizn Status",
+    "metadataDescription": "Current Seizn API availability and public incident history.",
+    "eyebrow": "STATUS",
+    "currentStatusLabel": "Current status",
+    "measuredScope": "Measured scope: api.seizn.com/v1/*",
+    "uptimeLabel": "Last 30 days uptime",
+    "uptimeWindow": "Calculated from public incident windows in the last 30 days.",
+    "incidentsEyebrow": "INCIDENTS",
+    "recentIncidentsTitle": "Recent incidents",
+    "noRecentIncidents": "No recent incidents",
+    "noRecentIncidentsBody": "The public incident ledger is empty for this period.",
+    "slaLink": "Read the SLA",
+    "states": {
+      "operational": "operational",
+      "degraded": "degraded",
+      "outage": "outage"
     }
   },
   "sla": {

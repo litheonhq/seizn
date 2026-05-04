@@ -76,7 +76,7 @@ export function RelayAgentList({ apiKey, onSelectAgent }: RelayAgentListProps) {
     return (
       <div className="animate-pulse space-y-4">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="h-24 bg-szn-surface rounded-lg" />
+          <div key={i} className="h-24 bg-[var(--ink-50)] rounded-lg" />
         ))}
       </div>
     );
@@ -84,11 +84,11 @@ export function RelayAgentList({ apiKey, onSelectAgent }: RelayAgentListProps) {
 
   if (error) {
     return (
-      <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-        <p className="text-red-600 dark:text-red-400">{error}</p>
+      <div className="p-4 bg-[var(--signal-conflict-soft)] dark:bg-[var(--signal-conflict)]/20 border border-[var(--signal-conflict)] dark:border-[var(--signal-conflict)] rounded-lg">
+        <p className="text-[var(--signal-conflict-ink)] dark:text-[var(--signal-conflict-soft)]">{error}</p>
         <button
           onClick={fetchAgents}
-          className="mt-2 text-sm text-red-600 dark:text-red-400 underline"
+          className="mt-2 text-sm text-[var(--signal-conflict-ink)] dark:text-[var(--signal-conflict-soft)] underline"
         >
           Retry
         </button>
@@ -98,7 +98,7 @@ export function RelayAgentList({ apiKey, onSelectAgent }: RelayAgentListProps) {
 
   if (agents.length === 0) {
     return (
-      <div className="text-center py-12 border border-dashed border-szn-border rounded-lg">
+      <div className="text-center py-12 border border-dashed border-[var(--ink-200)] rounded-lg">
         <svg
           className="mx-auto h-12 w-12 text-gray-400"
           fill="none"
@@ -112,10 +112,10 @@ export function RelayAgentList({ apiKey, onSelectAgent }: RelayAgentListProps) {
             d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"
           />
         </svg>
-        <h3 className="mt-4 text-lg font-medium text-szn-text-1">
+        <h3 className="mt-4 text-lg font-medium text-[var(--ink-900)]">
           No relay agents
         </h3>
-        <p className="mt-2 text-sm text-szn-text-2">
+        <p className="mt-2 text-sm text-[var(--ink-600)]">
           Create a relay agent to enable edge federated search.
         </p>
       </div>
@@ -127,25 +127,25 @@ export function RelayAgentList({ apiKey, onSelectAgent }: RelayAgentListProps) {
       {agents.map((agent) => (
         <div
           key={agent.id}
-          className="p-4 bg-szn-card border border-szn-border rounded-lg hover:border-blue-300 dark:hover:border-blue-700 transition-colors cursor-pointer"
+          className="p-4 bg-[var(--ink-0)] border border-[var(--ink-200)] rounded-lg hover:border-blue-300 dark:hover:border-blue-700 transition-colors cursor-pointer"
           onClick={() => onSelectAgent?.(agent)}
         >
           <div className="flex items-start justify-between">
             <div className="flex-1">
               <div className="flex items-center gap-3">
-                <h3 className="text-lg font-medium text-szn-text-1">
+                <h3 className="text-lg font-medium text-[var(--ink-900)]">
                   {agent.name}
                 </h3>
                 <StatusBadge status={agent.status} />
               </div>
 
               {agent.description && (
-                <p className="mt-1 text-sm text-szn-text-2">
+                <p className="mt-1 text-sm text-[var(--ink-600)]">
                   {agent.description}
                 </p>
               )}
 
-              <div className="mt-3 flex flex-wrap gap-4 text-sm text-szn-text-2">
+              <div className="mt-3 flex flex-wrap gap-4 text-sm text-[var(--ink-600)]">
                 <span className="flex items-center gap-1">
                   <CollectionIcon />
                   {agent.collections.length} collection{agent.collections.length !== 1 ? 's' : ''}
@@ -170,7 +170,7 @@ export function RelayAgentList({ apiKey, onSelectAgent }: RelayAgentListProps) {
               </div>
 
               {agent.lastHeartbeat && (
-                <p className="mt-2 text-xs text-szn-text-3">
+                <p className="mt-2 text-xs text-[var(--ink-500)]">
                   Last heartbeat: {formatRelativeTime(agent.lastHeartbeat)}
                 </p>
               )}
@@ -182,7 +182,7 @@ export function RelayAgentList({ apiKey, onSelectAgent }: RelayAgentListProps) {
                   e.stopPropagation();
                   handleDelete(agent.id, agent.name);
                 }}
-                className="p-2 text-gray-400 hover:text-red-500 transition-colors"
+                className="p-2 text-gray-400 hover:text-[var(--signal-conflict-ink)] transition-colors"
                 title="Delete agent"
               >
                 <TrashIcon />
@@ -201,10 +201,10 @@ export function RelayAgentList({ apiKey, onSelectAgent }: RelayAgentListProps) {
 
 function StatusBadge({ status }: { status: RelayAgentStatus }) {
   const styles: Record<RelayAgentStatus, string> = {
-    active: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
-    inactive: 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400',
-    error: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
-    maintenance: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
+    active: 'bg-[var(--signal-canon-soft)] text-[var(--signal-canon-ink)] dark:bg-[var(--signal-canon-ink)]/30 dark:text-[var(--signal-canon-soft)]',
+    inactive: 'bg-gray-100 text-gray-800 dark:bg-[var(--ink-900)]/30 dark:text-gray-400',
+    error: 'bg-[var(--signal-conflict-soft)] text-[var(--signal-conflict-ink)] dark:bg-[var(--signal-conflict)]/30 dark:text-[var(--signal-conflict-soft)]',
+    maintenance: 'bg-[var(--signal-pending-soft)] text-[var(--signal-pending-ink)] dark:bg-[var(--signal-pending-ink)]/30 dark:text-[var(--signal-pending-soft)]',
   };
 
   return (

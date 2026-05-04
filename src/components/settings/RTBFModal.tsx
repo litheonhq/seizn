@@ -278,19 +278,19 @@ export function RTBFModal({
       />
 
       {/* Modal */}
-      <div className="relative bg-szn-card rounded-lg shadow-xl max-w-lg w-full mx-4 max-h-[90vh] overflow-auto border border-szn-border">
+      <div className="relative bg-[var(--ink-0)] rounded-lg shadow-xl max-w-lg w-full mx-4 max-h-[90vh] overflow-auto border border-[var(--ink-200)]">
         {/* Header */}
-        <div className="px-6 py-4 border-b border-szn-border">
+        <div className="px-6 py-4 border-b border-[var(--ink-200)]">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
-                <TrashIcon className="w-5 h-5 text-red-600 dark:text-red-400" />
+              <div className="w-10 h-10 rounded-xl bg-[var(--signal-conflict-soft)] dark:bg-[var(--signal-conflict-ink)]/30 flex items-center justify-center">
+                <TrashIcon className="w-5 h-5 text-[var(--signal-conflict-ink)] dark:text-[var(--signal-conflict-soft)]" />
               </div>
               <div>
-                <h2 className="text-lg font-semibold text-szn-text-1">
+                <h2 className="text-lg font-semibold text-[var(--ink-900)]">
                   Delete Your Data
                 </h2>
-                <p className="text-sm text-szn-text-2">
+                <p className="text-sm text-[var(--ink-600)]">
                   GDPR Right to Be Forgotten
                 </p>
               </div>
@@ -298,7 +298,7 @@ export function RTBFModal({
             {step !== "executing" && (
               <button
                 onClick={onClose}
-                className="text-szn-text-3 hover:text-szn-text-2"
+                className="text-[var(--ink-500)] hover:text-[var(--ink-600)]"
               >
                 <CloseIcon className="w-6 h-6" />
               </button>
@@ -311,33 +311,33 @@ export function RTBFModal({
           {/* Step: Analysis */}
           {step === "analysis" && (
             <div className="space-y-6">
-              <p className="text-szn-text-2">
+              <p className="text-[var(--ink-600)]">
                 This will permanently delete all your data from our systems. This action
                 cannot be undone.
               </p>
 
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-szn-text-2 mb-2">
+                  <label className="block text-sm font-medium text-[var(--ink-600)] mb-2">
                     Reason for deletion (optional)
                   </label>
                   <textarea
                     value={reason}
                     onChange={(e) => setReason(e.target.value)}
                     placeholder="Why are you requesting data deletion?"
-                    className="w-full px-4 py-3 rounded-xl border border-szn-border bg-szn-card text-szn-text-1 focus:outline-none focus:ring-2 focus:ring-red-500"
+                    className="w-full px-4 py-3 rounded-xl border border-[var(--ink-200)] bg-[var(--ink-0)] text-[var(--ink-900)] focus:outline-none focus:ring-2 focus:ring-red-500"
                     rows={3}
                   />
                 </div>
 
-                <div className="p-4 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800">
+                <div className="p-4 rounded-xl bg-[var(--signal-pending-soft)] dark:bg-[var(--signal-pending-ink)]/20 border border-[var(--signal-pending)] dark:border-[var(--signal-pending)]">
                   <div className="flex items-start gap-3">
-                    <WarningIcon className="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
+                    <WarningIcon className="w-5 h-5 text-[var(--signal-pending-ink)] dark:text-[var(--signal-pending-soft)] flex-shrink-0 mt-0.5" />
                     <div>
-                      <p className="text-sm font-medium text-amber-800 dark:text-amber-300">
+                      <p className="text-sm font-medium text-[var(--signal-pending-ink)] dark:text-[var(--signal-pending-soft)]">
                         Important Notice
                       </p>
-                      <ul className="text-sm text-amber-700 dark:text-amber-400 mt-1 space-y-1">
+                      <ul className="text-sm text-[var(--signal-pending-ink)] dark:text-[var(--signal-pending-soft)] mt-1 space-y-1">
                         <li>All memories and associated data will be permanently deleted</li>
                         <li>This includes traces, analytics, and embeddings</li>
                         <li>A deletion certificate will be provided for your records</li>
@@ -368,32 +368,32 @@ export function RTBFModal({
           {step === "confirm" && impactAnalysis && (
             <div className="space-y-6">
               {/* Impact Summary */}
-              <div className="p-4 rounded-xl bg-szn-surface border border-szn-border">
-                <h3 className="font-medium text-szn-text-1 mb-3">
+              <div className="p-4 rounded-xl bg-[var(--ink-50)] border border-[var(--ink-200)]">
+                <h3 className="font-medium text-[var(--ink-900)] mb-3">
                   Impact Analysis
                 </h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-sm text-szn-text-2">Total Records</p>
-                    <p className="text-2xl font-bold text-szn-text-1">
+                    <p className="text-sm text-[var(--ink-600)]">Total Records</p>
+                    <p className="text-2xl font-bold text-[var(--ink-900)]">
                       {impactAnalysis.total_records.toLocaleString()}
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-szn-text-2">Data Size</p>
-                    <p className="text-2xl font-bold text-szn-text-1">
+                    <p className="text-sm text-[var(--ink-600)]">Data Size</p>
+                    <p className="text-2xl font-bold text-[var(--ink-900)]">
                       {formatBytes(impactAnalysis.total_size_bytes)}
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-szn-text-2">Affected Tables</p>
-                    <p className="text-2xl font-bold text-szn-text-1">
+                    <p className="text-sm text-[var(--ink-600)]">Affected Tables</p>
+                    <p className="text-2xl font-bold text-[var(--ink-900)]">
                       {impactAnalysis.affected_tables.length}
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-szn-text-2">Est. Duration</p>
-                    <p className="text-2xl font-bold text-szn-text-1">
+                    <p className="text-sm text-[var(--ink-600)]">Est. Duration</p>
+                    <p className="text-2xl font-bold text-[var(--ink-900)]">
                       {formatDuration(impactAnalysis.estimated_duration_seconds)}
                     </p>
                   </div>
@@ -402,19 +402,19 @@ export function RTBFModal({
 
               {/* Affected Tables */}
               <div>
-                <h4 className="text-sm font-medium text-szn-text-2 mb-2">
+                <h4 className="text-sm font-medium text-[var(--ink-600)] mb-2">
                   Data to be deleted
                 </h4>
                 <div className="space-y-2 max-h-40 overflow-y-auto">
                   {impactAnalysis.affected_tables.map((table) => (
                     <div
                       key={table.table_name}
-                      className="flex items-center justify-between p-3 rounded-lg bg-szn-surface border border-szn-border"
+                      className="flex items-center justify-between p-3 rounded-lg bg-[var(--ink-50)] border border-[var(--ink-200)]"
                     >
-                      <span className="text-sm text-szn-text-2 capitalize">
+                      <span className="text-sm text-[var(--ink-600)] capitalize">
                         {table.table_name.replace(/_/g, " ")}
                       </span>
-                      <span className="text-sm font-medium text-szn-text-1">
+                      <span className="text-sm font-medium text-[var(--ink-900)]">
                         {table.record_count.toLocaleString()} records
                       </span>
                     </div>
@@ -424,11 +424,11 @@ export function RTBFModal({
 
               {/* Warnings */}
               {impactAnalysis.warnings.length > 0 && (
-                <div className="p-4 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800">
-                  <p className="text-sm font-medium text-amber-800 dark:text-amber-300 mb-2">
+                <div className="p-4 rounded-xl bg-[var(--signal-pending-soft)] dark:bg-[var(--signal-pending-ink)]/20 border border-[var(--signal-pending)] dark:border-[var(--signal-pending)]">
+                  <p className="text-sm font-medium text-[var(--signal-pending-ink)] dark:text-[var(--signal-pending-soft)] mb-2">
                     Warnings
                   </p>
-                  <ul className="text-sm text-amber-700 dark:text-amber-400 space-y-1">
+                  <ul className="text-sm text-[var(--signal-pending-ink)] dark:text-[var(--signal-pending-soft)] space-y-1">
                     {impactAnalysis.warnings.map((warning, i) => (
                       <li key={i}>{warning}</li>
                     ))}
@@ -437,18 +437,18 @@ export function RTBFModal({
               )}
 
               {/* Confirmation Checkbox */}
-              <label className="flex items-start gap-3 cursor-pointer p-4 rounded-xl border-2 border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20">
+              <label className="flex items-start gap-3 cursor-pointer p-4 rounded-xl border-2 border-[var(--signal-conflict)] dark:border-[var(--signal-conflict)] bg-[var(--signal-conflict-soft)] dark:bg-[var(--signal-conflict-ink)]/20">
                 <input
                   type="checkbox"
                   checked={confirmed}
                   onChange={(e) => setConfirmed(e.target.checked)}
-                  className="w-5 h-5 mt-0.5 rounded border-szn-border text-red-600 focus:ring-red-500"
+                  className="w-5 h-5 mt-0.5 rounded border-[var(--ink-200)] text-[var(--signal-conflict-ink)] focus:ring-red-500"
                 />
                 <div>
-                  <span className="text-sm font-medium text-red-800 dark:text-red-300">
+                  <span className="text-sm font-medium text-[var(--signal-conflict-ink)] dark:text-[var(--signal-conflict-soft)]">
                     I understand this action is permanent
                   </span>
-                  <p className="text-xs text-red-600 dark:text-red-400 mt-1">
+                  <p className="text-xs text-[var(--signal-conflict-ink)] dark:text-[var(--signal-conflict-soft)] mt-1">
                     All my data will be permanently deleted and cannot be recovered.
                   </p>
                 </div>
@@ -457,7 +457,7 @@ export function RTBFModal({
               <div className="flex gap-3">
                 <button
                   onClick={() => setStep("analysis")}
-                  className="flex-1 py-3 rounded-xl border border-szn-border text-szn-text-2 font-medium hover:bg-szn-surface-1 transition-colors"
+                  className="flex-1 py-3 rounded-xl border border-[var(--ink-200)] text-[var(--ink-600)] font-medium hover:bg-[var(--ink-50)] transition-colors"
                 >
                   Back
                 </button>
@@ -475,14 +475,14 @@ export function RTBFModal({
           {/* Step: Executing */}
           {step === "executing" && (
             <div className="py-8 text-center space-y-6">
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-red-100 dark:bg-red-900/30">
-                <Spinner className="w-8 h-8 text-red-600 dark:text-red-400" />
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[var(--signal-conflict-soft)] dark:bg-[var(--signal-conflict-ink)]/30">
+                <Spinner className="w-8 h-8 text-[var(--signal-conflict-ink)] dark:text-[var(--signal-conflict-soft)]" />
               </div>
               <div>
-                <h3 className="text-lg font-medium text-szn-text-1 mb-2">
+                <h3 className="text-lg font-medium text-[var(--ink-900)] mb-2">
                   Deleting Your Data
                 </h3>
-                <p className="text-szn-text-2">
+                <p className="text-[var(--ink-600)]">
                   Please wait while we securely delete your data...
                 </p>
               </div>
@@ -490,19 +490,19 @@ export function RTBFModal({
               {/* Progress Bar */}
               {status && (
                 <div className="space-y-2">
-                  <div className="h-2 bg-szn-surface rounded-full overflow-hidden">
+                  <div className="h-2 bg-[var(--ink-50)] rounded-full overflow-hidden">
                     <div
                       className="h-full bg-gradient-to-r from-red-500 to-rose-500 rounded-full transition-all duration-500"
                       style={{ width: `${status.progress_percent}%` }}
                     />
                   </div>
-                  <p className="text-sm text-szn-text-2 capitalize">
+                  <p className="text-sm text-[var(--ink-600)] capitalize">
                     {status.phase.replace(/_/g, " ")} - {status.progress_percent}%
                   </p>
                 </div>
               )}
 
-              <p className="text-xs text-szn-text-3">
+              <p className="text-xs text-[var(--ink-500)]">
                 This may take a few minutes depending on the amount of data
               </p>
             </div>
@@ -511,37 +511,37 @@ export function RTBFModal({
           {/* Step: Complete */}
           {step === "complete" && result && (
             <div className="py-8 text-center space-y-6">
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-100 dark:bg-green-900/30">
-                <CheckIcon className="w-8 h-8 text-green-600 dark:text-green-400" />
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[var(--signal-canon-soft)] dark:bg-[var(--signal-canon-ink)]/30">
+                <CheckIcon className="w-8 h-8 text-[var(--signal-canon-ink)] dark:text-[var(--signal-canon-soft)]" />
               </div>
               <div>
-                <h3 className="text-lg font-medium text-szn-text-1 mb-2">
+                <h3 className="text-lg font-medium text-[var(--ink-900)] mb-2">
                   Data Deleted Successfully
                 </h3>
-                <p className="text-szn-text-2">
+                <p className="text-[var(--ink-600)]">
                   Your data has been permanently removed from our systems.
                 </p>
               </div>
 
               {/* Summary */}
-              <div className="p-4 rounded-xl bg-szn-surface border border-szn-border text-left">
+              <div className="p-4 rounded-xl bg-[var(--ink-50)] border border-[var(--ink-200)] text-left">
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
-                    <p className="text-szn-text-2">Records Deleted</p>
-                    <p className="font-medium text-szn-text-1">
+                    <p className="text-[var(--ink-600)]">Records Deleted</p>
+                    <p className="font-medium text-[var(--ink-900)]">
                       {result.total_deleted.toLocaleString()}
                     </p>
                   </div>
                   <div>
-                    <p className="text-szn-text-2">Duration</p>
-                    <p className="font-medium text-szn-text-1">
+                    <p className="text-[var(--ink-600)]">Duration</p>
+                    <p className="font-medium text-[var(--ink-900)]">
                       {(result.duration_ms / 1000).toFixed(1)}s
                     </p>
                   </div>
                   {result.verification?.verified && (
                     <div className="col-span-2">
-                      <p className="text-szn-text-2">Verification Status</p>
-                      <p className="font-medium text-green-600 dark:text-green-400">
+                      <p className="text-[var(--ink-600)]">Verification Status</p>
+                      <p className="font-medium text-[var(--signal-canon-ink)] dark:text-[var(--signal-canon-soft)]">
                         Verified
                       </p>
                     </div>
@@ -553,7 +553,7 @@ export function RTBFModal({
               {result.certificate && (
                 <button
                   onClick={downloadCertificate}
-                  className="w-full py-3 rounded-xl border-2 border-szn-success/30 bg-szn-success/10 text-szn-success font-medium hover:bg-szn-success/20 transition-colors flex items-center justify-center gap-2"
+                  className="w-full py-3 rounded-xl border-2 border-[var(--signal-canon)]/30 bg-[var(--signal-canon)]/10 text-[var(--signal-canon)] font-medium hover:bg-[var(--signal-canon)]/20 transition-colors flex items-center justify-center gap-2"
                 >
                   <DownloadIcon className="w-5 h-5" />
                   Download Deletion Certificate
@@ -572,20 +572,20 @@ export function RTBFModal({
           {/* Step: Error */}
           {step === "error" && (
             <div className="py-8 text-center space-y-6">
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-red-100 dark:bg-red-900/30">
-                <ErrorIcon className="w-8 h-8 text-red-600 dark:text-red-400" />
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[var(--signal-conflict-soft)] dark:bg-[var(--signal-conflict-ink)]/30">
+                <ErrorIcon className="w-8 h-8 text-[var(--signal-conflict-ink)] dark:text-[var(--signal-conflict-soft)]" />
               </div>
               <div>
-                <h3 className="text-lg font-medium text-szn-text-1 mb-2">
+                <h3 className="text-lg font-medium text-[var(--ink-900)] mb-2">
                   Something Went Wrong
                 </h3>
-                <p className="text-red-600 dark:text-red-400">{error}</p>
+                <p className="text-[var(--signal-conflict-ink)] dark:text-[var(--signal-conflict-soft)]">{error}</p>
               </div>
 
               <div className="flex gap-3">
                 <button
                   onClick={() => setStep("analysis")}
-                  className="flex-1 py-3 rounded-xl border border-szn-border text-szn-text-2 font-medium hover:bg-szn-surface-1 transition-colors"
+                  className="flex-1 py-3 rounded-xl border border-[var(--ink-200)] text-[var(--ink-600)] font-medium hover:bg-[var(--ink-50)] transition-colors"
                 >
                   Try Again
                 </button>
@@ -601,8 +601,8 @@ export function RTBFModal({
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 border-t border-szn-border bg-szn-surface/50 rounded-b-2xl">
-          <p className="text-xs text-szn-text-2 text-center">
+        <div className="px-6 py-4 border-t border-[var(--ink-200)] bg-[var(--ink-50)]/50 rounded-b-2xl">
+          <p className="text-xs text-[var(--ink-600)] text-center">
             Under GDPR Article 17, you have the right to request erasure of your personal data.
             We process deletion requests within 30 days.
           </p>

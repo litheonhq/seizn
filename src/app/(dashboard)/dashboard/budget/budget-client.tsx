@@ -185,7 +185,7 @@ export function BudgetDashboardClient() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <div className="animate-spin w-8 h-8 border-2 border-emerald-500 dark:border-emerald-400 border-t-transparent rounded-full" />
+        <div className="animate-spin w-8 h-8 border-2 border-[var(--signal-canon)] dark:border-[var(--signal-canon)] border-t-transparent rounded-full" />
       </div>
     );
   }
@@ -194,16 +194,16 @@ export function BudgetDashboardClient() {
     <div className="max-w-6xl mx-auto space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-szn-text-1">{t("dashboard.budgetPage.title")}</h1>
-        <p className="text-szn-text-2 mt-1">
+        <h1 className="text-2xl font-bold text-[var(--ink-900)]">{t("dashboard.budgetPage.title")}</h1>
+        <p className="text-[var(--ink-600)] mt-1">
           {t("dashboard.budgetPage.subtitle")}
         </p>
       </div>
 
       {/* Error Alert */}
       {error && (
-        <div className="p-4 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900/50 rounded-lg">
-          <p className="text-sm text-red-700 dark:text-red-300">{error}</p>
+        <div className="p-4 bg-[var(--signal-conflict-soft)] dark:bg-[var(--signal-conflict)]/30 border border-[var(--signal-conflict)] dark:border-[var(--signal-conflict)]/50 rounded-lg">
+          <p className="text-sm text-[var(--signal-conflict-ink)] dark:text-[var(--signal-conflict-soft)]">{error}</p>
         </div>
       )}
 
@@ -211,25 +211,25 @@ export function BudgetDashboardClient() {
       {stats && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Daily Usage */}
-          <div className="bg-szn-card rounded-xl border border-szn-border p-5">
+          <div className="bg-[var(--ink-0)] rounded-xl border border-[var(--ink-200)] p-5">
             <div className="flex items-center gap-3 mb-3">
               <div className="p-2 bg-blue-100 dark:bg-blue-950/40 rounded-lg">
                 <DollarIcon className="w-5 h-5 text-blue-600 dark:text-blue-300" />
               </div>
-              <span className="text-sm font-medium text-szn-text-2">{t("dashboard.budgetPage.todaysSpend")}</span>
+              <span className="text-sm font-medium text-[var(--ink-600)]">{t("dashboard.budgetPage.todaysSpend")}</span>
             </div>
-            <div className="text-2xl font-bold text-szn-text-1">
+            <div className="text-2xl font-bold text-[var(--ink-900)]">
               {formatCurrency(stats.dailyUsedUsd)}
             </div>
             <div className="mt-2">
-              <div className="flex justify-between text-xs text-szn-text-2 mb-1">
+              <div className="flex justify-between text-xs text-[var(--ink-600)] mb-1">
                 <span>{dailyPercent.toFixed(1)}% {t("dashboard.budgetPage.ofDailyLimit")}</span>
                 <span>{formatCurrency(stats.dailyBudgetUsd)}</span>
               </div>
-              <div className="h-2 bg-szn-surface rounded-full overflow-hidden">
+              <div className="h-2 bg-[var(--ink-50)] rounded-full overflow-hidden">
                 <div
                   className={`h-full rounded-full transition-all ${
-                    dailyPercent > 90 ? "bg-red-500" : dailyPercent > 70 ? "bg-yellow-500" : "bg-blue-500"
+                    dailyPercent > 90 ? "bg-[var(--signal-conflict)]" : dailyPercent > 70 ? "bg-yellow-500" : "bg-blue-500"
                   }`}
                   style={{ width: `${dailyPercent}%` }}
                 />
@@ -238,25 +238,25 @@ export function BudgetDashboardClient() {
           </div>
 
           {/* Monthly Usage */}
-          <div className="bg-szn-card rounded-xl border border-szn-border p-5">
+          <div className="bg-[var(--ink-0)] rounded-xl border border-[var(--ink-200)] p-5">
             <div className="flex items-center gap-3 mb-3">
-              <div className="p-2 bg-emerald-100 dark:bg-emerald-950/35 rounded-lg">
-                <ChartIcon className="w-5 h-5 text-emerald-600 dark:text-emerald-300" />
+              <div className="p-2 bg-[var(--signal-canon-soft)] dark:bg-[var(--signal-canon)]/35 rounded-lg">
+                <ChartIcon className="w-5 h-5 text-[var(--signal-canon-ink)] dark:text-[var(--signal-canon-soft)]" />
               </div>
-              <span className="text-sm font-medium text-szn-text-2">{t("dashboard.budgetPage.monthlySpend")}</span>
+              <span className="text-sm font-medium text-[var(--ink-600)]">{t("dashboard.budgetPage.monthlySpend")}</span>
             </div>
-            <div className="text-2xl font-bold text-szn-text-1">
+            <div className="text-2xl font-bold text-[var(--ink-900)]">
               {formatCurrency(stats.monthlyUsedUsd)}
             </div>
             <div className="mt-2">
-              <div className="flex justify-between text-xs text-szn-text-2 mb-1">
+              <div className="flex justify-between text-xs text-[var(--ink-600)] mb-1">
                 <span>{monthlyPercent.toFixed(1)}% {t("dashboard.budgetPage.ofMonthlyLimit")}</span>
                 <span>{formatCurrency(stats.monthlyBudgetUsd)}</span>
               </div>
-              <div className="h-2 bg-szn-surface rounded-full overflow-hidden">
+              <div className="h-2 bg-[var(--ink-50)] rounded-full overflow-hidden">
                 <div
                   className={`h-full rounded-full transition-all ${
-                    monthlyPercent > 90 ? "bg-red-500" : monthlyPercent > 70 ? "bg-yellow-500" : "bg-emerald-500"
+                    monthlyPercent > 90 ? "bg-[var(--signal-conflict)]" : monthlyPercent > 70 ? "bg-yellow-500" : "bg-[var(--signal-canon)]"
                   }`}
                   style={{ width: `${monthlyPercent}%` }}
                 />
@@ -265,33 +265,33 @@ export function BudgetDashboardClient() {
           </div>
 
           {/* Query Count */}
-          <div className="bg-szn-card rounded-xl border border-szn-border p-5">
+          <div className="bg-[var(--ink-0)] rounded-xl border border-[var(--ink-200)] p-5">
             <div className="flex items-center gap-3 mb-3">
-              <div className="p-2 bg-purple-100 dark:bg-purple-950/35 rounded-lg">
-                <ChartIcon className="w-5 h-5 text-purple-600 dark:text-purple-300" />
+              <div className="p-2 bg-[var(--ink-100)] dark:bg-[var(--ink-900)]/35 rounded-lg">
+                <ChartIcon className="w-5 h-5 text-[var(--ink-900)] underline dark:text-[var(--ink-500)]" />
               </div>
-              <span className="text-sm font-medium text-szn-text-2">{t("dashboard.budgetPage.apiCalls")}</span>
+              <span className="text-sm font-medium text-[var(--ink-600)]">{t("dashboard.budgetPage.apiCalls")}</span>
             </div>
-            <div className="text-2xl font-bold text-szn-text-1">
+            <div className="text-2xl font-bold text-[var(--ink-900)]">
               {stats.todayQueries.toLocaleString()}
             </div>
-            <p className="text-sm text-szn-text-2 mt-1">
+            <p className="text-sm text-[var(--ink-600)] mt-1">
               {stats.monthQueries.toLocaleString()} {t("dashboard.budgetPage.thisMonth")}
             </p>
           </div>
 
           {/* Degrade Events */}
-          <div className="bg-szn-card rounded-xl border border-szn-border p-5">
+          <div className="bg-[var(--ink-0)] rounded-xl border border-[var(--ink-200)] p-5">
             <div className="flex items-center gap-3 mb-3">
-              <div className={`p-2 rounded-lg ${stats.degradeEvents > 0 ? "bg-yellow-100 dark:bg-yellow-950/40" : "bg-green-100 dark:bg-green-950/35"}`}>
-                <ShieldIcon className={`w-5 h-5 ${stats.degradeEvents > 0 ? "text-yellow-600 dark:text-yellow-300" : "text-green-600 dark:text-green-300"}`} />
+              <div className={`p-2 rounded-lg ${stats.degradeEvents > 0 ? "bg-[var(--signal-pending-soft)] dark:bg-yellow-950/40" : "bg-[var(--signal-canon-soft)] dark:bg-green-950/35"}`}>
+                <ShieldIcon className={`w-5 h-5 ${stats.degradeEvents > 0 ? "text-[var(--signal-pending-ink)] dark:text-yellow-300" : "text-[var(--signal-canon-ink)] dark:text-green-300"}`} />
               </div>
-              <span className="text-sm font-medium text-szn-text-2">{t("dashboard.budgetPage.autoDegrades")}</span>
+              <span className="text-sm font-medium text-[var(--ink-600)]">{t("dashboard.budgetPage.autoDegrades")}</span>
             </div>
-            <div className="text-2xl font-bold text-szn-text-1">
+            <div className="text-2xl font-bold text-[var(--ink-900)]">
               {stats.degradeEvents}
             </div>
-            <p className="text-sm text-szn-text-2 mt-1">
+            <p className="text-sm text-[var(--ink-600)] mt-1">
               {stats.lastDegradeReason || t("dashboard.budgetPage.noRecentDegrades")}
             </p>
           </div>
@@ -300,11 +300,11 @@ export function BudgetDashboardClient() {
 
       {/* Degrade Warning Banner */}
       {stats && stats.degradeEvents > 0 && (
-        <div className="bg-yellow-50 dark:bg-yellow-950/20 border border-yellow-200 dark:border-yellow-900/40 rounded-xl p-4 flex items-start gap-3">
-          <AlertTriangleIcon className="w-5 h-5 text-yellow-600 dark:text-yellow-300 flex-shrink-0 mt-0.5" />
+        <div className="bg-[var(--signal-pending-soft)] dark:bg-yellow-950/20 border border-[var(--signal-pending)] dark:border-[var(--signal-pending)]/40 rounded-xl p-4 flex items-start gap-3">
+          <AlertTriangleIcon className="w-5 h-5 text-[var(--signal-pending-ink)] dark:text-yellow-300 flex-shrink-0 mt-0.5" />
           <div>
-            <h3 className="font-medium text-yellow-800 dark:text-yellow-200">{t("dashboard.budgetPage.protectionActive")}</h3>
-            <p className="text-sm text-yellow-700 dark:text-yellow-300 mt-1">
+            <h3 className="font-medium text-[var(--signal-pending-ink)] dark:text-yellow-200">{t("dashboard.budgetPage.protectionActive")}</h3>
+            <p className="text-sm text-[var(--signal-pending-ink)] dark:text-yellow-300 mt-1">
               {t("dashboard.budgetPage.protectionDesc")}
             </p>
           </div>
@@ -313,7 +313,7 @@ export function BudgetDashboardClient() {
 
       {/* Settings Form */}
       <div>
-        <h2 className="text-lg font-semibold text-szn-text-1 mb-4">{t("dashboard.budgetPage.settings")}</h2>
+        <h2 className="text-lg font-semibold text-[var(--ink-900)] mb-4">{t("dashboard.budgetPage.settings")}</h2>
         <BudgetSettings
           initialSettings={settings || undefined}
           onSave={handleSaveSettings}
@@ -323,40 +323,40 @@ export function BudgetDashboardClient() {
       {/* Recent Degrade Events */}
       {degradeEvents.length > 0 && (
         <div>
-          <h2 className="text-lg font-semibold text-szn-text-1 mb-4">{t("dashboard.budgetPage.recentEvents")}</h2>
-          <div className="bg-szn-card rounded-xl border border-szn-border overflow-hidden">
-            <table className="min-w-full divide-y divide-szn-border">
-              <thead className="bg-szn-bg">
+          <h2 className="text-lg font-semibold text-[var(--ink-900)] mb-4">{t("dashboard.budgetPage.recentEvents")}</h2>
+          <div className="bg-[var(--ink-0)] rounded-xl border border-[var(--ink-200)] overflow-hidden">
+            <table className="min-w-full divide-y divide-[var(--ink-200)]">
+              <thead className="bg-[var(--ink-50)]">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-szn-text-2 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-[var(--ink-600)] uppercase tracking-wider">
                     {t("dashboard.budgetPage.time")}
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-szn-text-2 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-[var(--ink-600)] uppercase tracking-wider">
                     {t("dashboard.budgetPage.reason")}
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-szn-text-2 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-[var(--ink-600)] uppercase tracking-wider">
                     {t("dashboard.budgetPage.changes")}
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-szn-text-2 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-[var(--ink-600)] uppercase tracking-wider">
                     {t("dashboard.budgetPage.saved")}
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-szn-card divide-y divide-szn-border">
+              <tbody className="bg-[var(--ink-0)] divide-y divide-[var(--ink-200)]">
                 {degradeEvents.map((event) => (
                   <tr key={event.id}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-szn-text-2">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-[var(--ink-600)]">
                       {new Date(event.timestamp).toLocaleString()}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-szn-text-1">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-[var(--ink-900)]">
                       {event.reason}
                     </td>
-                    <td className="px-6 py-4 text-sm text-szn-text-2">
-                      <code className="text-xs bg-szn-surface text-szn-text-1 px-2 py-1 rounded">
+                    <td className="px-6 py-4 text-sm text-[var(--ink-600)]">
+                      <code className="text-xs bg-[var(--ink-50)] text-[var(--ink-900)] px-2 py-1 rounded">
                         {JSON.stringify(event.degradedConfig)}
                       </code>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600 dark:text-green-300 font-medium">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-[var(--signal-canon-ink)] dark:text-green-300 font-medium">
                       {formatCurrency(event.costSaved)}
                     </td>
                   </tr>
@@ -368,23 +368,23 @@ export function BudgetDashboardClient() {
       )}
 
       {/* Info Box */}
-      <div className="bg-szn-bg border border-szn-border rounded-xl p-6">
-        <h3 className="font-medium text-szn-text-1 mb-2">{t("dashboard.budgetPage.howItWorks")}</h3>
-        <ul className="text-sm text-szn-text-2 space-y-2">
+      <div className="bg-[var(--ink-50)] border border-[var(--ink-200)] rounded-xl p-6">
+        <h3 className="font-medium text-[var(--ink-900)] mb-2">{t("dashboard.budgetPage.howItWorks")}</h3>
+        <ul className="text-sm text-[var(--ink-600)] space-y-2">
           <li className="flex items-start gap-2">
-            <span className="text-emerald-500 dark:text-emerald-400 font-bold">1.</span>
+            <span className="text-[var(--signal-canon-ink)] dark:text-[var(--signal-canon-soft)] font-bold">1.</span>
             <span>{t("dashboard.budgetPage.step1")}</span>
           </li>
           <li className="flex items-start gap-2">
-            <span className="text-emerald-500 dark:text-emerald-400 font-bold">2.</span>
+            <span className="text-[var(--signal-canon-ink)] dark:text-[var(--signal-canon-soft)] font-bold">2.</span>
             <span>{t("dashboard.budgetPage.step2")}</span>
           </li>
           <li className="flex items-start gap-2">
-            <span className="text-emerald-500 dark:text-emerald-400 font-bold">3.</span>
+            <span className="text-[var(--signal-canon-ink)] dark:text-[var(--signal-canon-soft)] font-bold">3.</span>
             <span>{t("dashboard.budgetPage.step3")}</span>
           </li>
           <li className="flex items-start gap-2">
-            <span className="text-emerald-500 dark:text-emerald-400 font-bold">4.</span>
+            <span className="text-[var(--signal-canon-ink)] dark:text-[var(--signal-canon-soft)] font-bold">4.</span>
             <span>{t("dashboard.budgetPage.step4")}</span>
           </li>
         </ul>

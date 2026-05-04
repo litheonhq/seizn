@@ -6,6 +6,7 @@
  */
 
 import { createServerClient } from '@/lib/supabase';
+import { normalizeOutboundWebhookUrl } from '@/lib/security/outbound-webhook';
 import type {
   TrainingConfig,
   TrainingRun,
@@ -57,11 +58,18 @@ async function dispatchTrainingRun(params: {
     };
   }
 
+  const safeDispatcherUrl = await normalizeOutboundWebhookUrl(dispatcherUrl, {
+    label: 'Reranker training dispatcher webhook',
+  });
+  if (!safeDispatcherUrl) {
+    throw new Error('Training dispatcher webhook rejected: unsafe URL');
+  }
+
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 10000);
 
   try {
-    const response = await fetch(dispatcherUrl, {
+    const response = await fetch(safeDispatcherUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -83,7 +91,7 @@ async function dispatchTrainingRun(params: {
 
     return {
       dispatched: true,
-      message: `Training run dispatched to worker via ${dispatcherUrl}`,
+      message: 'Training run dispatched to worker',
     };
   } catch (error) {
     if (error instanceof Error && error.name === 'AbortError') {

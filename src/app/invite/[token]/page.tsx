@@ -96,7 +96,7 @@ export default function InvitePage() {
       <div className="min-h-screen bg-zinc-950 flex items-center justify-center p-4">
         <div className="w-full max-w-md text-center">
           <h1 className="text-3xl font-bold text-white mb-4">
-            Seizn<span className="text-szn-accent">.</span>
+            Seizn<span className="text-[var(--ink-900)]">.</span>
           </h1>
           <p className="text-zinc-400">Loading invite...</p>
         </div>
@@ -110,13 +110,13 @@ export default function InvitePage() {
         <div className="w-full max-w-md">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-white">
-              Seizn<span className="text-szn-accent">.</span>
+              Seizn<span className="text-[var(--ink-900)]">.</span>
             </h1>
           </div>
 
           <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-8 text-center">
-            <div className="w-16 h-16 mx-auto mb-4 bg-red-500/10 rounded-full flex items-center justify-center">
-              <svg className="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="w-16 h-16 mx-auto mb-4 bg-[var(--signal-conflict)]/10 rounded-full flex items-center justify-center">
+              <svg className="w-8 h-8 text-[var(--signal-conflict-soft)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </div>
@@ -140,7 +140,7 @@ export default function InvitePage() {
         {/* Logo */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-white">
-            Seizn<span className="text-szn-accent">.</span>
+            Seizn<span className="text-[var(--ink-900)]">.</span>
           </h1>
           <p className="text-zinc-400 mt-2">Team Invitation</p>
         </div>
@@ -148,8 +148,8 @@ export default function InvitePage() {
         {/* Card */}
         <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-8">
           {/* Success Icon */}
-          <div className="w-16 h-16 mx-auto mb-6 bg-szn-accent/10 rounded-full flex items-center justify-center">
-            <svg className="w-8 h-8 text-szn-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="w-16 h-16 mx-auto mb-6 bg-[var(--ink-900)]/10 rounded-full flex items-center justify-center">
+            <svg className="w-8 h-8 text-[var(--ink-900)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
           </div>
@@ -158,7 +158,7 @@ export default function InvitePage() {
             <h2 className="text-xl font-semibold text-white mb-2">
               You&apos;ve been invited to join
             </h2>
-            <p className="text-2xl font-bold text-szn-accent">
+            <p className="text-2xl font-bold text-[var(--ink-900)]">
               {invite?.organization.name}
             </p>
           </div>
@@ -179,7 +179,7 @@ export default function InvitePage() {
           </div>
 
           {error && (
-            <div className="mb-4 p-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm">
+            <div className="mb-4 p-4 bg-[var(--signal-conflict)]/10 border border-[var(--signal-conflict)]/20 rounded-lg text-[var(--signal-conflict-soft)] text-sm">
               {error}
             </div>
           )}
@@ -189,7 +189,7 @@ export default function InvitePage() {
               <button
                 onClick={handleAccept}
                 disabled={accepting}
-                className="w-full py-3 bg-szn-accent hover:bg-szn-accent/80 text-white font-semibold rounded-lg transition-colors disabled:opacity-50"
+                className="w-full py-3 bg-[var(--ink-900)] hover:bg-[var(--ink-900)]/80 text-white font-semibold rounded-lg transition-colors disabled:opacity-50"
               >
                 {accepting ? 'Accepting...' : 'Accept Invitation'}
               </button>
@@ -233,7 +233,7 @@ export default function InvitePage() {
 
               <Link
                 href={`/login?callbackUrl=/invite/${token}`}
-                className="w-full block text-center py-3 bg-szn-accent hover:bg-szn-accent/80 text-white font-semibold rounded-lg transition-colors"
+                className="w-full block text-center py-3 bg-[var(--ink-900)] hover:bg-[var(--ink-900)]/80 text-white font-semibold rounded-lg transition-colors"
               >
                 Sign in with Email
               </Link>

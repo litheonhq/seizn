@@ -20,6 +20,7 @@ import {
 import * as fs from "fs";
 import * as path from "path";
 import * as os from "os";
+import { randomBytes, timingSafeEqual } from "crypto";
 
 // Configuration from environment
 const SEIZN_API_URL = process.env.SEIZN_API_URL || "https://www.seizn.com";
@@ -46,16 +47,24 @@ function loadCredentials(): string | null {
 
 function saveCredentials(token: string, expiresIn: number): void {
   const credDir = path.join(os.homedir(), ".seizn");
-  fs.mkdirSync(credDir, { recursive: true });
+  fs.mkdirSync(credDir, { recursive: true, mode: 0o700 });
+  try {
+    fs.chmodSync(credDir, 0o700);
+  } catch {}
+
+  const credPath = path.join(credDir, "credentials.json");
   fs.writeFileSync(
-    path.join(credDir, "credentials.json"),
+    credPath,
     JSON.stringify({
       access_token: token,
       expires_at: Date.now() + expiresIn * 1000,
       created_at: new Date().toISOString(),
     }, null, 2),
-    "utf-8"
+    { encoding: "utf-8", mode: 0o600 }
   );
+  try {
+    fs.chmodSync(credPath, 0o600);
+  } catch {}
 }
 
 // Try loading from credentials file if env not set
@@ -2181,6 +2190,118 @@ function registerHandlers(server: Server) {
 }
 
 // Create and run server
+const HTTP_BODY_LIMIT_BYTES = 1_000_000;
+const DEFAULT_HTTP_HOST = "127.0.0.1";
+const LOOPBACK_HOSTS = new Set(["127.0.0.1", "localhost", "::1"]);
+
+function parseBooleanEnv(value: string | undefined): boolean {
+  return value === "1" || value?.toLowerCase() === "true";
+}
+
+function resolveHttpHost(): string {
+  const host = process.env.SEIZN_MCP_HOST || DEFAULT_HTTP_HOST;
+  if (LOOPBACK_HOSTS.has(host)) {
+    return host;
+  }
+
+  if (parseBooleanEnv(process.env.SEIZN_MCP_UNSAFE_HTTP)) {
+    return host;
+  }
+
+  throw new Error(
+    `Refusing to bind Seizn MCP HTTP server to non-loopback host "${host}". ` +
+      "Set SEIZN_MCP_UNSAFE_HTTP=1 only if you also protect the port at the network boundary."
+  );
+}
+
+function resolveHttpAuthToken(): { token: string; generated: boolean } {
+  const configured = process.env.SEIZN_MCP_HTTP_TOKEN?.trim();
+  if (configured) {
+    return { token: configured, generated: false };
+  }
+
+  return {
+    token: randomBytes(32).toString("base64url"),
+    generated: true,
+  };
+}
+
+function getAllowedHttpOrigins(port: number): Set<string> {
+  const configured = process.env.SEIZN_MCP_ALLOWED_ORIGINS
+    ?.split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean) ?? [];
+
+  return new Set([
+    `http://127.0.0.1:${port}`,
+    `http://localhost:${port}`,
+    ...configured,
+  ]);
+}
+
+function setHttpCorsHeaders(
+  req: { headers: { origin?: string | string[] } },
+  res: { setHeader: (name: string, value: string) => void },
+  allowedOrigins: Set<string>
+): boolean {
+  const originHeader = req.headers.origin;
+  const origin = Array.isArray(originHeader) ? originHeader[0] : originHeader;
+  if (!origin) {
+    return true;
+  }
+
+  if (!allowedOrigins.has(origin)) {
+    return false;
+  }
+
+  res.setHeader("Access-Control-Allow-Origin", origin);
+  res.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Seizn-MCP-Token");
+  res.setHeader("Access-Control-Max-Age", "600");
+  res.setHeader("Vary", "Origin");
+  return true;
+}
+
+function isAuthorizedHttpRequest(
+  req: { headers: { authorization?: string | string[]; "x-seizn-mcp-token"?: string | string[] } },
+  token: string
+): boolean {
+  const authorization = Array.isArray(req.headers.authorization)
+    ? req.headers.authorization[0]
+    : req.headers.authorization;
+  const headerToken = Array.isArray(req.headers["x-seizn-mcp-token"])
+    ? req.headers["x-seizn-mcp-token"][0]
+    : req.headers["x-seizn-mcp-token"];
+  const provided = authorization?.match(/^Bearer\s+(.+)$/i)?.[1] || headerToken;
+  if (!provided) {
+    return false;
+  }
+
+  const expected = Buffer.from(token, "utf8");
+  const actual = Buffer.from(provided, "utf8");
+  return actual.length === expected.length && timingSafeEqual(actual, expected);
+}
+
+async function readJsonRpcBody(req: AsyncIterable<Buffer | string>): Promise<Record<string, unknown>> {
+  const chunks: Buffer[] = [];
+  let size = 0;
+
+  for await (const chunk of req) {
+    const buffer = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
+    size += buffer.length;
+    if (size > HTTP_BODY_LIMIT_BYTES) {
+      throw new Error("request_body_too_large");
+    }
+    chunks.push(buffer);
+  }
+
+  const body = JSON.parse(Buffer.concat(chunks).toString("utf8"));
+  if (!body || typeof body !== "object" || Array.isArray(body)) {
+    throw new Error("invalid_json_rpc_body");
+  }
+  return body as Record<string, unknown>;
+}
+
 async function main() {
   const httpMode = process.argv.includes('--http');
   const port = parseInt(process.env.SEIZN_MCP_PORT || '3100', 10);
@@ -2203,11 +2324,17 @@ async function main() {
   if (httpMode) {
     // HTTP transport mode
     const { createServer } = await import('node:http');
+    const host = resolveHttpHost();
+    const httpAuth = resolveHttpAuthToken();
+    const allowedHttpOrigins = getAllowedHttpOrigins(port);
 
     const httpServer = createServer(async (req, res) => {
-      res.setHeader('Access-Control-Allow-Origin', '*');
-      res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
-      res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+      const corsAllowed = setHttpCorsHeaders(req, res, allowedHttpOrigins);
+      if (!corsAllowed) {
+        res.writeHead(403, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Origin not allowed' }));
+        return;
+      }
 
       if (req.method === 'OPTIONS') {
         res.writeHead(204);
@@ -2215,7 +2342,7 @@ async function main() {
         return;
       }
 
-      const url = new URL(req.url || '/', `http://localhost:${port}`);
+      const url = new URL(req.url || '/', `http://${host}:${port}`);
 
       // Health endpoint
       if (url.pathname === '/health' && req.method === 'GET') {
@@ -2232,11 +2359,17 @@ async function main() {
       // MCP JSON-RPC endpoint
       if (url.pathname === '/mcp' && req.method === 'POST') {
         try {
-          const chunks: Buffer[] = [];
-          for await (const chunk of req) {
-            chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
+          if (!isAuthorizedHttpRequest(req, httpAuth.token)) {
+            res.writeHead(401, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({
+              jsonrpc: '2.0',
+              id: null,
+              error: { code: -32001, message: 'Unauthorized' },
+            }));
+            return;
           }
-          const body = JSON.parse(Buffer.concat(chunks).toString('utf8'));
+
+          const body = await readJsonRpcBody(req);
 
           if (body.method === 'tools/list') {
             res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -2248,8 +2381,19 @@ async function main() {
           }
 
           if (body.method === 'tools/call') {
-            const { name, arguments: args } = body.params;
-            const result = await dispatchTool(name, args, server);
+            const params = body.params as { name?: string; arguments?: Record<string, unknown> } | undefined;
+            const name = params?.name;
+            if (!name) {
+              res.writeHead(400, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({
+                jsonrpc: '2.0',
+                id: body.id,
+                error: { code: -32602, message: 'Invalid params' },
+              }));
+              return;
+            }
+
+            const result = await dispatchTool(name, params?.arguments, server);
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({
               jsonrpc: '2.0', id: body.id,
@@ -2259,9 +2403,10 @@ async function main() {
           }
 
           if (body.method === 'resources/list') {
+            const params = body.params as { cursor?: string | null } | undefined;
             const paginated = paginateByCursor(
               RESOURCE_DEFINITIONS,
-              body.params?.cursor,
+              params?.cursor,
               2
             );
             res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -2276,9 +2421,10 @@ async function main() {
           }
 
           if (body.method === 'resources/templates/list') {
+            const params = body.params as { cursor?: string | null } | undefined;
             const paginated = paginateByCursor(
               RESOURCE_TEMPLATE_DEFINITIONS,
-              body.params?.cursor,
+              params?.cursor,
               2
             );
             res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -2293,11 +2439,22 @@ async function main() {
           }
 
           if (body.method === 'resources/read') {
-            const resourceResult = await dispatchResource(body.params.uri);
+            const params = body.params as { uri?: string } | undefined;
+            if (!params?.uri) {
+              res.writeHead(400, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({
+                jsonrpc: '2.0',
+                id: body.id,
+                error: { code: -32602, message: 'Invalid params' },
+              }));
+              return;
+            }
+
+            const resourceResult = await dispatchResource(params.uri);
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({
               jsonrpc: '2.0', id: body.id,
-              result: { contents: [{ uri: body.params.uri, mimeType: resourceResult.mimeType, text: resourceResult.text }] },
+              result: { contents: [{ uri: params.uri, mimeType: resourceResult.mimeType, text: resourceResult.text }] },
             }));
             return;
           }
@@ -2305,8 +2462,17 @@ async function main() {
           res.writeHead(400, { 'Content-Type': 'application/json' });
           res.end(JSON.stringify({ jsonrpc: '2.0', id: body.id, error: { code: -32601, message: 'Method not found' } }));
         } catch (error) {
-          res.writeHead(500, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ error: (error as Error).message }));
+          const message = error instanceof Error ? error.message : String(error);
+          const status = message === "request_body_too_large" ? 413 : 400;
+          res.writeHead(status, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({
+            jsonrpc: '2.0',
+            id: null,
+            error: {
+              code: status === 413 ? -32013 : -32700,
+              message: status === 413 ? 'Request body too large' : 'Invalid JSON-RPC request',
+            },
+          }));
         }
         return;
       }
@@ -2315,10 +2481,14 @@ async function main() {
       res.end(JSON.stringify({ error: 'Not found' }));
     });
 
-    httpServer.listen(port, () => {
-      console.error(`Seizn MCP Server (HTTP) running on http://localhost:${port}`);
-      console.error(`  MCP endpoint: POST http://localhost:${port}/mcp`);
-      console.error(`  Health check: GET  http://localhost:${port}/health`);
+    httpServer.listen(port, host, () => {
+      console.error(`Seizn MCP Server (HTTP) running on http://${host}:${port}`);
+      console.error(`  MCP endpoint: POST http://${host}:${port}/mcp`);
+      console.error(`  Health check: GET  http://${host}:${port}/health`);
+      console.error(`  Authorization: Bearer ${httpAuth.token}`);
+      if (httpAuth.generated) {
+        console.error("  Set SEIZN_MCP_HTTP_TOKEN to use a stable HTTP transport token.");
+      }
     });
   } else {
     // stdio transport (default)

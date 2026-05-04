@@ -315,8 +315,7 @@ async function searchMemories(
       })),
       count: response.results?.length ?? 0,
     };
-  } catch (error) {
-    const seiznError = error as SeizNError;
+  } catch {
     return {
       success: false,
       memories: [],

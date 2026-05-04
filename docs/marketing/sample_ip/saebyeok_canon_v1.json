@@ -1,0 +1,493 @@
+{
+  "version": "v1",
+  "generated_at": "2026-05-02",
+  "ip_label": "Sample IP — Synthetic Demo Data",
+  "ip_title": "Saebyeok Academy / 새벽 학원",
+  "scope": "short_demo_30day",
+  "purpose": "Seizn Author landing live demo data source. Synthetic IP designed for Seizn — not a published work, not affiliated with any author or studio. Internal-IP separation rule compliant (zero overlap with internal dogfood IP characters, world, or terminology — verification procedure in saebyeok-readme.md §5).",
+  "genre": "Korean coming-of-age light SF mystery",
+  "tone": "realistic teen drama with soft SF edge — no fantasy, no magic, no superpowers; subtle anomalies",
+  "premise": "다온시(Daon City) 새벽고등학교 2학년생들이 새벽마다 도시 일부 지점에서 11분이 사라진다는 현상(여명 진동)의 흔적을 우연히 발견하고, 도서관 사서와 사진부 아카이브를 단서로 추적하는 30일간의 짧은 미스터리.",
+  "duration_days": 30,
+  "calendar": {
+    "day1": "2026-04-02 목",
+    "day30": "2026-05-08 금",
+    "weekdays_only": false,
+    "spring_semester": true
+  },
+  "schema_notes": [
+    "각 캐릭 = graph_entities(type='person') 매핑·Seizn primitive 정합",
+    "scope·tier·forbidden_in_scope 태그 일관 적용",
+    "current_knowledge / author_only / unknown 분리 — Theory of Mind 인지 비대칭 데모",
+    "voice·desire·relationships = persona simulation 입력 source",
+    "모든 항목 source = 'synthetic / Seizn sample IP' (실 작가 작품 0건)"
+  ],
+  "separation_check": {
+    "verified": "no character name, location, faction, world rule, or terminology overlaps with internal-only IP repo",
+    "verified_at": "2026-05-02",
+    "grep_procedure_documented_at": "saebyeok-readme.md §5"
+  },
+  "characters": [
+    {
+      "id": "saebyeok.short.char.iseul",
+      "name": "한이슬",
+      "name_romanized": "Han Iseul",
+      "scope": ["short_demo_30day"],
+      "story_role": "protagonist",
+      "tier": 1,
+      "basic_info": {
+        "gender": "여성",
+        "age": 17,
+        "grade": "고등학교 2학년 3반",
+        "region_culture": "서울 인근 다온시·표준 한국어",
+        "family_status": "어머니 직장인·아버지 엔지니어·외동",
+        "height": 165,
+        "build": "보통"
+      },
+      "appearance": {
+        "hair": "흑발 단발·앞머리 가지런",
+        "face": "차분한 인상·미세 표정 변화 큼",
+        "uniform": "교복·셔츠 깔끔",
+        "shoes": "흰 운동화"
+      },
+      "archetype": "관찰자·기록자·호기심형",
+      "voice": {
+        "narration_style": "해라체 (~다·~한다)",
+        "default_speech": "~예요·~어요 (존댓말 중립체)",
+        "first_person": "어른 앞 '저'·친구 사이 '나'·내레이션 '나'",
+        "signature_expressions": [
+          "…확실해요?",
+          "그건 좀 이상한데.",
+          "한 번 더 볼게.",
+          "기록은 거짓말 안 해."
+        ],
+        "taboo_expressions": [
+          "외래어 음차 X (오케이·예스·노프 등)",
+          "큰따옴표 X",
+          "유행어·축약형 반말 X (ㅇㅇ·ㅋㅋ)"
+        ],
+        "silence_ratio": "전체 대사의 15%"
+      },
+      "personality_core": {
+        "traits": [
+          "노트와 카메라가 본능적 도구",
+          "가설을 적어두고 반증을 좋아함",
+          "감정보다 사실을 먼저 정리하려 함",
+          "친구의 비논리적 추측에도 일단 들어줌"
+        ],
+        "desires": [
+          "여명 진동의 실체를 기록으로 확인",
+          "친구들과의 관계를 잃지 않으면서 진실 추적",
+          "좋아하는 음악 동아리 도윤이 위로받게 하기"
+        ],
+        "vulnerabilities": [
+          "확실하지 않으면 결정 못 내림",
+          "결정적 순간에 카메라 뒤로 숨음",
+          "친한 사람이 거짓말할 때 알아채지만 직면 못함"
+        ]
+      },
+      "habits_actions": [
+        "노트 모서리에 날짜·시각·날씨 자동 기록",
+        "사진 찍기 전 한 박자 멈춤",
+        "긴장하면 펜 캡 한쪽 입에 살짝"
+      ],
+      "ability": {
+        "name": "관찰·기록 (능력 아님·일반 학생 수준)",
+        "note": "여명 진동 자체는 외부 현상·이슬은 일반인. 합성 IP에는 초자연 능력 없음 (soft SF 톤·내부 전용 IP의 능력 컨셉과 명확 분리)"
+      },
+      "current_knowledge_d1": "여명 진동 소문만 들음·실 데이터 미접촉",
+      "current_knowledge_d30": "11분 결손 측정 7회·새벽 종탑 메커니즘 일부 추정·여명재단 관여 추측",
+      "author_only": [
+        "도서관 사서 임선재가 1978년 신문 클리핑 보유",
+        "여명재단이 학교 부지 100m 내에서 7년간 미공개 측정 진행"
+      ],
+      "tags": ["scope:short_demo_30day", "tier:1", "core_protagonist"]
+    },
+    {
+      "id": "saebyeok.short.char.serin",
+      "name": "정세린",
+      "name_romanized": "Jeong Serin",
+      "scope": ["short_demo_30day"],
+      "story_role": "co-lead, deuteragonist",
+      "tier": 1,
+      "basic_info": {
+        "gender": "여성",
+        "age": 17,
+        "grade": "고등학교 2학년 3반·반장",
+        "family_status": "공무원 가정·언니 1명",
+        "height": 168,
+        "build": "보통·운동 잘함"
+      },
+      "appearance": {
+        "hair": "긴 흑발·낮게 묶음",
+        "face": "밝은 인상·웃음 많음",
+        "uniform": "교복·리본 단정",
+        "accessory": "손목 디지털 시계 (기록 강박)"
+      },
+      "archetype": "낙관·신뢰·반장형",
+      "voice": {
+        "narration_style": "해라체",
+        "default_speech": "~지·~어 (친구 평어)·어른께 ~요",
+        "first_person": "어디서나 '나'",
+        "signature_expressions": [
+          "그건 그렇지!",
+          "잠깐만, 정리해보자.",
+          "이슬이 말이 맞을 거야.",
+          "괜찮아, 같이 가자."
+        ],
+        "silence_ratio": "5% 이하"
+      },
+      "personality_core": {
+        "traits": [
+          "분쟁 조정자 본능",
+          "정리·기록 강박·시간 약속 정확",
+          "친구의 직감을 일단 신뢰",
+          "혼자 두려운 감정 처리는 어려움"
+        ],
+        "desires": [
+          "동아리 6명 모두 무사",
+          "졸업까지 평범한 학교 생활 + 친구 보호"
+        ],
+        "vulnerabilities": [
+          "친구 다툴 때 자기 입장 못 정함",
+          "일이 통제 벗어나면 일정표부터 다시 씀"
+        ]
+      },
+      "habits_actions": [
+        "회의 시작 전 시계 한 번 확인",
+        "친구 어깨에 손 가볍게 (위로)",
+        "필기 양·디테일 학년 1위"
+      ],
+      "current_knowledge_d1": "여명 진동 = 도시 전설·과학적 검증 안 함·관심도 낮음",
+      "current_knowledge_d30": "데이터 직접 보고 인지·D14부터 합류·기록 정리 담당",
+      "tags": ["scope:short_demo_30day", "tier:1", "co_lead"]
+    },
+    {
+      "id": "saebyeok.short.char.hana",
+      "name": "윤하나",
+      "name_romanized": "Yun Hana",
+      "scope": ["short_demo_30day"],
+      "story_role": "supporting, photo club captain",
+      "tier": 1,
+      "basic_info": {
+        "gender": "여성",
+        "age": 18,
+        "grade": "고등학교 3학년 1반·사진부장",
+        "family_status": "조부모와 함께·부모 별거",
+        "height": 162,
+        "build": "마름"
+      },
+      "appearance": {
+        "hair": "검은 단발·오른쪽으로 가르마",
+        "face": "시니컬 표정·눈빛 날카로움",
+        "uniform": "교복·재킷 풀어 입음",
+        "accessory": "구식 필름 카메라 항상 어깨"
+      },
+      "archetype": "구조주의·시니컬·연장자",
+      "voice": {
+        "default_speech": "~지·~어·격식 거의 없음",
+        "first_person": "'나'",
+        "signature_expressions": [
+          "프레임이 거짓말이야.",
+          "그래서 결론은?",
+          "오. 이거 뭐야.",
+          "내일 다시 와."
+        ],
+        "silence_ratio": "10%"
+      },
+      "personality_core": {
+        "traits": [
+          "감정 거리 두는 편이지만 동아리 후배 챙김",
+          "사진 한 장의 구조 분석으로 진실 가까이 감",
+          "동아리 아카이브 3년치를 매일 정리"
+        ],
+        "desires": [
+          "수능 전까지 사진 한 장 완성",
+          "후배 이슬이 졸업 후에도 동아리 유지하길"
+        ]
+      },
+      "habits_actions": [
+        "셔터 누르기 전 숨 멈춤",
+        "필름 갈아끼울 때 손 정확",
+        "사진 뒷면에 좌표·시각 직접 기입"
+      ],
+      "current_knowledge_d1": "사진부 3년 아카이브에서 새벽 사진 일부에 frame skip 감지·논리적 설명 없음·D1 시점 가설 보류",
+      "current_knowledge_d30": "이슬에게 아카이브 일부 공유·여명재단 의심 (D22+)",
+      "tags": ["scope:short_demo_30day", "tier:1", "supporting"]
+    },
+    {
+      "id": "saebyeok.short.char.jio",
+      "name": "박지오",
+      "name_romanized": "Park Jio",
+      "scope": ["short_demo_30day"],
+      "story_role": "supporting, meteorology club",
+      "tier": 1,
+      "basic_info": {
+        "gender": "남성",
+        "age": 17,
+        "grade": "고등학교 2학년 5반·기상부",
+        "family_status": "이혼 가정·아버지·여동생 1명",
+        "height": 175,
+        "build": "마름"
+      },
+      "appearance": {
+        "hair": "갈색 머리·앞머리 길게",
+        "face": "조용·미세 무표정",
+        "uniform": "교복·셔츠 단추 1개 풀음",
+        "accessory": "디지털 기압계 (기상부 비품)"
+      },
+      "archetype": "패턴 탐지·내향형·관찰자",
+      "voice": {
+        "default_speech": "~어·~지·짧은 문장",
+        "first_person": "'나'",
+        "signature_expressions": [
+          "기압이 이상해.",
+          "오늘은 아닐 거야.",
+          "보면 알아.",
+          "..."
+        ],
+        "silence_ratio": "30% (긴 침묵 잦음)"
+      },
+      "personality_core": {
+        "traits": [
+          "기상 데이터 패턴에 민감",
+          "사람보다 숫자 편안",
+          "결정 내리는 데 시간 길지만 일단 결정하면 안 흔들림"
+        ],
+        "desires": [
+          "여명 진동의 기상학적 상관관계 검증",
+          "기상부 자료가 신뢰받기"
+        ]
+      },
+      "habits_actions": [
+        "10분마다 기압계 한 번 확인",
+        "셀폰 좀처럼 안 봄",
+        "걸으면서 옥상 바람 방향 체크"
+      ],
+      "current_knowledge_d1": "기상부 데이터에서 새벽 기압 미세 스파이크 7회 감지·1년 통계·논리적 설명 없음",
+      "current_knowledge_d30": "이슬·세린에게 D6부터 데이터 공유·D17 stronghold = 종탑 추정",
+      "tags": ["scope:short_demo_30day", "tier:1", "supporting"]
+    },
+    {
+      "id": "saebyeok.short.char.minchae",
+      "name": "김민채",
+      "name_romanized": "Kim Minchae",
+      "scope": ["short_demo_30day"],
+      "story_role": "supporting, student council secretary",
+      "tier": 1,
+      "basic_info": {
+        "gender": "여성",
+        "age": 17,
+        "grade": "고등학교 2학년 7반·학생회 서기",
+        "family_status": "변호사 가정·외동",
+        "height": 160,
+        "build": "보통"
+      },
+      "appearance": {
+        "hair": "갈색 단발·세련된 컷",
+        "face": "총명한 인상·미소 잘 함",
+        "uniform": "교복·완벽 정돈",
+        "accessory": "블레이저 학생회 배지"
+      },
+      "archetype": "정보통·야망가·학생회 정치가",
+      "voice": {
+        "default_speech": "~지·~어·친구 평어·필요 시 격식",
+        "first_person": "'나'",
+        "signature_expressions": [
+          "잠깐, 그거 흥미로운데.",
+          "정보 갖고 있어. 거래 가능?",
+          "선재 선생님 말씀이…",
+          "공식 채널로 가자."
+        ],
+        "silence_ratio": "8%"
+      },
+      "personality_core": {
+        "traits": [
+          "학교 정보 흐름 통제·교무실 출입",
+          "거래·교환 마인드",
+          "친구라도 정보는 등가 교환 원칙",
+          "우정과 야망 사이 자주 흔들림"
+        ],
+        "desires": [
+          "수도권 명문대 진학",
+          "학생회장 도전 (D25+)",
+          "여명 진동 진실 = 학생회 공식화 카드"
+        ]
+      },
+      "habits_actions": [
+        "노트 두 권 (공식·비공식) 분리 사용",
+        "복도에서 인사 횟수 일주일 기록",
+        "교무실 갈 때 옷 정돈 1초"
+      ],
+      "current_knowledge_d1": "학생회 비공식 풍문·여명재단 후원금 명단 일부",
+      "current_knowledge_d30": "이슬 그룹과 정보 거래·D20 학생회 공식 의제 시도·D25 이후 신중 모드",
+      "tags": ["scope:short_demo_30day", "tier:1", "supporting"]
+    },
+    {
+      "id": "saebyeok.short.char.doyun",
+      "name": "최도윤",
+      "name_romanized": "Choe Doyun",
+      "scope": ["short_demo_30day"],
+      "story_role": "supporting, music club",
+      "tier": 1,
+      "basic_info": {
+        "gender": "남성",
+        "age": 17,
+        "grade": "고등학교 2학년 3반·음악부",
+        "family_status": "어머니·할머니·형 1명·아버지 작년 사망",
+        "height": 178,
+        "build": "보통"
+      },
+      "appearance": {
+        "hair": "검은 머리·자연스러움",
+        "face": "웃음 많음·눈은 항상 조금 슬픔",
+        "uniform": "교복·셔츠 항상 깔끔",
+        "accessory": "왼쪽 손목 가죽 끈 (아버지 유품)"
+      },
+      "archetype": "외부 밝음·내부 무거움형·음악 의지",
+      "voice": {
+        "default_speech": "~지·~어·반장 톤 친근",
+        "first_person": "'나'",
+        "signature_expressions": [
+          "괜찮아, 진짜로.",
+          "이거 잠깐만 들어볼래?",
+          "그건 좀 슬픈데.",
+          "다음 곡 가자."
+        ],
+        "silence_ratio": "12%"
+      },
+      "personality_core": {
+        "traits": [
+          "친구 분위기 관리 1순위",
+          "본인 감정은 음악으로 처리",
+          "약속 늦는 것 절대 X",
+          "혼자 새벽 종탑 자주 감 (D1+)"
+        ],
+        "desires": [
+          "친구들이 자기 무게 알아채지 않게 하기",
+          "아버지 마지막 악보 완성"
+        ],
+        "vulnerabilities": [
+          "사람 많으면 갑자기 사라지는 순간",
+          "여명 진동 직접 겪었다고 의심하지만 인정 안 함"
+        ]
+      },
+      "habits_actions": [
+        "기타 케이스 항상 등에",
+        "잠깐 멈출 때 가죽 끈 만짐",
+        "수업 끝나면 옥상 한 번 보고 내려감"
+      ],
+      "current_knowledge_d1": "음악부 활동 외 여명 진동 무관심·다만 본인 D-2 새벽 11분 결손 미보고 (이슬 그룹은 D18에서야 인지)",
+      "current_knowledge_d30": "본인 경험 인정 (D26)·이슬·세린에게 일부 공개",
+      "tags": ["scope:short_demo_30day", "tier:1", "supporting", "internal_witness"]
+    },
+    {
+      "id": "saebyeok.short.char.yerin",
+      "name": "강예린",
+      "name_romanized": "Kang Yerin",
+      "scope": ["short_demo_30day"],
+      "story_role": "supporting, transfer student (D8 arrival)",
+      "tier": 1,
+      "basic_info": {
+        "gender": "여성",
+        "age": 17,
+        "grade": "고등학교 2학년 3반·전학생 (이전: 강원도)",
+        "family_status": "어머니·외할머니·아버지 부재",
+        "height": 161,
+        "build": "보통"
+      },
+      "appearance": {
+        "hair": "어두운 갈색 어깨선",
+        "face": "조용한 인상·눈맞춤 짧음",
+        "uniform": "교복·재킷 단정",
+        "accessory": "낡은 노트 1권 (오래된 느낌)"
+      },
+      "archetype": "수수께끼·관찰자·물려받은 짐",
+      "voice": {
+        "default_speech": "~네요·~예요 (조심스러운 존댓말)·친구 사이도 D14까지 격식",
+        "first_person": "'저' (D14까지)·'나' (D14+)",
+        "signature_expressions": [
+          "…그럴 수도 있겠네요.",
+          "네, 알겠어요.",
+          "이건 조금…",
+          "노트에 적어둘게요."
+        ],
+        "silence_ratio": "25%"
+      },
+      "personality_core": {
+        "traits": [
+          "처음 학교 환경 적응 신중",
+          "이전 학교에서 동아리 멤버였던 누군가의 노트를 갖고 옴",
+          "여명 진동 단어를 처음부터 알고 있음 (D1)",
+          "본인이 알고 있음 자체를 들키지 않으려 함 (D14까지)"
+        ],
+        "desires": [
+          "이전 동아리 선배의 노트 의미 해독",
+          "다온시 새벽 진동 측정 동행 가능 친구 발견"
+        ]
+      },
+      "habits_actions": [
+        "노트 펼치기 전 한 박자 침묵",
+        "친구 호명 시 한 박자 늦은 응답",
+        "지역 지명 들으면 미세 반응"
+      ],
+      "current_knowledge_d1": "여명 진동 = 알고 있음·이전 학교 동아리에서 들음·D1 신분 노출 안 함",
+      "current_knowledge_d30": "노트 일부 이슬·세린·하나에게 공개 (D17·D22·D29)·D29 핵심 페이지 협의 중",
+      "tier_2_secret": "노트 = 새벽고등학교 2024 졸업생 동아리 인계품·예린 = 그 선배의 사촌·노트 작성자 = 여명재단 측에서 D-30일 압력받고 일부 페이지 찢음 (이슬 그룹은 D29 시점에 추정만)",
+      "tags": ["scope:short_demo_30day", "tier:1", "transfer_student", "tier_2_link"]
+    },
+    {
+      "id": "saebyeok.short.char.seonjae",
+      "name": "임선재",
+      "name_romanized": "Im Seonjae",
+      "scope": ["short_demo_30day"],
+      "story_role": "adult mentor, school librarian",
+      "tier": 1,
+      "basic_info": {
+        "gender": "남성",
+        "age": 51,
+        "occupation": "새벽고등학교 도서관 사서·17년 근속",
+        "family_status": "독신",
+        "height": 172,
+        "build": "보통"
+      },
+      "appearance": {
+        "hair": "회색 짧은 머리",
+        "face": "온화한 표정·말 천천히",
+        "uniform": "회색 카디건·셔츠·체크 안경",
+        "accessory": "낡은 만년필"
+      },
+      "archetype": "관찰자·온건한 어른·기록 보관자",
+      "voice": {
+        "default_speech": "~예요·~지요·~네요 (학생에게 친근 존댓말)",
+        "first_person": "'나'",
+        "signature_expressions": [
+          "그게 맞을지도요.",
+          "한 번 도서관에 와볼래요.",
+          "기록은 오래 살아남아요.",
+          "서두르지 말고."
+        ],
+        "silence_ratio": "20%"
+      },
+      "personality_core": {
+        "traits": [
+          "학생 호기심에 답을 안 주고 자료를 줌",
+          "비밀을 묻고 살되 거짓말 하지 않음",
+          "1978년 신문 클리핑 캐비닛 따로 있음 (도서관 비공개실)"
+        ],
+        "desires": [
+          "학생 혼자 진실에 도달",
+          "여명재단 압력으로부터 학교 도서관 자료 보호"
+        ]
+      },
+      "habits_actions": [
+        "책 정리 시 좌표 표 작성",
+        "점심 후 옥상 한 번 다녀옴",
+        "신간 추천 메모를 학생 책상에 살짝"
+      ],
+      "current_knowledge_d1": "여명 진동 1978년부터 추적·1991/2003/2014 11분 결손 사례 보유·이슬·예린에게 D5/D17 단계적 자료 제공",
+      "tier_2_secret": "여명재단으로부터 2년 전 자료 양도 압박받음·거절 후 내사 흔적 (학생들 모름)",
+      "tags": ["scope:short_demo_30day", "tier:1", "adult_mentor", "tier_2_link"]
+    }
+  ]
+}

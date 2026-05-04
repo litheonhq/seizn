@@ -1,0 +1,391 @@
+{
+  "version": "v2-deep-fill-main7",
+  "generated_at": "2026-05-02",
+  "scope": "short1",
+  "status": "deep_fill_main7_complete_supporting_partial",
+  "fill_status": "단편 1 주연 7인 inter-relationships 풀 매트릭스 fill (소리·나리·레이카·아오이·나나·룰루·유이). 조연(허·도서관장·타오·도깨비) 다음 cycle.",
+  "source_primary": "C:\\Users\\admin\\Projects\\knot\\worldbuilding\\short1-characters.md §1.10·§2.8·§3.9·§4.8·§5.8·§6.8·§7.8 (관계 벡터 표)",
+  "schema_notes": [
+    "각 관계 = graph_edges 매핑",
+    "관계 차원: trust·suspicion·attachment·hostility·debt·information_asymmetry",
+    "각 차원 강도: -1.0~1.0 또는 enum (none·weak·moderate·strong·very_strong)",
+    "관계 변화 시점 = events 배열 (timeline_event_ledger.json 참조)",
+    "valid_at·invalid_at·source 필수"
+  ],
+  "dimensions": {
+    "trust": "신뢰 (-1.0 적대 ~ 1.0 신뢰)",
+    "suspicion": "의심 (0.0 ~ 1.0)",
+    "attachment": "애착 (0.0 ~ 1.0)",
+    "hostility": "적대 (0.0 ~ 1.0)",
+    "debt": "부채감 (0.0 ~ 1.0)",
+    "information_asymmetry": "정보 비대칭 (A가 B 모르는 것 / B가 A 모르는 것)"
+  },
+  "intensity_enum": ["none", "weak", "moderate", "strong", "very_strong"],
+  "relationships": [
+    {
+      "id": "knot.short1.rel.sori-nari",
+      "from": "knot.short1.char.sori",
+      "to": "knot.short1.char.nari",
+      "scope": "short1",
+      "relationship_type": "roommate·co-investigator",
+      "valid_at": "D1 (2/20 금)",
+      "current_state_w4": {
+        "trust": "moderate (룸메·신뢰 누적)",
+        "suspicion": "weak (양방향)",
+        "attachment": "moderate-strong",
+        "hostility": "none",
+        "debt": "weak",
+        "information_asymmetry": "양방향·소리 = 자서가 능력 작가 only·나리 = 풍기위 활동 부분 비공개·소리 W3+ 헤어핀 만지는 동작 나리만 목격"
+      },
+      "addressing": {
+        "sori_to_nari": "나리 / 나리야 (W3+)",
+        "nari_to_sori": "소리 / …너"
+      },
+      "events_progression": [
+        {"event_id": "knot.short1.event.d1-arrival", "delta": "관계 시작·룸메이트 첫 만남", "at": "D1"},
+        {"event_id": "knot.short1.event.d2-cafeteria-debrief", "delta": "trust + (나리 첫 지각 경고 1회)", "at": "D2"},
+        {"event_id": "knot.short1.event.w2-study-promise", "delta": "trust + attachment +·FRIEND_RANK_NARI=1", "at": "W2"},
+        {"event_id": "knot.short1.event.w3-record-fault", "delta": "NARI_SUSPICION +0.5 (셜록 모드 재가동)", "at": "W3"},
+        {"event_id": "knot.short1.event.w4-hur-trust-defer", "delta": "관찰 한 박자 봉인·시선 유지·말 X", "at": "W4"}
+      ],
+      "narrative_function": "단편 1 핵심 듀오·정보 추적 협력·정체 노출 분기 핵심축",
+      "future_branches": "Act 2+ 정체 인지 시 배신감 vs 이해 분기·후속부 엔딩별 관계 결산",
+      "tags": ["scope:short1", "tier:1", "core_pair", "core_dyad"]
+    },
+    {
+      "id": "knot.short1.rel.sori-lulu",
+      "from": "knot.short1.char.sori",
+      "to": "knot.short1.char.lulu",
+      "scope": "short1",
+      "relationship_type": "friend_class_adjacent·club_concept_intro",
+      "valid_at": "D2 (2/21 토)",
+      "current_state_w4": {
+        "trust": "weak-moderate",
+        "attachment": "moderate (룰루가 먼저 접근)",
+        "information_asymmetry": "룰루 = 마법권 혼혈 가정 + 혈통환상계 미인지·소리 = 자서가 능력 비공개"
+      },
+      "addressing": {
+        "sori_to_lulu": "룰루",
+        "lulu_to_sori": "소리! (큰 소리)"
+      },
+      "events_progression": [
+        {"event_id": "knot.short1.event.d2-cafeteria-lulu", "delta": "관계 시작·식당 합석", "at": "D2"},
+        {"event_id": "knot.short1.event.w1-club-recruit", "delta": "룰루 강권 동아리 견학", "at": "W1"},
+        {"event_id": "knot.short1.event.d14-club-join", "delta": "정식 합류 동행", "at": "D14"}
+      ],
+      "tags": ["scope:short1", "tier:1"]
+    },
+    {
+      "id": "knot.short1.rel.sori-aoi",
+      "from": "knot.short1.char.sori",
+      "to": "knot.short1.char.aoi",
+      "scope": "short1",
+      "relationship_type": "club_member·practical_partner",
+      "valid_at": "D3 (2/22 일)",
+      "current_state_w4": {
+        "trust": "moderate (실무 신뢰)",
+        "attachment": "weak-moderate",
+        "information_asymmetry": "아오이 W4 시점에 소리 정체 짐작·추궁 X·실무주의"
+      },
+      "addressing": {
+        "sori_to_aoi": "아오이 씨 → 아오이 (W4+)",
+        "aoi_to_sori": "소리"
+      },
+      "events_progression": [
+        {"event_id": "knot.short1.event.d3-corridor-clip", "delta": "관계 시작·복도 클립", "at": "D3"},
+        {"event_id": "knot.short1.event.w3-record-fault", "delta": "출석부 균열·사야카 정보 공유 수신", "at": "W3"},
+        {"event_id": "knot.short1.event.w4-document-cooperation", "delta": "트러스트 + ·'같이 가는 사람' 인정·FRIEND_RANK_AOI=1", "at": "W4"}
+      ],
+      "tags": ["scope:short1", "tier:1"]
+    },
+    {
+      "id": "knot.short1.rel.sori-reika",
+      "from": "knot.short1.char.sori",
+      "to": "knot.short1.char.reika",
+      "scope": "short1",
+      "relationship_type": "club_member·observed_protected",
+      "valid_at": "D5 (2/24 화) — D14 가입 정식",
+      "current_state_w4": {
+        "trust": "weak → moderate (W4 비상계단 후)",
+        "attachment": "moderate (보호 대상으로 확정)",
+        "information_asymmetry": "레이카 W3 시점 소리 어깨/걸음/시선 알아봄·말 X·소리는 레이카 시선 모름 W3 시점"
+      },
+      "addressing": {
+        "sori_to_reika": "레이카 씨 → 레이카 (W4+)",
+        "reika_to_sori": "너 / 이름 가끔"
+      },
+      "events_progression": [
+        {"event_id": "knot.short1.event.d5-clubroom-found", "delta": "최초 인지·레이카 자고 있음·말 X", "at": "D5"},
+        {"event_id": "knot.short1.event.d14-club-join", "delta": "정식 멤버", "at": "D14"},
+        {"event_id": "knot.short1.event.w3-silent-observation", "delta": "RAIKA_SILENT_OBSERVATION=1", "at": "W3"},
+        {"event_id": "knot.short1.event.w4-stairs-encounter", "delta": "비상계단 단독·'싸움 해 본 적 있지'·소리 침묵 지킴·FRIEND_RANK_RAIKA=1·RAIKA_READS_YOU=TRUE", "at": "W4"}
+      ],
+      "narrative_function": "낮은 → 급상승 가능·보호자 포지션 자동 진입",
+      "tags": ["scope:short1", "tier:1"]
+    },
+    {
+      "id": "knot.short1.rel.sori-nana",
+      "from": "knot.short1.char.sori",
+      "to": "knot.short1.char.nana",
+      "scope": "short1",
+      "relationship_type": "club_member·quiet_parallel",
+      "valid_at": "D6 (2/25 수)",
+      "current_state_w4": {
+        "trust": "weak",
+        "attachment": "weak (천천히)",
+        "information_asymmetry": "비슷한 무표정·집요 타입·서로 첫 교환 매우 작음"
+      },
+      "addressing": {
+        "sori_to_nana": "나나",
+        "nana_to_sori": "소리 / 이름"
+      },
+      "events_progression": [
+        {"event_id": "knot.short1.event.d6-nana-short-talk", "delta": "관계 시작·짧은 대화", "at": "D6"},
+        {"event_id": "knot.short1.event.w4-attention-accumulation", "delta": "관심 누적·시선 길어짐 미세 지표", "at": "W4"}
+      ],
+      "tags": ["scope:short1", "tier:2"]
+    },
+    {
+      "id": "knot.short1.rel.sori-yui",
+      "from": "knot.short1.char.sori",
+      "to": "knot.short1.char.yui",
+      "scope": "short1",
+      "relationship_type": "club_member·emotional_shelter",
+      "valid_at": "D9 (2/28 토)",
+      "current_state_w4": {
+        "trust": "moderate (정서적 쉼터)",
+        "attachment": "moderate (한 박자 편안)",
+        "information_asymmetry": "유이 = 연금 변환계 미인지·소리 = 자서가 비공개"
+      },
+      "addressing": {
+        "sori_to_yui": "유이",
+        "yui_to_sori": "소리 / 살짝 짧게"
+      },
+      "events_progression": [
+        {"event_id": "knot.short1.event.d9-yui-first", "delta": "관계 시작 (룰루+유이 페어)", "at": "D9"}
+      ],
+      "tags": ["scope:short1", "tier:2"]
+    },
+    {
+      "id": "knot.short1.rel.nari-lulu",
+      "from": "knot.short1.char.nari",
+      "to": "knot.short1.char.lulu",
+      "scope": "short1",
+      "relationship_type": "discipline_target·secret_amusement",
+      "current_state_w4": {
+        "trust": "moderate",
+        "suspicion": "weak (규율 위반 단골)",
+        "attachment": "moderate (재미있어함·놀이 처리)",
+        "hidden_aspect": "Vex 포즈 보고 몰래 웃음·룰루는 모름"
+      },
+      "tags": ["scope:short1", "tier:2", "subtag:discipline_dynamic"]
+    },
+    {
+      "id": "knot.short1.rel.nari-aoi",
+      "from": "knot.short1.char.nari",
+      "to": "knot.short1.char.aoi",
+      "scope": "short1",
+      "relationship_type": "practical_co-workers",
+      "current_state_w4": {
+        "trust": "moderate-strong",
+        "attachment": "moderate (실무 상호 신뢰·서류 주고받기)"
+      },
+      "tags": ["scope:short1", "tier:2", "subtag:practical"]
+    },
+    {
+      "id": "knot.short1.rel.nari-reika",
+      "from": "knot.short1.char.nari",
+      "to": "knot.short1.char.reika",
+      "scope": "short1",
+      "relationship_type": "mutual_silent_respect",
+      "current_state_w4": {
+        "trust": "moderate",
+        "attachment": "weak",
+        "hidden_aspect": "레이카 본능 못 다잡는 거 알아 규율 위반 미세해도 봐줌"
+      },
+      "tags": ["scope:short1", "tier:2"]
+    },
+    {
+      "id": "knot.short1.rel.nari-yui",
+      "from": "knot.short1.char.nari",
+      "to": "knot.short1.char.yui",
+      "scope": "short1",
+      "relationship_type": "small_size_concern",
+      "current_state_w4": {
+        "attachment": "weak-moderate",
+        "hidden_aspect": "유이 반창고 남는 거 받아감·아무도 모름"
+      },
+      "tags": ["scope:short1", "tier:2"]
+    },
+    {
+      "id": "knot.short1.rel.reika-lulu",
+      "from": "knot.short1.char.reika",
+      "to": "knot.short1.char.lulu",
+      "scope": "short1",
+      "relationship_type": "protective_mentor·care_focus",
+      "current_state_w4": {
+        "trust": "strong",
+        "attachment": "strong (가장 챙김·작은 동생처럼·보호자 톤)",
+        "behavior": "룰루 다쳤을 때 자기 몸보다 반 박자 빨리 움직임"
+      },
+      "tags": ["scope:short1", "tier:1", "subtag:core_protection"]
+    },
+    {
+      "id": "knot.short1.rel.reika-yui",
+      "from": "knot.short1.char.reika",
+      "to": "knot.short1.char.yui",
+      "scope": "short1",
+      "relationship_type": "protective_when_injured",
+      "current_state_w4": {
+        "attachment": "moderate (부상 시 보호 스위치 자동)",
+        "behavior": "유이 아플 때 '…괜찮아?' 묻는 유일한 선배 톤"
+      },
+      "tags": ["scope:short1", "tier:2"]
+    },
+    {
+      "id": "knot.short1.rel.reika-aoi",
+      "from": "knot.short1.char.reika",
+      "to": "knot.short1.char.aoi",
+      "scope": "short1",
+      "relationship_type": "practical_partner",
+      "current_state_w4": {
+        "attachment": "moderate (실무 파트너 취급·말 거는 상대)"
+      },
+      "tags": ["scope:short1", "tier:2"]
+    },
+    {
+      "id": "knot.short1.rel.reika-nana",
+      "from": "knot.short1.char.reika",
+      "to": "knot.short1.char.nana",
+      "scope": "short1",
+      "relationship_type": "quiet_parallel",
+      "current_state_w4": {
+        "attachment": "weak-moderate (조용한 평행·둘 다 말 적음·오히려 편안)"
+      },
+      "tags": ["scope:short1", "tier:2"]
+    },
+    {
+      "id": "knot.short1.rel.aoi-reika",
+      "from": "knot.short1.char.aoi",
+      "to": "knot.short1.char.reika",
+      "scope": "short1",
+      "relationship_type": "leader_management",
+      "current_state_w4": {
+        "behavior": "W2 이후 명목 리더 존중 + 나른함 관리 (조끼 매줌)"
+      },
+      "tags": ["scope:short1", "tier:2"]
+    },
+    {
+      "id": "knot.short1.rel.aoi-lulu",
+      "from": "knot.short1.char.aoi",
+      "to": "knot.short1.char.lulu",
+      "scope": "short1",
+      "relationship_type": "budget_target·hidden_provision",
+      "current_state_w4": {
+        "behavior": "예산 가장 많이 지적 대상·지적하면서도 나중에 채워줌"
+      },
+      "tags": ["scope:short1", "tier:2"]
+    },
+    {
+      "id": "knot.short1.rel.aoi-yui",
+      "from": "knot.short1.char.aoi",
+      "to": "knot.short1.char.yui",
+      "scope": "short1",
+      "relationship_type": "small_sibling_care",
+      "current_state_w4": {
+        "behavior": "작은 동생처럼 챙김·키 모자라면 위 칸 책 꺼내줌"
+      },
+      "tags": ["scope:short1", "tier:2"]
+    },
+    {
+      "id": "knot.short1.rel.aoi-nana",
+      "from": "knot.short1.char.aoi",
+      "to": "knot.short1.char.nana",
+      "scope": "short1",
+      "relationship_type": "silent_practical",
+      "current_state_w4": {
+        "behavior": "조용한 공조·말 적지만 통함",
+        "exclusive_observation": "나나의 무언 위로 (말 없이 옆에 서기)는 아오이만 알아봄"
+      },
+      "tags": ["scope:short1", "tier:2"]
+    },
+    {
+      "id": "knot.short1.rel.nana-lulu",
+      "from": "knot.short1.char.nana",
+      "to": "knot.short1.char.lulu",
+      "scope": "short1",
+      "relationship_type": "amusement_observed·octopus_partner",
+      "current_state_w4": {
+        "behavior": "룰루 Vex 포즈 0.5초 더 봄 (귀여워서)·어묵 파트너 (도깨비 포장마차 단골 공조)"
+      },
+      "tags": ["scope:short1", "tier:2"]
+    },
+    {
+      "id": "knot.short1.rel.nana-yui",
+      "from": "knot.short1.char.nana",
+      "to": "knot.short1.char.yui",
+      "scope": "short1",
+      "relationship_type": "small_consideration",
+      "current_state_w4": {
+        "behavior": "유이 손 잘 안 닿는 거 꺼내줌 (무언의 배려)·작은 배려 물건 나누는 대상"
+      },
+      "tags": ["scope:short1", "tier:2"]
+    },
+    {
+      "id": "knot.short1.rel.lulu-yui",
+      "from": "knot.short1.char.lulu",
+      "to": "knot.short1.char.yui",
+      "scope": "short1",
+      "relationship_type": "comic_relief_duo·emotional_rest",
+      "current_state_w4": {
+        "trust": "strong",
+        "attachment": "very_strong (⭐ 콤비)",
+        "behavior": "둘 다 키 작은 편·유이(무표정 상식인) + 룰루(겐키 개구쟁이)·코믹 릴리프·감정 쉼터 양면 기능·유이가 룰루 붙잡아줌·룰루 다친 직후 유이 가장 먼저 손 뻗음"
+      },
+      "narrative_function": "단편 1 핵심 듀오·이 둘이 함께 있을 때 소리 긴장이 한 박자 풀리는 연출·작중 코믹 릴리프 + 감정 쉼터 양면 기능",
+      "tags": ["scope:short1", "tier:1", "core_pair", "core_dyad", "subtag:lori_duo"]
+    }
+  ],
+  "asymmetric_pairs_summary": {
+    "tier_2_secrets_hidden_from_all_chars": [
+      "결 (소리 = 13번째 초월체) — 단편 1 본문 X·작가 only",
+      "허 사서 = 자허·삼족오위 OB — 단편 1 본문 X·작가 only",
+      "도서관장 = 월주 — 단편 1 본문 X·작가 only",
+      "도깨비 본질 = 달의 위상 이계 유입·삭 전이 조건 — 단편 1 본문 X·작가 only"
+    ],
+    "tier_1_partial_disclosure": [
+      "명부 회장 빈 줄 → D5 시각 노출·D21 정식 발견·점진 공개",
+      "사야카 = 실종자 013 → D25 명명",
+      "출석부 9번 균열 → D26",
+      "010~013 4명 패턴 → D31~D32"
+    ],
+    "character_ability_concealment": [
+      "소리 자서가 = all_chars unknown (단편 1)",
+      "룰루 혈통환상계 = 본인 미인지·all_chars unknown",
+      "유이 연금 변환계 = 본인 미인지·all_chars unknown",
+      "레이카 무공 잠재 상급 = 본인 숨김·표면 X (W4 비상계단 '싸움 해 본 적 있지' 직접 묻기까지)"
+    ],
+    "character_observation_one_sided": [
+      "나리 → 소리 헤어핀 동작 (W3+ 목격)",
+      "레이카 → 소리 어깨/걸음/시선 (W3 알아봄·말 X·소리는 모름)",
+      "나리 → 룰루 Vex 포즈 (몰래 웃음·룰루 모름)",
+      "유이 → 룰루 혼자 동그랗게 앉음 (목격)",
+      "아오이 → 나나 무언 위로 (말 없이 옆에 서기·아오이만 알아봄)"
+    ]
+  },
+  "supporting_relationships_pointer": {
+    "sori-heo": "허 사서·도서관 사서·정중·집사 톤·소리 가장 빠르게 녹음 (W1부터)·허 'soriya·당신' 호칭 자동 해제",
+    "sori-dokkaebi_3": "토라·도리·치비·도깨비 포장마차·가장 풀어짐·존대 속 친근",
+    "sori-tao": "타오 과장·학교 바깥 자료를 쫓는 성인 조연·상관 X·먼저 위험을 본 사람·D29 사망으로 단절",
+    "sori-min": "민 담임·낮 파트의 평범한 담임·행정 접점·변화 없음",
+    "sori-koh": "코우 교장·배경",
+    "sori-librarian": "도서관장·얼어붙음·이유 불명·고정 (본편까지)·forbidden_in_scope:short1 (월주 정체)"
+  },
+  "deferred_for_cycle_3": [
+    "조연 inter-relationship (도깨비 3인끼리·허↔도서관장·민↔코우)",
+    "각 관계 dimension 정량 score (-1.0~1.0 표준화)",
+    "이벤트 기반 관계 변화 sequence (D1~D35 시간순 deltas)",
+    "본편 scope 관계 (절·아리아드네·삼두군주 등)",
+    "Act 2~3 관계 분기 (정체 노출 분기·NG+ 분기)"
+  ]
+}

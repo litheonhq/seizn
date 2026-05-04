@@ -201,10 +201,10 @@ const NodeIcons: Record<GraphNodeType, React.FC<{ className?: string }>> = {
 // ============================================
 
 const statusColors: Record<NodeStatus, string> = {
-  active: "bg-green-500",
+  active: "bg-[var(--signal-canon)]",
   inactive: "bg-gray-400",
   pending: "bg-yellow-500",
-  error: "bg-red-500",
+  error: "bg-[var(--signal-conflict)]",
   syncing: "bg-blue-500",
 };
 

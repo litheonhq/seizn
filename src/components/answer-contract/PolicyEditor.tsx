@@ -144,7 +144,7 @@ function TextInput({
     <div className="space-y-1">
       <label className="text-sm font-medium text-gray-700">
         {label}
-        {required && <span className="text-red-500 ml-1">*</span>}
+        {required && <span className="text-[var(--signal-conflict-ink)] ml-1">*</span>}
       </label>
       {description && <p className="text-xs text-gray-500">{description}</p>}
       <input
@@ -375,7 +375,7 @@ export default function PolicyEditor({
               placeholder="e.g., Strict Verification"
               required
             />
-            {errors.name && <p className="text-sm text-red-600">{errors.name}</p>}
+            {errors.name && <p className="text-sm text-[var(--signal-conflict-ink)]">{errors.name}</p>}
 
             <TextareaInput
               label="Description"
@@ -548,8 +548,8 @@ export default function PolicyEditor({
 
         {/* Error message */}
         {errors.submit && (
-          <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-sm text-red-600">{errors.submit}</p>
+          <div className="p-4 bg-[var(--signal-conflict-soft)] border border-[var(--signal-conflict)] rounded-lg">
+            <p className="text-sm text-[var(--signal-conflict-ink)]">{errors.submit}</p>
           </div>
         )}
 
@@ -567,11 +567,11 @@ export default function PolicyEditor({
               <>
                 {showDeleteConfirm ? (
                   <div className="flex items-center gap-2">
-                    <span className="text-sm text-red-600">Delete this policy?</span>
+                    <span className="text-sm text-[var(--signal-conflict-ink)]">Delete this policy?</span>
                     <button
                       type="button"
                       onClick={handleDelete}
-                      className="px-3 py-1 text-sm bg-red-600 text-white rounded hover:bg-red-700"
+                      className="px-3 py-1 text-sm bg-[var(--signal-conflict)] text-white rounded hover:bg-[var(--signal-conflict)]"
                     >
                       Confirm
                     </button>
@@ -587,7 +587,7 @@ export default function PolicyEditor({
                   <button
                     type="button"
                     onClick={() => setShowDeleteConfirm(true)}
-                    className="px-3 py-2 text-sm text-red-600 hover:text-red-700"
+                    className="px-3 py-2 text-sm text-[var(--signal-conflict-ink)] hover:text-[var(--signal-conflict-ink)]"
                   >
                     Delete Policy
                   </button>

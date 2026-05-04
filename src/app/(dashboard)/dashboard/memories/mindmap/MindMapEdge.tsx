@@ -28,8 +28,8 @@ const edgeStyles: Record<EdgeType | "belongs_to", EdgeStyle> = {
     stroke: "#9CA3AF", // gray
     strokeDasharray: "5,5",
     animated: false,
-    labelBg: "bg-szn-surface",
-    labelText: "text-szn-text-2",
+    labelBg: "bg-[var(--ink-50)]",
+    labelText: "text-[var(--ink-600)]",
   },
   supersedes: {
     stroke: "#3B82F6", // blue
@@ -41,37 +41,37 @@ const edgeStyles: Record<EdgeType | "belongs_to", EdgeStyle> = {
   contradicts: {
     stroke: "#EF4444", // red
     animated: true,
-    labelBg: "bg-red-100 dark:bg-red-900/50",
-    labelText: "text-red-600 dark:text-red-300",
+    labelBg: "bg-[var(--signal-conflict-soft)] dark:bg-[var(--signal-conflict)]/50",
+    labelText: "text-[var(--signal-conflict-ink)] dark:text-[var(--signal-conflict-soft)]",
   },
   derived_from: {
     stroke: "#10B981", // green
     strokeDasharray: "8,4",
     markerEnd: "url(#arrow-green)",
     animated: false,
-    labelBg: "bg-green-100 dark:bg-green-900/50",
-    labelText: "text-green-600 dark:text-green-300",
+    labelBg: "bg-[var(--signal-canon-soft)] dark:bg-green-900/50",
+    labelText: "text-[var(--signal-canon-ink)] dark:text-green-300",
   },
   mentions_entity: {
     stroke: "#8B5CF6", // purple
     strokeDasharray: "3,3",
     animated: false,
-    labelBg: "bg-purple-100 dark:bg-purple-900/50",
-    labelText: "text-purple-600 dark:text-purple-300",
+    labelBg: "bg-[var(--ink-100)] dark:bg-[var(--ink-900)]/50",
+    labelText: "text-[var(--ink-900)] underline dark:text-[var(--ink-500)]",
   },
   part_of_cluster: {
     stroke: "#F59E0B", // amber
     strokeDasharray: "10,5",
     animated: false,
-    labelBg: "bg-amber-100 dark:bg-amber-900/50",
-    labelText: "text-amber-600 dark:text-amber-300",
+    labelBg: "bg-[var(--signal-pending-soft)] dark:bg-[var(--signal-pending)]/50",
+    labelText: "text-[var(--signal-pending-ink)] dark:text-[var(--signal-pending-soft)]",
   },
   belongs_to: {
     stroke: "#06B6D4", // cyan
     strokeDasharray: "4,4",
     animated: false,
-    labelBg: "bg-cyan-100 dark:bg-cyan-900/50",
-    labelText: "text-cyan-600 dark:text-cyan-300",
+    labelBg: "bg-[var(--ink-100)] dark:bg-[var(--ink-900)]/50",
+    labelText: "text-[var(--ink-900)] dark:text-[var(--ink-900)]",
   },
 };
 
@@ -220,8 +220,8 @@ function MindMapEdgeComponent({
               px-2 py-1 rounded-md text-xs font-medium
               border shadow-sm transition-all duration-200
               ${style.labelBg} ${style.labelText}
-              border-szn-border
-              ${selected ? "scale-110 ring-2 ring-szn-accent" : ""}
+              border-[var(--ink-200)]
+              ${selected ? "scale-110 ring-2 ring-[var(--ink-900)]" : ""}
             `}
           >
             {displayLabel}

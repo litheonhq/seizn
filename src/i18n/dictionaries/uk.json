@@ -392,7 +392,6 @@
     "nav": {
       "overview": "Огляд",
       "memories": "Сутності",
-      "memoryEditor": "Редактор пам’яті",
       "mindMap": "Граф відносин",
       "candidates": "Ящик подій",
       "devTools": "DevTools",
@@ -406,6 +405,7 @@
       "usage": "Використання",
       "budget": "Бюджет",
       "reports": "Звіти",
+      "calculator": "Оцінювач вартості",
       "apiKeys": "API-ключі",
       "integrations": "Плагіни рушія",
       "webhooks": "Вебхуки",
@@ -414,10 +414,15 @@
       "settings": "Налаштування",
       "groups": {
         "memory": "ПАМ'ЯТЬ NPC",
+        "observe": "МОНІТОРИНГ",
+        "govern": "ПОЛІТИКИ",
+        "finops": "ВИКОРИСТАННЯ І ВАРТІСТЬ",
+        "connect": "ІНТЕГРАЦІЯ",
         "system": "РОБОЧИЙ ПРОСТІР",
         "build": "Розробка",
         "integrate": "Інтеграція"
-      }
+      },
+      "memoryEditor": "Редактор пам’яті"
     },
     "pinSidebar": "Закріпити бічну панель",
     "unpinSidebar": "Згорнути бічну панель",
@@ -1406,6 +1411,50 @@
       "recentDecisions": "Недавні рішення",
       "noLogs": "Немає журналів рішень"
     },
+    "calculator": {
+      "title": "Калькулятор використання",
+      "subtitle": "Оцініть ваші місячні витрати на основі очікуваного використання",
+      "stats": {
+        "apiCalls": "API виклики",
+        "memories": "Спогади",
+        "extractions": "Вилучення",
+        "estimated": "Оціночна вартість"
+      },
+      "presets": {
+        "title": "Швидкі пресети",
+        "startup": "Стартап",
+        "growing": "Зростаючий",
+        "scale": "Масштаб",
+        "enterprise": "Корпоративний"
+      },
+      "customize": {
+        "title": "Налаштувати використання"
+      },
+      "labels": {
+        "apiCalls": "Місячні API виклики",
+        "memories": "Збережені спогади",
+        "extractions": "Вилучення"
+      },
+      "recommended": {
+        "title": "Рекомендований план",
+        "base": "Базова ціна",
+        "overage": "Перевищення",
+        "cta": "Почати"
+      },
+      "comparison": {
+        "title": "Всі плани",
+        "best": "Найкраща пропозиція"
+      },
+      "details": {
+        "title": "Детальна розбивка цін",
+        "plan": "План",
+        "base": "Базова ціна",
+        "includedCalls": "Включені виклики",
+        "overageRate": "Ставка за перевищення",
+        "yourOverage": "Ваше перевищення",
+        "total": "Загалом"
+      }
+    },
     "webhooks": {
       "title": "Вебхуки",
       "subtitle": "Налаштуйте HTTP зворотні виклики для сповіщень про події в реальному часі",
@@ -1606,12 +1655,98 @@
       "contactUs": "Зв'яжіться з нами"
     }
   },
+  "serviceSelector": {
+    "title": "Оберіть свій досвід",
+    "subtitle": "Два способи використати силу пам'яті ШІ",
+    "spring": {
+      "name": "Spring",
+      "icon": "🌿",
+      "tagline": "Мульти-ШІ чат",
+      "description": "Спілкуйтесь з GPT-4, Claude, Gemini та іншими — усі з постійною пам'яттю, яка пам'ятає вас.",
+      "features": [
+        "Доступ до всіх основних моделей ШІ в одному місці",
+        "Ваші вподобання запам'ятовуються між сесіями",
+        "Безшовне перемикання контексту між моделями"
+      ],
+      "cta": "Спробувати Spring",
+      "badge": ""
+    },
+    "summer": {
+      "name": "Summer",
+      "icon": "☀️",
+      "tagline": "API пам'яті",
+      "description": "Дайте вашим ШІ-застосункам постійну пам'ять з нашим API, орієнтованим на розробників.",
+      "features": [
+        "Простий REST API і SDK",
+        "Час витягування менше 50мс",
+        "Безпека корпоративного рівня"
+      ],
+      "cta": "Дослідити API",
+      "badge": "Доступно зараз"
+    },
+    "footer": "Частина сезонів Seizn — пам'ять ШІ для будь-яких потреб"
+  },
+  "springPage": {
+    "badge": "",
+    "title": "Один чат.",
+    "titleHighlight": "Усі ШІ.",
+    "subtitle": "Який би ви не обрали,\nусі вони пам'ятають вас.",
+    "startChatting": "Почати спілкування",
+    "viewPricing": "Переглянути ціни",
+    "features": {
+      "title": "Чому Spring?",
+      "subtitle": "Найкраще від кожного ШІ, об'єднане.",
+      "multiModel": {
+        "title": "Мульти-модельний доступ",
+        "description": "Перемикайтесь між GPT-4, Claude, Gemini, Llama та іншими. Обирайте найкращу модель для кожного завдання."
+      },
+      "persistentMemory": {
+        "title": "Постійна пам'ять",
+        "description": "Ваші вподобання, контекст та історія зберігаються в кожній розмові та кожній моделі."
+      },
+      "freeGenerosity": {
+        "title": "Безкоштовний план рівня Cursor",
+        "description": "Щедре безкоштовне використання. Більшості користувачів не потрібно платити. Pro за $9.99/місяць для просунутих користувачів."
+      }
+    },
+    "pricing": {
+      "title": "Прості ціни",
+      "free": {
+        "name": "Безкоштовно",
+        "price": "$0",
+        "period": "Назавжди",
+        "features": [
+          "Усі моделі ШІ",
+          "Пам'ять між сесіями",
+          "Веб і мобільні застосунки"
+        ],
+        "cta": "Почати безкоштовно"
+      },
+      "pro": {
+        "name": "Pro",
+        "price": "$9.99",
+        "period": "на місяць",
+        "badge": "Найкраща ціна",
+        "features": [
+          "Все з безкоштовного",
+          "Пріоритетний доступ",
+          "Розширене керування пам'яттю",
+          "Доступ до API"
+        ],
+        "cta": "Перейти на Pro"
+      }
+    }
+  },
   "extremeHome": {
     "heroTitle": "Пам'ять для NPC зі ШІ.",
     "heroSubtitle": "Підключіться до Inworld, Convai або власного LLM. Seizn надає вашим NPC постійну пам'ять, відносини та міжпоколінне пригадування — оплата за сутність, без поприсидячого цінника.",
     "ctaStart": "Читати документацію",
     "ctaDemo": "Грати в smallgod",
     "socialProof": "Створено для ігрових студій — від 10 до 10 000 NPC.",
+    "liveDemo": "Живе демо",
+    "heroTagline": "Грайте в smallgod — наш еталонний god-game на Seizn. Без реєстрації та встановлення.",
+    "firstRetrievalComplete": "Перший пошук завершено",
+    "copySnippetHint": "Скопіюйте фрагмент нижче для відтворення",
     "copySnippetTitle": "Інтеграція в Unity, Unreal або будь-який рушій",
     "copySnippetSubtitle": "HTTP-обгортка + офіційні плагіни C#/C++. Без пользовательської інфраструктури.",
     "whySeizn": {
@@ -1655,6 +1790,89 @@
       "status": "Статус",
       "help": "Допомога",
       "github": "OSS"
+    },
+    "requestBuilder": {
+      "title": "Конструктор запитів",
+      "query": "Запит",
+      "queryPlaceholder": "Введіть пошуковий запит...",
+      "tryExamples": "Спробувати приклади",
+      "dataset": "Dataset",
+      "latencyBudget": "Бюджет затримки",
+      "fast": "fast",
+      "thorough": "thorough",
+      "topK": "Top K",
+      "results": "результатів",
+      "features": "Функції",
+      "hybridSearch": "Гібридний пошук",
+      "hybridSearchDesc": "Поєднання вектор + ключові слова",
+      "rerank": "Rerank",
+      "rerankDesc": "Переоцінка за допомогою cross-encoder",
+      "answerContract": "Answer Contract",
+      "answerContractDesc": "Перевірити якість відповіді",
+      "running": "Виконання...",
+      "runQuery": "Виконати запит",
+      "datasets": {
+        "techDocs": "Технічна документація",
+        "legalContracts": "Юридичні контракти",
+        "researchPapers": "Дослідницькі статті"
+      },
+      "advanced": "Додатково"
+    },
+    "resultsPanel": {
+      "searching": "Пошук...",
+      "noResults": "Виконайте запит, щоб побачити результати",
+      "score": "Оцінка"
+    },
+    "tracePanel": {
+      "tracing": "Відстеження конвеєра...",
+      "noTrace": "Виконайте запит, щоб побачити трейс",
+      "latency": "Затримка",
+      "cost": "Вартість",
+      "tokens": "Токени",
+      "vectorOps": "Vector Ops",
+      "cached": "cached",
+      "model": "Модель",
+      "input": "Вхід",
+      "output": "Вихід"
+    },
+    "tabs": {
+      "results": "Результати",
+      "trace": "Трейс",
+      "cost": "Вартість"
+    },
+    "chips": {
+      "trace": "Сутності",
+      "eval": "Відносини",
+      "policy": "Події"
+    },
+    "playgroundTitle": "Спробуйте зараз",
+    "costPanel": {
+      "calculating": "Розрахунок вартості...",
+      "noCost": "Виконайте запит, щоб побачити розбивку вартості",
+      "costBreakdown": "Розбивка вартості",
+      "component": "Компонент",
+      "cost": "Вартість",
+      "embedding": "Ембединг",
+      "vectorSearch": "Векторний пошук",
+      "rerank": "Переранжування",
+      "answerContract": "Контракт відповіді",
+      "total": "Загальна вартість",
+      "usage": "Використання",
+      "tokensIn": "Токенів на вході",
+      "tokensOut": "Токенів на виході",
+      "queryUnits": "Одиниць запитів",
+      "estimatedMonthly": "Прогноз за місяць",
+      "basedOn": "На основі",
+      "queriesPerDay": "запитів/день"
+    },
+    "errorDisplay": {
+      "error": "Помилка",
+      "errorCode": "Код",
+      "traceId": "Трейс",
+      "hint": "Підказка",
+      "tryAgain": "Повторити",
+      "copyTraceId": "Копіювати trace ID",
+      "copied": "Скопійовано!"
     }
   },
   "docs": {
@@ -2564,6 +2782,42 @@
       }
     }
   },
+  "demoQuery": {
+    "title": "Жива демонстрація",
+    "subtitle": "Спробуйте конвеєр пошуку Seizn з повним трасуванням та прозорістю витрат.",
+    "tryItNow": "Спробуйте зараз — без реєстрації",
+    "queryPlaceholder": "Пошуковий запит",
+    "runDemo": "Запустити демо",
+    "running": "Виконується...",
+    "results": "Результати",
+    "trace": "Трасування",
+    "cost": "Вартість",
+    "noResults": "Запустіть демо, щоб побачити результати",
+    "errorTitle": "Помилка",
+    "rateLimitError": "Перевищено ліміт запитів. Будь ласка, зачекайте.",
+    "retryIn": "Повтор через",
+    "seconds": "секунд",
+    "score": "Оцінка",
+    "rerankScore": "Переранжування",
+    "latency": "Затримка",
+    "tokens": "Токени",
+    "cached": "кеш",
+    "model": "Модель",
+    "input": "Вхід",
+    "output": "Вихід",
+    "costBreakdown": "Деталізація",
+    "total": "Разом",
+    "embedding": "Ембедінг",
+    "vectorSearch": "Векторний пошук",
+    "rerank": "Переранжування",
+    "answerContract": "Контракт відповіді",
+    "tokensIn": "Вхідні токени",
+    "tokensOut": "Вихідні токени",
+    "queryUnits": "Одиниці запитів",
+    "prefilledQueries": [
+      "Спробувати приклади"
+    ]
+  },
   "publicTrace": {
     "title": "Спільне трасування",
     "subtitle": "Перегляд деталей спільного трасування",
@@ -2939,25 +3193,8 @@
     }
   },
   "status": {
-    "metadataTitle": "Seizn Status",
-    "metadataDescription": "Current Seizn API availability and public incident history.",
-    "eyebrow": "STATUS",
     "title": "Статус системи",
     "subtitle": "Статус системи та історія інцидентів у реальному часі",
-    "currentStatusLabel": "Current status",
-    "measuredScope": "Measured scope: api.seizn.com/v1/*",
-    "uptimeLabel": "Last 30 days uptime",
-    "uptimeWindow": "Calculated from public incident windows in the last 30 days.",
-    "incidentsEyebrow": "INCIDENTS",
-    "recentIncidentsTitle": "Recent incidents",
-    "noRecentIncidents": "No recent incidents",
-    "noRecentIncidentsBody": "The public incident ledger is empty for this period.",
-    "slaLink": "Read the SLA",
-    "states": {
-      "operational": "operational",
-      "degraded": "degraded",
-      "outage": "outage"
-    },
     "lastUpdated": "Останнє оновлення",
     "overall": {
       "operational": "Усі системи працюють",
@@ -3005,6 +3242,23 @@
       "title": "Підпишіться на оновлення",
       "rss": "RSS-стрічка",
       "email": "Сповіщення на email"
+    },
+    "metadataTitle": "Seizn Status",
+    "metadataDescription": "Current Seizn API availability and public incident history.",
+    "eyebrow": "STATUS",
+    "currentStatusLabel": "Current status",
+    "measuredScope": "Measured scope: api.seizn.com/v1/*",
+    "uptimeLabel": "Last 30 days uptime",
+    "uptimeWindow": "Calculated from public incident windows in the last 30 days.",
+    "incidentsEyebrow": "INCIDENTS",
+    "recentIncidentsTitle": "Recent incidents",
+    "noRecentIncidents": "No recent incidents",
+    "noRecentIncidentsBody": "The public incident ledger is empty for this period.",
+    "slaLink": "Read the SLA",
+    "states": {
+      "operational": "operational",
+      "degraded": "degraded",
+      "outage": "outage"
     }
   },
   "sla": {

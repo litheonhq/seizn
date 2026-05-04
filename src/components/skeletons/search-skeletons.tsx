@@ -31,7 +31,7 @@ export const SearchResultSkeleton = memo(function SearchResultSkeleton({
         <Skeleton className="h-4 w-full" />
         <div className="flex gap-1">
           <Skeleton className="h-4 w-16" />
-          <Skeleton className="h-4 w-24 bg-yellow-100" />
+          <Skeleton className="h-4 w-24 bg-[var(--signal-pending-soft)]" />
           <Skeleton className="h-4 w-32" />
         </div>
         <Skeleton className="h-4 w-4/5" />

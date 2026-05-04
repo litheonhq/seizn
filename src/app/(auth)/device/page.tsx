@@ -1,15 +1,9 @@
 import { Suspense } from "react";
+import { AuthLoadingShell } from "@/components/auth/auth-shell";
 import DeviceForm from "./device-form";
 
 function DeviceLoading() {
-  return (
-    <div className="text-center">
-      <div className="w-10 h-10 bg-gradient-to-br from-violet-500 via-purple-500 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg mx-auto">
-        <span className="text-white font-bold text-lg">S</span>
-      </div>
-      <p className="text-gray-400 mt-4">Loading...</p>
-    </div>
-  );
+  return <AuthLoadingShell />;
 }
 
 export default function DeviceAuthPage() {

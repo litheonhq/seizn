@@ -148,14 +148,14 @@ export default function BudgetPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <RefreshCw className="w-8 h-8 animate-spin text-szn-text-3" />
+        <RefreshCw className="w-8 h-8 animate-spin text-[var(--ink-500)]" />
       </div>
     );
   }
 
   const spendPercent = budget?.percentUsed ?? 0;
   const progressColor =
-    spendPercent >= 100 ? 'bg-red-500' :
+    spendPercent >= 100 ? 'bg-[var(--signal-conflict)]' :
     spendPercent >= 80 ? 'bg-yellow-500' :
     'bg-green-500';
 
@@ -168,13 +168,13 @@ export default function BudgetPage() {
             <CreditCard className="w-6 h-6" />
             Budget Management
           </h1>
-          <p className="text-szn-text-2 text-sm mt-1">
+          <p className="text-[var(--ink-600)] text-sm mt-1">
             Monitor spending and configure budget limits
           </p>
         </div>
         <button
           onClick={fetchData}
-          className="px-4 py-2 bg-szn-surface text-szn-text-1 rounded-lg flex items-center gap-2 hover:bg-szn-surface-1"
+          className="px-4 py-2 bg-[var(--ink-50)] text-[var(--ink-900)] rounded-lg flex items-center gap-2 hover:bg-[var(--ink-50)]"
         >
           <RefreshCw className="w-4 h-4" />
           Refresh
@@ -182,7 +182,7 @@ export default function BudgetPage() {
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+        <div className="bg-[var(--signal-conflict-soft)] border border-[var(--signal-conflict)] text-[var(--signal-conflict-ink)] px-4 py-3 rounded-lg">
           {error}
         </div>
       )}
@@ -221,31 +221,31 @@ export default function BudgetPage() {
 
       {/* Budget Progress */}
       {budget?.budgetLimit && (
-        <div className="bg-szn-card rounded-xl border border-szn-border p-6">
+        <div className="bg-[var(--ink-0)] rounded-xl border border-[var(--ink-200)] p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold">Budget Usage</h2>
             <span className={`text-sm font-medium ${
-              spendPercent >= 100 ? 'text-red-600' :
-              spendPercent >= 80 ? 'text-yellow-600' :
-              'text-green-600'
+              spendPercent >= 100 ? 'text-[var(--signal-conflict-ink)]' :
+              spendPercent >= 80 ? 'text-[var(--signal-pending-ink)]' :
+              'text-[var(--signal-canon-ink)]'
             }`}>
               {spendPercent.toFixed(1)}% used
             </span>
           </div>
 
-          <div className="w-full bg-szn-surface rounded-full h-4 mb-4">
+          <div className="w-full bg-[var(--ink-50)] rounded-full h-4 mb-4">
             <div
               className={`h-4 rounded-full transition-all ${progressColor}`}
               style={{ width: `${Math.min(spendPercent, 100)}%` }}
             />
           </div>
 
-          <div className="flex justify-between text-sm text-szn-text-2">
+          <div className="flex justify-between text-sm text-[var(--ink-600)]">
             <span>$0</span>
             <span className="flex items-center gap-1">
               Alert threshold: {budget.alertThreshold}%
               {spendPercent >= budget.alertThreshold && (
-                <AlertTriangle className="w-4 h-4 text-yellow-500" />
+                <AlertTriangle className="w-4 h-4 text-[var(--signal-pending-ink)]" />
               )}
             </span>
             <span>${budget.budgetLimit?.toFixed(2)}</span>
@@ -255,7 +255,7 @@ export default function BudgetPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Budget Settings */}
-        <div className="bg-szn-card rounded-xl border border-szn-border p-6">
+        <div className="bg-[var(--ink-0)] rounded-xl border border-[var(--ink-200)] p-6">
           <h2 className="text-lg font-semibold flex items-center gap-2 mb-4">
             <Settings className="w-5 h-5" />
             Budget Settings
@@ -263,26 +263,26 @@ export default function BudgetPage() {
 
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-szn-text-2 mb-2">
+              <label className="block text-sm font-medium text-[var(--ink-600)] mb-2">
                 Monthly Budget Limit ($)
               </label>
               <div className="relative">
-                <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-szn-text-3" />
+                <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[var(--ink-500)]" />
                 <input
                   type="number"
                   value={budgetLimit}
                   onChange={(e) => setBudgetLimit(e.target.value)}
                   placeholder="Enter monthly limit"
-                  className="w-full pl-10 pr-4 py-2 border border-szn-border rounded-lg bg-szn-card focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-2 border border-[var(--ink-200)] rounded-lg bg-[var(--ink-0)] focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
-              <p className="text-xs text-szn-text-2 mt-1">
+              <p className="text-xs text-[var(--ink-600)] mt-1">
                 Leave empty to disable budget tracking
               </p>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-szn-text-2 mb-2">
+              <label className="block text-sm font-medium text-[var(--ink-600)] mb-2">
                 Alert Threshold (%)
               </label>
               <div className="relative">
@@ -294,13 +294,13 @@ export default function BudgetPage() {
                   onChange={(e) => setAlertThreshold(e.target.value)}
                   className="w-full"
                 />
-                <div className="flex justify-between text-xs text-szn-text-2 mt-1">
+                <div className="flex justify-between text-xs text-[var(--ink-600)] mt-1">
                   <span>50%</span>
                   <span className="font-medium">{alertThreshold}%</span>
                   <span>100%</span>
                 </div>
               </div>
-              <p className="text-xs text-szn-text-2 mt-1">
+              <p className="text-xs text-[var(--ink-600)] mt-1">
                 Receive alerts when spending reaches this percentage
               </p>
             </div>
@@ -321,15 +321,15 @@ export default function BudgetPage() {
         </div>
 
         {/* Cost Alerts */}
-        <div className="bg-szn-card rounded-xl border border-szn-border p-6">
+        <div className="bg-[var(--ink-0)] rounded-xl border border-[var(--ink-200)] p-6">
           <h2 className="text-lg font-semibold flex items-center gap-2 mb-4">
             <Bell className="w-5 h-5" />
             Cost Alerts
           </h2>
 
           {alerts.length === 0 ? (
-            <div className="text-center py-8 text-szn-text-2">
-              <Check className="w-12 h-12 mx-auto mb-2 text-green-500" />
+            <div className="text-center py-8 text-[var(--ink-600)]">
+              <Check className="w-12 h-12 mx-auto mb-2 text-[var(--signal-canon-ink)]" />
               <p>No cost alerts</p>
               <p className="text-sm">Your spending is within normal limits</p>
             </div>
@@ -345,7 +345,7 @@ export default function BudgetPage() {
 
       {/* Spending Breakdown */}
       {costs && (
-        <div className="bg-szn-card rounded-xl border border-szn-border p-6">
+        <div className="bg-[var(--ink-0)] rounded-xl border border-[var(--ink-200)] p-6">
           <h2 className="text-lg font-semibold flex items-center gap-2 mb-4">
             <Zap className="w-5 h-5" />
             Spending Breakdown by Model
@@ -354,32 +354,32 @@ export default function BudgetPage() {
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-szn-border">
-                  <th className="text-left py-3 px-4 text-sm font-medium text-szn-text-2">Model</th>
-                  <th className="text-left py-3 px-4 text-sm font-medium text-szn-text-2">Provider</th>
-                  <th className="text-right py-3 px-4 text-sm font-medium text-szn-text-2">Requests</th>
-                  <th className="text-right py-3 px-4 text-sm font-medium text-szn-text-2">Total Cost</th>
-                  <th className="text-right py-3 px-4 text-sm font-medium text-szn-text-2">Avg/Request</th>
-                  <th className="text-right py-3 px-4 text-sm font-medium text-szn-text-2">% of Total</th>
+                <tr className="border-b border-[var(--ink-200)]">
+                  <th className="text-left py-3 px-4 text-sm font-medium text-[var(--ink-600)]">Model</th>
+                  <th className="text-left py-3 px-4 text-sm font-medium text-[var(--ink-600)]">Provider</th>
+                  <th className="text-right py-3 px-4 text-sm font-medium text-[var(--ink-600)]">Requests</th>
+                  <th className="text-right py-3 px-4 text-sm font-medium text-[var(--ink-600)]">Total Cost</th>
+                  <th className="text-right py-3 px-4 text-sm font-medium text-[var(--ink-600)]">Avg/Request</th>
+                  <th className="text-right py-3 px-4 text-sm font-medium text-[var(--ink-600)]">% of Total</th>
                 </tr>
               </thead>
               <tbody>
                 {costs.byModel.map((model) => (
-                  <tr key={model.model} className="border-b border-szn-border hover:bg-szn-surface-1">
+                  <tr key={model.model} className="border-b border-[var(--ink-200)] hover:bg-[var(--ink-50)]">
                     <td className="py-3 px-4 text-sm font-medium">{model.model}</td>
-                    <td className="py-3 px-4 text-sm text-szn-text-2">{model.provider}</td>
+                    <td className="py-3 px-4 text-sm text-[var(--ink-600)]">{model.provider}</td>
                     <td className="py-3 px-4 text-sm text-right">{model.requestCount.toLocaleString()}</td>
                     <td className="py-3 px-4 text-sm text-right font-medium">${model.totalCost.toFixed(4)}</td>
-                    <td className="py-3 px-4 text-sm text-right text-szn-text-2">${model.avgCostPerRequest.toFixed(6)}</td>
+                    <td className="py-3 px-4 text-sm text-right text-[var(--ink-600)]">${model.avgCostPerRequest.toFixed(6)}</td>
                     <td className="py-3 px-4 text-sm text-right">
                       <div className="flex items-center justify-end gap-2">
-                        <div className="w-16 bg-szn-surface rounded-full h-2">
+                        <div className="w-16 bg-[var(--ink-50)] rounded-full h-2">
                           <div
                             className="bg-blue-500 h-2 rounded-full"
                             style={{ width: `${(model.totalCost / costs.totalCost) * 100}%` }}
                           />
                         </div>
-                        <span className="text-szn-text-2">
+                        <span className="text-[var(--ink-600)]">
                           {((model.totalCost / costs.totalCost) * 100).toFixed(1)}%
                         </span>
                       </div>
@@ -388,7 +388,7 @@ export default function BudgetPage() {
                 ))}
               </tbody>
               <tfoot>
-                <tr className="bg-szn-bg">
+                <tr className="bg-[var(--ink-50)]">
                   <td colSpan={2} className="py-3 px-4 text-sm font-semibold">Total</td>
                   <td className="py-3 px-4 text-sm text-right font-semibold">{costs.totalRequests.toLocaleString()}</td>
                   <td className="py-3 px-4 text-sm text-right font-semibold">${costs.totalCost.toFixed(4)}</td>
@@ -402,7 +402,7 @@ export default function BudgetPage() {
 
       {/* Daily Spending Chart */}
       {costs?.byDay && costs.byDay.length > 0 && (
-        <div className="bg-szn-card rounded-xl border border-szn-border p-6">
+        <div className="bg-[var(--ink-0)] rounded-xl border border-[var(--ink-200)] p-6">
           <h2 className="text-lg font-semibold flex items-center gap-2 mb-4">
             <TrendingUp className="w-5 h-5" />
             Daily Spending Trend
@@ -434,27 +434,27 @@ function BudgetCard({
   isWarning?: boolean;
 }) {
   return (
-    <div className={`bg-szn-card rounded-xl border p-4 ${
-      isWarning ? 'border-yellow-300 dark:border-yellow-600' : 'border-szn-border'
+    <div className={`bg-[var(--ink-0)] rounded-xl border p-4 ${
+      isWarning ? 'border-[var(--signal-pending)] dark:border-[var(--signal-pending)]' : 'border-[var(--ink-200)]'
     }`}>
       <div className="flex items-center justify-between mb-2">
-        <span className="text-sm text-szn-text-2">{title}</span>
-        <Icon className={`w-5 h-5 ${isWarning ? 'text-yellow-500' : 'text-szn-text-3'}`} />
+        <span className="text-sm text-[var(--ink-600)]">{title}</span>
+        <Icon className={`w-5 h-5 ${isWarning ? 'text-[var(--signal-pending-ink)]' : 'text-[var(--ink-500)]'}`} />
       </div>
       <div className="flex items-baseline gap-2">
-        <span className={`text-2xl font-bold ${isWarning ? 'text-yellow-600' : ''}`}>
+        <span className={`text-2xl font-bold ${isWarning ? 'text-[var(--signal-pending-ink)]' : ''}`}>
           {value}
         </span>
         {trend && (
           <span className={`flex items-center text-xs ${
-            trend.direction === 'up' ? 'text-red-500' : 'text-green-500'
+            trend.direction === 'up' ? 'text-[var(--signal-conflict-ink)]' : 'text-[var(--signal-canon-ink)]'
           }`}>
             {trend.direction === 'up' ? <ArrowUp className="w-3 h-3" /> : <ArrowDown className="w-3 h-3" />}
             {trend.percent.toFixed(1)}%
           </span>
         )}
       </div>
-      <p className="text-xs text-szn-text-2 mt-1">{subtitle}</p>
+      <p className="text-xs text-[var(--ink-600)] mt-1">{subtitle}</p>
     </div>
   );
 }
@@ -463,8 +463,8 @@ function BudgetCard({
 function AlertCard({ alert }: { alert: CostAlert }) {
   const severityColors = {
     info: 'bg-blue-50 border-blue-200 text-blue-700',
-    warning: 'bg-yellow-50 border-yellow-200 text-yellow-700',
-    critical: 'bg-red-50 border-red-200 text-red-700',
+    warning: 'bg-[var(--signal-pending-soft)] border-[var(--signal-pending)] text-[var(--signal-pending-ink)]',
+    critical: 'bg-[var(--signal-conflict-soft)] border-[var(--signal-conflict)] text-[var(--signal-conflict-ink)]',
   };
 
   const severityIcons = {
@@ -484,7 +484,7 @@ function AlertCard({ alert }: { alert: CostAlert }) {
           </p>
         </div>
         <span className={`text-xs px-2 py-1 rounded-full ${
-          alert.severity === 'critical' ? 'bg-red-200' :
+          alert.severity === 'critical' ? 'bg-[var(--signal-conflict-soft)]' :
           alert.severity === 'warning' ? 'bg-yellow-200' :
           'bg-blue-200'
         }`}>
@@ -512,13 +512,13 @@ function SpendingChart({ data }: { data: DailyCost[] }) {
               className="w-full bg-blue-500 rounded-t hover:bg-blue-600 transition-colors cursor-pointer group relative"
               style={{ height: `${Math.max(height, 2)}%` }}
             >
-              <div className="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+              <div className="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 bg-[var(--ink-800)] text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                 ${day.totalCost.toFixed(4)}
                 <br />
                 {day.requestCount} requests
               </div>
             </div>
-            <span className="text-xs text-szn-text-2 mt-2 transform -rotate-45 origin-top-left">
+            <span className="text-xs text-[var(--ink-600)] mt-2 transform -rotate-45 origin-top-left">
               {dayLabel}
             </span>
           </div>

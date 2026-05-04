@@ -188,7 +188,7 @@ export function DevToolsClient() {
       {/* Right Panel - Trace Detail */}
       <div className="flex-1 overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="flex-shrink-0 p-4 border-b border-gray-800 bg-gray-900">
+        <div className="flex-shrink-0 p-4 border-b border-gray-800 bg-[var(--ink-900)]">
           <div className="flex items-center gap-3">
             <TerminalIcon className="w-6 h-6 text-blue-400" />
             <div>
@@ -203,7 +203,7 @@ export function DevToolsClient() {
         {selectedTraceId && traceDetail ? (
           <>
             {/* Trace Summary Bar */}
-            <div className="flex-shrink-0 p-4 border-b border-gray-800 bg-gray-900/50">
+            <div className="flex-shrink-0 p-4 border-b border-gray-800 bg-[var(--ink-900)]/50">
               {/* Query */}
               <div className="mb-3">
                 <span className="text-xs text-gray-500 uppercase tracking-wider">{t("dashboard.devtoolsPage.query")}</span>
@@ -224,7 +224,7 @@ export function DevToolsClient() {
                       traceDetail.latency.total_ms > 500
                         ? "text-yellow-400"
                         : traceDetail.latency.total_ms > 1000
-                          ? "text-red-400"
+                          ? "text-[var(--signal-conflict-soft)]"
                           : "text-green-400"
                     }`}
                   >
@@ -251,22 +251,22 @@ export function DevToolsClient() {
                 {/* Error indicator */}
                 {traceDetail.status.has_error && (
                   <div className="flex items-center gap-2">
-                    <AlertIcon className="w-4 h-4 text-red-400" />
-                    <span className="text-red-400">{t("dashboard.devtoolsPage.error")}</span>
+                    <AlertIcon className="w-4 h-4 text-[var(--signal-conflict-soft)]" />
+                    <span className="text-[var(--signal-conflict-soft)]">{t("dashboard.devtoolsPage.error")}</span>
                   </div>
                 )}
 
                 {/* Config badges */}
                 <div className="flex items-center gap-2 ml-auto">
-                  <span className="px-2 py-1 text-xs bg-gray-800 text-gray-300 rounded">
+                  <span className="px-2 py-1 text-xs bg-[var(--ink-800)] text-gray-300 rounded">
                     {String(traceDetail.config.effective.searchType || "hybrid")}
                   </span>
                   {Boolean(traceDetail.config.effective.rerankEnabled) && (
-                    <span className="px-2 py-1 text-xs bg-purple-900/50 text-purple-300 rounded">
+                    <span className="px-2 py-1 text-xs bg-[var(--ink-900)]/50 text-[var(--ink-500)] rounded">
                       {t("dashboard.devtoolsPage.rerank")}
                     </span>
                   )}
-                  <span className="px-2 py-1 text-xs bg-gray-800 text-gray-300 rounded">
+                  <span className="px-2 py-1 text-xs bg-[var(--ink-800)] text-gray-300 rounded">
                     topK: {String(traceDetail.config.effective.topK || 10)}
                   </span>
                 </div>
@@ -274,7 +274,7 @@ export function DevToolsClient() {
 
               {/* Optimization Hints */}
               {traceDetail.config.analysis.optimization_hints.length > 0 && (
-                <div className="mt-3 p-2 bg-yellow-900/20 border border-yellow-800 rounded-lg">
+                <div className="mt-3 p-2 bg-yellow-900/20 border border-[var(--signal-pending)] rounded-lg">
                   <div className="text-xs text-yellow-400 font-medium mb-1">
                     {t("dashboard.devtoolsPage.optimizationHints")}
                   </div>
@@ -288,7 +288,7 @@ export function DevToolsClient() {
             </div>
 
             {/* Tabs */}
-            <div className="flex-shrink-0 border-b border-gray-800 bg-gray-900/50">
+            <div className="flex-shrink-0 border-b border-gray-800 bg-[var(--ink-900)]/50">
               <div className="flex">
                 {tabs.map((tab) => {
                   // Hide rerank tab if not applied
@@ -377,9 +377,9 @@ export function DevToolsClient() {
                   )}
 
                   {activeTab === "raw" && (
-                    <div className="bg-gray-900 rounded-lg border border-gray-800 p-4">
+                    <div className="bg-[var(--ink-900)] rounded-lg border border-gray-800 p-4">
                       <h3 className="text-lg font-semibold text-white mb-4">{t("dashboard.devtoolsPage.rawTraceData")}</h3>
-                      <pre className="text-xs text-gray-300 overflow-x-auto bg-gray-800 p-4 rounded-lg">
+                      <pre className="text-xs text-gray-300 overflow-x-auto bg-[var(--ink-800)] p-4 rounded-lg">
                         {JSON.stringify(traceDetail, null, 2)}
                       </pre>
                     </div>
