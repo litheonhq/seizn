@@ -7,6 +7,8 @@
     "check:policy": "node scripts/policy-consistency-check.mjs",
     "build": "node scripts/check-route-conflicts.js && next build",
     "analyze": "node scripts/analyze-build.mjs",
+    "analyze:budget": "npm run analyze && node scripts/check-bundle-budget.mjs",
+    "check:bundle-budget": "node scripts/check-bundle-budget.mjs",
     "start": "next start",
     "lint": "eslint . --ignore-pattern test-results --ignore-pattern playwright-report",
     "typecheck": "next typegen && tsc --noEmit -p tsconfig.typecheck.json",
