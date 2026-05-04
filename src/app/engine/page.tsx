@@ -51,31 +51,6 @@ export default function EngineHoldingPage() {
         </p>
       </header>
 
-      <section
-        style={{
-          marginBottom: 56,
-          padding: 24,
-          border: "1px solid rgba(255,255,255,0.08)",
-          borderRadius: 12,
-          background: "rgba(255,255,255,0.02)",
-        }}
-      >
-        <p
-          style={{
-            fontSize: 12,
-            letterSpacing: "0.16em",
-            textTransform: "uppercase",
-            color: "#ff9d4a",
-          }}
-        >
-          Status — W7+ phase
-        </p>
-        <p style={{ marginTop: 12, fontSize: 16, lineHeight: 1.7, color: "#d6d6e8" }}>
-          Engine surface 풀 launch 는 작가용 Author flagship traction 신호 보고
-          단계적으로 진행합니다. 지금은 OSS SDK·docs·MCP 서버 모두 운영 중.
-        </p>
-      </section>
-
       <section style={{ marginBottom: 56 }}>
         <h2
           style={{
@@ -86,33 +61,20 @@ export default function EngineHoldingPage() {
             marginBottom: 20,
           }}
         >
-          Coming with public launch
+          Available now
         </h2>
         <div style={{ display: "grid", gap: 16 }}>
           <SdkCard
             name="@seizn/sdk-js"
             description="OpenAPI-generated TypeScript client. REST·webhook·SSE 스트림 지원."
+            href="https://www.npmjs.com/package/@seizn/sdk-js"
           />
           <SdkCard
             name="@seizn/mcp"
             description="Model Context Protocol server. Claude·OpenAI tool use 호환."
-          />
-          <SdkCard
-            name="create-seizn-app"
-            description="Project scaffolder. NPC SDK 통합·메모리 schema·Vercel 배포 템플릿."
+            href="https://www.npmjs.com/package/@seizn/mcp"
           />
         </div>
-        <p
-          style={{
-            marginTop: 16,
-            fontSize: 13,
-            lineHeight: 1.6,
-            color: "#8b8ba0",
-          }}
-        >
-          npm 패키지·GitHub 공개는 W7+ 부활 트리거 충족 시 동시 발행됩니다. 현재 SDK
-          source·docs 는 Author flagship 운영 데이터로 dogfood 중.
-        </p>
       </section>
 
       <section style={{ marginBottom: 56 }}>
@@ -129,6 +91,7 @@ export default function EngineHoldingPage() {
         </h2>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
           <ResourceLink href="https://www.seizn.com/en/docs">API docs</ResourceLink>
+          <ResourceLink href="https://github.com/litheonhq/seizn">GitHub</ResourceLink>
           <ResourceLink href="https://www.seizn.com/en/docs/faq">FAQ</ResourceLink>
         </div>
       </section>
@@ -208,43 +171,41 @@ function SWaveMark() {
   );
 }
 
-function SdkCard({ name, description }: { name: string; description: string }) {
+function SdkCard({
+  name,
+  description,
+  href,
+}: {
+  name: string;
+  description: string;
+  href: string;
+}) {
   return (
-    <div
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
       style={{
         display: "block",
         padding: "20px 24px",
         border: "1px solid rgba(255,255,255,0.08)",
         borderRadius: 10,
         background: "rgba(255,255,255,0.02)",
+        textDecoration: "none",
       }}
     >
-      <div style={{ display: "flex", alignItems: "baseline", gap: 12, marginBottom: 6 }}>
-        <p
-          style={{
-            fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
-            fontSize: 14,
-            color: "#fafaff",
-          }}
-        >
-          {name}
-        </p>
-        <span
-          style={{
-            fontSize: 10,
-            letterSpacing: "0.14em",
-            textTransform: "uppercase",
-            color: "#ff9d4a",
-            border: "1px solid rgba(255,157,74,0.4)",
-            borderRadius: 999,
-            padding: "2px 8px",
-          }}
-        >
-          Pending
-        </span>
-      </div>
+      <p
+        style={{
+          fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
+          fontSize: 14,
+          color: "#fafaff",
+          marginBottom: 6,
+        }}
+      >
+        {name}
+      </p>
       <p style={{ fontSize: 14, lineHeight: 1.5, color: "#a8a8c0" }}>{description}</p>
-    </div>
+    </a>
   );
 }
 
