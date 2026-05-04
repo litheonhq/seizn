@@ -75,6 +75,11 @@ export default function EngineHoldingPage() {
             href="https://www.npmjs.com/package/@seizn/mcp"
           />
           <SdkCard
+            name="@seizn/cli"
+            description="Command-line interface. 메모리 저장·검색·내보내기 자동화."
+            href="https://www.npmjs.com/package/@seizn/cli"
+          />
+          <SdkCard
             name="create-seizn-app"
             description="Project scaffolder. NPC SDK 통합·메모리 schema·Vercel 배포 템플릿."
             href="https://www.npmjs.com/package/create-seizn-app"
