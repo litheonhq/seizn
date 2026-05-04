@@ -1,13 +1,13 @@
 import Link from "next/link";
 import type { Locale } from "@/i18n/config";
-import type { AuthorLandingCopy } from "./author-landing-copy";
+import { ENGINE_SURFACE_URL, type AuthorLandingCopy } from "./author-landing-copy";
 import { SeiznLockup } from "./brand-marks";
 
 export function SectionFooter({ copy, locale }: { copy: AuthorLandingCopy; locale: Locale }) {
   return (
     <footer style={{ background: "var(--ink-900)", color: "var(--ink-0)" }}>
       <div className="author-shell px-4 py-12 sm:px-6 md:py-16 lg:px-8 xl:px-0">
-        <div className="grid gap-9 border-b pb-10 md:grid-cols-[1.4fr_1fr_1fr_1fr]" style={{ borderColor: "oklch(1 0 0 / 0.08)" }}>
+        <div className="grid gap-9 border-b pb-10 md:grid-cols-[1.4fr_1fr_1fr_1fr_1fr]" style={{ borderColor: "oklch(1 0 0 / 0.08)" }}>
           <div>
             <Link href={`/${locale}`} className="inline-flex min-h-11 items-center">
               <SeiznLockup tone="light" />
@@ -45,6 +45,14 @@ export function SectionFooter({ copy, locale }: { copy: AuthorLandingCopy; local
               { label: copy.footer.links.changelog, href: `/${locale}/docs` },
             ]}
           />
+          <FooterColumn
+            title={copy.footer.developers}
+            links={[
+              { label: copy.footer.links.engine, href: ENGINE_SURFACE_URL, external: true },
+              { label: copy.footer.links.sdk, href: "https://www.npmjs.com/package/@seizn/sdk-js", external: true },
+              { label: copy.footer.links.mcp, href: "https://www.npmjs.com/package/@seizn/mcp", external: true },
+            ]}
+          />
         </div>
         <div className="flex flex-wrap items-center justify-between gap-3 pt-6">
           <span className="author-mono text-[11px]" style={{ color: "oklch(1 0 0 / 0.46)" }}>
@@ -64,7 +72,7 @@ function FooterColumn({
   links,
 }: {
   title: string;
-  links: Array<{ label: string; href: string }>;
+  links: Array<{ label: string; href: string; external?: boolean }>;
 }) {
   return (
     <div>
@@ -74,7 +82,12 @@ function FooterColumn({
       <ul className="grid gap-2">
         {links.map((link) => (
           <li key={`${title}-${link.label}`}>
-            <a href={link.href} className="text-sm" style={{ color: "oklch(1 0 0 / 0.78)" }}>
+            <a
+              href={link.href}
+              className="text-sm"
+              style={{ color: "oklch(1 0 0 / 0.78)" }}
+              {...(link.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+            >
               {link.label}
             </a>
           </li>
