@@ -216,19 +216,19 @@ export function DeleteMemoriesModal({
       />
 
       {/* Modal */}
-      <div className="relative bg-szn-card rounded-lg shadow-xl max-w-lg w-full mx-4 max-h-[90vh] overflow-auto border border-szn-border">
+      <div className="relative bg-[var(--ink-0)] rounded-lg shadow-xl max-w-lg w-full mx-4 max-h-[90vh] overflow-auto border border-[var(--ink-200)]">
         {/* Header */}
-        <div className="px-6 py-4 border-b border-szn-border bg-red-50 dark:bg-red-900/20">
+        <div className="px-6 py-4 border-b border-[var(--ink-200)] bg-[var(--signal-conflict-soft)] dark:bg-[var(--signal-conflict-ink)]/20">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-red-100 dark:bg-red-900/50 flex items-center justify-center">
-                <TrashIcon className="w-5 h-5 text-red-600 dark:text-red-400" />
+              <div className="w-10 h-10 rounded-xl bg-[var(--signal-conflict-soft)] dark:bg-[var(--signal-conflict-ink)]/50 flex items-center justify-center">
+                <TrashIcon className="w-5 h-5 text-[var(--signal-conflict-ink)] dark:text-[var(--signal-conflict-soft)]" />
               </div>
               <div>
-                <h2 className="text-lg font-semibold text-red-700 dark:text-red-300">
+                <h2 className="text-lg font-semibold text-[var(--signal-conflict-ink)] dark:text-[var(--signal-conflict-soft)]">
                   Delete All Memories
                 </h2>
-                <p className="text-sm text-red-600 dark:text-red-400">
+                <p className="text-sm text-[var(--signal-conflict-ink)] dark:text-[var(--signal-conflict-soft)]">
                   {namespace ? `Namespace: ${namespace}` : "All namespaces"}
                 </p>
               </div>
@@ -236,7 +236,7 @@ export function DeleteMemoriesModal({
             {step !== "deleting" && (
               <button
                 onClick={onClose}
-                className="text-red-400 hover:text-red-600 dark:hover:text-red-300"
+                className="text-[var(--signal-conflict-soft)] hover:text-[var(--signal-conflict-ink)] dark:hover:text-[var(--signal-conflict-soft)]"
               >
                 <CloseIcon className="w-6 h-6" />
               </button>
@@ -250,14 +250,14 @@ export function DeleteMemoriesModal({
           {step === "confirm" && (
             <div className="space-y-6">
               {/* Warning Banner */}
-              <div className="p-4 rounded-xl bg-red-50 dark:bg-red-900/20 border-2 border-red-200 dark:border-red-800">
+              <div className="p-4 rounded-xl bg-[var(--signal-conflict-soft)] dark:bg-[var(--signal-conflict-ink)]/20 border-2 border-[var(--signal-conflict)] dark:border-[var(--signal-conflict)]">
                 <div className="flex items-start gap-3">
-                  <WarningIcon className="w-6 h-6 text-red-600 dark:text-red-400 flex-shrink-0" />
+                  <WarningIcon className="w-6 h-6 text-[var(--signal-conflict-ink)] dark:text-[var(--signal-conflict-soft)] flex-shrink-0" />
                   <div>
-                    <p className="font-semibold text-red-800 dark:text-red-300">
+                    <p className="font-semibold text-[var(--signal-conflict-ink)] dark:text-[var(--signal-conflict-soft)]">
                       This action cannot be undone
                     </p>
-                    <p className="text-sm text-red-700 dark:text-red-400 mt-1">
+                    <p className="text-sm text-[var(--signal-conflict-ink)] dark:text-[var(--signal-conflict-soft)] mt-1">
                       All memories{namespace ? ` in namespace "${namespace}"` : ""} will be
                       permanently deleted. This includes all associated embeddings, metadata,
                       and traces.
@@ -270,20 +270,20 @@ export function DeleteMemoriesModal({
               {loading ? (
                 <div className="py-8 text-center">
                   <Spinner className="w-8 h-8 text-gray-400 mx-auto" />
-                  <p className="text-sm text-szn-text-2 mt-2">
+                  <p className="text-sm text-[var(--ink-600)] mt-2">
                     Loading memory statistics...
                   </p>
                 </div>
               ) : stats ? (
-                <div className="p-4 rounded-xl bg-szn-surface border border-szn-border">
-                  <h3 className="font-medium text-szn-text-1 mb-3">
+                <div className="p-4 rounded-xl bg-[var(--ink-50)] border border-[var(--ink-200)]">
+                  <h3 className="font-medium text-[var(--ink-900)] mb-3">
                     Memories to be deleted
                   </h3>
                   <div className="text-center py-4">
-                    <p className="text-4xl font-bold text-red-600 dark:text-red-400">
+                    <p className="text-4xl font-bold text-[var(--signal-conflict-ink)] dark:text-[var(--signal-conflict-soft)]">
                       {totalCount.toLocaleString()}
                     </p>
-                    <p className="text-sm text-szn-text-2 mt-1">
+                    <p className="text-sm text-[var(--ink-600)] mt-1">
                       total memories
                     </p>
                   </div>
@@ -294,12 +294,12 @@ export function DeleteMemoriesModal({
                       {stats.namespaces.map((ns) => (
                         <div
                           key={ns.namespace}
-                          className="flex items-center justify-between text-sm p-2 rounded-lg bg-szn-card"
+                          className="flex items-center justify-between text-sm p-2 rounded-lg bg-[var(--ink-0)]"
                         >
-                          <span className="text-szn-text-2 font-mono">
+                          <span className="text-[var(--ink-600)] font-mono">
                             {ns.namespace || "default"}
                           </span>
-                          <span className="text-szn-text-2">
+                          <span className="text-[var(--ink-600)]">
                             {ns.count.toLocaleString()} ({formatBytes(ns.size_bytes)})
                           </span>
                         </div>
@@ -312,7 +312,7 @@ export function DeleteMemoriesModal({
               <div className="flex gap-3">
                 <button
                   onClick={onClose}
-                  className="flex-1 py-3 rounded-xl border border-szn-border text-szn-text-2 font-medium hover:bg-szn-surface-1 transition-colors"
+                  className="flex-1 py-3 rounded-xl border border-[var(--ink-200)] text-[var(--ink-600)] font-medium hover:bg-[var(--ink-50)] transition-colors"
                 >
                   Cancel
                 </button>
@@ -330,9 +330,9 @@ export function DeleteMemoriesModal({
           {/* Step: Typing Confirmation */}
           {step === "typing" && (
             <div className="space-y-6">
-              <p className="text-szn-text-2">
+              <p className="text-[var(--ink-600)]">
                 To confirm deletion, please type{" "}
-                <code className="px-2 py-1 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 rounded font-mono font-bold">
+                <code className="px-2 py-1 bg-[var(--signal-conflict-soft)] dark:bg-[var(--signal-conflict-ink)]/30 text-[var(--signal-conflict-ink)] dark:text-[var(--signal-conflict-soft)] rounded font-mono font-bold">
                   {CONFIRM_PHRASE}
                 </code>{" "}
                 below.
@@ -346,22 +346,22 @@ export function DeleteMemoriesModal({
                   placeholder={`Type "${CONFIRM_PHRASE}" to confirm`}
                   className={`w-full px-4 py-3 rounded-xl border-2 font-mono text-center text-lg tracking-wider transition-colors ${
                     confirmText === ""
-                      ? "border-szn-border"
+                      ? "border-[var(--ink-200)]"
                       : isConfirmValid
-                      ? "border-green-500 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300"
-                      : "border-red-300 dark:border-red-700 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300"
-                  } bg-szn-card focus:outline-none focus:ring-2 focus:ring-red-500`}
+                      ? "border-[var(--signal-canon)] bg-[var(--signal-canon-soft)] dark:bg-[var(--signal-canon-ink)]/20 text-[var(--signal-canon-ink)] dark:text-[var(--signal-canon-soft)]"
+                      : "border-[var(--signal-conflict)] dark:border-[var(--signal-conflict)] bg-[var(--signal-conflict-soft)] dark:bg-[var(--signal-conflict-ink)]/20 text-[var(--signal-conflict-ink)] dark:text-[var(--signal-conflict-soft)]"
+                  } bg-[var(--ink-0)] focus:outline-none focus:ring-2 focus:ring-red-500`}
                   autoFocus
                 />
                 {confirmText !== "" && !isConfirmValid && (
-                  <p className="text-sm text-red-600 dark:text-red-400 mt-2 text-center">
+                  <p className="text-sm text-[var(--signal-conflict-ink)] dark:text-[var(--signal-conflict-soft)] mt-2 text-center">
                     Please type exactly: {CONFIRM_PHRASE}
                   </p>
                 )}
               </div>
 
-              <div className="p-4 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800">
-                <p className="text-sm text-amber-700 dark:text-amber-300">
+              <div className="p-4 rounded-xl bg-[var(--signal-pending-soft)] dark:bg-[var(--signal-pending-ink)]/20 border border-[var(--signal-pending)] dark:border-[var(--signal-pending)]">
+                <p className="text-sm text-[var(--signal-pending-ink)] dark:text-[var(--signal-pending-soft)]">
                   <strong>Final warning:</strong> This will permanently delete{" "}
                   <strong>{totalCount.toLocaleString()}</strong> memories. This action is
                   irreversible.
@@ -371,7 +371,7 @@ export function DeleteMemoriesModal({
               <div className="flex gap-3">
                 <button
                   onClick={() => setStep("confirm")}
-                  className="flex-1 py-3 rounded-xl border border-szn-border text-szn-text-2 font-medium hover:bg-szn-surface-1 transition-colors"
+                  className="flex-1 py-3 rounded-xl border border-[var(--ink-200)] text-[var(--ink-600)] font-medium hover:bg-[var(--ink-50)] transition-colors"
                 >
                   Back
                 </button>
@@ -389,30 +389,30 @@ export function DeleteMemoriesModal({
           {/* Step: Deleting */}
           {step === "deleting" && (
             <div className="py-8 text-center space-y-6">
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-red-100 dark:bg-red-900/30">
-                <Spinner className="w-8 h-8 text-red-600 dark:text-red-400" />
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[var(--signal-conflict-soft)] dark:bg-[var(--signal-conflict-ink)]/30">
+                <Spinner className="w-8 h-8 text-[var(--signal-conflict-ink)] dark:text-[var(--signal-conflict-soft)]" />
               </div>
               <div>
-                <h3 className="text-lg font-medium text-szn-text-1 mb-2">
+                <h3 className="text-lg font-medium text-[var(--ink-900)] mb-2">
                   Deleting Memories
                 </h3>
-                <p className="text-szn-text-2">
+                <p className="text-[var(--ink-600)]">
                   Please wait while we delete your memories...
                 </p>
               </div>
 
               {/* Progress Bar */}
               <div className="space-y-2">
-                <div className="h-2 bg-szn-surface rounded-full overflow-hidden">
+                <div className="h-2 bg-[var(--ink-50)] rounded-full overflow-hidden">
                   <div
                     className="h-full bg-gradient-to-r from-red-500 to-rose-500 rounded-full transition-all duration-500"
                     style={{ width: `${progress}%` }}
                   />
                 </div>
-                <p className="text-sm text-szn-text-2">{progress}% complete</p>
+                <p className="text-sm text-[var(--ink-600)]">{progress}% complete</p>
               </div>
 
-              <p className="text-xs text-szn-text-3">
+              <p className="text-xs text-[var(--ink-500)]">
                 Do not close this window until the deletion is complete
               </p>
             </div>
@@ -421,30 +421,30 @@ export function DeleteMemoriesModal({
           {/* Step: Complete */}
           {step === "complete" && result && (
             <div className="py-8 text-center space-y-6">
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-100 dark:bg-green-900/30">
-                <CheckIcon className="w-8 h-8 text-green-600 dark:text-green-400" />
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[var(--signal-canon-soft)] dark:bg-[var(--signal-canon-ink)]/30">
+                <CheckIcon className="w-8 h-8 text-[var(--signal-canon-ink)] dark:text-[var(--signal-canon-soft)]" />
               </div>
               <div>
-                <h3 className="text-lg font-medium text-szn-text-1 mb-2">
+                <h3 className="text-lg font-medium text-[var(--ink-900)] mb-2">
                   Memories Deleted
                 </h3>
-                <p className="text-szn-text-2">
+                <p className="text-[var(--ink-600)]">
                   All memories have been permanently removed.
                 </p>
               </div>
 
               {/* Summary */}
-              <div className="p-4 rounded-xl bg-szn-surface border border-szn-border">
+              <div className="p-4 rounded-xl bg-[var(--ink-50)] border border-[var(--ink-200)]">
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
-                    <p className="text-szn-text-2">Memories Deleted</p>
-                    <p className="text-2xl font-bold text-szn-text-1">
+                    <p className="text-[var(--ink-600)]">Memories Deleted</p>
+                    <p className="text-2xl font-bold text-[var(--ink-900)]">
                       {result.deleted_count.toLocaleString()}
                     </p>
                   </div>
                   <div>
-                    <p className="text-szn-text-2">Duration</p>
-                    <p className="text-2xl font-bold text-szn-text-1">
+                    <p className="text-[var(--ink-600)]">Duration</p>
+                    <p className="text-2xl font-bold text-[var(--ink-900)]">
                       {(result.duration_ms / 1000).toFixed(1)}s
                     </p>
                   </div>
@@ -463,14 +463,14 @@ export function DeleteMemoriesModal({
           {/* Step: Error */}
           {step === "error" && (
             <div className="py-8 text-center space-y-6">
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-red-100 dark:bg-red-900/30">
-                <ErrorIcon className="w-8 h-8 text-red-600 dark:text-red-400" />
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[var(--signal-conflict-soft)] dark:bg-[var(--signal-conflict-ink)]/30">
+                <ErrorIcon className="w-8 h-8 text-[var(--signal-conflict-ink)] dark:text-[var(--signal-conflict-soft)]" />
               </div>
               <div>
-                <h3 className="text-lg font-medium text-szn-text-1 mb-2">
+                <h3 className="text-lg font-medium text-[var(--ink-900)] mb-2">
                   Deletion Failed
                 </h3>
-                <p className="text-red-600 dark:text-red-400">{error}</p>
+                <p className="text-[var(--signal-conflict-ink)] dark:text-[var(--signal-conflict-soft)]">{error}</p>
               </div>
 
               <div className="flex gap-3">
@@ -479,7 +479,7 @@ export function DeleteMemoriesModal({
                     setConfirmText("");
                     setStep("confirm");
                   }}
-                  className="flex-1 py-3 rounded-xl border border-szn-border text-szn-text-2 font-medium hover:bg-szn-surface-1 transition-colors"
+                  className="flex-1 py-3 rounded-xl border border-[var(--ink-200)] text-[var(--ink-600)] font-medium hover:bg-[var(--ink-50)] transition-colors"
                 >
                   Try Again
                 </button>
@@ -495,8 +495,8 @@ export function DeleteMemoriesModal({
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 border-t border-szn-border bg-szn-bg rounded-b-2xl">
-          <p className="text-xs text-szn-text-2 text-center">
+        <div className="px-6 py-4 border-t border-[var(--ink-200)] bg-[var(--ink-50)] rounded-b-2xl">
+          <p className="text-xs text-[var(--ink-600)] text-center">
             Memory deletion is processed through our GDPR-compliant RTBF (Right to Be Forgotten)
             system.
           </p>

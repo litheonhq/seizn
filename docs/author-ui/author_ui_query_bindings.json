@@ -1,0 +1,1098 @@
+{
+  "version": "v1",
+  "generated_at": "2026-05-02",
+  "applies_to": "Seizn Author UI 컴포넌트 ↔ 데이터 fetch 계약 (TanStack Query 호환 사양)",
+  "depends_on": [
+    "author_ui_data_contracts.json",
+    "author_ui_screen_specs.md",
+    "author_ui_component_inventory.md",
+    "author_ui_empty_error_states.md"
+  ],
+  "binding_principle": "각 컴포넌트가 어떤 query key를 구독·어떤 mutation을 발신·어떤 WebSocket event에 반응하는지 명시. Codex가 추측 없이 frontend state 층 구현 가능.",
+
+  "library_assumption": {
+    "query_client": "TanStack Query v5 (또는 동등 — SWR fallback OK)",
+    "websocket_client": "Native WebSocket + 자체 hub or socket.io",
+    "form_state": "React Hook Form (server validation 정합)",
+    "routing": "Next.js App Router (route segment cache + URL filter sync)"
+  },
+
+  "query_key_convention": {
+    "format": "[scope, resource, ...identifiers, filters?]",
+    "examples": [
+      "['projects']",
+      "['project', projectId]",
+      "['imports', projectId, filters]",
+      "['candidates', projectId, filters, sort, page]",
+      "['candidate', projectId, candidateId]",
+      "['characters', projectId, scope?]",
+      "['character', projectId, characterId]",
+      "['graph', projectId, { time_state, filters }]",
+      "['timeline', projectId, filters]",
+      "['conflicts', projectId, filters]",
+      "['conflict', projectId, conflictId]",
+      "['simulation', projectId, simulationId]",
+      "['settings', projectId]",
+      "['account', 'byok']",
+      "['account', 'usage']",
+      "['account', 'subscription']",
+      "['sync', 'status']"
+    ],
+    "notes": [
+      "filters·sort·page는 객체로 묶어 마지막 segment에 둠. URL state와 1:1 동기.",
+      "단일 리소스는 단수 (project·candidate·character·conflict·simulation), 컬렉션은 복수.",
+      "globally-scoped 리소스는 'account' 또는 'sync' prefix."
+    ]
+  },
+
+  "global_subscriptions": {
+    "websocket": {
+      "namespace": "/projects/{id}/ws",
+      "lifecycle": "프로젝트 진입 시 connect·이탈 시 disconnect·연결 끊기면 5초 backoff 재연결",
+      "topics_per_screen": {
+        "any_project_screen": [
+          "sync.status",
+          "import.parsed",
+          "import.failed",
+          "candidate.added",
+          "conflict.detected"
+        ],
+        "review_queue": [
+          "candidate.added",
+          "candidate.status_changed",
+          "conflict.detected"
+        ],
+        "inbox": [
+          "import.parsed",
+          "import.failed",
+          "candidate.added"
+        ],
+        "conflicts": [
+          "conflict.detected",
+          "candidate.status_changed"
+        ],
+        "simulate": [
+          "simulation.progress",
+          "simulation.complete"
+        ],
+        "graph": [
+          "candidate.status_changed"
+        ],
+        "timeline": [
+          "candidate.status_changed"
+        ],
+        "character_detail": [
+          "candidate.status_changed"
+        ]
+      },
+      "global_topics": [
+        "sync.status"
+      ]
+    },
+    "polling_fallback": {
+      "rule": "WebSocket 연결 실패·offline 모드 시 polling 으로 자동 fallback.",
+      "intervals": {
+        "imports": "10s (parsing/extracting 진행 중인 항목 ≥ 1 일 때만)",
+        "simulation_active": "3s (status='running' 동안만)",
+        "sync_status": "30s",
+        "candidates_review_queue": "60s (작업 흐름이 길어서 짧지 않게)",
+        "conflicts": "60s"
+      }
+    }
+  },
+
+  "screens": {
+
+    "dashboard": {
+      "route": "/dashboard",
+      "queries": [
+        {
+          "name": "useProjects",
+          "key": "['projects']",
+          "endpoint": "GET /api/projects",
+          "stale_time_ms": 30000,
+          "gc_time_ms": 300000,
+          "refetch_on_window_focus": true,
+          "refetch_on_mount": true,
+          "consumed_by": [
+            "<ProjectGrid>",
+            "<TopNav projectSwitcher>",
+            "<ActivityFeed>"
+          ],
+          "select_transformations": [
+            "ProjectCard 표시용: { id, name, scope, entity_count, candidate_count, conflict_count, last_updated, phase, trial_status }"
+          ],
+          "loading_state": "<LoadingState skeleton='project-grid' count=6 />",
+          "empty_state": "<EmptyState variant='dashboard-first' />",
+          "error_state": "<ErrorState variant='dashboard-load-fail' retry={refetch} />"
+        }
+      ],
+      "mutations": [
+        {
+          "name": "useCreateProject",
+          "endpoint": "POST /api/projects",
+          "trigger_components": ["<NewProjectButton>", "<NewProjectModal>"],
+          "optimistic": false,
+          "on_success": {
+            "invalidate": ["['projects']"],
+            "navigate_to": "/project/{response.project_id}/inbox",
+            "toast": "프로젝트 생성 완료"
+          },
+          "on_error": {
+            "toast_variant": "error",
+            "toast_message": "프로젝트 생성 실패: {error.message}"
+          }
+        }
+      ]
+    },
+
+    "inbox": {
+      "route": "/project/{projectId}/inbox",
+      "queries": [
+        {
+          "name": "useImports",
+          "key": "['imports', projectId]",
+          "endpoint": "GET /api/projects/{id}/imports",
+          "stale_time_ms": 5000,
+          "gc_time_ms": 60000,
+          "refetch_on_window_focus": true,
+          "refetch_interval_ms_active": 10000,
+          "refetch_interval_active_when": "imports.some(i => i.parse_status === 'parsing' || i.extract_status === 'extracting')",
+          "consumed_by": [
+            "<DocumentCard>",
+            "<InboxSummary>",
+            "<SidebarNav badge='inbox-pending'>"
+          ],
+          "select_transformations": [
+            "summary 카드: imports.summary",
+            "DocumentCard list: imports.imports[]"
+          ],
+          "loading_state": "<LoadingState skeleton='document-card-list' count=3 />",
+          "empty_state": "<EmptyState variant='inbox-first' />",
+          "error_state": "<ErrorState variant='inbox-load-fail' />",
+          "partial_state": {
+            "trigger": "imports.some(i => i.parse_status === 'failed' || i.extract_status === 'failed')",
+            "component": "<PartialImportBanner failedCount={...} />"
+          }
+        }
+      ],
+      "mutations": [
+        {
+          "name": "useUploadImport",
+          "endpoint": "POST /api/projects/{id}/imports",
+          "trigger_components": ["<DropZone>", "<FilePicker>"],
+          "optimistic": true,
+          "optimistic_patch": {
+            "target_query": "['imports', projectId]",
+            "patch": "imports.push({ id: tempId, file_name, file_size, file_type, parse_status: 'queued', extract_status: 'queued', upload_at: now, parse_progress: 0, extract_progress: 0, candidate_count: 0, storage_key: null, parsed_text_preview: null, parser_version: null, source_role, a_or_d_mode })"
+          },
+          "on_success": {
+            "invalidate": ["['imports', projectId]"],
+            "replace_temp_id_with": "response.import_id",
+            "toast": null
+          },
+          "on_error": {
+            "rollback": true,
+            "toast_variant": "error",
+            "toast_message": "{file_name} 업로드 실패: {error.message}"
+          }
+        },
+        {
+          "name": "useRetryImport",
+          "endpoint": "POST /api/projects/{id}/imports/{import_id}/retry",
+          "trigger_components": ["<DocumentCard.RetryButton>"],
+          "optimistic": true,
+          "optimistic_patch": {
+            "target_query": "['imports', projectId]",
+            "patch": "imports.find(i => i.id === import_id).parse_status = 'queued'; .extract_status = 'queued'; .error_message = null"
+          },
+          "on_success": {
+            "invalidate": ["['imports', projectId]"]
+          },
+          "on_error": {
+            "rollback": true,
+            "toast_variant": "error"
+          }
+        },
+        {
+          "name": "useDeleteImport",
+          "endpoint": "DELETE /api/projects/{id}/imports/{import_id}",
+          "trigger_components": ["<DocumentCard.DeleteButton>", "<BulkActions.DeleteAll>"],
+          "confirmation_modal": "<Modal title='문서 삭제' body='이 문서와 추출된 후보가 함께 삭제됩니다.' />",
+          "optimistic": true,
+          "optimistic_patch": {
+            "target_query": "['imports', projectId]",
+            "patch": "imports = imports.filter(i => i.id !== import_id)"
+          },
+          "on_success": {
+            "invalidate": [
+              "['imports', projectId]",
+              "['candidates', projectId]"
+            ],
+            "toast": "문서 삭제 완료"
+          },
+          "on_error": {
+            "rollback": true,
+            "toast_variant": "error"
+          }
+        },
+        {
+          "name": "useGenerateBacklog",
+          "endpoint": "POST /api/projects/{id}/characters/{character_id}/backlog",
+          "trigger_components": ["<CharacterBacklogButton>", "<CharacterCard>"],
+          "optimistic": false,
+          "request": {
+            "categories": ["좋아하는 것", "싫어하는 것", "작은 보상", "작은 짜증"],
+            "items_per_category": 5
+          },
+          "on_success": {
+            "invalidate": [
+              "['character', projectId, characterId]",
+              "['characters', projectId]",
+              "['candidates', projectId]",
+              "['conflicts', projectId]"
+            ],
+            "patch_preview": "inline backlog candidates preview from response.candidates",
+            "toast": "Backlog generated"
+          },
+          "on_error": {
+            "toast_variant": "error"
+          }
+        }
+      ],
+      "websocket_handlers": [
+        {
+          "event": "import.parsed",
+          "action": "patch",
+          "target_query": "['imports', projectId]",
+          "patch_logic": "imports.find(i => i.id === payload.import_id) = { ...item, parse_status: 'parsed', storage_key: payload.storage_key, parsed_text_preview: payload.parsed_text_preview, parser_version: payload.parser_version, candidate_count: payload.candidate_count }",
+          "side_effects": [
+            "invalidate ['candidates', projectId] (새 후보가 검수 큐에 추가됨)",
+            "toast variant='info' '{file_name} 파싱 완료·{candidate_count}건 검수 대기'"
+          ]
+        },
+        {
+          "event": "import.failed",
+          "action": "patch",
+          "target_query": "['imports', projectId]",
+          "patch_logic": "imports.find(i => i.id === payload.import_id).parse_status = 'failed'; .error_message = payload.error",
+          "side_effects": [
+            "toast variant='error' '{file_name} 파싱 실패'"
+          ]
+        },
+        {
+          "event": "candidate.added",
+          "action": "patch",
+          "target_query": "['imports', projectId]",
+          "patch_logic": "imports.find(i => i.id === payload.source_id).candidate_count += 1; imports.find(i => i.id === payload.source_id).extract_status = 'extracted' if all done"
+        }
+      ]
+    },
+
+    "review_queue": {
+      "route": "/project/{projectId}/review",
+      "queries": [
+        {
+          "name": "useCandidates",
+          "key": "['candidates', projectId, filters, sort, page]",
+          "endpoint": "GET /api/projects/{id}/candidates",
+          "stale_time_ms": 0,
+          "gc_time_ms": 60000,
+          "refetch_on_window_focus": false,
+          "refetch_on_mount": "always",
+          "pagination_mode": "infinite",
+          "page_size": 50,
+          "prefetch_next_page_when": "viewport reaches 70% of current page",
+          "url_state_sync": "filters·sort·page → search params",
+          "consumed_by": [
+            "<CandidateCard>",
+            "<ReviewProgressMeter>",
+            "<FilterPanel>"
+          ],
+          "select_transformations": [
+            "단일 카드 모드: candidates[currentIndex]",
+            "그리드 모드: candidates[]"
+          ],
+          "loading_state": "<LoadingState skeleton='candidate-card' count=3 />",
+          "empty_state": {
+            "no_results_with_filter": "<EmptyState variant='review-no-filter-match' clearFilters={...} />",
+            "no_pending": "<EmptyState variant='review-all-done' />"
+          },
+          "error_state": "<ErrorState variant='review-sync-fail' retry={refetch} offlineMode={true} />"
+        },
+        {
+          "name": "useCandidateDetail",
+          "key": "['candidate', projectId, candidateId]",
+          "endpoint": "GET /api/projects/{id}/candidates/{candidate_id} (or use candidates list cache)",
+          "consumed_by": ["<CandidateCard.ExpandedView>", "<SourcePreviewPanel>"],
+          "stale_time_ms": 30000,
+          "lazy": "Space 키로 expand 시에만 fetch (또는 list cache에서 구함)"
+        }
+      ],
+      "mutations": [
+        {
+          "name": "useDecideCandidate",
+          "endpoint": "POST /api/projects/{id}/candidates/{candidate_id}/decide",
+          "trigger_components": [
+            "<ApproveButton>",
+            "<RejectButton>",
+            "<RetireButton>",
+            "<PastOnlyButton>",
+            "<MergeButton>",
+            "<SplitButton>",
+            "<AssignKnowledgeButton>",
+            "<AuthorOnlyButton>",
+            "<ScopeChangeButton>",
+            "<EscalateConflictButton>"
+          ],
+          "shortcut_keys": ["A", "R", "T", "P", "M", "S", "K", "O", "C", "X"],
+          "optimistic": true,
+          "optimistic_patch": {
+            "target_query": "['candidates', projectId, ...]",
+            "patch": "candidates = candidates.filter(c => c.id !== candidate_id) (해당 카드를 큐에서 제거)·또는 status 변경",
+            "advance_index": "currentIndex stays·다음 카드 자동 표시"
+          },
+          "on_success": {
+            "invalidate": [
+              "['candidates', projectId]",
+              "['candidate', projectId, candidate_id]"
+            ],
+            "conditional_invalidate": {
+              "if_status_canon_and_type_character": ["['characters', projectId]", "['character', projectId, candidate.related_existing[0].entity_id]"],
+              "if_status_canon_and_type_relationship": ["['graph', projectId]"],
+              "if_status_canon_and_type_event": ["['timeline', projectId]"],
+              "if_action_escalate": ["['conflicts', projectId]"]
+            },
+            "toast": "검수 완료 ({decision_label})",
+            "audit_log": "frontend telemetry: 작가 키 입력 시각·결정 로그"
+          },
+          "on_error": {
+            "rollback": true,
+            "toast_variant": "error",
+            "toast_message": "검수 실패: {error.message}"
+          }
+        },
+        {
+          "name": "useBatchDecide",
+          "endpoint": "POST /api/projects/{id}/candidates/batch_decide",
+          "trigger_components": ["<BulkActionsBar>"],
+          "confirmation_modal": "<Modal title='일괄 검수' body='{count}건 일괄 처리.' />",
+          "optimistic": true,
+          "optimistic_patch": {
+            "target_query": "['candidates', projectId, ...]",
+            "patch": "candidates = candidates.filter(c => !ids.includes(c.id))"
+          },
+          "on_success": {
+            "invalidate": [
+              "['candidates', projectId]",
+              "['characters', projectId]"
+            ],
+            "toast": "{count}건 일괄 처리 완료"
+          },
+          "on_error": {
+            "rollback": true,
+            "toast_variant": "error"
+          }
+        }
+      ],
+      "websocket_handlers": [
+        {
+          "event": "candidate.added",
+          "action": "patch",
+          "target_query": "['candidates', projectId, ...]",
+          "patch_logic": "list 첫 페이지에 prepend (필터 통과 시)·아니면 stale flag",
+          "ui_signal": "<NewCandidatesAvailable count={N} onClickRefresh={refetch} />"
+        },
+        {
+          "event": "candidate.status_changed",
+          "action": "patch",
+          "target_query": "['candidates', projectId, ...]",
+          "patch_logic": "다른 작가/AI가 변경 시: 해당 후보 status 갱신·필요 시 큐에서 제거"
+        },
+        {
+          "event": "conflict.detected",
+          "action": "invalidate",
+          "target_query": "['conflicts', projectId]",
+          "ui_signal": "<SidebarNav.Conflicts badge++ />, <Toast variant='warning' '새 충돌 감지' />"
+        }
+      ]
+    },
+
+    "characters_list": {
+      "route": "/project/{projectId}/characters",
+      "queries": [
+        {
+          "name": "useCharacters",
+          "key": "['characters', projectId, scope]",
+          "endpoint": "GET /api/projects/{id}/characters",
+          "stale_time_ms": 60000,
+          "gc_time_ms": 600000,
+          "consumed_by": ["<CharacterCardGrid>", "<CharacterFilterPanel>"],
+          "loading_state": "<LoadingState skeleton='character-card' count=6 />",
+          "empty_state": "<EmptyState variant='characters-empty' interviewFallback={true} />",
+          "error_state": "<ErrorState variant='characters-load-fail' />"
+        }
+      ]
+    },
+
+    "character_detail": {
+      "route": "/project/{projectId}/characters/{characterId}",
+      "queries": [
+        {
+          "name": "useCharacter",
+          "key": "['character', projectId, characterId]",
+          "endpoint": "GET /api/projects/{id}/characters/{character_id}",
+          "stale_time_ms": 30000,
+          "gc_time_ms": 300000,
+          "consumed_by": [
+            "<CharacterPersonaPanel>",
+            "<KnowledgeStatePanels>",
+            "<RelationshipMiniGraph>",
+            "<RecentMemoriesPanel>",
+            "<VoiceSamplesPanel>",
+            "<CharacterArcTimeline>"
+          ],
+          "select_transformations": [
+            "page tab '정보': character.persona·voice·appearance·background",
+            "page tab '인지': character.knowledge_state.{known·unknown·hidden·author_only·misunderstandings}",
+            "page tab '관계': character.relationships",
+            "page tab '메모리': character.recent_important_memories",
+            "page tab '사건': character.events_participated",
+            "page tab '편집 기록': character.audit_log"
+          ],
+          "loading_state": "<LoadingState skeleton='character-detail' />",
+          "empty_state": {
+            "data_insufficient": "<EmptyState variant='character-data-insufficient' interviewFallback={true} />"
+          },
+          "error_state": "<ErrorState variant='character-load-fail' />"
+        }
+      ],
+      "mutations": [
+        {
+          "name": "useUpdateCharacter",
+          "endpoint": "PATCH /api/projects/{id}/characters/{character_id}",
+          "trigger_components": ["<InlineEditField>", "<KnowledgeAssignModal>", "<RelationshipEditor>"],
+          "optimistic": true,
+          "optimistic_patch": {
+            "target_query": "['character', projectId, characterId]",
+            "patch": "character = { ...character, ...patch }"
+          },
+          "review_queue_side_effect": {
+            "rule": "작가 본인 변경도 audit log 기록·옵션으로 review queue 자동 등록",
+            "trigger_condition": "settings.author_changes_require_review === true",
+            "behavior": "변경 시 review queue에 candidate 추가 → ['candidates', projectId] invalidate"
+          },
+          "on_success": {
+            "invalidate": [
+              "['character', projectId, characterId]",
+              "['characters', projectId]",
+              "['graph', projectId]",
+              "['timeline', projectId]"
+            ],
+            "conditional_invalidate": {
+              "if_relationships_changed": ["['graph', projectId]"],
+              "if_events_or_arc_changed": ["['timeline', projectId]"],
+              "if_knowledge_state_changed": ["['conflicts', projectId]"],
+              "if_author_changes_require_review": ["['candidates', projectId]"]
+            },
+            "toast": "캐릭터 갱신 완료"
+          },
+          "on_error": {
+            "rollback": true,
+            "toast_variant": "error"
+          }
+        }
+      ],
+      "websocket_handlers": [
+        {
+          "event": "candidate.status_changed",
+          "filter": "payload.target_entity_id === characterId",
+          "action": "invalidate",
+          "target_query": "['character', projectId, characterId]"
+        }
+      ]
+    },
+
+    "graph": {
+      "route": "/project/{projectId}/graph",
+      "queries": [
+        {
+          "name": "useGraph",
+          "key": "['graph', projectId, { time_state, filters }]",
+          "endpoint": "GET /api/projects/{id}/graph",
+          "stale_time_ms": 60000,
+          "gc_time_ms": 600000,
+          "consumed_by": [
+            "<RelationshipGraph cosmosgl>",
+            "<GraphTimeSlider>",
+            "<GraphFilterPanel>",
+            "<NodeDetailPanel>"
+          ],
+          "select_transformations": [
+            "Cosmos.gl input: { nodes: [{id, label, color, size}], edges: [{from, to, intensity, color}] }",
+            "필터된 view: filters에 따라 nodes/edges 부분 dim"
+          ],
+          "loading_state": "<LoadingState skeleton='graph-canvas' />",
+          "empty_state": {
+            "no_entities": "<EmptyState variant='graph-empty' />",
+            "filtered_zero": "<EmptyState variant='graph-no-filter-match' />"
+          },
+          "partial_state": {
+            "trigger": "nodes.length < 5",
+            "component": "<PartialState variant='graph-sparse' candidatesNeeded={N} />"
+          },
+          "error_state": {
+            "render_fail": "<ErrorState variant='graph-render-fail' fallbackToSigma={true} />",
+            "load_fail": "<ErrorState variant='graph-load-fail' />"
+          }
+        }
+      ],
+      "websocket_handlers": [
+        {
+          "event": "candidate.status_changed",
+          "filter": "payload.type === 'relationship' || payload.type === 'character'",
+          "action": "invalidate",
+          "target_query": "['graph', projectId]",
+          "throttle_ms": 2000,
+          "throttle_strategy": "trailing (마지막 N건을 묶어 1회 invalidate)"
+        }
+      ]
+    },
+
+    "timeline": {
+      "route": "/project/{projectId}/timeline",
+      "queries": [
+        {
+          "name": "useTimeline",
+          "key": "['timeline', projectId, filters]",
+          "endpoint": "GET /api/projects/{id}/timeline",
+          "stale_time_ms": 60000,
+          "gc_time_ms": 600000,
+          "consumed_by": [
+            "<Timeline>",
+            "<EventCard>",
+            "<EventInfluencePanel>",
+            "<TimelineFilterPanel>"
+          ],
+          "loading_state": "<LoadingState skeleton='timeline-row' count=5 />",
+          "empty_state": {
+            "no_events": "<EmptyState variant='timeline-empty' />",
+            "filtered_zero": "<EmptyState variant='timeline-no-filter-match' />"
+          },
+          "error_state": "<ErrorState variant='timeline-load-fail' />"
+        }
+      ],
+      "websocket_handlers": [
+        {
+          "event": "candidate.status_changed",
+          "filter": "payload.type === 'event'",
+          "action": "invalidate",
+          "target_query": "['timeline', projectId]",
+          "throttle_ms": 2000
+        }
+      ]
+    },
+
+    "conflicts": {
+      "route": "/project/{projectId}/conflicts",
+      "queries": [
+        {
+          "name": "useConflicts",
+          "key": "['conflicts', projectId, filters]",
+          "endpoint": "GET /api/projects/{id}/conflicts",
+          "stale_time_ms": 10000,
+          "gc_time_ms": 120000,
+          "refetch_on_window_focus": true,
+          "consumed_by": [
+            "<ConflictCard>",
+            "<ConflictDetailPanel>",
+            "<DiffView>",
+            "<SidebarNav badge='conflicts'>",
+            "<TopNav.AlertBadge severity='critical'>"
+          ],
+          "select_transformations": [
+            "list view: conflicts.map(c => ConflictCard summary)",
+            "detail view: conflicts.find(c => c.id === selectedConflictId)",
+            "critical alert: conflicts.filter(c => c.severity === 'critical').length"
+          ],
+          "loading_state": "<LoadingState skeleton='conflict-card' count=3 />",
+          "empty_state": "<EmptyState variant='conflicts-empty' />",
+          "error_state": "<ErrorState variant='conflicts-load-fail' />"
+        }
+      ],
+      "mutations": [
+        {
+          "name": "useResolveConflict",
+          "endpoint": "POST /api/projects/{id}/conflicts/{conflict_id}/resolve",
+          "trigger_components": [
+            "<ConflictDetailPanel.KeepExistingButton>",
+            "<ConflictDetailPanel.KeepNewButton>",
+            "<ConflictDetailPanel.BothScopeButton>",
+            "<ConflictDetailPanel.BothTimeButton>",
+            "<ConflictDetailPanel.MergeButton>",
+            "<ConflictDetailPanel.HoldButton>"
+          ],
+          "optimistic": true,
+          "optimistic_patch": {
+            "target_query": "['conflicts', projectId, ...]",
+            "patch": "conflicts = conflicts.filter(c => c.id !== conflict_id)"
+          },
+          "on_success": {
+            "invalidate": [
+              "['conflicts', projectId]",
+              "['candidates', projectId]"
+            ],
+            "conditional_invalidate": {
+              "if_resolution_keep_new_or_merge_and_existing_was_character": ["['character', projectId, existing.entity_id]", "['characters', projectId]"],
+              "if_existing_was_relationship": ["['graph', projectId]"],
+              "if_existing_was_event": ["['timeline', projectId]"]
+            },
+            "toast": "충돌 해결 완료"
+          },
+          "on_error": {
+            "rollback": true,
+            "toast_variant": "error"
+          }
+        }
+      ],
+      "websocket_handlers": [
+        {
+          "event": "conflict.detected",
+          "action": "invalidate",
+          "target_query": "['conflicts', projectId]",
+          "ui_signal": [
+            "if severity === 'critical': <Toast variant='error' duration=10000 'critical 충돌 감지·즉시 해결 필요' actions=[ '확인하러 가기' ] />",
+            "<SidebarNav.Conflicts badge++ />",
+            "<TopNav.AlertBadge if any critical />"
+          ]
+        }
+      ]
+    },
+
+    "simulate": {
+      "route": "/project/{projectId}/simulate",
+      "queries": [
+        {
+          "name": "useSimulation",
+          "key": "['simulation', projectId, simulationId]",
+          "endpoint": "GET /api/projects/{id}/simulations/{simulation_id}",
+          "stale_time_ms": 1000,
+          "gc_time_ms": 600000,
+          "refetch_interval_ms_active": 3000,
+          "refetch_interval_active_when": "simulation.status === 'running'",
+          "enabled": "!!simulationId",
+          "consumed_by": [
+            "<SimulationCandidateGrid>",
+            "<EvidencePanel>",
+            "<SimulationProgress>",
+            "<TokenUsageMeter>"
+          ],
+          "select_transformations": [
+            "in-progress: simulation.progress·current_step·tokens_used",
+            "complete: simulation.candidates[]·output_contract"
+          ],
+          "loading_state": "<SimulationProgress percent={progress} step={current_step} estimatedSeconds={...} />",
+          "empty_state": {
+            "first_use": "<EmptyState variant='simulate-first-use' samples={[KNOT_D29_demo, ...]} />",
+            "character_data_insufficient": "<EmptyState variant='simulate-character-insufficient' character={...} />"
+          },
+          "partial_state": {
+            "trigger": "simulation.candidates.some(c => c.canon_risk === 'leak')",
+            "component": "<PartialState variant='simulate-leak-detected' safeCount={...} riskyCount={...} />"
+          },
+          "error_state": "<ErrorState variant='simulate-fail' tier='token_limit | api_error' />"
+        }
+      ],
+      "mutations": [
+        {
+          "name": "useRunSimulation",
+          "endpoint": "POST /api/projects/{id}/simulate",
+          "trigger_components": ["<SimulationRunButton>"],
+          "optimistic": false,
+          "on_mutate": {
+            "navigate_to": "/project/{projectId}/simulate?id={tempSimId}",
+            "set_query_data": "['simulation', projectId, tempSimId] = { status: 'queued', progress: 0 }"
+          },
+          "on_success": {
+            "replace_temp_id_with": "response.simulation_id",
+            "invalidate": ["['simulation', projectId, response.simulation_id]"]
+          },
+          "on_error": {
+            "toast_variant": "error",
+            "toast_message": "시뮬레이션 실행 실패: {error.message}",
+            "show_byok_cta_if": "error.code === 'token_limit'"
+          }
+        },
+        {
+          "name": "useReplaySimulation",
+          "endpoint": "POST /api/projects/{id}/simulations/{simulation_id}/replay",
+          "trigger_components": ["<SimulationCandidateCard.ReplayButton>"],
+          "optimistic": false,
+          "on_success": {
+            "invalidate": ["['simulation', projectId, simulationId]"],
+            "toast": "재생 완료"
+          }
+        },
+        {
+          "name": "usePromoteSimulationCandidate",
+          "endpoint": "POST /api/projects/{id}/candidates (or character memory direct register)",
+          "trigger_components": ["<SimulationCandidateCard.PromoteButton>", "<SimulationCandidateCard.EditAndPromoteButton>"],
+          "optimistic": false,
+          "leak_warning_modal": {
+            "trigger_condition": "candidate.canon_risk === 'leak'",
+            "component": "<Modal title='⚠️ author_only fact leak 의심' body='이 후보는 작가 only 정보를 누설할 가능성이 있습니다.' actions=['승인 강행', '수정 후 승인', '취소'] />"
+          },
+          "on_success": {
+            "invalidate": [
+              "['candidates', projectId]",
+              "['character', projectId, perspective_character_id]"
+            ],
+            "toast": "후보 등록 완료·검수 큐에서 추가 검수 가능"
+          }
+        }
+      ],
+      "websocket_handlers": [
+        {
+          "event": "simulation.progress",
+          "action": "patch",
+          "target_query": "['simulation', projectId, payload.simulation_id]",
+          "patch_logic": "simulation.progress = payload.progress; .current_step = payload.step; .tokens_used = payload.tokens_used"
+        },
+        {
+          "event": "simulation.complete",
+          "action": "invalidate",
+          "target_query": "['simulation', projectId, payload.simulation_id]",
+          "ui_signal": "<Toast variant='success' '시뮬레이션 완료·{candidate_count}개 후보' />"
+        }
+      ]
+    },
+
+    "audit": {
+      "route": "/project/{projectId}/audit",
+      "queries": [
+        {
+          "name": "useAuthorAuditLogs",
+          "key": "['audit', projectId, filters]",
+          "endpoint": "GET /api/projects/{id}/audit",
+          "stale_time_ms": 30000,
+          "gc_time_ms": 600000,
+          "refetch_on_window_focus": true,
+          "consumed_by": ["<AuditLogView>", "<ReplayPanel>"],
+          "select_transformations": [
+            "audit_logs[] list sorted by created_at desc",
+            "replay=1 + decision_id returns deterministic replay chain"
+          ],
+          "loading_state": "<LoadingState skeleton='audit-log' />",
+          "empty_state": "<EmptyState variant='audit-empty' />",
+          "error_state": "<ErrorState variant='audit-load-fail' />"
+        }
+      ],
+      "websocket_handlers": [
+        {
+          "event": "audit.created",
+          "action": "patch",
+          "target_query": "['audit', projectId, filters]",
+          "patch_logic": "prepend payload.audit_log if it matches filters; otherwise invalidate"
+        }
+      ]
+    },
+
+    "settings": {
+      "route": "/project/{projectId}/settings",
+      "queries": [
+        {
+          "name": "useProjectSettings",
+          "key": "['settings', projectId]",
+          "endpoint": "GET /api/projects/{id}/settings",
+          "stale_time_ms": 60000,
+          "consumed_by": [
+            "<ProjectSettingsForm>",
+            "<SyncSettingsPanel>",
+            "<AuthorChangeReviewToggle>"
+          ],
+          "loading_state": "<LoadingState skeleton='settings-form' />",
+          "error_state": "<ErrorState variant='settings-load-fail' />"
+        }
+      ],
+      "mutations": [
+        {
+          "name": "useUpdateProjectSettings",
+          "endpoint": "PATCH /api/projects/{id}/settings",
+          "trigger_components": ["<ProjectSettingsForm.SaveButton>"],
+          "optimistic": true,
+          "on_success": {
+            "invalidate": ["['settings', projectId]"],
+            "toast": "설정 저장 완료"
+          },
+          "on_error": {
+            "rollback": true,
+            "toast_variant": "error"
+          }
+        }
+      ]
+    },
+
+    "account_byok": {
+      "route": "/account",
+      "queries": [
+        {
+          "name": "useByokKey",
+          "key": "['account', 'byok']",
+          "endpoint": "GET /api/account/byok (server returns masked key + status)",
+          "stale_time_ms": 300000,
+          "consumed_by": ["<BYOKKeyManager>", "<UsageMeter>"],
+          "loading_state": "<LoadingState skeleton='byok-form' />",
+          "empty_state": "<EmptyState variant='byok-not-set' />",
+          "error_state": "<ErrorState variant='byok-invalid' />"
+        },
+        {
+          "name": "useUsage",
+          "key": "['account', 'usage']",
+          "endpoint": "GET /api/account/usage",
+          "stale_time_ms": 60000,
+          "consumed_by": ["<UsageMeter>", "<TopNav.UsageIndicator>"]
+        },
+        {
+          "name": "useCurrentSubscription",
+          "key": "['account', 'subscription']",
+          "endpoint": "GET /api/account/subscription",
+          "stale_time_ms": 60000,
+          "consumed_by": ["<BillingDashboard>", "<UsageMeter>", "<TrialBanner>"],
+          "select_transformations": [
+            "billing dashboard: plan, tier_label, status, renewal/cancel dates, price_lock_version",
+            "BYOK discount badge: byok_discount_status -> Applied/Pending/Error/Not active",
+            "trial banner: trial_days_remaining <= 3",
+            "usage meter: usage.tokens_used_month + usage.tokens_cap_month"
+          ]
+        }
+      ],
+      "mutations": [
+        {
+          "name": "useSaveByok",
+          "endpoint": "POST /api/account/byok",
+          "trigger_components": ["<BYOKKeyManager.SaveButton>"],
+          "optimistic": false,
+          "validation": "client-side: Anthropic key format check before submit (sk-ant-)",
+          "on_success": {
+            "invalidate": ["['account', 'byok']", "['account', 'usage']"],
+            "toast": "BYOK 키 등록 완료·할인 상태 갱신"
+          },
+          "on_error": {
+            "toast_variant": "error",
+            "toast_message": "키 검증 실패: {error.message}"
+          }
+        },
+        {
+          "name": "useManageSubscription",
+          "endpoint": "POST /api/account/subscription",
+          "trigger_components": ["<BillingDashboard.ManageButton>", "<BillingDashboard.CancelButton>", "<BillingDashboard.ResumeButton>"],
+          "request": {
+            "action": "portal | cancel | resume"
+          },
+          "optimistic": false,
+          "on_success": {
+            "invalidate": ["['account', 'subscription']", "['account', 'usage']"],
+            "toast": "Billing state updated"
+          },
+          "on_error": {
+            "toast_variant": "error",
+            "toast_message": "Billing action failed: {error.message}"
+          }
+        },
+        {
+          "name": "useDisableByok",
+          "endpoint": "DELETE /api/account/byok",
+          "trigger_components": ["<BYOKKeyManager.DisableButton>"],
+          "optimistic": false,
+          "on_success": {
+            "invalidate": ["['account', 'byok']", "['account', 'usage']", "['account', 'subscription']"],
+            "toast": "BYOK disabled and discount removed"
+          },
+          "on_error": {
+            "toast_variant": "error",
+            "toast_message": "BYOK disable failed: {error.message}"
+          }
+        }
+      ]
+    },
+
+    "sync": {
+      "route": "/project/{projectId}/settings (sync section) + global TopNav indicator",
+      "queries": [
+        {
+          "name": "useSyncStatus",
+          "key": "['sync', 'status', projectId]",
+          "endpoint": "(sync 상태는 settings query에 포함되거나 별도 GET /api/projects/{id}/sync/status)",
+          "stale_time_ms": 30000,
+          "refetch_interval_ms_active": 30000,
+          "consumed_by": ["<SyncStatusIndicator>", "<SyncSettingsPanel>"]
+        }
+      ],
+      "websocket_handlers": [
+        {
+          "event": "sync.status",
+          "action": "patch",
+          "target_query": "['sync', 'status', projectId]",
+          "patch_logic": "syncStatus = { direction: payload.direction, last_sync: payload.last_sync, error: payload.error }",
+          "ui_signal": "if payload.error: <Toast variant='error' 'sync 실패: {error}' />"
+        }
+      ]
+    }
+  },
+
+  "cross_screen_subscriptions": {
+    "sidebar_nav_badges": {
+      "queries": [
+        {
+          "key": "['imports', projectId]",
+          "select": "imports.summary.ready_for_review > 0 → badge count"
+        },
+        {
+          "key": "['candidates', projectId, { status: 'candidate' }]",
+          "select": "candidates.length → review-pending badge"
+        },
+        {
+          "key": "['conflicts', projectId, { status: 'open' }]",
+          "select": "conflicts.length → conflicts badge (red if > 0 critical)"
+        }
+      ],
+      "refetch_strategy": "WebSocket 이벤트 + 초기 mount + 5분 폴링 fallback"
+    },
+    "top_nav_alert": {
+      "queries": [
+        {
+          "key": "['conflicts', projectId, { severity: 'critical' }]",
+          "select": "any → red dot indicator on TopNav"
+        }
+      ]
+    },
+    "command_palette_search": {
+      "queries": [
+        {
+          "key": "['search', projectId, query]",
+          "endpoint": "GET /api/projects/{id}/search?q=...",
+          "debounce_ms": 200,
+          "stale_time_ms": 30000
+        }
+      ]
+    }
+  },
+
+  "form_state_bindings": {
+    "review_queue_filters": {
+      "form_library": "React Hook Form + URL search params sync",
+      "fields": ["status[]", "scope[]", "tier[]", "confidence_min", "source_id", "type[]", "sort", "page"],
+      "submit_behavior": "fields 변경 시 query key 갱신 → ['candidates', projectId, filters, sort, page]",
+      "url_sync": "useSearchParams + router.replace (no scroll)"
+    },
+    "scene_input_form": {
+      "form_library": "React Hook Form",
+      "fields": ["text", "setting.location", "setting.time", "setting.weather", "setting.mood", "characters_present[]", "timepoint.day", "timepoint.scene_position", "pressure", "perspective", "candidate_count"],
+      "validation": [
+        "text: required, min 20 chars",
+        "characters_present: required, min 1",
+        "perspective: required, must be in characters_present",
+        "candidate_count: 5~10"
+      ],
+      "submit": "useRunSimulation mutation"
+    },
+    "byok_form": {
+      "form_library": "React Hook Form",
+      "fields": ["provider", "api_key"],
+      "validation": [
+        "provider: required, one of anthropic|google|openai",
+        "api_key: required, provider-specific format"
+      ],
+      "submit": "useSaveByok mutation"
+    },
+    "candidate_card_inline_edit": {
+      "form_library": "React Hook Form (per-card form)",
+      "fields_dynamic": "depends on candidate.type",
+      "submit": "useDecideCandidate with edited content"
+    }
+  },
+
+  "offline_mode": {
+    "trigger": "navigator.onLine === false || WebSocket reconnect 실패 ≥ 3회",
+    "behavior": [
+      "review queue 결정 = local cache (IndexedDB)에 큐잉",
+      "복귀 시 자동 sync·충돌 시 Conflict Inbox 격상",
+      "TopNav에 <OfflineIndicator />",
+      "graph·timeline·simulate = read-only (캐시된 데이터만)"
+    ],
+    "queries_cache_only": [
+      "['characters', projectId]",
+      "['character', projectId, ...]",
+      "['graph', projectId]",
+      "['timeline', projectId]"
+    ],
+    "mutations_queued": [
+      "useDecideCandidate",
+      "useUpdateCharacter"
+    ]
+  },
+
+  "audit_log_telemetry": {
+    "rule": "모든 mutation 호출 시 frontend telemetry 동시 발신 (작가 결정 trace 정합)",
+    "endpoint": "POST /api/telemetry/event (또는 batched)",
+    "events": [
+      "candidate.decide.click (key|button, candidate_id, decision, latency_ms)",
+      "character.update (character_id, fields_changed)",
+      "conflict.resolve (conflict_id, resolution)",
+      "simulation.run (input_summary, candidate_count_requested)",
+      "simulation.promote (simulation_id, candidate_index, leak_warning_overridden)"
+    ],
+    "privacy": "원문 텍스트는 telemetry에 포함 X·요약·event 메타만"
+  },
+
+  "error_boundary_strategy": {
+    "screen_level": {
+      "wrap": "각 화면 컴포넌트는 ErrorBoundary로 감쌈",
+      "fallback": "<ErrorState variant='screen-crash' reportError={...} />"
+    },
+    "query_level": {
+      "rule": "useQuery error → <ErrorState> 자동 표시·재시도 가능",
+      "retry_policy": "지수 백오프 (1s·2s·4s·8s) max 3회·timeout 지나면 사용자 수동 재시도"
+    },
+    "mutation_level": {
+      "rule": "useMutation error → toast + rollback if optimistic",
+      "retry_policy": "기본 X (작가가 다시 클릭) — 일관성 우선"
+    }
+  },
+
+  "prefetch_policy": {
+    "navigation_prefetch": [
+      "Dashboard → 프로젝트 카드 hover 시 ['imports', projectId] + ['candidates', projectId]",
+      "SidebarNav hover 시 해당 화면 main query prefetch",
+      "Review Queue 카드 hover 시 ['candidate', projectId, candidateId] 상세 prefetch (lazy expand 대비)"
+    ],
+    "infinite_scroll_prefetch": [
+      "Review Queue: 현재 페이지 70% 스크롤 시 다음 페이지 fetch",
+      "Timeline: 가로 스크롤 시 보이는 Day ± 7일 prefetch"
+    ]
+  },
+
+  "rate_limit_handling": {
+    "trigger": "HTTP 429",
+    "behavior": [
+      "Retry-After 헤더 존중·exponential backoff",
+      "<Toast variant='warning' '잠시 기다려주세요·{seconds}초 후 자동 재시도' />",
+      "review queue 같은 빠른 키 입력 시 client-side throttle (200ms)·queue로 직렬화"
+    ]
+  },
+
+  "race_condition_safeguards": {
+    "candidate_decision": {
+      "issue": "작가가 빠르게 A·R·T 연속 누름 → 같은 카드에 다중 결정 가능",
+      "guard": "carousel currentIndex가 카드 고유 id와 일치 검증·이미 결정된 카드는 재발신 차단"
+    },
+    "websocket_vs_mutation": {
+      "issue": "내가 결정한 mutation의 status_changed event 가 돌아옴 → optimistic patch와 충돌",
+      "guard": "mutation이 발신한 ack token을 server response·websocket payload에 포함·중복 patch skip"
+    },
+    "stale_filter_cache": {
+      "issue": "필터 변경 빈번 → 이전 query 응답이 늦게 도착",
+      "guard": "TanStack Query auto cancellation (last-write-wins)·또는 AbortController"
+    }
+  }
+}

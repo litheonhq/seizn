@@ -1,7 +1,10 @@
 import { Metadata } from "next";
-import { getDictionary } from "@/i18n/get-dictionary";
 import { type Locale } from "@/i18n/config";
-import { ExtremeHomepage } from "@/components/extreme-homepage/server";
+import {
+  AuthorFlagshipLanding,
+  getAuthorLandingCopy,
+} from "@/components/landing/author-flagship-landing";
+import { loadSaebyeokDemoData } from "@/lib/sample-ip-demo";
 
 type Props = {
   params: Promise<{ locale: Locale }>;
@@ -9,10 +12,9 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
-  const dict = await getDictionary(locale);
-
-  const title = dict.metadata?.title || "Seizn — Memory for AI NPCs";
-  const description = dict.metadata?.description || "Plug into Inworld, Convai, or your own LLM. Seizn gives your NPCs persistent memory, relationships, and cross-generation recall — graph-priced, not per-seat.";
+  const copy = getAuthorLandingCopy(locale);
+  const title = "Seizn Author - AI Memory for Authors";
+  const description = copy.hero.subtitle;
 
   return {
     title,
@@ -27,7 +29,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function Home({ params }: Props) {
   const { locale } = await params;
-  const dict = await getDictionary(locale);
+  const data = await loadSaebyeokDemoData();
 
-  return <ExtremeHomepage dict={dict} locale={locale} />;
+  return <AuthorFlagshipLanding data={data} locale={locale} />;
 }

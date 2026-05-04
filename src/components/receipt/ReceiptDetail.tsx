@@ -41,9 +41,9 @@ export function ReceiptDetail({
   };
 
   const statusColor = useMemo(() => {
-    if (receipt.policy.budget_remaining_percent < 10) return "text-red-400 bg-red-900/20";
+    if (receipt.policy.budget_remaining_percent < 10) return "text-[var(--signal-conflict-soft)] bg-[var(--signal-conflict)]/20";
     if (receipt.policy.budget_remaining_percent < 25) return "text-yellow-400 bg-yellow-900/20";
-    return "text-green-400 bg-green-900/20";
+    return "text-green-400 bg-[var(--signal-canon-ink)]/20";
   }, [receipt.policy.budget_remaining_percent]);
 
   const pipelineStages = useMemo(() => {
@@ -54,14 +54,14 @@ export function ReceiptDetail({
   }, [receipt.execution.plan_path]);
 
   return (
-    <div className={`bg-gray-900 rounded-lg border border-szn-border ${className}`}>
+    <div className={`bg-[var(--ink-900)] rounded-lg border border-[var(--ink-200)] ${className}`}>
       {/* Header */}
-      <div className="p-6 border-b border-szn-border">
+      <div className="p-6 border-b border-[var(--ink-200)]">
         <div className="flex items-start justify-between">
           <div>
             <div className="flex items-center gap-3">
               <svg
-                className="w-6 h-6 text-szn-accent"
+                className="w-6 h-6 text-[var(--ink-900)]"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -80,7 +80,7 @@ export function ReceiptDetail({
                 </span>
               )}
             </div>
-            <p className="mt-2 text-sm text-szn-text-3 font-mono">{receipt.receipt_id}</p>
+            <p className="mt-2 text-sm text-[var(--ink-500)] font-mono">{receipt.receipt_id}</p>
           </div>
 
           {/* Download Buttons */}
@@ -88,7 +88,7 @@ export function ReceiptDetail({
             <div className="flex items-center gap-2">
               <button
                 onClick={() => onDownload("json")}
-                className="px-3 py-2 text-sm bg-gray-800 hover:bg-gray-700 text-szn-text-2 rounded-lg transition-colors flex items-center gap-2"
+                className="px-3 py-2 text-sm bg-[var(--ink-800)] hover:bg-gray-700 text-[var(--ink-600)] rounded-lg transition-colors flex items-center gap-2"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path
@@ -102,7 +102,7 @@ export function ReceiptDetail({
               </button>
               <button
                 onClick={() => onDownload("pdf")}
-                className="px-3 py-2 text-sm bg-gray-800 hover:bg-gray-700 text-szn-text-2 rounded-lg transition-colors flex items-center gap-2"
+                className="px-3 py-2 text-sm bg-[var(--ink-800)] hover:bg-gray-700 text-[var(--ink-600)] rounded-lg transition-colors flex items-center gap-2"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path
@@ -120,18 +120,18 @@ export function ReceiptDetail({
 
         {/* Query Preview */}
         {receipt.query_preview && (
-          <div className="mt-4 p-3 bg-gray-800/50 rounded-lg">
-            <div className="text-xs text-szn-text-2 uppercase tracking-wide mb-1">Query</div>
-            <p className="text-sm text-szn-text-1">&ldquo;{receipt.query_preview}&rdquo;</p>
+          <div className="mt-4 p-3 bg-[var(--ink-800)]/50 rounded-lg">
+            <div className="text-xs text-[var(--ink-600)] uppercase tracking-wide mb-1">Query</div>
+            <p className="text-sm text-[var(--ink-900)]">&ldquo;{receipt.query_preview}&rdquo;</p>
           </div>
         )}
       </div>
 
       {/* Main Content Grid */}
-      <div className="grid md:grid-cols-2 divide-x divide-szn-border">
+      <div className="grid md:grid-cols-2 divide-x divide-[var(--ink-200)]">
         {/* Cost Section */}
         <div className="p-6">
-          <h3 className="text-sm font-semibold text-szn-text-3 uppercase tracking-wide mb-4 flex items-center gap-2">
+          <h3 className="text-sm font-semibold text-[var(--ink-500)] uppercase tracking-wide mb-4 flex items-center gap-2">
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path
                 strokeLinecap="round"
@@ -145,36 +145,36 @@ export function ReceiptDetail({
 
           <div className="space-y-4">
             {/* Total Cost */}
-            <div className="flex items-center justify-between p-3 bg-szn-accent/10 rounded-lg border border-szn-accent/30">
-              <span className="text-szn-accent">Total Cost</span>
-              <span className="text-2xl font-bold text-szn-accent">
+            <div className="flex items-center justify-between p-3 bg-[var(--ink-900)]/10 rounded-lg border border-[var(--ink-900)]/30">
+              <span className="text-[var(--ink-900)]">Total Cost</span>
+              <span className="text-2xl font-bold text-[var(--ink-900)]">
                 {formatCost(receipt.cost.estimated_cost_usd)}
               </span>
             </div>
 
             {/* Cost Details */}
             <div className="space-y-2">
-              <div className="flex items-center justify-between py-2 border-b border-szn-border">
-                <span className="text-sm text-szn-text-3">Embedding Tokens</span>
-                <span className="text-sm text-szn-text-1">
+              <div className="flex items-center justify-between py-2 border-b border-[var(--ink-200)]">
+                <span className="text-sm text-[var(--ink-500)]">Embedding Tokens</span>
+                <span className="text-sm text-[var(--ink-900)]">
                   {receipt.cost.embedding_tokens.toLocaleString()}
                 </span>
               </div>
-              <div className="flex items-center justify-between py-2 border-b border-szn-border">
-                <span className="text-sm text-szn-text-3">Rerank Candidates</span>
-                <span className="text-sm text-szn-text-1">{receipt.cost.rerank_candidates}</span>
+              <div className="flex items-center justify-between py-2 border-b border-[var(--ink-200)]">
+                <span className="text-sm text-[var(--ink-500)]">Rerank Candidates</span>
+                <span className="text-sm text-[var(--ink-900)]">{receipt.cost.rerank_candidates}</span>
               </div>
               {receipt.cost.llm_tokens !== undefined && (
-                <div className="flex items-center justify-between py-2 border-b border-szn-border">
-                  <span className="text-sm text-szn-text-3">LLM Tokens</span>
-                  <span className="text-sm text-szn-text-1">
+                <div className="flex items-center justify-between py-2 border-b border-[var(--ink-200)]">
+                  <span className="text-sm text-[var(--ink-500)]">LLM Tokens</span>
+                  <span className="text-sm text-[var(--ink-900)]">
                     {receipt.cost.llm_tokens.toLocaleString()}
                   </span>
                 </div>
               )}
               <div className="flex items-center justify-between py-2">
-                <span className="text-sm text-szn-text-3">Query Units</span>
-                <span className="text-sm font-medium text-szn-text-1">
+                <span className="text-sm text-[var(--ink-500)]">Query Units</span>
+                <span className="text-sm font-medium text-[var(--ink-900)]">
                   {receipt.cost.total_query_units} QU
                 </span>
               </div>
@@ -184,7 +184,7 @@ export function ReceiptDetail({
 
         {/* Execution Section */}
         <div className="p-6">
-          <h3 className="text-sm font-semibold text-szn-text-3 uppercase tracking-wide mb-4 flex items-center gap-2">
+          <h3 className="text-sm font-semibold text-[var(--ink-500)] uppercase tracking-wide mb-4 flex items-center gap-2">
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path
                 strokeLinecap="round"
@@ -207,16 +207,16 @@ export function ReceiptDetail({
 
             {/* Pipeline Path */}
             <div className="space-y-2">
-              <div className="text-sm text-szn-text-3 mb-2">Pipeline Path</div>
+              <div className="text-sm text-[var(--ink-500)] mb-2">Pipeline Path</div>
               <div className="flex flex-wrap gap-2">
                 {pipelineStages.map((stage, i) => (
                   <div key={i} className="flex items-center gap-1">
-                    <span className="px-2 py-1 text-xs bg-gray-800 text-szn-text-2 rounded capitalize">
+                    <span className="px-2 py-1 text-xs bg-[var(--ink-800)] text-[var(--ink-600)] rounded capitalize">
                       {stage.label}
                     </span>
                     {i < pipelineStages.length - 1 && (
                       <svg
-                        className="w-3 h-3 text-szn-text-2"
+                        className="w-3 h-3 text-[var(--ink-600)]"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -237,35 +237,35 @@ export function ReceiptDetail({
             {/* Stage Latencies */}
             {receipt.execution.stage_latencies && (
               <div className="space-y-2">
-                <div className="text-sm text-szn-text-3 mb-2">Stage Breakdown</div>
+                <div className="text-sm text-[var(--ink-500)] mb-2">Stage Breakdown</div>
                 {receipt.execution.stage_latencies.embedding_ms !== undefined && (
-                  <div className="flex items-center justify-between py-2 border-b border-szn-border">
-                    <span className="text-sm text-szn-text-3">Embedding</span>
-                    <span className="text-sm text-szn-text-1">
+                  <div className="flex items-center justify-between py-2 border-b border-[var(--ink-200)]">
+                    <span className="text-sm text-[var(--ink-500)]">Embedding</span>
+                    <span className="text-sm text-[var(--ink-900)]">
                       {formatLatency(receipt.execution.stage_latencies.embedding_ms)}
                     </span>
                   </div>
                 )}
                 {receipt.execution.stage_latencies.search_ms !== undefined && (
-                  <div className="flex items-center justify-between py-2 border-b border-szn-border">
-                    <span className="text-sm text-szn-text-3">Search</span>
-                    <span className="text-sm text-szn-text-1">
+                  <div className="flex items-center justify-between py-2 border-b border-[var(--ink-200)]">
+                    <span className="text-sm text-[var(--ink-500)]">Search</span>
+                    <span className="text-sm text-[var(--ink-900)]">
                       {formatLatency(receipt.execution.stage_latencies.search_ms)}
                     </span>
                   </div>
                 )}
                 {receipt.execution.stage_latencies.rerank_ms !== undefined && (
-                  <div className="flex items-center justify-between py-2 border-b border-szn-border">
-                    <span className="text-sm text-szn-text-3">Rerank</span>
-                    <span className="text-sm text-szn-text-1">
+                  <div className="flex items-center justify-between py-2 border-b border-[var(--ink-200)]">
+                    <span className="text-sm text-[var(--ink-500)]">Rerank</span>
+                    <span className="text-sm text-[var(--ink-900)]">
                       {formatLatency(receipt.execution.stage_latencies.rerank_ms)}
                     </span>
                   </div>
                 )}
                 {receipt.execution.stage_latencies.llm_ms !== undefined && (
                   <div className="flex items-center justify-between py-2">
-                    <span className="text-sm text-szn-text-3">LLM</span>
-                    <span className="text-sm text-szn-text-1">
+                    <span className="text-sm text-[var(--ink-500)]">LLM</span>
+                    <span className="text-sm text-[var(--ink-900)]">
                       {formatLatency(receipt.execution.stage_latencies.llm_ms)}
                     </span>
                   </div>
@@ -277,10 +277,10 @@ export function ReceiptDetail({
       </div>
 
       {/* Evidence & Policy */}
-      <div className="grid md:grid-cols-2 divide-x divide-szn-border border-t border-szn-border">
+      <div className="grid md:grid-cols-2 divide-x divide-[var(--ink-200)] border-t border-[var(--ink-200)]">
         {/* Evidence Section */}
         <div className="p-6">
-          <h3 className="text-sm font-semibold text-szn-text-3 uppercase tracking-wide mb-4 flex items-center gap-2">
+          <h3 className="text-sm font-semibold text-[var(--ink-500)] uppercase tracking-wide mb-4 flex items-center gap-2">
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path
                 strokeLinecap="round"
@@ -294,49 +294,49 @@ export function ReceiptDetail({
 
           <div className="space-y-3">
             <div className="grid grid-cols-2 gap-3">
-              <div className="p-3 bg-purple-900/20 rounded-lg text-center border border-purple-800/50">
-                <div className="text-2xl font-bold text-purple-400">
+              <div className="p-3 bg-[var(--ink-900)]/20 rounded-lg text-center border border-[var(--ink-900)]/50">
+                <div className="text-2xl font-bold text-[var(--ink-700)]">
                   {receipt.evidence.candidates_count}
                 </div>
-                <div className="text-xs text-szn-text-2">Candidates</div>
+                <div className="text-xs text-[var(--ink-600)]">Candidates</div>
               </div>
-              <div className="p-3 bg-purple-900/20 rounded-lg text-center border border-purple-800/50">
-                <div className="text-2xl font-bold text-purple-400">
+              <div className="p-3 bg-[var(--ink-900)]/20 rounded-lg text-center border border-[var(--ink-900)]/50">
+                <div className="text-2xl font-bold text-[var(--ink-700)]">
                   {receipt.evidence.reranked_count}
                 </div>
-                <div className="text-xs text-szn-text-2">Reranked</div>
+                <div className="text-xs text-[var(--ink-600)]">Reranked</div>
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
-              <div className="p-3 bg-gray-800 rounded-lg text-center">
-                <div className="text-xl font-bold text-szn-text-1">
+              <div className="p-3 bg-[var(--ink-800)] rounded-lg text-center">
+                <div className="text-xl font-bold text-[var(--ink-900)]">
                   {receipt.evidence.context_chunks}
                 </div>
-                <div className="text-xs text-szn-text-2">Context Chunks</div>
+                <div className="text-xs text-[var(--ink-600)]">Context Chunks</div>
               </div>
-              <div className="p-3 bg-gray-800 rounded-lg text-center">
+              <div className="p-3 bg-[var(--ink-800)] rounded-lg text-center">
                 <div
-                  className={`text-xl font-bold ${receipt.evidence.blocked_chunks > 0 ? "text-red-400" : "text-szn-text-1"}`}
+                  className={`text-xl font-bold ${receipt.evidence.blocked_chunks > 0 ? "text-[var(--signal-conflict-soft)]" : "text-[var(--ink-900)]"}`}
                 >
                   {receipt.evidence.blocked_chunks}
                 </div>
-                <div className="text-xs text-szn-text-2">Blocked</div>
+                <div className="text-xs text-[var(--ink-600)]">Blocked</div>
               </div>
             </div>
 
             {receipt.evidence.score_range && (
-              <div className="mt-3 p-3 bg-gray-800/50 rounded-lg">
-                <div className="text-xs text-szn-text-2 mb-2">Score Distribution</div>
+              <div className="mt-3 p-3 bg-[var(--ink-800)]/50 rounded-lg">
+                <div className="text-xs text-[var(--ink-600)] mb-2">Score Distribution</div>
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-szn-text-3">
-                    Min: <span className="text-szn-text-1">{receipt.evidence.score_range.min.toFixed(3)}</span>
+                  <span className="text-[var(--ink-500)]">
+                    Min: <span className="text-[var(--ink-900)]">{receipt.evidence.score_range.min.toFixed(3)}</span>
                   </span>
-                  <span className="text-szn-text-3">
-                    Avg: <span className="text-szn-text-1">{receipt.evidence.score_range.avg.toFixed(3)}</span>
+                  <span className="text-[var(--ink-500)]">
+                    Avg: <span className="text-[var(--ink-900)]">{receipt.evidence.score_range.avg.toFixed(3)}</span>
                   </span>
-                  <span className="text-szn-text-3">
-                    Max: <span className="text-szn-text-1">{receipt.evidence.score_range.max.toFixed(3)}</span>
+                  <span className="text-[var(--ink-500)]">
+                    Max: <span className="text-[var(--ink-900)]">{receipt.evidence.score_range.max.toFixed(3)}</span>
                   </span>
                 </div>
               </div>
@@ -346,7 +346,7 @@ export function ReceiptDetail({
 
         {/* Policy Section */}
         <div className="p-6">
-          <h3 className="text-sm font-semibold text-szn-text-3 uppercase tracking-wide mb-4 flex items-center gap-2">
+          <h3 className="text-sm font-semibold text-[var(--ink-500)] uppercase tracking-wide mb-4 flex items-center gap-2">
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path
                 strokeLinecap="round"
@@ -367,7 +367,7 @@ export function ReceiptDetail({
                   {receipt.policy.budget_remaining_percent.toFixed(1)}%
                 </span>
               </div>
-              <div className="mt-2 h-2 bg-gray-800 rounded-full overflow-hidden">
+              <div className="mt-2 h-2 bg-[var(--ink-800)] rounded-full overflow-hidden">
                 <div
                   className="h-full bg-current rounded-full"
                   style={{ width: `${receipt.policy.budget_remaining_percent}%` }}
@@ -377,36 +377,36 @@ export function ReceiptDetail({
 
             {/* PII & Redactions */}
             <div className="grid grid-cols-2 gap-3">
-              <div className="p-3 bg-gray-800 rounded-lg text-center">
+              <div className="p-3 bg-[var(--ink-800)] rounded-lg text-center">
                 <div className="mb-1">
                   {receipt.policy.pii_scanned ? (
                     <svg className="w-6 h-6 text-green-400 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   ) : (
-                    <svg className="w-6 h-6 text-szn-text-2 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="w-6 h-6 text-[var(--ink-600)] mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   )}
                 </div>
-                <div className="text-xs text-szn-text-2">
+                <div className="text-xs text-[var(--ink-600)]">
                   {receipt.policy.pii_scanned ? "PII Scanned" : "No PII Scan"}
                 </div>
               </div>
-              <div className="p-3 bg-gray-800 rounded-lg text-center">
+              <div className="p-3 bg-[var(--ink-800)] rounded-lg text-center">
                 <div
-                  className={`text-xl font-bold ${receipt.policy.redactions_applied > 0 ? "text-orange-400" : "text-szn-text-1"}`}
+                  className={`text-xl font-bold ${receipt.policy.redactions_applied > 0 ? "text-orange-400" : "text-[var(--ink-900)]"}`}
                 >
                   {receipt.policy.redactions_applied}
                 </div>
-                <div className="text-xs text-szn-text-2">Redactions</div>
+                <div className="text-xs text-[var(--ink-600)]">Redactions</div>
               </div>
             </div>
 
             {/* Applied Policies */}
             {receipt.policy.policies_applied && receipt.policy.policies_applied.length > 0 && (
               <div className="mt-3">
-                <div className="text-xs text-szn-text-2 mb-2">Applied Policies</div>
+                <div className="text-xs text-[var(--ink-600)] mb-2">Applied Policies</div>
                 <div className="flex flex-wrap gap-2">
                   {receipt.policy.policies_applied.map((policy, i) => (
                     <span
@@ -424,8 +424,8 @@ export function ReceiptDetail({
       </div>
 
       {/* Footer */}
-      <div className="p-4 border-t border-szn-border bg-gray-800/30">
-        <div className="flex flex-wrap items-center justify-between gap-4 text-xs text-szn-text-2">
+      <div className="p-4 border-t border-[var(--ink-200)] bg-[var(--ink-800)]/30">
+        <div className="flex flex-wrap items-center justify-between gap-4 text-xs text-[var(--ink-600)]">
           <div className="flex items-center gap-4">
             <span>Trace ID: {receipt.trace_id}</span>
             {receipt.collections && receipt.collections.length > 0 && (

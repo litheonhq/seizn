@@ -1,4 +1,4 @@
-import crypto from 'crypto';
+import { createHash, createHmac, type BinaryLike } from 'node:crypto';
 import { buildSignedArtifactUrl } from './dsr';
 
 export interface DsrObjectStore {
@@ -35,11 +35,11 @@ function readR2Config(): R2Config | null {
 }
 
 function hashHex(value: string | Buffer): string {
-  return crypto.createHash('sha256').update(value).digest('hex');
+  return createHash('sha256').update(value).digest('hex');
 }
 
-function hmac(key: crypto.BinaryLike, value: string): Buffer {
-  return crypto.createHmac('sha256', key).update(value, 'utf8').digest();
+function hmac(key: BinaryLike, value: string): Buffer {
+  return createHmac('sha256', key).update(value, 'utf8').digest();
 }
 
 function signingKey(secret: string, date: string, region: string): Buffer {
@@ -103,8 +103,7 @@ function signCanonicalRequest(params: {
     scope,
     hashHex(canonicalRequest),
   ].join('\n');
-  return crypto
-    .createHmac('sha256', signingKey(params.config.secretAccessKey, params.shortDate, params.config.region))
+  return createHmac('sha256', signingKey(params.config.secretAccessKey, params.shortDate, params.config.region))
     .update(stringToSign, 'utf8')
     .digest('hex');
 }

@@ -42,8 +42,8 @@ export function FAQCategoryFilter({ categoryKeys, categories }: Props) {
           onClick={() => handleCategoryChange(catKey)}
           className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
             activeCategory === catKey
-              ? "bg-szn-accent text-white"
-              : "bg-szn-surface-1 text-szn-text-2 hover:bg-szn-surface hover:text-szn-text-1"
+              ? "bg-[var(--ink-900)] text-white"
+              : "bg-[var(--ink-50)] text-[var(--ink-600)] hover:bg-[var(--ink-50)] hover:text-[var(--ink-900)]"
           }`}
         >
           {getCategoryDisplayName(catKey)}

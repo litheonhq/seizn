@@ -9,7 +9,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createHash } from 'crypto';
-import { validateApiKey } from '@/lib/auth/api-key';
+import { requireApiScope } from '@/lib/auth/api-scope';
 import { createServerClient } from '@/lib/supabase';
 
 interface RouteParams {
@@ -18,10 +18,9 @@ interface RouteParams {
 
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
-    const auth = await validateApiKey(request);
-    if (!auth.valid) {
-      return NextResponse.json({ error: 'Unauthorized', message: auth.error }, { status: 401 });
-    }
+    const authResult = await requireApiScope(request, 'fall:read');
+    if (authResult.response) return authResult.response;
+    const { auth } = authResult;
 
     const { runId } = await params;
     const supabase = createServerClient();

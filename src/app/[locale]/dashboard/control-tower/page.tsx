@@ -35,10 +35,10 @@ import type {
 
 // Health status color mapping
 const statusColors: Record<HealthStatus, string> = {
-  healthy: 'text-green-500 bg-green-500/10',
-  degraded: 'text-yellow-500 bg-yellow-500/10',
-  unhealthy: 'text-red-500 bg-red-500/10',
-  unknown: 'text-szn-text-2 bg-szn-surface-1',
+  healthy: 'text-[var(--signal-canon-ink)] bg-green-500/10',
+  degraded: 'text-[var(--signal-pending-ink)] bg-yellow-500/10',
+  unhealthy: 'text-[var(--signal-conflict-ink)] bg-[var(--signal-conflict)]/10',
+  unknown: 'text-[var(--ink-600)] bg-[var(--ink-50)]',
 };
 
 const statusIcons: Record<HealthStatus, React.ComponentType<{ className?: string }>> = {
@@ -115,7 +115,7 @@ export default function ControlTowerPage() {
   if (loading && !health) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <RefreshCw className="w-8 h-8 animate-spin text-szn-text-3" />
+        <RefreshCw className="w-8 h-8 animate-spin text-[var(--ink-500)]" />
       </div>
     );
   }
@@ -126,20 +126,20 @@ export default function ControlTowerPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">Control Tower</h1>
-          <p className="text-szn-text-2 text-sm mt-1">
+          <p className="text-[var(--ink-600)] text-sm mt-1">
             System monitoring and management dashboard
           </p>
         </div>
         <div className="flex items-center gap-4">
-          <span className="text-sm text-szn-text-2">
+          <span className="text-sm text-[var(--ink-600)]">
             Last updated: {lastRefresh.toLocaleTimeString()}
           </span>
           <button
             onClick={() => setAutoRefresh(!autoRefresh)}
             className={`px-3 py-1.5 rounded-lg text-sm flex items-center gap-2 ${
               autoRefresh
-                ? 'bg-green-500/10 text-green-600'
-                : 'bg-szn-surface text-szn-text-2'
+                ? 'bg-green-500/10 text-[var(--signal-canon-ink)]'
+                : 'bg-[var(--ink-50)] text-[var(--ink-600)]'
             }`}
           >
             <RefreshCw className={`w-4 h-4 ${autoRefresh ? 'animate-spin' : ''}`} />
@@ -157,7 +157,7 @@ export default function ControlTowerPage() {
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+        <div className="bg-[var(--signal-conflict-soft)] border border-[var(--signal-conflict)] text-[var(--signal-conflict-ink)] px-4 py-3 rounded-lg">
           {error}
         </div>
       )}
@@ -165,7 +165,7 @@ export default function ControlTowerPage() {
       {/* System Health Overview */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Overall Health Card */}
-        <div className="bg-szn-card rounded-xl border border-szn-border p-6">
+        <div className="bg-[var(--ink-0)] rounded-xl border border-[var(--ink-200)] p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold flex items-center gap-2">
               <Server className="w-5 h-5" />
@@ -189,21 +189,21 @@ export default function ControlTowerPage() {
                 return (
                   <div
                     key={service.name}
-                    className="flex items-center justify-between py-2 border-b border-szn-border last:border-0"
+                    className="flex items-center justify-between py-2 border-b border-[var(--ink-200)] last:border-0"
                   >
                     <div className="flex items-center gap-3">
                       <StatusIcon
                         className={`w-5 h-5 ${
                           service.status === 'healthy'
-                            ? 'text-green-500'
+                            ? 'text-[var(--signal-canon-ink)]'
                             : service.status === 'degraded'
-                              ? 'text-yellow-500'
-                              : 'text-red-500'
+                              ? 'text-[var(--signal-pending-ink)]'
+                              : 'text-[var(--signal-conflict-ink)]'
                         }`}
                       />
                       <span className="text-sm">{service.displayName}</span>
                     </div>
-                    <span className="text-xs text-szn-text-2">
+                    <span className="text-xs text-[var(--ink-600)]">
                       {service.latencyMs ? `${service.latencyMs}ms` : '-'}
                     </span>
                   </div>
@@ -212,7 +212,7 @@ export default function ControlTowerPage() {
             </div>
           )}
 
-          <div className="mt-4 pt-4 border-t border-szn-border text-xs text-szn-text-2">
+          <div className="mt-4 pt-4 border-t border-[var(--ink-200)] text-xs text-[var(--ink-600)]">
             Uptime: {health ? formatUptime(health.uptimeSeconds) : '-'}
           </div>
         </div>
@@ -271,13 +271,13 @@ export default function ControlTowerPage() {
       </div>
 
       {/* Alerts Section */}
-      <div className="bg-szn-card rounded-xl border border-szn-border p-6">
+      <div className="bg-[var(--ink-0)] rounded-xl border border-[var(--ink-200)] p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold flex items-center gap-2">
             <Bell className="w-5 h-5" />
             Active Alerts
             {alerts.length > 0 && (
-              <span className="ml-2 px-2 py-0.5 text-xs bg-red-100 text-red-700 rounded-full">
+              <span className="ml-2 px-2 py-0.5 text-xs bg-[var(--signal-conflict-soft)] text-[var(--signal-conflict-ink)] rounded-full">
                 {alerts.length}
               </span>
             )}
@@ -292,8 +292,8 @@ export default function ControlTowerPage() {
         </div>
 
         {alerts.length === 0 ? (
-          <div className="text-center py-8 text-szn-text-2">
-            <CheckCircle className="w-12 h-12 mx-auto mb-2 text-green-500" />
+          <div className="text-center py-8 text-[var(--ink-600)]">
+            <CheckCircle className="w-12 h-12 mx-auto mb-2 text-[var(--signal-canon-ink)]" />
             <p>No active alerts</p>
           </div>
         ) : (
@@ -396,21 +396,21 @@ function SignalCard({
   }>;
 }) {
   return (
-    <div className="bg-szn-card rounded-xl border border-szn-border p-6">
+    <div className="bg-[var(--ink-0)] rounded-xl border border-[var(--ink-200)] p-6">
       <h2 className="text-lg font-semibold flex items-center gap-2 mb-4">
         <Icon className="w-5 h-5" />
         {title}
       </h2>
 
       {items.length === 0 ? (
-        <div className="text-sm text-szn-text-2 py-6">{emptyLabel}</div>
+        <div className="text-sm text-[var(--ink-600)] py-6">{emptyLabel}</div>
       ) : (
         <div className="space-y-3">
           {items.map((item) => (
-            <div key={item.id} className="border border-szn-border rounded-lg p-3">
+            <div key={item.id} className="border border-[var(--ink-200)] rounded-lg p-3">
               <div className="text-sm font-medium">{item.headline}</div>
-              <div className="text-xs text-szn-text-2 mt-1">{item.subline}</div>
-              <div className="text-xs text-szn-text-3 mt-2">
+              <div className="text-xs text-[var(--ink-600)] mt-1">{item.subline}</div>
+              <div className="text-xs text-[var(--ink-500)] mt-2">
                 {new Date(item.timestamp).toLocaleString()}
               </div>
             </div>
@@ -447,23 +447,23 @@ function MetricCard({
       : value.toLocaleString();
 
   return (
-    <div className="bg-szn-card rounded-xl border border-szn-border p-4">
+    <div className="bg-[var(--ink-0)] rounded-xl border border-[var(--ink-200)] p-4">
       <div className="flex items-center justify-between mb-2">
-        <span className="text-sm text-szn-text-2">{title}</span>
-        <Icon className="w-4 h-4 text-szn-text-3" />
+        <span className="text-sm text-[var(--ink-600)]">{title}</span>
+        <Icon className="w-4 h-4 text-[var(--ink-500)]" />
       </div>
       <div className="flex items-baseline gap-1">
         <span
           className={`text-2xl font-bold ${
-            isNegative && value > 5 ? 'text-red-500' : ''
+            isNegative && value > 5 ? 'text-[var(--signal-conflict-ink)]' : ''
           }`}
         >
           {formattedValue}
         </span>
-        {unit && <span className="text-sm text-szn-text-2">{unit}</span>}
+        {unit && <span className="text-sm text-[var(--ink-600)]">{unit}</span>}
       </div>
       {trend !== undefined && (
-        <div className="text-xs text-szn-text-2 mt-1">
+        <div className="text-xs text-[var(--ink-600)] mt-1">
           {trend.toFixed(1)} {trendLabel}
         </div>
       )}
@@ -480,9 +480,9 @@ function AlertRow({
   onAction: () => void;
 }) {
   const severityColors: Record<string, string> = {
-    critical: 'bg-red-100 text-red-700 border-red-200',
+    critical: 'bg-[var(--signal-conflict-soft)] text-[var(--signal-conflict-ink)] border-[var(--signal-conflict)]',
     error: 'bg-orange-100 text-orange-700 border-orange-200',
-    warning: 'bg-yellow-100 text-yellow-700 border-yellow-200',
+    warning: 'bg-[var(--signal-pending-soft)] text-[var(--signal-pending-ink)] border-[var(--signal-pending)]',
     info: 'bg-blue-100 text-blue-700 border-blue-200',
   };
 
@@ -506,7 +506,7 @@ function AlertRow({
 
   return (
     <div
-      className={`p-4 rounded-lg border ${severityColors[alert.severity] || 'bg-szn-surface'}`}
+      className={`p-4 rounded-lg border ${severityColors[alert.severity] || 'bg-[var(--ink-50)]'}`}
     >
       <div className="flex items-start justify-between">
         <div>
@@ -527,7 +527,7 @@ function AlertRow({
             <>
               <button
                 onClick={handleAcknowledge}
-                className="px-3 py-1 text-xs bg-szn-card rounded border border-szn-border hover:bg-szn-surface-1"
+                className="px-3 py-1 text-xs bg-[var(--ink-0)] rounded border border-[var(--ink-200)] hover:bg-[var(--ink-50)]"
               >
                 Acknowledge
               </button>
@@ -568,11 +568,11 @@ function QuickActionCard({
   return (
     <a
       href={href}
-      className="block bg-szn-card rounded-xl border border-szn-border p-4 hover:border-blue-300 hover:shadow-sm transition-all"
+      className="block bg-[var(--ink-0)] rounded-xl border border-[var(--ink-200)] p-4 hover:border-blue-300 hover:shadow-sm transition-all"
     >
       <Icon className="w-6 h-6 text-blue-600 mb-2" />
       <h3 className="font-medium">{title}</h3>
-      <p className="text-sm text-szn-text-2 mt-1">{description}</p>
+      <p className="text-sm text-[var(--ink-600)] mt-1">{description}</p>
     </a>
   );
 }

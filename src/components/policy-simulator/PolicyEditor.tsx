@@ -161,9 +161,9 @@ export function PolicyEditor({
   }, [onChange]);
 
   return (
-    <div className="flex flex-col border rounded-lg overflow-hidden bg-gray-900">
+    <div className="flex flex-col border rounded-lg overflow-hidden bg-[var(--ink-900)]">
       {/* Toolbar */}
-      <div className="flex items-center justify-between px-3 py-2 bg-gray-800 border-b border-gray-700">
+      <div className="flex items-center justify-between px-3 py-2 bg-[var(--ink-800)] border-b border-gray-700">
         <div className="flex items-center gap-2">
           <span className="text-xs font-mono text-gray-400">YAML</span>
           {isValidating && (
@@ -172,7 +172,7 @@ export function PolicyEditor({
           {validation && !isValidating && (
             <span
               className={`text-xs ${
-                validation.valid ? 'text-green-500' : 'text-red-500'
+                validation.valid ? 'text-[var(--signal-canon-ink)]' : 'text-[var(--signal-conflict-ink)]'
               }`}
             >
               {validation.valid ? 'Valid' : `${validation.errors.length} error(s)`}
@@ -195,7 +195,7 @@ export function PolicyEditor({
       {/* Editor */}
       <div className="relative flex" style={{ height }}>
         {/* Line numbers */}
-        <div className="flex-shrink-0 w-12 bg-gray-800 text-gray-500 text-xs font-mono py-2 text-right pr-2 select-none overflow-hidden">
+        <div className="flex-shrink-0 w-12 bg-[var(--ink-800)] text-gray-500 text-xs font-mono py-2 text-right pr-2 select-none overflow-hidden">
           {Array.from({ length: lineCount }, (_, i) => (
             <div key={i} className="leading-5">
               {i + 1}
@@ -213,7 +213,7 @@ export function PolicyEditor({
           spellCheck={false}
           className={`
             flex-1 p-2 font-mono text-sm leading-5
-            bg-gray-900 text-gray-100
+            bg-[var(--ink-900)] text-gray-100
             resize-none outline-none
             placeholder:text-gray-600
             ${readOnly ? 'cursor-default' : ''}
@@ -233,9 +233,9 @@ export function PolicyEditor({
           {validation.errors.map((error, i) => (
             <div
               key={`error-${i}`}
-              className="flex items-start gap-2 px-3 py-1 text-xs bg-red-900/20 text-red-400"
+              className="flex items-start gap-2 px-3 py-1 text-xs bg-[var(--signal-conflict)]/20 text-[var(--signal-conflict-soft)]"
             >
-              <span className="font-mono text-red-500">ERROR</span>
+              <span className="font-mono text-[var(--signal-conflict-ink)]">ERROR</span>
               <span className="text-gray-500">{error.path}:</span>
               <span>{error.message}</span>
             </div>
@@ -245,7 +245,7 @@ export function PolicyEditor({
               key={`warning-${i}`}
               className="flex items-start gap-2 px-3 py-1 text-xs bg-yellow-900/20 text-yellow-400"
             >
-              <span className="font-mono text-yellow-500">WARN</span>
+              <span className="font-mono text-[var(--signal-pending-ink)]">WARN</span>
               <span className="text-gray-500">{warning.path}:</span>
               <span>{warning.message}</span>
             </div>

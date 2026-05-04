@@ -36,6 +36,7 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+.test-org-id
 
 # vercel
 .vercel
@@ -62,3 +63,9 @@ mcp-server/node_modules/
 # CI artifacts
 .seizn-traces/
 .seizn-generated-tests/
+docs/migrations/r2-integrity-report*.json
+
+# Supabase local runtime and generated SQL artifacts
+/supabase/.temp/
+/supabase/all_migrations.sql
+/supabase/batches/

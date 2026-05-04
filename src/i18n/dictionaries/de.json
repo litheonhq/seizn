@@ -392,7 +392,6 @@
     "nav": {
       "overview": "Übersicht",
       "memories": "Entitäten",
-      "memoryEditor": "Memory Editor",
       "mindMap": "Beziehungsgraph",
       "candidates": "Event-Posteingang",
       "devTools": "DevTools",
@@ -406,6 +405,7 @@
       "usage": "Nutzung",
       "budget": "Budget",
       "reports": "Berichte",
+      "calculator": "Kostenschätzung",
       "apiKeys": "API-Schlüssel",
       "integrations": "Engine-Plugins",
       "webhooks": "Webhooks",
@@ -414,10 +414,15 @@
       "settings": "Einstellungen",
       "groups": {
         "memory": "NPC-SPEICHER",
+        "observe": "BEOBACHTEN",
+        "govern": "RICHTLINIEN",
+        "finops": "NUTZUNG & KOSTEN",
+        "connect": "INTEGRIEREN",
         "system": "ARBEITSBEREICH",
         "build": "Entwicklung",
         "integrate": "Integration"
-      }
+      },
+      "memoryEditor": "Memory Editor"
     },
     "pinSidebar": "Seitenleiste anheften",
     "unpinSidebar": "Seitenleiste einklappen",
@@ -1439,6 +1444,50 @@
       "recentDecisions": "Letzte Entscheidungen",
       "noLogs": "Noch keine Entscheidungsprotokolle"
     },
+    "calculator": {
+      "title": "Nutzungsrechner",
+      "subtitle": "Schätzen Sie Ihre monatlichen Kosten basierend auf der erwarteten Nutzung",
+      "stats": {
+        "apiCalls": "API-Aufrufe",
+        "memories": "Erinnerungen",
+        "extractions": "Extraktionen",
+        "estimated": "Geschätzte Kosten"
+      },
+      "presets": {
+        "title": "Schnellvorlagen",
+        "startup": "Startup",
+        "growing": "Wachsend",
+        "scale": "Skalierung",
+        "enterprise": "Enterprise"
+      },
+      "customize": {
+        "title": "Nutzung anpassen"
+      },
+      "labels": {
+        "apiCalls": "Monatliche API-Aufrufe",
+        "memories": "Gespeicherte Erinnerungen",
+        "extractions": "Extraktionen"
+      },
+      "recommended": {
+        "title": "Empfohlener Plan",
+        "base": "Grundpreis",
+        "overage": "Mehrverbrauch",
+        "cta": "Loslegen"
+      },
+      "comparison": {
+        "title": "Alle Pläne",
+        "best": "Bester Wert"
+      },
+      "details": {
+        "title": "Detaillierte Preisaufschlüsselung",
+        "plan": "Plan",
+        "base": "Grundpreis",
+        "includedCalls": "Enthaltene Aufrufe",
+        "overageRate": "Mehrverbrauchsrate",
+        "yourOverage": "Ihr Mehrverbrauch",
+        "total": "Gesamt"
+      }
+    },
     "webhooks": {
       "title": "Webhooks",
       "subtitle": "Konfigurieren Sie HTTP-Callbacks für Echtzeit-Ereignisbenachrichtigungen",
@@ -1610,12 +1659,101 @@
       "contactUs": "Kontaktieren Sie uns unter"
     }
   },
+  "serviceSelector": {
+    "title": "Wählen Sie Ihr Erlebnis",
+    "subtitle": "Zwei Wege, die Kraft des KI-Speichers zu nutzen",
+    "spring": {
+      "name": "Spring",
+      "icon": "🌿",
+      "tagline": "Multi-KI-Chat",
+      "description": "Chatten Sie mit GPT-4, Claude, Gemini und mehr — alle mit persistentem Speicher, der sich an Sie erinnert.",
+      "features": [
+        "Zugriff auf alle wichtigen KI-Modelle an einem Ort",
+        "Ihre Präferenzen werden zwischen Sitzungen gespeichert",
+        "Nahtloser Kontextwechsel zwischen Modellen"
+      ],
+      "cta": "Spring testen",
+      "badge": ""
+    },
+    "summer": {
+      "name": "Summer",
+      "icon": "☀️",
+      "tagline": "Speicher-API",
+      "description": "Geben Sie Ihren KI-Anwendungen mit unserer entwicklerfreundlichen API persistenten Speicher.",
+      "features": [
+        "Einfache REST API und SDKs",
+        "Abrufzeit unter 50ms",
+        "Enterprise-Sicherheit"
+      ],
+      "cta": "API erkunden",
+      "badge": "Jetzt verfügbar"
+    },
+    "footer": "Teil der Seizn-Jahreszeiten — KI-Speicher für jeden Bedarf"
+  },
+  "springPage": {
+    "badge": "",
+    "title": "Ein Chat.",
+    "titleHighlight": "Alle KIs.",
+    "subtitle": "Egal welche Sie wählen,\nalle erinnern sich an Sie.",
+    "startChatting": "Chat starten",
+    "viewPricing": "Preise ansehen",
+    "features": {
+      "title": "Warum Spring?",
+      "subtitle": "Das Beste jeder KI, vereint.",
+      "multiModel": {
+        "title": "Multi-Modell-Zugriff",
+        "description": "Wechseln Sie zwischen GPT-4, Claude, Gemini, Llama und mehr. Wählen Sie das beste Modell für jede Aufgabe."
+      },
+      "persistentMemory": {
+        "title": "Persistenter Speicher",
+        "description": "Ihre Präferenzen, Kontext und Verlauf werden in jedem Gespräch und jedem Modell beibehalten."
+      },
+      "freeGenerosity": {
+        "title": "Cursor-Level-Gratis-Tier",
+        "description": "Großzügige kostenlose Nutzung. Die meisten Benutzer müssen nie bezahlen. Pro für 9,99 $/Monat für Power-User."
+      }
+    },
+    "pricing": {
+      "title": "Einfache Preise",
+      "free": {
+        "name": "Kostenlos",
+        "price": "0 $",
+        "period": "Für immer",
+        "features": [
+          "Alle KI-Modelle",
+          "Speicher über Sitzungen hinweg",
+          "Web- und Mobile-Apps"
+        ],
+        "cta": "Kostenlos starten"
+      },
+      "pro": {
+        "name": "Pro",
+        "price": "9,99 $",
+        "period": "pro Monat",
+        "badge": "Bester Wert",
+        "features": [
+          "Alles in Kostenlos",
+          "Prioritätszugriff",
+          "Erweiterte Speichersteuerung",
+          "API-Zugriff"
+        ],
+        "cta": "Auf Pro upgraden"
+      }
+    }
+  },
   "extremeHome": {
     "heroTitle": "Speicher für KI-NPCs.",
     "heroSubtitle": "Verbinde dich mit Inworld, Convai oder deinem eigenen LLM. Seizn gibt deinen NPCs persistente Erinnerungen, Beziehungen und generationenübergreifende Wiedererkennung — entitätsbasierte Preise, kein Seat-Pricing.",
     "ctaStart": "Docs lesen",
     "ctaDemo": "smallgod spielen",
     "socialProof": "Entwickelt für Game Studios, die von 10 auf 10.000 NPCs skalieren.",
+    "liveDemo": "Live-Demo",
+    "heroTagline": "Spiele smallgod — unser Referenz-Gottspiel auf Seizn-Basis. Ohne Anmeldung, ohne Installation.",
+    "chips": {
+      "trace": "Trace",
+      "eval": "Bewertung",
+      "policy": "Richtlinie"
+    },
     "copySnippetTitle": "In Unity, Unreal oder jede Runtime integrieren",
     "copySnippetSubtitle": "HTTP-Wrapper + offizielle C#/C++-Plugins. Keine eigene Infrastruktur nötig.",
     "whySeizn": {
@@ -1656,6 +1794,84 @@
       "status": "Status",
       "help": "Hilfe",
       "github": "OSS"
+    },
+    "requestBuilder": {
+      "title": "Anfrage-Builder",
+      "query": "Abfrage",
+      "queryPlaceholder": "Suchanfrage eingeben...",
+      "tryExamples": "Beispiele ausprobieren",
+      "dataset": "Datensatz",
+      "latencyBudget": "Latenz-Budget",
+      "fast": "schnell",
+      "thorough": "gründlich",
+      "topK": "Top K",
+      "results": "Ergebnisse",
+      "features": "Funktionen",
+      "hybridSearch": "Hybrid-Suche",
+      "hybridSearchDesc": "Vektor + Stichwort kombinieren",
+      "rerank": "Neuordnung",
+      "rerankDesc": "Mit Cross-Encoder neu bewerten",
+      "answerContract": "Antwort-Vertrag",
+      "answerContractDesc": "Antwortqualität validieren",
+      "running": "Läuft...",
+      "runQuery": "Abfrage ausführen",
+      "datasets": {
+        "techDocs": "Technische Dokumentation",
+        "legalContracts": "Rechtsverträge",
+        "researchPapers": "Forschungsarbeiten"
+      },
+      "advanced": "Erweitert"
+    },
+    "resultsPanel": {
+      "searching": "Suche...",
+      "noResults": "Führen Sie eine Abfrage aus",
+      "score": "Punktzahl"
+    },
+    "tracePanel": {
+      "tracing": "Pipeline verfolgen...",
+      "noTrace": "Führen Sie eine Abfrage aus um Trace zu sehen",
+      "latency": "Latenz",
+      "cost": "Kosten",
+      "tokens": "Token",
+      "vectorOps": "Vektor-Ops",
+      "cached": "gecacht",
+      "model": "Modell",
+      "input": "Eingabe",
+      "output": "Ausgabe"
+    },
+    "tabs": {
+      "results": "Ergebnisse",
+      "trace": "Trace",
+      "cost": "Kosten"
+    },
+    "playgroundTitle": "Jetzt ausprobieren",
+    "costPanel": {
+      "calculating": "Kosten werden berechnet...",
+      "noCost": "Führen Sie eine Abfrage aus, um die Kosten zu sehen",
+      "costBreakdown": "Kostenaufschlüsselung",
+      "component": "Komponente",
+      "cost": "Kosten",
+      "embedding": "Embedding",
+      "vectorSearch": "Vektorsuche",
+      "rerank": "Reranking",
+      "answerContract": "Antwortvertrag",
+      "total": "Gesamtkosten",
+      "usage": "Nutzung",
+      "tokensIn": "Token Eingabe",
+      "tokensOut": "Token Ausgabe",
+      "queryUnits": "Abfrageeinheiten",
+      "estimatedMonthly": "Geschätzte Monatskosten",
+      "basedOn": "Basierend auf",
+      "queriesPerDay": "Abfragen/Tag"
+    },
+    "errorDisplay": {
+      "error": "Fehler",
+      "errorCode": "Code",
+      "traceId": "Trace-ID",
+      "hint": "Hinweis",
+      "tryAgain": "Erneut versuchen",
+      "copyTraceId": "Trace-ID kopieren",
+      "copied": "Kopiert!"
     }
   },
   "docs": {
@@ -2605,6 +2821,42 @@
       }
     }
   },
+  "demoQuery": {
+    "title": "Live-Demo",
+    "subtitle": "Erleben Sie Seizns Abruf-Pipeline mit vollständiger Nachverfolgung und Kostentransparenz.",
+    "tryItNow": "Jetzt ausprobieren - Keine Anmeldung nötig",
+    "queryPlaceholder": "Suchanfrage",
+    "runDemo": "Demo starten",
+    "running": "Läuft...",
+    "results": "Ergebnisse",
+    "trace": "Trace",
+    "cost": "Kosten",
+    "noResults": "Starten Sie die Demo, um Ergebnisse zu sehen",
+    "errorTitle": "Fehler",
+    "rateLimitError": "Ratenlimit überschritten. Bitte warten.",
+    "retryIn": "Wiederholen in",
+    "seconds": "Sekunden",
+    "score": "Bewertung",
+    "rerankScore": "Reranking",
+    "latency": "Latenz",
+    "tokens": "Token",
+    "cached": "gecacht",
+    "model": "Modell",
+    "input": "Eingabe",
+    "output": "Ausgabe",
+    "costBreakdown": "Aufschlüsselung",
+    "total": "Gesamtkosten",
+    "embedding": "Embedding",
+    "vectorSearch": "Vektorsuche",
+    "rerank": "Reranking",
+    "answerContract": "Antwortvertrag",
+    "tokensIn": "Token Eingabe",
+    "tokensOut": "Token Ausgabe",
+    "queryUnits": "Abfrageeinheiten",
+    "prefilledQueries": [
+      "Beispiele ausprobieren"
+    ]
+  },
   "publicTrace": {
     "title": "Geteilte Trace",
     "subtitle": "Details der geteilten Abruf-Trace anzeigen",
@@ -2980,25 +3232,8 @@
     }
   },
   "status": {
-    "metadataTitle": "Seizn Status",
-    "metadataDescription": "Current Seizn API availability and public incident history.",
-    "eyebrow": "STATUS",
     "title": "Systemstatus",
     "subtitle": "Echtzeit-Systemstatus und Vorfallshistorie",
-    "currentStatusLabel": "Current status",
-    "measuredScope": "Measured scope: api.seizn.com/v1/*",
-    "uptimeLabel": "Last 30 days uptime",
-    "uptimeWindow": "Calculated from public incident windows in the last 30 days.",
-    "incidentsEyebrow": "INCIDENTS",
-    "recentIncidentsTitle": "Recent incidents",
-    "noRecentIncidents": "No recent incidents",
-    "noRecentIncidentsBody": "The public incident ledger is empty for this period.",
-    "slaLink": "Read the SLA",
-    "states": {
-      "operational": "operational",
-      "degraded": "degraded",
-      "outage": "outage"
-    },
     "lastUpdated": "Zuletzt aktualisiert",
     "overall": {
       "operational": "Alle Systeme betriebsbereit",
@@ -3046,6 +3281,23 @@
       "title": "Updates abonnieren",
       "rss": "RSS-Feed",
       "email": "E-Mail-Benachrichtigungen"
+    },
+    "metadataTitle": "Seizn Status",
+    "metadataDescription": "Current Seizn API availability and public incident history.",
+    "eyebrow": "STATUS",
+    "currentStatusLabel": "Current status",
+    "measuredScope": "Measured scope: api.seizn.com/v1/*",
+    "uptimeLabel": "Last 30 days uptime",
+    "uptimeWindow": "Calculated from public incident windows in the last 30 days.",
+    "incidentsEyebrow": "INCIDENTS",
+    "recentIncidentsTitle": "Recent incidents",
+    "noRecentIncidents": "No recent incidents",
+    "noRecentIncidentsBody": "The public incident ledger is empty for this period.",
+    "slaLink": "Read the SLA",
+    "states": {
+      "operational": "operational",
+      "degraded": "degraded",
+      "outage": "outage"
     }
   },
   "sla": {

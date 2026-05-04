@@ -263,8 +263,8 @@ export function RetOpsDashboard({
         <>
           {/* Error Message */}
           {data.error && (
-            <div className="p-4 rounded-lg bg-red-50 border border-red-200">
-              <p className="text-sm text-red-700">{data.error}</p>
+            <div className="p-4 rounded-lg bg-[var(--signal-conflict-soft)] border border-[var(--signal-conflict)]">
+              <p className="text-sm text-[var(--signal-conflict-ink)]">{data.error}</p>
             </div>
           )}
 

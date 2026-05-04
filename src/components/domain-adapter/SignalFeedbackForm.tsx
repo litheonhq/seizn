@@ -317,13 +317,13 @@ export function SignalFeedbackForm({
 
         {/* Error / Success Messages */}
         {error && (
-          <div className="text-sm text-red-600 bg-red-50 p-3 rounded-lg">
+          <div className="text-sm text-[var(--signal-conflict-ink)] bg-[var(--signal-conflict-soft)] p-3 rounded-lg">
             {error}
           </div>
         )}
 
         {success && (
-          <div className="text-sm text-green-600 bg-green-50 p-3 rounded-lg">
+          <div className="text-sm text-[var(--signal-canon-ink)] bg-[var(--signal-canon-soft)] p-3 rounded-lg">
             Signal recorded successfully!
           </div>
         )}

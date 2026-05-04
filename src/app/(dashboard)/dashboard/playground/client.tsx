@@ -173,24 +173,24 @@ export function PlaygroundClient() {
 
       {/* Header */}
       <header>
-        <h1 className="text-2xl font-bold text-szn-text-1 mb-2">
+        <h1 className="text-2xl font-bold text-[var(--ink-900)] mb-2">
           {t("dashboard.playground.title")}
         </h1>
-        <p className="text-szn-text-2">
+        <p className="text-[var(--ink-600)]">
           {t("dashboard.playground.subtitle")}
         </p>
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Left Panel - Query Builder */}
-        <div className="szn-card border border-szn-border rounded-lg p-6">
-          <h2 className="text-lg font-semibold text-szn-text-1 mb-4">
+        <div className="szn-card border border-[var(--ink-200)] rounded-lg p-6">
+          <h2 className="text-lg font-semibold text-[var(--ink-900)] mb-4">
             {t("dashboard.playground.queryBuilder")}
           </h2>
 
           {/* Query Input */}
           <div className="mb-4">
-            <label className="block text-sm font-medium text-szn-text-1 mb-1">
+            <label className="block text-sm font-medium text-[var(--ink-900)] mb-1">
               {t("dashboard.playground.query")}
             </label>
             <textarea
@@ -198,13 +198,13 @@ export function PlaygroundClient() {
               onChange={(e) => setQuery(e.target.value)}
               placeholder={t("dashboard.playground.queryPlaceholder")}
               data-testid="playground-query-input"
-              className="w-full h-24 px-4 py-3 rounded-xl border border-szn-border focus:outline-none focus:ring-2 focus:ring-szn-accent resize-none"
+              className="w-full h-24 px-4 py-3 rounded-xl border border-[var(--ink-200)] focus:outline-none focus:ring-2 focus:ring-[var(--ink-900)] resize-none"
             />
           </div>
 
           {/* Namespace */}
           <div className="mb-4">
-            <label className="block text-sm font-medium text-szn-text-1 mb-1">
+            <label className="block text-sm font-medium text-[var(--ink-900)] mb-1">
               {t("dashboard.playground.namespace")}
             </label>
             <input
@@ -213,7 +213,7 @@ export function PlaygroundClient() {
               onChange={(e) => setNamespace(e.target.value)}
               placeholder="default"
               data-testid="playground-namespace-input"
-              className="w-full px-4 py-2 rounded-xl border border-szn-border focus:outline-none focus:ring-2 focus:ring-szn-accent"
+              className="w-full px-4 py-2 rounded-xl border border-[var(--ink-200)] focus:outline-none focus:ring-2 focus:ring-[var(--ink-900)]"
             />
           </div>
 
@@ -221,7 +221,7 @@ export function PlaygroundClient() {
           <div className="grid grid-cols-2 gap-4 mb-4">
             {/* Top K */}
             <div>
-              <label className="block text-sm font-medium text-szn-text-1 mb-1">
+              <label className="block text-sm font-medium text-[var(--ink-900)] mb-1">
                 Top K
               </label>
               <input
@@ -230,13 +230,13 @@ export function PlaygroundClient() {
                 max={100}
                 value={topK}
                 onChange={(e) => setTopK(Math.max(1, Math.min(100, parseInt(e.target.value) || 5)))}
-                className="w-full px-4 py-2 rounded-xl border border-szn-border focus:outline-none focus:ring-2 focus:ring-szn-accent"
+                className="w-full px-4 py-2 rounded-xl border border-[var(--ink-200)] focus:outline-none focus:ring-2 focus:ring-[var(--ink-900)]"
               />
             </div>
 
             {/* Threshold */}
             <div>
-              <label className="block text-sm font-medium text-szn-text-1 mb-1">
+              <label className="block text-sm font-medium text-[var(--ink-900)] mb-1">
                 {t("dashboard.playground.threshold")}
               </label>
               <input
@@ -246,14 +246,14 @@ export function PlaygroundClient() {
                 step={0.05}
                 value={threshold}
                 onChange={(e) => setThreshold(Math.max(0, Math.min(1, parseFloat(e.target.value) || 0.7)))}
-                className="w-full px-4 py-2 rounded-xl border border-szn-border focus:outline-none focus:ring-2 focus:ring-szn-accent"
+                className="w-full px-4 py-2 rounded-xl border border-[var(--ink-200)] focus:outline-none focus:ring-2 focus:ring-[var(--ink-900)]"
               />
             </div>
           </div>
 
           {/* Search Mode */}
           <div className="mb-4">
-            <label className="block text-sm font-medium text-szn-text-1 mb-2">
+            <label className="block text-sm font-medium text-[var(--ink-900)] mb-2">
               {t("dashboard.playground.searchMode")}
             </label>
             <div className="flex gap-2">
@@ -263,8 +263,8 @@ export function PlaygroundClient() {
                   onClick={() => setMode(m)}
                   className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                     mode === m
-                      ? "bg-gradient-to-r from-szn-accent to-szn-accent-2 text-white"
-                      : "bg-szn-surface text-szn-text-2 hover:bg-szn-surface-1"
+                      ? "bg-gradient-to-r from-[var(--ink-900)] to-[var(--ink-900)]-2 text-white"
+                      : "bg-[var(--ink-50)] text-[var(--ink-600)] hover:bg-[var(--ink-50)]"
                   }`}
                 >
                   {t(`dashboard.playground.mode.${m}`)}
@@ -280,13 +280,13 @@ export function PlaygroundClient() {
                 type="checkbox"
                 checked={enableRerank}
                 onChange={(e) => setEnableRerank(e.target.checked)}
-                className="w-5 h-5 rounded border-szn-border text-szn-accent focus:ring-szn-accent"
+                className="w-5 h-5 rounded border-[var(--ink-200)] text-[var(--ink-900)] focus:ring-[var(--ink-900)]"
               />
               <div>
-                <span className="text-sm font-medium text-szn-text-1">
+                <span className="text-sm font-medium text-[var(--ink-900)]">
                   {t("dashboard.playground.enableRerank")}
                 </span>
-                <p className="text-xs text-szn-text-2">
+                <p className="text-xs text-[var(--ink-600)]">
                   {t("dashboard.playground.rerankDesc")}
                 </p>
               </div>
@@ -299,7 +299,7 @@ export function PlaygroundClient() {
             disabled={isLoading || !query.trim()}
             data-action="run-query"
             data-testid="playground-run-query"
-            className="w-full py-3 rounded-xl bg-gradient-to-r from-szn-accent to-szn-accent-2 text-white font-semibold hover:from-szn-accent/90 hover:to-szn-accent-2/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
+            className="w-full py-3 rounded-xl bg-gradient-to-r from-[var(--ink-900)] to-[var(--ink-900)]-2 text-white font-semibold hover:from-[var(--ink-900)]/90 hover:to-[var(--ink-900)]-2/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
           >
             {isLoading ? (
               <>
@@ -316,9 +316,9 @@ export function PlaygroundClient() {
         </div>
 
         {/* Right Panel - Results & Trace */}
-        <div className="szn-card border border-szn-border rounded-lg overflow-hidden">
+        <div className="szn-card border border-[var(--ink-200)] rounded-lg overflow-hidden">
           {/* Tabs */}
-          <div className="flex border-b border-szn-border">
+          <div className="flex border-b border-[var(--ink-200)]">
             {(["results", "trace", "cost"] as const).map((tab) => (
               <button
                 key={tab}
@@ -326,13 +326,13 @@ export function PlaygroundClient() {
                 data-testid={`playground-tab-${tab}`}
                 className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${
                   activeTab === tab
-                    ? "bg-szn-card text-szn-text-1 border-b-2 border-szn-accent"
-                    : "bg-szn-bg text-szn-text-2 hover:text-szn-text-1"
+                    ? "bg-[var(--ink-0)] text-[var(--ink-900)] border-b-2 border-[var(--ink-900)]"
+                    : "bg-[var(--ink-50)] text-[var(--ink-600)] hover:text-[var(--ink-900)]"
                 }`}
               >
                 {t(`dashboard.playground.tabs.${tab}`)}
                 {tab === "results" && results.length > 0 && (
-                  <span className="ml-2 px-2 py-0.5 bg-szn-accent/10 text-szn-accent rounded-full text-xs">
+                  <span className="ml-2 px-2 py-0.5 bg-[var(--ink-900)]/10 text-[var(--ink-900)] rounded-full text-xs">
                     {results.length}
                   </span>
                 )}
@@ -363,29 +363,29 @@ export function PlaygroundClient() {
 
       {/* Rerank Comparison (if enabled and has results) */}
       {enableRerank && results.length > 0 && (
-        <div className="szn-card border border-szn-border rounded-lg p-6">
-          <h3 className="text-lg font-semibold text-szn-text-1 mb-4">
+        <div className="szn-card border border-[var(--ink-200)] rounded-lg p-6">
+          <h3 className="text-lg font-semibold text-[var(--ink-900)] mb-4">
             {t("dashboard.playground.rerankComparison")}
           </h3>
           <div className="grid grid-cols-2 gap-6">
             <div>
-              <h4 className="text-sm font-medium text-szn-text-2 mb-2">
+              <h4 className="text-sm font-medium text-[var(--ink-600)] mb-2">
                 {t("dashboard.playground.beforeRerank")}
               </h4>
               <div className="space-y-2">
                 {results.slice(0, 5).map((r, i) => (
                   <div key={r.id} className="flex items-center gap-2 text-sm">
-                    <span className="w-6 h-6 rounded-full bg-szn-surface flex items-center justify-center text-szn-text-2">
+                    <span className="w-6 h-6 rounded-full bg-[var(--ink-50)] flex items-center justify-center text-[var(--ink-600)]">
                       {i + 1}
                     </span>
-                    <span className="flex-1 truncate text-szn-text-1">{r.content}</span>
-                    <span className="text-szn-text-3">{(r.similarity * 100).toFixed(1)}%</span>
+                    <span className="flex-1 truncate text-[var(--ink-900)]">{r.content}</span>
+                    <span className="text-[var(--ink-500)]">{(r.similarity * 100).toFixed(1)}%</span>
                   </div>
                 ))}
               </div>
             </div>
             <div>
-              <h4 className="text-sm font-medium text-szn-text-2 mb-2">
+              <h4 className="text-sm font-medium text-[var(--ink-600)] mb-2">
                 {t("dashboard.playground.afterRerank")}
               </h4>
               <div className="space-y-2">
@@ -394,11 +394,11 @@ export function PlaygroundClient() {
                   .slice(0, 5)
                   .map((r, i) => (
                     <div key={r.id} className="flex items-center gap-2 text-sm">
-                      <span className="w-6 h-6 rounded-full bg-szn-accent/10 flex items-center justify-center text-szn-accent">
+                      <span className="w-6 h-6 rounded-full bg-[var(--ink-900)]/10 flex items-center justify-center text-[var(--ink-900)]">
                         {i + 1}
                       </span>
-                      <span className="flex-1 truncate text-szn-text-1">{r.content}</span>
-                      <span className="text-szn-accent">{((r.rerank_score || r.similarity) * 100).toFixed(1)}%</span>
+                      <span className="flex-1 truncate text-[var(--ink-900)]">{r.content}</span>
+                      <span className="text-[var(--ink-900)]">{((r.rerank_score || r.similarity) * 100).toFixed(1)}%</span>
                     </div>
                   ))}
               </div>
@@ -423,7 +423,7 @@ function ResultsPanel({
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-64 text-szn-text-2">
+      <div className="flex items-center justify-center h-64 text-[var(--ink-600)]">
         <LoadingSpinner className="w-8 h-8 mr-3" />
         {t("dashboard.playground.searching")}
       </div>
@@ -432,17 +432,17 @@ function ResultsPanel({
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center h-64 text-szn-danger">
+      <div className="flex flex-col items-center justify-center h-64 text-[var(--signal-conflict)]">
         <ErrorIcon className="w-12 h-12 mb-3" />
         <p className="font-medium">{t("dashboard.playground.error")}</p>
-        <p className="text-sm text-szn-text-2 mt-1">{error}</p>
+        <p className="text-sm text-[var(--ink-600)] mt-1">{error}</p>
       </div>
     );
   }
 
   if (results.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center h-64 text-szn-text-3">
+      <div className="flex flex-col items-center justify-center h-64 text-[var(--ink-500)]">
         <SearchIcon className="w-12 h-12 mb-3" />
         <p>{t("dashboard.playground.noResults")}</p>
       </div>
@@ -455,26 +455,26 @@ function ResultsPanel({
         <div
           key={result.id}
           data-testid="playground-result-item"
-          className="p-4 rounded-xl bg-szn-bg border border-szn-border hover:border-szn-accent/30 transition-colors"
+          className="p-4 rounded-xl bg-[var(--ink-50)] border border-[var(--ink-200)] hover:border-[var(--ink-900)]/30 transition-colors"
         >
           <div className="flex items-start gap-3">
-            <span className="w-6 h-6 rounded-full bg-gradient-to-r from-szn-accent to-szn-accent-2 flex items-center justify-center text-white text-sm font-medium">
+            <span className="w-6 h-6 rounded-full bg-gradient-to-r from-[var(--ink-900)] to-[var(--ink-900)]-2 flex items-center justify-center text-white text-sm font-medium">
               {index + 1}
             </span>
             <div className="flex-1">
-              <p className="text-szn-text-1">{result.content}</p>
-              <div className="flex items-center gap-4 mt-2 text-xs text-szn-text-2">
+              <p className="text-[var(--ink-900)]">{result.content}</p>
+              <div className="flex items-center gap-4 mt-2 text-xs text-[var(--ink-600)]">
                 <span className="flex items-center gap-1">
                   <ScoreIcon className="w-3 h-3" />
                   {(result.similarity * 100).toFixed(1)}%
                 </span>
                 {result.memory_type && (
-                  <span className="px-2 py-0.5 bg-szn-surface rounded-full">
+                  <span className="px-2 py-0.5 bg-[var(--ink-50)] rounded-full">
                     {result.memory_type}
                   </span>
                 )}
                 {result.rerank_score !== undefined && (
-                  <span className="flex items-center gap-1 text-szn-accent">
+                  <span className="flex items-center gap-1 text-[var(--ink-900)]">
                     <RerankIcon className="w-3 h-3" />
                     {(result.rerank_score * 100).toFixed(1)}%
                   </span>
@@ -501,7 +501,7 @@ function TracePanel({
 
   if (steps.length === 0 && !isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center h-64 text-szn-text-3">
+      <div className="flex flex-col items-center justify-center h-64 text-[var(--ink-500)]">
         <TraceIcon className="w-12 h-12 mb-3" />
         <p>{t("dashboard.playground.noTrace")}</p>
       </div>
@@ -514,12 +514,12 @@ function TracePanel({
       {totalLatency > 0 && (
         <div
           data-testid="playground-trace-latency"
-          className="flex items-center justify-between p-3 rounded-lg bg-szn-accent/10 border border-szn-accent/20"
+          className="flex items-center justify-between p-3 rounded-lg bg-[var(--ink-900)]/10 border border-[var(--ink-900)]/20"
         >
-          <span className="text-sm font-medium text-szn-accent">
+          <span className="text-sm font-medium text-[var(--ink-900)]">
             {t("dashboard.playground.totalLatency")}
           </span>
-          <span className="text-lg font-bold text-szn-accent">
+          <span className="text-lg font-bold text-[var(--ink-900)]">
             {totalLatency}ms
           </span>
         </div>
@@ -532,19 +532,19 @@ function TracePanel({
             {/* Timeline Line */}
             <div className="relative flex flex-col items-center">
               <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                step.status === "completed" ? "bg-szn-success/10" :
-                step.status === "running" ? "bg-szn-accent/10 animate-pulse" :
-                step.status === "error" ? "bg-szn-danger/10" :
-                "bg-szn-surface"
+                step.status === "completed" ? "bg-[var(--signal-canon)]/10" :
+                step.status === "running" ? "bg-[var(--ink-900)]/10 animate-pulse" :
+                step.status === "error" ? "bg-[var(--signal-conflict)]/10" :
+                "bg-[var(--ink-50)]"
               }`}>
-                {step.status === "completed" && <CheckIcon className="w-4 h-4 text-szn-success" />}
-                {step.status === "running" && <LoadingSpinner className="w-4 h-4 text-szn-accent" />}
-                {step.status === "error" && <ErrorIcon className="w-4 h-4 text-szn-danger" />}
-                {step.status === "pending" && <span className="w-2 h-2 rounded-full bg-szn-text-3" />}
+                {step.status === "completed" && <CheckIcon className="w-4 h-4 text-[var(--signal-canon)]" />}
+                {step.status === "running" && <LoadingSpinner className="w-4 h-4 text-[var(--ink-900)]" />}
+                {step.status === "error" && <ErrorIcon className="w-4 h-4 text-[var(--signal-conflict)]" />}
+                {step.status === "pending" && <span className="w-2 h-2 rounded-full bg-[var(--ink-500)]" />}
               </div>
               {index < steps.length - 1 && (
                 <div className={`w-0.5 h-8 ${
-                  step.status === "completed" ? "bg-szn-success/30" : "bg-szn-border"
+                  step.status === "completed" ? "bg-[var(--signal-canon)]/30" : "bg-[var(--ink-200)]"
                 }`} />
               )}
             </div>
@@ -553,15 +553,15 @@ function TracePanel({
             <div className="flex-1 pt-1">
               <div className="flex items-center justify-between">
                 <span className={`text-sm font-medium ${
-                  step.status === "completed" ? "text-szn-text-1" :
-                  step.status === "running" ? "text-szn-accent" :
-                  step.status === "error" ? "text-szn-danger" :
-                  "text-szn-text-3"
+                  step.status === "completed" ? "text-[var(--ink-900)]" :
+                  step.status === "running" ? "text-[var(--ink-900)]" :
+                  step.status === "error" ? "text-[var(--signal-conflict)]" :
+                  "text-[var(--ink-500)]"
                 }`}>
                   {step.name}
                 </span>
                 {step.status === "completed" && (
-                  <span className="text-xs text-szn-text-2">
+                  <span className="text-xs text-[var(--ink-600)]">
                     {step.latencyMs}ms
                   </span>
                 )}
@@ -591,7 +591,7 @@ function CostPanel({
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-64 text-szn-text-2">
+      <div className="flex items-center justify-center h-64 text-[var(--ink-600)]">
         <LoadingSpinner className="w-8 h-8 mr-3" />
         {t("dashboard.playground.calculating")}
       </div>
@@ -600,7 +600,7 @@ function CostPanel({
 
   if (totalCost === "$0.00000") {
     return (
-      <div className="flex flex-col items-center justify-center h-64 text-szn-text-3">
+      <div className="flex flex-col items-center justify-center h-64 text-[var(--ink-500)]">
         <CostIcon className="w-12 h-12 mb-3" />
         <p>{t("dashboard.playground.noCost")}</p>
       </div>
@@ -616,16 +616,16 @@ function CostPanel({
   return (
     <div className="space-y-6">
       {/* Total Cost */}
-      <div className="text-center py-6 rounded-xl bg-szn-accent/10 border border-szn-accent/20">
-        <p className="text-sm text-szn-text-2 mb-1">{t("dashboard.playground.totalCost")}</p>
-        <p className="text-3xl font-bold bg-gradient-to-r from-szn-accent to-szn-accent-2 bg-clip-text text-transparent">
+      <div className="text-center py-6 rounded-xl bg-[var(--ink-900)]/10 border border-[var(--ink-900)]/20">
+        <p className="text-sm text-[var(--ink-600)] mb-1">{t("dashboard.playground.totalCost")}</p>
+        <p className="text-3xl font-bold bg-gradient-to-r from-[var(--ink-900)] to-[var(--ink-900)]-2 bg-clip-text text-transparent">
           {totalCost}
         </p>
       </div>
 
       {/* Cost Breakdown */}
       <div>
-        <h4 className="text-sm font-medium text-szn-text-1 mb-3">
+        <h4 className="text-sm font-medium text-[var(--ink-900)] mb-3">
           {t("dashboard.playground.costBreakdown")}
         </h4>
         <div className="space-y-2">
@@ -652,7 +652,7 @@ function CostPanel({
               model="cross-encoder"
             />
           )}
-          <div className="pt-2 mt-2 border-t border-szn-border">
+          <div className="pt-2 mt-2 border-t border-[var(--ink-200)]">
             <CostRow
               label={t("dashboard.playground.total")}
               cost={estimatedTotal}
@@ -663,11 +663,11 @@ function CostPanel({
       </div>
 
       {/* Monthly Estimate */}
-      <div className="p-4 rounded-xl bg-szn-bg border border-szn-border">
-        <p className="text-sm text-szn-text-2 mb-1">{t("dashboard.playground.monthlyEstimate")}</p>
-        <p className="text-lg font-semibold text-szn-text-1">
+      <div className="p-4 rounded-xl bg-[var(--ink-50)] border border-[var(--ink-200)]">
+        <p className="text-sm text-[var(--ink-600)] mb-1">{t("dashboard.playground.monthlyEstimate")}</p>
+        <p className="text-lg font-semibold text-[var(--ink-900)]">
           ${(estimatedTotal * 1000 * 30).toFixed(2)}
-          <span className="text-sm font-normal text-szn-text-2 ml-2">
+          <span className="text-sm font-normal text-[var(--ink-600)] ml-2">
             @ 1000 {t("dashboard.playground.queriesDay")}
           </span>
         </p>
@@ -692,13 +692,13 @@ function CostRow({
   return (
     <div className="flex items-center justify-between text-sm">
       <div className="flex items-center gap-2">
-        <span className={isBold ? "font-semibold text-szn-text-1" : "text-szn-text-2"}>
+        <span className={isBold ? "font-semibold text-[var(--ink-900)]" : "text-[var(--ink-600)]"}>
           {label}
         </span>
-        {model && <span className="text-xs text-szn-text-3">({model})</span>}
-        {note && <span className="text-xs text-szn-text-3">({note})</span>}
+        {model && <span className="text-xs text-[var(--ink-500)]">({model})</span>}
+        {note && <span className="text-xs text-[var(--ink-500)]">({note})</span>}
       </div>
-      <span className={isBold ? "font-semibold text-szn-text-1" : "text-szn-text-1"}>
+      <span className={isBold ? "font-semibold text-[var(--ink-900)]" : "text-[var(--ink-900)]"}>
         ${cost.toFixed(5)}
       </span>
     </div>

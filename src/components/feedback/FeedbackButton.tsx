@@ -134,7 +134,7 @@ export function FeedbackButton({
   if (submitted) {
     return (
       <div className={`inline-flex items-center gap-2 text-sm ${className}`}>
-        <span className="text-szn-accent font-medium">Thanks for your feedback!</span>
+        <span className="text-[var(--ink-900)] font-medium">Thanks for your feedback!</span>
       </div>
     );
   }
@@ -142,15 +142,15 @@ export function FeedbackButton({
   return (
     <div className={`relative ${className}`}>
       {/* Thumbs buttons */}
-      <div className="inline-flex items-center gap-1 bg-szn-surface rounded-lg p-1">
-        <span className="text-xs text-szn-text-2 px-2">Helpful?</span>
+      <div className="inline-flex items-center gap-1 bg-[var(--ink-50)] rounded-lg p-1">
+        <span className="text-xs text-[var(--ink-600)] px-2">Helpful?</span>
         <button
           onClick={handlePositive}
           disabled={submitting || rating !== null}
           className={`p-1.5 rounded-md transition-colors ${
             rating === "positive"
-              ? "bg-szn-accent/10 text-szn-accent"
-              : "hover:bg-szn-surface-1 text-szn-text-2 hover:text-szn-accent"
+              ? "bg-[var(--ink-900)]/10 text-[var(--ink-900)]"
+              : "hover:bg-[var(--ink-50)] text-[var(--ink-600)] hover:text-[var(--ink-900)]"
           } disabled:opacity-50 disabled:cursor-not-allowed`}
           aria-label="Yes, helpful"
         >
@@ -161,8 +161,8 @@ export function FeedbackButton({
           disabled={submitting || rating !== null}
           className={`p-1.5 rounded-md transition-colors ${
             rating === "negative"
-              ? "bg-red-100 text-red-600"
-              : "hover:bg-szn-surface-1 text-szn-text-2 hover:text-red-600"
+              ? "bg-[var(--signal-conflict-soft)] text-[var(--signal-conflict-ink)]"
+              : "hover:bg-[var(--ink-50)] text-[var(--ink-600)] hover:text-[var(--signal-conflict-ink)]"
           } disabled:opacity-50 disabled:cursor-not-allowed`}
           aria-label="No, not helpful"
         >
@@ -172,8 +172,8 @@ export function FeedbackButton({
 
       {/* Reason dropdown for negative feedback */}
       {showReasons && (
-        <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-xl shadow-lg border border-szn-border p-3 z-10">
-          <p className="text-sm font-medium text-szn-text-1 mb-2">What was the issue?</p>
+        <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-xl shadow-lg border border-[var(--ink-200)] p-3 z-10">
+          <p className="text-sm font-medium text-[var(--ink-900)] mb-2">What was the issue?</p>
           <div className="space-y-1">
             {NEGATIVE_REASONS[resourceType].map((reason) => (
               <button
@@ -182,8 +182,8 @@ export function FeedbackButton({
                 disabled={submitting}
                 className={`w-full text-left px-3 py-2 text-sm rounded-lg transition-colors ${
                   selectedReason === reason.id
-                    ? "bg-red-50 text-red-700"
-                    : "hover:bg-szn-surface text-szn-text-1"
+                    ? "bg-[var(--signal-conflict-soft)] text-[var(--signal-conflict-ink)]"
+                    : "hover:bg-[var(--ink-50)] text-[var(--ink-900)]"
                 } disabled:opacity-50`}
               >
                 {reason.label}
@@ -195,7 +195,7 @@ export function FeedbackButton({
               setShowReasons(false);
               setRating(null);
             }}
-            className="mt-2 text-xs text-szn-text-2 hover:text-szn-text-1"
+            className="mt-2 text-xs text-[var(--ink-600)] hover:text-[var(--ink-900)]"
           >
             Cancel
           </button>

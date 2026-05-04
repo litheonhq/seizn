@@ -126,16 +126,16 @@ function ClaimItem({
     <div
       className={`border rounded-lg overflow-hidden ${
         verification.supported
-          ? "border-green-200"
+          ? "border-[var(--signal-canon)]"
           : verification.supportStrength === "contradicted"
-          ? "border-red-200"
+          ? "border-[var(--signal-conflict)]"
           : "border-gray-200"
       }`}
     >
       <button
         onClick={onToggle}
         className={`w-full px-4 py-3 text-left flex items-start gap-3 hover:bg-gray-50 ${
-          verification.supported ? "bg-green-50/50" : ""
+          verification.supported ? "bg-[var(--signal-canon-soft)]/50" : ""
         }`}
       >
         <span className="flex-shrink-0 w-6 h-6 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center text-xs font-medium">
@@ -181,10 +181,10 @@ function ClaimItem({
  */
 function ContradictionItem({ contradiction }: { contradiction: Contradiction }) {
   return (
-    <div className="border border-red-200 bg-red-50 rounded-lg p-4">
+    <div className="border border-[var(--signal-conflict)] bg-[var(--signal-conflict-soft)] rounded-lg p-4">
       <div className="flex items-start gap-2">
         <svg
-          className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5"
+          className="w-5 h-5 text-[var(--signal-conflict-ink)] flex-shrink-0 mt-0.5"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -197,15 +197,15 @@ function ContradictionItem({ contradiction }: { contradiction: Contradiction }) 
           />
         </svg>
         <div className="flex-1">
-          <p className="text-sm font-medium text-red-800">Claim: &quot;{contradiction.claim.text}&quot;</p>
-          <p className="mt-1 text-sm text-red-700">{contradiction.explanation}</p>
-          <div className="mt-2 p-2 bg-white/50 rounded border border-red-100">
+          <p className="text-sm font-medium text-[var(--signal-conflict-ink)]">Claim: &quot;{contradiction.claim.text}&quot;</p>
+          <p className="mt-1 text-sm text-[var(--signal-conflict-ink)]">{contradiction.explanation}</p>
+          <div className="mt-2 p-2 bg-white/50 rounded border border-[var(--signal-conflict)]">
             <p className="text-xs text-gray-600">
               Contradicting evidence: &quot;{contradiction.evidence.excerpt.slice(0, 150)}...&quot;
             </p>
           </div>
           <div className="mt-2 flex items-center gap-2 text-xs">
-            <span className="text-red-600">Severity: {(contradiction.severity * 100).toFixed(0)}%</span>
+            <span className="text-[var(--signal-conflict-ink)]">Severity: {(contradiction.severity * 100).toFixed(0)}%</span>
           </div>
         </div>
       </div>
@@ -297,10 +297,10 @@ export default function ClaimBreakdown({
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold text-gray-900">Claim Analysis</h3>
         <div className="flex items-center gap-4 text-sm">
-          <span className="text-green-600">{stats.supported} supported</span>
+          <span className="text-[var(--signal-canon-ink)]">{stats.supported} supported</span>
           <span className="text-gray-600">{stats.unsupported} unsupported</span>
           {stats.contradicted > 0 && (
-            <span className="text-red-600">{stats.contradicted} contradicted</span>
+            <span className="text-[var(--signal-conflict-ink)]">{stats.contradicted} contradicted</span>
           )}
         </div>
       </div>
@@ -356,7 +356,7 @@ export default function ClaimBreakdown({
       {/* Contradictions warning */}
       {contradictions.length > 0 && (
         <div className="space-y-2">
-          <h4 className="text-sm font-medium text-red-700 flex items-center gap-1">
+          <h4 className="text-sm font-medium text-[var(--signal-conflict-ink)] flex items-center gap-1">
             <svg
               className="w-4 h-4"
               fill="none"

@@ -98,3 +98,21 @@
 **Symptom:** `pnpm exec supabase start` and `pnpm exec supabase db reset` failed repeatedly while replaying legacy migrations.
 **Cause:** Historical migrations were not clean-replay safe after `profiles.id` moved to `text`; overlapping migrations reused table, index, policy, trigger, and view names, and some DDL assumed optional extensions or compatibility columns.
 **Resolution:** Made legacy migrations replay-safe with idempotent policy, trigger, and index creation, text casts for profile-scoped IDs, conditional PGroonga DDL, additive compatibility columns, and function/view signature fixes. Verified with `pnpm exec supabase db reset`.
+
+### Author UI Slug Regex Patch Context Mismatch
+**Date:** 2026-05-02
+**Symptom:** Direct `apply_patch` replacement for the Author UI slug regex failed because the shell-rendered context showed mojibake while the file contained the valid Korean range `가-힣`.
+**Cause:** PowerShell output encoding did not match the file's actual Unicode content, so the patch context copied from terminal output was stale.
+**Fix:** Re-read the actual line with `Select-String`, then patched the real Unicode regex context. For future edits, verify suspect non-ASCII context from the file before building a manual patch.
+
+### Next Stable Audit Advisory Required Canary Install Guard
+**Date:** 2026-05-02
+**Symptom:** `npm audit --omit=dev` stayed nonzero after routine dependency updates because the stable Next.js line still resolved a vulnerable PostCSS dependency. Moving to the patched Next.js canary cleared the audit, but `npm ci` then rejected peer ranges that did not accept a prerelease Next version.
+**Cause:** The stable Next.js dependency graph had no patched PostCSS release available for this project yet, while several peer dependencies expressed ranges for stable Next versions only.
+**Resolution:** Upgraded the Next.js toolchain to `16.3.0-canary.8`, added a repo-local `.npmrc` with `legacy-peer-deps=true`, and verified `npm ci --dry-run`, `npm audit --omit=dev`, `npm run typecheck`, `npm run lint`, `npm run test:run`, and `npm run build`.
+
+### Scoped API Key Organization Binding Spoof
+**Date:** 2026-05-02
+**Symptom:** Scoped API keys could carry an organization binding that did not match the validated scope owner, and legacy API key validation trusted `api_keys.organization_id` directly.
+**Cause:** Scope configuration validation did not reject user-scoped organization/project bindings, and API key authentication did not re-check organization membership before returning an organization context.
+**Resolution:** Added scoped config validation, membership checks for organization/project scoped API keys, normalized user-scope updates, and route-level `graph:*` / `fall:*` scope enforcement with focused regression tests.

@@ -5,7 +5,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { validateApiKey } from '@/lib/auth/api-key';
+import { requireApiScope } from '@/lib/auth/api-scope';
 import { boundedInt } from '@/lib/parse-params';
 import { logServerError } from '@/lib/server/logger';
 import { createServerClient } from '@/lib/supabase';
@@ -31,15 +31,14 @@ interface GraphRelationshipRow {
   source_entity?: RelationshipEntityRef | null;
   target_entity?: RelationshipEntityRef | null;
   created_at: string;
-  updated_at: string;
+  updated_at?: string | null;
 }
 
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
-    const auth = await validateApiKey(request);
-    if (!auth.valid) {
-      return NextResponse.json({ error: 'Unauthorized', message: auth.error }, { status: 401 });
-    }
+    const authResult = await requireApiScope(request, 'graph:read');
+    if (authResult.response) return authResult.response;
+    const { auth } = authResult;
 
     const { graphId } = await params;
     const supabase = createServerClient();
@@ -84,8 +83,10 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       );
     }
 
+    const relationships = (data || []) as GraphRelationshipRow[];
+
     return NextResponse.json({
-      relationships: ((data as GraphRelationshipRow[] | null) || []).map((r) => ({
+      relationships: relationships.map((r) => ({
         id: r.id,
         type: r.type,
         label: r.label,

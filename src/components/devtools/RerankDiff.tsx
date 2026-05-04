@@ -101,7 +101,7 @@ export function RerankDiff({
 
   if (diffData.length === 0) {
     return (
-      <div className={`bg-gray-900 rounded-lg border border-gray-800 p-6 ${className}`}>
+      <div className={`bg-[var(--ink-900)] rounded-lg border border-gray-800 p-6 ${className}`}>
         <p className="text-center text-gray-500">
           No reranking data available. Enable reranking to see before/after comparison.
         </p>
@@ -110,7 +110,7 @@ export function RerankDiff({
   }
 
   return (
-    <div className={`bg-gray-900 rounded-lg border border-gray-800 ${className}`}>
+    <div className={`bg-[var(--ink-900)] rounded-lg border border-gray-800 ${className}`}>
       {/* Header */}
       <div className="p-4 border-b border-gray-800">
         <h3 className="text-lg font-semibold text-white">Rerank Comparison</h3>
@@ -123,19 +123,19 @@ export function RerankDiff({
       {stats && (
         <div className="p-4 border-b border-gray-800">
           <div className="grid grid-cols-4 gap-4">
-            <div className="bg-gray-800/50 rounded-lg p-3">
+            <div className="bg-[var(--ink-800)]/50 rounded-lg p-3">
               <div className="text-2xl font-bold text-green-400">{stats.improved}</div>
               <div className="text-xs text-gray-500">Improved</div>
             </div>
-            <div className="bg-gray-800/50 rounded-lg p-3">
-              <div className="text-2xl font-bold text-red-400">{stats.degraded}</div>
+            <div className="bg-[var(--ink-800)]/50 rounded-lg p-3">
+              <div className="text-2xl font-bold text-[var(--signal-conflict-soft)]">{stats.degraded}</div>
               <div className="text-xs text-gray-500">Degraded</div>
             </div>
-            <div className="bg-gray-800/50 rounded-lg p-3">
+            <div className="bg-[var(--ink-800)]/50 rounded-lg p-3">
               <div className="text-2xl font-bold text-gray-400">{stats.unchanged}</div>
               <div className="text-xs text-gray-500">Unchanged</div>
             </div>
-            <div className="bg-gray-800/50 rounded-lg p-3">
+            <div className="bg-[var(--ink-800)]/50 rounded-lg p-3">
               <div className="text-2xl font-bold text-blue-400">
                 {stats.avgRankChange.toFixed(1)}
               </div>
@@ -159,7 +159,7 @@ export function RerankDiff({
 
                   <div
                     key={candidate.id}
-                    className="flex items-center gap-2 p-2 rounded bg-gray-800/30"
+                    className="flex items-center gap-2 p-2 rounded bg-[var(--ink-800)]/30"
                   >
                     <span className="w-8 text-sm font-bold text-gray-400">
                       #{candidate.rank}
@@ -178,10 +178,10 @@ export function RerankDiff({
 
           {/* Arrow Column */}
           <div className="flex flex-col items-center justify-center w-12">
-            <svg className="w-6 h-6 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-6 h-6 text-[var(--ink-700)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
             </svg>
-            <span className="text-xs text-purple-400 mt-1">Rerank</span>
+            <span className="text-xs text-[var(--ink-700)] mt-1">Rerank</span>
           </div>
 
           {/* After Column */}
@@ -201,10 +201,10 @@ export function RerankDiff({
                     key={candidate.id}
                     className={`flex items-center gap-2 p-2 rounded ${
                       rankDelta > 0
-                        ? "bg-green-900/20 border-l-2 border-green-500"
+                        ? "bg-[var(--signal-canon-ink)]/20 border-l-2 border-[var(--signal-canon)]"
                         : rankDelta < 0
-                          ? "bg-red-900/20 border-l-2 border-red-500"
-                          : "bg-gray-800/30"
+                          ? "bg-[var(--signal-conflict)]/20 border-l-2 border-[var(--signal-conflict)]"
+                          : "bg-[var(--ink-800)]/30"
                     }`}
                   >
                     <span className="w-8 text-sm font-bold text-white">
@@ -219,7 +219,7 @@ export function RerankDiff({
                     {rankDelta !== 0 && (
                       <span
                         className={`flex items-center gap-1 text-xs ${
-                          rankDelta > 0 ? "text-green-400" : "text-red-400"
+                          rankDelta > 0 ? "text-green-400" : "text-[var(--signal-conflict-soft)]"
                         }`}
                       >
                         {rankDelta > 0 ? (
@@ -266,10 +266,10 @@ export function RerankDiff({
                       <span
                         className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${
                           rankDelta > 0
-                            ? "bg-green-900/50 text-green-400"
+                            ? "bg-[var(--signal-canon-ink)]/50 text-green-400"
                             : rankDelta < 0
-                              ? "bg-red-900/50 text-red-400"
-                              : "bg-gray-800 text-gray-400"
+                              ? "bg-[var(--signal-conflict)]/50 text-[var(--signal-conflict-soft)]"
+                              : "bg-[var(--ink-800)] text-gray-400"
                         }`}
                       >
                         {rankDelta > 0 ? (
@@ -292,7 +292,7 @@ export function RerankDiff({
                     <td className="py-2 text-right">
                       <span
                         className={
-                          scoreDelta > 0 ? "text-green-400" : scoreDelta < 0 ? "text-red-400" : "text-gray-400"
+                          scoreDelta > 0 ? "text-green-400" : scoreDelta < 0 ? "text-[var(--signal-conflict-soft)]" : "text-gray-400"
                         }
                       >
                         {scoreDelta > 0 ? "+" : ""}

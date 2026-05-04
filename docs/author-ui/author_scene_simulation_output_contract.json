@@ -1,0 +1,215 @@
+{
+  "version": "v1",
+  "generated_at": "2026-05-02",
+  "applies_to": "Scene Simulation Panel 출력 데이터 계약",
+  "contract_principle": "시뮬레이션은 candidate를 생성·근거를 추적·canon_risk를 평가·작가가 결정",
+  "input_schema_pointer": "see author_ui_data_contracts.json/screens/scene_simulation",
+  "output_schema": {
+    "simulation_id": "string",
+    "started_at": "ISO8601",
+    "completed_at": "ISO8601",
+    "input": {
+      "echo": "see input contract"
+    },
+    "context_used": {
+      "memory_snapshot_hash": "string",
+      "perspective_character": {
+        "character_id": "string",
+        "persona_summary": "string",
+        "voice_signature": ["string"],
+        "current_arc_phase": "string"
+      },
+      "memories_loaded": [
+        {
+          "memory_id": "string",
+          "content_summary": "string",
+          "salience": "0.0-1.0",
+          "category": "fact|identity|event|impression|rumor",
+          "decay_remaining": "0.0-1.0",
+          "learned_at": "string"
+        }
+      ],
+      "knowledge_state": {
+        "known_count": "number",
+        "unknown_count": "number",
+        "author_only_count": "number"
+      },
+      "graph_edges_loaded": [
+        {
+          "edge_id": "string",
+          "from": "entity_id",
+          "to": "entity_id",
+          "type": "string",
+          "intensity": "number"
+        }
+      ],
+      "world_rules_loaded": [
+        {"rule_id": "string", "summary": "string"}
+      ],
+      "scene_pressure_interpretation": "string"
+    },
+    "candidates": [
+      {
+        "candidate_id": "string",
+        "rank": "number 1-N",
+        "current_known_facts": [
+          {
+            "fact_id": "string",
+            "content": "string",
+            "tier": "string"
+          }
+        ],
+        "unknown_or_forbidden_facts": [
+          {
+            "fact_id": "string",
+            "content_summary": "string",
+            "reason_unknown": "string",
+            "is_author_only": "boolean"
+          }
+        ],
+        "internal_thought_candidates": [
+          {
+            "thought_id": "string",
+            "text": "string",
+            "tone": "string",
+            "voice_consistency_score": "0.0-1.0"
+          }
+        ],
+        "dialogue_candidates": [
+          {
+            "dialogue_id": "string",
+            "text": "string (외래어 음차 X·큰따옴표 X)",
+            "tone": "string",
+            "voice_consistency_score": "0.0-1.0"
+          }
+        ],
+        "action_candidates": [
+          {
+            "action_id": "string",
+            "description": "string",
+            "physicality": "string"
+          }
+        ],
+        "canon_risk": {
+          "level": "low|medium|high|leak",
+          "reasoning": "string",
+          "leak_warnings": [
+            {
+              "type": "author_only_leak|forbidden_in_scope_leak|tier_2_leak|character_unknown_violation",
+              "severity": "critical|high|medium",
+              "fact_at_risk": "fact_id",
+              "explanation": "string"
+            }
+          ]
+        },
+        "supporting_memories": [
+          {"memory_id": "string", "weight": "0.0-1.0", "reason": "string"}
+        ],
+        "supporting_graph_edges": [
+          {"edge_id": "string", "weight": "0.0-1.0"}
+        ],
+        "supporting_persona_traits": [
+          {"trait": "string", "match_strength": "0.0-1.0"}
+        ],
+        "contradiction_warnings": [
+          {
+            "warning_id": "string",
+            "conflicts_with_fact": "fact_id",
+            "explanation": "string"
+          }
+        ]
+      }
+    ],
+    "writer_decision_controls": {
+      "approve_as_canon": {
+        "endpoint": "POST /api/projects/{id}/candidates/from_simulation",
+        "params": {"candidate_id": "string", "selected_components": ["thought_id", "dialogue_id", "action_id"]}
+      },
+      "modify_and_approve": {
+        "endpoint": "POST /api/projects/{id}/candidates/from_simulation_modified",
+        "params": {"candidate_id": "string", "modifications": "object"}
+      },
+      "reject": {
+        "endpoint": "POST /api/projects/{id}/simulations/{simulation_id}/reject",
+        "params": {"candidate_ids": ["string"], "reason": "string?"}
+      },
+      "regenerate_with_adjusted_input": {
+        "endpoint": "POST /api/projects/{id}/simulate",
+        "params": "modified input"
+      },
+      "save_for_later": {
+        "endpoint": "POST /api/projects/{id}/simulations/{simulation_id}/bookmark"
+      }
+    },
+    "trace_metadata": {
+      "provider": "anthropic",
+      "model": "claude-opus-4-7",
+      "model_version": "string",
+      "input_tokens": "number",
+      "output_tokens": "number",
+      "total_cost_usd": "number",
+      "byok_used": "boolean",
+      "memory_snapshot_hash": "string",
+      "side_effect_record_ids": ["string"],
+      "replay_seed": "string",
+      "deterministic": "boolean"
+    },
+    "diagnostics": {
+      "warnings": [
+        {
+          "type": "string",
+          "message": "string"
+        }
+      ],
+      "context_completeness": "0.0-1.0",
+      "missing_context_items": ["string"],
+      "candidate_diversity": "0.0-1.0"
+    }
+  },
+  "leak_detection_rules": {
+    "author_only_leak": "candidate가 character의 author_only_facts 중 하나의 정보를 dialogue·thought·action에 포함하면 leak로 표시",
+    "forbidden_in_scope_leak": "candidate가 forbidden_in_scope:{scope} tag fact를 노출하면 leak (예: short1 본문에 도깨비 삭 조건)",
+    "tier_2_leak": "Tier 2 fact가 candidate에 등장 시 leak",
+    "character_unknown_violation": "candidate에서 perspective character가 모르는 fact (unknown_facts)를 alluded함"
+  },
+  "voice_consistency_scoring": {
+    "input": "candidate dialogue + character voice_signature + character_personas",
+    "method": "LLM judge (Sonnet 4.6) + heuristic regex check",
+    "checks": [
+      "외래어 음차 X (엣또·Yes·Ok 등)",
+      "큰따옴표 X",
+      "작중 시그니처 표현 매칭",
+      "타부 단어 회피",
+      "어미·존댓말 정합 (캐릭별)"
+    ],
+    "score_range": "0.0 (완전 OOC) ~ 1.0 (완벽 정합)"
+  },
+  "replay_contract": {
+    "principle": "동일 input + 동일 memory_snapshot_hash + 동일 model_version + 동일 seed → 동일 output",
+    "cache_miss_behavior": "fail closed·live provider call X (replay-only mode)",
+    "replay_endpoint": "POST /api/projects/{id}/simulations/{simulation_id}/replay",
+    "drift_detection": "원래 output_hash와 replay output_hash 비교"
+  },
+  "knot_dogfood_examples": {
+    "example_1_d29_lulu": {
+      "scene_input": {
+        "text": "타오 과장이 어제 저녁 죽었다는 소식이 동아리실에 퍼졌다.",
+        "setting": {"location": "동아리실", "time": "D30 아침", "mood": "우중충"},
+        "characters_present": ["sori", "nari", "lulu", "aoi", "reika", "nana", "yui"],
+        "timepoint": {"day": 30, "scene_position": "start"},
+        "pressure": "타오 사망 직후·동아리원 첫 반응",
+        "perspective": "knot.short1.char.lulu",
+        "candidate_count": 5
+      },
+      "expected_canon_risk_warnings": [
+        "candidate가 자서가(Tier 2) 정보 leak 시 critical",
+        "candidate가 도깨비 삭 조건 leak 시 critical",
+        "candidate가 허 사서·도서관장 정체 leak 시 critical"
+      ],
+      "expected_voice_checks": [
+        "룰루 = 호기심·친근 침범·말 빠름·자기 얘기 ↑",
+        "외래어·큰따옴표 X"
+      ]
+    }
+  }
+}

@@ -392,7 +392,6 @@
     "nav": {
       "overview": "Обзор",
       "memories": "Сущности",
-      "memoryEditor": "Редактор памяти",
       "mindMap": "Граф отношений",
       "candidates": "Ящик событий",
       "devTools": "DevTools",
@@ -406,6 +405,7 @@
       "usage": "Использование",
       "budget": "Бюджет",
       "reports": "Отчёты",
+      "calculator": "Оценщик стоимости",
       "apiKeys": "API-ключи",
       "integrations": "Плагины движка",
       "webhooks": "Вебхуки",
@@ -414,10 +414,15 @@
       "settings": "Настройки",
       "groups": {
         "memory": "ПАМЯТЬ NPC",
+        "observe": "МОНИТОРИНГ",
+        "govern": "ПОЛИТИКИ",
+        "finops": "ИСПОЛЬЗОВАНИЕ И СТОИМОСТЬ",
+        "connect": "ИНТЕГРАЦИЯ",
         "system": "РАБОЧЕЕ ПРОСТРАНСТВО",
         "build": "Разработка",
         "integrate": "Интеграция"
-      }
+      },
+      "memoryEditor": "Редактор памяти"
     },
     "pinSidebar": "Закрепить боковую панель",
     "unpinSidebar": "Свернуть боковую панель",
@@ -1439,6 +1444,50 @@
       "recentDecisions": "Недавние решения",
       "noLogs": "Нет журналов решений"
     },
+    "calculator": {
+      "title": "Калькулятор использования",
+      "subtitle": "Оцените ваши месячные расходы на основе ожидаемого использования",
+      "stats": {
+        "apiCalls": "API вызовы",
+        "memories": "Воспоминания",
+        "extractions": "Извлечения",
+        "estimated": "Оценочная стоимость"
+      },
+      "presets": {
+        "title": "Быстрые предустановки",
+        "startup": "Стартап",
+        "growing": "Растущий",
+        "scale": "Масштаб",
+        "enterprise": "Корпоративный"
+      },
+      "customize": {
+        "title": "Настроить использование"
+      },
+      "labels": {
+        "apiCalls": "Месячные API вызовы",
+        "memories": "Сохраненные воспоминания",
+        "extractions": "Извлечения"
+      },
+      "recommended": {
+        "title": "Рекомендуемый план",
+        "base": "Базовая цена",
+        "overage": "Превышение",
+        "cta": "Начать"
+      },
+      "comparison": {
+        "title": "Все планы",
+        "best": "Лучшее предложение"
+      },
+      "details": {
+        "title": "Детальная разбивка цен",
+        "plan": "План",
+        "base": "Базовая цена",
+        "includedCalls": "Включенные вызовы",
+        "overageRate": "Ставка за превышение",
+        "yourOverage": "Ваше превышение",
+        "total": "Итого"
+      }
+    },
     "webhooks": {
       "title": "Вебхуки",
       "subtitle": "Настройте HTTP обратные вызовы для уведомлений о событиях в реальном времени",
@@ -1610,12 +1659,98 @@
       "contactUs": "Свяжитесь с нами"
     }
   },
+  "serviceSelector": {
+    "title": "Выберите свой опыт",
+    "subtitle": "Два способа использовать силу памяти ИИ",
+    "spring": {
+      "name": "Spring",
+      "icon": "🌿",
+      "tagline": "Мульти-ИИ чат",
+      "description": "Общайтесь с GPT-4, Claude, Gemini и другими — все с постоянной памятью, которая помнит вас.",
+      "features": [
+        "Доступ ко всем основным моделям ИИ в одном месте",
+        "Ваши предпочтения запоминаются между сессиями",
+        "Бесшовное переключение контекста между моделями"
+      ],
+      "cta": "Попробовать Spring",
+      "badge": ""
+    },
+    "summer": {
+      "name": "Summer",
+      "icon": "☀️",
+      "tagline": "API памяти",
+      "description": "Дайте вашим ИИ-приложениям постоянную память с нашим API, ориентированным на разработчиков.",
+      "features": [
+        "Простой REST API и SDK",
+        "Время извлечения менее 50мс",
+        "Безопасность корпоративного уровня"
+      ],
+      "cta": "Изучить API",
+      "badge": "Доступно сейчас"
+    },
+    "footer": "Часть сезонов Seizn — память ИИ для любых нужд"
+  },
+  "springPage": {
+    "badge": "",
+    "title": "Один чат.",
+    "titleHighlight": "Все ИИ.",
+    "subtitle": "Какой бы вы ни выбрали,\nвсе они помнят вас.",
+    "startChatting": "Начать общение",
+    "viewPricing": "Посмотреть цены",
+    "features": {
+      "title": "Почему Spring?",
+      "subtitle": "Лучшее от каждого ИИ, объединённое.",
+      "multiModel": {
+        "title": "Мульти-модельный доступ",
+        "description": "Переключайтесь между GPT-4, Claude, Gemini, Llama и другими. Выбирайте лучшую модель для каждой задачи."
+      },
+      "persistentMemory": {
+        "title": "Постоянная память",
+        "description": "Ваши предпочтения, контекст и история сохраняются в каждом разговоре и каждой модели."
+      },
+      "freeGenerosity": {
+        "title": "Бесплатный план уровня Cursor",
+        "description": "Щедрое бесплатное использование. Большинству пользователей не нужно платить. Pro за $9.99/месяц для продвинутых пользователей."
+      }
+    },
+    "pricing": {
+      "title": "Простые цены",
+      "free": {
+        "name": "Бесплатно",
+        "price": "$0",
+        "period": "Навсегда",
+        "features": [
+          "Все модели ИИ",
+          "Память между сессиями",
+          "Веб и мобильные приложения"
+        ],
+        "cta": "Начать бесплатно"
+      },
+      "pro": {
+        "name": "Pro",
+        "price": "$9.99",
+        "period": "в месяц",
+        "badge": "Лучшая цена",
+        "features": [
+          "Всё из бесплатного",
+          "Приоритетный доступ",
+          "Расширенное управление памятью",
+          "Доступ к API"
+        ],
+        "cta": "Перейти на Pro"
+      }
+    }
+  },
   "extremeHome": {
     "heroTitle": "Память для NPC с ИИ.",
     "heroSubtitle": "Подключитесь к Inworld, Convai или собственному LLM. Seizn даёт вашим NPC постоянную память, отношения и межпоколенческое вспоминание — оплата за сущность, без поприсеточного ценника.",
     "ctaStart": "Читать документацию",
     "ctaDemo": "Играть в smallgod",
     "socialProof": "Создано для игровых студий — от 10 до 10 000 NPC.",
+    "liveDemo": "Живое демо",
+    "heroTagline": "Играйте в smallgod — наш эталонный god-game на Seizn. Без регистрации и установки.",
+    "firstRetrievalComplete": "Первый поиск завершён",
+    "copySnippetHint": "Скопируйте фрагмент ниже для воспроизведения",
     "copySnippetTitle": "Интеграция в Unity, Unreal или любой движок",
     "copySnippetSubtitle": "HTTP-обёртка + официальные плагины C#/C++. Никакой пользовательской инфраструктуры.",
     "whySeizn": {
@@ -1659,6 +1794,89 @@
       "status": "Статус",
       "help": "Помощь",
       "github": "OSS"
+    },
+    "requestBuilder": {
+      "title": "Конструктор Запросов",
+      "query": "Запрос",
+      "queryPlaceholder": "Введите поисковый запрос...",
+      "tryExamples": "Примеры",
+      "dataset": "Набор данных",
+      "latencyBudget": "Бюджет задержки",
+      "fast": "быстро",
+      "thorough": "тщательно",
+      "topK": "Топ K",
+      "results": "результатов",
+      "features": "Функции",
+      "hybridSearch": "Гибридный поиск",
+      "hybridSearchDesc": "Вектор + ключевое слово",
+      "rerank": "Переранжирование",
+      "rerankDesc": "Переоценка с cross-encoder",
+      "answerContract": "Контракт ответа",
+      "answerContractDesc": "Проверка качества ответа",
+      "running": "Выполнение...",
+      "runQuery": "Выполнить запрос",
+      "datasets": {
+        "techDocs": "Техническая документация",
+        "legalContracts": "Юридические договоры",
+        "researchPapers": "Научные статьи"
+      },
+      "advanced": "Дополнительно"
+    },
+    "resultsPanel": {
+      "searching": "Поиск...",
+      "noResults": "Выполните запрос для просмотра",
+      "score": "Оценка"
+    },
+    "tracePanel": {
+      "tracing": "Трассировка...",
+      "noTrace": "Выполните запрос для трассировки",
+      "latency": "Задержка",
+      "cost": "Стоимость",
+      "tokens": "Токены",
+      "vectorOps": "Вект. операции",
+      "cached": "кэш",
+      "model": "Модель",
+      "input": "Вход",
+      "output": "Выход"
+    },
+    "tabs": {
+      "results": "Результаты",
+      "trace": "Трассировка",
+      "cost": "Стоимость"
+    },
+    "chips": {
+      "trace": "Сущности",
+      "eval": "Отношения",
+      "policy": "События"
+    },
+    "playgroundTitle": "Попробуйте сейчас",
+    "costPanel": {
+      "calculating": "Расчёт стоимости...",
+      "noCost": "Выполните запрос, чтобы увидеть разбивку стоимости",
+      "costBreakdown": "Разбивка стоимости",
+      "component": "Компонент",
+      "cost": "Стоимость",
+      "embedding": "Эмбеддинг",
+      "vectorSearch": "Векторный поиск",
+      "rerank": "Переранжирование",
+      "answerContract": "Контракт ответа",
+      "total": "Итого",
+      "usage": "Использование",
+      "tokensIn": "Токенов на входе",
+      "tokensOut": "Токенов на выходе",
+      "queryUnits": "Единиц запросов",
+      "estimatedMonthly": "Прогноз за месяц",
+      "basedOn": "На основе",
+      "queriesPerDay": "запросов/день"
+    },
+    "errorDisplay": {
+      "error": "Ошибка",
+      "errorCode": "Код",
+      "traceId": "Трейс",
+      "hint": "Подсказка",
+      "tryAgain": "Повторить",
+      "copyTraceId": "Копировать trace ID",
+      "copied": "Скопировано!"
     }
   },
   "docs": {
@@ -2608,6 +2826,42 @@
       }
     }
   },
+  "demoQuery": {
+    "title": "Живая демонстрация",
+    "subtitle": "Испытайте конвейер поиска Seizn с полной трассировкой и прозрачностью затрат.",
+    "tryItNow": "Попробуйте сейчас — без регистрации",
+    "queryPlaceholder": "Поисковый запрос",
+    "runDemo": "Запустить демо",
+    "running": "Выполняется...",
+    "results": "Результаты",
+    "trace": "Трассировка",
+    "cost": "Стоимость",
+    "noResults": "Запустите демо, чтобы увидеть результаты",
+    "errorTitle": "Ошибка",
+    "rateLimitError": "Превышен лимит запросов. Пожалуйста, подождите.",
+    "retryIn": "Повтор через",
+    "seconds": "секунд",
+    "score": "Оценка",
+    "rerankScore": "Переранжирование",
+    "latency": "Задержка",
+    "tokens": "Токены",
+    "cached": "кэш",
+    "model": "Модель",
+    "input": "Вход",
+    "output": "Выход",
+    "costBreakdown": "Детализация",
+    "total": "Итого",
+    "embedding": "Эмбеддинг",
+    "vectorSearch": "Векторный поиск",
+    "rerank": "Переранжирование",
+    "answerContract": "Контракт ответа",
+    "tokensIn": "Входные токены",
+    "tokensOut": "Выходные токены",
+    "queryUnits": "Единицы запросов",
+    "prefilledQueries": [
+      "Попробовать примеры"
+    ]
+  },
   "publicTrace": {
     "title": "Общая трассировка",
     "subtitle": "Просмотр общей трассировки поиска",
@@ -2983,25 +3237,8 @@
     }
   },
   "status": {
-    "metadataTitle": "Seizn Status",
-    "metadataDescription": "Current Seizn API availability and public incident history.",
-    "eyebrow": "STATUS",
     "title": "Статус системы",
     "subtitle": "Статус системы и история инцидентов в реальном времени",
-    "currentStatusLabel": "Current status",
-    "measuredScope": "Measured scope: api.seizn.com/v1/*",
-    "uptimeLabel": "Last 30 days uptime",
-    "uptimeWindow": "Calculated from public incident windows in the last 30 days.",
-    "incidentsEyebrow": "INCIDENTS",
-    "recentIncidentsTitle": "Recent incidents",
-    "noRecentIncidents": "No recent incidents",
-    "noRecentIncidentsBody": "The public incident ledger is empty for this period.",
-    "slaLink": "Read the SLA",
-    "states": {
-      "operational": "operational",
-      "degraded": "degraded",
-      "outage": "outage"
-    },
     "lastUpdated": "Последнее обновление",
     "overall": {
       "operational": "Все системы работают",
@@ -3049,6 +3286,23 @@
       "title": "Подпишитесь на обновления",
       "rss": "RSS-лента",
       "email": "Уведомления по email"
+    },
+    "metadataTitle": "Seizn Status",
+    "metadataDescription": "Current Seizn API availability and public incident history.",
+    "eyebrow": "STATUS",
+    "currentStatusLabel": "Current status",
+    "measuredScope": "Measured scope: api.seizn.com/v1/*",
+    "uptimeLabel": "Last 30 days uptime",
+    "uptimeWindow": "Calculated from public incident windows in the last 30 days.",
+    "incidentsEyebrow": "INCIDENTS",
+    "recentIncidentsTitle": "Recent incidents",
+    "noRecentIncidents": "No recent incidents",
+    "noRecentIncidentsBody": "The public incident ledger is empty for this period.",
+    "slaLink": "Read the SLA",
+    "states": {
+      "operational": "operational",
+      "degraded": "degraded",
+      "outage": "outage"
     }
   },
   "sla": {

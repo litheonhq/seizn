@@ -1,4 +1,4 @@
-import crypto from 'crypto';
+import { randomUUID } from 'node:crypto';
 import type { createServerClient } from '@/lib/supabase';
 import { logAuditEvent } from '@/lib/audit/logger';
 import { sha256 } from '@/lib/audit/tamper-evident';
@@ -180,7 +180,7 @@ export async function enqueueDsrJob(
   }
 ): Promise<DsrJobStatusPayload> {
   const subjectId = normalizeSubjectId(params.subjectId);
-  const jobId = crypto.randomUUID();
+  const jobId = randomUUID();
   const job = await insertJobWithStatusFallback(supabase, {
     id: jobId,
     organization_id: params.actor.organizationId,

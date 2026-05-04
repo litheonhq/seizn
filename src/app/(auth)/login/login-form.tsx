@@ -213,7 +213,7 @@ export default function LoginForm() {
           {/* Sign Up Link */}
           <p className="mt-6 text-center text-szn-text-2 text-sm">
             Don&apos;t have an account?{" "}
-            <Link href="/signup" className="text-szn-signal hover:text-szn-signal/80 font-medium transition-colors">
+            <Link href={callbackUrl ? `/signup?callbackUrl=${encodeURIComponent(callbackUrl)}` : "/signup"} className="text-szn-signal hover:text-szn-signal/80 font-medium transition-colors">
               Sign up
             </Link>
           </p>

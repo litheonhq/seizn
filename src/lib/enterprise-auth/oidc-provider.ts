@@ -342,10 +342,10 @@ export class OIDCProvider {
 // ============================================
 
 export class OIDCSessionStore {
-  private supabase = createServerClient();
-
   async createAuthRequest(request: OIDCAuthRequest): Promise<void> {
-    await this.supabase.from('oidc_auth_requests').insert({
+    const supabase = createServerClient();
+
+    await supabase.from('oidc_auth_requests').insert({
       connection_id: request.connectionId,
       state: request.state,
       nonce: request.nonce,
@@ -356,7 +356,8 @@ export class OIDCSessionStore {
   }
 
   async getAuthRequest(state: string): Promise<OIDCAuthRequest | null> {
-    const { data } = await this.supabase
+    const supabase = createServerClient();
+    const { data } = await supabase
       .from('oidc_auth_requests')
       .select('*')
       .eq('state', state)
@@ -375,7 +376,8 @@ export class OIDCSessionStore {
   }
 
   async deleteAuthRequest(state: string): Promise<void> {
-    await this.supabase
+    const supabase = createServerClient();
+    await supabase
       .from('oidc_auth_requests')
       .delete()
       .eq('state', state);

@@ -102,15 +102,15 @@ export function FeatureFlagsDebugPanel({
       {isCollapsed ? (
         <button
           onClick={() => setIsCollapsed(false)}
-          className="bg-purple-600 text-white px-3 py-2 rounded-lg shadow-lg hover:bg-purple-700 transition-colors text-sm font-medium"
+          className="bg-[var(--ink-900)] text-white px-3 py-2 rounded-lg shadow-lg hover:bg-[var(--ink-900)] transition-colors text-sm font-medium"
           title="Open Feature Flags Debug Panel"
         >
           🚩 Flags
         </button>
       ) : (
-        <div className="bg-szn-bg rounded-lg shadow-2xl border border-szn-border w-80 overflow-hidden">
+        <div className="bg-[var(--ink-50)] rounded-lg shadow-2xl border border-[var(--ink-200)] w-80 overflow-hidden">
           {/* Header */}
-          <div className="bg-purple-600 text-white px-4 py-3 flex items-center justify-between">
+          <div className="bg-[var(--ink-900)] text-white px-4 py-3 flex items-center justify-between">
             <h3 className="font-semibold text-sm">Feature Flags</h3>
             <div className="flex items-center gap-2">
               <button
@@ -130,10 +130,10 @@ export function FeatureFlagsDebugPanel({
           </div>
 
           {/* Status */}
-          <div className="px-4 py-2 bg-szn-surface text-xs text-szn-text-2 flex items-center gap-2">
+          <div className="px-4 py-2 bg-[var(--ink-50)] text-xs text-[var(--ink-600)] flex items-center gap-2">
             <span
               className={`w-2 h-2 rounded-full ${
-                isReady ? 'bg-green-500' : 'bg-yellow-500'
+                isReady ? 'bg-[var(--signal-canon)]' : 'bg-yellow-500'
               }`}
             />
             {isReady ? 'Connected' : 'Loading...'}
@@ -153,8 +153,8 @@ export function FeatureFlagsDebugPanel({
           </div>
 
           {/* Footer */}
-          <div className="px-4 py-2 bg-szn-surface border-t border-szn-border">
-            <p className="text-xs text-szn-text-2">
+          <div className="px-4 py-2 bg-[var(--ink-50)] border-t border-[var(--ink-200)]">
+            <p className="text-xs text-[var(--ink-600)]">
               Overrides are local only
             </p>
           </div>
@@ -201,15 +201,15 @@ function FlagRow({ flag, value, onOverride, onClear }: FlagRowProps) {
   };
 
   return (
-    <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50">
+    <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-[var(--ink-800)]/50">
       <div className="flex items-center justify-between mb-1">
-        <span className="text-sm font-medium text-szn-text-1">
+        <span className="text-sm font-medium text-[var(--ink-900)]">
           {flag.label}
         </span>
         {isOverridden && (
           <button
             onClick={handleClear}
-            className="text-xs text-red-500 hover:text-red-700"
+            className="text-xs text-[var(--signal-conflict-ink)] hover:text-[var(--signal-conflict-ink)]"
           >
             Clear
           </button>
@@ -217,7 +217,7 @@ function FlagRow({ flag, value, onOverride, onClear }: FlagRowProps) {
       </div>
 
       <div className="flex items-center justify-between">
-        <code className="text-xs text-szn-text-2">
+        <code className="text-xs text-[var(--ink-600)]">
           {flag.key}
         </code>
 
@@ -225,7 +225,7 @@ function FlagRow({ flag, value, onOverride, onClear }: FlagRowProps) {
           <button
             onClick={handleToggle}
             className={`relative w-10 h-5 rounded-full transition-colors ${
-              value ? 'bg-green-500' : 'bg-gray-300 dark:bg-gray-600'
+              value ? 'bg-[var(--signal-canon)]' : 'bg-gray-300 dark:bg-gray-600'
             }`}
           >
             <span
@@ -238,7 +238,7 @@ function FlagRow({ flag, value, onOverride, onClear }: FlagRowProps) {
           <select
             value={(value as string) || 'control'}
             onChange={(e) => handleVariantChange(e.target.value)}
-            className="text-xs border border-szn-border rounded px-2 py-1 bg-szn-card text-szn-text-1"
+            className="text-xs border border-[var(--ink-200)] rounded px-2 py-1 bg-[var(--ink-0)] text-[var(--ink-900)]"
           >
             {flag.variants?.map((variant) => (
               <option key={variant} value={variant}>

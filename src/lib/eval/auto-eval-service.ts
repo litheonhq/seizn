@@ -6,6 +6,7 @@
  */
 
 import { createClient } from '@/lib/supabase/server';
+import { normalizeOutboundWebhookUrl } from '@/lib/security/outbound-webhook';
 import { v4 as uuidv4 } from 'uuid';
 import type {
   EvalTriggerEvent,
@@ -458,7 +459,12 @@ export class AutoEvalService {
     };
 
     try {
-      await fetch(webhookUrl, {
+      const safeWebhookUrl = await normalizeOutboundWebhookUrl(webhookUrl, {
+        label: 'Auto-eval Slack webhook',
+      });
+      if (!safeWebhookUrl) return;
+
+      await fetch(safeWebhookUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(message),

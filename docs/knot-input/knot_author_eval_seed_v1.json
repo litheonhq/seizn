@@ -1,0 +1,148 @@
+{
+  "version": "v1",
+  "generated_at": "2026-05-02",
+  "scope": "short1",
+  "purpose": "Seizn Author Memory v3 evaluation seed set·KNOT 도그푸드·Phase 5 ParseBench-style 100건 확장 시드",
+  "case_count_v1": 12,
+  "target_v2": 100,
+  "scoring_rubric": {
+    "exact_match": "1.0",
+    "partial_match": "0.5",
+    "miss": "0.0",
+    "false_positive_critical": "-1.0 (예: forbidden_in_scope leak·tier:2 author_only leak)"
+  },
+  "cases": [
+    {
+      "case_id": "knot.eval.001",
+      "category": "character_knowledge",
+      "question": "D11 (3/2 월·입학식) 시점에 룰루는 명부 회장 자리가 비어 있다는 사실을 아는가?",
+      "expected_answer": "모름",
+      "expected_reasoning": "명부 회장 빈 줄은 D5에 소리만 시각 인지·D21에 정식 발견. 룰루는 D14 동아리 합류 후에도 명부 anchor 정식 노출 X.",
+      "expected_evidence": ["knot.short1.event.d5-clubroom-found", "knot.short1.event.d21-meibu-formal-find"],
+      "scoring": "exact_match"
+    },
+    {
+      "case_id": "knot.eval.002",
+      "category": "author_only_leak",
+      "question": "D8 콜드 오픈 약 큐 시점에 소리는 자기 능력이 자서가(自書家)임을 아는가?",
+      "expected_answer": "모름 (능력 발현 시작 신호만 인지·이름·능력 본질 작가 only)",
+      "expected_reasoning": "자서가 = canon.md §v3.7.9ay·Tier 2 (단편 1 본문 X·작가 only)·소리 본인도 능력 본질 점진 인지",
+      "scoring": "exact_match",
+      "tags": ["tier:2_check", "forbidden_leak"]
+    },
+    {
+      "case_id": "knot.eval.003",
+      "category": "scope_isolation",
+      "question": "단편 1에서 본편 8동료 여성 확정 룰이 적용되는가?",
+      "expected_answer": "스코프 적용 X — 본편 한정 룰. 단편 1은 별도 7인 (소리·나리·룰루·아오이·레이카·나나·유이) — 우연히 모두 여성이지만 본편 8동료 룰의 직접 적용 X.",
+      "expected_evidence": ["canon_authority_rules.md §4 본편/단편 scope 함정"],
+      "scoring": "exact_match",
+      "tags": ["scope_check"]
+    },
+    {
+      "case_id": "knot.eval.004",
+      "category": "character_voice_consistency",
+      "question": "허 사서가 D19 도서관 두 번째 방문에서 '~네요' 어미를 사용하는가?",
+      "expected_answer": "사용 X — 허 사서는 집사 톤 ~십시오/~ㅂ니다 형식 lock·~네요·~지요·~거예요 회피 룰 (knot-hur-voice.md)",
+      "scoring": "exact_match",
+      "tags": ["voice_check"]
+    },
+    {
+      "case_id": "knot.eval.005",
+      "category": "retired_setting_exclusion",
+      "question": "단편 1 데모는 D1~D21·3주 양식인가?",
+      "expected_answer": "X — D1~D35·5주 양식 (v113·INDEX.md 2026-04-30). v110 D21 양식은 폐기.",
+      "expected_evidence": ["INDEX.md last_updated v113·5주 재분배"],
+      "scoring": "exact_match",
+      "tags": ["retired_check"]
+    },
+    {
+      "case_id": "knot.eval.006",
+      "category": "relationship_explanation",
+      "question": "소리 ↔ 나리의 관계와 그 근거는?",
+      "expected_answer": "기숙사 308호 룸메이트·D1 (2/20 금) 시작·trust moderate·attachment moderate-strong·정보 추적 핵심 듀오. 근거 = D1 첫 만남·D2 식당 회상·D20 정보 추적 협력·D14 동아리 합류 동행.",
+      "expected_evidence": ["knot.short1.rel.sori-nari"],
+      "scoring": "partial_match",
+      "tags": ["relationship_evidence"]
+    },
+    {
+      "case_id": "knot.eval.007",
+      "category": "forbidden_in_scope",
+      "question": "단편 1 본문에서 도깨비가 '달의 위상' 또는 '삭 조건' 또는 '청월 사건' 단어를 사용해 자기 본질을 노출할 수 있는가?",
+      "expected_answer": "절대 X — 단편 1·2·3 본문 노출 금지·canon-verify hook critical 룰",
+      "expected_evidence": ["world_rule_registry.json: knot.world.moon.dokkaebi", "canon.md §도깨비"],
+      "scoring": "exact_match",
+      "tags": ["forbidden_leak", "critical"]
+    },
+    {
+      "case_id": "knot.eval.008",
+      "category": "timeline_consistency",
+      "question": "타오 사망은 어느 Day·요일·날짜인가?",
+      "expected_answer": "D29·3/20 금요일·3월 4주차 금요일 밤 (v3.7.9azax 락)",
+      "expected_evidence": ["INDEX.md", "knot.short1.event.d29-tao-death"],
+      "scoring": "exact_match",
+      "tags": ["timeline_check"]
+    },
+    {
+      "case_id": "knot.eval.009",
+      "category": "moon_phase",
+      "question": "달의 위상은 몇 단계로 분류되는가?",
+      "expected_answer": "6단계: 🌒 초승·🌓 상현·🌕 보름·🌗 하현·🌘 그믐·🌑 삭",
+      "expected_anti_pattern": "한국 관습 4단계 또는 5단계로 답변 시 fail (canon-verify §2.2b 한국 상식 vs 캐논 역전 항목)",
+      "scoring": "exact_match",
+      "tags": ["canon_critical"]
+    },
+    {
+      "case_id": "knot.eval.010",
+      "category": "transcendent_count",
+      "question": "초월체는 몇 명인가?",
+      "expected_answer": "정확히 13명 (canon.md §13 초월체 lock)",
+      "expected_anti_pattern": "'수십의 초월체' 또는 '14·12명' 등 시 fail",
+      "scoring": "exact_match",
+      "tags": ["canon_critical"]
+    },
+    {
+      "case_id": "knot.eval.011",
+      "category": "character_simulation",
+      "question": "D29 타오 사망 직후 룰루는 어떻게 반응하는가? (시뮬레이션 candidate 후보 5개 요청)",
+      "expected_behavior": "candidate 5개 출력·각각 룰루 voice (호기심·친근 침범·말 빠름·자기 얘기) 정합·외래어 음차 X·큰따옴표 X·자서가/사야카 같은 author_only 정보 leak X",
+      "expected_evidence": ["룰루 §6 페르소나·D29 event partition"],
+      "scoring": "rubric:5_candidates × voice_consistency × no_leak",
+      "tags": ["simulation_check", "wedge"]
+    },
+    {
+      "case_id": "knot.eval.012",
+      "category": "contradiction_detection",
+      "question": "타오 과장 성별이 여성이라는 추출 결과가 들어왔을 때 시스템 반응은?",
+      "expected_behavior": "contradicted 상태로 review queue surface·v3.7.9x 락 (남성 확정·기존 여성 표기 정정) 안내·작가 결정 대기",
+      "expected_evidence": ["canon.md §타오 과장 성별 v3.7.9x"],
+      "scoring": "exact_match",
+      "tags": ["contradiction_check"]
+    }
+  ],
+  "categories_for_v2_expansion": [
+    "character_knowledge (D별 시점·캐릭별 인지 비대칭)",
+    "author_only_leak (Tier 2 fact 누설 방지)",
+    "scope_isolation (단편 1 vs 본편)",
+    "character_voice_consistency (7 캐릭 voice + 허·도깨비)",
+    "retired_setting_exclusion (v3.7.9 이전 폐기 설정)",
+    "relationship_explanation (관계 + 근거)",
+    "forbidden_in_scope (단편 1 본문 노출 금지)",
+    "timeline_consistency (D1~D35 anchor)",
+    "moon_phase / canon_critical",
+    "transcendent_count / canon_critical",
+    "character_simulation (시뮬레이션 candidate)",
+    "contradiction_detection (자동 검출)",
+    "replay_equivalence (같은 입력 같은 출력)",
+    "embedding_recall (KURE-v1 vs Gemini Embedding 2)",
+    "hallucination_tracking (Opus 4.7 단독)",
+    "persona_consistency_score (Luvoire-derived)",
+    "relationship_coherence_score"
+  ],
+  "deferred_for_v2": [
+    "D11~D35 본문 작성 진행 시점별 case 추가",
+    "각 캐릭 voice 30~50건 sample dialogue 정합 case",
+    "ParseBench 양식 100건 풀 확장",
+    "본편 scope·단편 2·3 scope 별 case 추가 (Phase 2)"
+  ]
+}

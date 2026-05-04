@@ -108,10 +108,10 @@ const ArrowDownIcon: React.FC<{ className?: string }> = ({ className }) => (
 // ============================================
 
 const MATCH_TYPE_STYLES: Record<MatchedTerm["matchType"], string> = {
-  exact: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
+  exact: "bg-[var(--signal-canon-soft)] text-[var(--signal-canon-ink)] dark:bg-[var(--signal-canon-ink)] dark:text-[var(--signal-canon-soft)]",
   stem: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200",
-  synonym: "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200",
-  semantic: "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200",
+  synonym: "bg-[var(--ink-100)] text-[var(--ink-900)] dark:bg-[var(--ink-900)] dark:text-[var(--ink-300)]",
+  semantic: "bg-[var(--signal-pending-soft)] text-[var(--signal-pending-ink)] dark:bg-[var(--signal-pending-ink)] dark:text-[var(--signal-pending-soft)]",
 };
 
 // ============================================
@@ -124,19 +124,19 @@ interface MatchedTermItemProps {
 
 function MatchedTermItem({ term }: MatchedTermItemProps) {
   return (
-    <div className="flex items-center gap-2 p-2 bg-szn-surface rounded-lg">
+    <div className="flex items-center gap-2 p-2 bg-[var(--ink-50)] rounded-lg">
       <span className={`px-2 py-0.5 text-xs font-medium rounded ${MATCH_TYPE_STYLES[term.matchType]}`}>
         {term.matchType}
       </span>
-      <span className="font-medium text-szn-text-1">
+      <span className="font-medium text-[var(--ink-900)]">
         &quot;{term.term}&quot;
       </span>
       {term.queryTerm && term.queryTerm !== term.term && (
-        <span className="text-xs text-szn-text-2">
+        <span className="text-xs text-[var(--ink-600)]">
           (from &quot;{term.queryTerm}&quot;)
         </span>
       )}
-      <span className="ml-auto text-xs text-szn-text-2">
+      <span className="ml-auto text-xs text-[var(--ink-600)]">
         {term.positions.length}x
       </span>
     </div>
@@ -149,19 +149,19 @@ interface SemanticMatchItemProps {
 
 function SemanticMatchItem({ match }: SemanticMatchItemProps) {
   return (
-    <div className="p-3 bg-amber-50 dark:bg-amber-900/30 rounded-lg border border-amber-200 dark:border-amber-800">
+    <div className="p-3 bg-[var(--signal-pending-soft)] dark:bg-[var(--signal-pending)]/30 rounded-lg border border-[var(--signal-pending)] dark:border-[var(--signal-pending)]">
       <div className="flex items-start justify-between gap-2 mb-2">
-        <span className="text-sm font-medium text-amber-800 dark:text-amber-200">
+        <span className="text-sm font-medium text-[var(--signal-pending-ink)] dark:text-[var(--signal-pending-soft)]">
           Query: &quot;{match.queryPhrase}&quot;
         </span>
-        <span className="text-xs px-2 py-0.5 bg-amber-200 dark:bg-amber-800 text-amber-800 dark:text-amber-200 rounded">
+        <span className="text-xs px-2 py-0.5 bg-[var(--signal-pending-soft)] dark:bg-[var(--signal-pending-ink)] text-[var(--signal-pending-ink)] dark:text-[var(--signal-pending-soft)] rounded">
           {(match.similarity * 100).toFixed(0)}% similar
         </span>
       </div>
-      <p className="text-sm text-szn-text-2 italic">
+      <p className="text-sm text-[var(--ink-600)] italic">
         &quot;{match.matchedPassage}&quot;
       </p>
-      <p className="mt-2 text-xs text-szn-text-2">
+      <p className="mt-2 text-xs text-[var(--ink-600)]">
         {match.reason}
       </p>
     </div>
@@ -176,12 +176,12 @@ function ComparisonItem({ comparison }: ComparisonItemProps) {
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <div className="border border-szn-border rounded-lg overflow-hidden">
+    <div className="border border-[var(--ink-200)] rounded-lg overflow-hidden">
       <button
         onClick={() => setExpanded(!expanded)}
-        className="w-full p-3 flex items-center justify-between bg-szn-surface hover:bg-szn-surface-1 transition-colors"
+        className="w-full p-3 flex items-center justify-between bg-[var(--ink-50)] hover:bg-[var(--ink-50)] transition-colors"
       >
-        <span className="text-sm font-medium text-szn-text-2">
+        <span className="text-sm font-medium text-[var(--ink-600)]">
           vs Result #{comparison.comparedToRank}
         </span>
         <ChevronDownIcon
@@ -192,7 +192,7 @@ function ComparisonItem({ comparison }: ComparisonItemProps) {
       {expanded && (
         <div className="p-3 space-y-3">
           {/* Summary */}
-          <p className="text-sm text-szn-text-2">
+          <p className="text-sm text-[var(--ink-600)]">
             {comparison.summary}
           </p>
 
@@ -201,23 +201,23 @@ function ComparisonItem({ comparison }: ComparisonItemProps) {
             {comparison.factors.map((factor, index) => (
               <div
                 key={index}
-                className="flex items-center gap-2 p-2 bg-szn-bg rounded border border-szn-border"
+                className="flex items-center gap-2 p-2 bg-[var(--ink-50)] rounded border border-[var(--ink-200)]"
               >
                 {/* Impact indicator */}
                 {factor.impact === "positive" && (
-                  <ArrowUpIcon className="w-4 h-4 text-green-500" />
+                  <ArrowUpIcon className="w-4 h-4 text-[var(--signal-canon-ink)]" />
                 )}
                 {factor.impact === "negative" && (
-                  <ArrowDownIcon className="w-4 h-4 text-red-500" />
+                  <ArrowDownIcon className="w-4 h-4 text-[var(--signal-conflict-ink)]" />
                 )}
                 {factor.impact === "neutral" && (
                   <div className="w-4 h-4 rounded-full bg-gray-300 dark:bg-gray-600" />
                 )}
 
-                <span className="text-sm font-medium text-szn-text-2">
+                <span className="text-sm font-medium text-[var(--ink-600)]">
                   {factor.factor}
                 </span>
-                <span className="ml-auto text-xs text-szn-text-2">
+                <span className="ml-auto text-xs text-[var(--ink-600)]">
                   {typeof factor.thisValue === "number"
                     ? factor.thisValue.toFixed(2)
                     : factor.thisValue}{" "}
@@ -253,14 +253,14 @@ export function AttributionList({
   return (
     <div className={`space-y-6 ${className}`}>
       {/* Source Information */}
-      <div className="p-4 bg-szn-surface rounded-lg">
+      <div className="p-4 bg-[var(--ink-50)] rounded-lg">
         <div className="flex items-start gap-3">
           <DocumentIcon className="w-5 h-5 text-gray-400 mt-0.5" />
           <div className="flex-1 min-w-0">
-            <h4 className="font-medium text-szn-text-1 truncate">
+            <h4 className="font-medium text-[var(--ink-900)] truncate">
               {attribution.documentTitle || "Untitled Document"}
             </h4>
-            <p className="text-sm text-szn-text-2 mt-1">
+            <p className="text-sm text-[var(--ink-600)] mt-1">
               ID: {attribution.documentId.substring(0, 20)}...
             </p>
             {attribution.source && (
@@ -269,22 +269,22 @@ export function AttributionList({
               </p>
             )}
             {attribution.page && (
-              <p className="text-sm text-szn-text-2">
+              <p className="text-sm text-[var(--ink-600)]">
                 Page {attribution.page}
               </p>
             )}
           </div>
           <div className="text-right">
-            <div className="text-xs text-szn-text-2">
+            <div className="text-xs text-[var(--ink-600)]">
               Confidence
             </div>
             <div
               className={`text-lg font-bold ${
                 attribution.confidence >= 0.7
-                  ? "text-green-600 dark:text-green-400"
+                  ? "text-[var(--signal-canon-ink)] dark:text-[var(--signal-canon-soft)]"
                   : attribution.confidence >= 0.4
-                    ? "text-amber-600 dark:text-amber-400"
-                    : "text-red-600 dark:text-red-400"
+                    ? "text-[var(--signal-pending-ink)] dark:text-[var(--signal-pending-soft)]"
+                    : "text-[var(--signal-conflict-ink)] dark:text-[var(--signal-conflict-soft)]"
               }`}
             >
               {(attribution.confidence * 100).toFixed(0)}%
@@ -298,7 +298,7 @@ export function AttributionList({
             <TagIcon className="w-4 h-4 text-gray-400" />
             {attribution.sections.map((section, index) => (
               <span key={index}>
-                <span className="text-xs text-szn-text-2">
+                <span className="text-xs text-[var(--ink-600)]">
                   {section}
                 </span>
                 {index < attribution.sections!.length - 1 && (
@@ -323,7 +323,7 @@ export function AttributionList({
       {/* Matched Terms */}
       {attribution.matchedTerms.length > 0 && (
         <div>
-          <h4 className="text-sm font-semibold text-szn-text-1 mb-3">
+          <h4 className="text-sm font-semibold text-[var(--ink-900)] mb-3">
             Matched Terms ({attribution.matchedTerms.length})
           </h4>
           <div className="space-y-2">
@@ -347,7 +347,7 @@ export function AttributionList({
       {/* Semantic Matches */}
       {attribution.semanticMatches.length > 0 && (
         <div>
-          <h4 className="text-sm font-semibold text-szn-text-1 mb-3">
+          <h4 className="text-sm font-semibold text-[var(--ink-900)] mb-3">
             Semantic Matches ({attribution.semanticMatches.length})
           </h4>
           <div className="space-y-3">
@@ -361,7 +361,7 @@ export function AttributionList({
       {/* Comparisons */}
       {comparisons && comparisons.length > 0 && (
         <div>
-          <h4 className="text-sm font-semibold text-szn-text-1 mb-3">
+          <h4 className="text-sm font-semibold text-[var(--ink-900)] mb-3">
             Ranking Comparisons
           </h4>
           <div className="space-y-2">
@@ -375,18 +375,18 @@ export function AttributionList({
       {/* Metadata */}
       {attribution.metadata && Object.keys(attribution.metadata).length > 0 && (
         <div>
-          <h4 className="text-sm font-semibold text-szn-text-1 mb-3">
+          <h4 className="text-sm font-semibold text-[var(--ink-900)] mb-3">
             Document Metadata
           </h4>
-          <div className="p-3 bg-szn-surface rounded-lg">
+          <div className="p-3 bg-[var(--ink-50)] rounded-lg">
             <dl className="grid grid-cols-2 gap-2 text-sm">
               {Object.entries(attribution.metadata)
                 .filter(([key]) => !["title", "source", "page", "sections"].includes(key))
                 .slice(0, 6)
                 .map(([key, value]) => (
                   <div key={key}>
-                    <dt className="text-szn-text-2">{key}</dt>
-                    <dd className="font-medium text-szn-text-1 truncate">
+                    <dt className="text-[var(--ink-600)]">{key}</dt>
+                    <dd className="font-medium text-[var(--ink-900)] truncate">
                       {String(value)}
                     </dd>
                   </div>

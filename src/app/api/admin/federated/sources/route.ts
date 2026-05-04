@@ -6,6 +6,7 @@ import {
   getAccessibleSources,
   logFederatedOperation,
 } from '@/lib/summer/admin';
+import { hasOrgAccess } from '@/lib/winter/org/organization';
 import { encrypt } from '@/lib/winter/crypto';
 import { logServerError } from '@/lib/server/logger';
 
@@ -27,8 +28,16 @@ export async function GET(request: NextRequest) {
 
     const { userId } = authResult;
     const url = new URL(request.url);
-    const organizationId = url.searchParams.get('organization_id') ?? undefined;
+    const requestedOrganizationId = url.searchParams.get('organization_id')?.trim();
+    const organizationId = requestedOrganizationId || undefined;
     const includeInactive = url.searchParams.get('include_inactive') === 'true';
+
+    if (organizationId && !(await hasOrgAccess(organizationId, userId))) {
+      return NextResponse.json(
+        { error: 'Access denied to this organization' },
+        { status: 403 }
+      );
+    }
 
     const sources = await getAccessibleSources(userId, organizationId);
 
@@ -103,6 +112,24 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    let organizationId: string | undefined;
+    if (body.organization_id != null) {
+      if (typeof body.organization_id !== 'string') {
+        return NextResponse.json(
+          { error: 'organization_id must be a string' },
+          { status: 400 }
+        );
+      }
+      organizationId = body.organization_id.trim() || undefined;
+    }
+
+    if (organizationId && !(await hasOrgAccess(organizationId, userId))) {
+      return NextResponse.json(
+        { error: 'Access denied to this organization' },
+        { status: 403 }
+      );
+    }
+
     // Encrypt sensitive config
     const encryptedConfig = await encrypt(JSON.stringify(body.config));
 
@@ -117,7 +144,7 @@ export async function POST(request: NextRequest) {
         config_encrypted: encryptedConfig,
         capabilities: body.capabilities ?? { vector: true },
         is_active: true,
-        organization_id: body.organization_id ?? null,
+        organization_id: organizationId ?? null,
         created_by: userId,
         verification_status: 'pending',
       })
@@ -128,7 +155,7 @@ export async function POST(request: NextRequest) {
       await logFederatedOperation(
         {
           userId,
-          organizationId: body.organization_id,
+          organizationId,
           operation: 'source.create',
           resourceType: 'source',
           details: { name: body.name, provider: body.provider },
@@ -138,14 +165,14 @@ export async function POST(request: NextRequest) {
         },
         context
       );
-      return NextResponse.json({ error: error.message }, { status: 400 });
+      return NextResponse.json({ error: 'Failed to create federated source' }, { status: 400 });
     }
 
     // Log success
     await logFederatedOperation(
       {
         userId,
-        organizationId: body.organization_id,
+        organizationId,
         operation: 'source.create',
         resourceType: 'source',
         resourceId: source.id,

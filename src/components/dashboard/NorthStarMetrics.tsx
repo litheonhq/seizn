@@ -89,13 +89,13 @@ export function NorthStarMetrics({ organizationId, compact = false }: Props) {
   const getTrendIcon = (trend: string) => {
     switch (trend) {
       case "improving":
-        return <TrendUpIcon className="w-4 h-4 text-green-500" />;
+        return <TrendUpIcon className="w-4 h-4 text-[var(--signal-canon-ink)]" />;
       case "declining":
-        return <TrendDownIcon className="w-4 h-4 text-red-500" />;
+        return <TrendDownIcon className="w-4 h-4 text-[var(--signal-conflict-ink)]" />;
       case "stable":
         return <TrendFlatIcon className="w-4 h-4 text-blue-500" />;
       default:
-        return <QuestionIcon className="w-4 h-4 text-szn-text-3" />;
+        return <QuestionIcon className="w-4 h-4 text-[var(--ink-500)]" />;
     }
   };
 
@@ -115,13 +115,13 @@ export function NorthStarMetrics({ organizationId, compact = false }: Props) {
   const getTrendColor = (trend: string) => {
     switch (trend) {
       case "improving":
-        return "text-green-600 bg-green-50";
+        return "text-[var(--signal-canon-ink)] bg-[var(--signal-canon-soft)]";
       case "declining":
-        return "text-red-600 bg-red-50";
+        return "text-[var(--signal-conflict-ink)] bg-[var(--signal-conflict-soft)]";
       case "stable":
         return "text-blue-600 bg-blue-50";
       default:
-        return "text-szn-text-2 bg-szn-bg";
+        return "text-[var(--ink-600)] bg-[var(--ink-50)]";
     }
   };
 
@@ -147,13 +147,13 @@ export function NorthStarMetrics({ organizationId, compact = false }: Props) {
     return (
       <div className={`szn-card rounded-lg overflow-hidden ${compact ? "p-4" : "p-6"}`}>
         <div className="animate-pulse">
-          <div className="h-6 bg-szn-surface rounded w-48 mb-4" />
+          <div className="h-6 bg-[var(--ink-50)] rounded w-48 mb-4" />
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[1, 2, 3, 4].map((i) => (
               <div key={i} className="space-y-2">
-                <div className="h-4 bg-szn-surface rounded w-24" />
-                <div className="h-8 bg-szn-surface rounded w-16" />
-                <div className="h-3 bg-szn-surface rounded w-20" />
+                <div className="h-4 bg-[var(--ink-50)] rounded w-24" />
+                <div className="h-8 bg-[var(--ink-50)] rounded w-16" />
+                <div className="h-3 bg-[var(--ink-50)] rounded w-20" />
               </div>
             ))}
           </div>
@@ -165,7 +165,7 @@ export function NorthStarMetrics({ organizationId, compact = false }: Props) {
   if (error) {
     return (
       <div className={`szn-card rounded-lg overflow-hidden ${compact ? "p-4" : "p-6"}`}>
-        <div className="flex items-center gap-3 text-amber-600">
+        <div className="flex items-center gap-3 text-[var(--signal-pending-ink)]">
           <WarningIcon className="w-5 h-5" />
           <p className="text-sm">{error}</p>
         </div>
@@ -181,10 +181,10 @@ export function NorthStarMetrics({ organizationId, compact = false }: Props) {
     return (
       <div className="szn-card rounded-lg p-4">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="font-semibold text-szn-text-1 text-sm">
+          <h3 className="font-semibold text-[var(--ink-900)] text-sm">
             {t("dashboard.northStar.title") || "North Star Metrics"}
           </h3>
-          <span className="text-xs text-szn-text-3">
+          <span className="text-xs text-[var(--ink-500)]">
             {formatDate(metrics.lastUpdated)}
           </span>
         </div>
@@ -219,24 +219,24 @@ export function NorthStarMetrics({ organizationId, compact = false }: Props) {
       {/* Header */}
       <div className="p-4 border-b theme-border flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-lg bg-szn-surface flex items-center justify-center">
-            <ChartIcon className="w-5 h-5 text-szn-text-2" />
+          <div className="w-9 h-9 rounded-lg bg-[var(--ink-50)] flex items-center justify-center">
+            <ChartIcon className="w-5 h-5 text-[var(--ink-600)]" />
           </div>
           <div>
-            <h2 className="font-semibold text-szn-text-1">
+            <h2 className="font-semibold text-[var(--ink-900)]">
               {t("dashboard.northStar.title") || "North Star Metrics"}
             </h2>
-            <p className="text-xs text-szn-text-2">
+            <p className="text-xs text-[var(--ink-600)]">
               {t("dashboard.northStar.subtitle") || "Key performance indicators"}
             </p>
           </div>
         </div>
         <button
           onClick={fetchMetrics}
-          className="p-2 hover:bg-szn-surface-1 rounded-lg transition-colors"
+          className="p-2 hover:bg-[var(--ink-50)] rounded-lg transition-colors"
           title={t("dashboard.northStar.refresh") || "Refresh"}
         >
-          <RefreshIcon className="w-4 h-4 text-szn-text-2" />
+          <RefreshIcon className="w-4 h-4 text-[var(--ink-600)]" />
         </button>
       </div>
 
@@ -258,7 +258,7 @@ export function NorthStarMetrics({ organizationId, compact = false }: Props) {
           trendColor={getTrendColor(metrics.ttft.trend)}
           trendIcon={getTrendIcon(metrics.ttft.trend)}
           sampleSize={metrics.ttft.sampleSize}
-          icon={<ClockIcon className="w-4 h-4 text-cyan-500" />}
+          icon={<ClockIcon className="w-4 h-4 text-[var(--ink-900)]" />}
           gradient=""
         />
 
@@ -278,7 +278,7 @@ export function NorthStarMetrics({ organizationId, compact = false }: Props) {
           trendColor={getTrendColor(metrics.ttd.trend)}
           trendIcon={getTrendIcon(metrics.ttd.trend)}
           sampleSize={metrics.ttd.sampleSize}
-          icon={<BugIcon className="w-4 h-4 text-amber-500" />}
+          icon={<BugIcon className="w-4 h-4 text-[var(--signal-pending-ink)]" />}
           gradient=""
         />
 
@@ -298,7 +298,7 @@ export function NorthStarMetrics({ organizationId, compact = false }: Props) {
           trendColor={getTrendColor(metrics.costPredictability.trend)}
           trendIcon={getTrendIcon(metrics.costPredictability.trend)}
           sampleSize={metrics.costPredictability.totalBudgetChecks}
-          icon={<ShieldIcon className="w-4 h-4 text-green-500" />}
+          icon={<ShieldIcon className="w-4 h-4 text-[var(--signal-canon-ink)]" />}
           gradient=""
         />
 
@@ -324,7 +324,7 @@ export function NorthStarMetrics({ organizationId, compact = false }: Props) {
       </div>
 
       {/* Footer */}
-      <div className="px-6 pb-4 flex items-center justify-between text-xs text-szn-text-3">
+      <div className="px-6 pb-4 flex items-center justify-between text-xs text-[var(--ink-500)]">
         <span>
           {t("dashboard.northStar.lastUpdated") || "Last updated"}:{" "}
           {new Date(metrics.lastUpdated).toLocaleString(locale)}
@@ -366,9 +366,9 @@ function MetricCard({
   gradient: _gradient,
 }: MetricCardProps) {
   return (
-    <div className="bg-szn-surface-1 rounded-lg p-4 border border-szn-border hover:border-szn-text-3/20 transition-colors">
+    <div className="bg-[var(--ink-50)] rounded-lg p-4 border border-[var(--ink-200)] hover:border-[var(--ink-500)]/20 transition-colors">
       <div className="flex items-start justify-between mb-3">
-        <div className="w-9 h-9 rounded-lg bg-szn-card border border-szn-border flex items-center justify-center">
+        <div className="w-9 h-9 rounded-lg bg-[var(--ink-0)] border border-[var(--ink-200)] flex items-center justify-center">
           {icon}
         </div>
         <div className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${trendColor}`}>
@@ -376,17 +376,17 @@ function MetricCard({
           <span>{trendLabel}</span>
         </div>
       </div>
-      <h3 className="font-semibold text-szn-text-1 text-sm">{title}</h3>
-      <p className="text-xs text-szn-text-2 mb-2">{subtitle}</p>
+      <h3 className="font-semibold text-[var(--ink-900)] text-sm">{title}</h3>
+      <p className="text-xs text-[var(--ink-600)] mb-2">{subtitle}</p>
       <div className="flex items-baseline gap-2">
-        <span className="text-2xl font-bold text-szn-text-1">{value}</span>
+        <span className="text-2xl font-bold text-[var(--ink-900)]">{value}</span>
         {secondaryValue && (
-          <span className="text-xs text-szn-text-2">{secondaryValue}</span>
+          <span className="text-xs text-[var(--ink-600)]">{secondaryValue}</span>
         )}
       </div>
       <div className="mt-2 flex items-center justify-between">
-        <span className="text-xs text-szn-text-3">{target}</span>
-        <span className="text-xs text-szn-text-3">n={sampleSize}</span>
+        <span className="text-xs text-[var(--ink-500)]">{target}</span>
+        <span className="text-xs text-[var(--ink-500)]">n={sampleSize}</span>
       </div>
     </div>
   );
@@ -401,17 +401,17 @@ interface MetricMiniProps {
 function MetricMini({ label, value, trend }: MetricMiniProps) {
   const trendColorClass =
     trend === "improving"
-      ? "border-green-200 bg-green-50"
+      ? "border-[var(--signal-canon)] bg-[var(--signal-canon-soft)]"
       : trend === "declining"
-      ? "border-red-200 bg-red-50"
+      ? "border-[var(--signal-conflict)] bg-[var(--signal-conflict-soft)]"
       : trend === "stable"
       ? "border-blue-200 bg-blue-50"
-      : "border-szn-border bg-szn-bg";
+      : "border-[var(--ink-200)] bg-[var(--ink-50)]";
 
   return (
     <div className={`p-2 rounded-lg border ${trendColorClass}`}>
-      <p className="text-xs text-szn-text-2 truncate">{label}</p>
-      <p className="text-lg font-bold text-szn-text-1">{value}</p>
+      <p className="text-xs text-[var(--ink-600)] truncate">{label}</p>
+      <p className="text-lg font-bold text-[var(--ink-900)]">{value}</p>
     </div>
   );
 }

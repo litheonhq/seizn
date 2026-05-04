@@ -39,25 +39,25 @@ function CodeBlock({ language, code, title }: { language: string; code: string; 
   return (
     <div className="relative mt-4">
       {title && (
-        <div className="flex items-center justify-between px-4 py-2 bg-szn-surface-1 rounded-t-lg border-b border-szn-border">
-          <span className="text-sm font-medium text-szn-text-1">{title}</span>
-          <span className="text-xs text-szn-text-3">{language}</span>
+        <div className="flex items-center justify-between px-4 py-2 bg-[var(--ink-50)] rounded-t-lg border-b border-[var(--ink-200)]">
+          <span className="text-sm font-medium text-[var(--ink-900)]">{title}</span>
+          <span className="text-xs text-[var(--ink-500)]">{language}</span>
         </div>
       )}
       <div className={`relative ${title ? 'rounded-b-lg' : 'rounded-lg'}`}>
         {!title && (
-          <div className="absolute top-2 right-2 text-xs text-szn-text-3">
+          <div className="absolute top-2 right-2 text-xs text-[var(--ink-500)]">
             {language}
           </div>
         )}
         <button
           onClick={handleCopy}
-          className="absolute top-2 right-12 px-2 py-1 text-xs bg-szn-surface hover:bg-szn-surface-1 text-white rounded transition-colors"
+          className="absolute top-2 right-12 px-2 py-1 text-xs bg-[var(--ink-50)] hover:bg-[var(--ink-50)] text-white rounded transition-colors"
         >
           {copied ? 'Copied!' : 'Copy'}
         </button>
-        <pre className={`bg-szn-surface-1 ${title ? '' : 'rounded-lg'} p-4 overflow-x-auto`}>
-          <code className="text-sm text-szn-text-1">{code}</code>
+        <pre className={`bg-[var(--ink-50)] ${title ? '' : 'rounded-lg'} p-4 overflow-x-auto`}>
+          <code className="text-sm text-[var(--ink-900)]">{code}</code>
         </pre>
       </div>
     </div>
@@ -71,36 +71,36 @@ export function LangChainClient({ locale, dictionary }: Props) {
   };
 
   return (
-    <div className="min-h-screen bg-szn-bg">
+    <div className="min-h-screen bg-[var(--ink-50)]">
       {/* Header */}
-      <header className="border-b border-szn-border sticky top-0 bg-szn-bg/80 backdrop-blur-sm z-50">
+      <header className="border-b border-[var(--ink-200)] sticky top-0 bg-[var(--ink-50)]/80 backdrop-blur-sm z-50">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link href={`/${locale}`} className="text-xl font-bold text-szn-text-1">
-              Seizn<span className="text-szn-accent">.</span>
+            <Link href={`/${locale}`} className="text-xl font-bold text-[var(--ink-900)]">
+              Seizn<span className="text-[var(--ink-900)]">.</span>
             </Link>
-            <span className="text-szn-text-3">/</span>
-            <Link href={`/${locale}/docs`} className="text-szn-text-2 hover:text-szn-text-1 transition-colors">
+            <span className="text-[var(--ink-500)]">/</span>
+            <Link href={`/${locale}/docs`} className="text-[var(--ink-600)] hover:text-[var(--ink-900)] transition-colors">
               {t("nav.docs")}
             </Link>
-            <span className="text-szn-text-3">/</span>
-            <Link href={`/${locale}/docs/integrations`} className="text-szn-text-2 hover:text-szn-text-1 transition-colors">
+            <span className="text-[var(--ink-500)]">/</span>
+            <Link href={`/${locale}/docs/integrations`} className="text-[var(--ink-600)] hover:text-[var(--ink-900)] transition-colors">
               {t("docs.integrationsPage.breadcrumb")}
             </Link>
-            <span className="text-szn-text-3">/</span>
-            <span className="text-szn-text-1">LangChain</span>
+            <span className="text-[var(--ink-500)]">/</span>
+            <span className="text-[var(--ink-900)]">LangChain</span>
           </div>
           <nav className="flex items-center gap-4">
             <LanguageSwitcher currentLocale={locale} />
             <Link
               href={`/${locale}/dashboard`}
-              className="text-szn-text-2 hover:text-szn-text-1 transition-colors"
+              className="text-[var(--ink-600)] hover:text-[var(--ink-900)] transition-colors"
             >
               Dashboard
             </Link>
             <Link
               href={`/${locale}/login`}
-              className="px-4 py-2 bg-szn-accent hover:bg-szn-accent/80 text-white font-medium rounded-lg transition-colors"
+              className="px-4 py-2 bg-[var(--ink-900)] hover:bg-[var(--ink-900)]/80 text-white font-medium rounded-lg transition-colors"
             >
               {t("nav.getStarted")}
             </Link>
@@ -113,39 +113,39 @@ export function LangChainClient({ locale, dictionary }: Props) {
         <div className="mb-12">
           <div className="flex items-center gap-3 mb-4">
             <span className="text-4xl">🦜</span>
-            <span className="px-3 py-1 text-sm font-medium bg-szn-accent/10 text-szn-accent rounded-lg">
+            <span className="px-3 py-1 text-sm font-medium bg-[var(--ink-900)]/10 text-[var(--ink-900)] rounded-lg">
               {t("docs.langchainPage.badge")}
             </span>
           </div>
-          <h1 className="text-4xl font-bold text-szn-text-1 mb-4">
+          <h1 className="text-4xl font-bold text-[var(--ink-900)] mb-4">
             {t("docs.langchainPage.title")}
           </h1>
-          <p className="text-xl text-szn-text-2">
+          <p className="text-xl text-[var(--ink-600)]">
             {t("docs.langchainPage.subtitle")}
           </p>
         </div>
 
         {/* 60-Second Overview */}
         <section className="mb-12">
-          <h2 className="text-2xl font-bold text-szn-text-1 mb-4 flex items-center gap-2">
-            <span className="text-szn-accent">01</span>
+          <h2 className="text-2xl font-bold text-[var(--ink-900)] mb-4 flex items-center gap-2">
+            <span className="text-[var(--ink-900)]">01</span>
             {t("docs.langchainPage.overview.title")}
           </h2>
-          <div className="bg-szn-surface border border-szn-border rounded-xl p-6">
-            <p className="text-szn-text-1 mb-4">
+          <div className="bg-[var(--ink-50)] border border-[var(--ink-200)] rounded-xl p-6">
+            <p className="text-[var(--ink-900)] mb-4">
               {t("docs.langchainPage.overview.description")}
             </p>
-            <ul className="space-y-2 text-szn-text-2">
+            <ul className="space-y-2 text-[var(--ink-600)]">
               <li className="flex items-start gap-2">
-                <span className="text-szn-accent mt-1">&#10003;</span>
+                <span className="text-[var(--ink-900)] mt-1">&#10003;</span>
                 <span>{t("docs.langchainPage.overview.feature1")}</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-szn-accent mt-1">&#10003;</span>
+                <span className="text-[var(--ink-900)] mt-1">&#10003;</span>
                 <span>{t("docs.langchainPage.overview.feature2")}</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-szn-accent mt-1">&#10003;</span>
+                <span className="text-[var(--ink-900)] mt-1">&#10003;</span>
                 <span>{t("docs.langchainPage.overview.feature3")}</span>
               </li>
             </ul>
@@ -154,12 +154,12 @@ export function LangChainClient({ locale, dictionary }: Props) {
 
         {/* Installation */}
         <section className="mb-12">
-          <h2 className="text-2xl font-bold text-szn-text-1 mb-4 flex items-center gap-2">
-            <span className="text-szn-accent">02</span>
+          <h2 className="text-2xl font-bold text-[var(--ink-900)] mb-4 flex items-center gap-2">
+            <span className="text-[var(--ink-900)]">02</span>
             {t("docs.langchainPage.installation.title")}
           </h2>
-          <div className="bg-szn-surface border border-szn-border rounded-xl p-6">
-            <p className="text-szn-text-1 mb-4">
+          <div className="bg-[var(--ink-50)] border border-[var(--ink-200)] rounded-xl p-6">
+            <p className="text-[var(--ink-900)] mb-4">
               {t("docs.langchainPage.installation.description")}
             </p>
             <CodeBlock
@@ -176,12 +176,12 @@ pip install seizn langchain`}
 
         {/* 5-Minute Example */}
         <section className="mb-12">
-          <h2 className="text-2xl font-bold text-szn-text-1 mb-4 flex items-center gap-2">
-            <span className="text-szn-accent">03</span>
+          <h2 className="text-2xl font-bold text-[var(--ink-900)] mb-4 flex items-center gap-2">
+            <span className="text-[var(--ink-900)]">03</span>
             {t("docs.langchainPage.example.title")}
           </h2>
-          <div className="bg-szn-surface border border-szn-border rounded-xl p-6">
-            <p className="text-szn-text-1 mb-4">
+          <div className="bg-[var(--ink-50)] border border-[var(--ink-200)] rounded-xl p-6">
+            <p className="text-[var(--ink-900)] mb-4">
               {t("docs.langchainPage.example.description")}
             </p>
 
@@ -273,16 +273,16 @@ print("Trace:", response.get("seizn_trace"))`}
 
         {/* Production Tips */}
         <section className="mb-12">
-          <h2 className="text-2xl font-bold text-szn-text-1 mb-4 flex items-center gap-2">
-            <span className="text-szn-accent">04</span>
+          <h2 className="text-2xl font-bold text-[var(--ink-900)] mb-4 flex items-center gap-2">
+            <span className="text-[var(--ink-900)]">04</span>
             {t("docs.langchainPage.production.title")}
           </h2>
           <div className="space-y-4">
-            <div className="bg-szn-surface border border-szn-border rounded-xl p-6">
-              <h3 className="text-lg font-semibold text-szn-text-1 mb-3">
+            <div className="bg-[var(--ink-50)] border border-[var(--ink-200)] rounded-xl p-6">
+              <h3 className="text-lg font-semibold text-[var(--ink-900)] mb-3">
                 {t("docs.langchainPage.production.caching.title")}
               </h3>
-              <p className="text-szn-text-2 mb-4">
+              <p className="text-[var(--ink-600)] mb-4">
                 {t("docs.langchainPage.production.caching.description")}
               </p>
               <CodeBlock
@@ -298,11 +298,11 @@ print("Trace:", response.get("seizn_trace"))`}
               />
             </div>
 
-            <div className="bg-szn-surface border border-szn-border rounded-xl p-6">
-              <h3 className="text-lg font-semibold text-szn-text-1 mb-3">
+            <div className="bg-[var(--ink-50)] border border-[var(--ink-200)] rounded-xl p-6">
+              <h3 className="text-lg font-semibold text-[var(--ink-900)] mb-3">
                 {t("docs.langchainPage.production.reranking.title")}
               </h3>
-              <p className="text-szn-text-2 mb-4">
+              <p className="text-[var(--ink-600)] mb-4">
                 {t("docs.langchainPage.production.reranking.description")}
               </p>
               <CodeBlock
@@ -319,11 +319,11 @@ print("Trace:", response.get("seizn_trace"))`}
               />
             </div>
 
-            <div className="bg-szn-surface border border-szn-border rounded-xl p-6">
-              <h3 className="text-lg font-semibold text-szn-text-1 mb-3">
+            <div className="bg-[var(--ink-50)] border border-[var(--ink-200)] rounded-xl p-6">
+              <h3 className="text-lg font-semibold text-[var(--ink-900)] mb-3">
                 {t("docs.langchainPage.production.filtering.title")}
               </h3>
-              <p className="text-szn-text-2 mb-4">
+              <p className="text-[var(--ink-600)] mb-4">
                 {t("docs.langchainPage.production.filtering.description")}
               </p>
               <CodeBlock
@@ -343,40 +343,40 @@ print("Trace:", response.get("seizn_trace"))`}
 
         {/* Troubleshooting */}
         <section className="mb-12">
-          <h2 className="text-2xl font-bold text-szn-text-1 mb-4 flex items-center gap-2">
-            <span className="text-szn-accent">05</span>
+          <h2 className="text-2xl font-bold text-[var(--ink-900)] mb-4 flex items-center gap-2">
+            <span className="text-[var(--ink-900)]">05</span>
             {t("docs.langchainPage.troubleshooting.title")}
           </h2>
-          <div className="bg-szn-surface border border-szn-border rounded-xl overflow-hidden">
+          <div className="bg-[var(--ink-50)] border border-[var(--ink-200)] rounded-xl overflow-hidden">
             <table className="w-full">
-              <thead className="bg-szn-surface-1">
+              <thead className="bg-[var(--ink-50)]">
                 <tr>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-szn-text-1">
+                  <th className="px-6 py-3 text-left text-sm font-medium text-[var(--ink-900)]">
                     {t("docs.langchainPage.troubleshooting.errorColumn")}
                   </th>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-szn-text-1">
+                  <th className="px-6 py-3 text-left text-sm font-medium text-[var(--ink-900)]">
                     {t("docs.langchainPage.troubleshooting.causeColumn")}
                   </th>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-szn-text-1">
+                  <th className="px-6 py-3 text-left text-sm font-medium text-[var(--ink-900)]">
                     {t("docs.langchainPage.troubleshooting.solutionColumn")}
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-szn-border">
+              <tbody className="divide-y divide-[var(--ink-200)]">
                 <tr>
-                  <td className="px-6 py-4"><code className="text-red-500 text-sm">SEIZN_AUTH_ERROR</code></td>
-                  <td className="px-6 py-4 text-szn-text-2 text-sm">{t("docs.langchainPage.troubleshooting.authCause")}</td>
-                  <td className="px-6 py-4 text-szn-text-2 text-sm">{t("docs.langchainPage.troubleshooting.authSolution")}</td>
+                  <td className="px-6 py-4"><code className="text-[var(--signal-conflict-ink)] text-sm">SEIZN_AUTH_ERROR</code></td>
+                  <td className="px-6 py-4 text-[var(--ink-600)] text-sm">{t("docs.langchainPage.troubleshooting.authCause")}</td>
+                  <td className="px-6 py-4 text-[var(--ink-600)] text-sm">{t("docs.langchainPage.troubleshooting.authSolution")}</td>
                 </tr>
                 <tr>
-                  <td className="px-6 py-4"><code className="text-red-500 text-sm">SEIZN_RATE_LIMIT</code></td>
-                  <td className="px-6 py-4 text-szn-text-2 text-sm">{t("docs.langchainPage.troubleshooting.rateCause")}</td>
-                  <td className="px-6 py-4 text-szn-text-2 text-sm">{t("docs.langchainPage.troubleshooting.rateSolution")}</td>
+                  <td className="px-6 py-4"><code className="text-[var(--signal-conflict-ink)] text-sm">SEIZN_RATE_LIMIT</code></td>
+                  <td className="px-6 py-4 text-[var(--ink-600)] text-sm">{t("docs.langchainPage.troubleshooting.rateCause")}</td>
+                  <td className="px-6 py-4 text-[var(--ink-600)] text-sm">{t("docs.langchainPage.troubleshooting.rateSolution")}</td>
                 </tr>
                 <tr>
-                  <td className="px-6 py-4"><code className="text-amber-500 text-sm">Empty results</code></td>
-                  <td className="px-6 py-4 text-szn-text-2 text-sm">{t("docs.langchainPage.troubleshooting.emptyCause")}</td>
-                  <td className="px-6 py-4 text-szn-text-2 text-sm">{t("docs.langchainPage.troubleshooting.emptySolution")}</td>
+                  <td className="px-6 py-4"><code className="text-[var(--signal-pending-ink)] text-sm">Empty results</code></td>
+                  <td className="px-6 py-4 text-[var(--ink-600)] text-sm">{t("docs.langchainPage.troubleshooting.emptyCause")}</td>
+                  <td className="px-6 py-4 text-[var(--ink-600)] text-sm">{t("docs.langchainPage.troubleshooting.emptySolution")}</td>
                 </tr>
               </tbody>
             </table>
@@ -384,10 +384,10 @@ print("Trace:", response.get("seizn_trace"))`}
         </section>
 
         {/* Navigation */}
-        <div className="flex items-center justify-between pt-8 border-t border-szn-border">
+        <div className="flex items-center justify-between pt-8 border-t border-[var(--ink-200)]">
           <Link
             href={`/${locale}/docs/integrations`}
-            className="flex items-center gap-2 text-szn-text-2 hover:text-szn-accent transition-colors"
+            className="flex items-center gap-2 text-[var(--ink-600)] hover:text-[var(--ink-900)] transition-colors"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -396,7 +396,7 @@ print("Trace:", response.get("seizn_trace"))`}
           </Link>
           <Link
             href={`/${locale}/docs/integrations/llamaindex`}
-            className="flex items-center gap-2 text-szn-text-2 hover:text-szn-accent transition-colors"
+            className="flex items-center gap-2 text-[var(--ink-600)] hover:text-[var(--ink-900)] transition-colors"
           >
             {t("docs.langchainPage.nav.nextLlamaIndex")}
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -407,8 +407,8 @@ print("Trace:", response.get("seizn_trace"))`}
       </div>
 
       {/* Footer */}
-      <footer className="border-t border-szn-border py-8">
-        <div className="max-w-6xl mx-auto px-6 text-center text-szn-text-3 text-sm">
+      <footer className="border-t border-[var(--ink-200)] py-8">
+        <div className="max-w-6xl mx-auto px-6 text-center text-[var(--ink-500)] text-sm">
           {t("docs.footer.copyright").replace("{year}", new Date().getFullYear().toString())}
         </div>
       </footer>

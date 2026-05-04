@@ -27,15 +27,15 @@ const severityColors = {
     badge: "szn-badge-info",
   },
   warning: {
-    bg: "bg-yellow-50",
-    border: "border-yellow-200",
-    text: "text-yellow-700",
+    bg: "bg-[var(--signal-pending-soft)]",
+    border: "border-[var(--signal-pending)]",
+    text: "text-[var(--signal-pending-ink)]",
     badge: "szn-badge-warning",
   },
   critical: {
-    bg: "bg-red-50",
-    border: "border-red-200",
-    text: "text-red-700",
+    bg: "bg-[var(--signal-conflict-soft)]",
+    border: "border-[var(--signal-conflict)]",
+    text: "text-[var(--signal-conflict-ink)]",
     badge: "szn-badge-error",
   },
 };
@@ -54,8 +54,8 @@ const statusColors = {
 function AlertIcon({ severity }: { severity: DriftAlert["severity"] }) {
   const colors = {
     info: "text-blue-500",
-    warning: "text-yellow-500",
-    critical: "text-red-500",
+    warning: "text-[var(--signal-pending-ink)]",
+    critical: "text-[var(--signal-conflict-ink)]",
   };
 
   return (
@@ -253,7 +253,7 @@ export function DriftAlertCard({
           {onAcknowledge && (
             <button
               onClick={handleAcknowledge}
-              className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-md bg-yellow-100 text-yellow-800 hover:bg-yellow-200 transition-colors"
+              className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-md bg-[var(--signal-pending-soft)] text-[var(--signal-pending-ink)] hover:bg-yellow-200 transition-colors"
             >
               <CheckIcon />
               Acknowledge
@@ -262,7 +262,7 @@ export function DriftAlertCard({
           {onResolve && !showResolveForm && (
             <button
               onClick={() => setShowResolveForm(true)}
-              className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-md bg-green-100 text-green-800 hover:bg-green-200 transition-colors"
+              className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-md bg-[var(--signal-canon-soft)] text-[var(--signal-canon-ink)] hover:bg-green-200 transition-colors"
             >
               <CheckIcon />
               Resolve
@@ -284,7 +284,7 @@ export function DriftAlertCard({
           <div className="flex gap-2 mt-2">
             <button
               onClick={handleResolve}
-              className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-md bg-green-600 text-white hover:bg-green-700 transition-colors"
+              className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-md bg-[var(--signal-canon)] text-white hover:bg-[var(--signal-canon)] transition-colors"
             >
               <CheckIcon />
               Confirm Resolve

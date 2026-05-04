@@ -47,5 +47,13 @@ export function isMissingExternalIdColumnError(
     return false;
   }
 
-  return error.code === '42703' || /external_id/i.test(error.message ?? '');
+  if (error.code === '42703') {
+    return true;
+  }
+
+  if (error.code === 'PGRST204' && /external_id/i.test(error.message ?? '')) {
+    return true;
+  }
+
+  return false;
 }

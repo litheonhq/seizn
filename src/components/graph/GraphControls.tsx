@@ -257,7 +257,7 @@ export function GraphControls({
           {hasActiveFilters && (
             <button
               onClick={handleClearFilters}
-              className="w-full py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+              className="w-full py-2 text-sm text-[var(--signal-conflict-ink)] hover:bg-[var(--signal-conflict-soft)] rounded-lg transition-colors"
             >
               Clear All Filters
             </button>

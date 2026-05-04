@@ -61,9 +61,9 @@ export default function AlertsPage() {
   };
 
   const severityColors: Record<AlertSeverity, string> = {
-    critical: 'bg-red-100 text-red-700 border-red-200',
+    critical: 'bg-[var(--signal-conflict-soft)] text-[var(--signal-conflict-ink)] border-[var(--signal-conflict)]',
     error: 'bg-orange-100 text-orange-700 border-orange-200',
-    warning: 'bg-yellow-100 text-yellow-700 border-yellow-200',
+    warning: 'bg-[var(--signal-pending-soft)] text-[var(--signal-pending-ink)] border-[var(--signal-pending)]',
     info: 'bg-blue-100 text-blue-700 border-blue-200',
   };
 
@@ -83,14 +83,14 @@ export default function AlertsPage() {
             <Bell className="w-6 h-6" />
             Alerts
           </h1>
-          <p className="text-szn-text-2 text-sm mt-1">
+          <p className="text-[var(--ink-600)] text-sm mt-1">
             Manage and review system alerts
           </p>
         </div>
         <div className="flex items-center gap-4">
           <Link
             href="/dashboard/control-tower/alerts/rules"
-            className="px-4 py-2 border border-szn-border rounded-lg hover:bg-szn-surface-1"
+            className="px-4 py-2 border border-[var(--ink-200)] rounded-lg hover:bg-[var(--ink-50)]"
           >
             Manage Rules
           </Link>
@@ -108,8 +108,8 @@ export default function AlertsPage() {
       {/* Filters */}
       <div className="flex items-center gap-4 flex-wrap">
         <div className="flex items-center gap-2">
-          <Filter className="w-4 h-4 text-szn-text-3" />
-          <span className="text-sm text-szn-text-2">Filters:</span>
+          <Filter className="w-4 h-4 text-[var(--ink-500)]" />
+          <span className="text-sm text-[var(--ink-600)]">Filters:</span>
         </div>
 
         <button
@@ -117,7 +117,7 @@ export default function AlertsPage() {
           className={`px-3 py-1.5 rounded-lg text-sm ${
             filter.activeOnly
               ? 'bg-blue-100 text-blue-700'
-              : 'bg-szn-surface text-szn-text-2'
+              : 'bg-[var(--ink-50)] text-[var(--ink-600)]'
           }`}
         >
           Active Only
@@ -131,7 +131,7 @@ export default function AlertsPage() {
               severity: (e.target.value as AlertSeverity) || undefined,
             }))
           }
-          className="px-3 py-1.5 rounded-lg border border-szn-border text-sm"
+          className="px-3 py-1.5 rounded-lg border border-[var(--ink-200)] text-sm"
         >
           <option value="">All Severities</option>
           <option value="critical">Critical</option>
@@ -148,7 +148,7 @@ export default function AlertsPage() {
               status: (e.target.value as AlertStatus) || undefined,
             }))
           }
-          className="px-3 py-1.5 rounded-lg border border-szn-border text-sm"
+          className="px-3 py-1.5 rounded-lg border border-[var(--ink-200)] text-sm"
         >
           <option value="">All Statuses</option>
           <option value="firing">Firing</option>
@@ -160,7 +160,7 @@ export default function AlertsPage() {
         {(filter.severity || filter.status || filter.activeOnly) && (
           <button
             onClick={() => setFilter({ activeOnly: false })}
-            className="text-sm text-szn-text-2 hover:text-szn-text-1"
+            className="text-sm text-[var(--ink-600)] hover:text-[var(--ink-900)]"
           >
             Clear filters
           </button>
@@ -168,34 +168,34 @@ export default function AlertsPage() {
       </div>
 
       {/* Alerts List */}
-      <div className="bg-szn-card rounded-xl border border-szn-border">
+      <div className="bg-[var(--ink-0)] rounded-xl border border-[var(--ink-200)]">
         {loading ? (
           <div className="flex items-center justify-center py-12">
-            <RefreshCw className="w-6 h-6 animate-spin text-szn-text-3" />
+            <RefreshCw className="w-6 h-6 animate-spin text-[var(--ink-500)]" />
           </div>
         ) : alerts.length === 0 ? (
-          <div className="text-center py-12 text-szn-text-2">
-            <CheckCircle className="w-12 h-12 mx-auto mb-2 text-green-500" />
+          <div className="text-center py-12 text-[var(--ink-600)]">
+            <CheckCircle className="w-12 h-12 mx-auto mb-2 text-[var(--signal-canon-ink)]" />
             <p>No alerts found</p>
           </div>
         ) : (
-          <div className="divide-y divide-szn-border">
+          <div className="divide-y divide-[var(--ink-200)]">
             {alerts.map((alert) => {
               const StatusIcon = statusIcons[alert.status];
               return (
                 <div
                   key={alert.id}
-                  className={`p-4 ${alert.status === 'firing' ? 'bg-red-50/50 dark:bg-red-900/10' : ''}`}
+                  className={`p-4 ${alert.status === 'firing' ? 'bg-[var(--signal-conflict-soft)]/50 dark:bg-[var(--signal-conflict)]/10' : ''}`}
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex items-start gap-3">
                       <StatusIcon
                         className={`w-5 h-5 mt-0.5 ${
                           alert.status === 'firing'
-                            ? 'text-red-500'
+                            ? 'text-[var(--signal-conflict-ink)]'
                             : alert.status === 'acknowledged'
-                              ? 'text-yellow-500'
-                              : 'text-green-500'
+                              ? 'text-[var(--signal-pending-ink)]'
+                              : 'text-[var(--signal-canon-ink)]'
                         }`}
                       />
                       <div>
@@ -206,14 +206,14 @@ export default function AlertsPage() {
                           >
                             {alert.severity}
                           </span>
-                          <span className="text-xs px-2 py-0.5 rounded bg-szn-surface">
+                          <span className="text-xs px-2 py-0.5 rounded bg-[var(--ink-50)]">
                             {alert.status}
                           </span>
                         </div>
-                        <p className="text-sm text-szn-text-2 mt-1">
+                        <p className="text-sm text-[var(--ink-600)] mt-1">
                           {alert.description}
                         </p>
-                        <div className="flex items-center gap-4 mt-2 text-xs text-szn-text-2">
+                        <div className="flex items-center gap-4 mt-2 text-xs text-[var(--ink-600)]">
                           <span>Source: {alert.source}</span>
                           <span>
                             Created: {new Date(alert.createdAt).toLocaleString()}
@@ -231,7 +231,7 @@ export default function AlertsPage() {
                         <>
                           <button
                             onClick={() => handleAction(alert.id, 'acknowledge')}
-                            className="px-3 py-1.5 text-sm border border-szn-border rounded hover:bg-szn-surface-1"
+                            className="px-3 py-1.5 text-sm border border-[var(--ink-200)] rounded hover:bg-[var(--ink-50)]"
                           >
                             Acknowledge
                           </button>

@@ -214,13 +214,13 @@ function QualityIndicator({
     <div className="flex items-center gap-2">
       <div
         className={`w-3 h-3 rounded-full ${
-          isAboveTarget ? "bg-green-500" : "bg-yellow-500"
+          isAboveTarget ? "bg-[var(--signal-canon)]" : "bg-yellow-500"
         }`}
       />
       <span className="text-sm text-gray-600">{label}:</span>
       <span
         className={`text-sm font-semibold ${
-          isAboveTarget ? "text-green-600" : "text-yellow-600"
+          isAboveTarget ? "text-[var(--signal-canon-ink)]" : "text-[var(--signal-pending-ink)]"
         }`}
       >
         {value.toFixed(1)}%
@@ -244,7 +244,7 @@ function ProgressBar({
 }) {
   const colorClasses = {
     indigo: "bg-indigo-500",
-    green: "bg-green-500",
+    green: "bg-[var(--signal-canon)]",
   };
 
   return (

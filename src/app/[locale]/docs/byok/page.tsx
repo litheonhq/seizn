@@ -71,24 +71,24 @@ const seizn = new Seizn({
 
 export default function BYOKPage() {
   return (
-    <div className="min-h-screen bg-szn-bg">
+    <div className="min-h-screen bg-[var(--ink-50)]">
       {/* Header */}
-      <header className="border-b border-szn-border sticky top-0 bg-szn-bg/80 backdrop-blur-sm z-10">
+      <header className="border-b border-[var(--ink-200)] sticky top-0 bg-[var(--ink-50)]/80 backdrop-blur-sm z-10">
         <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link href="/" className="text-xl font-bold text-szn-text-1">
-              Seizn<span className="text-szn-accent">.</span>
+            <Link href="/" className="text-xl font-bold text-[var(--ink-900)]">
+              Seizn<span className="text-[var(--ink-900)]">.</span>
             </Link>
-            <span className="text-szn-text-2">/</span>
-            <Link href="/docs" className="text-szn-text-2 hover:text-szn-text-1 transition-colors">
+            <span className="text-[var(--ink-600)]">/</span>
+            <Link href="/docs" className="text-[var(--ink-600)] hover:text-[var(--ink-900)] transition-colors">
               Docs
             </Link>
-            <span className="text-szn-text-2">/</span>
-            <span className="text-szn-text-1">BYOK</span>
+            <span className="text-[var(--ink-600)]">/</span>
+            <span className="text-[var(--ink-900)]">BYOK</span>
           </div>
           <Link
             href="/dashboard/settings"
-            className="px-4 py-2 bg-szn-accent hover:bg-szn-accent/80 text-szn-text-1 font-medium rounded-lg transition-colors text-sm"
+            className="px-4 py-2 bg-[var(--ink-900)] hover:bg-[var(--ink-900)]/80 text-[var(--ink-900)] font-medium rounded-lg transition-colors text-sm"
           >
             Configure Keys
           </Link>
@@ -102,13 +102,13 @@ export default function BYOKPage() {
             <span className="px-3 py-1 bg-blue-400/10 text-blue-400 text-sm font-medium rounded-full">
               Cost Control
             </span>
-            <span className="text-szn-text-3">•</span>
-            <span className="text-szn-text-2 text-sm">Bring Your Own Key</span>
+            <span className="text-[var(--ink-500)]">•</span>
+            <span className="text-[var(--ink-600)] text-sm">Bring Your Own Key</span>
           </div>
-          <h1 className="text-4xl font-bold text-szn-text-1 mb-4">
+          <h1 className="text-4xl font-bold text-[var(--ink-900)] mb-4">
             BYOK (Bring Your Own Key)
           </h1>
-          <p className="text-xl text-szn-text-2 max-w-2xl">
+          <p className="text-xl text-[var(--ink-600)] max-w-2xl">
             Use your own API keys for embedding and LLM providers with Seizn.
             Pay providers directly, use Seizn for orchestration only.
           </p>
@@ -116,38 +116,38 @@ export default function BYOKPage() {
 
         {/* Benefits */}
         <div className="grid md:grid-cols-3 gap-6 mb-12">
-          <div className="p-6 bg-szn-card border border-szn-border rounded-xl">
-            <div className="w-10 h-10 bg-szn-accent/10 rounded-lg flex items-center justify-center mb-4">
-              <svg className="w-5 h-5 text-szn-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="p-6 bg-[var(--ink-0)] border border-[var(--ink-200)] rounded-xl">
+            <div className="w-10 h-10 bg-[var(--ink-900)]/10 rounded-lg flex items-center justify-center mb-4">
+              <svg className="w-5 h-5 text-[var(--ink-900)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
-            <h3 className="text-lg font-semibold text-szn-text-1 mb-2">Cost Control</h3>
-            <p className="text-szn-text-2 text-sm">
+            <h3 className="text-lg font-semibold text-[var(--ink-900)] mb-2">Cost Control</h3>
+            <p className="text-[var(--ink-600)] text-sm">
               Pay providers directly. Use Seizn for orchestration at reduced rates.
             </p>
           </div>
 
-          <div className="p-6 bg-szn-card border border-szn-border rounded-xl">
+          <div className="p-6 bg-[var(--ink-0)] border border-[var(--ink-200)] rounded-xl">
             <div className="w-10 h-10 bg-blue-500/10 rounded-lg flex items-center justify-center mb-4">
               <svg className="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
               </svg>
             </div>
-            <h3 className="text-lg font-semibold text-szn-text-1 mb-2">Compliance</h3>
-            <p className="text-szn-text-2 text-sm">
+            <h3 className="text-lg font-semibold text-[var(--ink-900)] mb-2">Compliance</h3>
+            <p className="text-[var(--ink-600)] text-sm">
               Keep API traffic within your existing provider agreements.
             </p>
           </div>
 
-          <div className="p-6 bg-szn-card border border-szn-border rounded-xl">
-            <div className="w-10 h-10 bg-purple-500/10 rounded-lg flex items-center justify-center mb-4">
-              <svg className="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="p-6 bg-[var(--ink-0)] border border-[var(--ink-200)] rounded-xl">
+            <div className="w-10 h-10 bg-[var(--ink-900)]/10 rounded-lg flex items-center justify-center mb-4">
+              <svg className="w-5 h-5 text-[var(--ink-700)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
               </svg>
             </div>
-            <h3 className="text-lg font-semibold text-szn-text-1 mb-2">Flexibility</h3>
-            <p className="text-szn-text-2 text-sm">
+            <h3 className="text-lg font-semibold text-[var(--ink-900)] mb-2">Flexibility</h3>
+            <p className="text-[var(--ink-600)] text-sm">
               Switch providers without changing your Seizn integration.
             </p>
           </div>
@@ -155,27 +155,27 @@ export default function BYOKPage() {
 
         {/* Supported Providers */}
         <div className="mb-12">
-          <h2 className="text-2xl font-bold text-szn-text-1 mb-6">Supported Providers</h2>
-          <div className="bg-szn-card border border-szn-border rounded-xl overflow-hidden">
+          <h2 className="text-2xl font-bold text-[var(--ink-900)] mb-6">Supported Providers</h2>
+          <div className="bg-[var(--ink-0)] border border-[var(--ink-200)] rounded-xl overflow-hidden">
             <table className="w-full">
-              <thead className="bg-szn-surface">
+              <thead className="bg-[var(--ink-50)]">
                 <tr>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-szn-text-2">Provider</th>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-szn-text-2">Models</th>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-szn-text-2">Use Case</th>
+                  <th className="px-6 py-3 text-left text-sm font-medium text-[var(--ink-600)]">Provider</th>
+                  <th className="px-6 py-3 text-left text-sm font-medium text-[var(--ink-600)]">Models</th>
+                  <th className="px-6 py-3 text-left text-sm font-medium text-[var(--ink-600)]">Use Case</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-szn-border">
+              <tbody className="divide-y divide-[var(--ink-200)]">
                 {providers.map((provider) => (
                   <tr key={provider.name}>
-                    <td className="px-6 py-4 text-szn-text-1 font-medium">
+                    <td className="px-6 py-4 text-[var(--ink-900)] font-medium">
                       <span className="mr-2">{provider.icon}</span>
                       {provider.name}
                     </td>
-                    <td className="px-6 py-4 text-szn-text-2 text-sm">
+                    <td className="px-6 py-4 text-[var(--ink-600)] text-sm">
                       {provider.models.join(", ")}
                     </td>
-                    <td className="px-6 py-4 text-szn-text-2 text-sm">{provider.useCase}</td>
+                    <td className="px-6 py-4 text-[var(--ink-600)] text-sm">{provider.useCase}</td>
                   </tr>
                 ))}
               </tbody>
@@ -185,24 +185,24 @@ export default function BYOKPage() {
 
         {/* Setup Steps */}
         <div className="mb-12">
-          <h2 className="text-2xl font-bold text-szn-text-1 mb-6">Setup</h2>
+          <h2 className="text-2xl font-bold text-[var(--ink-900)] mb-6">Setup</h2>
           <div className="space-y-6">
             {steps.map((step, index) => (
-              <div key={index} className="bg-szn-card border border-szn-border rounded-xl p-6">
+              <div key={index} className="bg-[var(--ink-0)] border border-[var(--ink-200)] rounded-xl p-6">
                 <div className="flex items-start gap-4 mb-4">
-                  <div className="w-8 h-8 bg-szn-accent/10 text-szn-accent rounded-full flex items-center justify-center text-sm font-medium">
+                  <div className="w-8 h-8 bg-[var(--ink-900)]/10 text-[var(--ink-900)] rounded-full flex items-center justify-center text-sm font-medium">
                     {index + 1}
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold text-szn-text-1">{step.title}</h3>
-                    <p className="text-szn-text-2 text-sm">{step.description}</p>
+                    <h3 className="text-lg font-semibold text-[var(--ink-900)]">{step.title}</h3>
+                    <p className="text-[var(--ink-600)] text-sm">{step.description}</p>
                   </div>
                 </div>
 
                 {step.action && (
                   <Link
                     href={step.action.href}
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-szn-accent hover:bg-szn-accent/80 text-szn-text-1 font-medium rounded-lg transition-colors text-sm ml-12"
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--ink-900)] hover:bg-[var(--ink-900)]/80 text-[var(--ink-900)] font-medium rounded-lg transition-colors text-sm ml-12"
                   >
                     {step.action.label}
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -212,8 +212,8 @@ export default function BYOKPage() {
                 )}
 
                 {step.code && (
-                  <div className="bg-szn-surface rounded-lg p-4 ml-12 overflow-x-auto">
-                    <pre className="text-sm text-szn-text-1">
+                  <div className="bg-[var(--ink-50)] rounded-lg p-4 ml-12 overflow-x-auto">
+                    <pre className="text-sm text-[var(--ink-900)]">
                       <code>{step.code}</code>
                     </pre>
                   </div>
@@ -225,28 +225,28 @@ export default function BYOKPage() {
 
         {/* Cost Comparison */}
         <div className="mb-12">
-          <h2 className="text-2xl font-bold text-szn-text-1 mb-6">Cost Comparison</h2>
-          <div className="bg-szn-card border border-szn-border rounded-xl overflow-hidden">
+          <h2 className="text-2xl font-bold text-[var(--ink-900)] mb-6">Cost Comparison</h2>
+          <div className="bg-[var(--ink-0)] border border-[var(--ink-200)] rounded-xl overflow-hidden">
             <table className="w-full">
-              <thead className="bg-szn-surface">
+              <thead className="bg-[var(--ink-50)]">
                 <tr>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-szn-text-2">Mode</th>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-szn-text-2">Embedding Cost</th>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-szn-text-2">Seizn Fee</th>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-szn-text-2">Total</th>
+                  <th className="px-6 py-3 text-left text-sm font-medium text-[var(--ink-600)]">Mode</th>
+                  <th className="px-6 py-3 text-left text-sm font-medium text-[var(--ink-600)]">Embedding Cost</th>
+                  <th className="px-6 py-3 text-left text-sm font-medium text-[var(--ink-600)]">Seizn Fee</th>
+                  <th className="px-6 py-3 text-left text-sm font-medium text-[var(--ink-600)]">Total</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-szn-border">
+              <tbody className="divide-y divide-[var(--ink-200)]">
                 <tr>
-                  <td className="px-6 py-4 text-szn-text-1 font-medium">Managed</td>
-                  <td className="px-6 py-4 text-szn-text-2">Included</td>
-                  <td className="px-6 py-4 text-szn-text-2">$0.001/query</td>
-                  <td className="px-6 py-4 text-szn-accent font-medium">$0.001/query</td>
+                  <td className="px-6 py-4 text-[var(--ink-900)] font-medium">Managed</td>
+                  <td className="px-6 py-4 text-[var(--ink-600)]">Included</td>
+                  <td className="px-6 py-4 text-[var(--ink-600)]">$0.001/query</td>
+                  <td className="px-6 py-4 text-[var(--ink-900)] font-medium">$0.001/query</td>
                 </tr>
                 <tr>
-                  <td className="px-6 py-4 text-szn-text-1 font-medium">BYOK</td>
-                  <td className="px-6 py-4 text-szn-text-2">Your provider rate</td>
-                  <td className="px-6 py-4 text-szn-text-2">$0.0005/query</td>
+                  <td className="px-6 py-4 text-[var(--ink-900)] font-medium">BYOK</td>
+                  <td className="px-6 py-4 text-[var(--ink-600)]">Your provider rate</td>
+                  <td className="px-6 py-4 text-[var(--ink-600)]">$0.0005/query</td>
                   <td className="px-6 py-4 text-blue-400 font-medium">Provider + $0.0005</td>
                 </tr>
               </tbody>
@@ -255,29 +255,29 @@ export default function BYOKPage() {
         </div>
 
         {/* Security */}
-        <div className="mb-12 p-6 bg-szn-card border border-szn-border rounded-xl">
-          <h2 className="text-xl font-bold text-szn-text-1 mb-4">Security</h2>
-          <ul className="space-y-3 text-szn-text-2">
+        <div className="mb-12 p-6 bg-[var(--ink-0)] border border-[var(--ink-200)] rounded-xl">
+          <h2 className="text-xl font-bold text-[var(--ink-900)] mb-4">Security</h2>
+          <ul className="space-y-3 text-[var(--ink-600)]">
             <li className="flex items-start gap-3">
-              <svg className="w-5 h-5 text-szn-accent mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 text-[var(--ink-900)] mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
               Keys are encrypted at rest (AES-256)
             </li>
             <li className="flex items-start gap-3">
-              <svg className="w-5 h-5 text-szn-accent mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 text-[var(--ink-900)] mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
               Keys are never logged or exposed in traces
             </li>
             <li className="flex items-start gap-3">
-              <svg className="w-5 h-5 text-szn-accent mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 text-[var(--ink-900)] mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
               You can rotate keys anytime without downtime
             </li>
             <li className="flex items-start gap-3">
-              <svg className="w-5 h-5 text-szn-accent mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 text-[var(--ink-900)] mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
               Keys are scoped to your organization only
@@ -287,30 +287,30 @@ export default function BYOKPage() {
 
         {/* FAQ */}
         <div className="mb-12">
-          <h2 className="text-2xl font-bold text-szn-text-1 mb-6">FAQ</h2>
+          <h2 className="text-2xl font-bold text-[var(--ink-900)] mb-6">FAQ</h2>
           <div className="space-y-4">
-            <div className="bg-szn-card border border-szn-border rounded-xl p-6">
-              <h3 className="text-szn-text-1 font-medium mb-2">Can I mix BYOK and Managed?</h3>
-              <p className="text-szn-text-2 text-sm">Yes. Use BYOK for embeddings, Managed for reranking, etc.</p>
+            <div className="bg-[var(--ink-0)] border border-[var(--ink-200)] rounded-xl p-6">
+              <h3 className="text-[var(--ink-900)] font-medium mb-2">Can I mix BYOK and Managed?</h3>
+              <p className="text-[var(--ink-600)] text-sm">Yes. Use BYOK for embeddings, Managed for reranking, etc.</p>
             </div>
-            <div className="bg-szn-card border border-szn-border rounded-xl p-6">
-              <h3 className="text-szn-text-1 font-medium mb-2">Are BYOK queries counted against my Seizn quota?</h3>
-              <p className="text-szn-text-2 text-sm">Yes, API calls count regardless of key source. Only LLM costs differ.</p>
+            <div className="bg-[var(--ink-0)] border border-[var(--ink-200)] rounded-xl p-6">
+              <h3 className="text-[var(--ink-900)] font-medium mb-2">Are BYOK queries counted against my Seizn quota?</h3>
+              <p className="text-[var(--ink-600)] text-sm">Yes, API calls count regardless of key source. Only LLM costs differ.</p>
             </div>
-            <div className="bg-szn-card border border-szn-border rounded-xl p-6">
-              <h3 className="text-szn-text-1 font-medium mb-2">What happens if my provider key expires?</h3>
-              <p className="text-szn-text-2 text-sm">Queries fail with SEIZN_401 error. Seizn does not fall back automatically.</p>
+            <div className="bg-[var(--ink-0)] border border-[var(--ink-200)] rounded-xl p-6">
+              <h3 className="text-[var(--ink-900)] font-medium mb-2">What happens if my provider key expires?</h3>
+              <p className="text-[var(--ink-600)] text-sm">Queries fail with SEIZN_401 error. Seizn does not fall back automatically.</p>
             </div>
           </div>
         </div>
 
         {/* CTA */}
-        <div className="text-center p-8 bg-gradient-to-br from-szn-accent/10 to-szn-accent-2/10 border border-szn-accent/30 rounded-2xl">
-          <h2 className="text-2xl font-bold text-szn-text-1 mb-4">Ready to configure BYOK?</h2>
-          <p className="text-szn-text-2 mb-6">Add your provider keys in the dashboard to get started.</p>
+        <div className="text-center p-8 bg-gradient-to-br from-[var(--ink-900)]/10 to-[var(--ink-900)]-2/10 border border-[var(--ink-900)]/30 rounded-2xl">
+          <h2 className="text-2xl font-bold text-[var(--ink-900)] mb-4">Ready to configure BYOK?</h2>
+          <p className="text-[var(--ink-600)] mb-6">Add your provider keys in the dashboard to get started.</p>
           <Link
             href="/dashboard/settings"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-szn-accent hover:bg-szn-accent/80 text-szn-text-1 font-medium rounded-lg transition-colors"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--ink-900)] hover:bg-[var(--ink-900)]/80 text-[var(--ink-900)] font-medium rounded-lg transition-colors"
           >
             Configure Keys
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -321,9 +321,9 @@ export default function BYOKPage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-szn-border py-8">
-        <div className="max-w-4xl mx-auto px-6 text-center text-szn-text-3 text-sm">
-          Need help? Contact <a href="mailto:support@seizn.com" className="text-szn-accent hover:underline">support@seizn.com</a>
+      <footer className="border-t border-[var(--ink-200)] py-8">
+        <div className="max-w-4xl mx-auto px-6 text-center text-[var(--ink-500)] text-sm">
+          Need help? Contact <a href="mailto:support@seizn.com" className="text-[var(--ink-900)] hover:underline">support@seizn.com</a>
         </div>
       </footer>
     </div>
