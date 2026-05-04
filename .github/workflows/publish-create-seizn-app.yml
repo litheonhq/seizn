@@ -1,0 +1,61 @@
+name: Publish create-seizn-app
+
+on:
+  push:
+    tags:
+      - 'create-app-v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to publish (e.g., 0.1.0)'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    name: Publish create-seizn-app
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+
+      - name: Install dependencies
+        working-directory: packages/create-seizn-app
+        run: npm install
+
+      - name: Build
+        working-directory: packages/create-seizn-app
+        run: npm run build
+
+      - name: Publish
+        working-directory: packages/create-seizn-app
+        # cwd inside the package avoids workspace-root repository auto-detect issues.
+        # --provenance omitted until Trusted Publisher is configured for create-seizn-app on npmjs.com.
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN_PUBLISH }}
+
+  notify:
+    needs: publish
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Notify on success
+        if: needs.publish.result == 'success'
+        run: echo "Successfully published create-seizn-app"
+
+      - name: Notify on failure
+        if: needs.publish.result == 'failure'
+        run: |
+          echo "Failed to publish create-seizn-app"
+          exit 1
