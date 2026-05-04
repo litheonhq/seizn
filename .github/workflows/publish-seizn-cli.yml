@@ -1,0 +1,61 @@
+name: Publish @seizn/cli
+
+on:
+  push:
+    tags:
+      - 'cli-v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to publish (e.g., 0.9.0-beta.1)'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    name: Publish @seizn/cli
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+
+      - name: Install dependencies
+        working-directory: packages/seizn-cli
+        run: npm install
+
+      - name: Build
+        working-directory: packages/seizn-cli
+        run: npm run build
+
+      - name: Publish
+        working-directory: packages/seizn-cli
+        # cwd inside the package avoids workspace-root repository auto-detect issues.
+        # --provenance omitted until Trusted Publisher is configured for @seizn/cli on npmjs.com.
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN_PUBLISH }}
+
+  notify:
+    needs: publish
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Notify on success
+        if: needs.publish.result == 'success'
+        run: echo "Successfully published @seizn/cli"
+
+      - name: Notify on failure
+        if: needs.publish.result == 'failure'
+        run: |
+          echo "Failed to publish @seizn/cli"
+          exit 1
