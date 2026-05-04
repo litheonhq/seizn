@@ -5,6 +5,13 @@ import { locales, defaultLocale, getLocaleFromCountry, type Locale } from '@/i18
 export default async function RootPage() {
   const headersList = await headers();
 
+  // Engine surface fallback — middleware rewrites engine.seizn.com to /engine,
+  // but if the request reaches root with engine host, send it to /engine.
+  const host = (headersList.get('host') || '').toLowerCase();
+  if (host === 'engine.seizn.com') {
+    redirect('/engine');
+  }
+
   // Check for saved locale preference in cookie
   const cookieHeader = headersList.get('cookie') || '';
   const localeMatch = cookieHeader.match(/NEXT_LOCALE=([^;]+)/);
