@@ -33,12 +33,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/seizn/seizn.git",
+    "url": "https://github.com/litheonhq/seizn.git",
     "directory": "packages/create-seizn-app"
   },
-  "homepage": "https://seizn.com/docs/quickstart",
+  "homepage": "https://engine.seizn.com",
   "bugs": {
-    "url": "https://github.com/seizn/seizn/issues"
+    "url": "https://github.com/litheonhq/seizn/issues"
   },
   "dependencies": {
     "chalk": "^5.3.0",
