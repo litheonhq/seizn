@@ -27,6 +27,15 @@
     "sdk"
   ],
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/litheonhq/seizn.git",
+    "directory": "packages/seizn-sdk-js"
+  },
+  "homepage": "https://engine.seizn.com",
+  "bugs": {
+    "url": "https://github.com/litheonhq/seizn/issues"
+  },
   "publishConfig": {
     "access": "public"
   },
