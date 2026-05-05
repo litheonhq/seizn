@@ -1,0 +1,86 @@
+import type { Metadata } from "next";
+import { getAuthOrReview } from "@/lib/auth-or-review";
+import { createServerClient } from "@/lib/supabase";
+import { getUsage, type ApiKeyPeriod } from "@/lib/api-keys";
+import DashboardShell from "@/components/dashboard/DashboardShell";
+import ApiKeysClient from "./api-keys-client";
+import { TRACK_2_KEY_CAP_PER_USER } from "./actions";
+
+export const metadata: Metadata = {
+  title: "API keys — Seizn",
+  description: "Manage your Seizn API + MCP keys.",
+  robots: { index: false, follow: false },
+};
+
+export type ApiKeySummary = {
+  id: string;
+  name: string;
+  prefix: string;
+  scopes: string[];
+  monthlyQuota: number;
+  monthlyQuotaPeriod: ApiKeyPeriod;
+  rateLimitPerMinute: number;
+  used: number;
+  createdAt: string | null;
+  lastUsedAt: string | null;
+};
+
+async function loadKeys(userId: string): Promise<ApiKeySummary[]> {
+  const supabase = createServerClient();
+  const { data, error } = await supabase
+    .from("api_keys")
+    .select(
+      "id, name, prefix, key_prefix, scopes, monthly_quota, monthly_quota_period, rate_limit_per_minute, created_at, last_used_at"
+    )
+    .eq("user_id", userId)
+    .is("revoked_at", null)
+    .order("created_at", { ascending: false });
+
+  if (error || !data) {
+    return [];
+  }
+
+  type ApiKeyRow = {
+    id: string;
+    name: string | null;
+    prefix: string | null;
+    key_prefix: string | null;
+    scopes: string[] | null;
+    monthly_quota: number | null;
+    monthly_quota_period: string | null;
+    rate_limit_per_minute: number | null;
+    created_at: string | null;
+    last_used_at: string | null;
+  };
+
+  const rows = data as unknown as ApiKeyRow[];
+
+  const usages = await Promise.all(
+    rows.map((row) =>
+      getUsage(row.id, (row.monthly_quota_period as ApiKeyPeriod) ?? "month").catch(() => 0)
+    )
+  );
+
+  return rows.map((row, index) => ({
+    id: row.id,
+    name: row.name ?? "Untitled key",
+    prefix: row.prefix ?? row.key_prefix ?? "sk_seizn_…",
+    scopes: row.scopes ?? [],
+    monthlyQuota: row.monthly_quota ?? 0,
+    monthlyQuotaPeriod: (row.monthly_quota_period as ApiKeyPeriod) ?? "month",
+    rateLimitPerMinute: row.rate_limit_per_minute ?? 0,
+    used: usages[index],
+    createdAt: row.created_at,
+    lastUsedAt: row.last_used_at,
+  }));
+}
+
+export default async function ApiKeysPage() {
+  const { user } = await getAuthOrReview();
+  const keys = user.id === "review" ? [] : await loadKeys(user.id);
+  return (
+    <DashboardShell>
+      <ApiKeysClient initialKeys={keys} cap={TRACK_2_KEY_CAP_PER_USER} />
+    </DashboardShell>
+  );
+}

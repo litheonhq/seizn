@@ -1643,6 +1643,67 @@
     },
     "fallback": {
       "body": "このタブは同じシェルパターンを使います。"
+    },
+    "account": {
+      "apiKeys": {
+        "title": "API キー",
+        "description": "Seizn API と MCP で使う Track 2 キーを発行・管理します。",
+        "capHint": "アカウントごとに最大 {cap} 個まで作成できます。",
+        "newKey": "新しい API キー",
+        "create": "発行",
+        "cancel": "キャンセル",
+        "done": "完了",
+        "name": "名前",
+        "scopes": "スコープ",
+        "scopesDefault": "デフォルトのスコープ: recall, remember, graph, search.",
+        "copyKey": "キーをコピー",
+        "saveItNow": "いま保存してください。このキーは二度と表示されません。",
+        "created": "API キーを作成しました",
+        "rotated": "API キーをローテートしました",
+        "rotate": "ローテート",
+        "revoke": "失効",
+        "revokeTitle": "キーを失効しますか?",
+        "revokeBody": "「{name}」を失効すると、このキーを使った呼び出しはすべて停止します。利用中のアプリは新しいキーが必要です。",
+        "rotateTitle": "キーをローテートしますか?",
+        "rotateBody": "「{name}」をローテートすると新しいキーが発行され、現在のキーは失効します。アプリを更新してから進めてください。",
+        "usage": "使用量",
+        "rateLimit": "分間レート",
+        "lastUsed": "最終使用",
+        "createdAt": "作成日",
+        "empty": "有効なキーはまだありません。「新しい API キー」から発行してください。",
+        "errors": {
+          "capReached": "アカウントあたりのキー上限に達しました。",
+          "invalidName": "キー名を入力してください。",
+          "internal": "処理に失敗しました。しばらくしてから再度お試しください。",
+          "revokeFailed": "キーを失効できませんでした。",
+          "rotateFailed": "キーをローテートできませんでした。",
+          "copyFailed": "コピーできませんでした。"
+        },
+        "toasts": {
+          "copied": "キーをクリップボードにコピーしました。",
+          "revoked": "キーを失効しました。"
+        },
+        "audit": {
+          "link": "監査ログ",
+          "title": "API キー監査ログ",
+          "description": "API キーの作成・失効・ローテート・レート制限・クォータ・スコープのイベントを確認できます。",
+          "filterAction": "アクション",
+          "from": "開始日",
+          "to": "終了日",
+          "reset": "リセット",
+          "exportCsv": "CSV エクスポート",
+          "empty": "該当するイベントはありません。",
+          "action": {
+            "all": "すべて",
+            "created": "作成",
+            "revoked": "失効",
+            "rotated": "ローテート",
+            "rate_limited": "レート制限",
+            "quota_exceeded": "クォータ超過",
+            "scope_denied": "スコープ拒否"
+          }
+        }
+      }
     }
   },
   "pricingPage": {
