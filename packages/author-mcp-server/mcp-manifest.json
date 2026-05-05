@@ -1,0 +1,26 @@
+{
+  "name": "@seizn/author-mcp-server",
+  "displayName": "Seizn Author",
+  "description": "Canon recall, conflict check, semantic search, timeline, and relationship graph tools for fiction writers via the Seizn Memory v3 API.",
+  "version": "0.1.0",
+  "author": "Litheon LLC",
+  "homepage": "https://seizn.com/api",
+  "repository": "https://github.com/litheonhq/seizn",
+  "license": "MIT",
+  "keywords": [
+    "fiction",
+    "writing",
+    "canon",
+    "recall",
+    "korean-novel",
+    "mcp"
+  ],
+  "tools": [
+    "seizn_author_recall",
+    "seizn_author_check",
+    "seizn_author_remember",
+    "seizn_author_search",
+    "seizn_author_timeline",
+    "seizn_author_graph"
+  ]
+}
