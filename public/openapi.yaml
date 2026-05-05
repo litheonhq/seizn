@@ -1,0 +1,619 @@
+openapi: 3.0.3
+info:
+  title: Seizn API
+  version: "1.0"
+  description: |
+    REST + MCP API for fiction writers. Recall canon, run conflict checks, and
+    explore timeline/graph from any AI tool. All requests authenticate via
+    `Authorization: Bearer sk_seizn_...`. Errors follow RFC 7807
+    (`application/problem+json`).
+
+    See https://seizn.com/api for the human-readable docs and quick starts.
+  contact:
+    name: Seizn support
+    email: support@seizn.com
+servers:
+  - url: https://seizn.com/api/v1
+    description: Production
+tags:
+  - name: projects
+    description: Projects own canon, conflicts, timeline, and graph state.
+  - name: recall
+    description: Read-only canon recall and mention history.
+  - name: conflicts
+    description: AI-enhanced check / approve flow.
+  - name: search
+    description: Semantic + lexical search.
+  - name: timeline
+    description: Timeline beats (AI-enhanced).
+  - name: graph
+    description: Relationship graph subset.
+  - name: usage
+    description: Current key quota usage.
+security:
+  - BearerAuth: []
+paths:
+  /projects:
+    get:
+      tags: [projects]
+      summary: List projects for the current API key
+      operationId: listProjects
+      responses:
+        "200":
+          description: Project list
+          headers:
+            X-Request-Id:
+              $ref: "#/components/headers/XRequestId"
+            Seizn-Api-Version:
+              $ref: "#/components/headers/SeiznApiVersion"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectList"
+        "401":
+          $ref: "#/components/responses/UnauthorizedProblem"
+    post:
+      tags: [projects]
+      summary: Create a project
+      operationId: createProject
+      parameters:
+        - $ref: "#/components/parameters/IdempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name:
+                  type: string
+                  maxLength: 80
+                description:
+                  type: string
+                initial_scope:
+                  type: string
+      responses:
+        "201":
+          description: Project created
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [id]
+                properties:
+                  id:
+                    type: string
+        "402":
+          $ref: "#/components/responses/QuotaExceededProblem"
+        "429":
+          $ref: "#/components/responses/RateLimitedProblem"
+  /projects/{id}/recall:
+    get:
+      tags: [recall]
+      summary: Recall canon entities
+      operationId: recallProject
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: q
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Recalled entities
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [entities]
+                properties:
+                  entities:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/RecallEntity"
+        "404":
+          $ref: "#/components/responses/NotFoundProblem"
+  /projects/{id}/recall/{entityId}/mentions:
+    get:
+      tags: [recall]
+      summary: List past mentions for an entity
+      operationId: listMentions
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: entityId
+          required: true
+          schema:
+            type: string
+        - $ref: "#/components/parameters/Limit"
+        - $ref: "#/components/parameters/StartingAfter"
+      responses:
+        "200":
+          description: Paginated mention list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaginatedMentions"
+  /projects/{id}/conflicts/check:
+    post:
+      tags: [conflicts]
+      summary: Run conflict check on a passage (BYOK)
+      operationId: checkConflicts
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+        - $ref: "#/components/parameters/LlmProvider"
+        - $ref: "#/components/parameters/LlmKey"
+        - $ref: "#/components/parameters/LlmModel"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [text]
+              properties:
+                text:
+                  type: string
+      responses:
+        "200":
+          description: Conflict candidates
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [conflicts]
+                properties:
+                  conflicts:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ConflictHit"
+        "402":
+          $ref: "#/components/responses/PreconditionRequiredProblem"
+  /projects/{id}/canon/{entityId}/approve:
+    post:
+      tags: [conflicts]
+      summary: Approve a canon fact for an entity
+      operationId: approveCanon
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: entityId
+          required: true
+          schema:
+            type: string
+        - $ref: "#/components/parameters/IdempotencyKey"
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fact:
+                  type: string
+                content:
+                  type: string
+      responses:
+        "200":
+          description: Approval result
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [entityId, status, candidateId, decisionId]
+                properties:
+                  entityId:
+                    type: string
+                  status:
+                    type: string
+                    enum: [approved, suggested]
+                  candidateId:
+                    type: string
+                  decisionId:
+                    type: string
+  /projects/{id}/search:
+    get:
+      tags: [search]
+      summary: Semantic search across canon
+      operationId: searchProject
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: q
+          required: true
+          schema:
+            type: string
+        - $ref: "#/components/parameters/Limit"
+        - $ref: "#/components/parameters/StartingAfter"
+      responses:
+        "200":
+          description: Paginated entity matches
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaginatedEntities"
+  /projects/{id}/timeline:
+    get:
+      tags: [timeline]
+      summary: Timeline beats (BYOK)
+      operationId: getTimeline
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+        - $ref: "#/components/parameters/Limit"
+        - $ref: "#/components/parameters/StartingAfter"
+        - $ref: "#/components/parameters/LlmProvider"
+        - $ref: "#/components/parameters/LlmKey"
+        - $ref: "#/components/parameters/LlmModel"
+      responses:
+        "200":
+          description: Paginated timeline
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaginatedTimeline"
+  /projects/{id}/graph:
+    get:
+      tags: [graph]
+      summary: Relationship graph subset
+      operationId: getGraph
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: root
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Graph subset
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GraphSubset"
+  /usage:
+    get:
+      tags: [usage]
+      summary: Current period quota usage for the API key
+      operationId: getUsage
+      responses:
+        "200":
+          description: Usage summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UsageSummary"
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: API key (sk_seizn_…)
+  headers:
+    XRequestId:
+      description: Server-issued request id for log correlation.
+      schema:
+        type: string
+    SeiznApiVersion:
+      description: API contract version this response was served under.
+      schema:
+        type: string
+        enum: ["1.0"]
+  parameters:
+    IdempotencyKey:
+      in: header
+      name: Idempotency-Key
+      schema:
+        type: string
+      description: Client-supplied idempotency key. Same key + same body returns the cached 24h response.
+    Limit:
+      in: query
+      name: limit
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+    StartingAfter:
+      in: query
+      name: starting_after
+      schema:
+        type: string
+      description: Cursor — set to the last id of the previous page.
+    LlmProvider:
+      in: header
+      name: X-LLM-Provider
+      schema:
+        type: string
+      description: BYOK provider name (e.g. "anthropic"). Required for AI-enhanced endpoints.
+    LlmKey:
+      in: header
+      name: X-LLM-Key
+      schema:
+        type: string
+      description: BYOK provider key. Required for AI-enhanced endpoints.
+    LlmModel:
+      in: header
+      name: X-LLM-Model
+      schema:
+        type: string
+      description: Optional model override for BYOK calls.
+  responses:
+    UnauthorizedProblem:
+      description: Missing or invalid API key
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+    RateLimitedProblem:
+      description: Rate limit exceeded
+      headers:
+        Retry-After:
+          schema:
+            type: integer
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+    QuotaExceededProblem:
+      description: Monthly quota exceeded — upgrade plan
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+    NotFoundProblem:
+      description: Project or entity not found
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+    PreconditionRequiredProblem:
+      description: BYOK headers required for AI-enhanced endpoints
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+  schemas:
+    Problem:
+      type: object
+      required: [type, title, status, code, instance]
+      properties:
+        type:
+          type: string
+          format: uri
+        title:
+          type: string
+        status:
+          type: integer
+        code:
+          type: string
+        detail:
+          type: string
+        instance:
+          type: string
+    Project:
+      type: object
+      required: [id, name, description, last_updated, entity_count, conflict_count]
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        last_updated:
+          type: string
+          format: date-time
+        entity_count:
+          type: integer
+        conflict_count:
+          type: integer
+    ProjectList:
+      type: object
+      required: [data]
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Project"
+    RecallEntity:
+      type: object
+      required: [id, type, canonicalName]
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+          enum: [character, location, object, event, rule, promise]
+        canonicalName:
+          type: string
+        lastMentions:
+          type: array
+          items:
+            type: object
+            properties:
+              chapter:
+                type: string
+              line:
+                type: integer
+              snippet:
+                type: string
+              timestamp:
+                type: string
+                format: date-time
+        currentState:
+          type: object
+          additionalProperties: true
+        pendingConflictIds:
+          type: array
+          items:
+            type: string
+        confidence:
+          type: number
+        approvalStatus:
+          type: string
+          enum: [approved, suggested]
+    ConflictHit:
+      type: object
+      required: [id, severity, kind, title, rationale, refs]
+      properties:
+        id:
+          type: string
+        severity:
+          type: string
+          enum: [P1, P2, P3]
+        kind:
+          type: string
+        episode:
+          type: string
+          nullable: true
+        title:
+          type: string
+        rationale:
+          type: string
+        refs:
+          type: array
+          items:
+            type: string
+    PaginatedMentions:
+      type: object
+      required: [data, has_more]
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+        has_more:
+          type: boolean
+        next_starting_after:
+          type: string
+    PaginatedEntities:
+      type: object
+      required: [data, has_more, entities]
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/RecallEntity"
+        has_more:
+          type: boolean
+        next_starting_after:
+          type: string
+        entities:
+          type: array
+          items:
+            $ref: "#/components/schemas/RecallEntity"
+    PaginatedTimeline:
+      type: object
+      required: [data, has_more, timeline]
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/TimelineEntry"
+        has_more:
+          type: boolean
+        next_starting_after:
+          type: string
+        timeline:
+          type: array
+          items:
+            $ref: "#/components/schemas/TimelineEntry"
+    TimelineEntry:
+      type: object
+      required: [id, chapter, ordinal, beats]
+      properties:
+        id:
+          type: string
+        chapter:
+          type: string
+        ordinal:
+          type: integer
+        beats:
+          type: array
+          items:
+            type: object
+            required: [id, summary, entities]
+            properties:
+              id:
+                type: string
+              summary:
+                type: string
+              entities:
+                type: array
+                items:
+                  type: string
+    GraphSubset:
+      type: object
+      required: [nodes, edges]
+      properties:
+        nodes:
+          type: array
+          items:
+            type: object
+            required: [id, label, type]
+            properties:
+              id:
+                type: string
+              label:
+                type: string
+              type:
+                type: string
+        edges:
+          type: array
+          items:
+            type: object
+            required: [from, to, kind, weight]
+            properties:
+              from:
+                type: string
+              to:
+                type: string
+              kind:
+                type: string
+              weight:
+                type: number
+    UsageSummary:
+      type: object
+      required: [api_key_id, period, used, quota, remaining, rate_limit_per_minute]
+      properties:
+        api_key_id:
+          type: string
+        period:
+          type: string
+          enum: [day, month]
+        used:
+          type: integer
+        quota:
+          type: integer
+        remaining:
+          type: integer
+        rate_limit_per_minute:
+          type: integer
