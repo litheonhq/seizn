@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Seizn Author — Dashboard Redesign</title>
+<link rel="stylesheet" href="tokens.css"/>
+<style>
+  html, body { margin: 0; padding: 0; background: #f0eee9; font-family: 'Pretendard Variable', system-ui, sans-serif; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="primitives.jsx"></script>
+<script type="text/babel" src="sidebar.jsx"></script>
+<script type="text/babel" src="topbar.jsx"></script>
+<script type="text/babel" src="view-inbox.jsx"></script>
+<script type="text/babel" src="view-characters.jsx"></script>
+<script type="text/babel" src="view-graph.jsx"></script>
+<script type="text/babel" src="polish.jsx"></script>
+<script type="text/babel" src="workspace.jsx"></script>
+
+<script type="text/babel" data-presets="react">
+const { useState, useEffect } = React;
+
+// Variation B — TopBar tabs visible (workspace as the "main" view)
+const VariantB = ({ width = 1240, height = 820 }) => {
+  const [tab, setTab] = useState('characters');
+  const [collapsed, setCollapsed] = useState(false);
+  const view =
+    tab === 'inbox' ? <InboxView/> :
+    tab === 'characters' ? <CharactersView/> :
+    tab === 'graph' ? <GraphView/> :
+    tab === 'conflicts' ? <ConflictsView/> :
+    <FallbackView tab={tab}/>;
+  return (
+    <div className="seizn paper-bg" style={{
+      width, height, display: 'flex', overflow: 'hidden',
+      borderRadius: 14, border: '1px solid var(--border-subtle)',
+      boxShadow: 'var(--shadow-card)',
+    }}>
+      <Sidebar active={tab} onNav={setTab} collapsed={collapsed}/>
+      <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
+        <TopBar variant="B" tab={tab} onTab={setTab}
+          onToggleSidebar={() => setCollapsed(c => !c)}/>
+        <div style={{ flex: 1, display: 'flex', minHeight: 0, minWidth: 0 }}>{view}</div>
+      </div>
+    </div>
+  );
+};
+
+// Variation C — Compact density, second sidebar group (icon rail + workspace)
+const VariantC = ({ width = 1240, height = 820 }) => {
+  const [tab, setTab] = useState('graph');
+  return (
+    <div className="seizn paper-bg" style={{
+      width, height, display: 'flex', overflow: 'hidden',
+      borderRadius: 14, border: '1px solid var(--border-subtle)',
+      boxShadow: 'var(--shadow-card)',
+    }}>
+      {/* Icon rail */}
+      <Sidebar active={tab} onNav={setTab} collapsed={true} density="compact"/>
+      {/* Secondary nav (sub-list of current section) */}
+      <aside style={{
+        width: 220, flexShrink: 0,
+        background: 'var(--ink-25)',
+        borderRight: '1px solid var(--border-subtle)',
+        display: 'flex', flexDirection: 'column',
+        padding: '14px 0',
+      }}>
+        <div style={{ padding: '0 16px 10px' }}>
+          <div className="serif" style={{ fontSize: 16, fontWeight: 500, fontStyle: 'italic',
+            letterSpacing: '-0.015em' }}>Workspace</div>
+          <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 2 }}>Midnight City · 7 entries</div>
+        </div>
+        <div style={{ flex: 1, overflow: 'auto' }}>
+          {NAV.workspace.map(item => (
+            <SidebarItem key={item.id} item={item} density="compact"
+              active={tab === item.id} onClick={() => setTab(item.id)}/>
+          ))}
+        </div>
+        <div style={{
+          margin: '8px 12px 4px', padding: '10px 12px',
+          borderRadius: 10, background: 'var(--ink-0)',
+          border: '1px solid var(--border-subtle)',
+        }}>
+          <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-primary)' }}>
+            5 conflicts open
+          </div>
+          <div style={{ fontSize: 10.5, color: 'var(--text-muted)', marginTop: 2 }}>
+            3 critical · 2 warning
+          </div>
+          <button style={{
+            all: 'unset', cursor: 'pointer', marginTop: 8, fontSize: 11,
+            color: 'var(--terracotta-700)', fontWeight: 600,
+            display: 'inline-flex', alignItems: 'center', gap: 4,
+          }}>Resolve next {I.arrowRight}</button>
+        </div>
+      </aside>
+      <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
+        <TopBar tab={tab} onTab={setTab} density="compact"/>
+        <div style={{ flex: 1, display: 'flex', minHeight: 0, minWidth: 0 }}>
+          {tab === 'graph' ? <GraphView/> :
+           tab === 'inbox' ? <InboxView density="compact"/> :
+           tab === 'characters' ? <CharactersView/> :
+           tab === 'conflicts' ? <ConflictsView/> :
+           <FallbackView tab={tab}/>}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Empty-state showcase artboard (3 tones side by side)
+const EmptyShowcase = () => (
+  <div className="seizn" style={{
+    width: 1180, height: 360, display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 14,
+    padding: 14, background: 'var(--ink-25)', borderRadius: 12,
+    border: '1px solid var(--border-subtle)',
+  }}>
+    {[
+      { kind: 'characters', title: 'It’s quiet here.', body: 'Add your first character. We’ll start a canon entry and watch for inconsistencies as you write.', primary: 'Add character', hints: [{k:'C', t:'Jump to Characters'}, {k:'⌘N', t:'New character'}] },
+      { kind: 'inbox',      title: 'Inbox is clear.', body: 'Memory v3 will surface canon, character, and timeline conflicts here as you draft.', hints: [{k:'I', t:'Inbox'}, {k:'?', t:'How review works'}] },
+      { kind: 'graph',      title: 'No ties yet.',    body: 'Add two characters and a relationship. The graph fills out as you write — no manual upkeep.', primary: 'Add a relationship' },
+    ].map((p, i) => (
+      <div key={i} style={{
+        background: 'var(--ink-0)', borderRadius: 10,
+        border: '1px solid var(--border-subtle)', display: 'flex',
+      }}>
+        <EmptyState {...p}/>
+      </div>
+    ))}
+  </div>
+);
+
+// Conflict card showcase — three severities
+const ConflictShowcase = () => (
+  <div className="seizn" style={{
+    width: 1180, padding: 18, background: 'var(--ink-25)', borderRadius: 12,
+    border: '1px solid var(--border-subtle)',
+    display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 14,
+  }}>
+    <ConflictCard severity="P1" kind="Character" episode="Ch. 7"
+      title="Seoyun’s profession contradicts Ch. 4 canon"
+      why="In Ch. 4 §3 she is established as a reporter; Ch. 7 §1 has her badging in as a detective."
+      refs={['canon/seoyun', 'ep4§3', 'ep7§1']}/>
+    <ConflictCard severity="P2" kind="Timeline" episode="Ch. 5"
+      title="Minho recovery time vs. medical reference"
+      why="The draft has Minho back on his feet in 12 days; reference says 4–6 weeks."
+      refs={['timeline/minho']}/>
+    <ConflictCard severity="P3" kind="Note" episode="Ch. 2"
+      title="Stylistic inconsistency: present-tense narration in §4"
+      refs={['style/voice']}/>
+  </div>
+);
+
+// Sidebar comparison artboard
+const SidebarCompare = () => (
+  <div className="seizn" style={{ display: 'flex', gap: 18, padding: 18,
+    background: 'var(--ink-25)', borderRadius: 12, border: '1px solid var(--border-subtle)',
+  }}>
+    <div style={{ height: 600, borderRadius: 10, overflow: 'hidden',
+      border: '1px solid var(--border-subtle)' }}>
+      <div style={{ height: '100%' }}>
+        <Sidebar active="inbox" collapsed={false}/>
+      </div>
+    </div>
+    <div style={{ height: 600, borderRadius: 10, overflow: 'hidden',
+      border: '1px solid var(--border-subtle)' }}>
+      <div style={{ height: '100%' }}>
+        <Sidebar active="inbox" collapsed={true}/>
+      </div>
+    </div>
+    <div style={{ flex: 1, padding: 16, fontSize: 12.5, lineHeight: 1.6,
+      color: 'var(--text-secondary)', maxWidth: 360 }}>
+      <div className="serif" style={{ fontSize: 18, fontWeight: 500, fontStyle: 'italic',
+        letterSpacing: '-0.015em', color: 'var(--text-primary)', marginBottom: 8 }}>
+        Sidebar IA — 15 items, 3 groups
+      </div>
+      <p style={{ margin: '0 0 10px' }}>Workspace 8 + Memory 4 + Account 3 = 15 items, exactly on target. NPC SDK legacy nav (chaos, federated, reranker, policy-marketplace, …) is moved out of the sidebar entirely; reachable only by direct URL under <code className="mono" style={{ fontSize: 11 }}>/dashboard/_legacy/*</code>.</p>
+      <p style={{ margin: '0 0 10px' }}>The workspace switcher anchors the sidebar — IP context is always visible. Studio team members can swap projects from the same control.</p>
+      <p style={{ margin: '0 0 10px' }}>Collapsed mode keeps the same hierarchy as a 56-px icon rail. Group dividers replace the uppercase labels; tooltips on hover restore the names.</p>
+      <p style={{ margin: 0 }}>Memory health sits just above the user card so the “did it persist?” worry never travels far from the writer’s eye.</p>
+    </div>
+  </div>
+);
+
+// Quote artboard — design rationale
+const RationaleNote = () => (
+  <div className="seizn" style={{
+    width: 720, padding: '32px 36px', background: 'var(--ink-25)',
+    borderRadius: 14, border: '1px solid var(--border-subtle)',
+  }}>
+    <div style={{
+      fontSize: 10.5, fontWeight: 600, letterSpacing: '0.10em',
+      color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: 10,
+    }}>Design rationale</div>
+    <p className="serif" style={{
+      fontSize: 22, lineHeight: 1.4, margin: 0, fontStyle: 'italic',
+      letterSpacing: '-0.015em', color: 'var(--text-primary)',
+    }}>The dashboard should feel like a writer’s desk — paper-toned, ink-toned, no developer-console residue. Memory v3 is the engine; the surface is craft.</p>
+    <div style={{ marginTop: 22, display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 16, fontSize: 12, lineHeight: 1.5 }}>
+      <div>
+        <div style={{ fontWeight: 600, color: 'var(--text-primary)', marginBottom: 4 }}>Author-first</div>
+        <div style={{ color: 'var(--text-tertiary)' }}>Vocabulary is writer-native: Characters, Conflicts, Acts. No "NPC", no "SDK".</div>
+      </div>
+      <div>
+        <div style={{ fontWeight: 600, color: 'var(--text-primary)', marginBottom: 4 }}>Canon-aware</div>
+        <div style={{ color: 'var(--text-tertiary)' }}>Every surface — inbox, graph, characters, conflicts — sits on the same canon graph.</div>
+      </div>
+      <div>
+        <div style={{ fontWeight: 600, color: 'var(--text-primary)', marginBottom: 4 }}>Memory v3</div>
+        <div style={{ color: 'var(--text-tertiary)' }}>Persistent. The dot in the sidebar is the writer's "it remembered" guarantee.</div>
+      </div>
+    </div>
+  </div>
+);
+
+// PostIt note primitive uses DC's. Use one to flag legacy isolation.
+function App() {
+  const [tweaks, setTweak] = useTweaks();
+  const [tweaksOpen, setTweaksOpen] = useState(false);
+
+  useEffect(() => {
+    const onMsg = (e) => {
+      const d = e.data;
+      if (!d) return;
+      if (d.type === '__activate_edit_mode')   setTweaksOpen(true);
+      if (d.type === '__deactivate_edit_mode') setTweaksOpen(false);
+    };
+    window.addEventListener('message', onMsg);
+    try { window.parent.postMessage({ type: '__edit_mode_available' }, '*'); } catch (e) {}
+    return () => window.removeEventListener('message', onMsg);
+  }, []);
+
+  return (
+    <>
+      <DesignCanvas>
+        <DCSection id="hero" title="Hero workspace · 3 layout variations" subtitle="Inbox-first default · top-bar tabs · split-rail compact">
+          <DCArtboard id="varA" label="A · Default — Inbox-first split layout" width={1240} height={820}>
+            <WorkspaceShell width={1240} height={820} defaultTab="inbox"
+              collapsed={tweaks.sidebarCollapsed} density={tweaks.density}/>
+          </DCArtboard>
+          <DCArtboard id="varB" label="B · Top-bar tabs — flatter nav, full-width canvas" width={1240} height={820}>
+            <VariantB width={1240} height={820}/>
+          </DCArtboard>
+          <DCArtboard id="varC" label="C · Split-rail compact — icon rail + section nav" width={1240} height={820}>
+            <VariantC width={1240} height={820}/>
+          </DCArtboard>
+        </DCSection>
+
+        <DCSection id="tabs" title="Author tabs · Inbox · Characters · Graph" subtitle="Three of the eight tabs in detail. Same shell, three different working modes.">
+          <DCArtboard id="tab-inbox" label="Inbox — 3-pane review queue" width={1240} height={820}>
+            <WorkspaceShell width={1240} height={820} defaultTab="inbox"/>
+          </DCArtboard>
+          <DCArtboard id="tab-characters" label="Characters — register + canon detail" width={1240} height={820}>
+            <WorkspaceShell width={1240} height={820} defaultTab="characters"/>
+          </DCArtboard>
+          <DCArtboard id="tab-graph" label="Graph — relationship graph polish" width={1240} height={820}>
+            <WorkspaceShell width={1240} height={820} defaultTab="graph"/>
+          </DCArtboard>
+        </DCSection>
+
+        <DCSection id="polish" title="Polish components" subtitle="Sidebar IA · Conflict card v2 · Empty states">
+          <DCArtboard id="sidebar-compare" label="Sidebar — expanded vs collapsed" width={920} height={636}>
+            <SidebarCompare/>
+          </DCArtboard>
+          <DCArtboard id="conflicts-grid" label="Conflict card v2 — terracotta · dawn · muted" width={1216} height={300}>
+            <ConflictShowcase/>
+          </DCArtboard>
+          <DCArtboard id="empty-grid" label="Empty states — friendly EN copy + small illustration" width={1216} height={392}>
+            <EmptyShowcase/>
+          </DCArtboard>
+        </DCSection>
+
+        <DCSection id="conflicts-tab" title="Conflicts tab — full grid" subtitle="The polished cards living in their workspace.">
+          <DCArtboard id="conflicts-full" label="Conflicts — 5 open" width={1240} height={820}>
+            <WorkspaceShell width={1240} height={820} defaultTab="conflicts"/>
+          </DCArtboard>
+        </DCSection>
+
+        <DCSection id="rationale" title="Design rationale" subtitle="Why these decisions — and what's intentionally not here.">
+          <DCArtboard id="note" label="Three design moves" width={792} height={296}>
+            <RationaleNote/>
+          </DCArtboard>
+        </DCSection>
+      </DesignCanvas>
+
+      {tweaksOpen && (
+        <TweaksPanel tweaks={tweaks} setTweak={setTweak}
+          onClose={() => {
+            setTweaksOpen(false);
+            try { window.parent.postMessage({ type: '__edit_mode_dismissed' }, '*'); } catch (e) {}
+          }}/>
+      )}
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
