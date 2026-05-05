@@ -38,6 +38,7 @@ export interface ConflictHit {
 }
 
 export interface TimelineEntry {
+  id: string;
   chapter: string;
   ordinal: number;
   beats: Array<{ id: string; summary: string; entities: string[] }>;
@@ -116,10 +117,10 @@ export class SeiznAuthorClient {
     limit = 20,
   ): Promise<RecallEntity[]> {
     const params = new URLSearchParams({ q: query, limit: String(limit) });
-    const result = await this.request<{ entities: RecallEntity[] }>(
+    const result = await this.request<{ data: RecallEntity[] }>(
       `/projects/${encodeURIComponent(projectId)}/search?${params.toString()}`,
     );
-    return result.entities;
+    return result.data;
   }
 
   async timeline(
@@ -131,10 +132,10 @@ export class SeiznAuthorClient {
     if (fromChapter) params.set('from', fromChapter);
     if (toChapter) params.set('to', toChapter);
     const qs = params.toString();
-    const result = await this.request<{ timeline: TimelineEntry[] }>(
+    const result = await this.request<{ data: TimelineEntry[] }>(
       `/projects/${encodeURIComponent(projectId)}/timeline${qs ? `?${qs}` : ''}`,
     );
-    return result.timeline;
+    return result.data;
   }
 
   async graph(projectId: string, rootEntityId: string): Promise<GraphSubset> {
