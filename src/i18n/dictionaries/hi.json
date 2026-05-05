@@ -344,7 +344,7 @@
       "organizations": "Projects",
       "settings": "सेटिंग्स",
       "groups": {
-        "memory": "NPC MEMORY",
+        "memory": "MEMORY",
         "observe": "OBSERVE",
         "govern": "POLICIES",
         "finops": "USAGE & COST",

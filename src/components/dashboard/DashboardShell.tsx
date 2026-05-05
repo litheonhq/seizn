@@ -136,18 +136,18 @@ export default function DashboardShell({ children }: { children: React.ReactNode
           isSidebarExpanded ? "w-72" : "w-[68px]"
         }`}
       >
-        {/* Logo */}
-        <div className="p-4 border-b border-szn-border-subtle">
-          <Link href="/" className="flex items-center gap-3 overflow-hidden">
+        {/* Logo — height pinned to h-14 so the bottom border lines up with the TopBar */}
+        <div className="h-14 px-4 border-b border-szn-border-subtle flex items-center">
+          <Link href="/" className="flex items-center gap-3 overflow-hidden w-full">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/brand/seizn-mark-256.png" alt="Seizn" className="h-8 w-8 flex-shrink-0" />
+            <img src="/brand/seizn-mark-256.png" alt="Seizn" className="h-7 w-7 flex-shrink-0" />
             <div className={`flex-1 min-w-0 transition-all duration-200 ease-out ${
               isSidebarExpanded ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-2 w-0"
             }`}>
-              <span className="text-[15px] font-medium tracking-[-0.01em] text-szn-text-1 block truncate whitespace-nowrap">
+              <span className="text-[14px] font-medium tracking-[-0.01em] text-szn-text-1 block truncate whitespace-nowrap leading-tight">
                 Seizn
               </span>
-              <p className="szn-eyebrow whitespace-nowrap mt-0.5">NPC MEMORY · LIVE</p>
+              <p className="szn-eyebrow whitespace-nowrap leading-tight">{t("dashboard.brand.tagline") || "AUTHOR MEMORY · LIVE"}</p>
             </div>
           </Link>
         </div>

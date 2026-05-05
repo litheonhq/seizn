@@ -344,7 +344,7 @@
       "organizations": "โปรเจกต์",
       "settings": "การตั้งค่า",
       "groups": {
-        "memory": "NPC MEMORY",
+        "memory": "MEMORY",
         "observe": "การเฝ้าระวัง",
         "govern": "POLICIES",
         "finops": "USAGE & COST",
