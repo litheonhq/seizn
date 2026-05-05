@@ -2,11 +2,14 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   V8_GRANDFATHER_DAYS,
   V8_PRICE_LOCK_VERSION,
+  V8_TRACK2_OPUS_METER_EVENT,
   V8_TRACK2_PRODUCTS,
   V8_TRACK2_QUOTA,
   applyV8Track2TierToApiKeys,
   getV8Track2BillingCadenceFromPriceId,
   getV8Track2Config,
+  getV8Track2OpusMeterId,
+  getV8Track2OpusOveragePriceId,
   getV8Track2Quota,
   getV8Track2StripePriceId,
   getV8Track2TierFromStripePriceId,
@@ -93,6 +96,27 @@ describe('v8 Track 2 product catalog', () => {
 
   it('throws on invalid grandfather start date', () => {
     expect(() => v8Track2GrandfatherCutoffIso('not-a-date')).toThrow(/Invalid ISO date/);
+  });
+
+  it('exposes the Studio Managed Opus meter event name', () => {
+    expect(V8_TRACK2_OPUS_METER_EVENT).toBe('studio_managed_opus_call');
+  });
+
+  it('resolves the Opus overage price ID + ignores price_TODO sentinel + missing env', () => {
+    expect(
+      getV8Track2OpusOveragePriceId({ STRIPE_PRICE_ID_V8_STUDIO_MANAGED_OPUS_OVERAGE: 'price_overage' }),
+    ).toBe('price_overage');
+    expect(
+      getV8Track2OpusOveragePriceId({ STRIPE_PRICE_ID_V8_STUDIO_MANAGED_OPUS_OVERAGE: 'price_TODO' }),
+    ).toBeNull();
+    expect(getV8Track2OpusOveragePriceId({})).toBeNull();
+  });
+
+  it('resolves the Opus billing meter ID', () => {
+    expect(
+      getV8Track2OpusMeterId({ STRIPE_BILLING_METER_ID_V8_STUDIO_MANAGED_OPUS: 'mtr_abc' }),
+    ).toBe('mtr_abc');
+    expect(getV8Track2OpusMeterId({})).toBeNull();
   });
 });
 
