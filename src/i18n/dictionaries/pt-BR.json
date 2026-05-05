@@ -1623,7 +1623,7 @@
         "scopes": "Escopos",
         "scopesDefault": "Escopos padrão: recall, remember, graph, search.",
         "copyKey": "Copiar chave",
-        "saveItNow": "Salve agora — você não verá esta chave de novo.",
+        "saveItNow": "Salve agora; você não verá esta chave de novo.",
         "created": "Chave de API criada",
         "rotated": "Chave de API rotacionada",
         "rotate": "Rotacionar",
@@ -1664,7 +1664,7 @@
             "created": "Criada",
             "revoked": "Revogada",
             "rotated": "Rotacionada",
-            "rate_limited": "Limite de chamadas",
+            "rate_limited": "Limite atingido",
             "quota_exceeded": "Cota excedida",
             "scope_denied": "Escopo negado"
           }
