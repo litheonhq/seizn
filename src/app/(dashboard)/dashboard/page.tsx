@@ -1,14 +1,16 @@
-import { getAuthOrReview } from "@/lib/auth-or-review";
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import DashboardShell from "@/components/dashboard/DashboardShell";
+import { getAuthOrReview } from "@/lib/auth-or-review";
+import { isAuthorUiAccessAllowed } from "@/lib/author/ui/route";
 import DashboardOverviewClient from "./overview-client";
 
 export const metadata: Metadata = {
   title: "Dashboard - Seizn",
-  description: "Manage NPC memory entities, API keys, and usage across your game titles.",
+  description: "Seizn workspace overview.",
   openGraph: {
     title: "Dashboard - Seizn",
-    description: "Manage NPC memory entities, API keys, and usage across your game titles.",
+    description: "Seizn workspace overview.",
     type: "website",
   },
   robots: {
@@ -18,7 +20,16 @@ export const metadata: Metadata = {
 };
 
 export default async function DashboardPage() {
-  const { user } = await getAuthOrReview();
+  const { user, isAuthenticated } = await getAuthOrReview();
+
+  if (
+    isAuthenticated &&
+    user &&
+    typeof user.id === "string" &&
+    isAuthorUiAccessAllowed({ id: user.id, email: user.email ?? undefined })
+  ) {
+    redirect("/dashboard/author");
+  }
 
   return (
     <DashboardShell>
