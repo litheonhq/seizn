@@ -1609,6 +1609,67 @@
     },
     "northStar": {
       "subtitle": "Kluczowe wskaźniki niezawodności pamięci NPC"
+    },
+    "account": {
+      "apiKeys": {
+        "title": "Klucze API",
+        "description": "Twórz klucze Seizn API i MCP dla Track 2 i zarządzaj nimi.",
+        "capHint": "Możesz utworzyć do {cap} kluczy API na konto.",
+        "newKey": "Nowy klucz API",
+        "create": "Utwórz",
+        "cancel": "Anuluj",
+        "done": "Gotowe",
+        "name": "Nazwa",
+        "scopes": "Zakresy",
+        "scopesDefault": "Domyślne zakresy: recall, remember, graph, search.",
+        "copyKey": "Kopiuj klucz",
+        "saveItNow": "Zapisz go teraz — nie pojawi się ponownie.",
+        "created": "Klucz API utworzony",
+        "rotated": "Klucz API zrotowany",
+        "rotate": "Rotuj",
+        "revoke": "Unieważnij",
+        "revokeTitle": "Unieważnić klucz API?",
+        "revokeBody": "Unieważnienie „{name}\" zatrzyma wszystkie wywołania z tym kluczem. Istniejące aplikacje będą potrzebowały nowego klucza.",
+        "rotateTitle": "Zrotować klucz API?",
+        "rotateBody": "Rotacja „{name}\" wygeneruje nowy klucz i unieważni obecny. Zaktualizuj aplikacje, zanim stary klucz przestanie działać.",
+        "usage": "Użycie",
+        "rateLimit": "Limit żądań",
+        "lastUsed": "Ostatnio użyty",
+        "createdAt": "Utworzono",
+        "empty": "Brak aktywnych kluczy. Kliknij „Nowy klucz API\", aby utworzyć.",
+        "errors": {
+          "capReached": "Osiągnięto limit kluczy API dla tego konta.",
+          "invalidName": "Wprowadź nazwę klucza.",
+          "internal": "Nie udało się zakończyć operacji. Spróbuj ponownie.",
+          "revokeFailed": "Nie udało się unieważnić klucza.",
+          "rotateFailed": "Nie udało się zrotować klucza.",
+          "copyFailed": "Nie udało się skopiować klucza."
+        },
+        "toasts": {
+          "copied": "Skopiowano klucz do schowka.",
+          "revoked": "Klucz unieważniony."
+        },
+        "audit": {
+          "link": "Dziennik audytu",
+          "title": "Dziennik audytu kluczy API",
+          "description": "Wszystkie zdarzenia utworzenia, unieważnienia, rotacji, limitu, kwoty i zakresu dla twoich kluczy API.",
+          "filterAction": "Akcja",
+          "from": "Od",
+          "to": "Do",
+          "reset": "Resetuj",
+          "exportCsv": "Eksportuj CSV",
+          "empty": "Brak pasujących zdarzeń.",
+          "action": {
+            "all": "Wszystko",
+            "created": "Utworzono",
+            "revoked": "Unieważniono",
+            "rotated": "Zrotowano",
+            "rate_limited": "Przekroczono limit",
+            "quota_exceeded": "Przekroczono kwotę",
+            "scope_denied": "Odrzucono zakres"
+          }
+        }
+      }
     }
   },
   "pricingPage": {

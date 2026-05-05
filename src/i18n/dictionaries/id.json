@@ -1609,6 +1609,67 @@
     },
     "northStar": {
       "subtitle": "Indikator utama keandalan memori NPC"
+    },
+    "account": {
+      "apiKeys": {
+        "title": "Kunci API",
+        "description": "Buat dan kelola kunci Seizn API + MCP untuk Track 2.",
+        "capHint": "Anda dapat membuat hingga {cap} kunci API per akun.",
+        "newKey": "Kunci API Baru",
+        "create": "Buat",
+        "cancel": "Batal",
+        "done": "Selesai",
+        "name": "Nama",
+        "scopes": "Cakupan",
+        "scopesDefault": "Cakupan default: recall, remember, graph, search.",
+        "copyKey": "Salin kunci",
+        "saveItNow": "Simpan sekarang — kunci ini tidak akan muncul lagi.",
+        "created": "Kunci API dibuat",
+        "rotated": "Kunci API dirotasi",
+        "rotate": "Rotasi",
+        "revoke": "Cabut",
+        "revokeTitle": "Cabut kunci API?",
+        "revokeBody": "Mencabut \"{name}\" akan menghentikan semua panggilan yang menggunakan kunci ini. Aplikasi yang ada akan memerlukan kunci baru.",
+        "rotateTitle": "Rotasi kunci API?",
+        "rotateBody": "Merotasi \"{name}\" akan menghasilkan kunci baru dan mencabut yang sekarang. Perbarui aplikasi Anda sebelum kunci lama berhenti berfungsi.",
+        "usage": "Penggunaan",
+        "rateLimit": "Batas laju",
+        "lastUsed": "Terakhir digunakan",
+        "createdAt": "Dibuat",
+        "empty": "Belum ada kunci aktif. Klik \"Kunci API Baru\" untuk membuatnya.",
+        "errors": {
+          "capReached": "Anda telah mencapai batas kunci API untuk akun ini.",
+          "invalidName": "Silakan masukkan nama kunci.",
+          "internal": "Tindakan tidak dapat diselesaikan. Coba lagi.",
+          "revokeFailed": "Tidak dapat mencabut kunci.",
+          "rotateFailed": "Tidak dapat merotasi kunci.",
+          "copyFailed": "Tidak dapat menyalin kunci."
+        },
+        "toasts": {
+          "copied": "Kunci disalin ke papan klip.",
+          "revoked": "Kunci dicabut."
+        },
+        "audit": {
+          "link": "Log audit",
+          "title": "Log audit kunci API",
+          "description": "Semua peristiwa pembuatan, pencabutan, rotasi, batas laju, kuota, dan cakupan untuk kunci API Anda.",
+          "filterAction": "Tindakan",
+          "from": "Dari",
+          "to": "Sampai",
+          "reset": "Atur ulang",
+          "exportCsv": "Ekspor CSV",
+          "empty": "Tidak ada peristiwa audit yang cocok.",
+          "action": {
+            "all": "Semua",
+            "created": "Dibuat",
+            "revoked": "Dicabut",
+            "rotated": "Dirotasi",
+            "rate_limited": "Batas laju tercapai",
+            "quota_exceeded": "Kuota terlampaui",
+            "scope_denied": "Cakupan ditolak"
+          }
+        }
+      }
     }
   },
   "pricingPage": {
