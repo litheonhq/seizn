@@ -71,3 +71,5 @@ export {
   type TopBarVariant,
   type TopBarTab,
 } from './top-bar';
+
+export { WorkspaceShell, type WorkspaceShellProps } from './workspace-shell';
