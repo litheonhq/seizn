@@ -132,7 +132,7 @@ export default function DeviceForm() {
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/brand/seizn-mark-256.png" alt="Seizn" className="h-8 w-8" />
+            <img src="/icons/seizn-mark.svg" alt="Seizn" className="h-8 w-8" />
             <span className="text-[20px] font-medium tracking-[-0.01em] text-szn-text-1">
               Seizn
             </span>
