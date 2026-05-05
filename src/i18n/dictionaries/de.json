@@ -3364,7 +3364,7 @@
     "workflow": {
       "eyebrow": "02 / Workflow",
       "title": "Drei Schritte. Ein Hauptbuch.",
-      "subtitle": "Importieren, prüfen, schreiben — derselbe Kanon hinter jedem Tastendruck.",
+      "subtitle": "Importieren, prüfen, schreiben: derselbe Kanon hinter jedem Tastendruck.",
       "steps": [
         {
           "number": "01",
@@ -3435,7 +3435,7 @@
     },
     "conflicts": {
       "eyebrow": "04 / Konflikte",
-      "title": "Jeder Widerspruch — zitiert und gewichtet.",
+      "title": "Jeder Widerspruch: zitiert und gewichtet.",
       "subtitle": "Der Schweregrad ist Signal, kein Rauschen. Critical bricht den Kanon offen. Minor markiert eine leichte Abweichung, die Sie womöglich behalten wollen.",
       "graphNote": "Der Graph ist nicht Schmuck. Jeder Konflikt zeigt den Knoten und die Kante, die gerissen sind.",
       "items": [
