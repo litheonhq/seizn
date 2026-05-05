@@ -167,6 +167,38 @@
 - 그 customer 에 트랙별 별 subscription product:
   - Track 1: KRW subscription (Track 1 owner session 이 product / tier lock)
   - Track 2: USD subscription + metered usage (Track 2 owner session 이 v8 lock)
+  - Track 3: KRW subscription (Track 3 doc § 14)
+- 인보이스 트랙별 분리. 작가가 자기 영수증에 어느 채널 결제인지 명확
+- 환불 / 일시중단 / 다운그레이드도 트랙별 독립
+
+### 5.3 Cross-track timing dependency
+
+각 트랙은 다른 트랙에 의존하는 endpoint / cohort / data 가 있다. 진입 / 진행 순서 정합:
+
+| 트랙 / Phase | 의존 항목 | 의존 대상 | 처리 옵션 |
+|---|---|---|---|
+| Track 1 Phase -1 (7일) | recall 검색 endpoint | Track 2 Phase 1 의 `/api/v1/projects/{id}/recall` | (a) Track 2 Phase 1 먼저 끝내거나, (b) 기존 `useAuthorMemoryV3` SWR hooks 직접 호출 (Track 2 우회 — 1차 권장) |
+| Track 3 Phase 0 (30일) Phase 0.7 | Track 2 REST API client | Track 2 Phase 1 의 `/api/v1/*` Layer 1 모두 live | (a) Track 2 Phase 1 가 Track 3 Phase 0.7 (Day 13-14) 전에 endpoint live, (b) Track 3 가 mock JSON server 로 우회 (task pack §19 risk 표) |
+| Track 3 Phase 0 entry | founding writer cohort 3명 retain | Track 1 Phase -1 5명 검증 결과 | Track 1 Phase -1 gate 통과 필수. 미달 시 Track 3 Phase 0 보류 |
+| Track 2 Phase 1 metered billing | Stripe customer | Track 1 의 `/dashboard/account/api-keys` (또는 Track 2 자체 dashboard) | Track 2 가 자체 dashboard 갖거나 Track 1 dashboard 위에 attach (Track 2 owner session 결정) |
+| Track 3 Phase 1 cloud backup | Supabase Storage / S3 + KMS 암호화 | 별 cycle (infra 결정) | Track 3 Phase 1 시작 전 lock |
+| Track 1 Phase 3 web read parity | Track 3 Vault snapshot read API | Track 3 의 cloud backup 완료 (Phase 1+) + Track 2 가 expose | Phase 3 시점에 cross-track sync |
+
+### 5.4 진입 순서 (권장 sequencing)
+
+```
+Track 2 Phase 1 (W1~W2) — Layer 1 REST live
+    ↓ (Track 1 + Track 3 가 호출 가능)
+Track 1 Phase -1 (W2~W3, 7일) — dashboard prototype + founding writer 5
+    ↓ (gate 통과 시)
+Track 3 Phase 0 (W3~W7, 30일) — Tauri Vault desktop alpha
+    ↓ (gate 통과 시)
+Track 1 Phase 0 + Track 2 Phase 2 + Track 3 Phase 1 — 동시 진행
+    ↓
+Track 3 Phase 2 (~Q3) — 자체 에디터
+```
+
+권장 sequencing 은 강제 X. 각 트랙 owner session 이 자기 cycle 의 dependency 를 위 표에서 확인 후 자체 결정. 단 missing dependency 로 cycle stall 방지 위해 master 갱신 시 timing dependency 표 갱신 필수.
   - Track 3: KRW subscription (Track 3 doc § 14 에 lock)
 - 인보이스 트랙별 분리. 작가가 자기 영수증에 어느 채널 결제인지 명확
 - 환불 / 일시중단 / 다운그레이드도 트랙별 독립
@@ -226,7 +258,7 @@ _archive/{원본 파일명}.md                       # deprecated/대체된 doc
 4. **HWP 우선순위.** Phase -1 인터뷰에서 `HWP 없으면 결제 보류` 비율 40% 이상이면 Phase 1.5 로 당김. Track 3 doc §7 에 분기.
 5. **Tauri mobile (iOS/Android) 진입 시점.** Phase 3 default 이지만, founding writer 인터뷰에서 모바일 needs 강하면 Phase 1 후반에 spike.
 6. **부산대 맞춤법 검사기 상업 라이선스.** 현재 미해결. 검사기 v1 에서 완전 제거 또는 사용자가 외부 검사기로 export 하는 flow 만 제공. 라이선스 확정 전 제품 서버에서 호출 X.
-7. **Pensiv 사실 검증.** GPT input doc 은 pensiv 가 desktop + offline + HWP + mobile beta 다 갖췄다고 주장. Track 3 Phase -1 에서 pensiv.so 직접 fetch 로 검증 필요.
+7. **Pensiv 사실 검증.** ~~GPT input doc 은 pensiv 가 desktop + offline + HWP + mobile beta 다 갖췄다고 주장. Track 3 Phase -1 에서 pensiv.so 직접 fetch 로 검증 필요.~~ **CLOSED 2026-05-06.** pensiv.so primary source fetch 결과 4 claim 모두 verified: (1) Desktop app 다운로드 가능, (2) `Offline and local-only mode when you want drafts and assets to stay on your device without cloud sync` 명시, (3) `Hangul (HWP)` export 옵션 명시 (Word / PDF / EPUB / Markdown 과 함께), (4) `pensiv mobile beta testing is starting` 명시. 사이트 1차 언어 = 영어 (KR mainstream 작가 직접 마케팅 X). 가격 표는 homepage 미노출. → Track 3 차별화 narrow: `desktop + HWP + offline 우위` 주장 X. 차별점 = (a) 옆에 붙는 보조 layer (pensiv export 파일도 watch + recall), (b) Memory v3 entity-aware canon recall, (c) KR mainstream 마케팅 / KRW 가격 (pensiv 영어 노출). 추가 fact-check (pensiv 의 entity recall / file watcher 유무, KR 시장 점유율) 은 Track 1 Phase -1 인터뷰에서 작가에게 직접 물어 보충.
 
 ---
 

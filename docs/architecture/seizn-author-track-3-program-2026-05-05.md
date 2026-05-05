@@ -116,9 +116,35 @@ KR 웹소설 작가 YouTube 댓글 thread 50+ 댓글 분석 (사용자가 직접
 
 ### 3.1 Pensiv
 
-기존 설계안의 pensiv 분석은 갱신되어야 한다. 공식 사이트 기준 (2026-05 verify 필요, Phase -1 task) pensiv 는 desktop, offline/local-only, HWP export, mobile beta 를 표면에 둔다. 따라서 `desktop 있고 HWP 가능` 은 Track 3 우위 X.
+**Primary source verified 2026-05-06** (pensiv.so homepage fetch):
 
-차별점 = **pensiv 로 이사하지 않아도 Track 3 를 쓸 수 있어야 한다**. pensiv 사용자도 export 파일을 Track 3 가 watch + recall.
+- Desktop app: ✓ (`Download Desktop`)
+- Offline / local-only: ✓ (`Offline and local-only mode when you want drafts and assets to stay on your device without cloud sync`)
+- HWP export: ✓ (`Hangul (HWP)` listed alongside Word / PDF / EPUB / Markdown)
+- Mobile beta: ✓ (`pensiv mobile beta testing is starting`)
+- 1차 언어: 영어 (KR mainstream 작가 직접 마케팅 X)
+- 가격 tier: homepage 미노출 (별 fetch 필요)
+- 메인 카피: `Where stories take shape. A focused workspace for storytellers where novels, screenplays, and drafts find room to grow.`
+
+따라서 `desktop 있고 HWP 가능` 은 Track 3 우위 X. 직접 비교 우위 narrow:
+
+| 차원 | Pensiv | Track 3 |
+|---|---|---|
+| Desktop app | ✓ | ✓ (예정) |
+| Offline / local-only | ✓ | ✓ |
+| HWP export | ✓ | Phase 1.5+ (write 안정), Phase 0 = read import |
+| Mobile beta | ✓ | Phase 3 |
+| 옆에 붙는 보조 layer (file watcher) | 미확인 (별 fetch) | ✓ (Phase 0 핵심) |
+| 옵시디언 / 한글 / 메모장 export 파일 watch | 미확인 | ✓ |
+| Memory v3 entity-aware canon recall | 미확인 | ✓ |
+| KR mainstream 작가 마케팅 / KRW 가격 | 영어 사이트만 | ✓ (KRW + KR 인터뷰 / 카피) |
+
+차별점 = **pensiv 로 이사하지 않아도 Track 3 를 쓸 수 있어야 한다**. pensiv 사용자도 pensiv export 파일을 Track 3 가 watch + recall.
+
+**Phase -1 인터뷰 보충 질문:**
+- Pensiv 의 entity recall / file watcher 기능 유무 작가가 알고 있나?
+- Pensiv 사용 작가의 KR 시장 비율 (인터뷰에서 직접)?
+- Pensiv export 파일 (markdown? 자체 format?) 을 Track 3 가 watch 가능한가?
 
 ### 3.2 TypeTak
 
