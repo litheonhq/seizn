@@ -40,7 +40,7 @@
 | Stack | Next.js 15 + React 19 + Tailwind v4 (기존 그대로) |
 | Distribution | Vercel auto deploy |
 | Persona | KR mainstream 작가 + 출판사/스튜디오 협업자 + 모바일 read 작가 |
-| Pricing | KRW (Free / Pro ₩12,900 / Pro Plus ₩24,900 / Studio ₩99,000+) |
+| Pricing | **트랙 자체 가격** (Track 1 owner session 이 lock. KRW 기본, web 채널 가격 모델 별도) |
 | Repo path | `C:\Users\admin\Projects\seizn` (기존) |
 | 첫 마일스톤 | Phase -1 dashboard import + recall prototype (7일, founding writer 5명 검증) |
 
@@ -61,8 +61,8 @@
 | Stack | Next.js API routes + TypeScript MCP server |
 | Distribution | API key dashboard + npm + Anthropic MCP directory |
 | Persona | AI-native 작가 / 옵시디언 + AI / Cursor / Cline / Continue / dev-author / B2B 출판사 API |
-| Pricing | USD (Free $0 / Indie $19 / Studio API $99 / Enterprise Custom) |
-| Repo path | `C:\Users\admin\Projects\seizn` (web 과 같은 repo, `src/app/api/v1/` + `packages/mcp-server/`) |
+| Pricing | **트랙 자체 가격** (Track 2 owner session 이 lock. USD 기본, API/MCP 채널 가격 모델 별도. v8 lock 진행 중) |
+| Repo path | `C:\Users\admin\Projects\seizn` (web 과 같은 repo, `src/app/api/v1/` + `packages/author-mcp-server/`) |
 | 첫 마일스톤 | Phase 0 API spec lock → Phase 1 Layer 1 REST + key 발급 + Stripe metered (W1~W2) |
 
 **Scope (track-2 doc 에 lock):**
@@ -82,7 +82,7 @@
 | Stack | Tauri 2.x (Rust) + React + TipTap + Yjs + y-leveldb |
 | Distribution | GitHub Release + installer + auto-update |
 | Persona | 한글·메모장·구글독스·뮤블·Scrivener 정착 작가 (KR mainstream long-form fiction) |
-| Pricing | KRW (Track 1 과 단일 결제 instrument 공유. Pro / Pro Plus / Studio Publisher 동일 tier) |
+| Pricing | **트랙 자체 가격** — KRW (Pro ₩12,900 / Pro Plus ₩24,900 / Studio Publisher ₩99,000+). Track 3 doc § 14 에 lock |
 | Repo path | `C:\Users\admin\Projects\seizn-desktop` (신설, 별 repo) |
 | 첫 마일스톤 | Phase 0 Recall Vault desktop alpha (Tauri shell + file watcher + local snapshot + global hotkey recall) |
 
@@ -144,20 +144,32 @@
 
 ## 5. Cross-track sell path
 
-### 5.1 Upsell / cross-sell 매트릭스
+### 5.0 가격 모델 분리 원칙 (lock 2026-05-06)
+
+- **트랙별 별 가격, 별 plan, 별 인보이스.** Web · API/MCP · Program 은 채널 / 페르소나 / cost structure 모두 다름. 단일 통합 plan 으로 묶지 않음.
+- **`single plan = all surfaces` 정책 X.** 한 트랙 plan 이 다른 트랙 surface 를 커버하지 않는다. 사용자가 두 트랙 surface 를 쓰려면 두 plan 결제.
+- **단일 Stripe customer.** 한 사용자 = 한 customer. 그 위에서 트랙별 plan 이 별 subscription 으로 붙음. 인보이스 분리.
+
+### 5.1 Cross-track upsell 매트릭스
 
 | 시작 트랙 | 다음 단계 | Trigger |
 |---|---|---|
-| Track 1 Free → Pro | 같은 트랙 (Pro ₩12,900) | dashboard 사용량 / multi-project 요구 |
-| Track 1 Pro → Track 3 alpha | Track 3 desktop 다운로드 | snapshot/file watcher 가치 알게 됨 |
-| Track 3 Pro → Track 2 API key | API key 자동 발급 | 작가가 Cursor/Claude 에서 호출 원함 |
-| Track 1/3 Studio Publisher → Track 2 Studio API | B2B Studio tier 통합 | 출판사 internal API 필요 |
-| Track 2 Studio API → Track 1 web seats | reviewer 협업 web 표면 추가 | B2B 작가팀 web 협업 필요 |
+| Track 1 paid → Track 3 trial | Track 3 desktop 다운로드 | snapshot / file watcher 가치 알게 됨 |
+| Track 3 paid → Track 2 API key 발급 | Track 2 plan 별 결제 | 작가가 Cursor/Claude 에서 캐논 호출 원함 |
+| Track 1/3 Studio Publisher → Track 2 Studio | Track 2 별 결제 | 출판사 internal API 필요 |
+| Track 2 Studio → Track 1 web seats | Track 1 별 결제 | B2B 작가팀 web 협업 필요 |
 
-### 5.2 단일 결제 instrument
+각 단계는 새 plan 결제. cumulative add-on 형태가 아니라 **각 트랙 plan 의 동시 보유**.
 
-- 한 사용자의 Stripe customer 는 하나. tier 가 트랙별 add-on 이 아니라 cumulative.
-- 예: Pro Plus (Track 1+3 KRW) + Indie API ($19 USD) 동시 결제 가능. 인보이스 분리.
+### 5.2 결제 모델
+
+- 한 사용자의 Stripe customer = 1개
+- 그 customer 에 트랙별 별 subscription product:
+  - Track 1: KRW subscription (Track 1 owner session 이 product / tier lock)
+  - Track 2: USD subscription + metered usage (Track 2 owner session 이 v8 lock)
+  - Track 3: KRW subscription (Track 3 doc § 14 에 lock)
+- 인보이스 트랙별 분리. 작가가 자기 영수증에 어느 채널 결제인지 명확
+- 환불 / 일시중단 / 다운그레이드도 트랙별 독립
 
 ---
 

@@ -91,16 +91,25 @@ master §2 의 Track 1 정의 그대로:
 
 ---
 
-## 5. 가격 (KRW, master § 2 / Track 3 § 14 와 통합)
+## 5. 가격 (Track 1 자체, owner session 이 lock)
 
-| Plan | 월 | 연 | 포함 |
-|---|---|---|---|
-| Free | ₩0 | — | (Track 3 와 동일 단일 결제 instrument) |
-| Pro | ₩12,900 | ₩99,000 | (Track 3 와 동일) |
-| Pro Plus | ₩24,900 | — | (Track 3 와 동일) |
-| Studio Publisher | ₩99,000+ | custom | reviewer seat / shared canon bible / web 협업 표면 (Track 1 영역) |
+> **트랙별 가격 분리 원칙** (master § 5.0). Track 1 plan 이 Track 2 (API/MCP) 또는 Track 3 (Program/Desktop) surface 를 cover 하지 않는다. 다른 트랙 surface 를 쓰려면 그 트랙 plan 별 결제.
 
-가격 원칙은 Track 3 § 14 와 동일.
+**TODO: owner session 이 Track 1 자체 가격 model lock.** 후보 검토 항목:
+
+- Web 채널 자체 가격 단위 (KRW 기본 권장)
+- Free / 유료 tier 구조 (Free 의 dashboard 사용 한도, 유료 tier 의 web 협업 / 모바일 read / public profile)
+- B2B web seat 가격 (출판사 / 매니지먼트 / 스튜디오 web 협업)
+- Track 3 Studio Publisher 와 Track 2 Studio 와의 별 subscription 으로 attach 하는 구조 (master § 5.2)
+- Stripe product / subscription 단위 (Track 3 와 별 subscription, 같은 customer)
+
+가격 원칙 (3-track 공통, master § 5.0 그대로):
+
+- export paywall 금지
+- cancel 후 read-only lock-in 금지
+- AI 생성량 기반 과금 X
+- `AI prose generation` paid feature 전면 배치 X
+- 인보이스 트랙별 분리
 
 ---
 

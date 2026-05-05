@@ -590,21 +590,25 @@ Gate (Track 1 doc 에서 lock):
 
 ---
 
-## 14. 가격 (KRW, Track 1 과 통합)
+## 14. 가격 (KRW, Track 3 자체)
+
+> **트랙별 가격 분리 원칙** (master § 5.0). Track 3 plan 이 Track 1 (Web) 또는 Track 2 (API/MCP) surface 를 cover 하지 않는다. 다른 트랙 surface 를 쓰려면 그 트랙 plan 별 결제.
 
 | Plan | 월 | 연 (17% off) | 포함 |
 |---|---|---|---|
 | **Free** | ₩0 | — | 1 active project, local snapshot, txt/md/docx export, manual recall (limited quota), full data export 항상 가능 |
 | **Pro** | ₩12,900 | ₩99,000 | unlimited projects, cloud backup/sync, recall fair-use 무제한, version history 1년, conflict candidate review, priority indexing |
 | **Pro Plus** | ₩24,900 | — | very long manuscripts (>500k자), HWP/HWPX export when stable, cross-series canon recall, advanced audit/timeline |
-| **Studio Publisher** | ₩99,000+ | custom | editor/reviewer seats, private workspace, shared canon bible, export/audit history, onboarding support |
+| **Studio Publisher** | ₩99,000+ | custom | editor/reviewer seats (desktop 한정), private workspace, shared canon bible, export/audit history, onboarding support |
+
+> **Studio Publisher 의 web 협업 표면**은 Track 1 Studio plan 별도 결제. Track 2 API integration 도 Track 2 plan 별도 결제. Track 3 Studio Publisher 는 desktop 채널 가격만.
 
 가격 원칙:
 - export paywall 금지
 - cancel 후 read-only lock-in 금지
 - AI 생성량 기반 과금 X (recall · backup · project 가치 기반)
 - `AI prose generation` paid feature 전면 배치 X
-- Track 2 USD 가격과 단일 customer 공유 (cumulative add-on)
+- Stripe customer 1개 / Track 3 subscription 1개. 다른 트랙 plan 은 별 subscription 으로 같은 customer 에 attach. 인보이스 분리
 
 ---
 
