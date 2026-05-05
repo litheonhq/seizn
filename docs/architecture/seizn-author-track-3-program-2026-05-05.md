@@ -279,14 +279,77 @@ Track 3 promise:
 
 Phase 0 = read-only import 만. Phase 1.5 또는 Phase 3 = stable export.
 
-### 5.6 Recall API client
+### 5.6 자체 backend (lock 2026-05-06)
 
-Track 3 desktop 은 Memory v3 를 직접 호출 X. **Track 2 의 `/api/v1/*` REST + MCP** 를 client 로 사용. 이유:
-- Track 2 가 이미 정의한 endpoint 재사용 = duplicate effort 0
-- Auth/rate limit/quota 가 일관적
-- offline-first: 로컬 캐시 (y-leveldb) 에 entity card snapshot 저장, 온라인 시 sync
+**Track 2 endpoint 의존 무효** (master § 4.1 / § 5.3 / § 5.4 / § 8.1). Track 3 desktop 은 자체 backend 갖는다. fire-and-forget 모드 (master § 4.5) 정합.
 
-### 5.7 Korean spellcheck
+**Stack:**
+
+```
+seizn-desktop/src-tauri/
+├── memory/
+│   ├── extract.rs      ← LLM entity 추출 (Anthropic SDK + BYOK)
+│   ├── store.rs        ← rusqlite + sqlite-vec (embedding 검색)
+│   ├── recall.rs       ← @ 검색 → entity card 생성
+│   ├── conflict.rs     ← canon 충돌 감지
+│   └── approve.rs      ← entity 승인 / 수정 / 삭제
+└── llm/
+    ├── anthropic.rs    ← BYOK Haiku/Sonnet 호출 (reqwest)
+    ├── embedding.rs    ← Voyage AI 또는 OpenAI embedding (BYOK)
+    └── keyring.rs      ← Tauri keyring 으로 사용자 API key 보관
+```
+
+**의존 변환:**
+
+| 항목 | 그 전 (Track 2) | 자체 backend |
+|---|---|---|
+| Entity 추출 | `/manuscript/index` POST | Tauri command + BYOK Haiku |
+| Recall 검색 | `/recall?q=` GET | 로컬 SQLite vector search |
+| Entity 승인 | `/canon/.../approve` POST | local SQLite write |
+| Conflict 감지 | `/conflicts` GET | 로컬 rule + LLM compare |
+| LLM 비용 | Track 2 managed | 사용자 BYOK |
+| Offline | 부분 (cache) | 완전 (LLM call 시만 인터넷) |
+| Privacy | 작가 원고가 우리 server 통과 | 100% local (LLM provider 제외) |
+
+**Phase 3 cross-device sync 시:**
+
+Track 2 의 entity schema 와 long-term 정합. schema migration 필요 시 master 통해 cross-track 협의 (fire-and-forget § 4.5 예외 — schema 는 cross-track 결정).
+
+### 5.7 의존 라이브러리 (lock 2026-05-06)
+
+```toml
+[dependencies]
+# Tauri shell
+tauri = { version = "2", features = ["protocol-asset"] }
+tauri-plugin-fs = "2"
+tauri-plugin-dialog = "2"
+tauri-plugin-global-shortcut = "2"
+
+# File watcher
+notify = "6"
+
+# Local persistence
+rusqlite = { version = "0.31", features = ["bundled"] }
+sqlite-vec = "0.1"  # 또는 sqlite-vss. Phase 0.6.5 에서 lock
+zstd = "0.13"
+sha2 = "0.10"
+
+# LLM client (BYOK)
+reqwest = { version = "0.12", features = ["json", "rustls-tls", "stream"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+# Encoding
+encoding_rs = "0.8"  # EUC-KR fallback
+
+# Async
+tokio = { version = "1", features = ["full"] }
+
+# Korean
+unicode-normalization = "0.1"
+```
+
+### 5.8 Korean spellcheck
 
 v1 = 외부 검사기 export flow 만 (라이선스 미해결). 사용자가 직접 부산대/한컴 검사기로 paste 가능한 export.
 
@@ -655,29 +718,33 @@ Gate (Track 1 doc 에서 lock):
 
 ---
 
-## 16. Cross-track 의존 / 협업
+## 16. Cross-track 의존 / 협업 (lock 2026-05-06: 자체 backend 모드)
+
+Track 3 fire-and-forget 모드 (master § 4.5) + 자체 backend (§ 5.6) 채택. cross-track 의존 거의 0.
 
 ### 16.1 Track 3 가 Track 2 에 요청하는 것
 
-- `/api/v1/projects/{id}/recall?q=<name>` — entity card 반환
-- `/api/v1/projects/{id}/manuscript/index` — manuscript text push (file watcher 변경 감지 후)
-- `/api/v1/projects/{id}/canon/{entityId}/approve` — entity 승인
-- `/api/v1/projects/{id}/recall/{entityId}/mentions` — first/last mention
-- `/api/v1/projects/{id}/conflicts` — conflict candidate
-- BYOK 또는 managed Haiku/Sonnet — Phase 0 = managed Haiku (cost 보호)
+~~Phase 0~Phase 2 모두 X.~~ Track 2 endpoint 호출 0. 자체 backend 가 동일 logic 처리 (Anthropic SDK BYOK + sqlite-vec).
+
+**Phase 3 (cross-device sync) 시 한정:**
+- Track 2 의 entity schema 와 long-term 정합 (schema migration 협의)
+- Track 2 의 cloud sync endpoint (Phase 3 신설 시) 사용 가능 — 또는 Track 3 자체 cloud (Supabase Storage + KMS) 사용
 
 ### 16.2 Track 3 가 Track 1 에 요청하는 것
 
-- Track 1 Phase -1 prototype 의 founding writer cohort 유지 — Track 3 Phase 0 alpha tester 로 transfer
-- Track 1 의 `/dashboard/account/api-keys` (Track 2 영역) 가 Track 3 desktop login 에서 사용
+~~Track 1 Phase -1 founding writer cohort transfer.~~ **CLOSED 2026-05-06.** Track 3 self-dogfood + 별 channel 모집 (나비계곡 / 작가 디스코드 / 트위터 cold DM).
+
+**Phase 3 한정:**
 - Track 1 `/dashboard/author` 의 web read 표면 — Phase 3 web parity 의 base
+- Track 1 의 결제 dashboard (Track 1 owner session 결정 후) — Track 3 Pro 구독 결제 표면
 
 ### 16.3 Track 3 가 다른 트랙에 절대 안 하는 것
 
-- `seizn/` repo 의 어떤 파일도 직접 수정 X. Backend/web/API 변경 필요 시 issue/spec 만 작성
-- Track 2 API endpoint duplicate 구현 X (모든 backend 호출은 Track 2 통과)
+- `seizn/` repo 의 어떤 파일도 직접 수정 X
 - Track 1 의 dashboard 표면 변경 X
+- Track 2 API endpoint 변경 X
 - engine.seizn.com (NPC SDK) 영역 touch X
+- master.md 의 다른 트랙 영역 (§ 2 Track 1/2 셀, § 4.1 Track 1/2 row) 만지지 X (master § 4.5 fire-and-forget 정합)
 
 ---
 
