@@ -9,7 +9,7 @@ export function SimulateEmpty() {
     <div style={{ flex: 1, background: 'var(--bg-elevated)' }}>
       <EmptyState
         kind="graph"
-        title={t('dashboard.simulate.empty')}
+        title={t('dashboard.simulate.empty.title')}
         body={t('dashboard.simulate.empty.body')}
         primary={t('dashboard.simulate.empty.cta')}
         hints={[
