@@ -1,6 +1,7 @@
 {
   "name": "@seizn/author-mcp-server",
-  "version": "0.1.0",
+  "version": "0.1.1",
+  "mcpName": "io.github.litheonhq/author-mcp-server",
   "description": "MCP server exposing Seizn Author canon recall, conflict check, and timeline tools",
   "license": "MIT",
   "author": "Litheon LLC <dev@litheon.io>",

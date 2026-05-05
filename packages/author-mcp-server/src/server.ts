@@ -39,7 +39,7 @@ export function createSeiznAuthorMcpServer(
 
   const server = new McpServer({
     name: '@seizn/author-mcp-server',
-    version: '0.1.0',
+    version: '0.1.1',
   });
 
   registerSeiznAuthorTools(server, client);
