@@ -83,7 +83,7 @@ export default function InvitePage() {
       }
 
       // Redirect to organization page
-      router.push(`/dashboard/organizations/${data.organization?.id || ''}`);
+      router.push(`/dashboard/legacy/organizations/${data.organization?.id || ''}`);
     } catch {
       setError('Failed to accept invite');
     } finally {

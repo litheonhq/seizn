@@ -185,7 +185,7 @@ export function TraceDetailClient({ traceId }: TraceDetailClientProps) {
 
   // Handle what-if replay complete
   const handleReplayComplete = useCallback((result: WhatIfResult) => {
-    router.push(`/dashboard/devtools/${result.trace_id}`);
+    router.push(`/dashboard/legacy/devtools/${result.trace_id}`);
   }, [router]);
 
   // Format helpers
@@ -227,7 +227,7 @@ export function TraceDetailClient({ traceId }: TraceDetailClientProps) {
         <div className="text-center">
           <p className="text-[var(--signal-conflict-soft)] mb-4">{error || "Trace not found"}</p>
           <Link
-            href="/dashboard/devtools"
+            href="/dashboard/legacy/devtools"
             className="text-blue-400 hover:text-blue-300"
           >
             Back to DevTools
@@ -244,7 +244,7 @@ export function TraceDetailClient({ traceId }: TraceDetailClientProps) {
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center gap-4">
             <Link
-              href="/dashboard/devtools"
+              href="/dashboard/legacy/devtools"
               className="p-2 rounded-lg bg-[var(--ink-800)] text-gray-400 hover:text-white transition-colors"
             >
               <ArrowLeftIcon className="w-5 h-5" />
@@ -355,7 +355,7 @@ export function TraceDetailClient({ traceId }: TraceDetailClientProps) {
             <span>Collection: {traceDetail.collection.primary || "None"}</span>
             {traceDetail.replay.is_replay && traceDetail.replay.original_trace_id && (
               <Link
-                href={`/dashboard/devtools/${traceDetail.replay.original_trace_id}`}
+                href={`/dashboard/legacy/devtools/${traceDetail.replay.original_trace_id}`}
                 className="text-[var(--ink-700)] hover:text-[var(--ink-500)]"
               >
                 Original Trace

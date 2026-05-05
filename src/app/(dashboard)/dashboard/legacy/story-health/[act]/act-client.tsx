@@ -91,7 +91,7 @@ export function ActStoryHealthClient({
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8">
-      <Link href="/dashboard/story-health" className="mb-6 inline-flex items-center gap-2 text-xs text-szn-signal hover:text-szn-text-1">
+      <Link href="/dashboard/legacy/story-health" className="mb-6 inline-flex items-center gap-2 text-xs text-szn-signal hover:text-szn-text-1">
         <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
         STORY HEALTH
       </Link>
@@ -127,7 +127,7 @@ export function ActStoryHealthClient({
               return (
                 <Link
                   key={metric.key}
-                  href={`/dashboard/story-health/${encodeURIComponent(act)}?metric=${metric.key}`}
+                  href={`/dashboard/legacy/story-health/${encodeURIComponent(act)}?metric=${metric.key}`}
                   className={`bg-szn-bg p-4 transition hover:bg-szn-surface-1 ${active ? "outline outline-1 outline-szn-signal-line" : ""}`}
                 >
                   <div className="text-[11px] uppercase text-szn-text-3">{metric.label}</div>

@@ -66,7 +66,7 @@ function metricTone(key: StoryHealthMetricKey, value: number) {
 function replayFilterHref(snapshot: StoryHealthSnapshot, key: StoryHealthMetricKey) {
   const drillIds = (snapshot.drilldowns[key] || []).map((item) => item.traceId).filter(Boolean);
   const ids = [...new Set([...drillIds, ...snapshot.replayTraceIds])].slice(0, 30);
-  if (ids.length === 0) return `/dashboard/story-health/${encodeURIComponent(snapshot.act)}?metric=${key}`;
+  if (ids.length === 0) return `/dashboard/legacy/story-health/${encodeURIComponent(snapshot.act)}?metric=${key}`;
   return `/dashboard/replay?traceIds=${ids.map(encodeURIComponent).join(",")}&source=story-health&metric=${key}`;
 }
 
@@ -230,7 +230,7 @@ export function StoryHealthClient({ snapshots, loadError = null, live }: StoryHe
                     ))}
                   </div>
                   <Link
-                    href={`/dashboard/story-health/${encodeURIComponent(selected.act)}`}
+                    href={`/dashboard/legacy/story-health/${encodeURIComponent(selected.act)}`}
                     className="szn-btn-signal inline-flex w-full items-center justify-center gap-2 px-4 py-2 text-sm"
                   >
                     <Search className="h-4 w-4" aria-hidden="true" />
@@ -253,7 +253,7 @@ export function StoryHealthClient({ snapshots, loadError = null, live }: StoryHe
                     <th className="min-w-[210px] px-3 py-3 font-medium">Metric</th>
                     {latest.map((snapshot) => (
                       <th key={snapshot.act} className="min-w-[160px] px-3 py-3 font-medium">
-                        <Link href={`/dashboard/story-health/${encodeURIComponent(snapshot.act)}`} className="hover:text-szn-text-1">
+                        <Link href={`/dashboard/legacy/story-health/${encodeURIComponent(snapshot.act)}`} className="hover:text-szn-text-1">
                           {snapshot.act}
                         </Link>
                       </th>

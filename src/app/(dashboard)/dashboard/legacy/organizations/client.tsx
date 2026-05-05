@@ -208,7 +208,7 @@ export default function OrganizationsClient() {
           {organizations.map((org) => (
             <Link
               key={org.id}
-              href={`/dashboard/organizations/${org.id}`}
+              href={`/dashboard/legacy/organizations/${org.id}`}
               className="szn-card rounded-lg p-6 hover:shadow-lg hover:scale-[1.02] transition-all duration-300 group"
             >
               <div className="flex items-start justify-between mb-4">

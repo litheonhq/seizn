@@ -61,7 +61,7 @@ export default async function PostMortemDetailPage({ params, searchParams }: Pos
   return (
     <DashboardShell>
       <div className="mx-auto max-w-6xl px-4 py-8">
-        <Link href="/dashboard/post-mortem" className="mb-6 inline-flex text-xs text-szn-signal hover:text-szn-text-1">
+        <Link href="/dashboard/legacy/post-mortem" className="mb-6 inline-flex text-xs text-szn-signal hover:text-szn-text-1">
           POST-MORTEMS
         </Link>
 
