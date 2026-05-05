@@ -12,6 +12,7 @@
     "start": "next start",
     "lint": "eslint . --ignore-pattern test-results --ignore-pattern playwright-report",
     "lint:track2": "eslint src/lib/api-keys src/app/api/v1 --ignore-pattern test-results --ignore-pattern playwright-report",
+    "docs:test": "vitest run src/__tests__/docs",
     "typecheck": "next typegen && tsc --noEmit -p tsconfig.typecheck.json",
     "predeploy": "bash scripts/pre-deploy.sh",
     "deploy": "vercel --prod",
