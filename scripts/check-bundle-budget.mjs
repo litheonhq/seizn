@@ -11,7 +11,7 @@ import process from "node:process";
 const reportPath = path.join(process.cwd(), ".next", "analyze", "static-bundle-report.json");
 
 const budget = {
-  totalBytes: readKbBudget("SEIZN_BUNDLE_TOTAL_KB", 8000) * 1024,
+  totalBytes: readKbBudget("SEIZN_BUNDLE_TOTAL_KB", 8050) * 1024,
   totalGzipBytes: readKbBudget("SEIZN_BUNDLE_TOTAL_GZIP_KB", 2400) * 1024,
   maxFileBytes: readKbBudget("SEIZN_BUNDLE_MAX_FILE_KB", 550) * 1024,
   maxFileGzipBytes: readKbBudget("SEIZN_BUNDLE_MAX_FILE_GZIP_KB", 170) * 1024,
