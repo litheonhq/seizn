@@ -3336,5 +3336,307 @@
     "incidentsTitle": "Incident reporting",
     "incidentsBody": "Public incident history and current availability are published on the Seizn status page:",
     "statusLink": "View status"
+  },
+  "authorLanding": {
+    "nav": {
+      "workflow": "工作流",
+      "demo": "演示",
+      "pricing": "價格",
+      "docs": "文件",
+      "signIn": "登入",
+      "start": "免費試用",
+      "menu": "打開菜單"
+    },
+    "hero": {
+      "eyebrow": "01 / 作者記憶",
+      "title": "抓住每一處",
+      "italic": "矛盾",
+      "titleEnd": "，發佈前。",
+      "subtitle": "輸入一條事實。Seizn 拿它對照你的設定：8 個角色、22 條規則、30 天時間線。你的審查就是判決。",
+      "trialNote": "30 天試用，無需信用卡",
+      "byokNote": "BYOK 五折",
+      "yearly": "按年付省 15%",
+      "startPlan": "開始",
+      "comparePlans": "對比 Pro、Studio、Enterprise"
+    },
+    "workflow": {
+      "eyebrow": "02 / 工作流",
+      "title": "三步。一本設定簿。",
+      "subtitle": "匯入、審查、寫作，背後都是同一份設定。",
+      "steps": [
+        {
+          "number": "01",
+          "title": "匯入",
+          "subtitle": "把設定整本帶進來。",
+          "body": "丟一份手稿、指向一份 Google Doc，或同步一份世界觀文件。Seizn 把角色、地點、規則梳進設定簿。",
+          "chips": [
+            "DOCX",
+            "Plain text",
+            "Google Docs",
+            "Native"
+          ]
+        },
+        {
+          "number": "02",
+          "title": "審查",
+          "subtitle": "你的判決，記下來。",
+          "body": "每一條事實都拿到一個判決：通過、待定、衝突。審查成了真相的依據，隨時可以回放。",
+          "chips": [
+            "canon 142",
+            "pending 8",
+            "conflict 3"
+          ]
+        },
+        {
+          "number": "03",
+          "title": "寫作",
+          "subtitle": "在設定簿裡起稿。",
+          "body": "在圖譜旁邊寫新場景。矛盾一齣現就浮出來，引到具體規則上，按一下就能覆蓋。",
+          "chips": [
+            "Scene draft",
+            "Live check",
+            "Replay"
+          ]
+        }
+      ]
+    },
+    "inputs": {
+      "eyebrow": "03 / 輸入",
+      "title": "原稿在哪，Seizn 就到哪。",
+      "subtitle": "四種匯入方式。同一份設定簿、同一套審查、同一份設定。",
+      "modes": [
+        {
+          "id": "native",
+          "name": "原生編輯器",
+          "subtitle": "在 Seizn 裡直接寫。",
+          "body": "在懂設定的編輯器裡寫。每一段落都跟設定簿對一遍。"
+        },
+        {
+          "id": "docx",
+          "name": "DOCX 匯入",
+          "subtitle": "把手稿整篇拿過來。",
+          "body": "拖入 .docx、.rtf、.odt 文件。Seizn 抽出角色、場景、對白，放進設定簿。"
+        },
+        {
+          "id": "plain",
+          "name": "純文字",
+          "subtitle": "Markdown 友好。",
+          "body": "粘貼或上傳 .md 與 .txt。標題成場景，提到的名字成條目。來回一趟不丟東西。"
+        },
+        {
+          "id": "gdocs",
+          "name": "Google Docs",
+          "subtitle": "同步，不復制。",
+          "body": "Doc 接一次。Seizn 讓設定簿跟著同步，衝突以評論形式提醒你。"
+        }
+      ]
+    },
+    "conflicts": {
+      "eyebrow": "04 / 衝突",
+      "title": "每一處矛盾，都附根據，分等級。",
+      "subtitle": "等級是信號，不是噪聲。critical 直接撞壞設定，minor 標出你也許願意保留的輕微偏移。",
+      "graphNote": "圖譜不是裝飾。每條衝突都指向出問題的那個節點和那條邊。",
+      "items": [
+        {
+          "severity": "critical",
+          "rule": "character.han_iseul.eye_color",
+          "fact": "第 11 章：韓以瑟眼睛是灰色。",
+          "against": "第 2 章設定寫的是棕色。",
+          "cited": [
+            "scene.2.1",
+            "character.han_iseul"
+          ]
+        },
+        {
+          "severity": "major",
+          "rule": "rule.r03 屋頂通行",
+          "fact": "第 7 章：樸志吾在第 9 天進了屋頂。",
+          "against": "規則 r03 把屋頂鎖到第 14 天。",
+          "cited": [
+            "rule.r03",
+            "scene.7.4"
+          ]
+        },
+        {
+          "severity": "minor",
+          "rule": "character.yun_hana.club",
+          "fact": "第 18 章：尹哈娜參加天文社。",
+          "against": "設定上是攝影社。也可能是轉社。",
+          "cited": [
+            "character.yun_hana"
+          ]
+        }
+      ]
+    },
+    "simulation": {
+      "eyebrow": "05 / 模擬",
+      "title": "落筆前，先回放一次。",
+      "subtitle": "把場景放到設定簿上。Seizn 按 token 投影後續影響。安全路線和風險路線，都打分。",
+      "tokenDiff": "token 級 diff: scene 14.observatory.draft",
+      "replayReady": "回放就緒",
+      "candidates": [
+        {
+          "side": "safe",
+          "label": "安全路線",
+          "score": 92,
+          "title": "韓以瑟在天文臺守到天亮。",
+          "body": "守住 r02 與 r04。沒有新衝突。後續連得上。",
+          "tokens": [
+            "scene.continues",
+            "rule.r02",
+            "rule.r04"
+          ]
+        },
+        {
+          "side": "risk",
+          "label": "風險路線",
+          "score": 41,
+          "title": "韓以瑟在食蝕頂點前先離開。",
+          "body": "r02 的錨就掉了。後面兩個場景失了著力點。",
+          "tokens": [
+            "drops.r02",
+            "scene.16.orphan",
+            "scene.21.orphan"
+          ]
+        }
+      ]
+    },
+    "trust": {
+      "eyebrow": "06 / 信任",
+      "title": "預設就是作者級。",
+      "subtitle": "立得住的判斷、查得清的底層、說得清的隔離規則。",
+      "items": [
+        {
+          "icon": "lock",
+          "title": "工作區隔離",
+          "body": "樣例 IP 是合成的。你的手稿不會喂任何公開模型。"
+        },
+        {
+          "icon": "key",
+          "title": "支持 BYOK",
+          "body": "用你自己的 Anthropic key。原價五折，token 不設上限。"
+        },
+        {
+          "icon": "archive",
+          "title": "可回放的設定",
+          "body": "每一次判決都留底。回滾、分支、審計任何決定。"
+        },
+        {
+          "icon": "shield",
+          "title": "SFW 限定",
+          "body": "Litheon LLC 在嚴格的安全內容規則下運營 Seizn。"
+        }
+      ]
+    },
+    "pricing": {
+      "eyebrow": "07 / 價格",
+      "title": "為設定簿付費，不是為 LLM。",
+      "subtitle": "BYOK 讓價格減半，token 上限拿掉。年付省 15%。每個等級都有 30 天試用。",
+      "byok": "BYOK 五折",
+      "yearly": "按年付省 15%",
+      "start": "開始",
+      "contact": "聯繫銷售",
+      "mostPicked": "最多人選",
+      "blurbs": {
+        "indie": "適合一個人扛住自己設定的作者。",
+        "pro": "適合發佈多個 IP 的職業作者和小團隊。",
+        "studio": "多 IP、多作者。審計日誌、角色權限、專屬審查隊列。",
+        "enterprise": "數據駐留、SSO、本地回放歸檔、高級 SLA，按需定製。"
+      },
+      "features": {
+        "indie": [
+          "1 個 IP 項目",
+          "設定簿與回放",
+          "審查無上限",
+          "30 天試用，無需信用卡"
+        ],
+        "pro": [
+          "5 個 IP 項目",
+          "設定的分支與 diff",
+          "衝突審查優先",
+          "3 人協作",
+          "BYOK 五折"
+        ],
+        "studio": [
+          "每月 2,000 萬 token",
+          "工作室級審查運營",
+          "面向更大發佈的用量覆盤"
+        ],
+        "enterprise": [
+          "規模無上限",
+          "需啟用 BYOK",
+          "定製安全與採購支持"
+        ]
+      }
+    },
+    "faq": {
+      "eyebrow": "08 / 常見問題",
+      "title": "作者最先問的五個問題。",
+      "items": [
+        {
+          "q": "Seizn 跟 Sudowrite、NovelCrafter 有什麼不同？",
+          "a": "Seizn 不是寫作助手。它是設定簿。我們不替你寫文字；我們一字一句守住事實，矛盾出現的那一刻就告訴你。"
+        },
+        {
+          "q": "BYOK 到底解鎖什麼？",
+          "a": "用你自己的 Anthropic key，只付原價的一半。token 不設上限。"
+        },
+        {
+          "q": "我能把設定帶走嗎？",
+          "a": "隨時。設定簿都能導出成結構化 JSON、Markdown 或 DOCX。不鎖人。停用就把作品帶走。"
+        },
+        {
+          "q": "我的手稿會怎麼處理？",
+          "a": "你的稿子跟樣例 IP、跟任何公開模型訓練都隔開。這一頁上的黎明 demo 是合成數據，不是真實客戶。"
+        },
+        {
+          "q": "試用要綁卡嗎？",
+          "a": "不要。30 天，不綁卡。30 天後選一個等級，否則項目轉入只讀模式再保留 60 天。"
+        }
+      ]
+    },
+    "footer": {
+      "tagline": "作者記憶，一字一句守住。SFW 限定。為設定權威而生。",
+      "product": "產品",
+      "company": "公司",
+      "tools": "作者工具",
+      "developers": "開發者",
+      "links": {
+        "workflow": "工作流",
+        "demo": "演示",
+        "pricing": "價格",
+        "docs": "文件",
+        "about": "關於",
+        "trust": "信任與隱私",
+        "privacy": "隱私",
+        "terms": "條款",
+        "beta": "Beta 披露",
+        "status": "運行狀態",
+        "contact": "聯繫",
+        "ledger": "設定簿",
+        "replay": "回放",
+        "byok": "BYOK 指南",
+        "changelog": "更新記錄",
+        "engine": "Engine →",
+        "sdk": "@seizn/sdk-js",
+        "mcp": "@seizn/mcp"
+      },
+      "entity": "© 2026 Seizn by Litheon LLC · Wyoming",
+      "version": "v1.0 · 黎明 demo 為合成數據"
+    },
+    "engine": {
+      "badge": "新",
+      "body": "在做遊戲 NPC AI？同一套設定引擎，做成 SDK 暴露出來。",
+      "cta": "engine.seizn.com"
+    },
+    "checkout": {
+      "prefix": "我同意",
+      "terms": "服務條款",
+      "connector": "和",
+      "privacy": "隱私政策",
+      "suffix": "。",
+      "loading": "正在打開 Stripe...",
+      "error": "無法開始結賬。"
+    }
   }
 }
