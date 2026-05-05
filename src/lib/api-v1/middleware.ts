@@ -52,7 +52,11 @@ type CachedApiV1Response = {
   status: number;
 };
 
-const idempotencyMemory = new Map<string, CachedApiV1Response>();
+const IDEMPOTENCY_TTL_MS = 86_400_000; // 24h, matches the Redis `ex: 86_400` (s) on the same path
+
+type CachedEntry = { value: CachedApiV1Response; expiresAt: number };
+
+const idempotencyMemory = new Map<string, CachedEntry>();
 
 export function __resetApiV1IdempotencyForTests(): void {
   idempotencyMemory.clear();
@@ -255,7 +259,15 @@ async function readIdempotency(
     return redis.get<CachedApiV1Response>(cacheKey);
   }
 
-  return idempotencyMemory.get(cacheKey) ?? null;
+  const entry = idempotencyMemory.get(cacheKey);
+  if (!entry) {
+    return null;
+  }
+  if (entry.expiresAt < Date.now()) {
+    idempotencyMemory.delete(cacheKey);
+    return null;
+  }
+  return entry.value;
 }
 
 async function writeIdempotency(
@@ -268,7 +280,7 @@ async function writeIdempotency(
     return;
   }
 
-  idempotencyMemory.set(cacheKey, value);
+  idempotencyMemory.set(cacheKey, { value, expiresAt: Date.now() + IDEMPOTENCY_TTL_MS });
 }
 
 function decorateApiV1Response(
