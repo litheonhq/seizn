@@ -3294,5 +3294,307 @@
     "incidentsTitle": "Incident reporting",
     "incidentsBody": "Public incident history and current availability are published on the Seizn status page:",
     "statusLink": "View status"
+  },
+  "authorLanding": {
+    "nav": {
+      "workflow": "Workflow",
+      "demo": "Demo",
+      "pricing": "Prijzen",
+      "docs": "Documentatie",
+      "signIn": "Inloggen",
+      "start": "Gratis proberen",
+      "menu": "Menu openen"
+    },
+    "hero": {
+      "eyebrow": "01 / auteursgeheugen",
+      "title": "Vang elke",
+      "italic": "tegenspraak",
+      "titleEnd": " voor de release.",
+      "subtitle": "Tik één feit in. Seizn legt het naast je canon: 8 personages, 22 regels, een tijdlijn van 30 dagen. Jouw revisie is het oordeel.",
+      "trialNote": "30 dagen, geen kaart",
+      "byokNote": "BYOK halve prijs",
+      "yearly": "Jaarlijks bespaart 15%",
+      "startPlan": "Beginnen",
+      "comparePlans": "Vergelijk Pro, Studio en Enterprise"
+    },
+    "workflow": {
+      "eyebrow": "02 / workflow",
+      "title": "Drie stappen. Eén grootboek.",
+      "subtitle": "Importeren, nakijken en schrijven — dezelfde canon achter elke toets.",
+      "steps": [
+        {
+          "number": "01",
+          "title": "Importeren",
+          "subtitle": "Haal je canon binnen.",
+          "body": "Drop een manuscript, wijs naar een Google Doc of synchroniseer een wereldbestand. Seizn legt personages, plekken en regels in een gestructureerd grootboek.",
+          "chips": [
+            "DOCX",
+            "Plain text",
+            "Google Docs",
+            "Native"
+          ]
+        },
+        {
+          "number": "02",
+          "title": "Nakijken",
+          "subtitle": "Jouw oordeel, vastgelegd.",
+          "body": "Elk feit krijgt een oordeel: aanvaard, in de wachtrij of in conflict. De revisie wordt de bron van waarheid en kun je altijd opnieuw afspelen.",
+          "chips": [
+            "canon 142",
+            "pending 8",
+            "conflict 3"
+          ]
+        },
+        {
+          "number": "03",
+          "title": "Schrijven",
+          "subtitle": "Concept binnen het boek.",
+          "body": "Schrijf nieuwe scènes naast de graaf. Tegenspraken duiken op zodra ze verschijnen, met de regel erbij en één klik om te overschrijven.",
+          "chips": [
+            "Scene draft",
+            "Live check",
+            "Replay"
+          ]
+        }
+      ]
+    },
+    "inputs": {
+      "eyebrow": "03 / invoer",
+      "title": "We komen waar je werk leeft.",
+      "subtitle": "Vier manieren naar binnen. Hetzelfde grootboek, dezelfde revisie, dezelfde canon.",
+      "modes": [
+        {
+          "id": "native",
+          "name": "Eigen editor",
+          "subtitle": "Schrijf binnen Seizn.",
+          "body": "Schrijf rechtstreeks in de editor die de canon kent. Elke alinea wordt al tijdens het tikken tegen het grootboek gehouden."
+        },
+        {
+          "id": "docx",
+          "name": "DOCX-import",
+          "subtitle": "Breng een manuscript mee.",
+          "body": "Sleep een .docx-, .rtf- of .odt-bestand. Seizn haalt personages, scènes en dialoog naar het grootboek."
+        },
+        {
+          "id": "plain",
+          "name": "Platte tekst",
+          "subtitle": "Markdown-vriendelijk.",
+          "body": "Plak of upload .md en .txt. Koppen worden scènes, vermeldingen worden entiteiten. Heen en terug zonder verlies."
+        },
+        {
+          "id": "gdocs",
+          "name": "Google Docs",
+          "subtitle": "Synchroniseren, niet kopiëren.",
+          "body": "Verbind een Doc één keer. Seizn houdt het boek bij en conflicten komen als commentaarthreads binnen."
+        }
+      ]
+    },
+    "conflicts": {
+      "eyebrow": "04 / conflicten",
+      "title": "Elke tegenspraak — geciteerd en gerangschikt.",
+      "subtitle": "Ernst is signaal, geen ruis. Critical breekt de canon recht door. Minor markeert een lichte afwijking die je misschien wilt houden.",
+      "graphNote": "De graaf is geen versiering. Elk conflict wijst op de exacte knoop en rand die brak.",
+      "items": [
+        {
+          "severity": "critical",
+          "rule": "character.han_iseul.eye_color",
+          "fact": "Hoofdstuk 11: Han Iseul heeft grijze ogen.",
+          "against": "De canon in hoofdstuk 2 zegt bruin.",
+          "cited": [
+            "scene.2.1",
+            "character.han_iseul"
+          ]
+        },
+        {
+          "severity": "major",
+          "rule": "rule.r03 toegang tot het dak",
+          "fact": "Hoofdstuk 7: Park Jio gaat op dag 9 het dak op.",
+          "against": "Regel r03 sluit het dak tot dag 14.",
+          "cited": [
+            "rule.r03",
+            "scene.7.4"
+          ]
+        },
+        {
+          "severity": "minor",
+          "rule": "character.yun_hana.club",
+          "fact": "Hoofdstuk 18: Yun Hana sluit zich aan bij de astronomieclub.",
+          "against": "Canon zegt fotografieclub. Kan een clubwissel zijn.",
+          "cited": [
+            "character.yun_hana"
+          ]
+        }
+      ]
+    },
+    "simulation": {
+      "eyebrow": "05 / simulatie",
+      "title": "Speel het opnieuw voor je vastlegt.",
+      "subtitle": "Leg een scène op het boek. Seizn projecteert de impact op tokenniveau: veilige paden en risicopaden, met score.",
+      "tokenDiff": "diff op tokenniveau: scene 14.observatory.draft",
+      "replayReady": "klaar om opnieuw te spelen",
+      "candidates": [
+        {
+          "side": "safe",
+          "label": "Veilig pad",
+          "score": 92,
+          "title": "Han Iseul blijft tot zonsopgang in het observatorium.",
+          "body": "Eert r02 en r04. Geen nieuwe conflicten. De continuïteit blijft staan.",
+          "tokens": [
+            "scene.continues",
+            "rule.r02",
+            "rule.r04"
+          ]
+        },
+        {
+          "side": "risk",
+          "label": "Risicopad",
+          "score": 41,
+          "title": "Han Iseul vertrekt voor de top van de eclips.",
+          "body": "Het anker r02 valt weg. Twee latere scènes verliezen de gebeurtenis die hen draagt.",
+          "tokens": [
+            "drops.r02",
+            "scene.16.orphan",
+            "scene.21.orphan"
+          ]
+        }
+      ]
+    },
+    "trust": {
+      "eyebrow": "06 / vertrouwen",
+      "title": "Auteursniveau, vanaf dag één.",
+      "subtitle": "Beslissingen die je verdedigt. Infrastructuur die je controleert. Scheidingsregels die je bewijst.",
+      "items": [
+        {
+          "icon": "lock",
+          "title": "Werkruimte geïsoleerd",
+          "body": "Sample-IP is synthetisch. Je manuscript traint nooit een publiek model."
+        },
+        {
+          "icon": "key",
+          "title": "BYOK ondersteund",
+          "body": "Eigen Anthropic-sleutel. Halve prijs, tokens zonder plafond."
+        },
+        {
+          "icon": "archive",
+          "title": "Hervrijspeelbare canon",
+          "body": "Elke uitspraak wordt gelogd. Terugdraaien, vertakken, elke beslissing controleren."
+        },
+        {
+          "icon": "shield",
+          "title": "Alleen SFW",
+          "body": "Litheon LLC draait Seizn onder een strikte regel voor werk-veilige inhoud."
+        }
+      ]
+    },
+    "pricing": {
+      "eyebrow": "07 / prijzen",
+      "title": "Je betaalt voor het boek, niet voor de LLM.",
+      "subtitle": "BYOK halveert de prijs en haalt het tokenplafond weg. Jaarlijks bespaart 15%. 30 dagen proefperiode op elke laag.",
+      "byok": "BYOK halve prijs",
+      "yearly": "Jaarlijks bespaart 15%",
+      "start": "Beginnen",
+      "contact": "Met sales praten",
+      "mostPicked": "vaakst gekozen",
+      "blurbs": {
+        "indie": "Voor de solo-auteur die zijn eigen canon draagt.",
+        "pro": "Voor proffies en kleine studio's met meerdere IP's.",
+        "studio": "Multi-IP, multi-auteur. Auditlog, rolrechten, eigen revisiewachtrij.",
+        "enterprise": "Maatwerk dataresidentie, SSO, on-prem replay-archief, premium-SLA."
+      },
+      "features": {
+        "indie": [
+          "1 IP-project",
+          "Canonboek en replay",
+          "Onbeperkte revisies",
+          "30 dagen, geen kaart"
+        ],
+        "pro": [
+          "5 IP-projecten",
+          "Branches en diff op canon",
+          "Voorrang op conflictrevisie",
+          "Team van 3",
+          "BYOK 50%"
+        ],
+        "studio": [
+          "20M tokens / maand",
+          "Studio-revisieoperatie",
+          "Gebruiksoverzicht voor grote releases"
+        ],
+        "enterprise": [
+          "Schaal zonder limiet",
+          "BYOK vereist",
+          "Maatwerk security en inkoop"
+        ]
+      }
+    },
+    "faq": {
+      "eyebrow": "08 / faq",
+      "title": "Vijf vragen die auteurs eerst stellen.",
+      "items": [
+        {
+          "q": "Wat onderscheidt Seizn van Sudowrite of NovelCrafter?",
+          "a": "Seizn is geen schrijfassistent. Het is een canongrootboek. Wij maken jouw proza niet; wij houden je feiten letterlijk vast en duwen tegenspraken naar boven op het moment dat ze opduiken."
+        },
+        {
+          "q": "Wat krijg je met BYOK precies?",
+          "a": "Met je eigen Anthropic-sleutel betaal je 50% van de lijstprijs en zijn tokens onbeperkt."
+        },
+        {
+          "q": "Kan ik mijn canon exporteren?",
+          "a": "Altijd. Het grootboek komt eruit als gestructureerde JSON, kale Markdown of DOCX. Geen lock-in. Stop wanneer je wilt en neem je werk mee."
+        },
+        {
+          "q": "Wat gebeurt er met mijn manuscript?",
+          "a": "Je werk staat los van sample-IP en van elke publieke modeltraining. De Saebyeok-demo op deze pagina is synthetische data, geen echte klant."
+        },
+        {
+          "q": "Vraagt de proefperiode een creditcard?",
+          "a": "Nee. 30 dagen zonder kaart. Na 30 dagen kies je een laag, anders gaat het project nog 60 dagen alleen-lezen."
+        }
+      ]
+    },
+    "footer": {
+      "tagline": "Auteursgeheugen, letterlijk vastgehouden. Alleen SFW. Gebouwd voor canonautoriteit.",
+      "product": "Product",
+      "company": "Bedrijf",
+      "tools": "Auteurstools",
+      "developers": "Voor ontwikkelaars",
+      "links": {
+        "workflow": "Workflow",
+        "demo": "Demo",
+        "pricing": "Prijzen",
+        "docs": "Documentatie",
+        "about": "Over ons",
+        "trust": "Vertrouwen en privacy",
+        "privacy": "Privacy",
+        "terms": "Voorwaarden",
+        "beta": "Beta-aankondiging",
+        "status": "Status",
+        "contact": "Contact",
+        "ledger": "Canongrootboek",
+        "replay": "Replay",
+        "byok": "BYOK-gids",
+        "changelog": "Wijzigingen",
+        "engine": "Engine →",
+        "sdk": "@seizn/sdk-js",
+        "mcp": "@seizn/mcp"
+      },
+      "entity": "© 2026 Seizn by Litheon LLC · Wyoming",
+      "version": "v1.0 · de Saebyeok-demo is synthetische data"
+    },
+    "engine": {
+      "badge": "nieuw",
+      "body": "Bouw je NPC-AI voor games? Dezelfde canonmotor, blootgelegd als SDK.",
+      "cta": "engine.seizn.com"
+    },
+    "checkout": {
+      "prefix": "Ik ga akkoord met de",
+      "terms": "Servicevoorwaarden",
+      "connector": "en het",
+      "privacy": "Privacybeleid",
+      "suffix": ".",
+      "loading": "Stripe wordt geopend...",
+      "error": "Afrekenen kon niet starten."
+    }
   }
 }
