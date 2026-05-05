@@ -3336,5 +3336,307 @@
     "incidentsTitle": "Incident reporting",
     "incidentsBody": "Public incident history and current availability are published on the Seizn status page:",
     "statusLink": "View status"
+  },
+  "authorLanding": {
+    "nav": {
+      "workflow": "Flux",
+      "demo": "Démo",
+      "pricing": "Tarifs",
+      "docs": "Documentation",
+      "signIn": "Connexion",
+      "start": "Essai gratuit",
+      "menu": "Ouvrir le menu"
+    },
+    "hero": {
+      "eyebrow": "01 / mémoire d'auteur",
+      "title": "Attrapez chaque",
+      "italic": "contradiction",
+      "titleEnd": " avant la sortie.",
+      "subtitle": "Tapez un fait. Seizn le confronte à votre canon : 8 personnages, 22 règles et une chronologie de 30 jours. Votre revue tranche.",
+      "trialNote": "30 jours, sans carte",
+      "byokNote": "BYOK, 50% de moins",
+      "yearly": "Annuel, 15% en moins",
+      "startPlan": "Commencer",
+      "comparePlans": "Comparer Pro, Studio et Enterprise"
+    },
+    "workflow": {
+      "eyebrow": "02 / flux",
+      "title": "Trois étapes. Un seul registre.",
+      "subtitle": "Importez, relisez et écrivez avec le même canon derrière chaque touche.",
+      "steps": [
+        {
+          "number": "01",
+          "title": "Importer",
+          "subtitle": "Faites entrer votre canon.",
+          "body": "Lâchez un manuscrit, pointez un Google Doc ou synchronisez un fichier d'univers. Seizn rassemble personnages, lieux et règles dans un registre structuré.",
+          "chips": [
+            "DOCX",
+            "Plain text",
+            "Google Docs",
+            "Native"
+          ]
+        },
+        {
+          "number": "02",
+          "title": "Relire",
+          "subtitle": "Votre verdict, consigné.",
+          "body": "Chaque fait reçoit un verdict : accepté, en file ou en conflit. Votre revue devient la source de vérité, rejouable à volonté.",
+          "chips": [
+            "canon 142",
+            "pending 8",
+            "conflict 3"
+          ]
+        },
+        {
+          "number": "03",
+          "title": "Écrire",
+          "subtitle": "Brouillonnez dans le registre.",
+          "body": "Composez de nouvelles scènes à côté du graphe. Les contradictions remontent à l'instant, avec la règle citée et un clic pour passer outre.",
+          "chips": [
+            "Scene draft",
+            "Live check",
+            "Replay"
+          ]
+        }
+      ]
+    },
+    "inputs": {
+      "eyebrow": "03 / entrées",
+      "title": "On vient là où votre œuvre vit.",
+      "subtitle": "Quatre modes d'entrée. Même registre, même revue, même canon.",
+      "modes": [
+        {
+          "id": "native",
+          "name": "Éditeur natif",
+          "subtitle": "Écrivez dans Seizn.",
+          "body": "Écrivez directement dans l'éditeur qui connaît le canon. Chaque paragraphe est confronté au registre au fil de la frappe."
+        },
+        {
+          "id": "docx",
+          "name": "Import DOCX",
+          "subtitle": "Apportez un manuscrit.",
+          "body": "Glissez un fichier .docx, .rtf ou .odt. Seizn extrait personnages, scènes et dialogues vers le registre."
+        },
+        {
+          "id": "plain",
+          "name": "Texte brut",
+          "subtitle": "Compatible Markdown.",
+          "body": "Collez ou téléversez .md et .txt. Les titres deviennent des scènes ; les mentions, des entités. Aller-retour sans perte."
+        },
+        {
+          "id": "gdocs",
+          "name": "Google Docs",
+          "subtitle": "Synchronisez, ne copiez pas.",
+          "body": "Connectez un Doc une fois. Seizn garde le registre à jour et fait remonter les conflits sous forme de fils de commentaires."
+        }
+      ]
+    },
+    "conflicts": {
+      "eyebrow": "04 / conflits",
+      "title": "Chaque contradiction, citée et classée.",
+      "subtitle": "La gravité est un signal, pas du bruit. Critical brise le canon de plein fouet. Minor signale un écart léger que vous voudrez peut-être garder.",
+      "graphNote": "Le graphe n'est pas décoratif. Chaque conflit pointe le nœud et l'arête qui ont cassé.",
+      "items": [
+        {
+          "severity": "critical",
+          "rule": "character.han_iseul.eye_color",
+          "fact": "Chapitre 11 : Han Iseul a les yeux gris.",
+          "against": "Le canon du chapitre 2 dit marron.",
+          "cited": [
+            "scene.2.1",
+            "character.han_iseul"
+          ]
+        },
+        {
+          "severity": "major",
+          "rule": "rule.r03 accès au toit",
+          "fact": "Chapitre 7 : Park Jio monte au toit le jour 9.",
+          "against": "La règle r03 verrouille le toit jusqu'au jour 14.",
+          "cited": [
+            "rule.r03",
+            "scene.7.4"
+          ]
+        },
+        {
+          "severity": "minor",
+          "rule": "character.yun_hana.club",
+          "fact": "Chapitre 18 : Yun Hana rejoint le club d'astronomie.",
+          "against": "Le canon dit club photo. Ce peut être un changement de club.",
+          "cited": [
+            "character.yun_hana"
+          ]
+        }
+      ]
+    },
+    "simulation": {
+      "eyebrow": "05 / simulation",
+      "title": "Rejouez avant de valider.",
+      "subtitle": "Posez une scène sur le registre. Seizn projette l'impact au token près : chemins sûrs, chemins à risque, scorés.",
+      "tokenDiff": "diff au token : scene 14.observatory.draft",
+      "replayReady": "prêt à rejouer",
+      "candidates": [
+        {
+          "side": "safe",
+          "label": "Chemin sûr",
+          "score": 92,
+          "title": "Han Iseul reste à l'observatoire jusqu'à l'aube.",
+          "body": "Honore r02 et r04. Aucun nouveau conflit. La continuité tient.",
+          "tokens": [
+            "scene.continues",
+            "rule.r02",
+            "rule.r04"
+          ]
+        },
+        {
+          "side": "risk",
+          "label": "Chemin à risque",
+          "score": 41,
+          "title": "Han Iseul part avant le pic de l'éclipse.",
+          "body": "L'ancrage de r02 saute. Deux scènes ultérieures perdent leur événement de soutien.",
+          "tokens": [
+            "drops.r02",
+            "scene.16.orphan",
+            "scene.21.orphan"
+          ]
+        }
+      ]
+    },
+    "trust": {
+      "eyebrow": "06 / confiance",
+      "title": "Calibré pour les auteurs, dès le départ.",
+      "subtitle": "Des décisions que vous défendez, une infrastructure que vous auditez, des règles de séparation que vous prouvez.",
+      "items": [
+        {
+          "icon": "lock",
+          "title": "Espace isolé",
+          "body": "Le sample IP est synthétique. Votre manuscrit ne nourrit jamais un modèle public."
+        },
+        {
+          "icon": "key",
+          "title": "BYOK pris en charge",
+          "body": "Apportez votre clé Anthropic. 50% de moins sur le tarif public, jetons sans plafond."
+        },
+        {
+          "icon": "archive",
+          "title": "Canon rejouable",
+          "body": "Chaque verdict est consigné. Revenez en arrière, branchez ou auditez n'importe quelle décision."
+        },
+        {
+          "icon": "shield",
+          "title": "SFW uniquement",
+          "body": "Litheon LLC opère Seizn sous une règle stricte de contenu adapté au travail."
+        }
+      ]
+    },
+    "pricing": {
+      "eyebrow": "07 / tarifs",
+      "title": "On paie le registre, pas le LLM.",
+      "subtitle": "BYOK divise le prix par deux et fait sauter le plafond de jetons. Annuel, 15% en moins. Essai 30 jours sur chaque plan.",
+      "byok": "BYOK, 50% de moins",
+      "yearly": "Annuel, 15% en moins",
+      "start": "Commencer",
+      "contact": "Parler à un commercial",
+      "mostPicked": "le plus pris",
+      "blurbs": {
+        "indie": "Pour l'auteur seul qui tient son propre canon.",
+        "pro": "Pour les auteurs pros et petits studios qui sortent plusieurs IP.",
+        "studio": "Multi-IP, multi-auteurs. Journal d'audit, permissions par rôle, file de revue dédiée.",
+        "enterprise": "Résidence des données sur mesure, SSO, archive de relecture on-prem, SLA premium."
+      },
+      "features": {
+        "indie": [
+          "1 projet IP",
+          "Registre canon et relecture",
+          "Revues illimitées",
+          "30 jours, sans carte"
+        ],
+        "pro": [
+          "5 projets IP",
+          "Branches et diff de canon",
+          "Revue de conflit prioritaire",
+          "Équipe de 3",
+          "BYOK 50%"
+        ],
+        "studio": [
+          "20M jetons / mois",
+          "Opérations de revue studio",
+          "Examen d'usage pour gros lancements"
+        ],
+        "enterprise": [
+          "Échelle sans limite",
+          "BYOK requis",
+          "Sécurité et achats sur mesure"
+        ]
+      }
+    },
+    "faq": {
+      "eyebrow": "08 / faq",
+      "title": "Cinq questions que les auteurs posent en premier.",
+      "items": [
+        {
+          "q": "Qu'est-ce qui distingue Seizn de Sudowrite ou NovelCrafter ?",
+          "a": "Seizn n'est pas un assistant d'écriture. C'est un registre de canon. On ne génère pas votre prose ; on tient vos faits à la lettre et on remonte les contradictions dès qu'elles surgissent."
+        },
+        {
+          "q": "Que débloque vraiment BYOK ?",
+          "a": "Avec votre clé Anthropic, vous payez 50% du tarif public et les jetons sont illimités."
+        },
+        {
+          "q": "Puis-je exporter mon canon ?",
+          "a": "Toujours. Le registre sort en JSON structuré, Markdown brut ou DOCX. Pas de verrouillage. Annulez quand vous voulez et partez avec votre travail."
+        },
+        {
+          "q": "Que devient mon manuscrit ?",
+          "a": "Votre œuvre est isolée du sample IP et de tout entraînement de modèle public. La démo Saebyeok de cette page, c'est de la donnée synthétique, pas un vrai client."
+        },
+        {
+          "q": "L'essai demande-t-il une carte ?",
+          "a": "Non. 30 jours, sans carte. Passé ce délai, vous choisissez un plan, sinon le projet passe en lecture seule pour 60 jours de plus."
+        }
+      ]
+    },
+    "footer": {
+      "tagline": "Mémoire d'auteur, tenue à la lettre. SFW uniquement. Faite pour l'autorité du canon.",
+      "product": "Produit",
+      "company": "Société",
+      "tools": "Outils auteur",
+      "developers": "Pour les développeurs",
+      "links": {
+        "workflow": "Flux",
+        "demo": "Démo",
+        "pricing": "Tarifs",
+        "docs": "Documentation",
+        "about": "À propos",
+        "trust": "Confiance et confidentialité",
+        "privacy": "Confidentialité",
+        "terms": "Conditions",
+        "beta": "Avis bêta",
+        "status": "État du service",
+        "contact": "Contact",
+        "ledger": "Registre canon",
+        "replay": "Relecture",
+        "byok": "Guide BYOK",
+        "changelog": "Journal des changements",
+        "engine": "Engine →",
+        "sdk": "@seizn/sdk-js",
+        "mcp": "@seizn/mcp"
+      },
+      "entity": "© 2026 Seizn by Litheon LLC · Wyoming",
+      "version": "v1.0 · la démo Saebyeok est de la donnée synthétique"
+    },
+    "engine": {
+      "badge": "nouveau",
+      "body": "Vous bâtissez de l'IA pour PNJ de jeu ? Le même moteur de canon, exposé en SDK.",
+      "cta": "engine.seizn.com"
+    },
+    "checkout": {
+      "prefix": "J'accepte les",
+      "terms": "Conditions de service",
+      "connector": "et la",
+      "privacy": "Politique de confidentialité",
+      "suffix": ".",
+      "loading": "Ouverture de Stripe...",
+      "error": "Impossible de démarrer le paiement."
+    }
   }
 }
