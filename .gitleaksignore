@@ -1,0 +1,7 @@
+# Track 2 — false positives in curl examples / placeholder Bearer tokens.
+# These finger-prints reference the public docs and the Phase 0 task pack.
+b8295ba4ad8ac6ed9d8a691d906457e0a92e243a:src/app/[locale]/api/page.tsx:curl-auth-header:212
+b8295ba4ad8ac6ed9d8a691d906457e0a92e243a:src/app/[locale]/api/page.tsx:curl-auth-header:224
+c52a9cc43b6bfb25893c01d772c1274748102615:docs/architecture/seizn-author-track-2-phase-0-task-pack-2026-05-06.md:curl-auth-header:392
+c52a9cc43b6bfb25893c01d772c1274748102615:docs/architecture/seizn-author-track-2-phase-0-task-pack-2026-05-06.md:curl-auth-header:399
+62dc11033566f4a84e692b3833c6f16cc3b18f1b:docs/architecture/seizn-author-track-2-phase-0-task-pack-2026-05-06.md:curl-auth-header:367

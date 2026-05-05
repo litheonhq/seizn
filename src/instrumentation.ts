@@ -1,6 +1,9 @@
 import * as Sentry from '@sentry/nextjs';
+import { assertTrack2RedisConfiguredForProduction } from '@/lib/api-keys/redis-config';
 
 export async function register() {
+  assertTrack2RedisConfiguredForProduction();
+
   if (process.env.NEXT_RUNTIME === 'nodejs') {
     // Server-side Sentry initialization
     Sentry.init({

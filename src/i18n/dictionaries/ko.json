@@ -1723,6 +1723,67 @@
     },
     "fallback": {
       "body": "이 탭은 같은 셸 패턴을 사용해요."
+    },
+    "account": {
+      "apiKeys": {
+        "title": "API 키",
+        "description": "Seizn API와 MCP에서 사용할 Track 2 키를 발급하고 관리합니다.",
+        "capHint": "계정당 최대 {cap}개까지 만들 수 있습니다.",
+        "newKey": "새 API 키",
+        "create": "발급",
+        "cancel": "취소",
+        "done": "확인",
+        "name": "이름",
+        "scopes": "스코프",
+        "scopesDefault": "기본 스코프: recall, remember, graph, search.",
+        "copyKey": "키 복사",
+        "saveItNow": "지금 저장해 두세요. 이 키는 이 화면 이후 다시 표시되지 않습니다.",
+        "created": "API 키가 생성되었습니다",
+        "rotated": "API 키가 교체되었습니다",
+        "rotate": "교체",
+        "revoke": "폐기",
+        "revokeTitle": "키를 폐기할까요?",
+        "revokeBody": "\"{name}\" 키를 폐기하면 이 키로 들어오던 모든 호출이 즉시 차단됩니다. 사용 중인 앱은 새 키를 발급받아야 합니다.",
+        "rotateTitle": "키를 교체할까요?",
+        "rotateBody": "\"{name}\" 키를 교체하면 새 키가 발급되고 기존 키는 폐기됩니다. 앱을 새 키로 업데이트한 뒤 진행해 주세요.",
+        "usage": "사용량",
+        "rateLimit": "분당 한도",
+        "lastUsed": "마지막 사용",
+        "createdAt": "발급일",
+        "empty": "활성 키가 없습니다. 위의 \"새 API 키\" 버튼으로 발급하세요.",
+        "errors": {
+          "capReached": "계정당 최대 키 개수에 도달했습니다.",
+          "invalidName": "키 이름을 입력해 주세요.",
+          "internal": "처리 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.",
+          "revokeFailed": "키 폐기에 실패했습니다.",
+          "rotateFailed": "키 교체에 실패했습니다.",
+          "copyFailed": "복사하지 못했습니다."
+        },
+        "toasts": {
+          "copied": "키가 클립보드에 복사되었습니다.",
+          "revoked": "키가 폐기되었습니다."
+        },
+        "audit": {
+          "link": "감사 로그",
+          "title": "API 키 감사 로그",
+          "description": "API 키의 발급·폐기·교체·rate limit·쿼터·스코프 이벤트를 모두 확인할 수 있습니다.",
+          "filterAction": "동작",
+          "from": "시작일",
+          "to": "종료일",
+          "reset": "초기화",
+          "exportCsv": "CSV 내보내기",
+          "empty": "조건에 맞는 이벤트가 없습니다.",
+          "action": {
+            "all": "전체",
+            "created": "발급",
+            "revoked": "폐기",
+            "rotated": "교체",
+            "rate_limited": "Rate limited",
+            "quota_exceeded": "쿼터 초과",
+            "scope_denied": "스코프 거부"
+          }
+        }
+      }
     }
   },
   "pricingPage": {
