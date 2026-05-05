@@ -97,6 +97,22 @@ verify gate 가 안전망. 실패하지 않은 phase 는 묻지 않고 진행.
 
 ---
 
+## Lint baseline policy (lock 2026-05-06)
+
+`pnpm lint` (전체 codebase eslint) = main 기준 약 66 problems 의 **pre-existing baseline** (react-hooks/set-state-in-effect 59건 + react-hooks/purity 2건 + react-hooks/exhaustive-deps 2건 + react-hooks/static-components 1건 + react-hooks/incompatible-library 1건 + react-hooks/immutability 1건). 영역 = `src/app/(dashboard)/dashboard/*`, `src/components/traces/*`, `src/components/viz/*`, `src/components/relay/*` — Track 1 (Web) 영역. Track 2 cycle 이 발생시킨 게 아니며, Track 1 owner session / 별 cycle 영역.
+
+따라서 Track 2 verify gate 의 lint 검증 범위 = **Track 2 영역 한정** (`pnpm lint:track2` script):
+
+- `src/lib/api-keys`
+- `src/app/api/v1`
+- (참고: `packages/author-mcp-server` 는 eslint flat config 의 base path 밖 — 별 verify 필요 시 직접 `pnpm exec eslint packages/author-mcp-server` 시도, 또는 그 패키지 자체 lint script)
+
+Track 2 owner session 이 자기 영역 lint clean 보장 + Track 1 baseline 은 별 cycle 처리.
+
+**전체 `pnpm lint` 의 baseline error 수가 줄어들면 추가 fix bonus.** 단 Track 2 verify gate 는 `pnpm lint:track2` 통과만 필수.
+
+---
+
 ## Pre-flight checklist
 
 Phase 0 시작 전 확인:
@@ -275,7 +291,7 @@ feat(track-2): add api_keys + api_key_usage + api_key_audit_log tables (multi-te
 
 - `pnpm test src/lib/api-keys` pass (모든 단위 테스트 + timing-safe property)
 - `pnpm typecheck` pass
-- `pnpm lint` pass
+- `pnpm lint:track2` pass (Track 2 영역 한정 — src/lib/api-keys, src/app/api/v1, packages/author-mcp-server. 전체 `pnpm lint` 의 react-hooks/* errors 는 Track 1 영역 pre-existing baseline, 별 cycle. 자세한 내용 §"How to use" 참고)
 - production env 부재 시 startup fail 검증 (`UPSTASH_REDIS_REST_URL=` 없이 `NODE_ENV=production pnpm dev` → process 종료)
 
 **Commit:**
@@ -368,7 +384,7 @@ src/app/api/v1/usage/route.ts                          GET (current quota usage)
 
 - `pnpm test src/app/api/v1` pass (모든 e2e 시나리오)
 - `pnpm typecheck` pass
-- `pnpm lint` pass
+- `pnpm lint:track2` pass (Track 2 영역 한정 — src/lib/api-keys, src/app/api/v1, packages/author-mcp-server. 전체 `pnpm lint` 의 react-hooks/* errors 는 Track 1 영역 pre-existing baseline, 별 cycle. 자세한 내용 §"How to use" 참고)
 - 수동 curl 테스트:
 
   ```bash
@@ -473,7 +489,7 @@ feat(track-2): Stripe v8 product spec + v7 deprecation plan (no live Stripe call
 
 - `pnpm test` pass
 - `pnpm typecheck` pass
-- `pnpm lint` pass
+- `pnpm lint:track2` pass (Track 2 영역 한정 — src/lib/api-keys, src/app/api/v1, packages/author-mcp-server. 전체 `pnpm lint` 의 react-hooks/* errors 는 Track 1 영역 pre-existing baseline, 별 cycle. 자세한 내용 §"How to use" 참고)
 - `pnpm verify:i18n-integrity` pass (5 locale 모두 dashboard.account.apiKeys.* 정합)
 - 수동 smoke: 개발 서버에서 `/dashboard/account/api-keys` 접속 → 페이지 렌더
 
@@ -527,7 +543,7 @@ feat(track-2): add API key dashboard + audit log at /dashboard/account/api-keys 
 
 - `pnpm test` pass
 - `pnpm typecheck` pass
-- `pnpm lint` pass
+- `pnpm lint:track2` pass (Track 2 영역 한정 — src/lib/api-keys, src/app/api/v1, packages/author-mcp-server. 전체 `pnpm lint` 의 react-hooks/* errors 는 Track 1 영역 pre-existing baseline, 별 cycle. 자세한 내용 §"How to use" 참고)
 - `pnpm verify:i18n-integrity` pass (EN master + 4 locale fallback OK)
 - `pnpm docs:test` pass (curl 예제 모두 동작)
 - 수동 smoke: `/en/api` 접속 → 페이지 렌더 + 8 섹션 모두 표시
