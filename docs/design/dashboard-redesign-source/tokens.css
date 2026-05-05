@@ -1,0 +1,90 @@
+/* Seizn Author — V1 ink token system (Phase D'') */
+
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css');
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  /* Ink palette — warm, paper-toned */
+  --ink-0:    #ffffff;
+  --ink-25:   #fbf8f2;   /* paper highlight */
+  --ink-50:   #f5f0e6;   /* warm cream / ivory — sidebar bg */
+  --ink-75:   #ece5d5;   /* cream border */
+  --ink-100:  #ddd3bd;
+  --ink-200:  #bfb39a;
+  --ink-300:  #948872;
+  --ink-400:  #6f6655;
+  --ink-500:  #4a4338;   /* mid-warm gray */
+  --ink-700:  #2c2820;
+  --ink-900:  #1a1612;   /* rich ink black */
+
+  /* Accents — terracotta & dawn */
+  --terracotta-50:  #fbeee6;
+  --terracotta-100: #f4d6c2;
+  --terracotta-300: #d99877;
+  --terracotta-500: #c96442;   /* warm signal — primary CTA */
+  --terracotta-600: #a94e2f;
+  --terracotta-700: #8a3d22;
+
+  --dawn-50:  #fdf3da;
+  --dawn-200: #f5dca5;
+  --dawn-500: #d9a847;        /* sunrise highlight */
+  --dawn-700: #8a6818;
+
+  /* Semantic */
+  --bg-app:        var(--ink-25);
+  --bg-sidebar:    var(--ink-50);
+  --bg-elevated:   var(--ink-0);
+  --bg-muted:      var(--ink-50);
+  --border-subtle: rgba(74, 67, 56, 0.10);
+  --border-strong: rgba(74, 67, 56, 0.20);
+  --text-primary:  var(--ink-900);
+  --text-secondary: var(--ink-500);
+  --text-tertiary:  var(--ink-400);
+  --text-muted:    var(--ink-300);
+  --shadow-card:   0 1px 2px rgba(26,22,18,.04), 0 4px 12px rgba(26,22,18,.04);
+  --shadow-pop:    0 4px 12px rgba(26,22,18,.08), 0 16px 32px rgba(26,22,18,.08);
+
+  /* Severity (conflict cards) */
+  --sev-p1-bg:     #fbeee6;
+  --sev-p1-border: var(--terracotta-500);
+  --sev-p1-text:   var(--terracotta-700);
+  --sev-p2-bg:     #fdf3da;
+  --sev-p2-border: var(--dawn-500);
+  --sev-p2-text:   var(--dawn-700);
+  --sev-p3-bg:     var(--ink-50);
+  --sev-p3-border: var(--ink-200);
+  --sev-p3-text:   var(--ink-500);
+
+  /* Type */
+  --font-sans:  'Pretendard Variable', Pretendard, -apple-system, system-ui, sans-serif;
+  --font-serif: 'Newsreader', 'Iowan Old Style', 'Apple Garamond', Georgia, serif;
+  --font-mono:  'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+
+  /* Radii */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+}
+
+/* Reset-ish for components inside artboards */
+.seizn * { box-sizing: border-box; }
+.seizn {
+  font-family: var(--font-sans);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: 'ss01', 'ss02', 'cv01', 'cv11';
+  letter-spacing: -0.005em;
+}
+.seizn .serif { font-family: var(--font-serif); letter-spacing: -0.012em; }
+.seizn .mono  { font-family: var(--font-mono); letter-spacing: 0; }
+
+.seizn ::selection { background: var(--terracotta-100); color: var(--ink-900); }
+
+/* Subtle paper-tone gradient for app background */
+.seizn .paper-bg {
+  background:
+    radial-gradient(1200px 600px at 90% -10%, rgba(217, 168, 71, 0.06), transparent 60%),
+    radial-gradient(800px 500px at -10% 110%, rgba(201, 100, 66, 0.04), transparent 60%),
+    var(--bg-app);
+}
