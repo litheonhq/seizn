@@ -13,21 +13,26 @@
 
 ## Open decisions (build 시작 전 사용자 승인 필수 — 28개 보강 후 lock)
 
-이 task pack 의 build 가 막히지 않으려면 다음 3가지 결정 lock 이 선행되어야 함. 결정 보류 시 codex/별 세션 dispatch 시점에 stop.
+**LOCKED 2026-05-06 (사용자 confirm).** 권장 그대로 진행.
+
+| # | 결정 | Lock |
+|---|---|---|
+| 1 | BYOK key 저장 위치 | **(a) Per-request header `X-LLM-Key`** — Phase 0~7 적용. server 저장 X. Vault (옵션 b) 는 Phase 8+ 별 cycle |
+| 2 | Multi-tenancy (Studio 5 seats) | **(a) v1 = 1 user 1 key** — Studio = 5 keys per user. 진짜 multi-seat (`org_id` + `org_members`) 는 B2B 출판사 contract 시 별 cycle |
+| 3 | v7 → v8 Stripe cutover | **PR merge 즉시 v7 SKU 제거** (신규 차단). 기존 v7 결제자 = **90일 grandfather**. **91일째 v8 자동 마이그레이션 안내 메일 발송**. v7 결제자 0 명일 시 grandfather skip (Stripe dashboard 사용자 영역 verify) |
+
+원본 옵션 분석 (참고용 — lock 후에도 future cycle 에서 정책 변경 시 reference):
 
 1. **BYOK Anthropic/OpenAI key 저장 위치** (Phase 1·2 영향):
-   - **(a) Per-request header** — 매 호출마다 client 가 `X-LLM-Key` header 로 전달. 우리 server 는 저장 X. 단순·보안 강함·UX 마찰 (매 client config 에 키)
-   - **(b) Server-side encrypted vault** — user account 에 encrypted 저장 (AES-256-GCM + per-org KEK + Supabase Vault 또는 자체). UX 좋음·보안 책임 우리·복잡
-   - **권장 (a) Phase 0~7 = per-request header**, vault 는 Phase 8+ 별 cycle. Reason: launch 빠름·BYOK 페르소나 (Cline / Cursor 사용자) 가 이미 환경변수 패턴 익숙
+   - (a) Per-request header — 매 호출마다 client 가 `X-LLM-Key` header 로 전달. 우리 server 는 저장 X. 단순·보안 강함·UX 마찰
+   - (b) Server-side encrypted vault — user account 에 encrypted 저장 (AES-256-GCM + per-org KEK). UX 좋음·보안 책임 우리·복잡
 2. **Multi-tenancy (Studio tier 5 seats)** (Phase 0 schema 영향):
-   - **(a) v1 = 1 user 1 key** — Studio 5 seats 는 Phase 8+ 별 cycle 로 deferred. user 1 명이 5 key 발급으로 우회
-   - **(b) v1 = `org_id` + `org_members` 테이블 처음부터** — 진짜 5 seats 지원, schema 복잡·DB migration 큼
-   - **권장 (a) — v1 deferred**, Studio tier 는 'effective 1 user, 5 keys per user' 로 launch. 진짜 multi-seat 는 B2B 출판사 contract 시 별 cycle
+   - (a) v1 = 1 user 1 key — Studio 5 seats 는 Phase 8+ 별 cycle 로 deferred
+   - (b) v1 = `org_id` + `org_members` 테이블 처음부터 — schema 복잡·DB migration 큼
 3. **v7 → v8 Stripe cutover 시점**:
-   - 실제 v7 결제자 수 = ? (Stripe dashboard 확인 필요. 0 명이면 grandfather 정책 X)
-   - **권장:** PR merge 즉시 pricing UI 에서 v7 SKU 제거 (신규 차단), 기존 결제자 = 90일 grandfather, 91일째 v8 마이그레이션 안내 메일 발송
+   - 실제 v7 결제자 수 검증 — Stripe dashboard 확인 (사용자 영역). 0 명일 시 grandfather skip.
 
-이 3건 결정 받지 않고 dispatch 시 → 각 phase 의 첫 step 에서 codex 가 stop and ask.
+dispatch 시 codex 는 이 3건 lock 그대로 진행. 추가 stop and ask 불필요.
 
 ---
 
