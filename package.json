@@ -11,6 +11,8 @@
     "check:bundle-budget": "node scripts/check-bundle-budget.mjs",
     "start": "next start",
     "lint": "eslint . --ignore-pattern test-results --ignore-pattern playwright-report",
+    "lint:track2": "eslint src/lib/api-keys src/app/api/v1 --ignore-pattern test-results --ignore-pattern playwright-report",
+    "docs:test": "vitest run src/__tests__/docs",
     "typecheck": "next typegen && tsc --noEmit -p tsconfig.typecheck.json",
     "predeploy": "bash scripts/pre-deploy.sh",
     "deploy": "vercel --prod",
@@ -26,6 +28,11 @@
     "verify:e2e-encryption-db": "node scripts/db-verify-e2e-encryption.mjs",
     "verify:runtime-primitives": "node scripts/db-verify-runtime-primitives.mjs",
     "verify:ai-os-memory": "node scripts/verify-ai-os-memory.mjs",
+    "verify:api-auth-surface": "node scripts/verify-api-auth-surface.mjs",
+    "verify:security-headers": "node scripts/verify-security-headers.mjs",
+    "verify:telemetry-privacy": "node scripts/verify-telemetry-privacy.mjs",
+    "verify:seo-surface": "node -e \"const fs=require('fs');if(!fs.existsSync('src/app/sitemap.ts')||!fs.existsSync('src/app/robots.ts')){console.error('SEO surface stub: sitemap.ts or robots.ts missing');process.exit(1)}console.log('SEO surface stub: sitemap.ts and robots.ts present')\"",
+    "test:e2e:auth": "playwright test e2e/auth-v1-token-smoke.spec.ts",
     "vercel:ignore-build": "node scripts/vercel-ignore-build.mjs",
     "refresh:competitive-research": "node scripts/market/update-competitive-research.mjs",
     "security:red-team": "npx ts-node --project tsconfig.node.json scripts/red-team-ci.ts"
@@ -85,7 +92,8 @@
     "tailwind-merge": "^3.4.0",
     "uuid": "^14.0.0",
     "web-vitals": "^4.2.4",
-    "yaml": "^2.8.3"
+    "yaml": "^2.8.3",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.11.3",

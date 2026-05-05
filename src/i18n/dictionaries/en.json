@@ -1782,6 +1782,67 @@
     },
     "fallback": {
       "body": "This tab uses the same shell pattern."
+    },
+    "account": {
+      "apiKeys": {
+        "title": "API keys",
+        "description": "Create and manage Seizn API + MCP keys for Track 2.",
+        "capHint": "You can create up to {cap} API keys per account.",
+        "newKey": "New API key",
+        "create": "Create",
+        "cancel": "Cancel",
+        "done": "Done",
+        "name": "Name",
+        "scopes": "Scopes",
+        "scopesDefault": "Default scopes: recall, remember, graph, search.",
+        "copyKey": "Copy key",
+        "saveItNow": "Save it now — you won't see this key again.",
+        "created": "API key created",
+        "rotated": "API key rotated",
+        "rotate": "Rotate",
+        "revoke": "Revoke",
+        "revokeTitle": "Revoke API key?",
+        "revokeBody": "Revoking \"{name}\" stops all calls using this key. Existing apps will need a new key.",
+        "rotateTitle": "Rotate API key?",
+        "rotateBody": "Rotating \"{name}\" generates a new key and revokes the current one. Update your apps before the old key stops working.",
+        "usage": "Usage",
+        "rateLimit": "Rate limit",
+        "lastUsed": "Last used",
+        "createdAt": "Created",
+        "empty": "No active keys yet. Click \"New API key\" to issue one.",
+        "errors": {
+          "capReached": "You've reached the API key cap for this account.",
+          "invalidName": "Please enter a name for the key.",
+          "internal": "We couldn't complete this action. Try again.",
+          "revokeFailed": "Could not revoke the key.",
+          "rotateFailed": "Could not rotate the key.",
+          "copyFailed": "Could not copy the key."
+        },
+        "toasts": {
+          "copied": "Key copied to clipboard.",
+          "revoked": "Key revoked."
+        },
+        "audit": {
+          "link": "Audit log",
+          "title": "API key audit log",
+          "description": "Every create, revoke, rotate, rate limit, quota, and scope event for your API keys.",
+          "filterAction": "Action",
+          "from": "From",
+          "to": "To",
+          "reset": "Reset",
+          "exportCsv": "Export CSV",
+          "empty": "No matching audit events.",
+          "action": {
+            "all": "All",
+            "created": "Created",
+            "revoked": "Revoked",
+            "rotated": "Rotated",
+            "rate_limited": "Rate limited",
+            "quota_exceeded": "Quota exceeded",
+            "scope_denied": "Scope denied"
+          }
+        }
+      }
     }
   },
   "pricingPage": {

@@ -6,6 +6,11 @@ import {
   getPlanFromStripePriceId,
   mapStripeSubscriptionStatus,
 } from "@/lib/stripe-config";
+import {
+  applyV8Track2TierToApiKeys,
+  getV8Track2TierFromStripePriceId,
+  type V8Track2Tier,
+} from "@/lib/billing/v8-products";
 import { ensureMeteredPriceAttached } from "@/lib/stripe-metered";
 import { sendEmail, paymentFailedEmail } from "@/lib/email";
 
@@ -246,6 +251,30 @@ async function logBillingEvent(
   }
 }
 
+type V8AdjustmentResult =
+  | { matched: true; tier: V8Track2Tier; updated: boolean; error?: string }
+  | { matched: false };
+
+async function maybeApplyV8Track2(
+  supabase: ReturnType<typeof createServerClient>,
+  userId: string,
+  priceId: string,
+): Promise<V8AdjustmentResult> {
+  const tier = getV8Track2TierFromStripePriceId(priceId);
+  if (!tier) {
+    return { matched: false };
+  }
+  const result = await applyV8Track2TierToApiKeys(
+    userId,
+    tier,
+    supabase as unknown as Parameters<typeof applyV8Track2TierToApiKeys>[2],
+  );
+  if (!result.ok) {
+    return { matched: true, tier, updated: false, error: result.error };
+  }
+  return { matched: true, tier, updated: true };
+}
+
 async function attachMeteredOverageItems(subscriptionId: string, plan: string): Promise<void> {
   try {
     const result = await ensureMeteredPriceAttached(subscriptionId, plan);
@@ -382,12 +411,6 @@ export async function POST(request: NextRequest) {
           break;
         }
 
-        const plan = getPlanFromStripePriceId(priceId);
-        if (!plan) {
-          console.error(`Unknown price ID: ${priceId}`);
-          break;
-        }
-
         // Find or create user association
         let user = await findUser(supabase, customerId, customUserId);
 
@@ -395,36 +418,66 @@ export async function POST(request: NextRequest) {
           user = { id: customUserId };
         }
 
-        if (user) {
-          const { error } = await supabase
-            .from("profiles")
-            .update({
-              ...buildSubscriptionProfileUpdates(eventData),
-              stripe_customer_id: customerId,
-            })
-            .eq("id", user.id);
+        if (!user) {
+          console.error("Could not find user for subscription", {
+            customerId,
+            customUserId,
+          });
+          break;
+        }
 
-          if (error) {
-            console.error("Failed to update user plan:", error);
+        const v8 = await maybeApplyV8Track2(supabase, user.id, priceId);
+        if (v8.matched) {
+          if (!v8.updated) {
+            console.error("Failed to apply v8 Track 2 tier on api_keys:", v8.error);
             await logBillingEvent(supabase, user.id, "subscription_created", {
               subscription_id: subscriptionId,
-              plan,
+              channel: "track2",
+              tier: v8.tier,
               price_id: priceId,
-            }, "failed", error.message);
+            }, "failed", v8.error);
           } else {
-            console.log(`Subscription created for user ${user.id}: ${plan} plan`);
-            await attachMeteredOverageItems(subscriptionId, plan);
+            console.log(`v8 Track 2 subscription created for user ${user.id}: ${v8.tier}`);
             await logBillingEvent(supabase, user.id, "subscription_created", {
               subscription_id: subscriptionId,
-              plan,
+              channel: "track2",
+              tier: v8.tier,
               price_id: priceId,
               current_period_end: eventData.current_period_end,
             });
           }
+          break;
+        }
+
+        const plan = getPlanFromStripePriceId(priceId);
+        if (!plan) {
+          console.error(`Unknown price ID: ${priceId}`);
+          break;
+        }
+
+        const { error } = await supabase
+          .from("profiles")
+          .update({
+            ...buildSubscriptionProfileUpdates(eventData),
+            stripe_customer_id: customerId,
+          })
+          .eq("id", user.id);
+
+        if (error) {
+          console.error("Failed to update user plan:", error);
+          await logBillingEvent(supabase, user.id, "subscription_created", {
+            subscription_id: subscriptionId,
+            plan,
+            price_id: priceId,
+          }, "failed", error.message);
         } else {
-          console.error("Could not find user for subscription", {
-            customerId,
-            customUserId,
+          console.log(`Subscription created for user ${user.id}: ${plan} plan`);
+          await attachMeteredOverageItems(subscriptionId, plan);
+          await logBillingEvent(supabase, user.id, "subscription_created", {
+            subscription_id: subscriptionId,
+            plan,
+            price_id: priceId,
+            current_period_end: eventData.current_period_end,
           });
         }
         break;
@@ -449,6 +502,32 @@ export async function POST(request: NextRequest) {
         if (!user) {
           console.error(`User not found for customer: ${customerId}`);
           break;
+        }
+
+        if (priceId) {
+          const v8 = await maybeApplyV8Track2(supabase, user.id, priceId);
+          if (v8.matched) {
+            if (!v8.updated) {
+              console.error("Failed to apply v8 Track 2 tier on api_keys:", v8.error);
+              await logBillingEvent(supabase, user.id, "subscription_updated", {
+                subscription_id: subscriptionId,
+                channel: "track2",
+                tier: v8.tier,
+                price_id: priceId,
+              }, "failed", v8.error);
+            } else {
+              console.log(`v8 Track 2 subscription updated for user ${user.id}: ${v8.tier}`);
+              await logBillingEvent(supabase, user.id, "subscription_updated", {
+                subscription_id: subscriptionId,
+                channel: "track2",
+                tier: v8.tier,
+                price_id: priceId,
+                cancel_at_period_end: eventData.cancel_at_period_end,
+                status: eventData.status,
+              });
+            }
+            break;
+          }
         }
 
         const updates = buildSubscriptionProfileUpdates(eventData);
@@ -482,6 +561,7 @@ export async function POST(request: NextRequest) {
       case "customer.subscription.deleted": {
         const customerId = eventData.customer as string;
         const subscriptionId = eventData.id;
+        const priceId = extractPriceId(eventData.items);
 
         if (!customerId) {
           console.error("Missing customer ID in subscription deletion");
@@ -494,8 +574,26 @@ export async function POST(request: NextRequest) {
           eventData.metadata?.user_id
         );
 
+        if (user && priceId) {
+          const v8Tier = getV8Track2TierFromStripePriceId(priceId);
+          if (v8Tier) {
+            const downgrade = await applyV8Track2TierToApiKeys(
+              user.id,
+              "free",
+              supabase as unknown as Parameters<typeof applyV8Track2TierToApiKeys>[2],
+            );
+            await logBillingEvent(supabase, user.id, "subscription_deleted", {
+              subscription_id: subscriptionId,
+              channel: "track2",
+              previous_tier: v8Tier,
+              downgraded_to: "free",
+              ended_at: eventData.ended_at,
+            }, downgrade.ok ? "success" : "failed", downgrade.ok ? undefined : downgrade.error);
+            break;
+          }
+        }
+
         if (user) {
-          // Downgrade to free plan immediately on deletion
           const { error } = await supabase
             .from("profiles")
             .update({

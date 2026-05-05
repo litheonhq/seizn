@@ -1,0 +1,59 @@
+{
+  "name": "@seizn/author-mcp-server",
+  "version": "0.1.0",
+  "description": "MCP server exposing Seizn Author canon recall, conflict check, and timeline tools",
+  "license": "MIT",
+  "author": "Litheon LLC <dev@litheon.io>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/litheonhq/seizn.git",
+    "directory": "packages/author-mcp-server"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "seizn",
+    "author",
+    "canon",
+    "recall",
+    "fiction",
+    "writing"
+  ],
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "seizn-author-mcp": "./dist/cli.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "start": "node dist/cli.js",
+    "test": "vitest run --passWithNoTests",
+    "typecheck": "tsc --noEmit",
+    "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\""
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.5.0",
+    "vitest": "^3.2.4"
+  },
+  "sideEffects": false
+}
