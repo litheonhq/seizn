@@ -32,6 +32,7 @@
     "verify:security-headers": "node scripts/verify-security-headers.mjs",
     "verify:telemetry-privacy": "node scripts/verify-telemetry-privacy.mjs",
     "verify:seo-surface": "node -e \"const fs=require('fs');if(!fs.existsSync('src/app/sitemap.ts')||!fs.existsSync('src/app/robots.ts')){console.error('SEO surface stub: sitemap.ts or robots.ts missing');process.exit(1)}console.log('SEO surface stub: sitemap.ts and robots.ts present')\"",
+    "test:e2e:auth": "playwright test e2e/auth-v1-token-smoke.spec.ts",
     "vercel:ignore-build": "node scripts/vercel-ignore-build.mjs",
     "refresh:competitive-research": "node scripts/market/update-competitive-research.mjs",
     "security:red-team": "npx ts-node --project tsconfig.node.json scripts/red-team-ci.ts"
