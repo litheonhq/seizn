@@ -346,4 +346,547 @@ Claude Code will translate the HTML/CSS to React server / client components in t
 
 ---
 
-*End of brief. Paste sections 1–8 into the Claude Design canvas as initial context, then onboard the codebase pointing at `src/components/dashboard/redesign/` and `src/i18n/dictionaries/en.json`. Iterate per surface in §3a.*
+*Continued in §13–§19 — paste-ready bundle when "Link your codebase" isn't available.*
+
+---
+
+## 13. tokens.css — paste this verbatim as the canvas's first asset
+
+When Claude Design has no codebase link, this is the *only* token file the prototypes should reference. Drop it into the canvas and require every surface to consume only these CSS variables.
+
+```css
+/* Seizn Author — V1 ink token system (Phase D''). Source of truth: docs/design/dashboard-redesign-source/tokens.css */
+
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css');
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  /* Ink palette — warm, paper-toned */
+  --ink-0:    #ffffff;
+  --ink-25:   #fbf8f2;
+  --ink-50:   #f5f0e6;
+  --ink-75:   #ece5d5;
+  --ink-100:  #ddd3bd;
+  --ink-200:  #bfb39a;
+  --ink-300:  #948872;
+  --ink-400:  #6f6655;
+  --ink-500:  #4a4338;
+  --ink-700:  #2c2820;
+  --ink-900:  #1a1612;
+
+  /* Accents */
+  --terracotta-50:  #fbeee6;
+  --terracotta-100: #f4d6c2;
+  --terracotta-300: #d99877;
+  --terracotta-500: #c96442;
+  --terracotta-600: #a94e2f;
+  --terracotta-700: #8a3d22;
+  --dawn-50:  #fdf3da;
+  --dawn-200: #f5dca5;
+  --dawn-500: #d9a847;
+  --dawn-700: #8a6818;
+
+  /* Semantic */
+  --bg-app:        var(--ink-25);
+  --bg-sidebar:    var(--ink-50);
+  --bg-elevated:   var(--ink-0);
+  --bg-muted:      var(--ink-50);
+  --border-subtle: rgba(74, 67, 56, 0.10);
+  --border-strong: rgba(74, 67, 56, 0.20);
+  --text-primary:  var(--ink-900);
+  --text-secondary:var(--ink-500);
+  --text-tertiary: var(--ink-400);
+  --text-muted:    var(--ink-300);
+  --shadow-card:   0 1px 2px rgba(26,22,18,.04), 0 4px 12px rgba(26,22,18,.04);
+  --shadow-pop:    0 4px 12px rgba(26,22,18,.08), 0 16px 32px rgba(26,22,18,.08);
+
+  /* Severity (P1 / P2 / P3) */
+  --sev-p1-bg:     #fbeee6;
+  --sev-p1-border: var(--terracotta-500);
+  --sev-p1-text:   var(--terracotta-700);
+  --sev-p2-bg:     #fdf3da;
+  --sev-p2-border: var(--dawn-500);
+  --sev-p2-text:   var(--dawn-700);
+  --sev-p3-bg:     var(--ink-50);
+  --sev-p3-border: var(--ink-200);
+  --sev-p3-text:   var(--ink-500);
+
+  /* Type */
+  --font-sans:  'Pretendard Variable', Pretendard, -apple-system, system-ui, sans-serif;
+  --font-serif: 'Newsreader', 'Iowan Old Style', 'Apple Garamond', Georgia, serif;
+  --font-mono:  'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+
+  /* Radii */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+}
+
+.seizn * { box-sizing: border-box; }
+.seizn {
+  font-family: var(--font-sans);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: 'ss01', 'ss02', 'cv01', 'cv11';
+  letter-spacing: -0.005em;
+}
+.seizn .serif { font-family: var(--font-serif); letter-spacing: -0.012em; }
+.seizn .mono  { font-family: var(--font-mono); letter-spacing: 0; }
+.seizn ::selection { background: var(--terracotta-100); color: var(--ink-900); }
+
+.seizn .paper-bg {
+  background:
+    radial-gradient(1200px 600px at 90% -10%, rgba(217, 168, 71, 0.06), transparent 60%),
+    radial-gradient(800px 500px at -10% 110%, rgba(201, 100, 66, 0.04), transparent 60%),
+    var(--bg-app);
+}
+```
+
+---
+
+## 14. Starter HTML — paste this as the canvas's "App shell" first artboard
+
+Single-file paste-ready scaffold. Subsequent surfaces in §3a should *replace the `<main>` content* and keep the sidebar / topbar identical.
+
+```html
+<!DOCTYPE html>
+<html lang="ko" dir="ltr">
+<head>
+<meta charset="utf-8" />
+<title>Seizn Dashboard</title>
+<style>
+/* paste the full tokens.css from §13 here */
+html, body { margin: 0; padding: 0; }
+body { font-family: var(--font-sans); background: var(--bg-app); color: var(--text-primary); min-height: 100vh; }
+.app { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
+.sidebar { background: var(--bg-sidebar); border-right: 1px solid var(--border-subtle); padding: 24px 16px; display: flex; flex-direction: column; gap: 24px; }
+.sidebar-brand { font-family: var(--font-serif); font-size: 22px; letter-spacing: -0.012em; color: var(--ink-900); padding-left: 8px; }
+.sidebar-section-label { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-tertiary); padding-left: 8px; margin-bottom: 6px; }
+.sidebar-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: var(--radius-sm); color: var(--text-secondary); font-size: 13.5px; cursor: pointer; }
+.sidebar-item:hover { background: rgba(74, 67, 56, 0.04); color: var(--text-primary); }
+.sidebar-item.active { background: rgba(201, 100, 66, 0.08); color: var(--terracotta-700); border-left: 2px solid var(--terracotta-500); padding-left: 10px; font-weight: 500; }
+.topbar { display: flex; align-items: center; justify-content: space-between; padding: 16px 32px; border-bottom: 1px solid var(--border-subtle); background: var(--bg-elevated); }
+.topbar-search { width: 360px; padding: 7px 12px; border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); background: var(--bg-app); font-size: 13px; color: var(--text-secondary); }
+.topbar-actions { display: flex; gap: 12px; align-items: center; }
+.btn { font-family: var(--font-sans); font-size: 13.5px; font-weight: 500; padding: 8px 14px; border-radius: var(--radius-sm); border: 0; cursor: pointer; line-height: 1; }
+.btn.primary { background: var(--terracotta-500); color: var(--ink-0); }
+.btn.primary:hover { background: var(--terracotta-600); }
+.btn.ghost { background: transparent; color: var(--terracotta-700); padding: 8px 12px; }
+.btn.ghost:hover { background: var(--terracotta-50); }
+.btn.danger { background: transparent; color: var(--terracotta-700); border: 1px solid rgba(201, 100, 66, 0.4); }
+main { padding: 32px 48px; max-width: 1080px; }
+h1.serif { font-family: var(--font-serif); font-size: 36px; font-weight: 500; line-height: 1.2; letter-spacing: -0.012em; margin: 0 0 8px; color: var(--ink-900); }
+h2.serif { font-family: var(--font-serif); font-size: 24px; font-weight: 500; line-height: 1.3; letter-spacing: -0.012em; margin: 32px 0 12px; color: var(--ink-900); }
+.lead { font-size: 14.5px; color: var(--text-secondary); margin: 0 0 24px; line-height: 1.55; max-width: 64ch; }
+.card { background: var(--bg-elevated); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 20px 24px; box-shadow: var(--shadow-card); }
+.card.dawn { background: var(--dawn-50); border-color: rgba(217, 168, 71, 0.30); }
+.card.legal { background: var(--ink-25); border-color: var(--ink-200); }
+.row { display: flex; gap: 16px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border-subtle); }
+.row:last-child { border-bottom: 0; }
+.dim { color: var(--text-tertiary); font-size: 12.5px; }
+.mono { font-family: var(--font-mono); font-size: 12.5px; color: var(--text-secondary); }
+.pill { display: inline-flex; padding: 2px 8px; font-size: 11.5px; font-weight: 500; border-radius: 999px; background: var(--ink-50); color: var(--text-secondary); border: 1px solid var(--border-subtle); }
+.pill.terracotta { background: var(--terracotta-50); color: var(--terracotta-700); border-color: rgba(201, 100, 66, 0.25); }
+.pill.dawn { background: var(--dawn-50); color: var(--dawn-700); border-color: rgba(217, 168, 71, 0.30); }
+</style>
+</head>
+<body class="seizn paper-bg">
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-brand">Seizn</div>
+
+    <div>
+      <div class="sidebar-section-label">Workspace</div>
+      <div class="sidebar-item active">Dashboard</div>
+      <div class="sidebar-item">Writing</div>
+      <div class="sidebar-item">Memories</div>
+      <div class="sidebar-item">Import</div>
+      <div class="sidebar-item">Replay</div>
+    </div>
+
+    <div>
+      <div class="sidebar-section-label">Account</div>
+      <div class="sidebar-item">API keys</div>
+      <div class="sidebar-item">Privacy</div>
+      <div class="sidebar-item">Settings</div>
+    </div>
+
+    <div>
+      <div class="sidebar-section-label">Billing</div>
+      <div class="sidebar-item">Plans</div>
+      <div class="sidebar-item">Usage</div>
+      <div class="sidebar-item">Invoices</div>
+    </div>
+  </aside>
+
+  <div>
+    <header class="topbar">
+      <input class="topbar-search" placeholder="Search canon, conflicts, traces…  ⌘K" />
+      <div class="topbar-actions">
+        <span class="dim">Saebyeok Academy · ko</span>
+        <button class="btn ghost">Help</button>
+        <div style="width:28px; height:28px; border-radius:50%; background:var(--terracotta-500); color:#fff; display:flex; align-items:center; justify-content:center; font-size:12px;">SY</div>
+      </div>
+    </header>
+    <main>
+      <!-- Surface content goes here. Each artboard in §3a replaces this <main> only. -->
+    </main>
+  </div>
+</div>
+</body>
+</html>
+```
+
+---
+
+## 15. Sidebar nav tree (locked)
+
+```
+Workspace
+├── Dashboard            /dashboard
+├── Writing              /dashboard/author
+├── Memories             /dashboard/memories
+│   ├── Beliefs          /dashboard/memories/beliefs
+│   ├── Branches         /dashboard/memories/branches
+│   ├── Candidates       /dashboard/memories/candidates
+│   ├── Decay            /dashboard/memories/decay
+│   ├── Mindmap          /dashboard/memories/mindmap
+│   └── Provenance       /dashboard/memories/provenance
+├── Import               /dashboard/import
+└── Replay               /dashboard/replay
+
+Account
+├── API keys             /dashboard/account/api-keys
+├── Audit log            /dashboard/account/api-keys/audit  (deep link from API keys page only)
+├── Privacy              /dashboard/account/privacy
+└── Settings             /dashboard/settings
+
+Billing
+├── Plans                /dashboard/billing
+├── Usage                /dashboard/usage
+└── Invoices             /dashboard/billing#invoices  (anchor on Plans page; not a separate route)
+```
+
+The 23 `/dashboard/legacy/*` routes do **not** appear in the nav.
+
+---
+
+## 16. Wireframe ASCII — five anchor surfaces
+
+### `/dashboard` (root landing)
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│  [ topbar ]                                                         │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│  Saebyeok Academy                              [ Open writing → ]   │   ← Newsreader 36, terracotta CTA
+│  12 chapters drafted · last edit 3h ago                             │   ← Pretendard 14, secondary
+│                                                                     │
+│  ┌──────────────┐   ┌──────────────┐   ┌──────────────┐             │
+│  │ API key      │   │ Memory v3    │   │ This month   │             │
+│  │ healthy      │   │ synced       │   │ 7,231/10,000 │             │   ← 3 status cards, ink-0 bg
+│  │ Manage →     │   │ Resync →     │   │ Upgrade →    │             │
+│  └──────────────┘   └──────────────┘   └──────────────┘             │
+│                                                                     │
+│  ── Recent activity ─────────────────────────────────────────────   │   ← Newsreader 24
+│  Chapter 12 imported · Saebyeok                          3h ago     │
+│  Conflict resolved: protagonist occupation               yesterday  │
+│  Key sk_seizn_4f2a… rotated                              2 days ago │
+│  …                                                                  │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### `/dashboard/billing`
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│  Billing                                  [ Manage in Stripe → ]    │   ← Newsreader 36
+│  Current plan: Pro · renews 2026-06-12                              │
+│                                                                     │
+│  ┌────────┐ ┌────────┐ ┌──────────┐ ┌──────────────────┐            │
+│  │ Free   │ │ Indie  │ │ ◀ Pro   ▶│ │ Studio           │            │   ← 4 plan cards;
+│  │ $0     │ │ $9/mo  │ │ $19/mo   │ │ $99/mo           │            │     Pro card has
+│  │        │ │        │ │ Current  │ │                  │            │     terracotta-500
+│  │ Choose │ │ Upgrade│ │ Manage   │ │ Upgrade          │            │     left rule
+│  └────────┘ └────────┘ └──────────┘ └──────────────────┘            │
+│                                                                     │
+│  ┌──────────────────────────────────────────────────────────────┐   │
+│  │ ⓘ  Studio Managed adds metered Opus calls at $0.15 / call    │   │   ← dawn-50 callout
+│  │     and removes the BYOK requirement on check + timeline.    │   │
+│  │     [ Switch to Studio Managed → ]                           │   │
+│  └──────────────────────────────────────────────────────────────┘   │
+│                                                                     │
+│  ── Invoices ─────────────────────────────────────────────────────   │
+│  2026-05-12   Pro · monthly    $19.00     paid    [PDF]             │
+│  2026-04-12   Pro · monthly    $19.00     paid    [PDF]             │
+│  …                                                                  │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### `/dashboard/usage`
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                                                                     │
+│              7,231 / 10,000                                         │   ← Newsreader 64
+│              calls this month                                       │   ← Pretendard small caps
+│                                                                     │
+│  ▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▱▱▱▱▱▱▱▱▱▱▱▱▱▱▱  72%                            │   ← terracotta-500 fill on ink-100 track
+│                                                                     │
+│  ── Per tool ─────────────────────────────────────────────────────   │
+│  recall          4,210 calls    1 unit each    last 2 min ago       │
+│  check             612 calls    5 units each   last 1h ago          │
+│  timeline           48 calls    5 units each   last 3d ago          │
+│  graph              91 calls    1 unit each    last 5h ago          │
+│  search            980 calls    2 units each   last 12 min ago      │
+│  approve         1,290 calls    1 unit each    last 8h ago          │
+└─────────────────────────────────────────────────────────────────────┘
+                                                       [ Upgrade → ]   ← sticky bottom-right when used >= 80%
+```
+
+### `/dashboard/replay/[traceId]`
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│  Trace req_abc123de4567f8                                           │   ← Newsreader 28 + JetBrains Mono id
+│  recall · 312 ms · 200 OK                                           │   ← Pretendard 13, secondary
+│                                                                     │
+│  ●  validate_bearer            sk_seizn_a1b2…    8 ms       [json]  │
+│  │                                                                  │
+│  ●  check_scope                recall            1 ms       [json]  │
+│  │                                                                  │
+│  ●  rate_limit                 30/min            2 ms       [json]  │
+│  │                                                                  │
+│  ●  enforce_quota              7,232 / 10,000    14 ms      [json]  │
+│  │                                                                  │
+│  ●  service.recall             saebyeok-main     287 ms     [json]  │
+│                                                                     │
+│  Click any [json] to inspect payload (modal, JetBrains Mono).       │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### `/dashboard/import`
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│  Bring your manuscript in                                           │   ← Newsreader 36
+│  Upload a docx, txt, or hwp. We'll extract characters, places,      │   ← Pretendard 14, secondary
+│  and chapter beats. You confirm before anything's stored.           │
+│                                                                     │
+│  ┌─────────────────────────────────────────────────────────────┐    │
+│  │                                                             │    │
+│  │            Drop your manuscript here                        │    │   ← dashed --border-strong rectangle,
+│  │            or click to browse                               │    │     ink-50 bg, 240px tall,
+│  │                                                             │    │     terracotta-300 dashed on hover
+│  │            .docx · .txt · .hwp · ≤ 20 MB                    │    │
+│  │                                                             │    │
+│  └─────────────────────────────────────────────────────────────┘    │
+│                                                                     │
+│  Once uploaded:                                                     │
+│  ① Preview extracted entities + chapters                            │
+│  ② Edit names inline                                                │
+│  ③ Confirm — only then anything is saved                            │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 17. Component reference HTML — paste these inline into surface artboards
+
+These approximate the existing `src/components/dashboard/redesign/atoms.tsx` API. Use them verbatim.
+
+### Tag (pill) — 5 tones × 2 sizes
+
+```html
+<span class="pill">5 / 5 keys</span>
+<span class="pill terracotta">P1 critical</span>
+<span class="pill dawn">P2 warning</span>
+<span class="pill" style="background:var(--ink-25); color:var(--text-secondary);">P3 stylistic</span>
+<span class="pill" style="background:var(--ink-900); color:var(--ink-25); border-color:var(--ink-900);">solid</span>
+```
+
+### Button — 3 variants
+
+```html
+<button class="btn primary">Save</button>
+<button class="btn ghost">Cancel</button>
+<button class="btn danger">Delete account</button>
+```
+
+### Card — default / dawn / legal
+
+```html
+<div class="card">
+  <h3 class="serif" style="margin:0 0 4px; font-size:18px; font-weight:500;">API key health</h3>
+  <p class="dim" style="margin:0 0 16px;">All keys responding within SLA.</p>
+  <a class="btn ghost" href="/dashboard/account/api-keys">Manage →</a>
+</div>
+
+<div class="card dawn">
+  <h3 class="serif" style="margin:0 0 4px; font-size:18px; font-weight:500;">Studio Managed</h3>
+  <p class="dim" style="margin:0 0 16px;">Drops the BYOK header. Adds $0.15 per Opus call.</p>
+  <a class="btn primary" href="/dashboard/billing">Switch →</a>
+</div>
+
+<div class="card legal">
+  <h3 class="serif" style="margin:0 0 4px; font-size:18px; font-weight:500;">Export my data</h3>
+  <p class="dim" style="margin:0 0 16px;">A zip of every memory, beat, and approval decision tied to your account.</p>
+  <a class="btn ghost">Request export →</a>
+</div>
+```
+
+### Avatar (28 / 40 / 64 px)
+
+```html
+<div style="width:28px; height:28px; border-radius:50%; background:var(--terracotta-500); color:#fff; display:flex; align-items:center; justify-content:center; font-size:12px;">SY</div>
+<div style="width:40px; height:40px; border-radius:50%; background:#7a8c5a; color:#fff; display:flex; align-items:center; justify-content:center; font-size:16px;">JM</div>
+<div style="width:64px; height:64px; border-radius:50%; background:var(--dawn-500); color:var(--ink-900); display:flex; align-items:center; justify-content:center; font-size:24px; font-family:var(--font-serif);">SA</div>
+```
+
+### Kbd (keyboard shortcut chip)
+
+```html
+<kbd style="display:inline-flex; align-items:center; padding:1px 6px; font-family:var(--font-mono); font-size:11px; background:var(--ink-50); color:var(--text-secondary); border:1px solid var(--border-subtle); border-radius:4px;">⌘K</kbd>
+```
+
+---
+
+## 18. Mock data — use these literal values in the prototypes
+
+Realistic enough to look shipped; not real customer data. Sample IP is **Saebyeok Academy** per `docs/marketing/sample_ip/saebyeok-readme.md`.
+
+### Plans (used by `/dashboard/billing`, `/dashboard`)
+
+```json
+[
+  { "tier": "free",            "label": "Free",           "monthly": 0,   "yearly": null, "scopes": ["recall","remember","graph","search"] },
+  { "tier": "indie",           "label": "Indie",          "monthly": 9,   "yearly": 90,   "scopes": ["…","check","timeline"], "byok": true },
+  { "tier": "pro",             "label": "Pro",            "monthly": 19,  "yearly": 190,  "scopes": ["…","projects:write"],   "byok": true, "current": true },
+  { "tier": "studio",          "label": "Studio",         "monthly": 99,  "yearly": 990,  "scopes": ["…","audit:read"],       "byok": true, "keysCap": 5 },
+  { "tier": "studio_managed",  "label": "Studio Managed", "monthly": 299, "yearly": 2990, "scopes": ["…","managed_llm"],      "byok": false, "meteredOpusUsd": 0.15 },
+  { "tier": "enterprise",      "label": "Enterprise",     "monthly": null,"yearly": null, "scopes": ["*"], "contactOnly": true }
+]
+```
+
+### Invoices (used by `/dashboard/billing`)
+
+```json
+[
+  { "id": "in_AB12", "issuedAt": "2026-05-12", "label": "Pro · monthly", "amountUsd": 19.00, "status": "paid",   "pdfUrl": "#" },
+  { "id": "in_AB13", "issuedAt": "2026-04-12", "label": "Pro · monthly", "amountUsd": 19.00, "status": "paid",   "pdfUrl": "#" },
+  { "id": "in_AB14", "issuedAt": "2026-03-12", "label": "Pro · monthly", "amountUsd": 19.00, "status": "paid",   "pdfUrl": "#" }
+]
+```
+
+### Usage (used by `/dashboard/usage`, `/dashboard`)
+
+```json
+{
+  "period": "month",
+  "used": 7231,
+  "quota": 10000,
+  "perTool": [
+    { "tool": "recall",    "calls": 4210, "costUnits": 1, "lastUsed": "2 min ago"  },
+    { "tool": "check",     "calls":  612, "costUnits": 5, "lastUsed": "1h ago"     },
+    { "tool": "timeline",  "calls":   48, "costUnits": 5, "lastUsed": "3d ago"     },
+    { "tool": "graph",     "calls":   91, "costUnits": 1, "lastUsed": "5h ago"     },
+    { "tool": "search",    "calls":  980, "costUnits": 2, "lastUsed": "12 min ago" },
+    { "tool": "approve",   "calls": 1290, "costUnits": 1, "lastUsed": "8h ago"     }
+  ]
+}
+```
+
+### Recent activity (used by `/dashboard`)
+
+```json
+[
+  { "kind": "import",  "label": "Chapter 12 imported · Saebyeok",         "at": "3h ago"     },
+  { "kind": "conflict","label": "Conflict resolved: protagonist occupation","at": "yesterday"},
+  { "kind": "key",     "label": "Key sk_seizn_4f2a… rotated",              "at": "2 days ago"},
+  { "kind": "approve", "label": "Canon fact approved on Seoyun",           "at": "3 days ago"},
+  { "kind": "import",  "label": "Chapter 11 imported · Saebyeok",          "at": "5 days ago"}
+]
+```
+
+### Trace (used by `/dashboard/replay/[traceId]`)
+
+```json
+{
+  "id": "req_abc123de4567f8",
+  "tool": "recall",
+  "totalMs": 312,
+  "status": 200,
+  "steps": [
+    { "label": "validate_bearer",  "metadata": "sk_seizn_a1b2…",        "ms": 8   },
+    { "label": "check_scope",      "metadata": "recall",                 "ms": 1   },
+    { "label": "rate_limit",       "metadata": "30/min",                 "ms": 2   },
+    { "label": "enforce_quota",    "metadata": "7,232 / 10,000",         "ms": 14  },
+    { "label": "service.recall",   "metadata": "saebyeok-main",          "ms": 287 }
+  ]
+}
+```
+
+### Audit events (used by `/dashboard/account/api-keys/audit` — **already shipped, reference only**)
+
+```json
+[
+  { "action": "created",         "occurredAt": "2026-05-06T10:12:33Z", "metadata": { "name": "MCP desktop key" } },
+  { "action": "rotated",         "occurredAt": "2026-04-30T08:21:01Z", "metadata": { "newApiKeyId": "key-…" } },
+  { "action": "revoked",         "occurredAt": "2026-04-12T14:00:00Z" },
+  { "action": "rate_limited",    "occurredAt": "2026-04-09T22:18:11Z", "metadata": { "tool": "check" } },
+  { "action": "quota_exceeded",  "occurredAt": "2026-03-31T23:59:01Z" }
+]
+```
+
+---
+
+## 19. i18n strings — `dashboard.<surface>.*` reference (en + ko pairs)
+
+When the canvas needs literal copy, use these exact strings. The `en` side is the source of truth; `ko` is reviewed.
+
+```json
+{
+  "dashboard.root.heroOpenWriting":     { "en": "Open writing →",                  "ko": "글쓰기 열기 →" },
+  "dashboard.root.statusKeyHealth":     { "en": "API key health",                  "ko": "API 키 상태" },
+  "dashboard.root.statusMemorySync":    { "en": "Memory v3 synced",                "ko": "Memory v3 동기화" },
+  "dashboard.root.statusQuota":         { "en": "This month",                      "ko": "이번 달 사용량" },
+  "dashboard.root.recentActivity":      { "en": "Recent activity",                 "ko": "최근 활동" },
+
+  "dashboard.billing.title":            { "en": "Billing",                         "ko": "결제" },
+  "dashboard.billing.currentPlan":      { "en": "Current plan",                    "ko": "현재 플랜" },
+  "dashboard.billing.manageInStripe":   { "en": "Manage in Stripe →",              "ko": "Stripe에서 관리 →" },
+  "dashboard.billing.upgrade":          { "en": "Upgrade",                         "ko": "업그레이드" },
+  "dashboard.billing.invoices":         { "en": "Invoices",                        "ko": "청구서" },
+  "dashboard.billing.studioManagedHint":{ "en": "Studio Managed adds metered Opus calls at $0.15 / call and removes the BYOK requirement on check + timeline.", "ko": "Studio Managed는 $0.15/Opus 호출 사용량 과금이 추가되고 check·timeline의 BYOK 요구를 제거합니다." },
+
+  "dashboard.usage.callsThisMonth":     { "en": "calls this month",                "ko": "이번 달 호출" },
+  "dashboard.usage.perTool":            { "en": "Per tool",                        "ko": "도구별" },
+  "dashboard.usage.lastUsed":           { "en": "Last used",                       "ko": "마지막 사용" },
+
+  "dashboard.replay.title":             { "en": "Replay",                          "ko": "재생" },
+  "dashboard.replay.viewJson":          { "en": "View JSON",                       "ko": "JSON 보기" },
+
+  "dashboard.import.heroTitle":         { "en": "Bring your manuscript in",        "ko": "원고를 가져오세요" },
+  "dashboard.import.heroBody":          { "en": "Upload a docx, txt, or hwp. We'll extract characters, places, and chapter beats. You confirm before anything's stored.", "ko": "docx, txt, hwp 파일을 올리면 등장인물·장소·회차 비트를 추출합니다. 저장 전에 확인할 수 있어요." },
+  "dashboard.import.dropPrompt":        { "en": "Drop your manuscript here, or click to browse", "ko": "원고를 여기 놓거나 클릭해서 선택하세요" },
+
+  "dashboard.privacy.title":            { "en": "Privacy",                         "ko": "프라이버시" },
+  "dashboard.privacy.exportData":       { "en": "Export my data",                  "ko": "내 데이터 내보내기" },
+  "dashboard.privacy.deleteData":       { "en": "Delete my data",                  "ko": "내 데이터 삭제" },
+  "dashboard.privacy.stopTraining":     { "en": "Stop training on my data",        "ko": "내 데이터로 학습 중지" },
+
+  "dashboard.settings.profile":         { "en": "Profile",                         "ko": "프로필" },
+  "dashboard.settings.locale":          { "en": "Locale",                          "ko": "언어와 시간대" },
+  "dashboard.settings.notifications":   { "en": "Notifications",                   "ko": "알림" },
+  "dashboard.settings.workspace":       { "en": "Workspace",                       "ko": "작업 환경" },
+  "dashboard.settings.dangerZone":      { "en": "Danger zone",                     "ko": "위험 구역" }
+}
+```
+
+When the canvas generates a new surface key not in this table, follow the same shape: `dashboard.<surface>.<camelCaseLeaf>` with `en` as source and `ko` reviewed; the other 20 locales fall back later.
+
+---
+
+*End of brief. Sections 13–19 are the codebase-link substitute — paste them along with §1–8 when the canvas can't link the repository.*
