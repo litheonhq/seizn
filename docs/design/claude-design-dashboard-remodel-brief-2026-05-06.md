@@ -23,7 +23,7 @@ This brief asks Claude Design to **extend the Author-first tokens and mood acros
 
 **Seizn** is an AI memory platform aimed at fiction writers. Three-track architecture:
 
-- **Track 1 — Web (KRW)**: the dashboard you're remodelling now. Korean primary user, then EN/JA/ZH/ES.
+- **Track 1 — Web (KRW billing)**: the dashboard you're remodelling now. **English-primary user (seizn.com is an EN-first product), then KO / JA / ZH / ES.** KRW remains the legacy billing currency for grandfathered subscribers; it does not drive the UX locale.
 - **Track 2 — API + MCP (USD)**: REST + Claude Desktop / Cursor / Cline integration. *Just launched.*
 - **Track 3 — Tauri desktop (KRW)**: separate cycle.
 
@@ -268,7 +268,7 @@ All new components live in `src/components/dashboard/redesign/`. Don't introduce
 2. **Server components by default.** Client components only where you actually need interactivity (forms, modals, hover state with dynamic data). This is a Next.js 15 App Router codebase.
 3. **No `useEffect` + `setState` for data fetching.** Server components fetch; client components receive props and use `useReducer` or `useTransition` for local state. PR #252 has the pattern.
 4. **i18n on every user-visible string.** 22 locales already supported; `useDashboardTranslation()` hook from `src/contexts/DashboardLocaleContext`. Add new keys under `dashboard.<surface>.*` in all 5 base dictionaries (en/ko/ja/zh-hans/zh-hant) — fallback locales follow in a separate cycle.
-5. **Locale-aware layout** — Korean text is the primary length budget. EN expands ~1.3×, AR/HE flow RTL, JA/ZH compress ~0.8×. Test ko + en + ar in the canvas.
+5. **Locale-aware layout** — English is the primary length budget. KO compresses ~0.75×, JA/ZH ~0.8×, AR/HE flow RTL and may run ~1.1×. Test en + ko + ar in the canvas.
 6. **Bundle budget**: each new client component adds to the chunk. Total JS/CSS budget is currently 8000 KB raw / 2400 KB gzip. Don't import heavy charting libs into client components — use SSR for charts where possible (`recharts` SSR works with `next/dynamic`).
 7. **Accessibility**: every interactive element needs a label, every modal needs `aria-labelledby`, focus traps, escape-to-close. Existing components honour this; new ones must too.
 8. **Don't redesign Track 2 surfaces.** `/dashboard/account/api-keys` + audit just shipped and are in production. Read them, match their visual register, don't refactor them.
@@ -347,6 +347,8 @@ Claude Code will translate the HTML/CSS to React server / client components in t
 ---
 
 *Continued in §13–§19 — paste-ready bundle when "Link your codebase" isn't available.*
+
+> **Errata (2026-05-06, post-paste)** — earlier drafts said "Korean primary user". Superseded: **seizn.com is English-primary**; KO is one of 21 secondary locales (KO/JA/ZH-Hans/ZH-Hant/ES/FR/DE/IT/NL/PT-BR/PT-PT/RU/PL/UK/SV/AR/HE/HI/ID/TH/VI). Affected lines have been edited inline at §1, §5, §14 — the surface designs that were already in flight on the cream/serif/terracotta system stay correct; only the locale primary flips.
 
 ---
 
@@ -524,7 +526,7 @@ h2.serif { font-family: var(--font-serif); font-size: 24px; font-weight: 500; li
     <header class="topbar">
       <input class="topbar-search" placeholder="Search canon, conflicts, traces…  ⌘K" />
       <div class="topbar-actions">
-        <span class="dim">Saebyeok Academy · ko</span>
+        <span class="dim">Saebyeok Academy · en</span>
         <button class="btn ghost">Help</button>
         <div style="width:28px; height:28px; border-radius:50%; background:var(--terracotta-500); color:#fff; display:flex; align-items:center; justify-content:center; font-size:12px;">SY</div>
       </div>
