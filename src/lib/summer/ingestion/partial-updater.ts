@@ -408,7 +408,7 @@ export async function applyPartialUpdate(
           position: change.position,
         };
       })
-      .filter(Boolean);
+      .filter((x): x is NonNullable<typeof x> => x !== null);
 
     if (inserts.length > 0) {
       const { error: insertError } = await supabase
