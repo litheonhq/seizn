@@ -5,7 +5,7 @@ import { getUsage, type ApiKeyPeriod } from "@/lib/api-keys";
 import { isTrack2ApiEnabled } from "@/lib/feature-flags/track-2";
 import DashboardShell from "@/components/dashboard/DashboardShell";
 import ApiKeysClient from "./api-keys-client";
-import { TRACK_2_KEY_CAP_PER_USER } from "./actions";
+import { TRACK_2_KEY_CAP_PER_USER } from "./constants";
 
 export const metadata: Metadata = {
   title: "API keys — Seizn",

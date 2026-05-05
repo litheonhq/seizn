@@ -21,12 +21,8 @@ vi.mock('@/lib/api-keys', async () => {
   };
 });
 
-import {
-  TRACK_2_KEY_CAP_PER_USER,
-  createApiKey,
-  revokeApiKey,
-  rotateApiKey,
-} from '../actions';
+import { createApiKey, revokeApiKey, rotateApiKey } from '../actions';
+import { TRACK_2_KEY_CAP_PER_USER } from '../constants';
 
 type SelectChain = {
   select: ReturnType<typeof vi.fn>;
