@@ -1,3 +1,5 @@
+'use client';
+
 import type { ReactNode } from 'react';
 import { Kbd } from './atoms';
 import { PlusIcon } from './icons';

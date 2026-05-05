@@ -1,3 +1,5 @@
+'use client';
+
 import { ChevronDownIcon } from '../icons';
 
 export interface WorkspaceSwitcherProps {

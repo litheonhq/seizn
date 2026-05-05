@@ -1,3 +1,5 @@
+'use client';
+
 import { Avatar } from '../atoms';
 import { MoreIcon } from '../icons';
 
