@@ -1,0 +1,49 @@
+name: Author MCP — Registry Publish
+
+# Registers / re-publishes @seizn/author-mcp-server on
+# https://registry.modelcontextprotocol.io using GitHub Actions OIDC.
+#
+# The mcp-publisher CLI device-flow login is currently buggy (v1.7.8 aborts on
+# the first GitHub `slow_down` poll), so the OIDC path is the only reliable
+# automation. Run via the Actions tab → "Run workflow" once each time
+# packages/author-mcp-server/server.json bumps or after a new npm version.
+
+on:
+  workflow_dispatch: {}
+  push:
+    paths:
+      - 'packages/author-mcp-server/server.json'
+      - 'packages/author-mcp-server/package.json'
+      - '.github/workflows/author-mcp-registry-publish.yml'
+    branches: [main]
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    name: Publish to MCP Registry
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install mcp-publisher CLI
+        run: |
+          set -euo pipefail
+          curl -fsSL "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_linux_amd64.tar.gz" -o /tmp/mcp-publisher.tar.gz
+          tar -xzf /tmp/mcp-publisher.tar.gz -C /tmp mcp-publisher
+          sudo install -m 0755 /tmp/mcp-publisher /usr/local/bin/mcp-publisher
+          mcp-publisher --help | head -3
+
+      - name: Validate server.json
+        working-directory: packages/author-mcp-server
+        run: mcp-publisher validate
+
+      - name: Login (GitHub OIDC)
+        working-directory: packages/author-mcp-server
+        run: mcp-publisher login github-oidc
+
+      - name: Publish
+        working-directory: packages/author-mcp-server
+        run: mcp-publisher publish
