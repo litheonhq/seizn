@@ -61,7 +61,7 @@
 | Stack | Next.js API routes + TypeScript MCP server |
 | Distribution | API key dashboard + npm + Anthropic MCP directory |
 | Persona | AI-native 작가 / 옵시디언 + AI / Cursor / Cline / Continue / dev-author / B2B 출판사 API |
-| Pricing | **트랙 자체 가격** (Track 2 owner session 이 lock. USD 기본, API/MCP 채널 가격 모델 별도. v8 lock 진행 중) |
+| Pricing | **v8 lock 2026-05-06** — Free $0 / Indie $9 / Pro $19 / Studio $99 / Studio Managed $299 (Phase 3+, ~Q3) / Enterprise Custom (USD flat). BYOK default (no-LLM 도구는 BYOK 불필요, AI-enhanced 도구는 BYOK header 또는 Studio Managed). Memory: `seizn-author-pricing-2026-05.md` v8 |
 | Repo path | `C:\Users\admin\Projects\seizn` (web 과 같은 repo, `src/app/api/v1/` + `packages/author-mcp-server/`) |
 | 첫 마일스톤 | Phase 0 API spec lock → Phase 1 Layer 1 REST + key 발급 + Stripe metered (W1~W2) |
 
