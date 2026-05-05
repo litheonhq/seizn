@@ -345,7 +345,7 @@ claude.ai Designer 의 pre-handoff 질문지 답. Persona radar (B P0 · E P1 ·
 - **Author Memory v3 spec**: `docs/architecture/seizn-author-memory-v3.md`
 - **Engine landing brief (참고 패턴)**: `docs/marketing/engine_landing_brief.md`
 - **dual-surface positioning**: `docs/marketing/dual_surface_positioning.md`
-- **dogfood report (KNOT-isolated)**: `~/.codex/private/seizn-dogfood-report-2026-05-03.md`
+- **dogfood report (private, identifier-isolated)**: `~/.codex/private/seizn-dogfood-report-2026-05-03.md`
 - **production**: https://www.seizn.com/dashboard
 - **engine surface**: https://engine.seizn.com (디자인 cue 절대 회피)
 
