@@ -69,3 +69,7 @@ docs/migrations/r2-integrity-report*.json
 /supabase/.temp/
 /supabase/all_migrations.sql
 /supabase/batches/
+
+
+# pnpm-lock.yaml — repo uses lockfile-less installs (see PR #252 build fix)
+pnpm-lock.yaml
