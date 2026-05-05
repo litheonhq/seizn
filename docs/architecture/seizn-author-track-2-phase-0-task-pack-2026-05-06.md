@@ -490,7 +490,8 @@ feat(track-2): Stripe v8 product spec + v7 deprecation plan (no live Stripe call
 - `pnpm test` pass
 - `pnpm typecheck` pass
 - `pnpm lint:track2` pass (Track 2 영역 한정 — src/lib/api-keys, src/app/api/v1, packages/author-mcp-server. 전체 `pnpm lint` 의 react-hooks/* errors 는 Track 1 영역 pre-existing baseline, 별 cycle. 자세한 내용 §"How to use" 참고)
-- `pnpm verify:i18n-integrity` pass (5 locale 모두 dashboard.account.apiKeys.* 정합)
+- `pnpm test:run src/__tests__/i18n/dashboard-keys.test.ts` pass (기존 i18n key integrity test, 5 locale 의 dashboard.account.apiKeys.* 정합 자동 검증). 이전 spec 의 `pnpm verify:i18n-integrity` script 는 부재 — 기존 vitest test 가 정확한 verify path
+- 신규 dashboard page lint 검증: `pnpm exec eslint "src/app/(dashboard)/dashboard/account/api-keys"` clean. Track 1 baseline 의 `react-hooks/set-state-in-effect` / `react-hooks/exhaustive-deps` / `react-hooks/static-components` rule 위반 회피 — useEffect 안 setState 패턴 X (functional update / useReducer 사용), 의존 배열 정확. lint:track2 script 의 base path 밖 (`src/app/(dashboard)/`) 이라 별 명령으로 검증
 - 수동 smoke: 개발 서버에서 `/dashboard/account/api-keys` 접속 → 페이지 렌더
 
 **Commit:**
@@ -544,7 +545,7 @@ feat(track-2): add API key dashboard + audit log at /dashboard/account/api-keys 
 - `pnpm test` pass
 - `pnpm typecheck` pass
 - `pnpm lint:track2` pass (Track 2 영역 한정 — src/lib/api-keys, src/app/api/v1, packages/author-mcp-server. 전체 `pnpm lint` 의 react-hooks/* errors 는 Track 1 영역 pre-existing baseline, 별 cycle. 자세한 내용 §"How to use" 참고)
-- `pnpm verify:i18n-integrity` pass (EN master + 4 locale fallback OK)
+- `pnpm test:run src/__tests__/i18n/dashboard-keys.test.ts` pass (EN master + 4 locale fallback OK, 기존 i18n key integrity test 사용. `verify:i18n-integrity` script 부재)
 - `pnpm docs:test` pass (curl 예제 모두 동작)
 - 수동 smoke: `/en/api` 접속 → 페이지 렌더 + 8 섹션 모두 표시
 - `public/openapi.yaml` 생성 확인 (10 endpoints + error schema)
@@ -664,13 +665,12 @@ feat(track-2): add e2e tests + npm publish prep for @seizn/author-mcp-server
    - middleware: flag false 시 `/api/v1/*` 모두 503 + 'Track 2 API beta. Contact sales for early access.'
    - dashboard `/dashboard/account/api-keys` 도 flag false 시 'Coming soon' placeholder
    - Phase 8 에서 점진 rollout (10% → 50% → 100%)
-5. `git push -u origin feat/track-2-phase-0`.
-6. PR 생성 (gh CLI):
+5. **STOP (사용자 정책: local only, push X).** 사용자 결정 시점 까지 이 phase 는 step 4 까지 완료 + observability/feature-flag commit 박힘 + 자동 stop. step 5 (git push) + step 6 (gh pr create) 은 **Phase 8 (인간 작업)** 으로 이동:
 
-**Steps:**
+**Steps (Phase 8 인간 작업으로 이동, lock 2026-05-06):**
 
-1. 모든 phase 의 commit 들이 `feat/track-2-phase-0` 브랜치에 누적되어 있음 확인 (Pre-flight checklist 의 브랜치).
-2. `git push -u origin feat/track-2-phase-0`.
+1. 모든 phase 의 commit 들이 `feat/track-2-next` 브랜치에 누적되어 있음 확인 (실제 사용 브랜치, task pack 작성 시 spec 의 `feat/track-2-phase-0` 와 다름).
+2. `git push -u origin feat/track-2-next` (사용자 결정 시점, local only 정책 변경 시).
 3. PR 생성 (gh CLI):
 
 ```bash
