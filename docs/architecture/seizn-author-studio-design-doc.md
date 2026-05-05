@@ -271,14 +271,19 @@ All three surfaces share:
 
 ### 5.2 Editor technology
 
-- **Editor framework:** Lexical (Meta) — chosen over TipTap/ProseMirror for its first-class collaborative-with-Yjs story, Lexical's composability, and its integration in the existing dashboard codebase via React 19.
-- **Document model:** Yjs `Y.Doc`. Body lives in a `Y.Text`. Chapter markers, comments, version history each get their own subdoc inside the same Yjs document.
-- **Custom plugins:**
-  - Single-file chapter detection (parses `Y.Text` for marker regex on debounce, builds the sidebar structure)
-  - Korean IME composition handler (so 한글 IME composition does not produce CRDT operations until the composition is committed)
-  - `@`-mention plugin tied to Memory v3 recall API
-  - On-demand spellcheck plugin (panel-side, no inline marks)
-  - Toggle-driven conflict marker plugin
+- **Editor framework: TipTap (ProseMirror under the hood).** Decision rationale:
+  - The existing `editorkit-pro` project (in `C:\Users\admin\Projects\editorkit-pro`) already runs TipTap + Yjs + Hocuspocus collaboration with 25+ extensions wired up, plus DOCX/PDF export pipeline and Supabase RLS auth schema. Reusing that scaffold removes 2–3 weeks of editor groundwork.
+  - `y-prosemirror` is the most mature Yjs binding in the ecosystem (used by Notion among others). Lexical's Yjs binding (`@lexical/yjs`) is newer and less battle-tested.
+  - Korean IME composition has been handled in ProseMirror for nearly a decade (Notion, Naver editor, Daum services rely on it). Lexical's Korean IME story is shorter.
+  - This trade gives up some Lexical composability ergonomics in exchange for a much faster path to a working editor and stronger Korean text handling.
+- **Document model:** Yjs `Y.Doc`. Body lives in a `Y.XmlFragment` driven by ProseMirror. Chapter markers, comments, and version history each get their own subdoc inside the same Yjs document.
+- **Reused TipTap extensions** (extracted from `editorkit-pro`): heading, bold, italic, strike, underline, blockquote, hard-break, code-block, ordered-list, bullet-list, task-list, link, image, table (subset), horizontal-rule, character-count, history, drop-cursor, gap-cursor, placeholder, typography. Anything outside the writer-facing scope is dropped.
+- **New custom extensions:**
+  - Single-file chapter detection (parses `Y.XmlFragment` for marker regex on debounce, builds the sidebar structure)
+  - Korean IME composition guard (so 한글 IME composition does not commit CRDT operations until the composition is finalized; ProseMirror's existing IME plugin handles 95% of this — we wrap the last 5%)
+  - `@`-mention extension tied to Memory v3 recall API
+  - On-demand spellcheck extension (panel-side, no inline marks)
+  - Toggle-driven conflict marker extension (off / draft / full per §4.8)
 
 ### 5.3 Sync architecture
 
@@ -526,7 +531,245 @@ In addition to §3.4 anti-scope, the *cycle itself* should not:
 
 ---
 
-## 12. Appendix A — interview source data (paraphrased, anonymized)
+## 12. UI direction — premium, restrained, animated
+
+The visual goal is *고급스러움* — the surface should feel like a hardback novel given a software interface, not a productivity SaaS. Restraint over ornament. Motion exists to confirm causality, not to decorate. Every animation answers a question: 'where did this come from?', 'where did it go?', 'is the system still alive?'.
+
+### 12.1 Inheritance and extensions from the existing redesign
+
+The `.dashboard-redesign` token scope (shipped in cycle #246) already establishes the warm paper-tone palette: terracotta accent, dawn highlight, ink scale, paper-bg gradient, Newsreader serif italic for display, Pretendard for body. **Author Studio inherits this scope wholesale** and adds the following extensions:
+
+| Token / element | New value | Purpose |
+| --- | --- | --- |
+| `--paper-grain` | SVG noise overlay at 3.5% opacity (extracted from `ara.studio/src/globals.css`) | Subtle texture on long-form editor canvas — defeats the 'flat web app' feel |
+| `--editor-content-max-width` | `clamp(640px, 50vw, 760px)` | Optimal reading width per typographic conventions; overrides default flex stretch |
+| `--editor-line-height` | `1.85` (body), `1.55` (headings) | Generous, novel-like spacing |
+| `--font-body-display` | `'Newsreader', 'Source Serif 4', Georgia, serif` (already exists; promoted to body in editor) | The whole editor body is serif, not sans, in default mode — matches what writers expect from book pages |
+| `--shadow-paper-edge` | `0 1px 0 rgba(74, 67, 56, 0.04), 0 0 0 1px rgba(74, 67, 56, 0.06)` | Whisper-thin border around the editor 'page', evokes paper edge |
+| `--accent-save` | `oklch(0.65 0.13 145)` (the existing MemoryHealth green) | Save indicator pulse |
+
+### 12.2 Motion principles
+
+Six rules. Every animation gets justified against them.
+
+1. **Causality.** Movement must answer 'where did this thing come from'. Sheets slide up from the trigger location; modals scale from the button that opened them; tooltips fade-in tangentially to the cursor. Never appear from nowhere.
+2. **Restraint over duration.** Default duration 200ms. Micro-interactions (hover, focus) 100–150ms. Sheets and large surfaces cap at 400ms. Above 600ms only with a narrative reason (onboarding intro, first-run delight).
+3. **Spring physics over linear ease.** Use the easing curves from §12.3 below; reserve `linear` only for indeterminate progress.
+4. **Reduce-motion respect.** All animations honour `prefers-reduced-motion`. Specifically: motion is replaced with cross-fade, never skipped to instant (which is jarring).
+5. **Scale, don't translate, for premium feel.** Buttons, cards, modals: scale (0.96 → 1.0) with shadow blur change. Reserve translate for slide-up sheets and chapter transitions.
+6. **One animation at a time per region.** No overlapping motion on the same surface. Stagger if multiple things must move (e.g. recall card list — 30ms stagger between items).
+
+### 12.3 Easing curves — the named bestiary
+
+Sourced from the `_extracted/` library (Vercel, Stripe, Supabase, Framer). Each gets a name we use throughout the codebase:
+
+```css
+:root {
+  /* For sheet slides + modal entrances. Slight overshoot, premium feel. */
+  --ease-premium: cubic-bezier(0.175, 0.885, 0.32, 1.1);
+
+  /* For snappy UI: button press, focus ring, tooltip appear. */
+  --ease-snap: cubic-bezier(0.165, 0.84, 0.44, 1);
+
+  /* For bidirectional state changes: tab switch, sidebar collapse. */
+  --ease-bidir: cubic-bezier(0.87, 0, 0.13, 1);
+
+  /* For symmetric / breathing animations: save indicator pulse, recall card hover. */
+  --ease-sym: cubic-bezier(0.44, 0, 0.56, 1);
+
+  /* Standard durations. */
+  --dur-micro: 120ms;
+  --dur-quick: 200ms;
+  --dur-medium: 320ms;
+  --dur-large: 480ms;
+}
+```
+
+Build-cycle code review must reject any `cubic-bezier()` literal that is not one of the above (or a documented exception). Discipline keeps the surface coherent.
+
+### 12.4 Specific animations per surface
+
+| Surface | Animation | Curve | Duration | Notes |
+| --- | --- | --- | --- | --- |
+| Editor canvas first paint | Body fade-up 8px → 0px | `--ease-premium` | `--dur-medium` | First paint only, then no canvas-level animation during typing |
+| Chapter sidebar expand / collapse | Width grow + content fade | `--ease-bidir` | `--dur-quick` | Width animates first, then content fades in 100ms after |
+| `@`-mention picker | Slide-up 12px + fade-in + backdrop blur 6px | `--ease-premium` | `--dur-quick` | Anchored to cursor x, slides up from cursor row |
+| Recall card pinned to sidebar | Scale 0.96 → 1.0 + shadow grow | `--ease-snap` | `--dur-quick` | Per-card stagger 30ms when multiple |
+| Save indicator pulse on autosave commit | Color fade green → muted, 1 cycle | `--ease-sym` | `--dur-medium` | Subtle. No bounce. |
+| Settings bottom sheet | Slide up from bottom 320px | `--ease-premium` | `--dur-medium` | Backdrop fades in over 100ms, sheet over `--dur-medium` |
+| Export modal | Scale 0.92 → 1.0 + backdrop fade | `--ease-premium` | `--dur-quick` | Format cards inside stagger 40ms each |
+| Conflict diff side-by-side | Cross-fade of two cards | `--ease-bidir` | `--dur-medium` | Diff highlights paint 200ms after card lands |
+| Version history timeline | Vertical line draws + dots pop | `--ease-premium` | `--dur-large` | First open only. After that no animation. |
+| Toast notification | Slide-down 24px + fade | `--ease-snap` | `--dur-quick` | Auto-dismiss at 3s with reverse animation |
+| Focus mode entry | Surrounding chrome fades to 0 over 400ms, body re-centers, 'paper grain' subtly intensifies | `--ease-premium` | `--dur-large` | Reverse on exit |
+| Word count tick (number animating up) | Lerp from previous to new value | `--ease-sym` | `--dur-quick` | Only after a chapter break, not every keystroke (would be distracting) |
+| Onboarding multi-step | Step transition fades current + slides next from right | `--ease-premium` | `--dur-medium` | Progress dots animate fill on each step |
+
+### 12.5 Reduce-motion mode
+
+When `prefers-reduced-motion: reduce`:
+- All `translate` / `scale` animations replaced with opacity cross-fade at half duration.
+- All recall card stagger collapses to simultaneous appear.
+- Pulse on save becomes a static green dot for 200ms.
+- Focus mode chrome change is instant, body re-center is instant.
+- Version history dots draw without line-draw animation.
+
+This is mandatory, not optional. A non-trivial fraction of writers (especially those with long writing sessions) actively prefer reduced motion to limit visual fatigue.
+
+---
+
+## 13. UX direction — Toss-tier frictionless
+
+Target reference: Toss (toss.im). Toss is the Korean fintech that set the bar for app UX in the KR market — spring-physics sheets, bottom-sheet flows over modals, single-decision-per-screen wizard pattern, micro-haptic-feel on critical confirmations, never a dead end. Author Studio adopts the same UX vocabulary, scoped to a writing tool.
+
+### 13.1 The seven UX commandments
+
+1. **One decision per screen.** Onboarding, settings, export, conflict resolution — each step asks for one choice. Never present six checkboxes when three sequential screens will do.
+2. **Bottom sheets over modals.** When the action is mobile-friendly or single-purpose (export format pick, settings group, AI suggestion accept/reject), use a slide-up bottom sheet instead of a centered modal. Bottom sheets are dismissable with swipe-down or backdrop-tap.
+3. **Skeleton loaders, never spinners.** Recall picker, snapshot list, export queue — all show shape-of-content placeholders. Never a generic spinner. The writer's brain doesn't have to switch contexts.
+4. **No dead ends.** Every error state offers a path forward. 'Sync error' has 'Retry' and 'View details'. 'Export failed' has 'Try again' and 'Export as different format'. Never a flat 'Error' message.
+5. **Confirmations are calm.** Toast notifications fade in, live for 3s, fade out. No icons screaming 'success!' — a quiet check mark and the action name suffices. Critical confirmations (delete project, restore snapshot) get a bottom sheet with 'Are you sure?' wording, never a native browser dialog.
+6. **Number animations on stat changes.** Word count, character count, chapter count — animate from old value to new on chapter break (not every keystroke). Tactile feel.
+7. **Empty states have personality.** No 'No data available'. Instead: '아직 비어 있어요. 첫 인물부터 추가해 볼까요?' with a small illustration and a primary action. Each empty state is a hand-off, not a wall.
+
+### 13.2 Specific Toss-tier patterns we steal
+
+| Pattern | Where it appears in Author Studio |
+| --- | --- |
+| **Slide-up bottom sheet for a single decision** | Export format pick, settings groups (each group is its own sheet), conflict resolution diff |
+| **Stacked sheets** (sheet-on-sheet) | Settings → Account → Edit profile (each level is a new sheet stacked on top, with backdrop blur deepening) |
+| **Swipe-down to dismiss** | All bottom sheets. Animate the sheet position with finger; release at >50% throw to dismiss, snap back otherwise |
+| **Inline confirmation for risky actions** | 'Delete project' → button transforms in place into 'Confirm delete' for 3s, requires second tap. No popup. |
+| **Number lerp on stat update** | Word count, character count, snapshot count, recall hit count |
+| **'You're almost done' progress bar** | Onboarding (5 steps), import wizard (3 steps), export (queue progress) |
+| **Single-tap critical action with haptic confirmation** | Save (already automatic, but the explicit 'snapshot now' button), apply spellcheck suggestion |
+| **Tactile button press** | Every button gets `transform: scale(0.97)` on `:active` with `--ease-snap` 80ms |
+| **Soft shake on error** | 50ms left-right wiggle (4px amplitude) on form-validation errors. Once. Not a continuous shake. |
+| **Always a 'back' option in flows** | No forced-completion modals. Onboarding 'Skip for now' visible at every step. Export wizard 'Cancel' always available. |
+| **Disclosure progressively** | Advanced settings hidden behind 'Show more' that animates the panel to grow. Don't show 30 settings on first paint. |
+| **Pre-empt errors with constraint UI** | Project name input refuses invalid characters silently with a soft border-color shift instead of throwing an error after submit |
+
+### 13.3 Onboarding flow specification (5 steps, ≤90 seconds total)
+
+This is the writer's first 90 seconds with Author Studio. Every step is a separate slide.
+
+1. **Welcome.** Single sentence: '당신이 잊은 당신의 설정을, 시즌이 기억합니다.' Single button: '시작하기'. No login yet. (Step 1 takes 5s.)
+2. **Your project.** Input: project name (default placeholder: '제목 미정'). Single button: '다음'. (10s.)
+3. **Your first chapter.** Auto-creates 'Ch. 1' and drops the writer into the editor with a soft introduction toast: '바로 쓰기 시작하세요. ⌘S 안 눌러도 자동으로 저장돼요.' (15s.)
+4. **Try recall.** A small inline tip appears after 30s of writing: '지금까지 적은 인물이 자동으로 캐논에 저장됐어요. 다음 화에서 `@이름` 으로 즉시 찾을 수 있어요. 한 번 시도해 볼까요?' Tip dismisses on success or after 30s. (30s.)
+5. **Sign up to keep your work.** Triggers only after the writer has written ≥500 characters or ≥3 minutes. Sheet slides up: '여기서 멈추면 이 글은 이 기기에만 저장돼요. 계정 만들고 어디서든 이어서 쓸 수 있게 할까요?' Two buttons: '계정 만들기' (primary) and '나중에' (secondary). (variable, 30s if engaged.)
+
+Steps 1–4 require no login. The 5-step flow gets the writer producing words *before* asking for an account — the opposite of most SaaS onboarding, and the right pattern for a tool that respects writing flow.
+
+### 13.4 Korean-native UX micro-decisions
+
+These are small choices that compound into 'this product feels Korean-native':
+
+- **Default font for input fields:** Pretendard (-요 / -습니다 / 한자 friendly). Not system-default which on Windows is Malgun Gothic (less consistent).
+- **Date format:** 'YYYY년 MM월 DD일 (요일)' for full, '5월 5일 16:23' for relative. Western fallback on locale switch.
+- **Number format:** '1,234자' / '12,345단어' with the unit attached, not '1234 chars'.
+- **Time-ago format:** '방금', '2분 전', '1시간 전', '어제', 'YYYY년 MM월 DD일'. Toss-tier: never raw timestamps in user-facing copy.
+- **Polite register (-요 / -습니다):** All UI copy uses -요 ending. Empty states, errors, confirmations, onboarding. No banmal (반말) anywhere except in non-text contexts (e.g. illustration captions).
+- **Punctuation:** Korean text uses 작은따옴표 (' ') only — no double quotes, per existing project rule. Em-dashes are fine but used sparingly per the writing-pattern guides.
+- **Honorifics in addressing the user:** '작가님' (not '사용자' / 'user'). Used in every greeting, error, and empty state.
+
+### 13.5 Things we explicitly refuse to do (Toss does not do these either)
+
+- Hide-and-seek primary actions (button below the fold, hidden in a hamburger)
+- Modals stacked three-deep with no clear hierarchy
+- 'Are you sure?' dialogs for non-destructive actions (we only confirm delete / restore / export-overwrite)
+- Generic loading spinners in primary surfaces
+- Disabled buttons without explanation (always tooltip the why)
+- Auto-playing media or animations on first paint (only on user gesture)
+- Scrolling hijack (full-page transition libraries that break native scroll)
+- Cookie / consent banners that block core UX (we deal with consent through proper local-first design, not banners)
+
+---
+
+## 14. Asset reuse map — what we pull from existing work
+
+This catalogues what to mine from existing repositories and the `_extracted` library. The build cycle uses this as its first pass — extract these, adapt to Author Studio scope, then write only what's missing.
+
+### 14.1 From `C:\Users\admin\Projects\editorkit-pro` — the editor scaffold
+
+This is the highest-value reuse target. The repo already has:
+
+| Component | Path (in editorkit-pro) | Adapt for Author Studio |
+| --- | --- | --- |
+| TipTap editor instance with 25+ extensions | `src/lib/editor/` | Drop business-doc extensions (table, mention-as-task), keep prose extensions |
+| Yjs + Hocuspocus collab integration | `src/lib/collaboration/` | Replace Hocuspocus with our `y-websocket` relay (simpler, sufficient for v1) |
+| DOCX export pipeline | `src/lib/export/docx.ts` (or similar) | Keep as-is. Ship in v1. |
+| PDF export pipeline | `src/lib/export/pdf.ts` | Keep with adjustment for novel-format margins |
+| Supabase RLS schema for documents | `supabase/migrations/*` | Adapt table names to manuscript / snapshot / export per §5.8 of this doc |
+| Activity log UI | `src/components/activity/` | Repurpose as 'version history timeline' |
+| Onboarding skeleton | `src/components/onboarding/` | Strip down to the 5-step flow in §13.3 |
+| Toss Payments adapter | `src/lib/payments/toss-adapter.ts` | Direct reuse for KR billing (when we add paid tier) |
+| Multi-locale (next-intl) integration | `next-intl.config.ts` + dictionaries | Reuse locale config; we already have a parallel system in seizn so we adapt |
+
+**Build action:** copy these files into the Author Studio cycle as a `_extracted/editorkit-pro/` reference (do not vendor wholesale; cherry-pick), then write integration glue.
+
+### 14.2 From `C:\Users\admin\Projects\ara.studio` — typography and texture
+
+| Asset | Path | Adapt for Author Studio |
+| --- | --- | --- |
+| OKLCH palette (Ink / Cinnabar / Paper) | `src/globals.css` | We already have the equivalent in `seizn/src/styles/tokens.css` `.dashboard-redesign` scope. Cross-check ara.studio for any nuance we missed. |
+| Grain overlay SVG (3.5% opacity) | `src/globals.css` | Direct copy. Use as `--paper-grain` from §12.1. |
+| Noto Serif KR + Pretendard + Outfit font stack | font-loading code | Author Studio uses Newsreader (already loaded) + Pretendard. Keep Noto Serif KR as a fallback for KR display headings. |
+| Fade-up + section reveal animations | `src/components/` | Reuse the patterns; route through our easing-curve system in §12.3. |
+
+### 14.3 From `C:\Users\admin\Projects\notrivo` — chunk IDs and offline persistence
+
+| Asset | Path | Adapt for Author Studio |
+| --- | --- | --- |
+| Stable chunk ID generator (`SC-*` pattern) | `src/lib/twin/source-chunks.ts` | Adapt to chapter / scene chunk IDs (`CH-`, `SCN-`) for snapshot reference and export filtering |
+| Offline-first persistence pattern (Supabase + local fallback) | `src/lib/twin/persistence.ts` | Direct architectural reference for our local-first sync layer |
+| Export filter logic (status / mode / context filters) | `src/app/api/twin/export/route.ts` | Reuse the filter design for manuscript export (export specific chapters, exclude drafts, etc.) |
+
+### 14.4 From `C:\Users\admin\Projects\hanpaemo` — Korean text utilities
+
+| Asset | Path | Adapt for Author Studio |
+| --- | --- | --- |
+| Korean IME composition handling patterns | game translation handlers | Reference for Tauri WebView IME edge cases on Windows |
+| Terminology glossary structure | term management module | Future asset for Author Studio's per-project glossary feature (not in v1, but relevant for v2 'consistent translation of names across novels') |
+
+### 14.5 From `D:\AI-Apps\_extracted\` — animation / effects libraries
+
+Selected as MUST per the survey:
+
+| File | Author Studio surface |
+| --- | --- |
+| `01-magic-ui-animations.css` | Skeleton shimmer (recall picker loading), aurora subtle (focus mode background) |
+| `02-linear-grid-animations.css` | Live-presence indicator if/when we add multi-author collab (post-v1) |
+| `05-common-landing-effects.css` | Glassmorphism for floating recall card, save indicator glow |
+| `06-framer-motion-patterns.tsx` | Stagger animations for chapter list, fade-up for sidebar reveal |
+| `08-onboarding-tutorial-patterns.tsx` | The 5-step onboarding shell from §13.3 |
+| `11-vercel-animations.css` | Easing curves (`--ease-premium`), nav scale-in for chapter switcher |
+| `12-stripe-animations.css` | Cubic-bezier curves for sheets, bento layout if we add a 'discover' page |
+| `13-supabase-animations.css` | Panel slide-left/right for settings sheets, accordion for advanced settings |
+| `15-resend-effects.css` | Drawer slide animations (settings, export, conflict diff sheets) |
+
+Additional reference (not direct reuse):
+
+| Source (in `_extracted/`) | What we learn from it |
+| --- | --- |
+| `Linear/` (Electron app) | Sidebar collapse logic, real-time grid presence patterns. Architectural. |
+| `Notion/` | Korean i18n routing, chapter-document split-pane patterns. Architectural. |
+| `Paper/` (Electron + React 19 + Lexical-like + Yjs) | **Architectural reference for our Tauri + React + TipTap + Yjs combination.** Same product class. |
+| `Slack/` | IPC / preload / contextBridge patterns for Tauri Rust ↔ WebView (translates to Tauri's invoke API) |
+
+### 14.6 What we do NOT pull from existing work
+
+For clarity (so the build agent does not waste time investigating):
+
+- `seizn-batch-b/`, `seizn-command-palette-npc/`, `seizn-dashboard-cleanup/`, `seizn-dependabot-clean/`, `seizn-feature-translations-cleanup/`, `seizn-guard/`, `seizn-seo-npc-positioning/`, `seizn_external_id_clean/` — these are seizn cleanup branches, not source repos.
+- `creator-shield/` — pre-MVP concept docs only, no code.
+- `parabreak/`, `playgodot/`, `coplay-server/` — game-engine work, not relevant.
+- `KREN_한방부동산/`, `zigbang/`, `kic-frontend/`, `kic-mobile/` — domain-specific (real estate), not relevant.
+- `Kimi/`, `Doubao/`, `Yuanbao/`, `Quark/`, `Qwen/`, `ChatGLM/`, `paperclip/`, `mirofish/`, `onspace/`, `system_prompts/`, `colleague-skill/`, `openclaw/`, `claude-mem/`, `Skills/`, `AutoClaw/`, `C_Code/` — AI product references; the patterns we want from them are already covered by direct competitor analysis (§2.3 of this doc).
+
+---
+
+## 15. Appendix A — interview source data (paraphrased, anonymized)
 
 Captured from user interviews 2026-04 to 2026-05. Patterns ≥2 writers unless noted (1 = single-source, do not act on alone).
 
@@ -540,7 +783,7 @@ Captured from user interviews 2026-04 to 2026-05. Patterns ≥2 writers unless n
 
 ---
 
-## 13. Appendix B — hand-off checklist for the build cycle
+## 16. Appendix B — hand-off checklist for the build cycle
 
 When the user approves this doc and a build cycle starts, the build agent should receive:
 
