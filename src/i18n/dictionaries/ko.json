@@ -3882,5 +3882,307 @@
     "incidentsTitle": "Incident reporting",
     "incidentsBody": "Public incident history and current availability are published on the Seizn status page:",
     "statusLink": "View status"
+  },
+  "authorLanding": {
+    "nav": {
+      "workflow": "워크플로우",
+      "demo": "데모",
+      "pricing": "가격",
+      "docs": "문서",
+      "signIn": "로그인",
+      "start": "무료 체험",
+      "menu": "메뉴 열기"
+    },
+    "hero": {
+      "eyebrow": "01 / 작가 메모리",
+      "title": "모든",
+      "italic": "모순",
+      "titleEnd": ", 출시 전에 잡으세요.",
+      "subtitle": "사실 하나를 입력해 보세요. Seizn이 작가의 캐논과 맞춰봐요. 인물 8명, 규칙 22개, 30일 타임라인. 검수가 결론을 만들어요.",
+      "trialNote": "30일 체험, 카드 없이",
+      "byokNote": "BYOK 50% 할인",
+      "yearly": "연간 결제 15% 할인",
+      "startPlan": "시작",
+      "comparePlans": "Pro·Studio·Enterprise 비교"
+    },
+    "workflow": {
+      "eyebrow": "02 / 워크플로우",
+      "title": "세 단계. 하나의 원장.",
+      "subtitle": "가져오고, 검수하고, 같은 캐논 위에서 쓰세요.",
+      "steps": [
+        {
+          "number": "01",
+          "title": "가져오기",
+          "subtitle": "캐논을 통째로 들여와요.",
+          "body": "원고를 던지거나, Google Doc을 연결하거나, 세계관 파일을 동기화하세요. Seizn이 인물·장소·규칙을 정리해 원장에 담아요.",
+          "chips": [
+            "DOCX",
+            "Plain text",
+            "Google Docs",
+            "Native"
+          ]
+        },
+        {
+          "number": "02",
+          "title": "검수",
+          "subtitle": "작가의 판결, 기록으로.",
+          "body": "사실은 모두 판결을 받아요. 통과·대기·충돌 가운데 하나로 들어가요. 검수가 진실의 기준이 돼요. 언제든 다시 돌려볼 수 있어요.",
+          "chips": [
+            "canon 142",
+            "pending 8",
+            "conflict 3"
+          ]
+        },
+        {
+          "number": "03",
+          "title": "집필",
+          "subtitle": "원장 안에서 초안.",
+          "body": "그래프 옆에서 새 장면을 써요. 모순이 보이면 그 자리에서 떠올라요. 어떤 규칙이 걸렸는지 보고, 한 번 누르면 덮어 쓸 수 있어요.",
+          "chips": [
+            "Scene draft",
+            "Live check",
+            "Replay"
+          ]
+        }
+      ]
+    },
+    "inputs": {
+      "eyebrow": "03 / 입력",
+      "title": "원고가 있는 자리로 찾아가요.",
+      "subtitle": "네 가지 가져오기 방식. 같은 원장, 같은 검수, 같은 캐논.",
+      "modes": [
+        {
+          "id": "native",
+          "name": "네이티브 에디터",
+          "subtitle": "Seizn 안에서 글쓰기.",
+          "body": "캐논을 아는 에디터에서 바로 쓰세요. 한 문단 한 문단 원장과 맞춰봐요."
+        },
+        {
+          "id": "docx",
+          "name": "DOCX 가져오기",
+          "subtitle": "원고 통째로.",
+          "body": ".docx, .rtf, .odt 파일을 끌어다 놓아요. Seizn이 인물·장면·대사를 뽑아 원장에 담아요."
+        },
+        {
+          "id": "plain",
+          "name": "일반 텍스트",
+          "subtitle": "마크다운 친화.",
+          "body": ".md, .txt를 붙여 넣거나 올리세요. 헤더는 장면이 되고 언급된 이름은 항목이 돼요. 왕복해도 손실 없어요."
+        },
+        {
+          "id": "gdocs",
+          "name": "Google Docs",
+          "subtitle": "복사 말고 동기화.",
+          "body": "Doc을 한 번만 연결하세요. Seizn이 원장을 맞춰주고, 충돌은 댓글로 띄워요."
+        }
+      ]
+    },
+    "conflicts": {
+      "eyebrow": "04 / 충돌",
+      "title": "모든 모순, 근거와 함께 등급으로.",
+      "subtitle": "심각도는 신호예요, 잡음 아니라요. critical은 캐논을 바로 깨고, minor는 작가가 살릴 수도 있는 흐름을 짚어요.",
+      "graphNote": "그래프는 장식이 아니에요. 충돌마다 어느 노드와 어느 연결이 깨졌는지 짚어줘요.",
+      "items": [
+        {
+          "severity": "critical",
+          "rule": "character.han_iseul.eye_color",
+          "fact": "11화: 한이슬 눈동자가 회색.",
+          "against": "2화 캐논은 갈색이에요.",
+          "cited": [
+            "scene.2.1",
+            "character.han_iseul"
+          ]
+        },
+        {
+          "severity": "major",
+          "rule": "rule.r03 옥상 출입",
+          "fact": "7화: 박지오가 9일째 옥상에 들어가요.",
+          "against": "규칙 r03은 14일까지 옥상을 잠그라 했어요.",
+          "cited": [
+            "rule.r03",
+            "scene.7.4"
+          ]
+        },
+        {
+          "severity": "minor",
+          "rule": "character.yun_hana.club",
+          "fact": "18화: 윤하나가 천문부에 가요.",
+          "against": "캐논은 사진부예요. 부서 이동일 수도 있어요.",
+          "cited": [
+            "character.yun_hana"
+          ]
+        }
+      ]
+    },
+    "simulation": {
+      "eyebrow": "05 / 시뮬레이션",
+      "title": "쓰기 전에 다시 돌려보세요.",
+      "subtitle": "장면을 원장 위에 올려두세요. Seizn이 토큰 단위로 영향을 잡아내요. 안전한 길과 위험한 길, 점수까지.",
+      "tokenDiff": "토큰 단위 diff: scene 14.observatory.draft",
+      "replayReady": "다시 돌리기 준비",
+      "candidates": [
+        {
+          "side": "safe",
+          "label": "안전한 길",
+          "score": 92,
+          "title": "한이슬이 새벽까지 천문대에 머물러요.",
+          "body": "r02·r04를 지켜요. 새 충돌은 없고, 흐름은 그대로 이어져요.",
+          "tokens": [
+            "scene.continues",
+            "rule.r02",
+            "rule.r04"
+          ]
+        },
+        {
+          "side": "risk",
+          "label": "위험한 길",
+          "score": 41,
+          "title": "한이슬이 식 절정 전에 자리를 떠요.",
+          "body": "r02 닻이 빠져요. 뒤따르는 두 장면이 근거를 잃어요.",
+          "tokens": [
+            "drops.r02",
+            "scene.16.orphan",
+            "scene.21.orphan"
+          ]
+        }
+      ]
+    },
+    "trust": {
+      "eyebrow": "06 / 신뢰",
+      "title": "작가용 기준으로 시작.",
+      "subtitle": "방어할 수 있는 결정, 감사할 수 있는 인프라, 증명할 수 있는 분리 규칙.",
+      "items": [
+        {
+          "icon": "lock",
+          "title": "워크스페이스 분리",
+          "body": "샘플 IP는 합성이에요. 작가의 원고는 공개 모델 학습에 닿지 않아요."
+        },
+        {
+          "icon": "key",
+          "title": "BYOK 지원",
+          "body": "본인 Anthropic 키로 연결하세요. 정가에서 50% 할인, 토큰 무제한."
+        },
+        {
+          "icon": "archive",
+          "title": "다시 돌릴 수 있는 캐논",
+          "body": "판결은 모두 기록돼요. 되돌리고, 분기하고, 어떤 결정도 감사할 수 있어요."
+        },
+        {
+          "icon": "shield",
+          "title": "SFW 전용 정책",
+          "body": "Litheon LLC는 Seizn을 안전 콘텐츠 규칙 아래에서만 운영해요."
+        }
+      ]
+    },
+    "pricing": {
+      "eyebrow": "07 / 가격",
+      "title": "원장에 값을 매겨요, LLM 말고.",
+      "subtitle": "BYOK는 가격을 절반으로 줄이고 토큰 한도를 풀어요. 연간 15% 할인. 모든 등급에 30일 체험.",
+      "byok": "BYOK 50% 할인",
+      "yearly": "연간 결제 15% 할인",
+      "start": "시작",
+      "contact": "영업팀 문의",
+      "mostPicked": "가장 많이 선택",
+      "blurbs": {
+        "indie": "혼자 캐논을 들고 가는 작가용.",
+        "pro": "여러 IP를 출간하는 프로 작가와 작은 스튜디오.",
+        "studio": "여러 IP, 여러 작가용. 감사 로그, 권한, 전용 검수 큐.",
+        "enterprise": "데이터 리전, SSO, 온프레미스 다시 돌리기 보관소, 프리미엄 SLA."
+      },
+      "features": {
+        "indie": [
+          "IP 프로젝트 1개",
+          "캐논 원장과 다시 돌리기",
+          "검수 무제한",
+          "30일 체험, 카드 없이"
+        ],
+        "pro": [
+          "IP 프로젝트 5개",
+          "캐논 분기와 diff",
+          "충돌 검수 우선순위",
+          "3인 협업",
+          "BYOK 50% 할인"
+        ],
+        "studio": [
+          "월 2,000만 토큰",
+          "스튜디오 검수 운영",
+          "출시 규모 사용량 검토"
+        ],
+        "enterprise": [
+          "무제한 규모",
+          "BYOK 필수",
+          "맞춤 보안·조달 지원"
+        ]
+      }
+    },
+    "faq": {
+      "eyebrow": "08 / 자주 묻는 질문",
+      "title": "작가들이 가장 먼저 묻는 다섯 가지.",
+      "items": [
+        {
+          "q": "Sudowrite, NovelCrafter와 무엇이 달라요?",
+          "a": "Seizn은 글쓰기 도우미가 아니에요. 캐논 원장이에요. 산문을 만들지 않아요. 사실을 글자 그대로 쥐고, 모순이 나타나는 그 자리에서 알려줘요."
+        },
+        {
+          "q": "BYOK로 무엇이 풀려요?",
+          "a": "본인 Anthropic 키를 쓰면 정가에서 50%만 내요. 토큰은 무제한이에요."
+        },
+        {
+          "q": "캐논 내보낼 수 있어요?",
+          "a": "언제든지요. 원장은 모두 구조화 JSON, 일반 마크다운, DOCX로 나가요. 잠금 없어요. 언제든 그만두고 작업물 들고 가세요."
+        },
+        {
+          "q": "원고는 어떻게 다뤄져요?",
+          "a": "작업물은 샘플 IP와도, 공개 모델 학습과도 분리돼요. 이 페이지의 새벽 데모는 합성 데이터예요. 실제 고객이 아니에요."
+        },
+        {
+          "q": "체험에 카드가 필요해요?",
+          "a": "아니요. 30일, 카드 없이요. 30일이 지나면 등급을 고르거나, 60일 동안 읽기 전용으로 보관돼요."
+        }
+      ]
+    },
+    "footer": {
+      "tagline": "작가 메모리, 글자 그대로 지켜요. SFW 전용. 캐논 권위를 위해 만들었어요.",
+      "product": "제품",
+      "company": "회사",
+      "tools": "작가 도구",
+      "developers": "개발자용",
+      "links": {
+        "workflow": "워크플로우",
+        "demo": "데모",
+        "pricing": "가격",
+        "docs": "문서",
+        "about": "회사 소개",
+        "trust": "신뢰와 개인정보",
+        "privacy": "개인정보",
+        "terms": "이용약관",
+        "beta": "베타 고지",
+        "status": "운영 상태",
+        "contact": "문의",
+        "ledger": "캐논 원장",
+        "replay": "다시 돌리기",
+        "byok": "BYOK 안내",
+        "changelog": "변경 사항",
+        "engine": "Engine →",
+        "sdk": "@seizn/sdk-js",
+        "mcp": "@seizn/mcp"
+      },
+      "entity": "© 2026 Seizn by Litheon LLC · Wyoming",
+      "version": "v1.0 · 새벽 데모는 합성 데이터"
+    },
+    "engine": {
+      "badge": "신규",
+      "body": "게임 NPC AI를 만들고 있나요? 같은 캐논 엔진, SDK로.",
+      "cta": "engine.seizn.com"
+    },
+    "checkout": {
+      "prefix": "",
+      "terms": "이용약관",
+      "connector": "및",
+      "privacy": "개인정보 처리방침",
+      "suffix": "에 동의합니다.",
+      "loading": "Stripe를 여는 중...",
+      "error": "체크아웃을 시작할 수 없습니다."
+    }
   }
 }

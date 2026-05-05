@@ -3336,5 +3336,307 @@
     "incidentsTitle": "Incident reporting",
     "incidentsBody": "Public incident history and current availability are published on the Seizn status page:",
     "statusLink": "View status"
+  },
+  "authorLanding": {
+    "nav": {
+      "workflow": "工作流",
+      "demo": "演示",
+      "pricing": "价格",
+      "docs": "文档",
+      "signIn": "登录",
+      "start": "免费试用",
+      "menu": "打开菜单"
+    },
+    "hero": {
+      "eyebrow": "01 / 作者记忆",
+      "title": "抓住每一处",
+      "italic": "矛盾",
+      "titleEnd": "，发布前。",
+      "subtitle": "输入一条事实。Seizn 拿它对照你的设定：8 个角色、22 条规则、30 天时间线。你的审查就是判决。",
+      "trialNote": "30 天试用，无需信用卡",
+      "byokNote": "BYOK 五折",
+      "yearly": "按年付省 15%",
+      "startPlan": "开始",
+      "comparePlans": "对比 Pro、Studio、Enterprise"
+    },
+    "workflow": {
+      "eyebrow": "02 / 工作流",
+      "title": "三步。一本设定簿。",
+      "subtitle": "导入、审查、写作，背后都是同一份设定。",
+      "steps": [
+        {
+          "number": "01",
+          "title": "导入",
+          "subtitle": "把设定整本带进来。",
+          "body": "丢一份手稿、指向一份 Google Doc，或同步一份世界观文件。Seizn 把角色、地点、规则梳进设定簿。",
+          "chips": [
+            "DOCX",
+            "Plain text",
+            "Google Docs",
+            "Native"
+          ]
+        },
+        {
+          "number": "02",
+          "title": "审查",
+          "subtitle": "你的判决，记下来。",
+          "body": "每一条事实都拿到一个判决：通过、待定、冲突。审查成了真相的依据，随时可以回放。",
+          "chips": [
+            "canon 142",
+            "pending 8",
+            "conflict 3"
+          ]
+        },
+        {
+          "number": "03",
+          "title": "写作",
+          "subtitle": "在设定簿里起稿。",
+          "body": "在图谱旁边写新场景。矛盾一出现就浮出来，引到具体规则上，按一下就能覆盖。",
+          "chips": [
+            "Scene draft",
+            "Live check",
+            "Replay"
+          ]
+        }
+      ]
+    },
+    "inputs": {
+      "eyebrow": "03 / 输入",
+      "title": "原稿在哪，Seizn 就到哪。",
+      "subtitle": "四种导入方式。同一份设定簿、同一套审查、同一份设定。",
+      "modes": [
+        {
+          "id": "native",
+          "name": "原生编辑器",
+          "subtitle": "在 Seizn 里直接写。",
+          "body": "在懂设定的编辑器里写。每一段落都跟设定簿对一遍。"
+        },
+        {
+          "id": "docx",
+          "name": "DOCX 导入",
+          "subtitle": "把手稿整篇拿过来。",
+          "body": "拖入 .docx、.rtf、.odt 文件。Seizn 抽出角色、场景、对白，放进设定簿。"
+        },
+        {
+          "id": "plain",
+          "name": "纯文本",
+          "subtitle": "Markdown 友好。",
+          "body": "粘贴或上传 .md 与 .txt。标题成场景，提到的名字成条目。来回一趟不丢东西。"
+        },
+        {
+          "id": "gdocs",
+          "name": "Google Docs",
+          "subtitle": "同步，不复制。",
+          "body": "Doc 接一次。Seizn 让设定簿跟着同步，冲突以评论形式提醒你。"
+        }
+      ]
+    },
+    "conflicts": {
+      "eyebrow": "04 / 冲突",
+      "title": "每一处矛盾，都附根据，分等级。",
+      "subtitle": "等级是信号，不是噪声。critical 直接撞坏设定，minor 标出你也许愿意保留的轻微偏移。",
+      "graphNote": "图谱不是装饰。每条冲突都指向出问题的那个节点和那条边。",
+      "items": [
+        {
+          "severity": "critical",
+          "rule": "character.han_iseul.eye_color",
+          "fact": "第 11 章：韩以瑟眼睛是灰色。",
+          "against": "第 2 章设定写的是棕色。",
+          "cited": [
+            "scene.2.1",
+            "character.han_iseul"
+          ]
+        },
+        {
+          "severity": "major",
+          "rule": "rule.r03 屋顶通行",
+          "fact": "第 7 章：朴志吾在第 9 天进了屋顶。",
+          "against": "规则 r03 把屋顶锁到第 14 天。",
+          "cited": [
+            "rule.r03",
+            "scene.7.4"
+          ]
+        },
+        {
+          "severity": "minor",
+          "rule": "character.yun_hana.club",
+          "fact": "第 18 章：尹哈娜参加天文社。",
+          "against": "设定上是摄影社。也可能是转社。",
+          "cited": [
+            "character.yun_hana"
+          ]
+        }
+      ]
+    },
+    "simulation": {
+      "eyebrow": "05 / 模拟",
+      "title": "落笔前，先回放一次。",
+      "subtitle": "把场景放到设定簿上。Seizn 按 token 投影后续影响。安全路线和风险路线，都打分。",
+      "tokenDiff": "token 级 diff: scene 14.observatory.draft",
+      "replayReady": "回放就绪",
+      "candidates": [
+        {
+          "side": "safe",
+          "label": "安全路线",
+          "score": 92,
+          "title": "韩以瑟在天文台守到天亮。",
+          "body": "守住 r02 与 r04。没有新冲突。后续连得上。",
+          "tokens": [
+            "scene.continues",
+            "rule.r02",
+            "rule.r04"
+          ]
+        },
+        {
+          "side": "risk",
+          "label": "风险路线",
+          "score": 41,
+          "title": "韩以瑟在食蚀顶点前先离开。",
+          "body": "r02 的锚就掉了。后面两个场景失了着力点。",
+          "tokens": [
+            "drops.r02",
+            "scene.16.orphan",
+            "scene.21.orphan"
+          ]
+        }
+      ]
+    },
+    "trust": {
+      "eyebrow": "06 / 信任",
+      "title": "默认就是作者级。",
+      "subtitle": "立得住的判断、查得清的底层、说得清的隔离规则。",
+      "items": [
+        {
+          "icon": "lock",
+          "title": "工作区隔离",
+          "body": "样例 IP 是合成的。你的手稿不会喂任何公开模型。"
+        },
+        {
+          "icon": "key",
+          "title": "支持 BYOK",
+          "body": "用你自己的 Anthropic key。原价五折，token 不设上限。"
+        },
+        {
+          "icon": "archive",
+          "title": "可回放的设定",
+          "body": "每一次判决都留底。回滚、分支、审计任何决定。"
+        },
+        {
+          "icon": "shield",
+          "title": "SFW 限定",
+          "body": "Litheon LLC 在严格的安全内容规则下运营 Seizn。"
+        }
+      ]
+    },
+    "pricing": {
+      "eyebrow": "07 / 价格",
+      "title": "为设定簿付费，不是为 LLM。",
+      "subtitle": "BYOK 让价格减半，token 上限拿掉。年付省 15%。每个等级都有 30 天试用。",
+      "byok": "BYOK 五折",
+      "yearly": "按年付省 15%",
+      "start": "开始",
+      "contact": "联系销售",
+      "mostPicked": "最多人选",
+      "blurbs": {
+        "indie": "适合一个人扛住自己设定的作者。",
+        "pro": "适合发布多个 IP 的职业作者和小团队。",
+        "studio": "多 IP、多作者。审计日志、角色权限、专属审查队列。",
+        "enterprise": "数据驻留、SSO、本地回放归档、高级 SLA，按需定制。"
+      },
+      "features": {
+        "indie": [
+          "1 个 IP 项目",
+          "设定簿与回放",
+          "审查无上限",
+          "30 天试用，无需信用卡"
+        ],
+        "pro": [
+          "5 个 IP 项目",
+          "设定的分支与 diff",
+          "冲突审查优先",
+          "3 人协作",
+          "BYOK 五折"
+        ],
+        "studio": [
+          "每月 2,000 万 token",
+          "工作室级审查运营",
+          "面向更大发布的用量复盘"
+        ],
+        "enterprise": [
+          "规模无上限",
+          "需启用 BYOK",
+          "定制安全与采购支持"
+        ]
+      }
+    },
+    "faq": {
+      "eyebrow": "08 / 常见问题",
+      "title": "作者最先问的五个问题。",
+      "items": [
+        {
+          "q": "Seizn 跟 Sudowrite、NovelCrafter 有什么不同？",
+          "a": "Seizn 不是写作助手。它是设定簿。我们不替你写文字；我们一字一句守住事实，矛盾出现的那一刻就告诉你。"
+        },
+        {
+          "q": "BYOK 到底解锁什么？",
+          "a": "用你自己的 Anthropic key，只付原价的一半。token 不设上限。"
+        },
+        {
+          "q": "我能把设定带走吗？",
+          "a": "随时。设定簿都能导出成结构化 JSON、Markdown 或 DOCX。不锁人。停用就把作品带走。"
+        },
+        {
+          "q": "我的手稿会怎么处理？",
+          "a": "你的稿子跟样例 IP、跟任何公开模型训练都隔开。这一页上的黎明 demo 是合成数据，不是真实客户。"
+        },
+        {
+          "q": "试用要绑卡吗？",
+          "a": "不要。30 天，不绑卡。30 天后选一个等级，否则项目转入只读模式再保留 60 天。"
+        }
+      ]
+    },
+    "footer": {
+      "tagline": "作者记忆，一字一句守住。SFW 限定。为设定权威而生。",
+      "product": "产品",
+      "company": "公司",
+      "tools": "作者工具",
+      "developers": "开发者",
+      "links": {
+        "workflow": "工作流",
+        "demo": "演示",
+        "pricing": "价格",
+        "docs": "文档",
+        "about": "关于",
+        "trust": "信任与隐私",
+        "privacy": "隐私",
+        "terms": "条款",
+        "beta": "Beta 披露",
+        "status": "运行状态",
+        "contact": "联系",
+        "ledger": "设定簿",
+        "replay": "回放",
+        "byok": "BYOK 指南",
+        "changelog": "更新记录",
+        "engine": "Engine →",
+        "sdk": "@seizn/sdk-js",
+        "mcp": "@seizn/mcp"
+      },
+      "entity": "© 2026 Seizn by Litheon LLC · Wyoming",
+      "version": "v1.0 · 黎明 demo 为合成数据"
+    },
+    "engine": {
+      "badge": "新",
+      "body": "在做游戏 NPC AI？同一套设定引擎，做成 SDK 暴露出来。",
+      "cta": "engine.seizn.com"
+    },
+    "checkout": {
+      "prefix": "我同意",
+      "terms": "服务条款",
+      "connector": "和",
+      "privacy": "隐私政策",
+      "suffix": "。",
+      "loading": "正在打开 Stripe...",
+      "error": "无法开始结账。"
+    }
   }
 }

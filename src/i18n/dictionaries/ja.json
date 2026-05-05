@@ -3233,5 +3233,307 @@
     "incidentsTitle": "Incident reporting",
     "incidentsBody": "Public incident history and current availability are published on the Seizn status page:",
     "statusLink": "View status"
+  },
+  "authorLanding": {
+    "nav": {
+      "workflow": "ワークフロー",
+      "demo": "デモ",
+      "pricing": "料金",
+      "docs": "ドキュメント",
+      "signIn": "ログイン",
+      "start": "無料で試す",
+      "menu": "メニューを開く"
+    },
+    "hero": {
+      "eyebrow": "01 / 作家メモリー",
+      "title": "すべての",
+      "italic": "矛盾",
+      "titleEnd": "を、出荷前に見抜く。",
+      "subtitle": "事実を一つ入れてみてください。Seizn が作家のカノンと照らし合わせます。登場人物8人、ルール22個、30日のタイムライン。判決は作家の手で。",
+      "trialNote": "30日トライアル、カード不要",
+      "byokNote": "BYOK 50%オフ",
+      "yearly": "年払いで15%オフ",
+      "startPlan": "始める",
+      "comparePlans": "Pro・Studio・Enterprise を比べる"
+    },
+    "workflow": {
+      "eyebrow": "02 / ワークフロー",
+      "title": "三段階。一つの台帳。",
+      "subtitle": "取り込んで、確かめて、同じカノンの上で書く。",
+      "steps": [
+        {
+          "number": "01",
+          "title": "取り込み",
+          "subtitle": "カノンをまるごと連れてくる。",
+          "body": "原稿を放り込むか、Google Doc を指すか、世界観ファイルを同期。Seizn が登場人物・場所・ルールを台帳にまとめます。",
+          "chips": [
+            "DOCX",
+            "Plain text",
+            "Google Docs",
+            "Native"
+          ]
+        },
+        {
+          "number": "02",
+          "title": "確認",
+          "subtitle": "作家の判決、記録に。",
+          "body": "事実は一つひとつ判決を受けます。受理・保留・衝突のどれか。確認が真実の基準になり、いつでも巻き戻せます。",
+          "chips": [
+            "canon 142",
+            "pending 8",
+            "conflict 3"
+          ]
+        },
+        {
+          "number": "03",
+          "title": "執筆",
+          "subtitle": "台帳の中で下書き。",
+          "body": "グラフのそばで新しい場面を書きます。矛盾はその場で浮かびます。どのルールが引っかかったかが見え、ひと押しで上書きできます。",
+          "chips": [
+            "Scene draft",
+            "Live check",
+            "Replay"
+          ]
+        }
+      ]
+    },
+    "inputs": {
+      "eyebrow": "03 / 入力",
+      "title": "原稿のあるところまで、Seizn が来ます。",
+      "subtitle": "四つの取り込み方。同じ台帳、同じ確認、同じカノン。",
+      "modes": [
+        {
+          "id": "native",
+          "name": "ネイティブエディタ",
+          "subtitle": "Seizn の中で書く。",
+          "body": "カノンを知っているエディタで、そのまま書きます。一段落ずつ台帳と照らし合わせます。"
+        },
+        {
+          "id": "docx",
+          "name": "DOCX 取り込み",
+          "subtitle": "原稿をそのまま。",
+          "body": ".docx・.rtf・.odt ファイルをドラッグ。Seizn が登場人物・場面・台詞を取り出して台帳に入れます。"
+        },
+        {
+          "id": "plain",
+          "name": "プレーンテキスト",
+          "subtitle": "Markdown と相性よく。",
+          "body": ".md と .txt を貼るかアップロード。見出しは場面に、登場名は項目になります。往復で欠けません。"
+        },
+        {
+          "id": "gdocs",
+          "name": "Google Docs",
+          "subtitle": "コピーではなく同期。",
+          "body": "Doc を一度つなぐだけ。Seizn が台帳を合わせ、衝突はコメントで知らせます。"
+        }
+      ]
+    },
+    "conflicts": {
+      "eyebrow": "04 / 衝突",
+      "title": "すべての矛盾を、根拠と等級で。",
+      "subtitle": "深刻度はノイズではなく信号です。critical はカノンを真正面から壊し、minor は作家が残したい流れの揺らぎを示します。",
+      "graphNote": "グラフは飾りではありません。衝突ごとに、どのノードとどの辺が壊れたかを指します。",
+      "items": [
+        {
+          "severity": "critical",
+          "rule": "character.han_iseul.eye_color",
+          "fact": "11話: ハン・イスルの瞳が灰色。",
+          "against": "2話のカノンでは茶色。",
+          "cited": [
+            "scene.2.1",
+            "character.han_iseul"
+          ]
+        },
+        {
+          "severity": "major",
+          "rule": "rule.r03 屋上の出入り",
+          "fact": "7話: パク・ジオが9日目に屋上へ。",
+          "against": "ルール r03 は14日まで屋上を閉じます。",
+          "cited": [
+            "rule.r03",
+            "scene.7.4"
+          ]
+        },
+        {
+          "severity": "minor",
+          "rule": "character.yun_hana.club",
+          "fact": "18話: ユン・ハナが天文部に参加。",
+          "against": "カノンは写真部。部活替えの可能性も。",
+          "cited": [
+            "character.yun_hana"
+          ]
+        }
+      ]
+    },
+    "simulation": {
+      "eyebrow": "05 / シミュレーション",
+      "title": "書き込む前に、巻き戻して試す。",
+      "subtitle": "場面を台帳に当てます。Seizn がトークン単位で影響を映します。安全な道と危ない道、点数まで。",
+      "tokenDiff": "トークン単位 diff: scene 14.observatory.draft",
+      "replayReady": "巻き戻し準備完了",
+      "candidates": [
+        {
+          "side": "safe",
+          "label": "安全な道",
+          "score": 92,
+          "title": "ハン・イスルが夜明けまで天文台に残る。",
+          "body": "r02 と r04 を守ります。新しい衝突なし。続きは保たれます。",
+          "tokens": [
+            "scene.continues",
+            "rule.r02",
+            "rule.r04"
+          ]
+        },
+        {
+          "side": "risk",
+          "label": "危ない道",
+          "score": 41,
+          "title": "ハン・イスルが食の頂点前に去る。",
+          "body": "r02 の錨が外れます。後続の二つの場面が拠り所を失います。",
+          "tokens": [
+            "drops.r02",
+            "scene.16.orphan",
+            "scene.21.orphan"
+          ]
+        }
+      ]
+    },
+    "trust": {
+      "eyebrow": "06 / 信頼",
+      "title": "作家基準で、はじめから。",
+      "subtitle": "守れる判断、監査できる土台、証明できる切り分けの規則。",
+      "items": [
+        {
+          "icon": "lock",
+          "title": "ワークスペース隔離",
+          "body": "サンプル IP は合成です。作家の原稿が公開モデルの学習に回ることはありません。"
+        },
+        {
+          "icon": "key",
+          "title": "BYOK 対応",
+          "body": "ご自身の Anthropic キーで。定価から50%オフ、トークン無制限。"
+        },
+        {
+          "icon": "archive",
+          "title": "巻き戻せるカノン",
+          "body": "判決はすべて記録。戻す、分岐する、どの判断も監査できます。"
+        },
+        {
+          "icon": "shield",
+          "title": "SFW 限定の方針",
+          "body": "Litheon LLC は Seizn を SFW (安全な内容) ルールの下で運営します。"
+        }
+      ]
+    },
+    "pricing": {
+      "eyebrow": "07 / 料金",
+      "title": "値がつくのは台帳。LLM ではありません。",
+      "subtitle": "BYOK で価格は半分、トークン上限は外れます。年払いで15%オフ。どの段階にも30日トライアル。",
+      "byok": "BYOK 50%オフ",
+      "yearly": "年払いで15%オフ",
+      "start": "始める",
+      "contact": "営業に相談",
+      "mostPicked": "よく選ばれる",
+      "blurbs": {
+        "indie": "自分のカノンを一人で抱える作家へ。",
+        "pro": "複数 IP を出すプロ作家と小さなスタジオへ。",
+        "studio": "複数 IP・複数作家。監査ログ、権限、専用の確認キュー。",
+        "enterprise": "データ所在地、SSO、オンプレの巻き戻しアーカイブ、プレミアム SLA。"
+      },
+      "features": {
+        "indie": [
+          "IP プロジェクト 1個",
+          "カノン台帳と巻き戻し",
+          "確認は無制限",
+          "30日トライアル、カード不要"
+        ],
+        "pro": [
+          "IP プロジェクト 5個",
+          "カノンの分岐と diff",
+          "衝突確認の優先",
+          "3人チーム",
+          "BYOK 50%オフ"
+        ],
+        "studio": [
+          "月 2,000万トークン",
+          "スタジオ確認運営",
+          "大型ローンチの利用見直し"
+        ],
+        "enterprise": [
+          "規模制限なし",
+          "BYOK 必須",
+          "個別のセキュリティ・調達支援"
+        ]
+      }
+    },
+    "faq": {
+      "eyebrow": "08 / よくある質問",
+      "title": "作家から先に届く五つの問い。",
+      "items": [
+        {
+          "q": "Sudowrite や NovelCrafter と何が違いますか？",
+          "a": "Seizn は書き手の代わりではありません。カノンの台帳です。文章は作りません。事実を字義どおりに掴み、矛盾が現れた瞬間に知らせます。"
+        },
+        {
+          "q": "BYOK で何が外れますか？",
+          "a": "ご自身の Anthropic キーを使えば、定価の50%だけ。トークンは無制限です。"
+        },
+        {
+          "q": "カノンは書き出せますか？",
+          "a": "いつでも。台帳は構造化 JSON、Markdown、DOCX で出ます。囲い込みなし。やめる時はそのまま作品を持って出られます。"
+        },
+        {
+          "q": "原稿はどう扱われますか？",
+          "a": "作品はサンプル IP からも、公開モデルの学習からも切り分けます。このページの早暁デモは合成データで、実在の顧客ではありません。"
+        },
+        {
+          "q": "トライアルにカードは要りますか？",
+          "a": "不要です。30日、カードなし。30日を過ぎたら段階を選ぶか、60日のあいだ読み取り専用で保管します。"
+        }
+      ]
+    },
+    "footer": {
+      "tagline": "作家のメモリー、字義どおりに守ります。SFW 限定。カノンの権威のために。",
+      "product": "プロダクト",
+      "company": "会社",
+      "tools": "作家ツール",
+      "developers": "開発者向け",
+      "links": {
+        "workflow": "ワークフロー",
+        "demo": "デモ",
+        "pricing": "料金",
+        "docs": "ドキュメント",
+        "about": "会社案内",
+        "trust": "信頼とプライバシー",
+        "privacy": "プライバシー",
+        "terms": "利用規約",
+        "beta": "ベータ開示",
+        "status": "稼働状況",
+        "contact": "問い合わせ",
+        "ledger": "カノン台帳",
+        "replay": "巻き戻し",
+        "byok": "BYOK ガイド",
+        "changelog": "更新履歴",
+        "engine": "Engine →",
+        "sdk": "@seizn/sdk-js",
+        "mcp": "@seizn/mcp"
+      },
+      "entity": "© 2026 Seizn by Litheon LLC · Wyoming",
+      "version": "v1.0 · 早暁デモは合成データ"
+    },
+    "engine": {
+      "badge": "新着",
+      "body": "ゲーム NPC AI を作っていますか？同じカノンエンジンを SDK として。",
+      "cta": "engine.seizn.com"
+    },
+    "checkout": {
+      "prefix": "",
+      "terms": "利用規約",
+      "connector": "および",
+      "privacy": "プライバシーポリシー",
+      "suffix": "に同意します。",
+      "loading": "Stripe を開いています...",
+      "error": "チェックアウトを開始できませんでした。"
+    }
   }
 }
