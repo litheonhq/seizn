@@ -424,9 +424,20 @@
         "connect": "接続",
         "system": "システム",
         "build": "開発",
-        "integrate": "連携"
+        "integrate": "連携",
+        "workspace": "ワークスペース",
+        "account": "アカウント"
       },
-      "memoryEditor": "メモリーエディター"
+      "memoryEditor": "メモリーエディター",
+      "inbox": "インボックス",
+      "review": "レビュー",
+      "characters": "人物",
+      "graph": "関係グラフ",
+      "timeline": "タイムライン",
+      "conflicts": "対立",
+      "simulate": "シミュレート",
+      "audit": "監査ログ",
+      "byok": "APIキー連携"
     },
     "pinSidebar": "サイドバーを固定",
     "unpinSidebar": "サイドバーを折りたたむ",
@@ -1307,7 +1318,13 @@
       "create": "作成",
       "createApiKey": "新しいAPIキー",
       "createOrg": "新規プロジェクト",
-      "switchOrg": "プロジェクトを切り替え"
+      "switchOrg": "プロジェクトを切り替え",
+      "workspace": "ワークスペース",
+      "search": "検索",
+      "command": "コマンド",
+      "write": "執筆",
+      "notifications": "通知",
+      "toggleSidebar": "サイドバーを切替"
     },
     "theme": {
       "light": "ライト",
@@ -1516,6 +1533,116 @@
     },
     "brand": {
       "tagline": "オーサー メモリ · ライブ"
+    },
+    "workspace": {
+      "switcher": {
+        "studio": "Studio",
+        "entries": "{count}件のエントリ"
+      }
+    },
+    "memoryHealth": {
+      "synced": "メモリ同期済み",
+      "syncing": "同期中...",
+      "error": "同期エラー",
+      "factsCount": "{relativeTime}・事実{count}件"
+    },
+    "inbox": {
+      "title": "インボックス",
+      "newCount": "新着{count}件",
+      "filter": {
+        "all": "すべて",
+        "conflicts": "対立",
+        "reviews": "レビュー",
+        "characters": "人物"
+      },
+      "empty": "インボックスは空です。",
+      "emptyBody": "下書き中にMemory v3がキャノン・人物・タイムラインの対立をここに集めます。",
+      "detail": {
+        "evidence": "根拠",
+        "suggestion": "提案された解決",
+        "memorySuggests": "Memory v3の提案",
+        "applySuggestion": "提案を適用",
+        "openIn": "{episode}で開く",
+        "notConflict": "対立ではない"
+      },
+      "priority": "優先度 {p}"
+    },
+    "characters": {
+      "title": "人物",
+      "add": "人物を追加",
+      "filter": "人物を検索",
+      "col": {
+        "name": "名前",
+        "role": "役割",
+        "episodes": "話",
+        "relations": "関係",
+        "conflicts": "対立"
+      },
+      "role": {
+        "lead": "主役",
+        "supporting": "助演",
+        "minor": "脇役"
+      },
+      "detail": {
+        "canonFacts": "キャノン事実",
+        "relationships": "関係"
+      },
+      "empty": "ここは静かですね。",
+      "emptyBody": "最初の人物を追加してください。キャノンを記録しながら矛盾を見守ります。",
+      "emptyCta": "人物を追加"
+    },
+    "graph": {
+      "title": "関係グラフ",
+      "summary": "人物{characters}名・関係{ties}本",
+      "mode": {
+        "force": "力学",
+        "radial": "放射",
+        "hierarchy": "階層"
+      },
+      "legend": {
+        "lead": "主役",
+        "supporting": "助演",
+        "minor": "脇役",
+        "tie": "関係",
+        "conflict": "対立"
+      },
+      "detail": {
+        "directTies": "直接関係・{count}",
+        "tieStrength": "関係の強さ",
+        "avgStrength": "平均 {percent}% ・関係 {count}本"
+      },
+      "empty": "まだ関係はありません。",
+      "emptyBody": "人物二名と関係を追加してください。執筆中にグラフが自動で埋まります — 手作業は不要です。",
+      "emptyCta": "関係を追加"
+    },
+    "conflicts": {
+      "title": "対立",
+      "criticalCount": "重大 {count}件",
+      "warningCount": "警告 {count}件",
+      "severity": {
+        "p1": "重大",
+        "p2": "警告",
+        "p3": "メモ"
+      },
+      "action": {
+        "resolve": "解決",
+        "openEvidence": "根拠を開く",
+        "dismiss": "閉じる"
+      }
+    },
+    "simulate": {
+      "empty": {
+        "title": "最初のシーンをシミュレート",
+        "body": "人物二名と一拍のビートを置いてください。キャノンに対する反応を再生します — 本文に書く前に確認できます。",
+        "cta": "シミュレーションを設定"
+      },
+      "hint": {
+        "new": "新規シミュレーション",
+        "help": "シミュレーションの使い方"
+      }
+    },
+    "fallback": {
+      "body": "このタブは同じシェルパターンを使います。"
     }
   },
   "pricingPage": {
