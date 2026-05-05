@@ -65,4 +65,20 @@ describe('Track 2 Redis production startup guard', () => {
     process.env.UPSTASH_REDIS_REST_TOKEN = 'token';
     expect(() => assertTrack2RedisConfiguredForProduction()).not.toThrow();
   });
+
+  it('does not throw when NEXT_PUBLIC_E2E_MODE=true even in production without UPSTASH', () => {
+    process.env.NODE_ENV = 'production';
+    process.env.NEXT_PUBLIC_E2E_MODE = 'true';
+    delete process.env.UPSTASH_REDIS_REST_URL;
+    delete process.env.UPSTASH_REDIS_REST_TOKEN;
+    expect(() => assertTrack2RedisConfiguredForProduction()).not.toThrow();
+  });
+
+  it('does not throw when SKIP_ENV_VALIDATION=true even in production without UPSTASH', () => {
+    process.env.NODE_ENV = 'production';
+    process.env.SKIP_ENV_VALIDATION = 'true';
+    delete process.env.UPSTASH_REDIS_REST_URL;
+    delete process.env.UPSTASH_REDIS_REST_TOKEN;
+    expect(() => assertTrack2RedisConfiguredForProduction()).not.toThrow();
+  });
 });

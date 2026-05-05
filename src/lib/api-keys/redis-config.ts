@@ -9,6 +9,13 @@ export function assertTrack2RedisConfiguredForProduction(): void {
     return;
   }
 
+  if (
+    process.env.NEXT_PUBLIC_E2E_MODE === 'true' ||
+    process.env.SKIP_ENV_VALIDATION === 'true'
+  ) {
+    return;
+  }
+
   if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) {
     throw new Error(TRACK_2_REDIS_PRODUCTION_ERROR);
   }
