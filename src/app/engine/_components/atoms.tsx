@@ -163,26 +163,18 @@ export function Arrow() {
   );
 }
 
-export function Logo({ size = 22 }: { size?: number }) {
+export function Logo({ size = 24 }: { size?: number }) {
   return (
     <div style={{ display: "inline-flex", alignItems: "center", gap: 10 }}>
-      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden>
-        <defs>
-          <linearGradient id="seiznEngineWave" x1="0" y1="0" x2="24" y2="24">
-            <stop offset="0" stopColor="#7C3AED" />
-            <stop offset="1" stopColor="#22D3EE" />
-          </linearGradient>
-        </defs>
-        <path
-          d="M4 16 C 7 16, 8 8, 12 8 C 16 8, 17 16, 20 16"
-          stroke="url(#seiznEngineWave)"
-          strokeWidth="2.4"
-          strokeLinecap="round"
-          fill="none"
-        />
-        <circle cx="4" cy="16" r="1.6" fill="#7C3AED" />
-        <circle cx="20" cy="16" r="1.6" fill="#22D3EE" />
-      </svg>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/seizn-engine-logo.png"
+        alt=""
+        width={size}
+        height={size}
+        style={{ display: "block", flexShrink: 0 }}
+        aria-hidden
+      />
       <span style={{ display: "inline-flex", alignItems: "baseline", gap: 8, color: "var(--engine-text-strong)", fontSize: 16, fontWeight: 600, letterSpacing: "-0.01em" }}>
         Seizn
         <span className="engine-mono" style={{ fontSize: 11, letterSpacing: "0.18em", color: "var(--engine-violet-soft)", textTransform: "uppercase", fontWeight: 500 }}>
