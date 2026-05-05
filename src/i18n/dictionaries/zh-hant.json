@@ -1739,6 +1739,67 @@
     },
     "fallback": {
       "body": "此頁籤使用相同的殼層樣式。"
+    },
+    "account": {
+      "apiKeys": {
+        "title": "API 金鑰",
+        "description": "為 Seizn API 與 MCP（Track 2）建立並管理金鑰。",
+        "capHint": "每個帳號最多可建立 {cap} 個金鑰。",
+        "newKey": "新增 API 金鑰",
+        "create": "建立",
+        "cancel": "取消",
+        "done": "完成",
+        "name": "名稱",
+        "scopes": "權限範圍",
+        "scopesDefault": "預設權限:recall、remember、graph、search。",
+        "copyKey": "複製金鑰",
+        "saveItNow": "請立刻儲存。此金鑰僅顯示一次。",
+        "created": "已建立 API 金鑰",
+        "rotated": "已輪換 API 金鑰",
+        "rotate": "輪換",
+        "revoke": "撤銷",
+        "revokeTitle": "撤銷此金鑰?",
+        "revokeBody": "撤銷「{name}」後,使用此金鑰的呼叫會立即停止,應用程式需要更換新金鑰。",
+        "rotateTitle": "輪換此金鑰?",
+        "rotateBody": "輪換「{name}」會產生新金鑰並撤銷現有金鑰。請先更新您的應用程式再繼續。",
+        "usage": "使用量",
+        "rateLimit": "每分鐘上限",
+        "lastUsed": "最後使用",
+        "createdAt": "建立時間",
+        "empty": "尚無啟用中的金鑰。請點擊「新增 API 金鑰」建立。",
+        "errors": {
+          "capReached": "已達帳號金鑰上限。",
+          "invalidName": "請填寫金鑰名稱。",
+          "internal": "操作未能完成,請稍後再試。",
+          "revokeFailed": "撤銷金鑰失敗。",
+          "rotateFailed": "輪換金鑰失敗。",
+          "copyFailed": "複製失敗。"
+        },
+        "toasts": {
+          "copied": "金鑰已複製到剪貼簿。",
+          "revoked": "金鑰已撤銷。"
+        },
+        "audit": {
+          "link": "稽核紀錄",
+          "title": "API 金鑰稽核紀錄",
+          "description": "記錄 API 金鑰的建立、撤銷、輪換、限速、配額與權限事件。",
+          "filterAction": "事件",
+          "from": "起始日期",
+          "to": "結束日期",
+          "reset": "重設",
+          "exportCsv": "匯出 CSV",
+          "empty": "沒有符合條件的事件。",
+          "action": {
+            "all": "全部",
+            "created": "建立",
+            "revoked": "撤銷",
+            "rotated": "輪換",
+            "rate_limited": "限速",
+            "quota_exceeded": "超過配額",
+            "scope_denied": "權限拒絕"
+          }
+        }
+      }
     }
   },
   "pricingPage": {
