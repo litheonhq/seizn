@@ -67,6 +67,42 @@ User-conducted interviews with Korean web novel writers. N≥2, patterns confirm
 - **Wedge validation.** All four candidate wedges (canon validation / KR-native / multi-tool consolidation / web-CLI-desktop sync) drew positive interest, with the **strongest excitement around** 'finds setting errors I didn't realize I'd made' — i.e. Memory v3 in writing context.
 - **Required for v1:** post-draft spellcheck (on demand), configurable autosave interval, export to docx / HWP / pdf / txt / md.
 
+### 2.1.1 Extended primary signal — KR writer YouTube comment dataset (N≈40)
+
+Beyond the 2-writer interview, we sampled ~40 KR web novel writer comments on a public YouTube video about writing programs (collected by the user, May 2026). This is *secondary* primary data: writers self-describing their tooling without being prompted by us. Patterns from the interview are re-confirmed at scale and 8 new patterns surface.
+
+**Tool usage frequency (mentions in the comment set):**
+
+| Tool | Mentions | Sentiment | Representative quotes (anonymized) |
+| --- | --- | --- | --- |
+| 메모장 (Notepad) | ~12 | Positive (gravity well) | '그냥 메모장 켭니다 귀찮아용' / '가볍다는 거 + 안정적' / '기본 메모장이 기능이 좋더군요. 글자 수 표시, 실수로 꺼도 기억해주고. 오탈자는 ai로' |
+| 뮤블 (Mubble) | ~8 | Strongly positive, **active migration target** | '뮤블이 정말 소설 쓰라고 만든 앱이라 편한 기능이 많아요' / '한글 쓰다가 뮤블로 옮겼는데 매우 만족 중' / '뮤블 데스크탑 버전 좋아요' |
+| 한글 / 한컴오피스 | ~6 (use + complaint) | Mixed → negative | '한컴 독스는 쓰지 마세요. 자동 저장 기능이 씹창이 나있고 단어의 앞뒤가 뒤집어지는 오류 (라면→면라). 마감 40분 남기고 4000자가 넘게 날아가서 휴재' / '한글 쓰다가 세이브 안 되는 걸 몇 번이나 겪고' |
+| 스크리브너 (Scrivener) | ~6 | Positive on stability, negative on UX/HWP/Android | '저장 쪽 안정성이 뛰어나서 좋더라고요. 그냥 항상 안심이 됨' / '한 바인더에 수백화 다 몰아넣고 그때그때 검색이 되는 게 압도적으로 편리. 저장이 안돼서 날아가는 경우를 2년째 경험해본 적이 없습니다' / '단점이라 하면 매니지에 원고 보낼 때 워드로밖에 추출이 안 돼서 PD가 처음에 좀 당황' / '쓰기 너무 복잡하고 기능이 직관적이지가 않음' / **'스크리브너가 안드로이드만 지원했다면... 바로 썼을 거 같은데'** |
+| 옵시디언 (Obsidian) | ~3 (power user segment) | Strongly positive | '검색 쉬움, 설정 위키화 가능, AI 접근 권한 쉬움 (문장 수정, 요약, 의미기반 검색, 설정 위키화, AI 브레인스토밍, 맞춤법 검사, **설정 오류 찾기**, 평가). 가벼움. 클라우드 기능 (모바일/집필/읽기)' / '옵시디언으로 쓰고 깃헙으로 관리합니다(?)' |
+| 노벨라 (Novela) | ~3 | Positive | '노벨라가 어플도 나와서 사용하기 편하고, 이전 내용 검색 기능도 있어서 찾기 편함' |
+| 구글 독스 | ~3 | Positive on autosave | '한글이 싫고 자동 저장이 되니까' |
+| Notepad++ | 2 | Positive | '무료이기도 하고 프로그래밍용이다 보니 북마크나 자동저장 같은 기능도 많아서 은근히 편합니다' |
+| Other (카카오톡 / 메일함 / 삼성노트 / Pencake / 업노트 / 문피아 서재 / 워드 / Notion + 엑셀 combo) | each 1–2 | Neutral | '문피아 글작성 페이지에 바로 쓰는 게 국룰 아니었소' / '모바일 삼성 노트' / '한글 (완성), 메모장 (설정/플롯/초고), 엑셀 (매화 스탯/인벤), 오탈자 검사 (부산대맞춤법)' |
+
+**8 new patterns surfaced (each changes a design decision):**
+
+1. **한컴 독스 has a documented data-loss bug pattern.** Writers report 'word inversion' (라면 → 면라) and unsaved 4,000-character losses leading to chapter postponements ('휴재'). One writer named the bug specifically: 'auto-save is broken'. This is not anecdote — it's a recurring complaint shared across multiple commenters. Implication: 'never lose a word' marketing is not a hook, it's verified writer trauma.
+
+2. **뮤블 (Mubble) is the largest active KR migration target — bigger than Pensiv.** Pensiv has ~50 closed-beta users; Mubble has visible, organic word-of-mouth ('한글에서 뮤블로 이주' is the dominant migration path in this comment set). Pensiv direction is structure-management; Mubble direction is 'a tool actually built for novel writing'. Implication: §3.3 of this doc focused on Pensiv as the primary KR competitor; we now add §3.3.1 to handle Mubble as the actual primary competitor.
+
+3. **한글/워드 hits a hard performance ceiling at ~40–50 chapters in single-file mode.** Direct quote: '한글, 워드는 파일 하나에 몰아서 장편을 썼을 때 체감상 4–50화 인아웃부터는 버벅이기 시작'. Even on '400만원짜리 최신 컴'. This validates our ≥500k-character target and turns it from a feature into a *competitive moat*: 한글/워드 cannot do this; Scrivener can; we must too.
+
+4. **Scrivener's #1 churn driver is the missing Android app.** Direct quote: '스크리브너가 안드로이드만 지원했다면... 바로 썼을 거 같은데.' Scrivener's secondary churn driver is the HWP-incompatibility burden ('PD가 처음에 좀 당황'). Implication: our Phase 4 'mobile + HWP' plan may need to move earlier — both are explicit Scrivener pain points that, if we have them when Scrivener does not, are direct switching motivators.
+
+5. **The publisher / PD workflow requires *two* formats: docx outbound, HWP inbound.** Direct quote: '매니지에 원고 보낼 때 워드로밖에 추출이 안 돼서... 교정고는 항상 한글로 돌아와서 그게 좀 번거롭긴 해요'. Implication: our v1 docx export covers half (sending). The other half (receiving and editing HWP) needs at least HWP *read* in v1 (so writers can open the editor's redlines) — HWP write can defer.
+
+6. **Obsidian + AI is a power-user wedge we hadn't mapped.** Direct quote on the Obsidian workflow: '검색 쉬움, 설정 위키화 가능, AI 접근 권한 쉬움 (문장 수정, 요약, 의미기반 검색, 설정 위키화, ai 브레인스토밍, 맞춤법 검사, **설정 오류 찾기**, 평가). 가벼움. 클라우드 (모바일/집필/읽기)'. The exact list — *especially '설정 오류 찾기'* — is what we offer with Memory v3 conflict detection. These users are technical, do their own AI prompt orchestration, and pay for capability. They are *not* our primary target, but an .md-native + git-friendly path could absorb them. Implication: §3 add an 'Obsidian power-user pathway'; §4 add export-as-markdown + git-friendly file layout as a v1 must.
+
+7. **The performance budget is 'Notepad-light'.** Notepad is the gravity well, mentioned more than any other tool in this dataset. Notepad is ~1 MB, sub-100 ms launch, never crashes, never loses data. Our Tauri 2.x ~10 MB target is acceptable; an Electron alternative at ~80–200 MB would lose this entire segment. Implication: the Tauri decision in §5.7 is now non-negotiable — Electron is explicitly off the table.
+
+8. **부산대 맞춤법 검사기 is the de-facto writer standard.** A multi-tool combo writer wrote: '오탈자 검사 - 부산대맞춤법 검사기'. This is named without explanation, treated as the obvious choice. Implication: §4.5's plan to integrate the open-source 부산대 API is the right call — this is the spelling tool writers already trust.
+
 ### 2.2 Secondary research — Korean tooling landscape (2026-05)
 
 Active KR-native and KR-friendly writing tools:
@@ -75,7 +111,7 @@ Active KR-native and KR-friendly writing tools:
 | --- | --- | --- | --- | --- |
 | **펜시브 (pensiv)** | 라움랩스 | Multi-file (docs / plot board / character / canvas / folder), AI as validation layer (Ask / Plan / Agent / Review). NotebookLM-style direction. | Closed beta, ~50 writers including Naver-published authors. AES at rest + Google KMS keys. Foundation API (GPT/Gemini/Claude), no training on user data. Free basic tier. Mobile app planned 2026 Q1. Web only at present. | **Most direct competitor in our space.** Same canon-validation thesis, but assumes Scrivener-style multi-file structure that interviews say writers do not actually use. |
 | **타입탁 (TypeTak)** | TypeTak | AI sentence recommendation + chatbot feedback. Web-based. | Live. AI suggestion adoption rate 45.6% — meaning writers reject majority of AI sentence suggestions. Validates 'AI off by default' design choice. | Less competitive — focused on sentence-level AI assist, not project-level memory. |
-| **뮤블 (Mubble)** | (KR indie) | Episode / wiki / memo three-tier, cross-platform editor with workspace splitting. | Live. Lacks deep long-series structure per Pensiv's own competitive note. | Adjacent. |
+| **뮤블 (Mubble)** | (KR indie) | Episode / wiki / memo three-tier, cross-platform editor with workspace splitting. Word-counter, stopwatch, dictionary widgets. Workspace screen-split. | **Live and actively pulling writers off 한글 (per the YT comment dataset above — the dominant migration path). Desktop version praised. KR-native through and through.** | **Now upgraded to PRIMARY KR competitor** (above Pensiv). See §3.3.1. |
 | **노벨라 (Novela)** | (KR indie) | Web-based AI editor. Notes / research / characters / plot in one app. ChatGPT-style models, no user-content training. | Live. Surface-level AI integration. | Adjacent. |
 | **한컴오피스 한글 (HWP)** | 한컴 | Standard KR document format. Used by writers for publishing layout (편집 용지, 글자 모양, 문단 모양) before submission. | Required. Submission to KR publishers, contests, and government channels expects HWP. Tooling is mostly proprietary. |
 | **구글 독스** | Google | Strongest sync + version recovery. | Default fallback for writers who got burned by Word's Drive sync. |
@@ -153,6 +189,42 @@ Pensiv is the closest competitor and we should be honest about it. Differences t
 
 Where we lose to Pensiv on day one: brand recognition in KR closed beta, ~50 already-onboarded writers. Where we beat them by design: writers don't actually use multi-file Scrivener-style structure; we match the real workflow. Plus we have Memory v3 already in production.
 
+### 3.3.1 Direct competitive differentiation — Mubble (뮤블) — PRIMARY competitor
+
+Per the YT comment dataset (§2.1.1), Mubble is *the* tool KR writers are actively migrating to from 한글, more than any other in our 2026 landscape. We must differentiate sharply.
+
+| Dimension | Mubble (뮤블) | Author Studio |
+| --- | --- | --- |
+| Positioning | 'A tool actually built for novel writing.' Light, KR-first, writer-friendly widgets (word counter, stopwatch, dictionary). | 'A writing tool that does not lose your words and does not forget your own canon.' KR-first by design plus AI-native canon recall. |
+| Document model | Episode / wiki / memo three-tier. Wiki is essentially a structured Notion page; memos are scratch. | **Single linear file** matching the interview pattern; Memory v3 *replaces* the wiki — the writer never has to maintain it manually. |
+| Memory / canon validation | Manual wiki entry by the writer. No AI. | **Automatic canon extraction** by Memory v3 from the prose itself. No manual data-entry burden. |
+| Recall (Ctrl-F replacement) | Search across episodes. Text-match. | `@name` semantic recall returns last mentions + current state + pending conflicts. *This is the wedge Mubble cannot match without a memory backend.* |
+| Sync / data safety | Standard cloud sync. Specifics not publicly documented. | Local-first CRDT (Yjs) with three-layer defense (§6). Visible save indicator. Never silent fail. |
+| Surfaces | Desktop (Windows / Mac), some mobile coverage. | Desktop (Tauri 2.x — much lighter than Electron) + Web + CLI from day one; mobile via Tauri 2.x mobile builds in v1.5–v2. |
+| Korean publishing workflow | DOCX export. HWP not first-class (last-confirmed; verify in Phase 0). | DOCX in v1; HWP read in v1, HWP write in v1.5 via rhwp Rust+WASM (resolves Scrivener's 'PD가 처음에 좀 당황' pain). |
+| Performance ceiling on long manuscripts | Specifics unknown — verify with founding writers running ≥40-chapter projects. | Target ≥500k characters with no buffering, validated under stress test (§9 risks). |
+| Multi-author / editor collab | Limited / unknown. | Founding-writer feedback — likely deferred to v2 since interview signal does not yet demand it. |
+| Pricing | Subscription details unconfirmed in this dataset. | Free tier with full export; Pro for AI features and unlimited cloud sync. Always-unlocked export. |
+
+**Strategic implications:**
+
+- We do *not* try to clone Mubble's wiki (writers tell us they don't fill it). We replace it with automatic extraction.
+- Our wedge against Mubble is *not* features — it is **AI-native canon awareness** without manual data entry, plus rock-solid data safety. Mubble offers a clean editor; we offer a clean editor *plus* the recall layer Memory v3 provides.
+- Mubble's existing user base is the most likely founding-writer pool for us, since they already chose 'a tool built for novels'. They may switch if recall + safety meaningfully reduces their effort.
+- We do not bash Mubble. The marketing posture is 'we extend the same direction Mubble started, with the canon layer that has to be automated to stay in flow'.
+
+### 3.3.2 Obsidian power-user pathway
+
+The YT dataset surfaces a small but vocal Obsidian + AI segment using Obsidian for: search, wiki structure, AI-driven setting-error detection, mobile sync, lightweight clients. They self-orchestrate prompts and pay nothing extra. They are not our primary target but are absorbable.
+
+Pathway design (added to MVP scope as §4.x clarifications):
+
+- **Filesystem-native storage option.** On desktop, Author Studio offers 'Use a folder I choose' alongside 'Use cloud project'. The folder layout matches Obsidian's: one `.md` per chapter, a `_canon/` directory for the recall index, a `.author-studio.json` for project metadata. Git-friendly — power users can version and back up themselves.
+- **Markdown round-trip.** Every Author Studio document opens, saves, and exports as plain CommonMark (with our chapter-marker convention). Obsidian users can mirror an Author Studio project into Obsidian and vice versa.
+- **Export to Obsidian vault.** A one-click 'Export project as Obsidian-compatible vault' bundles the markdown + canon wiki pages (auto-generated from Memory v3) so power users can take their data and leave at any time. The opposite of Novelcrafter's 'read-only on cancel'.
+
+This is a small additional surface (~0.5–1 week of effort) and earns considerable goodwill from a vocal segment.
+
 ### 3.4 What we explicitly do NOT build (anti-scope)
 
 These are excluded from v1 *and v2*:
@@ -213,13 +285,14 @@ The eight features below define v1. Anything not on this list is post-v1.
 - Result rendered in a side panel as a list with 'Accept / Skip / Add to dictionary' per item. Body text is not visually marked unless the user clicks into a finding.
 - v1 uses the open-source 부산대 맞춤법 검사 API (with rate-limit) or a vendored offline checker; v2 considers commercial license if usage demands it.
 
-### 4.6 Multi-format export
+### 4.6 Multi-format export — schedule revised after YT comment data
 
-- v1: docx, md, txt, pdf.
-- docx export uses standard 한글 fonts + 웹소설 조판 defaults (편집 용지, 줄간격, 문단 들여쓰기) so that the docx opens cleanly in 한컴오피스 with minimal cleanup.
-- v2: HWP write via `rhwp` Rust + WASM lib embedded in the Tauri Rust backend. Same project file, native HWP output.
-- Each export is reproducible (same input → same output bytes), versioned, and saved alongside the project for audit.
-- Honest UI message: 'HWP export is on the v2 roadmap. For now we recommend DOCX → 한컴오피스 → 다른 이름으로 저장 → HWP. v2 will let you skip the middle step.'
+The YT dataset (§2.1.1, pattern 5) confirms that publisher / PD workflow uses *two* formats: DOCX outbound, HWP inbound (교정고). A writer described the friction directly: '매니지에 원고 보낼 때 워드로밖에 추출이 안 돼서... 교정고는 항상 한글로 돌아와서 그게 좀 번거롭긴 해요'. This means: docx-only export is fine for *sending* but the writer cannot easily *receive* a redlined HWP back into the editor. We split the requirement.
+
+- **v1 (4–6 weeks):** docx, md, txt, pdf export. **Plus HWP *read*** (open a 교정고 redline back into the editor as a comparison view, even if we cannot write it back). Read-only is achievable with `@ohah/hwpjs` or `hwp.js`.
+- **v1.5 (8–10 weeks, accelerated from prior v2):** HWP *write* via `rhwp` Rust+WASM embedded in the Tauri Rust backend. Resolves the Scrivener-vs-Mubble pain that writers explicitly named.
+- **All exports:** docx uses standard 한글 fonts + 웹소설 조판 defaults (편집 용지, 줄간격, 문단 들여쓰기) so the file opens cleanly in 한컴오피스 with minimal cleanup. Each export is reproducible (same input → same output bytes), versioned, and saved alongside the project for audit.
+- **Honest UI:** 'HWP write is on the v1.5 roadmap. For now we recommend DOCX → 한컴오피스 → 다른 이름으로 저장 → HWP. v1.5 will let you skip the middle step. HWP read works today.'
 
 ### 4.7 Canon recall via `@`
 
@@ -427,39 +500,54 @@ Each of these gets an automated test in CI. Every release runs them. No release 
 
 ### Phase 1 — single-file editor + sync (Week 2–4, ~3 weeks)
 
-- Tauri 2.x desktop shell scaffolded.
-- Lexical + Yjs editor with chapter marker detection.
+- Tauri 2.x desktop shell scaffolded (matches the 'Notepad-light' performance budget per §2.1.1 pattern 7).
+- TipTap + Yjs editor with chapter marker detection (extending editorkit-pro's 25-extension scaffold; see §14.1).
 - y-indexeddb / y-leveldb local persistence.
 - Cloud relay running, JWT-authed.
 - Visible save indicator + version history UI.
-- Failure-mode test suite (item 6.3) — must pass before Phase 2.
+- Filesystem-native folder option for power users (Obsidian pathway, §3.3.2).
+- Failure-mode test suite (§6.3) — must pass before Phase 2.
 
-**Gate to Phase 2:** all 6 data-safety tests pass on CI.
+**Gate to Phase 2:** all 6 data-safety tests pass on CI; ≥40-chapter stress test passes without buffering (§2.1.1 pattern 3).
 
 ### Phase 2 — Memory v3 recall + export (Week 4–6, ~2 weeks)
 
-- `@`-mention plugin wired to the recall API.
+- `@`-mention extension wired to the recall API.
 - Recall API endpoints live (`/api/projects/{id}/recall*`).
 - Recall index pipeline runs on every snapshot.
-- docx / md / txt / pdf export.
-- On-demand spellcheck panel (KoSpellCheck or 부산대 API integration).
+- docx / md / txt / pdf export. **Plus HWP read** (open 교정고 redlines for comparison view; addresses §2.1.1 pattern 5).
+- On-demand spellcheck panel (부산대 맞춤법 API integration — confirmed standard per §2.1.1 pattern 8).
+- Markdown round-trip + 'Export as Obsidian-compatible vault' option (§3.3.2).
 
-**Gate to GA-beta:** end-to-end demo with one founding writer drafts 5,000 words across desktop and web, exports docx, never sees a save error.
+**Gate to GA-beta:** end-to-end demo with one founding writer drafts 5,000 words across desktop and web, exports docx, opens an HWP redline back, never sees a save error.
 
 ### Phase 3 — CLI + web parity (Week 6–8, ~2 weeks)
 
-- `seizn` CLI with all commands listed in 5.5.
+- `seizn` CLI with all commands listed in §5.5.
 - Web `/dashboard/author?tab=write` parity with desktop.
-- Marketing site / landing copy update.
+- Marketing site / landing copy update — landing leads with 'never lose a word' (per §2.1.1 pattern 1, this is verified writer trauma not abstraction).
 
 **Gate to public beta:** all 5 founding writers have written ≥10,000 words in the tool. Zero data-loss reports.
 
-### Phase 4 — HWP write + mobile (post-MVP, deferred 2–3 months)
+### Phase 3.5 — HWP write (Week 8–10, ~2 weeks, accelerated from prior 'v2 Phase 4')
 
-- rhwp embedded in Tauri Rust backend.
-- HWP write export.
-- Tauri 2.x mobile build (iOS + Android).
+- `rhwp` Rust + WASM embedded in the Tauri Rust backend.
+- HWP *write* export (resolves the Scrivener-vs-Mubble PD-handoff friction directly).
 - Validation toggle UI polish.
+- Phase 0 founding-writer feedback loop integrated into `seizn check` CLI for power-user pre-publish validation.
+
+**Gate to v1.5:** founding writers can complete the 'draft → docx out → HWP redline in → HWP back out' loop without leaving Author Studio.
+
+### Phase 4 — Mobile (Week 10–14, ~4 weeks; previously 'deferred 2–3 months')
+
+The YT comment data (§2.1.1 pattern 4) names Android-missing as Scrivener's #1 churn driver. We don't repeat that mistake.
+
+- Tauri 2.x mobile build (Android first per writer demand signal, iOS to follow).
+- Yjs sync working across desktop / web / mobile via the same relay.
+- Korean IME on Android tested (Samsung keyboard / iWnn / SwiftKey) — quirky on web views, must be hardened.
+- Read-mostly first; full editing on mobile is v1.7+. The writer's primary need on mobile is *recall* and *quick capture*, not 5,000-word drafting sessions.
+
+**Gate to v1.7:** at least 1 founding writer uses mobile recall ('어제 쓴 인물 정보 확인하고 한 줄 추가하기') in a real workflow without bug reports.
 
 ---
 
@@ -493,7 +581,10 @@ Day-1 metric: 5 founding writers signed within 2 weeks of Phase 0 start.
 | --- | --- | --- |
 | Data loss event in beta — single biggest reputational risk | Low if §6 enforced; catastrophic if it happens | Three-layer safety, six-test gate, 30-day tombstone. No release without all six passing. |
 | Pensiv lock-in among Naver writers — they have ~50 already | Medium | Differentiate on single-file model + offline + CLI. Recruit founding writers who are *not* in Pensiv beta. |
-| KR HWP requirement blocks v1 launch | Medium | Honest 'v2 HWP' messaging plus DOCX export today. If 3+ founding writers refuse to use without HWP, escalate rhwp embed into v1. |
+| KR HWP requirement blocks v1 launch | Reduced — schedule revised | HWP read in v1 (open 교정고 redlines). HWP write in v1.5 (8–10 weeks) via rhwp. Explicit Scrivener pain ('PD가 처음에 좀 당황' per §2.1.1 pattern 5) is something we directly solve, not punt on. |
+| **Mubble — primary KR competitor with active migration momentum** (replaces Pensiv as #1 competitor risk per §3.3.1) | Medium-high | Differentiate on AI-native canon recall + data-safety architecture + linear single-file model. We don't try to clone Mubble's wiki; we replace it with automatic Memory v3 extraction. Recruit founding writers from Mubble user base ('I love Mubble but I can't be bothered to fill the wiki' is our wedge). |
+| Pensiv lock-in among Naver closed beta writers (~50) | Low–medium (smaller than Mubble) | Pensiv's structure-management direction inherits Scrivener's mental model; interview data says writers don't use that. Don't fight Pensiv on their turf, win on linear-flow + single-file workflow. |
+| **한컴 독스 / 한글 word-inversion bug surfaced in YT data — could happen in any Korean text editor including ours if we don't handle IME composition correctly** | Low–medium | ProseMirror IME composition handling is a decade-mature; we wrap final 5% in §5.2. CI test: 1,000 keystrokes of '라면라면라면...' through Korean IME, assert zero inversions. |
 | AI homogenization concern (82% of Authors Guild respondents) | Low for our product since we don't generate prose | Position recall as 'looks up your own writing' not 'generates new writing.' Validation toggle defaults OFF. We never train on user content. |
 | Korean spellcheck vendor risk (open-source 부산대 API rate limits, commercial alts cost) | Medium | v1 ships with rate-limit-aware queue. Vendor-specific licensing decision for v2 after usage data. |
 | CRDT performance on >500k-character manuscripts | Low (Yjs scales) but unproven for our specific workload | Stress-test with 1M-character manuscript before Phase 2 gate. If degradation appears, evaluate Diamond Types or sharding strategies. |
@@ -514,6 +605,10 @@ These need answers before Phase 1 starts:
 5. **Memory v3 recall scope.** Should the recall be only across the current manuscript, or across all manuscripts in the same project (cross-novel canon)? Interview signal not yet clear.
 6. **Conflict resolution UX.** When two devices diverge mid-paragraph, what does the diff UI look like? Side-by-side text? Inline track-changes-style? This needs a UI sketch in Phase 0.
 7. **Beta closure.** Does v1 ship as 'public beta' or 'closed beta with waitlist'? Public beta accepts faster feedback but increases data-safety blast radius if anything fails.
+8. **HWP write timing.** v1.5 (8–10 weeks) is the current target. Should it move into v1 if Phase 0 founding writers say 'I won't use without HWP write'? rhwp has active development; embedding cost is moderate. Decision needed end of Phase 0.
+9. **Mobile launch sequencing.** Android-first per YT pattern 4 ('스크리브너가 안드로이드만 지원했다면 바로 썼을 거 같은데'). But Tauri 2.x mobile is newer than its desktop runtime. Should we ship Android beta in v1.7 (Week 14) or wait until desktop is rock-solid (Week 18+)?
+10. **Mubble user-base outreach strategy.** 뮤블 user 모집은 윤리적으로 미묘함 — Mubble 의 community 에서 직접 마이그레이션 권유는 상도덕 위반. 대신 'Mubble 도 좋아하시는 분들이 추가로 원하던 캐논 추적 기능' 같은 framing 검토 필요.
+11. **Obsidian compatibility scope.** Markdown round-trip + folder-native option = ~0.5–1 week. Worth the segment? Decision: ship v1, validate with 1+ Obsidian-using founding writer.
 
 ---
 
@@ -780,6 +875,86 @@ Captured from user interviews 2026-04 to 2026-05. Patterns ≥2 writers unless n
 - '예상 못한 설정 오류를 잡아 주면 좋겠다' — single source so far, but consistent with the recall pain point. Drives the validation toggle (DRAFT mode for P1 only).
 - '한 파일 안에서 자기가 까먹은 설정 찾느라 Ctrl-F 시간 오래 소모' — single explicit source but referenced as a chronic pain. Drives the *primary* AI surface (recall).
 - 'Notion (영감 기록) / Word (메인) / 메모장 (방해 회피) / Scrivener (사회증명) / Gmail (자동저장 + 간편)' — five-tool combo, ≥2 writers. Drives the multi-tool consolidation play.
+
+### 15.1 YouTube comment dataset (N≈40, May 2026, anonymized)
+
+Collected by the user from a public KR-YouTube video about writing programs. Quotes are paraphrased and usernames omitted. This is *secondary primary* data: writers self-describing their tooling without us prompting them. Each quote below is included because it surfaced a pattern that reshaped a design decision in this doc.
+
+**Direct data-loss + bug evidence (drives §2.1.1 pattern 1, §6 design):**
+
+> '한컴 독스는 쓰지 마세요. 자동 저장 기능이 씹창이 나있고 단어의 앞뒤가 뒤집어지는 오류가 매우 빈번합니다. 예를 들어 라면이란 단어를 쓰면 면라 이런 식으로 뒤집어져서 쓰여지는 경우가 한편 쓰면 1~2번은 무조건 생깁니다. 250화 넘게 써서 뮤블로 넘기기 귀찮아서 이번 작품까지만 한컴 독스 쓰려고 했는데 마감 40분 남기고 4000자가 넘게 날아가서 휴재한 적도 있습니다.'
+
+> '한글 쓰다가 세이브 안 되는 걸 몇 번이나 겪고, 뮤블로 옮겨간 1인.'
+
+> '한글 3초 저도 썼는데 400만원짜리 최신 컴도 미친듯이 팅겨서 아예 끄고 수동 저장.'
+
+**Mubble migration pattern (drives §3.3.1):**
+
+> '저는 설정은 스크리브너로 정리하고, 집필은 뮤블로 하네요. 뮤블이 정말 소설 쓰라고 만든 앱이라 편한 기능이 많아요.'
+
+> '한글 쓰다가 뮤블로 옮겼는데 매우 만족 중.'
+
+> '뮤블 데스크탑 버전 좋아요.'
+
+> '뮤블이 진짜 좋긴 합니다.'
+
+**한 파일 multi-chapter performance ceiling (drives §2.1.1 pattern 3, §9 stress test):**
+
+> '한글, 워드는 파일 하나에 몰아서 장편을 썼을 때 체감상 4~50화 인아웃부터는 버벅이기 시작하더라고요. 전에 쓴 회차 검색하려고 할때마다 버벅이거나 멈추길래 식겁했던 적이 한두번이 아님. 그렇다고 회차별로 각각 파일을 나눠서 쓰다보면 전회차 내용이나 떡밥 확인하려고 일일이 키고 찾는 것도 귀찮고 일이고... 스크리브너는 한 바인더에 수백화 다 몰아넣고 그때그때 검색이 되는 게 압도적으로 편리합니다.'
+
+**Scrivener strengths + weaknesses (drives §3, §7):**
+
+> '스크리브너가 저장 쪽 안정성이 뛰어나서 좋더라고요. 그냥 항상 안심이 됨. 뻑나고 뭐 날아가고 이런 일이 없음. 회차별로 나눠 써 쓸 수 있는 것도 좋고.'
+
+> '스크리브너는 글쓰는 곳이라기보단 글을 저장하는 기능 << 이게 GOAT라 애용합니다.'
+
+> '스크리브너 개강추하는데 유일한 단점이라 하면 매니지에 원고 보낼 때 워드로밖에 추출이 안돼서 PD가 처음에 좀 당황했었던 거 정도.'
+
+> '스크리브너가 안드로이드만 지원했다면... 바로 썼을 거 같은데.'
+
+> '스크리브너가 뮤블보다 기능이 많고 편의성도 많은데 쓰기 너무 복잡하고 기능이 직관적이지가 않음.'
+
+**메모장 gravity well (drives §2.1.1 pattern 7, §5.7 Tauri budget):**
+
+> '그냥 메모장 켭니다. 귀찮아용.'
+
+> '메모장 조아요! 장점은 가볍다는 거 + 안정적이라는 점. 추가로 여러 개 켤 수 있다는 점도 있어요.'
+
+> '요새 기본 메모장이 기능이 좋더군요. 글자 수 표시, 실수로 꺼도 기억해주고. 오탈자는 ai로 잡으니. 전 구글 독스와 메모장을 병행해서 씁니다.'
+
+> '메모장에 쓴 뒤 메모장 하나 새로 띄워놓고 탈고 한 다음 오탈자 검사로 완성해여.'
+
+**Obsidian + AI power-user wedge (drives §3.3.2):**
+
+> '옵시디언 쓰는 편입니다. 검색 쉬움, 설정 위키화 가능, 가장 큰 게 ai 접근 권한 쉬움 (문장 수정, 요약, 의미기반 검색, 설정 위키화, ai 브레인스토밍, 맞춤법 검사, 설정 오류 찾기, 평가 다 가능), 가벼움, 클라우드 기능 (모바일로 메모, 집필, 읽기).'
+
+> '옵시디언으로 쓰고 깃헙으로 관리합니다(?)'
+
+**Multi-tool combo confirmed (drives §3.4 anti-scope, §4 MVP):**
+
+> '한글 (완성글쓰는 프로그램), 메모장 (설정, 플롯 메모, 초고 작성), 엑셀 (매화 스탯, 인벤 정리), 오탈자 검사 (부산대맞춤법 검사기).'
+
+> '글은 텍스트로 쓰고 설정은 엑셀로 정리합니다.'
+
+> '메모장에 쓰고 설정, 트리트먼트 같은 건 엑셀에. 한글은 뭔가 공무적인 일을 해야 할 거 같아서 손이 잘 안 가요.'
+
+**Notepad++ — power-user variant of 메모장 (data point for v1.5):**
+
+> '의외로 notepad++도 좋습니다. 무료이기도 하고 프로그래밍용이다 보니 북마크나 자동저장 같은 기능도 많아서 은근히 편합니다.'
+
+**Mobile / pad sync as a real demand (drives §7 Phase 4 acceleration):**
+
+> '스크리브너가 진짜 익숙해지면 편한대.. 패드랑 폰이랑 드롭박스 쓰면 다 연동돼요!'
+
+> '노벨라가 어플도 나와서 사용하기 편하고, 이전 내용 검색 기능도 있어서 찾기 편함.'
+
+> '모바일 삼성 노트로 쓰고 있는 나.'
+
+**Builder-perspective signal (drives §10 open question 7 — public vs closed beta):**
+
+> 'AI 덕에 누구나 프로그램은 만들 수 있게 되니 텀블벅에서 웹소설 집필용 프로그램들이 우후죽순 나오더라고요.'
+
+The dataset confirms two truths simultaneously: (a) the writer-tool market is fragmented and chaotic — there is room — and (b) writers are loyal once they pick something — the cost of *not* shipping a great experience on day one is very high.
 
 ---
 
