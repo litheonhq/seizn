@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getAuthOrReview } from "@/lib/auth-or-review";
 import { createServerClient } from "@/lib/supabase";
 import { getUsage, type ApiKeyPeriod } from "@/lib/api-keys";
+import { isTrack2ApiEnabled } from "@/lib/feature-flags/track-2";
 import DashboardShell from "@/components/dashboard/DashboardShell";
 import ApiKeysClient from "./api-keys-client";
 import { TRACK_2_KEY_CAP_PER_USER } from "./actions";
@@ -77,6 +78,21 @@ async function loadKeys(userId: string): Promise<ApiKeySummary[]> {
 
 export default async function ApiKeysPage() {
   const { user } = await getAuthOrReview();
+  if (!isTrack2ApiEnabled()) {
+    return (
+      <DashboardShell>
+        <section className="mx-auto w-full max-w-2xl px-6 py-16 text-ink">
+          <h1 className="font-serif text-3xl">API keys — coming soon</h1>
+          <p className="mt-3 text-sm text-ink/70">
+            Track 2 (REST API + MCP server) is rolling out in waves. We&apos;ll email you the moment your account is unlocked.
+          </p>
+          <p className="mt-2 text-sm text-ink/60">
+            Need early access for a Studio or Enterprise team? <a className="underline" href="mailto:sales@seizn.com">sales@seizn.com</a>.
+          </p>
+        </section>
+      </DashboardShell>
+    );
+  }
   const keys = user.id === "review" ? [] : await loadKeys(user.id);
   return (
     <DashboardShell>

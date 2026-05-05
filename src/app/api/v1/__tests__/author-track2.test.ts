@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const validateBearerMock = vi.hoisted(() => vi.fn());
 const checkScopeMock = vi.hoisted(() => vi.fn());
@@ -75,8 +75,11 @@ function canonParams(id = 'saebyeok-main', entityId = 'saebyeok-entity-primary')
 }
 
 describe('Track 2 /api/v1 author facade', () => {
+  const originalFlag = process.env.TRACK_2_API_ENABLED;
+
   beforeEach(() => {
     vi.clearAllMocks();
+    process.env.TRACK_2_API_ENABLED = 'true';
     __resetApiV1IdempotencyForTests();
     resetAuthorUiServiceForTests('user-1');
     validateBearerMock.mockResolvedValue({ ...baseKey });
@@ -85,6 +88,14 @@ describe('Track 2 /api/v1 author facade', () => {
     enforceQuotaMock.mockResolvedValue(undefined);
     recordUsageMock.mockResolvedValue(undefined);
     getUsageMock.mockResolvedValue(7);
+  });
+
+  afterEach(() => {
+    if (originalFlag === undefined) {
+      delete process.env.TRACK_2_API_ENABLED;
+    } else {
+      process.env.TRACK_2_API_ENABLED = originalFlag;
+    }
   });
 
   it('returns recall entities for a valid API key with request id and version headers', async () => {
@@ -308,6 +319,19 @@ describe('Track 2 /api/v1 author facade', () => {
     expect(recall.status).toBe(200);
     const recallBody = await recall.json();
     expect(Array.isArray(recallBody.entities)).toBe(true);
+  });
+
+  it('returns 503 problem+json when Track 2 feature flag is off', async () => {
+    delete process.env.TRACK_2_API_ENABLED;
+    const response = await recallGET(request('/projects/saebyeok-main/recall'), projectParams());
+    const body = await response.json();
+    expect(response.status).toBe(503);
+    expect(response.headers.get('content-type')).toContain('application/problem+json');
+    expect(body).toMatchObject({
+      code: 'feature_disabled',
+      status: 503,
+    });
+    expect(validateBearerMock).not.toHaveBeenCalled();
   });
 
   it('returns 404 when recalling a project that does not exist', async () => {

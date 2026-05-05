@@ -16,6 +16,7 @@ import {
 } from '@/lib/api-keys';
 import { createTrack2RedisFromEnv } from '@/lib/api-keys/redis-config';
 import { AuthorUiNotFoundError, AuthorUiValidationError } from '@/lib/author/ui/service';
+import { TRACK_2_DISABLED_PROBLEM, isTrack2ApiEnabled } from '@/lib/feature-flags/track-2';
 
 export type ApiV1Context = {
   requestId: string;
@@ -63,8 +64,29 @@ export async function handleApiV1(
   handler: ApiV1Handler
 ): Promise<NextResponse> {
   const requestId = `req_${randomUUID().replace(/-/g, '').slice(0, 24)}`;
+  const startedAt = Date.now();
+  let outboundStatus = 0;
 
   try {
+    if (!isTrack2ApiEnabled()) {
+      outboundStatus = TRACK_2_DISABLED_PROBLEM.status;
+      return new NextResponse(
+        JSON.stringify({
+          ...TRACK_2_DISABLED_PROBLEM,
+          instance: new URL(request.url).pathname,
+        }),
+        {
+          status: TRACK_2_DISABLED_PROBLEM.status,
+          headers: {
+            ...corsHeaders(),
+            'Content-Type': 'application/problem+json',
+            'X-Request-Id': requestId,
+            'Seizn-Api-Version': '1.0',
+          },
+        },
+      );
+    }
+
     const token = parseBearerToken(request);
     const apiKey = await validateBearer(token, { supabase: options.supabase });
 
@@ -101,6 +123,7 @@ export async function handleApiV1(
     const redis = cacheKey ? options.redis ?? createTrack2RedisFromEnv() : null;
     const cached = cacheKey ? await readIdempotency(cacheKey, redis) : null;
     if (cached) {
+      outboundStatus = cached.status;
       return decorateApiV1Response(requestId, cached.body, cached.status, {
         'Idempotency-Replayed': 'true',
       });
@@ -129,6 +152,7 @@ export async function handleApiV1(
       }, redis);
     }
 
+    outboundStatus = result.status;
     return decorateApiV1Response(requestId, result.body, result.status, result.headers);
   } catch (error) {
     if (
@@ -147,7 +171,20 @@ export async function handleApiV1(
         stack: error instanceof Error ? error.stack : undefined,
       });
     }
-    return problemResponse(error, request, requestId);
+    const response = problemResponse(error, request, requestId);
+    outboundStatus = response.status;
+    return response;
+  } finally {
+    const latencyMs = Date.now() - startedAt;
+    console.log('[track-2-metric]', {
+      requestId,
+      tool: options.tool,
+      method: request.method,
+      pathname: new URL(request.url).pathname,
+      status: outboundStatus,
+      latencyMs,
+      costUnits: options.costUnits,
+    });
   }
 }
 
