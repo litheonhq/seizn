@@ -1609,6 +1609,67 @@
     },
     "northStar": {
       "subtitle": "Kernindicatoren voor NPC-geheugenbetrouwbaarheid"
+    },
+    "account": {
+      "apiKeys": {
+        "title": "API-sleutels",
+        "description": "Beheer Seizn API- en MCP-sleutels voor Track 2.",
+        "capHint": "Je kunt tot {cap} API-sleutels per account aanmaken.",
+        "newKey": "Nieuwe API-sleutel",
+        "create": "Aanmaken",
+        "cancel": "Annuleren",
+        "done": "Klaar",
+        "name": "Naam",
+        "scopes": "Scopes",
+        "scopesDefault": "Standaardscopes: recall, remember, graph, search.",
+        "copyKey": "Sleutel kopiëren",
+        "saveItNow": "Sla hem nu op — deze sleutel zie je niet opnieuw.",
+        "created": "API-sleutel aangemaakt",
+        "rotated": "API-sleutel geroteerd",
+        "rotate": "Roteren",
+        "revoke": "Intrekken",
+        "revokeTitle": "API-sleutel intrekken?",
+        "revokeBody": "Door \"{name}\" in te trekken stoppen alle aanroepen met deze sleutel. Bestaande apps hebben dan een nieuwe sleutel nodig.",
+        "rotateTitle": "API-sleutel roteren?",
+        "rotateBody": "Bij rotatie van \"{name}\" wordt een nieuwe sleutel aangemaakt en de huidige ingetrokken. Werk je apps bij voordat de oude sleutel stopt.",
+        "usage": "Gebruik",
+        "rateLimit": "Snelheidslimiet",
+        "lastUsed": "Laatst gebruikt",
+        "createdAt": "Aangemaakt",
+        "empty": "Nog geen actieve sleutels. Klik op \"Nieuwe API-sleutel\" om er een aan te maken.",
+        "errors": {
+          "capReached": "Je hebt de limiet voor API-sleutels bereikt.",
+          "invalidName": "Voer een naam in voor de sleutel.",
+          "internal": "Actie mislukt. Probeer het opnieuw.",
+          "revokeFailed": "Sleutel kon niet worden ingetrokken.",
+          "rotateFailed": "Sleutel kon niet worden geroteerd.",
+          "copyFailed": "Sleutel kon niet worden gekopieerd."
+        },
+        "toasts": {
+          "copied": "Sleutel naar klembord gekopieerd.",
+          "revoked": "Sleutel ingetrokken."
+        },
+        "audit": {
+          "link": "Auditlog",
+          "title": "Auditlog voor API-sleutels",
+          "description": "Alle gebeurtenissen voor aanmaken, intrekken, roteren, snelheidslimiet, quota en scope van je API-sleutels.",
+          "filterAction": "Actie",
+          "from": "Van",
+          "to": "Tot",
+          "reset": "Herstellen",
+          "exportCsv": "CSV exporteren",
+          "empty": "Geen overeenkomende auditgebeurtenissen.",
+          "action": {
+            "all": "Alle",
+            "created": "Aangemaakt",
+            "revoked": "Ingetrokken",
+            "rotated": "Geroteerd",
+            "rate_limited": "Snelheidslimiet bereikt",
+            "quota_exceeded": "Quota overschreden",
+            "scope_denied": "Scope geweigerd"
+          }
+        }
+      }
     }
   },
   "pricingPage": {
