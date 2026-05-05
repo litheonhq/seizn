@@ -1,8 +1,8 @@
 import type { Locale } from "@/i18n/config";
 import type { SaebyeokDemoData } from "@/lib/sample-ip-demo";
 import {
-  getAuthorLandingCopy,
   isAuthorEngineSurfaceLive,
+  type AuthorLandingCopy,
 } from "./author-landing-copy";
 import { EngineTease } from "./engine-tease";
 import { HeroSplitDetector } from "./hero-split-detector";
@@ -23,11 +23,12 @@ export {
 export function AuthorFlagshipLanding({
   locale,
   data,
+  copy,
 }: {
   locale: Locale;
   data: SaebyeokDemoData;
+  copy: AuthorLandingCopy;
 }) {
-  const copy = getAuthorLandingCopy(locale);
   const engineLive = isAuthorEngineSurfaceLive();
 
   return (

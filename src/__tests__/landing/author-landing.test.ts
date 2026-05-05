@@ -37,8 +37,8 @@ describe("Author flagship landing", () => {
     }
   });
 
-  it("ships the Round 2.1 English master copy and section inventory", () => {
-    const copy = getAuthorLandingCopy("en");
+  it("ships the Round 2.1 English master copy and section inventory", async () => {
+    const copy = await getAuthorLandingCopy("en");
 
     expect(copy.hero.italic).toBe("contradiction");
     expect(copy.workflow.steps).toHaveLength(3);
@@ -56,8 +56,8 @@ describe("Author flagship landing", () => {
     expect(copy.faq.items.map((item) => item.a).join("\n")).not.toContain("CI grep");
   });
 
-  it("keeps public landing copy free of internal codename and double quote characters", () => {
-    const strings = collectStrings(getAuthorLandingCopy("en")).join("\n");
+  it("keeps public landing copy free of internal codename and double quote characters", async () => {
+    const strings = collectStrings(await getAuthorLandingCopy("en")).join("\n");
 
     expect(strings).not.toMatch(/\bKNOT\b/i);
     expect(strings).not.toContain('"');
@@ -65,7 +65,8 @@ describe("Author flagship landing", () => {
 
   it("renders the detector seed and class conflict reconciliation", async () => {
     const data = await loadSaebyeokDemoData();
-    const html = renderToStaticMarkup(createElement(AuthorFlagshipLanding, { data, locale: "en" }));
+    const copy = await getAuthorLandingCopy("en");
+    const html = renderToStaticMarkup(createElement(AuthorFlagshipLanding, { data, locale: "en", copy }));
 
     expect(html).toContain(DETECTOR_SEED);
     expect(html).toContain("character.han_iseul.class = 1");
@@ -75,6 +76,7 @@ describe("Author flagship landing", () => {
 
   it("gates the engine tease behind the live surface env flag", async () => {
     const data = await loadSaebyeokDemoData();
+    const copy = await getAuthorLandingCopy("en");
 
     delete process.env.NEXT_PUBLIC_ENGINE_SURFACE_LIVE;
     expect(isAuthorEngineSurfaceLive()).toBe(false);
@@ -84,11 +86,11 @@ describe("Author flagship landing", () => {
     expect(isAuthorEngineSurfaceLive(" TRUE ")).toBe(true);
     // Footer cross-link는 항상 노출 (양방향 dual-surface 정책, 2026-05-05 v118)
     // Engine tease 배너만 NEXT_PUBLIC_ENGINE_SURFACE_LIVE 게이트
-    expect(renderToStaticMarkup(createElement(AuthorFlagshipLanding, { data, locale: "en" }))).not.toContain("engine-tease");
+    expect(renderToStaticMarkup(createElement(AuthorFlagshipLanding, { data, locale: "en", copy }))).not.toContain("engine-tease");
 
     process.env.NEXT_PUBLIC_ENGINE_SURFACE_LIVE = "1";
     expect(isAuthorEngineSurfaceLive()).toBe(true);
-    const liveHtml = renderToStaticMarkup(createElement(AuthorFlagshipLanding, { data, locale: "en" }));
+    const liveHtml = renderToStaticMarkup(createElement(AuthorFlagshipLanding, { data, locale: "en", copy }));
     expect(liveHtml).toContain("engine-tease");
     expect(liveHtml).toContain('href="https://engine.seizn.com"');
     expect(liveHtml).toContain('target="_blank"');
@@ -97,7 +99,8 @@ describe("Author flagship landing", () => {
 
   it("renders pricing cadence, secondary tiers, footer entity, and responsive hooks", async () => {
     const data = await loadSaebyeokDemoData();
-    const html = renderToStaticMarkup(createElement(AuthorFlagshipLanding, { data, locale: "en" }));
+    const copy = await getAuthorLandingCopy("en");
+    const html = renderToStaticMarkup(createElement(AuthorFlagshipLanding, { data, locale: "en", copy }));
 
     expect(html).toContain("most picked");
     expect(html).toContain("$499 / month");
