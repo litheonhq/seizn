@@ -15,14 +15,15 @@ ALTER TABLE public.api_keys
   ADD COLUMN IF NOT EXISTS monthly_quota INTEGER NOT NULL DEFAULT 100,
   ADD COLUMN IF NOT EXISTS monthly_quota_period TEXT NOT NULL DEFAULT 'month',
   ADD COLUMN IF NOT EXISTS revoked_at TIMESTAMPTZ,
-  ADD COLUMN IF NOT EXISTS rotated_from_id UUID REFERENCES public.api_keys(id);
+  ADD COLUMN IF NOT EXISTS rotated_from_id UUID REFERENCES public.api_keys(id),
+  ADD COLUMN IF NOT EXISTS org_id UUID;
 
 UPDATE public.api_keys
 SET
   prefix = COALESCE(prefix, key_prefix),
   hash = COALESCE(hash, key_hash),
   revoked_at = CASE
-    WHEN revoked_at IS NULL AND is_active = false THEN COALESCE(updated_at, now())
+    WHEN revoked_at IS NULL AND is_active = false THEN now()
     ELSE revoked_at
   END
 WHERE prefix IS NULL
