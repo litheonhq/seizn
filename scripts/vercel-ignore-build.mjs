@@ -23,6 +23,13 @@ function getRange() {
   const head = process.env.VERCEL_GIT_COMMIT_SHA || 'HEAD';
   const previous = process.env.VERCEL_GIT_PREVIOUS_SHA;
 
+  // Env-only redeploys (vercel redeploy after env change) reuse the same SHA.
+  // diff against self == empty → would skip build, but env changes need build.
+  // Force build by returning null (which routes to "always build" in main()).
+  if (previous && previous === head) {
+    return null;
+  }
+
   if (previous) {
     return { base: previous, head };
   }
