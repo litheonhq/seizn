@@ -1,9 +1,6 @@
 import type { Locale } from "@/i18n/config";
 import type { CheckoutLegalCopy } from "@/lib/checkout-copy";
-import {
-  AUTHOR_LANDING_COPY,
-  type AuthorLandingCopy,
-} from "@/components/landing/author-landing-copy";
+import type { AuthorLandingCopy } from "@/components/landing/author-landing-copy";
 import {
   AUTHOR_PRICE_LOCK_VERSION,
 } from "@/lib/stripe-config";
@@ -94,9 +91,27 @@ const PRICING_COPY: Record<PricingLocale, PricingPageCopy> = {
       beta: "Beta Disclosure",
       contact: "Contact",
     },
-    features: AUTHOR_LANDING_COPY.pricing.features,
-    blurbs: AUTHOR_LANDING_COPY.pricing.blurbs,
-    checkout: AUTHOR_LANDING_COPY.checkout,
+    features: {
+      indie: ["1 IP project", "Canon ledger and replay", "Unlimited reviews", "30-day trial, no card"],
+      pro: ["5 IP projects", "Branch and diff canon", "Priority conflict review", "Team-of-3 collaboration", "BYOK 50% off"],
+      studio: ["20M tokens / mo", "Studio review operations", "Usage review for larger launches"],
+      enterprise: ["Unlimited scale", "BYOK required", "Custom security and procurement support"],
+    },
+    blurbs: {
+      indie: "For solo authors holding their own canon.",
+      pro: "For pro authors and small studios shipping multiple IPs.",
+      studio: "Multi-IP, multi-author. Audit log, role permissions, dedicated review queue.",
+      enterprise: "Custom data residency, SSO, on-prem replay archive, premium SLA.",
+    },
+    checkout: {
+      prefix: "I agree to the",
+      terms: "Terms of Service",
+      connector: "and",
+      privacy: "Privacy Policy",
+      suffix: ".",
+      loading: "Opening Stripe...",
+      error: "Checkout could not start.",
+    },
   },
   ko: {
     nav: {

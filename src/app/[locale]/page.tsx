@@ -12,7 +12,7 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
-  const copy = getAuthorLandingCopy(locale);
+  const copy = await getAuthorLandingCopy(locale);
   const title = "Seizn Author - AI Memory for Authors";
   const description = copy.hero.subtitle;
 
@@ -29,7 +29,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function Home({ params }: Props) {
   const { locale } = await params;
-  const data = await loadSaebyeokDemoData();
+  const [data, copy] = await Promise.all([
+    loadSaebyeokDemoData(),
+    getAuthorLandingCopy(locale),
+  ]);
 
-  return <AuthorFlagshipLanding data={data} locale={locale} />;
+  return <AuthorFlagshipLanding data={data} locale={locale} copy={copy} />;
 }
