@@ -213,46 +213,68 @@ Pensiv · Novelcrafter 한국 mainstream 노출 0건 = **두 트랙 모두 first
 
 ---
 
-## 6. 가격
+## 6. 가격 (v8 lock 2026-05-06, 3-track 통합 정합)
 
 ### 6.1 Tier 표
 
 | Plan | $/mo | $/yr (17% off) | 포함 |
 |---|---|---|---|
-| **Free** | $0 | — | 100 recall/일, **BYOK 필수**, MCP server 무제한, 1 project |
-| **Indie** | $19 | $190 | 10,000 recall/월, **managed Haiku 또는 BYOK 선택**, MCP unlimited, single user, API rate 60 req/min |
-| **Studio API** | $99 | $990 | 100,000 recall/월, 5 seats, audit log, SLA 99.5%, API rate 600 req/min, **managed Sonnet** 또는 BYOK |
-| **Enterprise** | Custom | — | volume pricing, SOC 2, SSO, dedicated support, custom SLA, on-prem 옵션, **managed Opus** 또는 BYOK |
+| **Free** | $0 | — | 1 project, 100 recall/일 (Track 2 API + MCP only), MCP server 무제한 |
+| **Indie** | $9 | $90 | 5 projects, 1k recall/월, priority indexing |
+| **Pro** | $19 | $190 | unlimited projects, 10k recall/월, 90일 version history, 모든 export format |
+| **Studio** | $99 | $990 | 100k recall/월, **5 seats**, audit log, SLA 99.5%, 1년 version history, HWP export |
+| **Studio Managed** (Phase 3+, ~Q3) | $299 | $2,990 | + **500 Opus calls/월 managed** (host LLM 없어도 OK), overage $0.15/call |
+| **Enterprise** | Custom | — | volume + SOC 2 + SSO + dedicated capacity + custom SLA |
 
-### 6.2 정당화 (anchor 비교)
+**Track 2 plan = Track 2 surface (API + MCP) only.** Web dashboard (Track 1) 또는 Tauri desktop (Track 3) 사용 시 그 트랙의 별 plan 결제 필요. 단일 Stripe customer 위 트랙별 별 subscription (master `seizn-author-master-2026-05-05.md` §5.0 + §5.2 정합).
 
-- **$19 anchor:** ChatGPT Plus $20 · Cursor Pro $20 · Notion Plus + AI $18 · Novelcrafter $20 — **모두 같은 sweet spot**. 옵시디언 + AI / Cursor 사용자에게 익숙
-- **$99 anchor:** Cursor Business $40/seat × 5 = $200, 우리는 $99 = B2B 진입 magnet
-- **Free + BYOK:** 옵시디언 / Cline / Cursor 사용자 즉시 dogfood 가능 = adoption funnel 진입장벽 0
-- **per-call quota:** AI 비용 unit economics 보호. 'unlimited within fair use' 표현은 모호하므로 명시적 quota.
+### 6.2 Backend LLM 정책 (도구별 — BYOK 필요 여부)
 
-### 6.3 Unit economics 안전 검증
+| 도구 | Backend LLM | BYOK 필요? |
+|---|---|---|
+| `seizn_author_recall` | ❌ DB lookup only | ❌ Free 에서도 unlimited fast |
+| `seizn_author_remember` | ❌ DB write | ❌ |
+| `seizn_author_graph` | ❌ DB join | ❌ |
+| `seizn_author_search` | ⚠️ embedding only (cheap) | ❌ embedding cost 우리 부담 |
+| `seizn_author_check` | ✅ Sonnet/Opus 캐논 비교 | ✅ BYOK or Studio Managed |
+| `seizn_author_timeline` | ✅ beat 추출 | ✅ BYOK or Studio Managed |
 
-Indie tier ($19) user 가 월 5,000 recall 가정 (50% 이용):
-- recall 평균 토큰: 1.5k input + 1k output = 2.5k
-- **Sonnet 비용:** $3/$15 per 1M → 0.0195/call → 5,000 × 0.0195 = **$97.50/월** (revenue $19 의 5배 손실)
-- **Haiku 비용:** $0.25/$1.25 per 1M → 0.00163/call → 5,000 × 0.00163 = **$8.15/월** (revenue $19 → margin $10.85)
+→ **No-LLM 도구 (recall/remember/graph/search) 는 어떤 tier 든 BYOK 무관**. Free $0 plan 사용자도 100 recall/일 quota 안에서 무료로 사용. AI-enhanced 도구 (check/timeline) 만 사용자가 자기 Anthropic/OpenAI key 입력하면 활성화 (Studio Managed 부터는 우리 부담).
 
-→ **Indie tier = managed Haiku default + BYOK 옵션 (사용자가 자기 Sonnet/Opus key 가져옴)**.
-→ Studio tier = managed Sonnet (cost ~$98 per 5,000 calls × 5 seats = $490 per 100k calls; revenue $99 per seat × 5 = $495 = margin tight, B2B value 정당화)
-→ Enterprise = managed Opus + custom budget + 명시 volume floor
+### 6.3 Host LLM 자원 무관
 
-이는 메모리 `seizn-byok-only-tier-deferred.md` 의 'BYOK-only tier 보류, 현 hybrid 유지' 정책과 정합.
+사용자의 host AI agent (Claude Desktop / Code / Cursor / Cline / Continue / Zed 등) 가 자체 LLM 호출 처리. **Seizn 가격은 host LLM cost 와 분리**:
 
-### 6.4 메모리 가격 정합성
+- Claude MAX/Pro 구독자 → Claude Code/Desktop 안에서 우리 MCP 사용 OK (host LLM = 구독으로 cover)
+- Cursor Pro 구독자 → Cursor 안에서 우리 MCP 사용 OK
+- BYOK 사용자 (Cline, Continue 등) → Cline 에 자기 key 입력, 우리 MCP 도 같은 key 또는 별도 BYOK 가능
+- ChatGPT Plus + ChatGPT 웹 = host 가 MCP 미지원 (제외)
 
-`seizn-author-pricing-2026-05.md` 메모리 (Author $39 / Pro $129 / Studio $399):
-- 우리 Platform Track 가격 ($19/$99) 과 다름
-- 메모리 가격은 'Author dashboard 글로벌 individual SaaS' 가격으로 정의되어 있었으나 → **재배치 필요**
-- 권장 재정의: 메모리 가격 = 'Author dashboard full-tier (web GUI + 자체 에디터 등)' 또는 Recall Vault Pro Plus equivalent
-- Platform Track 가격 ($19/$99) 은 'API channel 별 가격' 으로 별도 trail
+### 6.4 정당화 (anchor 비교)
 
-→ 별 작업: 메모리 갱신 시 두 트랙 가격 명시 분리
+- **$9 anchor:** Notion Plus $10 · 뮤블 ₩4,900 (~$3.7) · 옵시디언 Sync $4 — 한국 mainstream entry-point
+- **$19 anchor:** ChatGPT Plus $20 · Cursor Pro $20 · Notion Plus + AI $18 · Novelcrafter $20 — power user sweet spot
+- **$99 anchor:** Cursor Business $40/seat × 5 = $200, 우리는 절반 = B2B 진입 magnet
+- **$299 anchor:** Anthropic Tier 4 commit $5,000+/월의 entry-point (Studio Managed 은 우리가 enterprise discount 받아 markup 가능)
+- **Free + 100/일 (no BYOK):** 옵시디언 / Cline / Cursor 사용자 즉시 dogfood 가능 = adoption funnel 진입장벽 0
+- **per-call quota:** AI 비용 unit economics 보호 + 사용자 surprise bill 방지
+
+### 6.5 Unit economics 검증
+
+**Indie tier ($9) BYOK 사용자 가정** (recall/remember/graph 위주, no AI-enhanced):
+- Backend LLM cost = $0 (no-LLM 도구만)
+- Embedding cost (search) = ~$0.0001/call × 1,000 = ~$0.10
+- Infra fixed cost = Supabase $25 + Vercel $20 = $45/월 (pool)
+- → 5 paying Indie users = $45 매출, BEP
+
+**Studio Managed ($299) 가정** (managed Opus 500 calls 포함):
+- Opus 4.7 cost = $0.10/call × 500 = $50/월
+- Gross margin = $249/월 per user
+- Overage $0.15/call > Opus passthrough $0.10/call → 헤비 사용 자연 흡수
+
+**v8 변경 사유:** v7 ($39/$149/$499/$2500) 는 Author = single Web GUI product 전제. v8 = 3 트랙 통합 + Pure BYOK default → Indie $9 entry 가능. v7 → v8 마이그레이션 = Phase 0 task pack 안에 Stripe deprecate + 신규 product 등록.
+
+→ 메모리: `seizn-author-pricing-2026-05.md` v8 lock + 도구별 BYOK 정책 보강 (2026-05-06)
 
 ---
 
@@ -260,7 +282,7 @@ Indie tier ($19) user 가 월 5,000 recall 가정 (50% 이용):
 
 ### 7.1 Layer 1 — REST API
 
-```
+```text
 GET    /api/v1/projects                                   list
 POST   /api/v1/projects                                   create
 GET    /api/v1/projects/{id}/recall?q=<name>              primary
