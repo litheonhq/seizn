@@ -126,15 +126,11 @@ Seizn operates globally. Data may be processed in the United States, Korea, Japa
 - Usage telemetry: retained 13 months in identifiable form, longer in aggregate form.
 - Audit logs (canon decisions, AI candidate reviews): retained for the lifetime of the workspace; exportable on request.
 
-## 14. Beta period notice
-
-During the beta period, certain infrastructure components operate under temporary personal ownership pending migration to Litheon LLC. Throughout beta and post-beta, Litheon LLC remains the sole data controller. See the [Beta Disclaimer](./beta-disclaimer.md) for details.
-
-## 15. Changes to this policy
+## 14. Changes to this policy
 
 We may update this policy. Material changes will be announced by email and an in-app banner at least 30 days before they take effect. Historical versions remain available at seizn.com/legal/privacy/history.
 
-## 16. Contact
+## 15. Contact
 
 - Privacy questions: privacy@seizn.com
 - Data protection officer: dpo@seizn.com
