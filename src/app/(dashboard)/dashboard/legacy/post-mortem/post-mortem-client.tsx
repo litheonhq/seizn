@@ -182,7 +182,7 @@ export function PostMortemClient({ reports: initialReports, loadError = null, li
                     <Mini label="PDF" value={report.pdfSizeBytes > 0 ? `${Math.round(report.pdfSizeBytes / 1024)}KB` : "-"} />
                   </div>
                   <div className="flex items-start gap-2 lg:justify-end">
-                    <Link href={`/dashboard/post-mortem/${report.id}`} className="szn-btn-ghost inline-flex items-center gap-2 px-3 py-2 text-xs">
+                    <Link href={`/dashboard/legacy/post-mortem/${report.id}`} className="szn-btn-ghost inline-flex items-center gap-2 px-3 py-2 text-xs">
                       <FileText className="h-3.5 w-3.5" aria-hidden="true" />
                       Open
                     </Link>

@@ -346,7 +346,7 @@ export default function OrganizationDetailClient({
               Retry
             </button>
           )}
-          <Link href="/dashboard/organizations" className="theme-gradient-btn text-white px-4 py-2 rounded-xl">
+          <Link href="/dashboard/legacy/organizations" className="theme-gradient-btn text-white px-4 py-2 rounded-xl">
             Back to Organizations
           </Link>
         </div>
@@ -358,7 +358,7 @@ export default function OrganizationDetailClient({
     <div className="space-y-6">
       {/* Back button */}
       <Link
-        href="/dashboard/organizations"
+        href="/dashboard/legacy/organizations"
         className="inline-flex items-center gap-2 text-[var(--ink-600)] hover:text-[var(--ink-600)] transition-colors"
       >
         <BackIcon className="w-4 h-4" />
@@ -846,7 +846,7 @@ function OrgSettingsTab({
       const data = await res.json();
 
       if (data.success) {
-        router.push("/dashboard/organizations");
+        router.push("/dashboard/legacy/organizations");
       } else {
         setSaveMessage({
           type: "error",

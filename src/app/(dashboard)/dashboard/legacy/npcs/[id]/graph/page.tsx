@@ -53,7 +53,7 @@ export default async function NpcRelationshipGraphPage({ params }: PageProps) {
             Memory editor
           </Link>
           <span className="text-szn-text-3">/</span>
-          <Link href={`/dashboard/npcs/${encodeURIComponent(npcId)}/timeline`} className="text-xs uppercase text-szn-text-3 hover:text-szn-signal">
+          <Link href={`/dashboard/legacy/npcs/${encodeURIComponent(npcId)}/timeline`} className="text-xs uppercase text-szn-text-3 hover:text-szn-signal">
             Timeline
           </Link>
         </div>
