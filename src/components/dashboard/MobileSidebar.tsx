@@ -132,7 +132,7 @@ export default function MobileSidebar({
                 Seizn
               </span>
               <p className="text-[10px] text-szn-text-3 flex items-center gap-1">
-                {"NPC Memory"} <span>{seasonConfig.icon}</span>
+                {t("dashboard.brand.tagline") || "AUTHOR MEMORY · LIVE"} <span>{seasonConfig.icon}</span>
               </p>
             </div>
           </Link>
