@@ -308,7 +308,7 @@
       "organizations": "Projects",
       "settings": "Settings",
       "groups": {
-        "memory": "NPC MEMORY",
+        "memory": "MEMORY",
         "observe": "OBSERVE",
         "govern": "POLICIES",
         "finops": "USAGE & COST",
@@ -1652,6 +1652,9 @@
       },
       "attribution": "Powered by Nemotron-Personas-Korea (NVIDIA, CC BY 4.0)",
       "attributionUrlLabel": "Dataset card"
+    },
+    "brand": {
+      "tagline": "AUTHOR MEMORY · LIVE"
     }
   },
   "pricingPage": {
