@@ -292,7 +292,7 @@ feat(track-2): add api_keys + api_key_usage + api_key_audit_log tables (multi-te
 - `pnpm test src/lib/api-keys` pass (모든 단위 테스트 + timing-safe property)
 - `pnpm typecheck` pass
 - `pnpm lint:track2` pass (Track 2 영역 한정 — src/lib/api-keys, src/app/api/v1, packages/author-mcp-server. 전체 `pnpm lint` 의 react-hooks/* errors 는 Track 1 영역 pre-existing baseline, 별 cycle. 자세한 내용 §"How to use" 참고)
-- production env 부재 시 startup fail 검증 (`UPSTASH_REDIS_REST_URL=` 없이 `NODE_ENV=production pnpm dev` → process 종료)
+- production env startup guard 단위 test pass — `pnpm test:run src/lib/api-keys/__tests__/redis-config.test.ts` (7 cases: NODE_ENV=production + UPSTASH vars missing/empty 모두 throw 검증, NODE_ENV!=production 시 no-throw 검증, both vars 존재 시 no-throw 검증). 직접 `pnpm dev` 실행 검증 X — next dev 가 NODE_ENV 강제 development 으로 override 하므로 guard trigger 못 함, unit test 가 정확한 verify path
 
 **Commit:**
 
