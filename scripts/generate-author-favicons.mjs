@@ -1,5 +1,6 @@
 import sharp from "sharp";
-import { readFileSync } from "node:fs";
+import toIco from "to-ico";
+import { readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 
 const svgPath = resolve("public/icons/seizn-mark.svg");
@@ -20,4 +21,19 @@ for (const { name, size } of sizes) {
     .png()
     .toFile(resolve("public", name));
   console.log(`generated public/${name} (${size}x${size})`);
+}
+
+const icoSizes = [16, 32, 48];
+const icoBuffers = await Promise.all(
+  icoSizes.map((size) =>
+    sharp(svg, { density: 384 })
+      .resize(size, size, { fit: "contain", background: { r: 0, g: 0, b: 0, alpha: 0 } })
+      .png()
+      .toBuffer(),
+  ),
+);
+const icoBuffer = await toIco(icoBuffers);
+for (const target of ["public/favicon.ico", "src/app/favicon.ico"]) {
+  writeFileSync(resolve(target), icoBuffer);
+  console.log(`generated ${target} (16/32/48 multi-size ICO)`);
 }
