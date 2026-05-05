@@ -267,7 +267,13 @@
       "create": "새로 만들기",
       "createApiKey": "새 API 키",
       "createOrg": "새 프로젝트",
-      "switchOrg": "프로젝트 전환"
+      "switchOrg": "프로젝트 전환",
+      "workspace": "작업 공간",
+      "search": "검색",
+      "command": "명령",
+      "write": "쓰기",
+      "notifications": "알림",
+      "toggleSidebar": "사이드바 토글"
     },
     "commandPalette": {
       "title": "명령 팔레트",
@@ -315,7 +321,9 @@
         "connect": "연동",
         "system": "시스템",
         "build": "개발",
-        "integrate": "연동"
+        "integrate": "연동",
+        "workspace": "작업 공간",
+        "account": "계정"
       },
       "memory": {
         "author_memory": "작가 메모리"
@@ -342,7 +350,16 @@
       "replay": "Replay",
       "branches": "브랜치",
       "provenance": "출처",
-      "compliance": "Compliance"
+      "compliance": "Compliance",
+      "inbox": "인박스",
+      "review": "검수",
+      "characters": "인물",
+      "graph": "관계 그래프",
+      "timeline": "타임라인",
+      "conflicts": "갈등",
+      "simulate": "시뮬레이션",
+      "audit": "감사 로그",
+      "byok": "API 키 연결"
     },
     "pinSidebar": "사이드바 고정",
     "unpinSidebar": "사이드바 접기",
@@ -1596,6 +1613,116 @@
     },
     "brand": {
       "tagline": "작가 메모리 · 라이브"
+    },
+    "workspace": {
+      "switcher": {
+        "studio": "Studio",
+        "entries": "{count}개 엔트리"
+      }
+    },
+    "memoryHealth": {
+      "synced": "메모리 동기화 완료",
+      "syncing": "동기화 중...",
+      "error": "동기화 오류",
+      "factsCount": "{relativeTime} · 사실 {count}건"
+    },
+    "inbox": {
+      "title": "인박스",
+      "newCount": "새 {count}건",
+      "filter": {
+        "all": "전체",
+        "conflicts": "갈등",
+        "reviews": "검수",
+        "characters": "인물"
+      },
+      "empty": "인박스가 비어 있어요.",
+      "emptyBody": "초안을 쓰는 동안 메모리 v3가 캐논·인물·타임라인 갈등을 여기에 모아 드려요.",
+      "detail": {
+        "evidence": "근거",
+        "suggestion": "제안된 해결",
+        "memorySuggests": "메모리 v3 제안",
+        "applySuggestion": "제안 적용",
+        "openIn": "{episode}에서 열기",
+        "notConflict": "갈등 아님"
+      },
+      "priority": "우선순위 {p}"
+    },
+    "characters": {
+      "title": "인물",
+      "add": "인물 추가",
+      "filter": "인물 검색",
+      "col": {
+        "name": "이름",
+        "role": "역할",
+        "episodes": "회차",
+        "relations": "관계",
+        "conflicts": "갈등"
+      },
+      "role": {
+        "lead": "주연",
+        "supporting": "조연",
+        "minor": "단역"
+      },
+      "detail": {
+        "canonFacts": "캐논 사실",
+        "relationships": "관계"
+      },
+      "empty": "여기 조용하네요.",
+      "emptyBody": "첫 번째 인물을 추가해 보세요. 캐논 항목을 만들고 글을 쓰는 동안 모순을 자동으로 살펴 드려요.",
+      "emptyCta": "인물 추가"
+    },
+    "graph": {
+      "title": "관계 그래프",
+      "summary": "인물 {characters}명 · 관계 {ties}개",
+      "mode": {
+        "force": "포스",
+        "radial": "방사형",
+        "hierarchy": "계층"
+      },
+      "legend": {
+        "lead": "주연",
+        "supporting": "조연",
+        "minor": "단역",
+        "tie": "관계",
+        "conflict": "갈등"
+      },
+      "detail": {
+        "directTies": "직접 관계 · {count}",
+        "tieStrength": "관계 강도",
+        "avgStrength": "평균 {percent}% · 관계 {count}개 기준"
+      },
+      "empty": "아직 관계가 없어요.",
+      "emptyBody": "인물 두 명과 관계를 추가해 보세요. 글을 쓰는 동안 그래프가 자동으로 채워져요 — 손으로 정리할 필요 없이요.",
+      "emptyCta": "관계 추가"
+    },
+    "conflicts": {
+      "title": "갈등",
+      "criticalCount": "치명 {count}건",
+      "warningCount": "주의 {count}건",
+      "severity": {
+        "p1": "치명",
+        "p2": "주의",
+        "p3": "메모"
+      },
+      "action": {
+        "resolve": "해결",
+        "openEvidence": "근거 열기",
+        "dismiss": "넘기기"
+      }
+    },
+    "simulate": {
+      "empty": {
+        "title": "첫 장면 시뮬레이션을 돌려 보세요",
+        "body": "인물 두 명과 한 박자를 던져 주세요. 그들이 캐논과 어떻게 부딪힐지 미리 재생해 드려요 — 장면을 본 원고에 옮기기 전에 확인하기 좋아요.",
+        "cta": "시뮬레이션 설정"
+      },
+      "hint": {
+        "new": "새 시뮬레이션",
+        "help": "시뮬레이션 사용법"
+      }
+    },
+    "fallback": {
+      "body": "이 탭은 같은 셸 패턴을 사용해요."
     }
   },
   "pricingPage": {

@@ -420,9 +420,20 @@
         "connect": "连接",
         "system": "系统",
         "build": "开发",
-        "integrate": "集成"
+        "integrate": "集成",
+        "workspace": "工作区",
+        "account": "账户"
       },
-      "memoryEditor": "记忆编辑器"
+      "memoryEditor": "记忆编辑器",
+      "inbox": "收件箱",
+      "review": "检视",
+      "characters": "人物",
+      "graph": "关系图",
+      "timeline": "时间线",
+      "conflicts": "冲突",
+      "simulate": "模拟",
+      "audit": "审计日志",
+      "byok": "API密钥"
     },
     "pinSidebar": "固定侧边栏",
     "unpinSidebar": "折叠侧边栏",
@@ -1357,7 +1368,13 @@
       "create": "创建",
       "createApiKey": "新建 API 密钥",
       "createOrg": "新建项目",
-      "switchOrg": "切换项目"
+      "switchOrg": "切换项目",
+      "workspace": "工作区",
+      "search": "搜索",
+      "command": "命令",
+      "write": "写作",
+      "notifications": "通知",
+      "toggleSidebar": "切换侧边栏"
     },
     "share": {
       "title": "分享追踪",
@@ -1612,6 +1629,116 @@
     },
     "brand": {
       "tagline": "作者记忆 · 在线"
+    },
+    "workspace": {
+      "switcher": {
+        "studio": "Studio",
+        "entries": "{count}个条目"
+      }
+    },
+    "memoryHealth": {
+      "synced": "记忆已同步",
+      "syncing": "同步中...",
+      "error": "同步错误",
+      "factsCount": "{relativeTime} · 事实 {count}条"
+    },
+    "inbox": {
+      "title": "收件箱",
+      "newCount": "{count}条新",
+      "filter": {
+        "all": "全部",
+        "conflicts": "冲突",
+        "reviews": "检视",
+        "characters": "人物"
+      },
+      "empty": "收件箱已清空。",
+      "emptyBody": "Memory v3 会在你写作时把规范、人物和时间线冲突汇集到这里。",
+      "detail": {
+        "evidence": "证据",
+        "suggestion": "建议的解决方案",
+        "memorySuggests": "Memory v3 建议",
+        "applySuggestion": "应用建议",
+        "openIn": "在 {episode} 打开",
+        "notConflict": "标为非冲突"
+      },
+      "priority": "优先级 {p}"
+    },
+    "characters": {
+      "title": "人物",
+      "add": "添加人物",
+      "filter": "搜索人物",
+      "col": {
+        "name": "姓名",
+        "role": "角色",
+        "episodes": "集",
+        "relations": "关系",
+        "conflicts": "冲突"
+      },
+      "role": {
+        "lead": "主角",
+        "supporting": "配角",
+        "minor": "次要"
+      },
+      "detail": {
+        "canonFacts": "规范事实",
+        "relationships": "关系"
+      },
+      "empty": "这里很安静。",
+      "emptyBody": "添加你的第一个人物。我们会建立规范条目，并在你写作时关注一致性。",
+      "emptyCta": "添加人物"
+    },
+    "graph": {
+      "title": "关系图",
+      "summary": "人物 {characters} · 关系 {ties}",
+      "mode": {
+        "force": "力导向",
+        "radial": "环形",
+        "hierarchy": "层次"
+      },
+      "legend": {
+        "lead": "主角",
+        "supporting": "配角",
+        "minor": "次要",
+        "tie": "关系",
+        "conflict": "冲突"
+      },
+      "detail": {
+        "directTies": "直接关系 · {count}",
+        "tieStrength": "关系强度",
+        "avgStrength": "平均 {percent}% · 关系 {count} 条"
+      },
+      "empty": "尚无关系。",
+      "emptyBody": "添加两个人物和一段关系。图会随你写作自动填充 — 无需手动维护。",
+      "emptyCta": "添加关系"
+    },
+    "conflicts": {
+      "title": "冲突",
+      "criticalCount": "严重 {count} 条",
+      "warningCount": "警告 {count} 条",
+      "severity": {
+        "p1": "严重",
+        "p2": "警告",
+        "p3": "备注"
+      },
+      "action": {
+        "resolve": "解决",
+        "openEvidence": "查看证据",
+        "dismiss": "关闭"
+      }
+    },
+    "simulate": {
+      "empty": {
+        "title": "运行你的第一次场景模拟",
+        "body": "放入两个人物和一个节拍。我们会按照你的规范回放他们的反应 — 在落笔之前确认很有用。",
+        "cta": "设置模拟"
+      },
+      "hint": {
+        "new": "新建模拟",
+        "help": "模拟使用方式"
+      }
+    },
+    "fallback": {
+      "body": "此选项卡使用相同的外壳模式。"
     }
   },
   "pricingPage": {
