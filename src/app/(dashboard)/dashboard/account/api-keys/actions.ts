@@ -9,8 +9,12 @@ import {
   rotateApiKey as rotateApiKeyService,
 } from "@/lib/api-keys";
 import { V8_TRACK2_QUOTA } from "@/lib/billing/v8-products";
-
-export const TRACK_2_KEY_CAP_PER_USER = 5;
+import {
+  TRACK_2_KEY_CAP_PER_USER,
+  type CreateApiKeyResult,
+  type RevokeApiKeyResult,
+  type RotateApiKeyResult,
+} from "./constants";
 
 const DEFAULT_SCOPES = V8_TRACK2_QUOTA.free.scopes;
 const ALLOWED_SCOPES = new Set([
@@ -40,10 +44,6 @@ function sanitizeScopes(input: unknown): string[] {
     .filter((value) => ALLOWED_SCOPES.has(value));
   return normalized.length > 0 ? Array.from(new Set(normalized)) : [...DEFAULT_SCOPES];
 }
-
-export type CreateApiKeyResult =
-  | { ok: true; id: string; key: string; prefix: string; name: string; scopes: string[]; createdAt: string }
-  | { ok: false; code: "unauthorized" | "cap_reached" | "invalid_name" | "internal_error"; detail?: string };
 
 export async function createApiKey(input: {
   name: string;
@@ -125,10 +125,6 @@ export async function createApiKey(input: {
   };
 }
 
-export type RevokeApiKeyResult =
-  | { ok: true; id: string }
-  | { ok: false; code: "unauthorized" | "not_found" | "internal_error"; detail?: string };
-
 export async function revokeApiKey(id: string): Promise<RevokeApiKeyResult> {
   const session = await auth();
   if (!session?.user?.id) {
@@ -167,10 +163,6 @@ export async function revokeApiKey(id: string): Promise<RevokeApiKeyResult> {
 
   return { ok: true, id: data.id };
 }
-
-export type RotateApiKeyResult =
-  | { ok: true; id: string; key: string; prefix: string; rotatedFromId: string }
-  | { ok: false; code: "unauthorized" | "not_found" | "internal_error"; detail?: string };
 
 export async function rotateApiKey(id: string): Promise<RotateApiKeyResult> {
   const session = await auth();
