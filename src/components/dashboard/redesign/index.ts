@@ -63,3 +63,11 @@ export { ConflictCard } from './conflict-card';
 export type { ConflictCardProps } from './conflict-card';
 
 export { SkeletonInbox } from './skeletons';
+
+export {
+  TopBar,
+  ICON_BTN_TOPBAR,
+  type TopBarProps,
+  type TopBarVariant,
+  type TopBarTab,
+} from './top-bar';
