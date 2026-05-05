@@ -1623,7 +1623,7 @@
         "scopes": "Permisos",
         "scopesDefault": "Permisos por defecto: recall, remember, graph, search.",
         "copyKey": "Copiar clave",
-        "saveItNow": "Guárdala ya — no volverás a verla.",
+        "saveItNow": "Guárdala ya; no volverás a verla.",
         "created": "Clave API creada",
         "rotated": "Clave API rotada",
         "rotate": "Rotar",

@@ -1623,7 +1623,7 @@
         "scopes": "Âmbitos",
         "scopesDefault": "Âmbitos predefinidos: recall, remember, graph, search.",
         "copyKey": "Copiar chave",
-        "saveItNow": "Guarde-a agora — não voltará a vê-la.",
+        "saveItNow": "Guarde-a agora; não voltará a vê-la.",
         "created": "Chave de API criada",
         "rotated": "Chave de API rodada",
         "rotate": "Rodar",

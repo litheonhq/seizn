@@ -1623,7 +1623,7 @@
         "scopes": "Portées",
         "scopesDefault": "Portées par défaut : recall, remember, graph, search.",
         "copyKey": "Copier la clé",
-        "saveItNow": "Sauvegardez-la maintenant — elle ne sera plus affichée.",
+        "saveItNow": "Notez-la maintenant – elle ne sera plus affichée.",
         "created": "Clé API créée",
         "rotated": "Clé API renouvelée",
         "rotate": "Renouveler",
