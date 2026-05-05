@@ -3296,5 +3296,307 @@
     "incidentsTitle": "Incident reporting",
     "incidentsBody": "Public incident history and current availability are published on the Seizn status page:",
     "statusLink": "View status"
+  },
+  "authorLanding": {
+    "nav": {
+      "workflow": "Quy trình",
+      "demo": "Demo",
+      "pricing": "Giá",
+      "docs": "Tài liệu",
+      "signIn": "Đăng nhập",
+      "start": "Dùng thử",
+      "menu": "Mở menu"
+    },
+    "hero": {
+      "eyebrow": "01 / trí nhớ tác giả",
+      "title": "Bắt mọi",
+      "italic": "mâu thuẫn",
+      "titleEnd": " trước khi xuất bản.",
+      "subtitle": "Gõ một sự thật. Seizn đối chiếu nó với canon của bạn: 8 nhân vật, 22 quy tắc và dòng thời gian 30 ngày. Lượt soát của bạn là phán quyết.",
+      "trialNote": "30 ngày, không cần thẻ",
+      "byokNote": "BYOK giảm nửa",
+      "yearly": "Năm tiết kiệm 15%",
+      "startPlan": "Bắt đầu",
+      "comparePlans": "So sánh Pro, Studio và Enterprise"
+    },
+    "workflow": {
+      "eyebrow": "02 / quy trình",
+      "title": "Ba bước. Một sổ cái.",
+      "subtitle": "Nhập, soát và viết — cùng một canon đứng sau mỗi phím gõ.",
+      "steps": [
+        {
+          "number": "01",
+          "title": "Nhập",
+          "subtitle": "Mang cả canon vào.",
+          "body": "Thả một bản thảo, trỏ tới Google Doc hoặc đồng bộ tệp thế giới. Seizn xếp nhân vật, địa điểm, quy tắc vào một sổ cái có cấu trúc.",
+          "chips": [
+            "DOCX",
+            "Plain text",
+            "Google Docs",
+            "Native"
+          ]
+        },
+        {
+          "number": "02",
+          "title": "Soát",
+          "subtitle": "Phán quyết của bạn, được ghi.",
+          "body": "Mỗi sự thật nhận một phán quyết: chấp thuận, chờ, hoặc xung đột. Lượt soát trở thành nguồn sự thật, có thể phát lại bất cứ lúc nào.",
+          "chips": [
+            "canon 142",
+            "pending 8",
+            "conflict 3"
+          ]
+        },
+        {
+          "number": "03",
+          "title": "Viết",
+          "subtitle": "Bản nháp ngay trong sổ.",
+          "body": "Soạn cảnh mới ngay cạnh đồ thị. Mâu thuẫn nổi lên đúng lúc xuất hiện, kèm quy tắc trích dẫn và một cú nhấp để ghi đè.",
+          "chips": [
+            "Scene draft",
+            "Live check",
+            "Replay"
+          ]
+        }
+      ]
+    },
+    "inputs": {
+      "eyebrow": "03 / đầu vào",
+      "title": "Chúng tôi đến nơi tác phẩm của bạn sống.",
+      "subtitle": "Bốn lối vào. Cùng sổ cái, cùng lượt soát, cùng canon.",
+      "modes": [
+        {
+          "id": "native",
+          "name": "Trình soạn nội bộ",
+          "subtitle": "Viết bên trong Seizn.",
+          "body": "Viết thẳng trong trình soạn hiểu canon. Mỗi đoạn đều được đối chiếu với sổ cái khi bạn gõ."
+        },
+        {
+          "id": "docx",
+          "name": "Nhập DOCX",
+          "subtitle": "Mang bản thảo vào.",
+          "body": "Kéo tệp .docx, .rtf hoặc .odt vào. Seizn rút nhân vật, cảnh và đối thoại vào sổ cái."
+        },
+        {
+          "id": "plain",
+          "name": "Văn bản thuần",
+          "subtitle": "Hợp với Markdown.",
+          "body": "Dán hoặc tải lên .md và .txt. Tiêu đề thành cảnh, danh xưng được nhắc thành thực thể. Đi và về không mất."
+        },
+        {
+          "id": "gdocs",
+          "name": "Google Docs",
+          "subtitle": "Đồng bộ, không sao chép.",
+          "body": "Nối Doc một lần. Seizn giữ sổ cái khớp, xung đột đến dưới dạng luồng bình luận."
+        }
+      ]
+    },
+    "conflicts": {
+      "eyebrow": "04 / xung đột",
+      "title": "Mỗi mâu thuẫn — có dẫn nguồn và xếp hạng.",
+      "subtitle": "Mức nghiêm trọng là tín hiệu, không phải nhiễu. Critical phá canon thẳng. Minor đánh dấu một sai lệch nhẹ mà có lẽ bạn muốn giữ.",
+      "graphNote": "Đồ thị không phải để trang trí. Mỗi xung đột chỉ đúng nút và cạnh đã đứt.",
+      "items": [
+        {
+          "severity": "critical",
+          "rule": "character.han_iseul.eye_color",
+          "fact": "Chương 11: Han Iseul có đôi mắt xám.",
+          "against": "Canon chương 2 ghi nâu.",
+          "cited": [
+            "scene.2.1",
+            "character.han_iseul"
+          ]
+        },
+        {
+          "severity": "major",
+          "rule": "rule.r03 lối lên mái",
+          "fact": "Chương 7: Park Jio lên mái vào ngày 9.",
+          "against": "Quy tắc r03 khoá mái tới ngày 14.",
+          "cited": [
+            "rule.r03",
+            "scene.7.4"
+          ]
+        },
+        {
+          "severity": "minor",
+          "rule": "character.yun_hana.club",
+          "fact": "Chương 18: Yun Hana vào câu lạc bộ thiên văn.",
+          "against": "Canon ghi câu lạc bộ nhiếp ảnh. Có thể là chuyển nhóm.",
+          "cited": [
+            "character.yun_hana"
+          ]
+        }
+      ]
+    },
+    "simulation": {
+      "eyebrow": "05 / mô phỏng",
+      "title": "Phát lại trước khi chốt.",
+      "subtitle": "Đặt một cảnh lên sổ cái. Seizn chiếu tác động ở mức token: đường an toàn và đường rủi ro, có điểm.",
+      "tokenDiff": "diff mức token: scene 14.observatory.draft",
+      "replayReady": "sẵn sàng phát lại",
+      "candidates": [
+        {
+          "side": "safe",
+          "label": "Đường an toàn",
+          "score": 92,
+          "title": "Han Iseul ở lại đài thiên văn tới rạng đông.",
+          "body": "Tôn trọng r02 và r04. Không có xung đột mới. Mạch chuyện vẫn liền.",
+          "tokens": [
+            "scene.continues",
+            "rule.r02",
+            "rule.r04"
+          ]
+        },
+        {
+          "side": "risk",
+          "label": "Đường rủi ro",
+          "score": 41,
+          "title": "Han Iseul rời đi trước đỉnh nhật thực.",
+          "body": "Mỏ neo r02 tuột. Hai cảnh sau mất sự kiện đỡ chân.",
+          "tokens": [
+            "drops.r02",
+            "scene.16.orphan",
+            "scene.21.orphan"
+          ]
+        }
+      ]
+    },
+    "trust": {
+      "eyebrow": "06 / niềm tin",
+      "title": "Chuẩn tác giả từ ngày đầu.",
+      "subtitle": "Quyết định bạn đứng ra bảo vệ. Hạ tầng bạn kiểm tra. Quy tắc tách biệt bạn chứng minh.",
+      "items": [
+        {
+          "icon": "lock",
+          "title": "Cô lập không gian làm việc",
+          "body": "IP mẫu là dữ liệu tổng hợp. Bản thảo của bạn không bao giờ huấn luyện mô hình công cộng."
+        },
+        {
+          "icon": "key",
+          "title": "Hỗ trợ BYOK",
+          "body": "Khoá Anthropic của riêng bạn. Nửa giá, token không có trần."
+        },
+        {
+          "icon": "archive",
+          "title": "Canon phát lại được",
+          "body": "Mỗi phán quyết được ghi. Lui, rẽ nhánh, kiểm tra mọi quyết định."
+        },
+        {
+          "icon": "shield",
+          "title": "Chỉ SFW",
+          "body": "Litheon LLC vận hành Seizn dưới quy tắc nội dung an toàn nơi làm việc."
+        }
+      ]
+    },
+    "pricing": {
+      "eyebrow": "07 / giá",
+      "title": "Bạn trả cho sổ cái, không trả cho LLM.",
+      "subtitle": "BYOK cắt giá còn nửa và bỏ trần token. Năm tiết kiệm 15%. Mỗi gói đều có 30 ngày dùng thử.",
+      "byok": "BYOK giảm nửa",
+      "yearly": "Năm tiết kiệm 15%",
+      "start": "Bắt đầu",
+      "contact": "Liên hệ kinh doanh",
+      "mostPicked": "được chọn nhiều nhất",
+      "blurbs": {
+        "indie": "Cho tác giả đơn lẻ giữ canon của mình.",
+        "pro": "Cho tác giả chuyên nghiệp và studio nhỏ ra nhiều IP.",
+        "studio": "Đa IP, đa tác giả. Nhật ký kiểm toán, quyền theo vai, hàng đợi soát riêng.",
+        "enterprise": "Trú ngụ dữ liệu theo yêu cầu, SSO, kho phát lại tại chỗ, SLA cao cấp."
+      },
+      "features": {
+        "indie": [
+          "1 dự án IP",
+          "Sổ canon và phát lại",
+          "Soát không giới hạn",
+          "30 ngày, không cần thẻ"
+        ],
+        "pro": [
+          "5 dự án IP",
+          "Nhánh và diff canon",
+          "Ưu tiên soát xung đột",
+          "Đội 3 người",
+          "BYOK 50%"
+        ],
+        "studio": [
+          "20 triệu token / tháng",
+          "Vận hành soát theo studio",
+          "Soát mức dùng cho lần ra mắt lớn"
+        ],
+        "enterprise": [
+          "Quy mô không trần",
+          "Bắt buộc BYOK",
+          "Hỗ trợ bảo mật và mua sắm theo yêu cầu"
+        ]
+      }
+    },
+    "faq": {
+      "eyebrow": "08 / faq",
+      "title": "Năm câu tác giả hỏi đầu tiên.",
+      "items": [
+        {
+          "q": "Seizn khác Sudowrite hay NovelCrafter ở đâu?",
+          "a": "Seizn không phải trợ lý viết. Đây là sổ cái canon. Chúng tôi không sinh văn của bạn; chúng tôi giữ sự thật theo mặt chữ và đẩy mâu thuẫn lên ngay khi nó xuất hiện."
+        },
+        {
+          "q": "BYOK thực sự mở khoá điều gì?",
+          "a": "Với khoá Anthropic của bạn, bạn trả 50% giá niêm yết và token là không giới hạn."
+        },
+        {
+          "q": "Tôi có thể xuất canon không?",
+          "a": "Bất cứ lúc nào. Sổ cái xuất ra dưới dạng JSON có cấu trúc, Markdown thuần hoặc DOCX. Không ràng buộc. Dừng khi muốn và mang công việc theo."
+        },
+        {
+          "q": "Bản thảo của tôi sẽ ra sao?",
+          "a": "Tác phẩm tách biệt với IP mẫu và với mọi huấn luyện mô hình công cộng. Demo Saebyeok trên trang là dữ liệu tổng hợp, không phải khách hàng thật."
+        },
+        {
+          "q": "Dùng thử có cần thẻ không?",
+          "a": "Không. 30 ngày không cần thẻ. Sau 30 ngày chọn một gói, nếu không dự án vào chế độ chỉ đọc thêm 60 ngày."
+        }
+      ]
+    },
+    "footer": {
+      "tagline": "Trí nhớ tác giả, giữ theo mặt chữ. Chỉ SFW. Dựng để giữ thẩm quyền canon.",
+      "product": "Sản phẩm",
+      "company": "Công ty",
+      "tools": "Công cụ tác giả",
+      "developers": "Cho nhà phát triển",
+      "links": {
+        "workflow": "Quy trình",
+        "demo": "Demo",
+        "pricing": "Giá",
+        "docs": "Tài liệu",
+        "about": "Về chúng tôi",
+        "trust": "Niềm tin và quyền riêng tư",
+        "privacy": "Quyền riêng tư",
+        "terms": "Điều khoản",
+        "beta": "Thông báo beta",
+        "status": "Trạng thái",
+        "contact": "Liên hệ",
+        "ledger": "Sổ canon",
+        "replay": "Phát lại",
+        "byok": "Hướng dẫn BYOK",
+        "changelog": "Thay đổi",
+        "engine": "Engine →",
+        "sdk": "@seizn/sdk-js",
+        "mcp": "@seizn/mcp"
+      },
+      "entity": "© 2026 Seizn by Litheon LLC · Wyoming",
+      "version": "v1.0 · demo Saebyeok là dữ liệu tổng hợp"
+    },
+    "engine": {
+      "badge": "mới",
+      "body": "Đang xây AI cho NPC trong game? Cùng một động cơ canon, mở dưới dạng SDK.",
+      "cta": "engine.seizn.com"
+    },
+    "checkout": {
+      "prefix": "Tôi đồng ý với",
+      "terms": "Điều khoản Dịch vụ",
+      "connector": "và",
+      "privacy": "Chính sách Bảo mật",
+      "suffix": ".",
+      "loading": "Đang mở Stripe...",
+      "error": "Không thể bắt đầu thanh toán."
+    }
   }
 }
