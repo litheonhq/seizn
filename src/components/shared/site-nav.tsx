@@ -52,7 +52,7 @@ export function LandingNav({
         <div className="flex items-center gap-10">
           <Link href={`/${locale}`} className="flex items-center gap-2">
             <Image
-              src="/brand/seizn-mark-256.png"
+              src="/icons/seizn-mark.svg"
               alt="Seizn"
               className="h-7 w-7"
               width={28}
