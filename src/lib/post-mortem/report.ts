@@ -268,7 +268,7 @@ function baseUrl() {
 }
 
 function shareUrl(report: PostMortemReportRecord) {
-  return `${baseUrl()}/dashboard/post-mortem/${report.id}?token=${encodeURIComponent(report.publicToken)}`;
+  return `${baseUrl()}/dashboard/legacy/post-mortem/${report.id}?token=${encodeURIComponent(report.publicToken)}`;
 }
 
 function extractJsonObject(text: string): Row | null {

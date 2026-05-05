@@ -16,18 +16,18 @@ type CommandPaletteItem = NavGroup["items"][number] & { group: string };
 
 const EXCLUDED_COMMAND_ROUTES = new Set([
   "/dashboard/analytics",
-  "/dashboard/autopilot",
-  "/dashboard/budget",
-  "/dashboard/calculator",
-  "/dashboard/enterprise",
-  "/dashboard/evals",
-  "/dashboard/federated",
-  "/dashboard/governance",
-  "/dashboard/policy-marketplace",
-  "/dashboard/privacy",
-  "/dashboard/reports",
-  "/dashboard/reranker",
-  "/dashboard/security",
+  "/dashboard/legacy/autopilot",
+  "/dashboard/legacy/budget",
+  "/dashboard/legacy/calculator",
+  "/dashboard/legacy/enterprise",
+  "/dashboard/legacy/evals",
+  "/dashboard/legacy/federated",
+  "/dashboard/legacy/governance",
+  "/dashboard/legacy/policy-marketplace",
+  "/dashboard/account/privacy",
+  "/dashboard/legacy/reports",
+  "/dashboard/legacy/reranker",
+  "/dashboard/legacy/security",
 ]);
 
 export default function CommandPalette({ isOpen, onClose, navigationGroups, t }: CommandPaletteProps) {

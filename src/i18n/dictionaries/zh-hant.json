@@ -420,9 +420,20 @@
         "connect": "連接",
         "system": "系統",
         "build": "開發",
-        "integrate": "整合"
+        "integrate": "整合",
+        "workspace": "工作區",
+        "account": "帳號"
       },
-      "memoryEditor": "記憶編輯器"
+      "memoryEditor": "記憶編輯器",
+      "inbox": "收件匣",
+      "review": "檢視",
+      "characters": "人物",
+      "graph": "關係圖",
+      "timeline": "時間軸",
+      "conflicts": "衝突",
+      "simulate": "模擬",
+      "audit": "稽核紀錄",
+      "byok": "API 金鑰"
     },
     "pinSidebar": "固定側邊欄",
     "unpinSidebar": "摺疊側邊欄",
@@ -1356,7 +1367,13 @@
       "create": "建立",
       "createApiKey": "新增 API 金鑰",
       "createOrg": "新增專案",
-      "switchOrg": "切換專案"
+      "switchOrg": "切換專案",
+      "workspace": "工作區",
+      "search": "搜尋",
+      "command": "命令",
+      "write": "寫作",
+      "notifications": "通知",
+      "toggleSidebar": "切換側邊欄"
     },
     "share": {
       "title": "分享追蹤",
@@ -1612,6 +1629,116 @@
     },
     "brand": {
       "tagline": "作者記憶 · 在線"
+    },
+    "workspace": {
+      "switcher": {
+        "studio": "Studio",
+        "entries": "{count} 筆條目"
+      }
+    },
+    "memoryHealth": {
+      "synced": "記憶已同步",
+      "syncing": "同步中...",
+      "error": "同步錯誤",
+      "factsCount": "{relativeTime} · 事實 {count} 筆"
+    },
+    "inbox": {
+      "title": "收件匣",
+      "newCount": "新 {count} 筆",
+      "filter": {
+        "all": "全部",
+        "conflicts": "衝突",
+        "reviews": "檢視",
+        "characters": "人物"
+      },
+      "empty": "收件匣已清空。",
+      "emptyBody": "Memory v3 會在你寫作時，把規範、人物與時間軸的衝突彙整到這裡。",
+      "detail": {
+        "evidence": "證據",
+        "suggestion": "建議的解法",
+        "memorySuggests": "Memory v3 建議",
+        "applySuggestion": "套用建議",
+        "openIn": "在 {episode} 開啟",
+        "notConflict": "標記為非衝突"
+      },
+      "priority": "優先順序 {p}"
+    },
+    "characters": {
+      "title": "人物",
+      "add": "新增人物",
+      "filter": "搜尋人物",
+      "col": {
+        "name": "姓名",
+        "role": "角色",
+        "episodes": "集",
+        "relations": "關係",
+        "conflicts": "衝突"
+      },
+      "role": {
+        "lead": "主角",
+        "supporting": "配角",
+        "minor": "次要"
+      },
+      "detail": {
+        "canonFacts": "規範事實",
+        "relationships": "關係"
+      },
+      "empty": "這裡靜悄悄的。",
+      "emptyBody": "新增你的第一位人物。我們會建立規範條目，並在你寫作時留意一致性。",
+      "emptyCta": "新增人物"
+    },
+    "graph": {
+      "title": "關係圖",
+      "summary": "人物 {characters} · 關係 {ties}",
+      "mode": {
+        "force": "力導向",
+        "radial": "環形",
+        "hierarchy": "階層"
+      },
+      "legend": {
+        "lead": "主角",
+        "supporting": "配角",
+        "minor": "次要",
+        "tie": "關係",
+        "conflict": "衝突"
+      },
+      "detail": {
+        "directTies": "直接關係 · {count}",
+        "tieStrength": "關係強度",
+        "avgStrength": "平均 {percent}% · 關係 {count} 條"
+      },
+      "empty": "尚無關係。",
+      "emptyBody": "新增兩位人物和一段關係。圖會在你寫作時自動填充 — 不必手動維護。",
+      "emptyCta": "新增關係"
+    },
+    "conflicts": {
+      "title": "衝突",
+      "criticalCount": "重大 {count} 筆",
+      "warningCount": "警告 {count} 筆",
+      "severity": {
+        "p1": "重大",
+        "p2": "警告",
+        "p3": "備註"
+      },
+      "action": {
+        "resolve": "解決",
+        "openEvidence": "開啟證據",
+        "dismiss": "關閉"
+      }
+    },
+    "simulate": {
+      "empty": {
+        "title": "執行你的第一次場景模擬",
+        "body": "放入兩位人物與一個節拍。我們會按照你的規範回放他們的反應 — 落筆前確認很有用。",
+        "cta": "設定模擬"
+      },
+      "hint": {
+        "new": "新增模擬",
+        "help": "模擬使用方式"
+      }
+    },
+    "fallback": {
+      "body": "此頁籤使用相同的殼層樣式。"
     }
   },
   "pricingPage": {

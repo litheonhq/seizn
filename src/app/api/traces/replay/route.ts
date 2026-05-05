@@ -137,7 +137,7 @@ export async function POST(request: NextRequest) {
         latency: timingsMs,
         cost_usd: cost.total,
       },
-      compare_url: `/dashboard/traces/compare?a=${trace_id}&b=${handle.traceId}`,
+      compare_url: `/dashboard/legacy/traces/compare?a=${trace_id}&b=${handle.traceId}`,
     });
   } catch (error) {
     logServerError('Trace replay error', error);

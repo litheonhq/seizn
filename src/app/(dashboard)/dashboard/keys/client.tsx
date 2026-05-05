@@ -375,7 +375,7 @@ export default function ApiKeysClient() {
                   </pre>
                   <div className="mt-3 flex flex-col sm:flex-row gap-3">
                     <Link
-                      href="/dashboard/playground"
+                      href="/dashboard/legacy/playground"
                       data-testid="open-playground-link"
                       onClick={closeModal}
                       className="flex-1 inline-flex items-center justify-center px-4 py-3 rounded-xl theme-gradient-btn text-white text-sm font-medium"

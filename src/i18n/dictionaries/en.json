@@ -267,7 +267,13 @@
       "create": "Create",
       "createApiKey": "New API Key",
       "createOrg": "New Project",
-      "switchOrg": "Switch project"
+      "switchOrg": "Switch project",
+      "workspace": "Workspace",
+      "search": "Search",
+      "command": "Command",
+      "write": "Write",
+      "notifications": "Notifications",
+      "toggleSidebar": "Toggle sidebar"
     },
     "commandPalette": {
       "title": "Command palette",
@@ -315,7 +321,9 @@
         "connect": "INTEGRATE",
         "system": "WORKSPACE",
         "build": "Build",
-        "integrate": "Integrate"
+        "integrate": "Integrate",
+        "workspace": "Workspace",
+        "account": "Account"
       },
       "memory": {
         "author_memory": "Author Memory"
@@ -348,7 +356,16 @@
       "branches": "Branches",
       "provenance": "Provenance",
       "compliance": "Compliance",
-      "moderation": "Moderation"
+      "moderation": "Moderation",
+      "inbox": "Inbox",
+      "review": "Review",
+      "characters": "Characters",
+      "graph": "Graph",
+      "timeline": "Timeline",
+      "conflicts": "Conflicts",
+      "simulate": "Simulate",
+      "audit": "Audit",
+      "byok": "BYOK"
     },
     "pinSidebar": "Pin sidebar",
     "unpinSidebar": "Collapse sidebar",
@@ -1655,6 +1672,116 @@
     },
     "brand": {
       "tagline": "AUTHOR MEMORY · LIVE"
+    },
+    "workspace": {
+      "switcher": {
+        "studio": "Studio",
+        "entries": "{count} entries"
+      }
+    },
+    "memoryHealth": {
+      "synced": "Memory synced",
+      "syncing": "Syncing...",
+      "error": "Sync error",
+      "factsCount": "{relativeTime} · {count} facts"
+    },
+    "inbox": {
+      "title": "Inbox",
+      "newCount": "{count} new",
+      "filter": {
+        "all": "All",
+        "conflicts": "Conflicts",
+        "reviews": "Reviews",
+        "characters": "Characters"
+      },
+      "empty": "Inbox is clear.",
+      "emptyBody": "Memory v3 will surface canon, character, and timeline conflicts here as you draft.",
+      "detail": {
+        "evidence": "Evidence",
+        "suggestion": "Suggested resolution",
+        "memorySuggests": "Memory v3 suggests",
+        "applySuggestion": "Apply suggestion",
+        "openIn": "Open in {episode}",
+        "notConflict": "Mark not a conflict"
+      },
+      "priority": "Priority {p}"
+    },
+    "characters": {
+      "title": "Characters",
+      "add": "Add character",
+      "filter": "Filter characters",
+      "col": {
+        "name": "Name",
+        "role": "Role",
+        "episodes": "Eps",
+        "relations": "Rel",
+        "conflicts": "Conflicts"
+      },
+      "role": {
+        "lead": "Lead",
+        "supporting": "Supporting",
+        "minor": "Minor"
+      },
+      "detail": {
+        "canonFacts": "Canon facts",
+        "relationships": "Relationships"
+      },
+      "empty": "It's quiet here.",
+      "emptyBody": "Add your first character. We'll start a canon entry and watch for inconsistencies as you write.",
+      "emptyCta": "Add character"
+    },
+    "graph": {
+      "title": "Relationship graph",
+      "summary": "{characters} characters · {ties} ties",
+      "mode": {
+        "force": "Force",
+        "radial": "Radial",
+        "hierarchy": "Hierarchy"
+      },
+      "legend": {
+        "lead": "Lead",
+        "supporting": "Supp.",
+        "minor": "Minor",
+        "tie": "Tie",
+        "conflict": "Conflict"
+      },
+      "detail": {
+        "directTies": "Direct ties · {count}",
+        "tieStrength": "Tie strength",
+        "avgStrength": "Avg. {percent}% across {count} ties"
+      },
+      "empty": "No ties yet.",
+      "emptyBody": "Add two characters and a relationship. The graph fills out as you write — no manual upkeep.",
+      "emptyCta": "Add a relationship"
+    },
+    "conflicts": {
+      "title": "Conflicts",
+      "criticalCount": "{count} critical",
+      "warningCount": "{count} warning",
+      "severity": {
+        "p1": "Critical",
+        "p2": "Warning",
+        "p3": "Note"
+      },
+      "action": {
+        "resolve": "Resolve",
+        "openEvidence": "Open evidence",
+        "dismiss": "Dismiss"
+      }
+    },
+    "simulate": {
+      "empty": {
+        "title": "Run your first scene simulation",
+        "body": "Drop two characters and a beat. We replay how they'd react against your canon — useful before you commit a scene to draft.",
+        "cta": "Set up a simulation"
+      },
+      "hint": {
+        "new": "New simulation",
+        "help": "How simulations work"
+      }
+    },
+    "fallback": {
+      "body": "This tab uses the same shell pattern."
     }
   },
   "pricingPage": {

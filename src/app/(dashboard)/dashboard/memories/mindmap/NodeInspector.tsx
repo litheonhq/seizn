@@ -515,7 +515,7 @@ export function NodeInspector({ node, onClose, onRefresh }: NodeInspectorProps) 
                     )}
                     {u.traceId && (
                       <a
-                        href={`/dashboard/traces/${u.traceId}`}
+                        href={`/dashboard/legacy/traces/${u.traceId}`}
                         className="text-[var(--ink-900)] hover:underline"
                       >
                         View trace
