@@ -1623,7 +1623,7 @@
         "scopes": "Scopes",
         "scopesDefault": "Standaardscopes: recall, remember, graph, search.",
         "copyKey": "Sleutel kopiëren",
-        "saveItNow": "Sla hem nu op — deze sleutel zie je niet opnieuw.",
+        "saveItNow": "Sla hem nu op, want deze sleutel zie je niet opnieuw.",
         "created": "API-sleutel aangemaakt",
         "rotated": "API-sleutel geroteerd",
         "rotate": "Roteren",

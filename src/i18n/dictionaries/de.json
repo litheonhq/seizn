@@ -1627,7 +1627,7 @@
         "scopes": "Scopes",
         "scopesDefault": "Standard-Scopes: recall, remember, graph, search.",
         "copyKey": "Schlüssel kopieren",
-        "saveItNow": "Jetzt speichern — er wird nicht erneut angezeigt.",
+        "saveItNow": "Jetzt speichern – er wird nicht erneut angezeigt.",
         "created": "API-Schlüssel erstellt",
         "rotated": "API-Schlüssel rotiert",
         "rotate": "Rotieren",
