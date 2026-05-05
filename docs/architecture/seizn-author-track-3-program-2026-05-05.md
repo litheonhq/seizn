@@ -269,39 +269,55 @@ Track 3 promise:
 
 **Tauri 2.x lock 사유:** mobile 통합 (Phase 3) 까지 single shell 로 가능, Rust 의 file watcher (notify crate) + IPC 안정성, npm 생태계 (TipTap/Yjs) 그대로 사용 가능.
 
-### 5.2 Editor — TipTap (Phase 2)
+### 5.2 Editor — TipTap 3 (Phase 2, lock 2026-05-06)
 
 | 후보 | 결정 | 이유 |
 |---|---|---|
-| **TipTap (ProseMirror)** | ✓ pick | Korean IME composition handling 십년 성숙, 25+ extension, editorkit-pro 자산 재사용 가능, Yjs 통합 native |
+| **TipTap 3 + `@tiptap/y-tiptap`** | ✓ pick (lock 2026-05-06) | TipTap 3 stable (decorations API · Floating UI · TableKit · `@tiptap/y-tiptap` 공식 Yjs 바인딩). editorkit-pro fork base 가 v3 정합 시 그대로, v2 면 fork-and-pin v2. Yjs 통합 native |
+| TipTap 2 | conditional | editorkit-pro 가 v2 잠긴 경우만. 새 코드는 v3 권장 |
 | Lexical (Meta) | ✗ | IME 미성숙 (KO/JA/ZH composition 버그 잔존), Yjs 통합 plugin 부재 |
 | Slate | ✗ | maintenance 약화, IME 직접 구현 부담 |
 | TinyMCE / Quill | ✗ | long-form / chapter marker / chunk-based 색인에 약함 |
 
-### 5.3 CRDT — Yjs
+**Korean IME 위험 (lock 2026-05-06):** TipTap 자체는 안정적이나 ProseMirror 레이어에 한국어 IME 버그 잔존 (y-prosemirror issues #186/#188 2025-05+, ProseMirror issue #1484 — Korean Enter-key character loss). 근본 원인 = ProseMirror 의 aggressive DOM management during composition + Chrome IME brittleness. **Phase 2 dispatch 전 KO dogfood 필수 + `handleDOMEvents.beforeinput` workaround 예산 (~3 일)**. ko-locale 작가 alpha 회귀 셋 (자모 조합 깨짐, 일본어 변환 중 Enter, 拼音 후 backspace) ≥30 cases 필요.
+
+### 5.3 CRDT — Yjs (lock 2026-05-06: yjs ^13 · y-prosemirror ^1.2)
 
 | 후보 | 결정 | 이유 |
 |---|---|---|
-| **Yjs** | ✓ pick | 900k weekly download, sequential text insert 빠름, y-prosemirror / y-leveldb / y-indexeddb / y-websocket 생태계 성숙 |
+| **Yjs ^13 + y-prosemirror ^1.2 + @tiptap/y-tiptap** | ✓ pick | sequential text insert 빠름, y-prosemirror / y-leveldb / y-indexeddb / y-websocket 생태계 성숙 |
 | Automerge | ✗ | sequential text insert 느림, fiction 장문 워크로드에 약함 |
 
-### 5.4 Local persistence
+### 5.4 Local persistence (lock 2026-05-06: SQLite-backed Yjs adapter, y-leveldb fallback)
 
-- **y-leveldb** (Tauri side) — Yjs document 전체 binary 저장, append-only history
-- **append-only snapshot log** — 별 SQLite (또는 leveldb) 에 timestamped snapshot. y-leveldb 의 internal history 와 별개로 사용자-인지 가능한 `오늘/어제/지난주 버전` 표시
+- **Primary: SQLite-backed Yjs persistence** — Phase 0.5 의 snapshot SQLite 인프라 재사용. 새 `yjs_documents` table (project_id, doc_state BLOB, updated_at). `Y.encodeStateAsUpdate` / `Y.applyUpdate` 으로 binary 저장. **이유:** y-leveldb 의 native bindings 가 Windows + Tauri 에서 fragile, 단일 SQLite root = backup 단순화 + uninstall 시 orphan data X
+- **Fallback: y-leveldb** — Phase 2 spike 후 SQLite adapter 가 perf 미달 (10k char doc apply >100ms 등) 시 도입 검토. Phase 2 시작 전 1-day spike: `leveldb-rs` on Win11 + Tauri 빌드/load test
+- **append-only snapshot log** — 별 SQLite table 에 timestamped snapshot. Yjs 의 internal history 와 별개로 사용자-인지 가능한 `오늘/어제/지난주 버전` 표시
 - **file watcher** — Rust `notify` crate, 변경 감지 → debounce 500ms → snapshot append + Memory v3 index refresh
 - **zip export** — 프로젝트 단위, 무결성 verify (SHA-256)
+- **Storage root (lock 2026-05-06):** `<app_data_dir>/projects/<project_id>/snapshots.db` (Phase 0.5 시작점). entities + entities_vec + conflicts + yjs_documents + settings 모두 같은 DB. keyring 은 OS 별 (Windows Credential Manager / macOS Keychain / Linux Secret Service) — 단일 store 로 묶을 수 없으니 unique 패턴 OK. **uninstall 가이드** = `app_data_dir` 통째 삭제 + OS keyring 의 `seizn-desktop` 서비스 항목 삭제 (사용자 안내 필요)
 
-### 5.5 HWP 라이브러리
+### 5.5 HWP 라이브러리 (lock 2026-05-06, audit 결과 반영)
 
-| 후보 | 라이선스 | 용도 | 결정 |
-|---|---|---|---|
-| `rhwp` (Rust + WASM) | MIT | read | Phase 0 read-only import 후보 |
-| `@ohah/hwpjs` | MIT | read | Phase 0 read-only import 후보 |
-| `hwp.js` | MIT | read | 보조 |
-| `node-hwp` | MIT | read/write | Phase 3 export 후보 |
+| 후보 | 라이선스 | 활성 (2026-05) | 용도 | 결정 |
+|---|---|---|---|---|
+| **`rhwp`** (Rust + WASM, edwardkim) | MIT | ✓ active (2026-05 commits) | read+editor | **Phase 0.11 1순위** (Rust native, Tauri 통합 단순) |
+| **`openhwp`** (Rust crates `hwp` + `hwpx`, IR) | MIT | ✓ active (2025-12+) | read + HWPX write | Phase 0.11 fallback + Phase 1.5+ HWPX write 후보 |
+| **`@ohah/hwpjs`** (Rust core + JS/WASM/RN) | MIT | ✓ active (npm 2025-12) | read | JS 통합 필요 시 보조 (현 Tauri Rust side 우선이라 후순위) |
+| ~~`hwp.js`~~ (hahnlee) | MIT | ✗ stale (2022 last commit) | read | **drop** |
+| ~~`hwp-rs`~~ (hahnlee) | MIT | ✗ stale (2022) | read | **drop** |
+| `node-hwp` | MIT | unverified | read/write | Phase 3 검토 (단 Phase 3 시점 status 재확인 필요) |
 
-Phase 0 = read-only import 만. Phase 1.5 또는 Phase 3 = stable export.
+**Phase 0.11 entry decision (lock):** `rhwp` 1순위. 1-day spike 에서 sample HWP read 통과 시 lock; 실패 시 `openhwp` 으로 fallback. Phase 1.5+ HWPX write = `openhwp` 의 hwpx crate (write coverage 있음).
+
+**Phase 3 HWP write stable:** **production-ready Rust crate 없음** (audit 2026-05 결과). 옵션:
+1. `openhwp` 의 hwpx write 능력 확장 (PR contribution + 우리 spike 2주)
+2. Hancom 직접 partnership (commercial library license)
+3. HWP write 포기, HWPX 만 (Hancom Office 2018+ 호환)
+
+**권장 = (3)**. HWP (binary, 구식) write 보다 HWPX (XML, 표준) write 가 작가에게 충분 + 우리 부담 ↓. 사용자 인터뷰에서 `HWP 만 받는 출판사` 비율 ≥30% 면 (1) 또는 (2) 진입.
+
+Phase 0 = read-only import 만. Phase 1.5 또는 Phase 3 = stable HWPX export.
 
 ### 5.6 자체 backend — local embedding + LLM BYOK (lock 2026-05-06, revised)
 
@@ -346,6 +362,19 @@ seizn-desktop/src-tauri/
 | BYOK friction (Free tier) | N/A | recall = 0 (local embedding), entity 추출 = Anthropic key 필요 시만 |
 
 **Free tier UX (lock):** import + watcher + snapshot + **recall (semantic search)** 모두 BYOK 0 작동. Anthropic key 입력 = entity 추출 / conflict 감지 활성화 (옵션). 마케팅 카피: `Recall works out of the box. Bring your own key only when you want AI-extracted entities.`
+
+**Cloud embedding alternative — OpenAI dropped (lock 2026-05-06):**
+
+OpenAI text-embedding-3-small = **drop**. 사유: OpenAI 의 free/Tier 1 API 는 학습 opt-out 이 default 가 아니라 **opt-in 필요** (사용자가 모르고 사용 시 자기 manuscript 가 OpenAI training set 에 들어갈 risk). Track 3 의 `no AI training on user content` 약속 (§ 8.1) 과 모순. **권장 cloud embedding alt = Voyage AI 만** (paid, no-train default per Voyage commercial terms — Phase 0.7.5 wizard 에서 Voyage 선택 시 paid org key 안내). OpenAI 옵션 부활 = 사용자가 명시적으로 `opt-out 등록 완료` toggle 체크 시만 (Phase 1.X).
+
+**Anthropic API privacy (verified 2026-05-06 from `privacy.claude.com`):**
+
+- API inputs/outputs default retention = **30 days** (auto-delete on backend). [policy date 2026-03-16]
+- Zero Data Retention = enterprise contract negotiation 가능 (User Safety classifier 결과만 보존)
+- Usage Policy violation 시 inputs/outputs 최대 2년, classification 최대 7년
+- 학습 정책 = 별 `Commercial Terms` 문서. **마케팅 copy 발행 전 docs.anthropic.com 에서 commercial training opt-out default 재확인 필수** (글로벌 CLAUDE.md §12 fact verification, anthropic 정책 자주 revise)
+
+→ 사용자에게 `BYOK Anthropic key 사용 시 30일 retention, 학습 X (commercial terms 정합)` 안내. Marketing copy 의 정확한 wording 은 Phase 0.15 alpha invite 시 lock 전 재확인 cycle.
 
 **Phase 3 cross-device sync 시:**
 
@@ -412,11 +441,11 @@ v1 = 외부 검사기 export flow 만 (라이선스 미해결). 사용자가 직
    - Google Docs = export/import flow
 
 2. **파일 감시 모드**
-   - 사용자가 Word·메모장·VS Code·Scrivener·뮤블 export 파일에서 계속 쓰면 desktop 이 지정 파일 watch
-   - 변경 감지 → debounce 500ms → snapshot 생성 + Memory v3 index refresh (Track 2 API 호출)
+   - 사용자가 Word·메모장·VS Code·Scrivener·Vellum·Atticus export 파일에서 계속 쓰면 desktop 이 지정 파일 watch
+   - 변경 감지 → debounce 500ms → snapshot 생성 + 자체 backend (sqlite-vec) index refresh (lock 2026-05-06: Track 2 API 호출 X, master § 5.6)
 
 3. **로컬 우선 snapshot vault**
-   - append-only snapshot log (y-leveldb 또는 SQLite)
+   - append-only snapshot log (SQLite primary, y-leveldb fallback Phase 2 spike 후)
    - `오늘 / 어제 / 지난주 / 지난달` 버전 보기
    - diff 후 복원
    - 삭제 시 tombstone 유지
@@ -809,6 +838,10 @@ Track 3 fire-and-forget 모드 (master § 4.5) + 자체 backend (§ 5.6) 채택.
 - 큰따옴표 (`""`) 사용 X (**ko locale only** — EN/JA/ZH/ES locale 은 standard typography 적용)
 - KNOT/청학여/char.sori/knot.short1 sample X (Saebyeok IP 만)
 - Marketing or UI copy that hard-codes a single locale's tools (e.g., '한컴 전용', 'Mubble export 우선') outside its locale segment — keep tool callouts locale-scoped
+- **함초롬바탕 폰트 binary embed 금지** (Hancom 독점 폰트 — license 위반). DOCX export 시 style name 만 declare, Hancom Office 가 호스트 머신에서 substitute. Fallback chain: 함초롬바탕 → 바탕 → 맑은 고딕
+- **OpenAI cloud embedding 기본 활성화 X** (free/Tier 1 의 학습 opt-in default 정책 → §5.6 정합, Voyage 만 cloud alt). 사용자가 OpenAI opt-out toggle 명시 체크 시만 (Phase 1.X)
+- **Stronghold plugin 도입 X** (Tauri 측 v3 에서 removal 예정 lock 2026-05-06; `keyring 3` crate 사용 — 이미 §5.7 lock)
+- **Anthropic 외 LLM provider production 추가 X (Phase 0)** — Phase 0 LLM = Anthropic Haiku BYOK 단일. Phase 1.X 의 Ollama integration + GPT-5-mini / Gemini Flash 옵션 추가 = signal 기반 (§5.6 hybrid AI 전략 정합)
 
 ---
 
