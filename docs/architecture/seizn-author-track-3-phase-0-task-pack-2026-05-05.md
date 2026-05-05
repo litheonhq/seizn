@@ -6,7 +6,7 @@
 **Master:** `seizn-author-master-2026-05-05.md`
 **Design doc:** `seizn-author-track-3-program-2026-05-05.md`
 
-> **Entry gate.** Track 1 Phase -1 dashboard prototype 의 founding writer 5명 중 3명이 `다음 원고에도 쓰겠다` 신호 + 2명 이상 WTP ≥ ₩9,900. 미달 시 Phase 0 보류, Track 1 Phase -1 iterate.
+> **Entry gate (lock 2026-05-06).** ~~Track 1 Phase -1 dashboard prototype 의 founding writer 5명 중 3명 retain.~~ **우회**. Track 3 fire-and-forget 모드 (master § 4.5) + 자체 backend (master § 5.6, Track 3 doc § 5.6) 채택으로 Track 1 gate 의존 무효. self-dogfood (사용자 본인이 첫 alpha, Saebyeok IP 원고 import) + Phase 0.15 시 별 channel 모집 (나비계곡 / 작가 디스코드 / 트위터). 즉시 Phase 0.0 진입 가능.
 
 ---
 
@@ -28,6 +28,8 @@
 - 실시간 협업 (Phase 2)
 - HWP write 안정 (Phase 1.5+)
 - 자동 맞춤법 (라이선스 후)
+- **Track 2 REST endpoint 호출** (자체 backend 채택 — master § 5.6, lock 2026-05-06)
+- **Track 1 cohort 의존** (self-dogfood + 별 channel — § 17.0)
 
 ---
 
@@ -387,55 +389,160 @@ Verify: 100 snapshots <200ms, restore preserves history
 
 ---
 
-## 9. Phase 0.7 — Track 2 API client (Day 13-14)
+## 9. Phase 0.7 — 자체 backend: LLM client + sqlite-vec store (Day 13-16, REVISED 2026-05-06)
+
+### 9.0 Revision note
+
+이전 spec = Track 2 REST client. **자체 backend 채택 (master § 5.6 + Track 3 doc § 5.6)** 으로 변경. Track 2 endpoint 호출 0. 모든 entity 추출 / recall / 승인 = local SQLite + 사용자 BYOK Anthropic key.
+
+기간 4일 (Day 13-16) — 이전 0.7 (Day 13-14) + 옛 0.8 의 일부 시간 흡수.
 
 ### 9.1 Scope
 
-Track 2 의 `/api/v1/*` REST 호출 client. Recall · index push · entity approve.
+Tauri Rust side 에 자체 backend (Memory v3 desktop clone) 구현:
 
-### 9.2 의존성
+- BYOK keyring (사용자 Anthropic + 옵션: Voyage AI / OpenAI key)
+- Anthropic SDK client (Haiku 기본 / Sonnet 옵션)
+- Embedding client (Voyage AI 또는 OpenAI text-embedding-3-small)
+- sqlite-vec extension + vector store schema
+- Entity extraction pipeline (manuscript text → entity card)
+- Recall search (vector similarity + entity metadata join)
+- Entity 승인 / 수정 / 삭제 (local SQLite)
+
+### 9.2 의존성 (Cargo.toml)
 
 ```toml
-reqwest = { version = "0.12", features = ["json", "rustls-tls"] }
+[dependencies]
+reqwest = { version = "0.12", features = ["json", "rustls-tls", "stream"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tokio = { version = "1", features = ["full"] }
+keyring = "3"  # OS keyring (Windows Credential Manager / macOS Keychain / Linux Secret Service)
+sqlite-vec = "0.1"  # 또는 sqlite-vss. 첫 시도 = sqlite-vec
 ```
 
-또는 frontend 에서 직접 fetch. 권장: **frontend 에서 fetch** (Rust 통과 안 함, simplicity 우선).
+### 9.3 BYOK keyring 설계
 
-### 9.3 Endpoints (Track 2 doc § 7.1 mirror)
+사용자 첫 실행 시 wizard:
+- Anthropic API key 입력 (필수, Haiku 호출용)
+- Voyage AI key 입력 (옵션, embedding 비용 ↓)
+- OS keyring 에 저장 (사용자 password 보호)
+
+key 가 없으면 entity 추출 / recall 비활성. 사용자가 wizard 다시 띄울 수 있는 setting 제공.
+
+### 9.4 Anthropic client
+
+```rust
+// src-tauri/src/llm/anthropic.rs
+pub async fn extract_entities(
+    text: &str,
+    chunk_size: usize,
+) -> Result<Vec<EntityCard>, LlmError> {
+    // POST https://api.anthropic.com/v1/messages
+    // model: claude-haiku-4-5-20251001 (default) or claude-sonnet-4-6
+    // system: '당신은 한국 장편 소설의 등장인물·장소·물건·설정·약속·사건·떡밥을 추출합니다.'
+    // 응답: structured JSON (zod-equivalent serde struct)
+}
+```
+
+### 9.5 Embedding client
+
+기본 = Voyage AI (`voyage-3` 한국어 우수). Fallback = OpenAI `text-embedding-3-small`.
+
+```rust
+pub async fn embed(text: &str) -> Result<Vec<f32>, EmbeddingError> {
+    // POST https://api.voyageai.com/v1/embeddings
+    // input: text, model: voyage-3
+}
+```
+
+### 9.6 SQLite schema
+
+```sql
+-- 기존 snapshots table (Phase 0.5) 유지
+-- 추가:
+CREATE TABLE entities (
+    id TEXT PRIMARY KEY,                -- UUID
+    project_id TEXT NOT NULL,
+    canonical_name TEXT NOT NULL,
+    type TEXT NOT NULL,                  -- 인물/장소/물건/설정/약속/사건/떡밥
+    first_mention_chapter INTEGER,
+    first_mention_offset INTEGER,
+    last_mentions_json TEXT,             -- JSON array of {chapter, offset, ts}
+    current_state TEXT,
+    related_json TEXT,                   -- promises/events/items
+    status TEXT NOT NULL,                -- 'ai_suggested' | 'user_approved' | 'archived'
+    confidence REAL,
+    source_snippet TEXT,
+    created_at INTEGER NOT NULL,
+    updated_at INTEGER NOT NULL
+);
+CREATE INDEX idx_entities_project ON entities(project_id);
+CREATE INDEX idx_entities_name ON entities(canonical_name);
+
+-- sqlite-vec virtual table for embedding
+CREATE VIRTUAL TABLE entities_vec USING vec0(
+    id TEXT PRIMARY KEY,
+    embedding FLOAT[1024]               -- voyage-3 dimension
+);
+
+CREATE TABLE conflicts (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    entity_id TEXT NOT NULL,
+    chapter_a INTEGER NOT NULL,
+    chapter_b INTEGER NOT NULL,
+    snippet_a TEXT,
+    snippet_b TEXT,
+    severity TEXT NOT NULL,              -- 'P1' | 'P2' | 'P3'
+    status TEXT NOT NULL,                -- 'open' | 'resolved' | 'ignored'
+    created_at INTEGER NOT NULL,
+    FOREIGN KEY (entity_id) REFERENCES entities(id)
+);
+```
+
+### 9.7 Tauri commands (frontend 노출)
+
+```rust
+#[tauri::command]
+async fn recall(query: String, project_id: String) -> Result<Vec<EntityCard>, String> { ... }
+
+#[tauri::command]
+async fn index_manuscript(project_id: String, text: String) -> Result<IndexResult, String> { ... }
+
+#[tauri::command]
+async fn approve_entity(entity_id: String) -> Result<(), String> { ... }
+
+#[tauri::command]
+async fn edit_entity(entity_id: String, patch: EntityPatch) -> Result<EntityCard, String> { ... }
+
+#[tauri::command]
+async fn delete_entity(entity_id: String) -> Result<(), String> { ... }
+
+#[tauri::command]
+async fn list_conflicts(project_id: String) -> Result<Vec<ConflictCard>, String> { ... }
+
+#[tauri::command]
+async fn save_api_key(provider: String, key: String) -> Result<(), String> { ... }
+
+#[tauri::command]
+async fn get_api_key_status() -> Result<KeyStatus, String> { ... }
+```
+
+### 9.8 Verify
+
+- 첫 실행 wizard 에서 Anthropic key 입력 → keyring 저장 → 재시작 후에도 보존
+- 1만 자 manuscript text → `index_manuscript` → 5~20 entity 추출 (Haiku 호출) → SQLite + embedding 저장 → 5~10초 이내
+- `recall("서윤")` → vector similarity + name match → top 5 entity card
+- 네트워크 끊겨도 SQLite 검색은 작동 (LLM 호출만 실패)
+- API key 비용 추적 (call count + token usage)
+
+### 9.9 Commit
 
 ```
-POST /api/v1/projects                                  - create project
-POST /api/v1/projects/{id}/manuscript/index            - push manuscript text
-GET  /api/v1/projects/{id}/recall?q=<name>             - recall card
-GET  /api/v1/projects/{id}/recall/{entityId}/mentions  - mentions list
-POST /api/v1/projects/{id}/canon/{entityId}/approve    - approve entity
-GET  /api/v1/projects/{id}/conflicts                   - conflict list
-GET  /api/v1/usage                                     - quota
-```
-
-### 9.4 Auth
-
-- API key 환경변수 (`VITE_SEIZN_API_KEY` 개발용) 또는 OS keyring
-- v0.1 = `.env.local` 의 dev key, Phase 1 = OS keyring (`keyring` crate)
-
-### 9.5 Offline-first
-
-- 네트워크 실패 시 → 로컬 캐시 (IndexedDB 또는 SQLite) 사용
-- 변경된 manuscript text 는 local outbox 에 queue → 온라인 시 batch upload
-
-### 9.6 Verify
-
-- 단일 file 의 manuscript text → `index` 호출 → entity 추출 시작 → recall 호출 → entity card 반환
-- 네트워크 끊겨도 앱 freeze X. `오프라인` 배지 표시
-- 재연결 시 outbox 자동 sync
-
-### 9.7 Commit
-
-```
-feat(api): Track 2 REST client + offline outbox
+feat(memory): self-hosted backend - BYOK Anthropic + sqlite-vec + entity store
 
 Phase: 0.7
-Verify: index→recall E2E OK, offline queue resumes on reconnect
+Verify: 1만자 → 5~20 entity 추출 ≤10초, recall vector search ≤100ms, BYOK keyring 보존
 ```
 
 ---
@@ -726,14 +833,24 @@ Verify: 5 safety tests pass, analytics events recorded
 
 ---
 
-## 17. Phase 0.15 — Closed alpha 3 writer invite (Day 29-30)
+## 17. Phase 0.15 — Closed alpha 3 writer invite (Day 29-30, REVISED 2026-05-06)
+
+### 17.0 Revision note
+
+이전 spec = Track 1 Phase -1 retain 작가 cohort transfer. **자체 모집 채택** (master § 5.3 lock 2026-05-06). Track 1 의존 무효.
 
 ### 17.1 Scope
 
 - `Seizn Desktop alpha 0.1.0` 빌드 (Win + Mac)
-- 3명 작가 invite (Track 1 Phase -1 retain 작가 중 우선)
+- alpha 3명 (이상) invite — 모집 channel:
+  - **사용자 본인 self-dogfood** (Saebyeok IP 원고 import, 첫 alpha)
+  - **나비계곡** 작가 cold outreach
+  - **작가 디스코드** (관련 서버)
+  - **트위터** dev-author / KR fiction writer 계정 cold DM
+  - **레딧 r/koreanwebnovel** (있으면)
+- BYOK 안내 (Anthropic key 발급 가이드 link)
 - Onboarding doc 1page (`작가님 첫 사용 가이드`)
-- WhatsApp / Discord / Telegram 채널 (작가가 익숙한 곳)
+- 채널 = 작가가 익숙한 곳 (WhatsApp / Discord / Telegram / 트위터 DM)
 
 ### 17.2 Onboarding doc 핵심
 
