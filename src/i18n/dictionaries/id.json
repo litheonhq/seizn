@@ -3299,5 +3299,307 @@
     "incidentsTitle": "Incident reporting",
     "incidentsBody": "Public incident history and current availability are published on the Seizn status page:",
     "statusLink": "View status"
+  },
+  "authorLanding": {
+    "nav": {
+      "workflow": "Alur kerja",
+      "demo": "Demo",
+      "pricing": "Harga",
+      "docs": "Dokumentasi",
+      "signIn": "Masuk",
+      "start": "Coba gratis",
+      "menu": "Buka menu"
+    },
+    "hero": {
+      "eyebrow": "01 / memori penulis",
+      "title": "Tangkap setiap",
+      "italic": "kontradiksi",
+      "titleEnd": " sebelum rilis.",
+      "subtitle": "Ketik satu fakta. Seizn mencocokkannya dengan kanon Anda: 8 tokoh, 22 aturan, dan timeline 30 hari. Tinjauan Anda adalah putusan.",
+      "trialNote": "30 hari, tanpa kartu",
+      "byokNote": "BYOK setengah harga",
+      "yearly": "Tahunan hemat 15%",
+      "startPlan": "Mulai",
+      "comparePlans": "Bandingkan Pro, Studio, dan Enterprise"
+    },
+    "workflow": {
+      "eyebrow": "02 / alur kerja",
+      "title": "Tiga langkah. Satu buku besar.",
+      "subtitle": "Impor, periksa, dan tulis — kanon yang sama di balik setiap ketukan tombol.",
+      "steps": [
+        {
+          "number": "01",
+          "title": "Impor",
+          "subtitle": "Bawa kanon Anda utuh.",
+          "body": "Jatuhkan naskah, tunjuk ke Google Doc, atau sinkronkan berkas worldbuilding. Seizn merangkai tokoh, lokasi, dan aturan dalam buku besar yang terstruktur.",
+          "chips": [
+            "DOCX",
+            "Plain text",
+            "Google Docs",
+            "Native"
+          ]
+        },
+        {
+          "number": "02",
+          "title": "Periksa",
+          "subtitle": "Putusan Anda, dicatat.",
+          "body": "Setiap fakta menerima putusan: diterima, antre, atau bentrok. Tinjauan menjadi sumber kebenaran dan bisa diputar ulang kapan saja.",
+          "chips": [
+            "canon 142",
+            "pending 8",
+            "conflict 3"
+          ]
+        },
+        {
+          "number": "03",
+          "title": "Tulis",
+          "subtitle": "Draf di dalam buku.",
+          "body": "Susun adegan baru di sebelah grafnya. Kontradiksi muncul saat itu juga, dengan aturan yang dikutip dan satu klik untuk menimpa.",
+          "chips": [
+            "Scene draft",
+            "Live check",
+            "Replay"
+          ]
+        }
+      ]
+    },
+    "inputs": {
+      "eyebrow": "03 / masukan",
+      "title": "Kami mendatangi tempat karya Anda hidup.",
+      "subtitle": "Empat jalan masuk. Buku yang sama, tinjauan yang sama, kanon yang sama.",
+      "modes": [
+        {
+          "id": "native",
+          "name": "Editor bawaan",
+          "subtitle": "Tulis di dalam Seizn.",
+          "body": "Tulis langsung di editor yang mengenal kanon. Tiap paragraf dicocokkan dengan buku besar saat Anda mengetik."
+        },
+        {
+          "id": "docx",
+          "name": "Impor DOCX",
+          "subtitle": "Bawa naskah.",
+          "body": "Tarik berkas .docx, .rtf, atau .odt. Seizn mengangkat tokoh, adegan, dan dialog ke buku besar."
+        },
+        {
+          "id": "plain",
+          "name": "Teks polos",
+          "subtitle": "Akrab dengan Markdown.",
+          "body": "Tempel atau unggah .md dan .txt. Judul jadi adegan, sebutan jadi entitas. Bolak-balik tanpa kehilangan."
+        },
+        {
+          "id": "gdocs",
+          "name": "Google Docs",
+          "subtitle": "Sinkron, bukan salin.",
+          "body": "Hubungkan Doc sekali. Seizn menjaga buku tetap selaras, kontradiksi datang sebagai utas komentar."
+        }
+      ]
+    },
+    "conflicts": {
+      "eyebrow": "04 / kontradiksi",
+      "title": "Tiap kontradiksi, dikutip dan diberi peringkat.",
+      "subtitle": "Tingkat keparahan adalah sinyal, bukan derau. Critical mematahkan kanon di muka. Minor menandai pergeseran tipis yang mungkin ingin Anda pertahankan.",
+      "graphNote": "Graf bukan hiasan. Tiap kontradiksi menunjuk node dan tepi yang patah.",
+      "items": [
+        {
+          "severity": "critical",
+          "rule": "character.han_iseul.eye_color",
+          "fact": "Bab 11: Han Iseul bermata abu-abu.",
+          "against": "Kanon di bab 2 mengatakan cokelat.",
+          "cited": [
+            "scene.2.1",
+            "character.han_iseul"
+          ]
+        },
+        {
+          "severity": "major",
+          "rule": "rule.r03 akses atap",
+          "fact": "Bab 7: Park Jio naik ke atap pada hari ke-9.",
+          "against": "Aturan r03 mengunci atap sampai hari ke-14.",
+          "cited": [
+            "rule.r03",
+            "scene.7.4"
+          ]
+        },
+        {
+          "severity": "minor",
+          "rule": "character.yun_hana.club",
+          "fact": "Bab 18: Yun Hana ikut klub astronomi.",
+          "against": "Kanon menyebut klub fotografi. Mungkin pindah klub.",
+          "cited": [
+            "character.yun_hana"
+          ]
+        }
+      ]
+    },
+    "simulation": {
+      "eyebrow": "05 / simulasi",
+      "title": "Putar ulang sebelum mengunci.",
+      "subtitle": "Letakkan adegan di atas buku. Seizn memproyeksikan dampak hingga level token: jalur aman dan jalur risiko, dengan skor.",
+      "tokenDiff": "diff level token: scene 14.observatory.draft",
+      "replayReady": "siap diputar ulang",
+      "candidates": [
+        {
+          "side": "safe",
+          "label": "Jalur aman",
+          "score": 92,
+          "title": "Han Iseul tinggal di observatorium sampai fajar.",
+          "body": "Menjaga r02 dan r04. Tidak ada kontradiksi baru. Kontinuitas tetap utuh.",
+          "tokens": [
+            "scene.continues",
+            "rule.r02",
+            "rule.r04"
+          ]
+        },
+        {
+          "side": "risk",
+          "label": "Jalur risiko",
+          "score": 41,
+          "title": "Han Iseul pergi sebelum puncak gerhana.",
+          "body": "Jangkar r02 lepas. Dua adegan setelahnya kehilangan peristiwa yang menopang.",
+          "tokens": [
+            "drops.r02",
+            "scene.16.orphan",
+            "scene.21.orphan"
+          ]
+        }
+      ]
+    },
+    "trust": {
+      "eyebrow": "06 / kepercayaan",
+      "title": "Standar penulis sejak hari pertama.",
+      "subtitle": "Keputusan yang Anda bela. Infrastruktur yang Anda audit. Aturan pemisah yang Anda buktikan.",
+      "items": [
+        {
+          "icon": "lock",
+          "title": "Workspace terpisah",
+          "body": "Sample IP bersifat sintetis. Naskah Anda tak pernah melatih model publik."
+        },
+        {
+          "icon": "key",
+          "title": "Mendukung BYOK",
+          "body": "Pakai kunci Anthropic Anda sendiri. Setengah harga, token tanpa batas."
+        },
+        {
+          "icon": "archive",
+          "title": "Kanon dapat diputar ulang",
+          "body": "Tiap putusan tercatat. Mundur, bercabang, audit keputusan apa pun."
+        },
+        {
+          "icon": "shield",
+          "title": "Hanya SFW",
+          "body": "Litheon LLC menjalankan Seizn dalam aturan ketat konten aman untuk kerja."
+        }
+      ]
+    },
+    "pricing": {
+      "eyebrow": "07 / harga",
+      "title": "Anda bayar bukunya, bukan LLM-nya.",
+      "subtitle": "BYOK memotong harga setengah dan menghapus batas token. Tahunan hemat 15%. Uji coba 30 hari di tiap tingkatan.",
+      "byok": "BYOK setengah harga",
+      "yearly": "Tahunan hemat 15%",
+      "start": "Mulai",
+      "contact": "Hubungi sales",
+      "mostPicked": "paling dipilih",
+      "blurbs": {
+        "indie": "Untuk penulis tunggal yang menjaga kanonnya sendiri.",
+        "pro": "Untuk penulis profesional dan studio kecil yang merilis beberapa IP.",
+        "studio": "Multi-IP, multi-penulis. Log audit, izin per peran, antrean tinjauan khusus.",
+        "enterprise": "Residensi data sesuai kebutuhan, SSO, arsip replay on-prem, SLA premium."
+      },
+      "features": {
+        "indie": [
+          "1 proyek IP",
+          "Buku kanon dan replay",
+          "Tinjauan tanpa batas",
+          "30 hari, tanpa kartu"
+        ],
+        "pro": [
+          "5 proyek IP",
+          "Cabang dan diff kanon",
+          "Prioritas tinjauan kontradiksi",
+          "Tim 3 orang",
+          "BYOK 50%"
+        ],
+        "studio": [
+          "20 juta token / bulan",
+          "Operasi tinjauan studio",
+          "Tinjauan penggunaan untuk peluncuran besar"
+        ],
+        "enterprise": [
+          "Skala tanpa batas",
+          "BYOK wajib",
+          "Dukungan keamanan dan pengadaan kustom"
+        ]
+      }
+    },
+    "faq": {
+      "eyebrow": "08 / faq",
+      "title": "Lima hal yang penulis tanyakan duluan.",
+      "items": [
+        {
+          "q": "Apa beda Seizn dengan Sudowrite atau NovelCrafter?",
+          "a": "Seizn bukan asisten penulisan. Ini buku besar kanon. Kami tidak membuat prosa Anda; kami memegang fakta secara harfiah dan memunculkan kontradiksi begitu muncul."
+        },
+        {
+          "q": "Apa yang sebenarnya dibuka BYOK?",
+          "a": "Dengan kunci Anthropic Anda, Anda membayar 50% dari harga daftar dan token tanpa batas."
+        },
+        {
+          "q": "Bisa ekspor kanon?",
+          "a": "Selalu. Buku besar keluar sebagai JSON terstruktur, Markdown polos, atau DOCX. Tanpa ikatan. Berhenti kapan saja dan bawa pekerjaan Anda."
+        },
+        {
+          "q": "Bagaimana naskah saya diperlakukan?",
+          "a": "Karya Anda terpisah dari sample IP dan dari pelatihan model publik mana pun. Demo Saebyeok di halaman ini adalah data sintetis, bukan pelanggan nyata."
+        },
+        {
+          "q": "Apakah uji coba meminta kartu?",
+          "a": "Tidak. 30 hari tanpa kartu. Setelah 30 hari pilih tingkat, kalau tidak proyek masuk mode hanya-baca selama 60 hari berikutnya."
+        }
+      ]
+    },
+    "footer": {
+      "tagline": "Memori penulis, dipegang secara harfiah. Hanya SFW. Dibangun untuk otoritas kanon.",
+      "product": "Produk",
+      "company": "Perusahaan",
+      "tools": "Alat penulis",
+      "developers": "Untuk pengembang",
+      "links": {
+        "workflow": "Alur kerja",
+        "demo": "Demo",
+        "pricing": "Harga",
+        "docs": "Dokumentasi",
+        "about": "Tentang",
+        "trust": "Kepercayaan dan privasi",
+        "privacy": "Privasi",
+        "terms": "Ketentuan",
+        "beta": "Pemberitahuan beta",
+        "status": "Status",
+        "contact": "Kontak",
+        "ledger": "Buku kanon",
+        "replay": "Replay",
+        "byok": "Panduan BYOK",
+        "changelog": "Perubahan",
+        "engine": "Engine →",
+        "sdk": "@seizn/sdk-js",
+        "mcp": "@seizn/mcp"
+      },
+      "entity": "© 2026 Seizn by Litheon LLC · Wyoming",
+      "version": "v1.0 · demo Saebyeok adalah data sintetis"
+    },
+    "engine": {
+      "badge": "baru",
+      "body": "Sedang membangun AI NPC untuk game? Mesin kanon yang sama, dipaparkan sebagai SDK.",
+      "cta": "engine.seizn.com"
+    },
+    "checkout": {
+      "prefix": "Saya menyetujui",
+      "terms": "Ketentuan Layanan",
+      "connector": "dan",
+      "privacy": "Kebijakan Privasi",
+      "suffix": ".",
+      "loading": "Membuka Stripe...",
+      "error": "Checkout gagal dimulai."
+    }
   }
 }

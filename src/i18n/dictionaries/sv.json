@@ -3294,5 +3294,307 @@
     "incidentsTitle": "Incident reporting",
     "incidentsBody": "Public incident history and current availability are published on the Seizn status page:",
     "statusLink": "View status"
+  },
+  "authorLanding": {
+    "nav": {
+      "workflow": "Flöde",
+      "demo": "Demo",
+      "pricing": "Priser",
+      "docs": "Dokumentation",
+      "signIn": "Logga in",
+      "start": "Prova gratis",
+      "menu": "Öppna meny"
+    },
+    "hero": {
+      "eyebrow": "01 / författarminne",
+      "title": "Fånga varje",
+      "italic": "motsägelse",
+      "titleEnd": " innan du släpper.",
+      "subtitle": "Skriv ett faktum. Seizn stämmer av det mot din kanon: 8 karaktärer, 22 regler, en 30-dagars tidslinje. Din granskning är domen.",
+      "trialNote": "30 dagar, utan kort",
+      "byokNote": "BYOK halva priset",
+      "yearly": "Årsvis sparar 15%",
+      "startPlan": "Börja",
+      "comparePlans": "Jämför Pro, Studio och Enterprise"
+    },
+    "workflow": {
+      "eyebrow": "02 / flöde",
+      "title": "Tre steg. En enda huvudbok.",
+      "subtitle": "Importera, granska och skriv — samma kanon bakom varje tangent.",
+      "steps": [
+        {
+          "number": "01",
+          "title": "Importera",
+          "subtitle": "Ta in hela din kanon.",
+          "body": "Släpp ett manus, peka på ett Google Doc eller synka en världsfil. Seizn lägger karaktärer, platser och regler i en strukturerad huvudbok.",
+          "chips": [
+            "DOCX",
+            "Plain text",
+            "Google Docs",
+            "Native"
+          ]
+        },
+        {
+          "number": "02",
+          "title": "Granska",
+          "subtitle": "Din dom, inskriven.",
+          "body": "Varje faktum får en dom: godkänd, i kö eller i konflikt. Granskningen blir sanningens källa och kan spelas om när som helst.",
+          "chips": [
+            "canon 142",
+            "pending 8",
+            "conflict 3"
+          ]
+        },
+        {
+          "number": "03",
+          "title": "Skriva",
+          "subtitle": "Utkast inne i boken.",
+          "body": "Skriv nya scener bredvid grafen. Motsägelser dyker upp i samma stund som de syns, med regeln citerad och ett klick för att skriva över.",
+          "chips": [
+            "Scene draft",
+            "Live check",
+            "Replay"
+          ]
+        }
+      ]
+    },
+    "inputs": {
+      "eyebrow": "03 / ingångar",
+      "title": "Vi går dit ditt arbete bor.",
+      "subtitle": "Fyra vägar in. Samma huvudbok, samma granskning, samma kanon.",
+      "modes": [
+        {
+          "id": "native",
+          "name": "Inbyggd editor",
+          "subtitle": "Skriv inuti Seizn.",
+          "body": "Skriv direkt i editorn som kan kanonen. Varje stycke stäms av mot huvudboken medan du skriver."
+        },
+        {
+          "id": "docx",
+          "name": "DOCX-import",
+          "subtitle": "Ta med ett manus.",
+          "body": "Dra in en .docx-, .rtf- eller .odt-fil. Seizn plockar ut karaktärer, scener och dialog till huvudboken."
+        },
+        {
+          "id": "plain",
+          "name": "Vanlig text",
+          "subtitle": "Trivs med Markdown.",
+          "body": "Klistra eller ladda upp .md och .txt. Rubriker blir scener, omnämnanden blir entiteter. Tur och retur utan förlust."
+        },
+        {
+          "id": "gdocs",
+          "name": "Google Docs",
+          "subtitle": "Synka, inte kopiera.",
+          "body": "Anslut ett Doc en gång. Seizn håller boken i synk och konflikter kommer som kommentarstrådar."
+        }
+      ]
+    },
+    "conflicts": {
+      "eyebrow": "04 / konflikter",
+      "title": "Varje motsägelse — citerad och rangordnad.",
+      "subtitle": "Allvar är signal, inte brus. Critical bryter kanonen rakt av. Minor markerar en mjuk avvikelse du kanske vill behålla.",
+      "graphNote": "Grafen är ingen utsmyckning. Varje konflikt pekar på just den nod och kant som gick sönder.",
+      "items": [
+        {
+          "severity": "critical",
+          "rule": "character.han_iseul.eye_color",
+          "fact": "Kapitel 11: Han Iseul har grå ögon.",
+          "against": "Kanon i kapitel 2 säger bruna.",
+          "cited": [
+            "scene.2.1",
+            "character.han_iseul"
+          ]
+        },
+        {
+          "severity": "major",
+          "rule": "rule.r03 åtkomst till tak",
+          "fact": "Kapitel 7: Park Jio går upp på taket dag 9.",
+          "against": "Regel r03 låser taket till dag 14.",
+          "cited": [
+            "rule.r03",
+            "scene.7.4"
+          ]
+        },
+        {
+          "severity": "minor",
+          "rule": "character.yun_hana.club",
+          "fact": "Kapitel 18: Yun Hana går med i astronomiklubben.",
+          "against": "Kanon säger fotoklubben. Kan vara ett klubbyte.",
+          "cited": [
+            "character.yun_hana"
+          ]
+        }
+      ]
+    },
+    "simulation": {
+      "eyebrow": "05 / simulering",
+      "title": "Spela om innan du fastställer.",
+      "subtitle": "Lägg en scen ovanpå huvudboken. Seizn projicerar effekten på tokennivå: säkra spår och risk-spår, med poäng.",
+      "tokenDiff": "diff på tokennivå: scene 14.observatory.draft",
+      "replayReady": "redo att spelas om",
+      "candidates": [
+        {
+          "side": "safe",
+          "label": "Säkert spår",
+          "score": 92,
+          "title": "Han Iseul stannar i observatoriet till gryningen.",
+          "body": "Hedrar r02 och r04. Inga nya konflikter. Kontinuiteten håller.",
+          "tokens": [
+            "scene.continues",
+            "rule.r02",
+            "rule.r04"
+          ]
+        },
+        {
+          "side": "risk",
+          "label": "Risk-spår",
+          "score": 41,
+          "title": "Han Iseul går innan förmörkelsens topp.",
+          "body": "Ankaret r02 släpper. Två senare scener tappar händelsen som bär dem.",
+          "tokens": [
+            "drops.r02",
+            "scene.16.orphan",
+            "scene.21.orphan"
+          ]
+        }
+      ]
+    },
+    "trust": {
+      "eyebrow": "06 / förtroende",
+      "title": "Författarstandard från start.",
+      "subtitle": "Beslut du försvarar. Infrastruktur du granskar. Separationsregler du bevisar.",
+      "items": [
+        {
+          "icon": "lock",
+          "title": "Isolerad arbetsyta",
+          "body": "Sample-IP är syntetiskt. Ditt manus tränar aldrig en publik modell."
+        },
+        {
+          "icon": "key",
+          "title": "BYOK stöds",
+          "body": "Egen Anthropic-nyckel. Halva priset, tokens utan tak."
+        },
+        {
+          "icon": "archive",
+          "title": "Återspelbar kanon",
+          "body": "Varje dom loggas. Backa, gren a, granska vilket beslut som helst."
+        },
+        {
+          "icon": "shield",
+          "title": "Bara SFW",
+          "body": "Litheon LLC kör Seizn under en strikt regel om arbetsplatsanpassat innehåll."
+        }
+      ]
+    },
+    "pricing": {
+      "eyebrow": "07 / priser",
+      "title": "Du betalar för boken, inte för LLM:en.",
+      "subtitle": "BYOK halverar priset och tar bort tokentaket. Årsvis sparar 15%. 30 dagars provperiod på varje plan.",
+      "byok": "BYOK halva priset",
+      "yearly": "Årsvis sparar 15%",
+      "start": "Börja",
+      "contact": "Prata med säljare",
+      "mostPicked": "mest valt",
+      "blurbs": {
+        "indie": "För soloförfattaren som håller sin egen kanon.",
+        "pro": "För proffsförfattare och små studior med flera IP.",
+        "studio": "Flera IP, flera författare. Granskningslogg, rollrättigheter, dedikerad granskningskö.",
+        "enterprise": "Skräddarsydd dataresidens, SSO, lokalt replay-arkiv, premium-SLA."
+      },
+      "features": {
+        "indie": [
+          "1 IP-projekt",
+          "Kanonbok och replay",
+          "Obegränsade granskningar",
+          "30 dagar utan kort"
+        ],
+        "pro": [
+          "5 IP-projekt",
+          "Grenar och diff på kanon",
+          "Prioriterad konfliktgranskning",
+          "Team om 3",
+          "BYOK 50%"
+        ],
+        "studio": [
+          "20M tokens / mån",
+          "Studio-granskningsdrift",
+          "Användningsöversyn för stora lanseringar"
+        ],
+        "enterprise": [
+          "Skala utan tak",
+          "BYOK krävs",
+          "Skräddarsytt säkerhets- och inköpsstöd"
+        ]
+      }
+    },
+    "faq": {
+      "eyebrow": "08 / faq",
+      "title": "Fem frågor författare ställer först.",
+      "items": [
+        {
+          "q": "Hur skiljer sig Seizn från Sudowrite eller NovelCrafter?",
+          "a": "Seizn är ingen skrivassistent. Det är en kanonbok. Vi skriver inte din prosa; vi håller dina fakta ordagrant och visar motsägelser i samma stund som de dyker upp."
+        },
+        {
+          "q": "Vad låser BYOK upp på riktigt?",
+          "a": "Med din egen Anthropic-nyckel betalar du 50% av listpris och tokens är obegränsade."
+        },
+        {
+          "q": "Kan jag exportera min kanon?",
+          "a": "Alltid. Boken går ut som strukturerad JSON, ren Markdown eller DOCX. Ingen inlåsning. Säg upp när du vill och ta med jobbet."
+        },
+        {
+          "q": "Vad händer med mitt manus?",
+          "a": "Ditt arbete hålls åtskilt från sample-IP och från all publik modellträning. Saebyeok-demon på sidan är syntetisk data, inte en riktig kund."
+        },
+        {
+          "q": "Behöver provperioden ett kort?",
+          "a": "Nej. 30 dagar utan kort. Efter 30 dagar väljer du en plan, annars går projektet till lässkyddat läge i 60 dagar till."
+        }
+      ]
+    },
+    "footer": {
+      "tagline": "Författarminne, hållet ordagrant. Bara SFW. Byggt för kanonens auktoritet.",
+      "product": "Produkt",
+      "company": "Bolag",
+      "tools": "Författarverktyg",
+      "developers": "För utvecklare",
+      "links": {
+        "workflow": "Flöde",
+        "demo": "Demo",
+        "pricing": "Priser",
+        "docs": "Dokumentation",
+        "about": "Om oss",
+        "trust": "Förtroende och integritet",
+        "privacy": "Integritet",
+        "terms": "Villkor",
+        "beta": "Beta-information",
+        "status": "Status",
+        "contact": "Kontakt",
+        "ledger": "Kanonbok",
+        "replay": "Replay",
+        "byok": "BYOK-guide",
+        "changelog": "Ändringar",
+        "engine": "Engine →",
+        "sdk": "@seizn/sdk-js",
+        "mcp": "@seizn/mcp"
+      },
+      "entity": "© 2026 Seizn by Litheon LLC · Wyoming",
+      "version": "v1.0 · Saebyeok-demon är syntetisk data"
+    },
+    "engine": {
+      "badge": "nytt",
+      "body": "Bygger du NPC-AI till spel? Samma kanonmotor, exponerad som SDK.",
+      "cta": "engine.seizn.com"
+    },
+    "checkout": {
+      "prefix": "Jag godkänner",
+      "terms": "användarvillkoren",
+      "connector": "och",
+      "privacy": "integritetspolicyn",
+      "suffix": ".",
+      "loading": "Öppnar Stripe...",
+      "error": "Det gick inte att starta kassan."
+    }
   }
 }
