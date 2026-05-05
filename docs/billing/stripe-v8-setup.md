@@ -2,38 +2,48 @@
 
 **Scope:** Track 2 (API + MCP, USD) only. Track 1 (Web, KRW) and Track 3 (Tauri, KRW) products are owned by their own track cycles. v7 (`prod_UNGac…`) products stay active for grandfathered Track 1 subscribers and **are not modified by this Phase 3**.
 
-**Status:** Spec only. **No live Stripe API calls** are made from this repo. The actual product/price creation happens during Phase 8 (human task) — see `## Phase 8 — Activation steps` at the bottom.
+**Status:** Active in Stripe live mode (Litheon LLC, `acct_1TJbTb8XSoMws9Uf`). Products / prices listed below were registered 2026-05-06 via Stripe REST API — see commit history for the registration script. Track 2 webhook (`src/app/api/webhooks/stripe/route.ts`) consumes these price IDs already.
 
 ## Tiers (v8)
 
 | Tier | Monthly USD | Yearly USD | Stripe product | Notes |
 |---|---|---|---|---|
 | Free | $0 | — | (no product, plan flag only) | 100 calls/day quota |
-| Indie | $9 | $90 | `prod_TODO_v8_indie` | BYOK required for `check`/`timeline` |
-| Pro | $19 | $190 | `prod_TODO_v8_pro` | + `projects:write` scope |
-| Studio | $99 | $990 | `prod_TODO_v8_studio` | + `audit:read` scope, 5 keys/user cap |
-| Studio Managed | $299 | $2,990 | `prod_TODO_v8_studio_managed` | + `managed_llm`, $0.15/Opus call metered overage |
-| Enterprise | (contact) | (contact) | `prod_TODO_v8_enterprise` | Custom quota / scopes |
+| Indie | $9 | $90 | `prod_USlhSMAlUmwUTZ` | BYOK required for `check`/`timeline` |
+| Pro | $19 | $190 | `prod_USlhgCG7pTLJoR` | + `projects:write` scope |
+| Studio | $99 | $990 | `prod_USlhrj96E3mOpj` | + `audit:read` scope, 5 keys/user cap |
+| Studio Managed | $299 | $2,990 | `prod_USlhNulslV0gp9` | + `managed_llm`, $0.15/Opus call metered overage (`price_1TTrCL8XSoMws9UfKlX8PELp`, meter `mtr_61UdF9YpTP0pfAmlk418XSoMws9Uf5b6`, event `studio_managed_opus_call`) |
+| Enterprise | (contact) | (contact) | `prod_USmmy54g0sLK41` | Custom quota / scopes — `metadata.contact_only=true`, no recurring price |
 
 **Source of truth in code:** `src/lib/billing/v8-products.ts` (`V8_TRACK2_PRODUCTS` + `V8_TRACK2_QUOTA`). Tier → quota / rate / scope mapping mirrors the Phase 0 task pack Appendix B.
 
-## Env vars (placeholders until Phase 8)
+## Env vars
 
-Add to `.env.local` and to the production env. Until Phase 8, use the literal `price_TODO` sentinel — `getV8Track2StripePriceId` treats it as missing.
+Vercel production env is already populated for Indie / Pro / Studio / Studio Managed (live IDs). Enterprise rows stay `price_TODO` — there is no recurring Enterprise price by design, only the contact-us product (`prod_USmmy54g0sLK41`).
 
 ```bash
 STRIPE_PRICE_LOCK_VERSION=v8
-STRIPE_PRICE_ID_V8_INDIE_MONTHLY=price_TODO
-STRIPE_PRICE_ID_V8_INDIE_YEARLY=price_TODO
-STRIPE_PRICE_ID_V8_PRO_MONTHLY=price_TODO
-STRIPE_PRICE_ID_V8_PRO_YEARLY=price_TODO
-STRIPE_PRICE_ID_V8_STUDIO_MONTHLY=price_TODO
-STRIPE_PRICE_ID_V8_STUDIO_YEARLY=price_TODO
-STRIPE_PRICE_ID_V8_STUDIO_MANAGED_MONTHLY=price_TODO
-STRIPE_PRICE_ID_V8_STUDIO_MANAGED_YEARLY=price_TODO
+
+# Recurring prices (live)
+STRIPE_PRICE_ID_V8_INDIE_MONTHLY=price_1TTqA68XSoMws9Uf2p4Wi7rR
+STRIPE_PRICE_ID_V8_INDIE_YEARLY=price_1TTqA68XSoMws9UfHnwpJst0
+STRIPE_PRICE_ID_V8_PRO_MONTHLY=price_1TTqA78XSoMws9Uf23uaN8hh
+STRIPE_PRICE_ID_V8_PRO_YEARLY=price_1TTqA88XSoMws9UfZiSQIN7T
+STRIPE_PRICE_ID_V8_STUDIO_MONTHLY=price_1TTqA98XSoMws9UfYdSqbeoi
+STRIPE_PRICE_ID_V8_STUDIO_YEARLY=price_1TTqA98XSoMws9UfsYegLOkz
+STRIPE_PRICE_ID_V8_STUDIO_MANAGED_MONTHLY=price_1TTqAA8XSoMws9Ufz8C6Y3Io
+STRIPE_PRICE_ID_V8_STUDIO_MANAGED_YEARLY=price_1TTqAA8XSoMws9UfyI0rMq1n
+
+# Metered overage (Studio Managed Opus calls @ $0.15)
+STRIPE_PRICE_ID_V8_STUDIO_MANAGED_OPUS_OVERAGE=price_1TTrCL8XSoMws9UfKlX8PELp
+STRIPE_BILLING_METER_ID_V8_STUDIO_MANAGED_OPUS=mtr_61UdF9YpTP0pfAmlk418XSoMws9Uf5b6
+
+# Enterprise — contact-only, no recurring price
 STRIPE_PRICE_ID_V8_ENTERPRISE_MONTHLY=price_TODO
 STRIPE_PRICE_ID_V8_ENTERPRISE_YEARLY=price_TODO
 ```
+
+`getV8Track2StripePriceId` and `getV8Track2OpusOveragePriceId` treat `price_TODO` as missing, so the Enterprise placeholders never short-circuit a lookup into a fake ID.
 
 ## Webhook integration
 

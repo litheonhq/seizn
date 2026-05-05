@@ -211,6 +211,22 @@ export function getV8Track2StripePriceId(
   return value && value !== 'price_TODO' ? value : null;
 }
 
+export function getV8Track2OpusOveragePriceId(
+  env: NodeJS.ProcessEnv = process.env,
+): string | null {
+  const value = env.STRIPE_PRICE_ID_V8_STUDIO_MANAGED_OPUS_OVERAGE?.trim();
+  return value && value !== 'price_TODO' ? value : null;
+}
+
+export function getV8Track2OpusMeterId(
+  env: NodeJS.ProcessEnv = process.env,
+): string | null {
+  const value = env.STRIPE_BILLING_METER_ID_V8_STUDIO_MANAGED_OPUS?.trim();
+  return value || null;
+}
+
+export const V8_TRACK2_OPUS_METER_EVENT = 'studio_managed_opus_call';
+
 export function getV8Track2TierFromStripePriceId(
   priceId: string,
   env: NodeJS.ProcessEnv = process.env,
