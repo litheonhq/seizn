@@ -1,5 +1,9 @@
 # @seizn/author-mcp-server
 
+[![npm version](https://img.shields.io/npm/v/@seizn/author-mcp-server.svg)](https://www.npmjs.com/package/@seizn/author-mcp-server)
+[![license](https://img.shields.io/npm/l/@seizn/author-mcp-server.svg)](./LICENSE)
+[![status](https://img.shields.io/badge/status-pre--1.0-orange.svg)](#versioning)
+
 MCP server exposing **Seizn Author** canon recall, conflict check, semantic search, timeline, and relationship graph tools to any MCP-compatible AI agent (Claude Desktop, Claude Code, Cursor, Cline, Continue, Zed, etc.).
 
 > Bring Seizn canon into the AI tool you already use. No new editor required.
@@ -117,6 +121,12 @@ The Seizn subscription covers the canon backend and recall infrastructure. The t
 **Your host AI agent's LLM is separate.** Whether you use Claude Pro/Max subscription via Claude Code/Desktop, Cursor Pro, or BYOK in Cline/Continue — the host handles its own LLM cost. Seizn doesn't double-charge.
 
 See <https://seizn.com/pricing> for full details.
+
+## Versioning
+
+While the package is on `0.x.y` we may ship breaking changes on minor bumps (`0.2.0` etc.) — we'll call them out clearly in `CHANGELOG.md`. Once we tag `1.0.0`, strict semver applies: major = breaking, minor = additive, patch = fix-only.
+
+Each release is published with a matching GitHub tag (`v0.1.0`, …) and a `CHANGELOG.md` entry.
 
 ## License
 
