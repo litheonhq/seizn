@@ -1609,6 +1609,67 @@
     },
     "northStar": {
       "subtitle": "Indicadores clave de fiabilidad de la memoria de NPC"
+    },
+    "account": {
+      "apiKeys": {
+        "title": "Claves API",
+        "description": "Crea y gestiona las claves Seizn API + MCP para Track 2.",
+        "capHint": "Puedes crear hasta {cap} claves API por cuenta.",
+        "newKey": "Nueva clave API",
+        "create": "Crear",
+        "cancel": "Cancelar",
+        "done": "Listo",
+        "name": "Nombre",
+        "scopes": "Permisos",
+        "scopesDefault": "Permisos por defecto: recall, remember, graph, search.",
+        "copyKey": "Copiar clave",
+        "saveItNow": "Guárdala ya — no volverás a verla.",
+        "created": "Clave API creada",
+        "rotated": "Clave API rotada",
+        "rotate": "Rotar",
+        "revoke": "Revocar",
+        "revokeTitle": "¿Revocar la clave API?",
+        "revokeBody": "Al revocar \"{name}\" se detendrán todas las llamadas con esta clave. Las apps existentes necesitarán una nueva.",
+        "rotateTitle": "¿Rotar la clave API?",
+        "rotateBody": "Al rotar \"{name}\" se generará una nueva clave y se revocará la actual. Actualiza tus apps antes de que la clave antigua deje de funcionar.",
+        "usage": "Uso",
+        "rateLimit": "Límite de peticiones",
+        "lastUsed": "Último uso",
+        "createdAt": "Creada",
+        "empty": "Aún no hay claves activas. Haz clic en \"Nueva clave API\" para crear una.",
+        "errors": {
+          "capReached": "Has alcanzado el límite de claves API para esta cuenta.",
+          "invalidName": "Indica un nombre para la clave.",
+          "internal": "No se pudo completar la acción. Inténtalo de nuevo.",
+          "revokeFailed": "No se pudo revocar la clave.",
+          "rotateFailed": "No se pudo rotar la clave.",
+          "copyFailed": "No se pudo copiar la clave."
+        },
+        "toasts": {
+          "copied": "Clave copiada al portapapeles.",
+          "revoked": "Clave revocada."
+        },
+        "audit": {
+          "link": "Registro de auditoría",
+          "title": "Registro de auditoría de claves API",
+          "description": "Todos los eventos de creación, revocación, rotación, límite de peticiones, cuota y permisos de tus claves API.",
+          "filterAction": "Acción",
+          "from": "Desde",
+          "to": "Hasta",
+          "reset": "Restablecer",
+          "exportCsv": "Exportar CSV",
+          "empty": "Sin eventos coincidentes.",
+          "action": {
+            "all": "Todo",
+            "created": "Creada",
+            "revoked": "Revocada",
+            "rotated": "Rotada",
+            "rate_limited": "Límite de peticiones alcanzado",
+            "quota_exceeded": "Cuota superada",
+            "scope_denied": "Permiso denegado"
+          }
+        }
+      }
     }
   },
   "pricingPage": {

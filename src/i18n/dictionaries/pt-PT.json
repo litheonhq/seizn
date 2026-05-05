@@ -1609,6 +1609,67 @@
     },
     "northStar": {
       "subtitle": "Indicadores-chave de fiabilidade da memória de NPC"
+    },
+    "account": {
+      "apiKeys": {
+        "title": "Chaves de API",
+        "description": "Crie e faça a gestão das chaves Seizn API e MCP para o Track 2.",
+        "capHint": "Pode criar até {cap} chaves de API por conta.",
+        "newKey": "Nova chave de API",
+        "create": "Criar",
+        "cancel": "Cancelar",
+        "done": "Concluído",
+        "name": "Nome",
+        "scopes": "Âmbitos",
+        "scopesDefault": "Âmbitos predefinidos: recall, remember, graph, search.",
+        "copyKey": "Copiar chave",
+        "saveItNow": "Guarde-a agora — não voltará a vê-la.",
+        "created": "Chave de API criada",
+        "rotated": "Chave de API rodada",
+        "rotate": "Rodar",
+        "revoke": "Revogar",
+        "revokeTitle": "Revogar a chave de API?",
+        "revokeBody": "Revogar \"{name}\" interrompe todas as chamadas com esta chave. As apps existentes precisarão de uma nova chave.",
+        "rotateTitle": "Rodar a chave de API?",
+        "rotateBody": "Rodar \"{name}\" gera uma nova chave e revoga a atual. Atualize as apps antes de a chave antiga deixar de funcionar.",
+        "usage": "Utilização",
+        "rateLimit": "Limite de chamadas",
+        "lastUsed": "Última utilização",
+        "createdAt": "Criada",
+        "empty": "Sem chaves ativas. Clique em \"Nova chave de API\" para criar uma.",
+        "errors": {
+          "capReached": "Atingiu o limite de chaves de API desta conta.",
+          "invalidName": "Indique um nome para a chave.",
+          "internal": "Não foi possível concluir a ação. Tente novamente.",
+          "revokeFailed": "Não foi possível revogar a chave.",
+          "rotateFailed": "Não foi possível rodar a chave.",
+          "copyFailed": "Não foi possível copiar a chave."
+        },
+        "toasts": {
+          "copied": "Chave copiada para a área de transferência.",
+          "revoked": "Chave revogada."
+        },
+        "audit": {
+          "link": "Registo de auditoria",
+          "title": "Registo de auditoria das chaves de API",
+          "description": "Todos os eventos de criação, revogação, rotação, limite de chamadas, quota e âmbito das suas chaves de API.",
+          "filterAction": "Ação",
+          "from": "De",
+          "to": "Até",
+          "reset": "Repor",
+          "exportCsv": "Exportar CSV",
+          "empty": "Sem eventos correspondentes.",
+          "action": {
+            "all": "Todos",
+            "created": "Criada",
+            "revoked": "Revogada",
+            "rotated": "Rodada",
+            "rate_limited": "Limite atingido",
+            "quota_exceeded": "Quota excedida",
+            "scope_denied": "Âmbito recusado"
+          }
+        }
+      }
     }
   },
   "pricingPage": {

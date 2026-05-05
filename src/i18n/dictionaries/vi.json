@@ -1609,6 +1609,67 @@
     },
     "northStar": {
       "subtitle": "Chỉ báo chính về độ tin cậy bộ nhớ NPC"
+    },
+    "account": {
+      "apiKeys": {
+        "title": "Khóa API",
+        "description": "Tạo và quản lý các khóa Seizn API + MCP cho Track 2.",
+        "capHint": "Bạn có thể tạo tối đa {cap} khóa API cho mỗi tài khoản.",
+        "newKey": "Khóa API mới",
+        "create": "Tạo",
+        "cancel": "Hủy",
+        "done": "Xong",
+        "name": "Tên",
+        "scopes": "Phạm vi",
+        "scopesDefault": "Phạm vi mặc định: recall, remember, graph, search.",
+        "copyKey": "Sao chép khóa",
+        "saveItNow": "Hãy lưu ngay — bạn sẽ không thấy khóa này nữa.",
+        "created": "Đã tạo khóa API",
+        "rotated": "Đã xoay khóa API",
+        "rotate": "Xoay",
+        "revoke": "Thu hồi",
+        "revokeTitle": "Thu hồi khóa API?",
+        "revokeBody": "Thu hồi \"{name}\" sẽ dừng mọi lệnh gọi dùng khóa này. Các ứng dụng hiện tại sẽ cần khóa mới.",
+        "rotateTitle": "Xoay khóa API?",
+        "rotateBody": "Xoay \"{name}\" sẽ tạo khóa mới và thu hồi khóa hiện tại. Cập nhật ứng dụng trước khi khóa cũ ngừng hoạt động.",
+        "usage": "Sử dụng",
+        "rateLimit": "Giới hạn tần suất",
+        "lastUsed": "Sử dụng lần cuối",
+        "createdAt": "Đã tạo",
+        "empty": "Chưa có khóa nào. Nhấn \"Khóa API mới\" để tạo.",
+        "errors": {
+          "capReached": "Bạn đã đạt giới hạn khóa API cho tài khoản này.",
+          "invalidName": "Vui lòng nhập tên cho khóa.",
+          "internal": "Không hoàn tất được thao tác. Vui lòng thử lại.",
+          "revokeFailed": "Không thể thu hồi khóa.",
+          "rotateFailed": "Không thể xoay khóa.",
+          "copyFailed": "Không thể sao chép khóa."
+        },
+        "toasts": {
+          "copied": "Đã sao chép khóa vào clipboard.",
+          "revoked": "Đã thu hồi khóa."
+        },
+        "audit": {
+          "link": "Nhật ký kiểm toán",
+          "title": "Nhật ký kiểm toán khóa API",
+          "description": "Tất cả các sự kiện tạo, thu hồi, xoay, giới hạn tần suất, hạn ngạch và phạm vi của các khóa API của bạn.",
+          "filterAction": "Hành động",
+          "from": "Từ",
+          "to": "Đến",
+          "reset": "Đặt lại",
+          "exportCsv": "Xuất CSV",
+          "empty": "Không có sự kiện kiểm toán phù hợp.",
+          "action": {
+            "all": "Tất cả",
+            "created": "Đã tạo",
+            "revoked": "Đã thu hồi",
+            "rotated": "Đã xoay",
+            "rate_limited": "Vượt giới hạn tần suất",
+            "quota_exceeded": "Vượt hạn ngạch",
+            "scope_denied": "Phạm vi bị từ chối"
+          }
+        }
+      }
     }
   },
   "pricingPage": {
