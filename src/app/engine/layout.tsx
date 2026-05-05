@@ -32,6 +32,7 @@ export const metadata: Metadata = {
       { url: "/brand/engine-icons/favicon-192.png", sizes: "192x192", type: "image/png" },
       { url: "/brand/engine-icons/favicon-512.png", sizes: "512x512", type: "image/png" },
     ],
+    shortcut: "/brand/engine-icons/favicon.ico",
     apple: [{ url: "/brand/engine-icons/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
   },
 };
