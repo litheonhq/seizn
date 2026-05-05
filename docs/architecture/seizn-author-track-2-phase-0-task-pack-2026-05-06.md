@@ -385,14 +385,26 @@ src/app/api/v1/usage/route.ts                          GET (current quota usage)
 - `pnpm test src/app/api/v1` pass (모든 e2e 시나리오)
 - `pnpm typecheck` pass
 - `pnpm lint:track2` pass (Track 2 영역 한정 — src/lib/api-keys, src/app/api/v1, packages/author-mcp-server. 전체 `pnpm lint` 의 react-hooks/* errors 는 Track 1 영역 pre-existing baseline, 별 cycle. 자세한 내용 §"How to use" 참고)
-- 수동 curl 테스트:
+- 수동 curl 테스트 (project 생성 → recall 2-step pattern, default state.projects 가 'knot' DEFAULT_PROJECT_ID 만 가지므로 미존재 project 호출 시 404):
 
   ```bash
-  curl -H 'authorization: Bearer sk_seizn_test_...' \
-       -H 'idempotency-key: test-001' \
-       http://localhost:3000/api/v1/projects/test-project/recall?q=Seoyun
-  # → 200 + JSON body + X-Request-Id header
+  # Step 1: POST /api/v1/projects 으로 새 project 생성 + 그 id 캡처
+  PROJECT_ID=$(curl -s -X POST -H 'authorization: Bearer sk_seizn_test_...' \
+       -H 'content-type: application/json' \
+       -H 'idempotency-key: test-create-001' \
+       http://localhost:3000/api/v1/projects \
+       -d '{"name":"Test Project"}' | jq -r '.data.id // .id')
+
+  # Step 2: 그 id 으로 recall 호출 → 200
+  curl -H "authorization: Bearer sk_seizn_test_..." \
+       -H 'idempotency-key: test-recall-001' \
+       "http://localhost:3000/api/v1/projects/$PROJECT_ID/recall?q=Seoyun"
+  # → 200 + JSON body { entities: [...] } + X-Request-Id header
   ```
+
+  미존재 project 호출 (예: `/projects/saebyeok-main/recall`) → 404 not_found
+  (RFC 7807 problem+json) 가 정합. AuthorUiNotFoundError → 404 매핑 (commit 에서
+  middleware 의 toProblem 갱신).
 
 - mcp-server type 정합: `pnpm --filter @seizn/author-mcp-server typecheck` pass (response shape 일치 확인)
 
