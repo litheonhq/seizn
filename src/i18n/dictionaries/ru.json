@@ -1668,7 +1668,7 @@
             "created": "Создан",
             "revoked": "Отозван",
             "rotated": "Обновлён",
-            "rate_limited": "Лимит запросов",
+            "rate_limited": "Превышен лимит",
             "quota_exceeded": "Квота превышена",
             "scope_denied": "Область отклонена"
           }

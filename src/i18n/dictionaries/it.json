@@ -1627,7 +1627,7 @@
         "scopes": "Ambiti",
         "scopesDefault": "Ambiti predefiniti: recall, remember, graph, search.",
         "copyKey": "Copia chiave",
-        "saveItNow": "Salvala ora — non sarà più visibile.",
+        "saveItNow": "Salvala ora: non sarà più visibile.",
         "created": "Chiave API creata",
         "rotated": "Chiave API ruotata",
         "rotate": "Ruota",
@@ -1668,7 +1668,7 @@
             "created": "Creata",
             "revoked": "Revocata",
             "rotated": "Ruotata",
-            "rate_limited": "Limite di richieste",
+            "rate_limited": "Limite superato",
             "quota_exceeded": "Quota superata",
             "scope_denied": "Ambito negato"
           }
