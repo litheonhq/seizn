@@ -1593,6 +1593,9 @@
     },
     "northStar": {
       "subtitle": "NPC 메모리 신뢰성 핵심 지표"
+    },
+    "brand": {
+      "tagline": "작가 메모리 · 라이브"
     }
   },
   "pricingPage": {

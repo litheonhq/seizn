@@ -1513,6 +1513,9 @@
     },
     "northStar": {
       "subtitle": "NPC メモリ信頼性の主要指標"
+    },
+    "brand": {
+      "tagline": "オーサー メモリ · ライブ"
     }
   },
   "pricingPage": {

@@ -344,7 +344,7 @@
       "organizations": "Dự án",
       "settings": "Cài đặt",
       "groups": {
-        "memory": "NPC MEMORY",
+        "memory": "MEMORY",
         "observe": "GIÁM SÁT",
         "govern": "POLICIES",
         "finops": "USAGE & COST",
