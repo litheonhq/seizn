@@ -1,9 +1,10 @@
 # Seizn Author Studio — Track 3: Program (Tauri 데스크톱)
 
-**Cycle date:** 2026-05-05
+**Cycle date:** 2026-05-05 (작성), 2026-05-06 (global-first lock)
 **Status:** Active design doc. 이 cycle 의 Track 3 SSOT.
-**Owner session:** 이 Claude session
-**Repo:** `C:\Users\admin\Projects\seizn-desktop\` (신설 예정, Step 3 에서 scaffold)
+**Owner session:** Track 3 owner — Windows VSCode Claude (swap 2026-05-06, Tauri Windows native build 환경 적합)
+**Locale strategy (lock 2026-05-06):** **EN-first, ko/ja/zh-Hans/zh-Hant/es secondary.** 이전 KR-only 페르소나는 ko locale segment 으로 demote. 이유: Litheon LLC USD revenue 정합 + 글로벌 long-form fiction writer 풀 (Scrivener 6M+ 사용자, Reedsy 1M+, Atticus·Vellum 50k+) 이 KR mainstream (~수만) 보다 큼 + Track 2 와 같은 USD 단위로 cross-track upsell 단순화
+**Repo:** `C:\Users\admin\Projects\seizn-desktop\` (root commit `32ebc28`, Phase 0.1~0.6 완료)
 **Master:** `seizn-author-master-2026-05-05.md`
 **Companion tracks:**
 - Track 1 (Web): `seizn-author-track-1-web-2026-05-05.md`
@@ -13,9 +14,11 @@
 
 ## 0. 결론 한 줄
 
-> **Vault-first 로 launch 하되, 자체 에디터는 Phase 2 commitment (조건부 X). 사용자가 결국 만들고 싶은 건 작가의 도구 자체가 되는 것.**
+> **Vault-first launch, built-in editor is a Phase 2 commitment (not conditional). The product writers eventually live in.**
 
-Vault 는 작가가 기존 도구 (한글·메모장·뮤블·Scrivener·구글독스) 를 떠나지 않게 하는 *진입 ramp*. Editor 는 그 ramp 를 거쳐 도착할 *목표 도구*. 두 단계는 같은 Tauri shell, 같은 Memory v3 backend, 같은 사용자 ID 위에 있다. Vault 가 진입장벽을 낮추고, Editor 가 retention 을 만든다.
+Vault keeps writers in the tools they already use (Scrivener · Ulysses · Bear · Word · Google Docs · Obsidian · Vellum · Atticus · Hangul · Mubble · Notepad). Editor is the *destination*. Same Tauri shell, same backend, same identity. Vault lowers the entry friction, Editor earns retention.
+
+**Locale: EN-first, ko/ja/zh-Hans/zh-Hant/es secondary** (lock 2026-05-06 global-first).
 
 ---
 
@@ -178,57 +181,78 @@ Track 3 vs:
 
 ---
 
-## 4. 사용자 세그먼트 (Track 3 우선순위)
+## 4. User segments (Track 3 priority, global-first lock 2026-05-06)
 
-### 4.1 1순위: 한 파일에 장문 원고를 쓰는 KR 웹소설 작가
-
-Pain:
-- 원고가 길어질수록 한글/워드/독스 버벅임
-- 예전 회차의 떡밥·설정·약속·아이템 검색 어려움
-- 자동 저장 오류·튕김 트라우마
-
-Track 3 promise:
-- 원고 파일 watch + 자동 snapshot
-- `@이름`, `@장소`, `@떡밥` 으로 즉시 recall
-- 데이터 유실 시 10초 안에 이전 버전 복구
-
-### 4.2 2순위: 메모장 / Notepad++ / VS Code 에서 쓰는 작가
+### 4.1 P1: long-form fiction writers in Scrivener · Ulysses · Bear · Word · Google Docs · Obsidian
 
 Pain:
-- 가벼워서 쓰지만 설정 관리·백업 약함
-- 모바일/PC 흐름 분산
+
+- Manuscript balloons past 100k words; existing tools slow, search bad
+- Lose minutes/hours hunting prior canon (character height, magic system rule, foreshadowed promise)
+- Lost-data trauma (Word crash, Docs sync glitch, hard drive die)
 
 Track 3 promise:
-- 지금 도구 안 바꿈
-- watch 만 붙임 → 자동 snapshot + recall
 
-### 4.3 3순위: Scrivener / 뮤블 정착 작가
+- Watches the file you already write in; never asks you to switch
+- Auto-snapshots every change, restorable in 10 seconds
+- `@name` / `@place` / `@promise` recall across the full manuscript
+
+Recruit channels: r/writing, r/Fantasy_Writers, r/selfpublish, NaNoWriMo forums, Twitter writing community, Indie Author Telegram groups.
+
+### 4.2 P2: indie self-publishers using Vellum · Atticus · Plottr · World Anvil
 
 Pain:
-- Scrivener: 복잡, HWP 흐름 약함
-- 뮤블: 좋지만 외부 recall layer 가 더 있으면 좋음
+
+- Worldbuilding lives in one tool, draft in another, formatting in a third — context lost between
+- Series canon (book 1 → book 5) drifts without a memory layer
 
 Track 3 promise:
-- 대체 X, 보조 O
-- export 파일 watch + canon recall
 
-### 4.4 4순위: 출판사 / 매니지먼트 / 스튜디오 (B2B)
+- Watches the manuscript export from Vellum / Atticus; recalls World Anvil entries beside the draft
+- Cross-book canon (P1.5+) for series authors
+
+### 4.3 P3: KR mainstream long-form web-novel writers (한국 웹소설 작가, ko locale segment)
 
 Pain:
-- 교정고·HWP·Word·설정집 분산
-- 장기 시리즈 canon 관리 어려움
+
+- 한글/뮤블/메모장/구글독스 정착, 원고가 길수록 검색·백업 약함
+- 회차 간 설정 충돌·자동 저장 사고
 
 Track 3 promise:
-- shared canon bible (Studio Publisher tier)
-- export/audit history
-- reviewer seat (Track 1 web 협업과 cross-track 묶음)
 
-### 4.5 명시적 비-타깃
+- 지금 도구 안 바꿈. 옆에서 백업하고 설정을 기억함
+- `@이름`, `@장소`, `@떡밥` recall
 
-- AI 회의주의 작가 (시즌 전체 비-타깃)
-- AI 가 글을 대신 쓰기를 원하는 작가 (Sudowrite 영역)
-- 단편/짧은 글 작가 (recall 가치 낮음)
-- 옵시디언 + AI plugin 정착 작가 → Track 2 영역 (Track 3 는 secondary)
+Recruit channels: 나비계곡, 작가 디스코드, 트위터 KR, Reddit r/koreanwebnovel.
+
+### 4.4 P4: Notepad / VS Code / TextEdit minimalists
+
+Pain:
+
+- Lightweight by choice, but settings management + backup almost zero
+- Cross-device fragmentation
+
+Track 3 promise:
+
+- Don't change tool. Just attach watch + recall layer.
+
+### 4.5 P5: publishers / agencies / studios (B2B, all locales)
+
+Pain:
+
+- Galleys / DOCX / spreadsheets / wiki spread thin
+- Long-running series canon hard to share with editors / PMs
+
+Track 3 promise:
+
+- Studio Publisher tier: shared canon bible, export/audit history, reviewer seat (cross-track with Track 1 web collaboration)
+
+### 4.6 Explicit non-targets
+
+- AI-skeptic writers (entire Seizn product non-target)
+- Writers who want AI to draft prose for them (Sudowrite territory)
+- Short-form writers (recall value low under ~30k words)
+- Obsidian + AI plugin writers → Track 2 territory (Track 3 secondary)
 
 ---
 
@@ -679,25 +703,30 @@ Gate (Track 1 doc 에서 lock):
 
 ---
 
-## 14. 가격 (KRW, Track 3 자체)
+## 14. Pricing (USD, Track 3, global-first lock 2026-05-06)
 
-> **트랙별 가격 분리 원칙** (master § 5.0). Track 3 plan 이 Track 1 (Web) 또는 Track 2 (API/MCP) surface 를 cover 하지 않는다. 다른 트랙 surface 를 쓰려면 그 트랙 plan 별 결제.
+> **Per-track pricing separation** (master § 5.0). A Track 3 plan does NOT cover Track 1 (Web) or Track 2 (API/MCP) surfaces. To use those surfaces a writer pays for those tracks separately.
 
-| Plan | 월 | 연 (17% off) | 포함 |
+| Plan | / month | / year (17% off) | Includes |
 |---|---|---|---|
-| **Free** | ₩0 | — | 1 active project, local snapshot, txt/md/docx export, manual recall (limited quota), full data export 항상 가능 |
-| **Pro** | ₩12,900 | ₩99,000 | unlimited projects, cloud backup/sync, recall fair-use 무제한, version history 1년, conflict candidate review, priority indexing |
-| **Pro Plus** | ₩24,900 | — | very long manuscripts (>500k자), HWP/HWPX export when stable, cross-series canon recall, advanced audit/timeline |
-| **Studio Publisher** | ₩99,000+ | custom | editor/reviewer seats (desktop 한정), private workspace, shared canon bible, export/audit history, onboarding support |
+| **Free** | $0 | — | 1 active project, local snapshot, txt/md/docx export, manual recall (limited quota), full data export always |
+| **Pro** | $9.90 | $99 | unlimited projects, cloud backup/sync, recall fair-use unlimited, 1 year version history, conflict candidate review, priority indexing |
+| **Pro Plus** | $19.90 | $199 | very long manuscripts (>500k chars), HWP/HWPX export when stable, cross-series canon recall, advanced audit/timeline |
+| **Studio Publisher** | $79+ | custom | editor/reviewer seats (desktop only), private workspace, shared canon bible, export/audit history, onboarding support |
 
-> **Studio Publisher 의 web 협업 표면**은 Track 1 Studio plan 별도 결제. Track 2 API integration 도 Track 2 plan 별도 결제. Track 3 Studio Publisher 는 desktop 채널 가격만.
+KRW shown via Stripe automatic FX. No PPP tier (review at Phase 1 if cohort data shows demand).
 
-가격 원칙:
-- export paywall 금지
-- cancel 후 read-only lock-in 금지
-- AI 생성량 기반 과금 X (recall · backup · project 가치 기반)
-- `AI prose generation` paid feature 전면 배치 X
-- Stripe customer 1개 / Track 3 subscription 1개. 다른 트랙 plan 은 별 subscription 으로 같은 customer 에 attach. 인보이스 분리
+> **Studio Publisher web-collaboration surface** = Track 1 Studio plan, billed separately. Track 2 API integration = Track 2 plan, billed separately. Track 3 Studio Publisher covers desktop channel only.
+
+Pricing principles:
+
+- No export paywall
+- No read-only lock-in after cancel
+- No usage-based billing on AI generation (recall · backup · project value-based)
+- No `AI prose generation` paid feature placement
+- 1 Stripe customer / 1 Track 3 subscription. Other track plans = separate subscriptions on the same customer. Invoices separated.
+
+**v0 → v1 (KRW deprecated 2026-05-06):** previous KRW lock (Pro ₩12,900 / Pro Plus ₩24,900 / Studio Publisher ₩99,000+) deprecated for global-first conversion. KR locale users see KRW via Stripe FX, not a separate price tier.
 
 ---
 
@@ -759,9 +788,10 @@ Track 3 fire-and-forget 모드 (master § 4.5) + 자체 backend (§ 5.6) 채택.
 - 모바일 only 출시 X (desktop first, mobile Phase 3)
 - AI prose generation 기능 X (시즌 전체 정책)
 - 부산대 맞춤법 검사기 상업 사용 X (라이선스 미해결)
-- `한 단어도 잃지 않습니다` 등 절대 표현 X
-- 큰따옴표 (`""`) 사용 X (한국어 public copy)
+- 'Not one word will be lost' / `한 단어도 잃지 않습니다` 등 absolute guarantee 표현 X (legal/평판 리스크, 모든 locale)
+- 큰따옴표 (`""`) 사용 X (**ko locale only** — EN/JA/ZH/ES locale 은 standard typography 적용)
 - KNOT/청학여/char.sori/knot.short1 sample X (Saebyeok IP 만)
+- Marketing or UI copy that hard-codes a single locale's tools (e.g., '한컴 전용', 'Mubble export 우선') outside its locale segment — keep tool callouts locale-scoped
 
 ---
 
@@ -855,16 +885,18 @@ gates, commit conventions per phase, sequential execution only.
 
 ---
 
-## 20. 다음 액션 (이 세션)
+## 20. Next actions (Track 3 owner session, post global-first lock 2026-05-06)
 
-1. Track 1 web skeleton 작성 (다른 세션이 본문 채울 frame).
-2. `C:\Users\admin\Projects\seizn-desktop\` repo scaffold:
-   - 폴더 생성
-   - Git init + `litheonhq` 계정 확인
-   - Tauri 2.x init (의존성 설치 필요 시 사용자 hand-off)
-   - 첫 commit
-3. Track 3 Phase 0 task pack 작성 (`seizn-author-track-3-phase-0-task-pack-2026-05-05.md`).
-4. master + 본 doc + skeleton commit (`docs/seizn-author-studio-design-doc` branch).
+Phase 0 implementation already in progress in `C:\Users\admin\Projects\seizn-desktop\` (commits `086ceb4` Tauri scaffold → `085ceca` skeleton+tray → `3606b88` watcher → `36b7034` import → `9c651de` snapshot store → `91612db` snapshot UI). Mouse gesture spec locked at `9cae27b` (Phase 1 implementation, not Phase 0).
+
+Global-first conversion follow-through (this cycle):
+
+1. Phase 0.7 (self-hosted backend, sqlite-vec + Anthropic BYOK) implementation — locale-agnostic (BYOK key entry / wizard wording = EN default + ko fallback).
+2. seizn-desktop code: i18n dict.ts add `en` + default = en, system locale fallback. Microcopy strings hoisted out of App.tsx into dict. tauri.conf window title kept as 'Seizn Desktop'. Tray menu labels EN default. README/CLAUDE.md EN-first. Codex task pack covers this.
+3. Mouse gesture spec (`seizn-desktop/docs/mouse-gesture-spec-2026-05-06.md`): add EN action labels alongside KR labels.
+4. Stripe v0 (USD) product creation — Phase 1 entry, after Phase 0 release gate passes.
+5. Marketing brief (en) for Phase 0.15 alpha invite — global recruit channels (r/writing, r/Fantasy_Writers, Twitter writing community, Indie Author Telegram).
+6. ko locale brief preserved as Phase 1.5 secondary launch (KR-mainstream channels: 나비계곡, 작가 디스코드, r/koreanwebnovel).
 
 ---
 

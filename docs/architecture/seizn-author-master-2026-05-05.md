@@ -81,8 +81,8 @@
 | Surface | Tauri 2.x desktop app (Win/Mac/Linux) + 모바일 (iOS/Android) 후속 |
 | Stack | Tauri 2.x (Rust) + React + TipTap + Yjs + y-leveldb + **자체 backend (sqlite-vec + Anthropic SDK BYOK)** |
 | Distribution | GitHub Release + installer + auto-update |
-| Persona | 한글·메모장·구글독스·뮤블·Scrivener 정착 작가 (KR mainstream long-form fiction) |
-| Pricing | **트랙 자체 가격** — KRW (Pro ₩12,900 / Pro Plus ₩24,900 / Studio Publisher ₩99,000+). Track 3 doc § 14 에 lock. **Free tier = BYOK (사용자 본인 Anthropic key)** |
+| Persona | **global-first (lock 2026-05-06)** — long-form fiction writers worldwide (Scrivener · Ulysses · Bear · Word · Google Docs · Obsidian · Vellum · Atticus 정착 사용자). KR mainstream (한글·메모장·뮤블·노벨라) = secondary locale segment. EN-first marketing, ko/ja/zh-Hans/zh-Hant/es locale 추가 예정 |
+| Pricing | **트랙 자체 가격** — **USD (lock 2026-05-06 global-first)** Pro $9.90 / Pro Plus $19.90 / Studio Publisher $79+ (KRW = Stripe 자동 환율, 별 PPP tier X). Track 3 doc § 14 에 lock. **Free tier = BYOK (사용자 본인 Anthropic key)** |
 | Backend dependency | **자체 — Track 2 endpoint 의존 X** (lock 2026-05-06). LLM call = BYOK |
 | Repo path | `C:\Users\admin\Projects\seizn-desktop` (신설, 별 repo) |
 | 첫 마일스톤 | Phase 0 Recall Vault desktop alpha (Tauri shell + file watcher + local snapshot + global hotkey recall) |
@@ -201,7 +201,7 @@
 - 그 customer 에 트랙별 별 subscription product:
   - Track 1: KRW subscription (Track 1 owner session 이 product / tier lock)
   - Track 2: USD subscription + metered usage (Track 2 owner session 이 v8 lock)
-  - Track 3: KRW subscription (Track 3 doc § 14)
+  - Track 3: USD subscription (Track 3 doc § 14, **global-first lock 2026-05-06**, KRW = Stripe 자동 환율 표시)
 - 인보이스 트랙별 분리. 작가가 자기 영수증에 어느 채널 결제인지 명확
 - 환불 / 일시중단 / 다운그레이드도 트랙별 독립
 

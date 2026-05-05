@@ -14,13 +14,13 @@
 
 작가가 지금 쓰는 도구를 유지한 채, Track 3 desktop 이 옆에서 원고를 백업하고 설정을 기억한다.
 
-**Phase 0 release gate (Day 30):**
+**Phase 0 release gate (Day 30, global-first lock 2026-05-06):**
 
-- 3명 작가가 기존 편집기 유지한 채 1주 이상 사용
-- 데이터 유실 0건
-- snapshot 복원 성공률 100%
-- recall usefulness ≥ 80%
-- critical hallucination 0건
+- ≥3 alpha writers (mix of EN-locale primary + ko-locale secondary, **min 1 EN**) used the build for ≥1 week with their existing editor
+- 0 data-loss events
+- 100% snapshot restore success rate
+- recall usefulness ≥80% (writer self-report, per locale)
+- 0 critical hallucinations
 
 **Phase 0 = NOT in scope:**
 - 자체 에디터 (Phase 2)
@@ -267,9 +267,9 @@ Verify: rapid edits debounced, 24h no leak
 ### 6.1 Scope
 
 - File picker dialog (Tauri `@tauri-apps/plugin-dialog`)
-- `.txt` 읽기 (UTF-8 + EUC-KR fallback for legacy KR txt)
-- 글자 수 표시
-- Project metadata 저장 (project name, file path, last modified)
+- `.txt` read: UTF-8 primary, **EUC-KR fallback for ko locale users only** (legacy KR txt). Other locales rely on UTF-8.
+- Char count display
+- Project metadata persisted (project name, file path, last modified)
 
 ### 6.2 의존성
 
@@ -751,31 +751,30 @@ Verify: 100MB project unzip integrity OK, no paywall
 
 ---
 
-## 15. Phase 0.13 — DOCX export Hancom-friendly preset (Day 25)
+## 15. Phase 0.13 — DOCX export presets (Day 25, global-first)
 
 ### 15.1 Scope
 
-`docx-rs` 로 텍스트 → DOCX. 한컴오피스에서 열어도 흐름 끊김 없도록 preset.
+`docx-rs` 로 텍스트 → DOCX. 두 preset:
 
-### 15.2 Preset
+- **`default`** (EN/JA/ZH/ES locale): generic Word-friendly (Calibri-equivalent fallback, standard Heading 1 / paragraph styles). Opens cleanly in Word 2019+, LibreOffice 7+, Google Docs import.
+- **`hangul`** (ko locale, opt-in): 함초롬바탕 font mapping + 한국어 줄바꿈 + chapter marker → Heading 1. Opens cleanly in 한컴오피스 2024/2018.
 
-- 함초롬바탕 (한글 default font) 매핑
-- 한국어 줄바꿈 처리 (한 줄 띄어쓰기 처리)
-- 챕터 marker → Heading 1 매핑
+User chooses preset at export time (default = locale-derived suggestion, override allowed).
 
-### 15.3 Verify
+### 15.2 Verify
 
-- export DOCX → 한컴오피스 2024 / 2018 에서 열림 확인
-- 1화 ~ 50화 chapter 가 outline panel 에 표시
-- 한국어 자모 깨짐 없음
+- `default` export → Word 2019 + LibreOffice + Google Docs import OK, chapter outline preserved
+- `hangul` export → 한컴오피스 2024 / 2018 opens cleanly, 한국어 자모 unbroken
+- Chapter markers (`# 1화` / `## Chapter N` / `Chapter N` line patterns) → Heading 1
 
-### 15.4 Commit
+### 15.3 Commit
 
-```
-feat(export): DOCX Hancom-friendly preset (함초롬바탕, chapter as Heading 1)
+```text
+feat(export): DOCX presets (default + hangul opt-in for ko locale)
 
 Phase: 0.13
-Verify: Hancom Office 2024/2018 opens cleanly with outline
+Verify: Word/LibreOffice/Hangul Office round-trip OK
 ```
 
 ---
@@ -837,22 +836,46 @@ Verify: 5 safety tests pass, analytics events recorded
 
 ### 17.0 Revision note
 
-이전 spec = Track 1 Phase -1 retain 작가 cohort transfer. **자체 모집 채택** (master § 5.3 lock 2026-05-06). Track 1 의존 무효.
+- 2026-05-06 (a): 이전 spec = Track 1 Phase -1 retain 작가 cohort transfer. **자체 모집 채택** (master § 5.3 lock). Track 1 의존 무효.
+- 2026-05-06 (b, **global-first lock**): 모집 채널 = EN-locale primary + ko-locale secondary. ≥3 writers with **min 1 EN-locale**.
 
 ### 17.1 Scope
 
-- `Seizn Desktop alpha 0.1.0` 빌드 (Win + Mac)
-- alpha 3명 (이상) invite — 모집 channel:
-  - **사용자 본인 self-dogfood** (Saebyeok IP 원고 import, 첫 alpha)
-  - **나비계곡** 작가 cold outreach
-  - **작가 디스코드** (관련 서버)
-  - **트위터** dev-author / KR fiction writer 계정 cold DM
-  - **레딧 r/koreanwebnovel** (있으면)
-- BYOK 안내 (Anthropic key 발급 가이드 link)
-- Onboarding doc 1page (`작가님 첫 사용 가이드`)
-- 채널 = 작가가 익숙한 곳 (WhatsApp / Discord / Telegram / 트위터 DM)
+- `Seizn Desktop alpha 0.1.0` build (Win + Mac)
+- ≥3 alpha writers invited — recruit channels:
+  - **Self-dogfood** (Saebyeok IP manuscript, first alpha — bilingual EN/KO test)
+  - **EN-locale primary:**
+    - r/writing, r/Fantasy_Writers, r/selfpublish (Reddit cold post)
+    - Twitter writing community (`#WritingCommunity`, `#amwriting`, `#scrivener`)
+    - Indie Author Telegram / Discord groups (NaNoWriMo Discord, indie-fiction Slack)
+  - **ko-locale secondary:**
+    - 나비계곡 cold outreach
+    - 작가 Discord servers
+    - 트위터 KR dev-author / KR fiction writer accounts
+    - r/koreanwebnovel (if active)
+- BYOK guide (Anthropic API key issuance link, locale-localized)
+- Onboarding doc 1 page per locale (en + ko initial; ja/zh/es Phase 1)
+- Outreach channel = writer's familiar place (WhatsApp / Discord / Telegram / Twitter DM)
 
-### 17.2 Onboarding doc 핵심
+### 17.2 Onboarding doc — EN (primary)
+
+```markdown
+## Get started in 5 minutes
+
+1. Launch Seizn Desktop.
+2. Click `Import manuscript` and pick a .txt, .md, or .docx file.
+3. Once the word count shows, you're done. Seizn is now backing up beside you.
+4. Press `Ctrl + Shift + Space` from anywhere to recall a character, place, or setting.
+
+## Your data, safe
+
+- Every backup lives on your computer only.
+- Cloud backup is opt-in; off by default.
+- We don't train AI on what you write.
+- One-click zip export, anytime.
+```
+
+### 17.3 Onboarding doc — ko (secondary, ko locale)
 
 ```markdown
 ## 5분 안에 시작하기
@@ -870,18 +893,18 @@ Verify: 5 safety tests pass, analytics events recorded
 - 언제든 zip 으로 통째로 가져갈 수 있어요.
 ```
 
-### 17.3 Verify (Phase 0 final gate)
+### 17.4 Verify (Phase 0 final gate, global-first)
 
-- 3명 작가가 alpha 빌드 설치 + 1주 이상 사용
-- 데이터 유실 0건
-- snapshot 복원 사례 발생 시 100% 성공
-- recall usefulness 작가 self-report ≥ 80%
-- critical hallucination 0건
+- ≥3 writers (min 1 EN-locale) installed alpha + used ≥1 week with their existing editor
+- 0 data-loss events
+- 100% snapshot restore success
+- recall usefulness ≥80% per writer self-report (per locale)
+- 0 critical hallucinations
 
-### 17.4 Commit
+### 17.5 Commit
 
-```
-release(alpha): Seizn Desktop 0.1.0-alpha.1 — closed 3-writer invite
+```text
+release(alpha): Seizn Desktop 0.1.0-alpha.1 — closed alpha (≥3 writers, EN+ko)
 
 Phase: 0.15
 Verify: alpha build runs, 3 writers onboarded, gate criteria pending 1-week data
