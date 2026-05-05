@@ -1609,6 +1609,67 @@
     },
     "northStar": {
       "subtitle": "Nyckelindikatorer för NPC-minnets tillförlitlighet"
+    },
+    "account": {
+      "apiKeys": {
+        "title": "API-nycklar",
+        "description": "Skapa och hantera Seizn API- och MCP-nycklar för Track 2.",
+        "capHint": "Du kan skapa upp till {cap} API-nycklar per konto.",
+        "newKey": "Ny API-nyckel",
+        "create": "Skapa",
+        "cancel": "Avbryt",
+        "done": "Klar",
+        "name": "Namn",
+        "scopes": "Scopes",
+        "scopesDefault": "Standardscopes: recall, remember, graph, search.",
+        "copyKey": "Kopiera nyckel",
+        "saveItNow": "Spara den nu — nyckeln visas inte igen.",
+        "created": "API-nyckel skapad",
+        "rotated": "API-nyckel roterad",
+        "rotate": "Rotera",
+        "revoke": "Återkalla",
+        "revokeTitle": "Återkalla API-nyckel?",
+        "revokeBody": "Att återkalla \"{name}\" stoppar alla anrop som använder den här nyckeln. Befintliga appar behöver en ny nyckel.",
+        "rotateTitle": "Rotera API-nyckel?",
+        "rotateBody": "När \"{name}\" roteras skapas en ny nyckel och den nuvarande återkallas. Uppdatera dina appar innan den gamla nyckeln slutar fungera.",
+        "usage": "Användning",
+        "rateLimit": "Hastighetsgräns",
+        "lastUsed": "Senast använd",
+        "createdAt": "Skapad",
+        "empty": "Inga aktiva nycklar ännu. Klicka på \"Ny API-nyckel\" för att skapa en.",
+        "errors": {
+          "capReached": "Du har nått gränsen för API-nycklar på det här kontot.",
+          "invalidName": "Ange ett namn för nyckeln.",
+          "internal": "Åtgärden kunde inte slutföras. Försök igen.",
+          "revokeFailed": "Det gick inte att återkalla nyckeln.",
+          "rotateFailed": "Det gick inte att rotera nyckeln.",
+          "copyFailed": "Det gick inte att kopiera nyckeln."
+        },
+        "toasts": {
+          "copied": "Nyckel kopierad till urklipp.",
+          "revoked": "Nyckel återkallad."
+        },
+        "audit": {
+          "link": "Granskningslogg",
+          "title": "Granskningslogg för API-nycklar",
+          "description": "Alla händelser för skapande, återkallande, rotation, hastighetsgräns, kvot och scope för dina API-nycklar.",
+          "filterAction": "Åtgärd",
+          "from": "Från",
+          "to": "Till",
+          "reset": "Återställ",
+          "exportCsv": "Exportera CSV",
+          "empty": "Inga matchande händelser.",
+          "action": {
+            "all": "Alla",
+            "created": "Skapad",
+            "revoked": "Återkallad",
+            "rotated": "Roterad",
+            "rate_limited": "Hastighetsgräns",
+            "quota_exceeded": "Kvot överskriden",
+            "scope_denied": "Scope nekat"
+          }
+        }
+      }
     }
   },
   "pricingPage": {
