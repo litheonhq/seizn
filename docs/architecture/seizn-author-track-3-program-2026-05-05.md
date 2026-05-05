@@ -303,37 +303,49 @@ Track 3 promise:
 
 Phase 0 = read-only import 만. Phase 1.5 또는 Phase 3 = stable export.
 
-### 5.6 자체 backend (lock 2026-05-06)
+### 5.6 자체 backend — local embedding + LLM BYOK (lock 2026-05-06, revised)
 
 **Track 2 endpoint 의존 무효** (master § 4.1 / § 5.3 / § 5.4 / § 8.1). Track 3 desktop 은 자체 backend 갖는다. fire-and-forget 모드 (master § 4.5) 정합.
 
+**Hybrid AI 전략 (revised 2026-05-06):**
+
+- **Embedding (recall vector search) = local default** (`fastembed-rs` + BGE-m3 multilingual, ~500MB model, CPU 가능, 한국어 OK). **사용자 BYOK 0, Free tier 도 recall 작동.** Cloud embedding (Voyage AI / OpenAI) = optional alternative for users who want higher quality.
+- **LLM (entity 추출 / canon conflict 감지) = BYOK** Anthropic SDK 호출 (Haiku default / Sonnet opt-in). **AI 제안 entity 는 작가 승인 후 canonical** (hallucination 차단 gate).
+- **Phase 1.X (signal 기반):** Free tier 사용자 다수가 LLM BYOK 진입장벽 호소 시 Ollama integration 추가 (`http://localhost:11434` 자동 감지, `cloud BYOK / local Ollama / skip` 3 선택 wizard).
+- **Phase 2+ (검토):** in-process llama.cpp (`llama-cpp-rs`) — Ollama install 부담 X, 단 build/binary size complexity ↑. Phase 1 Ollama 신호 강할 때만 진입.
+
 **Stack:**
 
-```
+```text
 seizn-desktop/src-tauri/
 ├── memory/
-│   ├── extract.rs      ← LLM entity 추출 (Anthropic SDK + BYOK)
-│   ├── store.rs        ← rusqlite + sqlite-vec (embedding 검색)
-│   ├── recall.rs       ← @ 검색 → entity card 생성
-│   ├── conflict.rs     ← canon 충돌 감지
-│   └── approve.rs      ← entity 승인 / 수정 / 삭제
+│   ├── extract.rs      ← LLM entity 추출 (BYOK Anthropic Haiku/Sonnet)
+│   ├── store.rs        ← rusqlite + sqlite-vec (vector search)
+│   ├── recall.rs       ← @ 검색 → entity card 생성 (embedding-first; LLM 보강 = BYOK 시만)
+│   ├── conflict.rs     ← canon 충돌 감지 (rule + LLM compare, BYOK 시만)
+│   └── approve.rs      ← entity 승인 / 수정 / 삭제 (no LLM, 로컬만)
 └── llm/
     ├── anthropic.rs    ← BYOK Haiku/Sonnet 호출 (reqwest)
-    ├── embedding.rs    ← Voyage AI 또는 OpenAI embedding (BYOK)
-    └── keyring.rs      ← Tauri keyring 으로 사용자 API key 보관
+    ├── embedding.rs    ← fastembed-rs default (local BGE-m3) + cloud alt (Voyage / OpenAI BYOK)
+    └── keyring.rs      ← Tauri keyring 으로 사용자 API key 보관 (Anthropic 필수 시만, embedding cloud 선택 시 추가)
 ```
 
 **의존 변환:**
 
-| 항목 | 그 전 (Track 2) | 자체 backend |
+| 항목 | 그 전 (Track 2) | 자체 backend (revised) |
 |---|---|---|
-| Entity 추출 | `/manuscript/index` POST | Tauri command + BYOK Haiku |
-| Recall 검색 | `/recall?q=` GET | 로컬 SQLite vector search |
+| Embedding (recall) | Voyage/OpenAI cloud | **fastembed-rs local default**, cloud BYOK alt |
+| Entity 추출 | `/manuscript/index` POST | Tauri command + BYOK Anthropic Haiku |
+| Recall 검색 | `/recall?q=` GET | 로컬 SQLite vector search (embedding 무료) |
 | Entity 승인 | `/canon/.../approve` POST | local SQLite write |
-| Conflict 감지 | `/conflicts` GET | 로컬 rule + LLM compare |
-| LLM 비용 | Track 2 managed | 사용자 BYOK |
-| Offline | 부분 (cache) | 완전 (LLM call 시만 인터넷) |
-| Privacy | 작가 원고가 우리 server 통과 | 100% local (LLM provider 제외) |
+| Conflict 감지 | `/conflicts` GET | 로컬 rule + LLM compare (BYOK 시만) |
+| LLM 비용 | Track 2 managed | 사용자 BYOK (Studio Managed Phase 3+ 옵션) |
+| Embedding 비용 | Track 2 managed | 0 (local) |
+| Offline | 부분 (cache) | embedding/recall 완전 offline · LLM call 시만 인터넷 |
+| Privacy | 작가 원고가 우리 server 통과 | embedding/recall 100% local · LLM (BYOK) 만 cloud (Anthropic) 통과 |
+| BYOK friction (Free tier) | N/A | recall = 0 (local embedding), entity 추출 = Anthropic key 필요 시만 |
+
+**Free tier UX (lock):** import + watcher + snapshot + **recall (semantic search)** 모두 BYOK 0 작동. Anthropic key 입력 = entity 추출 / conflict 감지 활성화 (옵션). 마케팅 카피: `Recall works out of the box. Bring your own key only when you want AI-extracted entities.`
 
 **Phase 3 cross-device sync 시:**
 
@@ -358,10 +370,15 @@ sqlite-vec = "0.1"  # 또는 sqlite-vss. Phase 0.6.5 에서 lock
 zstd = "0.13"
 sha2 = "0.10"
 
-# LLM client (BYOK)
+# Local embedding (default, Free tier OK without BYOK)
+fastembed = "5"  # BGE-m3 multilingual, ~500MB model auto-download on first run
+ort = { version = "2", optional = true }  # ONNX runtime backend for fastembed
+
+# LLM client (BYOK Anthropic) + optional cloud embedding alt (Voyage / OpenAI)
 reqwest = { version = "0.12", features = ["json", "rustls-tls", "stream"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+keyring = "3"  # OS keyring for BYOK API keys
 
 # Encoding
 encoding_rs = "0.8"  # EUC-KR fallback
@@ -709,7 +726,7 @@ Gate (Track 1 doc 에서 lock):
 
 | Plan | / month | / year (17% off) | Includes |
 |---|---|---|---|
-| **Free** | $0 | — | 1 active project, local snapshot, txt/md/docx export, manual recall (limited quota), full data export always |
+| **Free** | $0 | — | 1 active project, local snapshot, txt/md/docx export, **local semantic recall (no BYOK needed — embedding runs on-device)**, full data export always. AI-extracted entities = BYOK Anthropic key required (optional). |
 | **Pro** | $9.90 | $99 | unlimited projects, cloud backup/sync, recall fair-use unlimited, 1 year version history, conflict candidate review, priority indexing |
 | **Pro Plus** | $19.90 | $199 | very long manuscripts (>500k chars), HWP/HWPX export when stable, cross-series canon recall, advanced audit/timeline |
 | **Studio Publisher** | $79+ | custom | editor/reviewer seats (desktop only), private workspace, shared canon bible, export/audit history, onboarding support |

@@ -389,11 +389,12 @@ Verify: 100 snapshots <200ms, restore preserves history
 
 ---
 
-## 9. Phase 0.7 — 자체 backend: LLM client + sqlite-vec store (Day 13-16, REVISED 2026-05-06)
+## 9. Phase 0.7 — 자체 backend: local embedding + LLM BYOK + sqlite-vec store (Day 13-16, REVISED 2026-05-06)
 
-### 9.0 Revision note
+### 9.0 Revision history
 
-이전 spec = Track 2 REST client. **자체 backend 채택 (master § 5.6 + Track 3 doc § 5.6)** 으로 변경. Track 2 endpoint 호출 0. 모든 entity 추출 / recall / 승인 = local SQLite + 사용자 BYOK Anthropic key.
+- 2026-05-06 (a): 이전 spec = Track 2 REST client. **자체 backend 채택 (master § 5.6 + Track 3 doc § 5.6)** — Track 2 endpoint 호출 0.
+- 2026-05-06 (b): **Embedding = local default (`fastembed-rs` BGE-m3)**. LLM = BYOK Anthropic only. Free tier = recall (semantic search) 가 BYOK 0 작동. AI-extracted entities = BYOK 시만 활성. Privacy + Free tier UX 우선.
 
 기간 4일 (Day 13-16) — 이전 0.7 (Day 13-14) + 옛 0.8 의 일부 시간 흡수.
 
@@ -401,13 +402,13 @@ Verify: 100 snapshots <200ms, restore preserves history
 
 Tauri Rust side 에 자체 backend (Memory v3 desktop clone) 구현:
 
-- BYOK keyring (사용자 Anthropic + 옵션: Voyage AI / OpenAI key)
+- **Local embedding default** (`fastembed-rs` + BGE-m3 multilingual, ~500MB model auto-download on first run, CPU 가능)
+- BYOK keyring (사용자 Anthropic key 필수, optional Voyage/OpenAI cloud embedding key)
 - Anthropic SDK client (Haiku 기본 / Sonnet 옵션)
-- Embedding client (Voyage AI 또는 OpenAI text-embedding-3-small)
 - sqlite-vec extension + vector store schema
-- Entity extraction pipeline (manuscript text → entity card)
-- Recall search (vector similarity + entity metadata join)
-- Entity 승인 / 수정 / 삭제 (local SQLite)
+- Entity extraction pipeline (manuscript text → entity card, **BYOK 시만 활성**)
+- Recall search (vector similarity + entity metadata join, **embedding-only path = BYOK 무관 작동**)
+- Entity 승인 / 수정 / 삭제 (local SQLite, no LLM)
 
 ### 9.2 의존성 (Cargo.toml)
 
@@ -419,16 +420,20 @@ serde_json = "1"
 tokio = { version = "1", features = ["full"] }
 keyring = "3"  # OS keyring (Windows Credential Manager / macOS Keychain / Linux Secret Service)
 sqlite-vec = "0.1"  # 또는 sqlite-vss. 첫 시도 = sqlite-vec
+fastembed = "5"    # local embedding default (BGE-m3 multilingual)
 ```
 
-### 9.3 BYOK keyring 설계
+### 9.3 BYOK keyring 설계 (revised)
 
-사용자 첫 실행 시 wizard:
-- Anthropic API key 입력 (필수, Haiku 호출용)
-- Voyage AI key 입력 (옵션, embedding 비용 ↓)
-- OS keyring 에 저장 (사용자 password 보호)
+사용자 첫 실행 시 wizard (3 step):
 
-key 가 없으면 entity 추출 / recall 비활성. 사용자가 wizard 다시 띄울 수 있는 setting 제공.
+1. **Embedding source** = `local (default, ~500MB model, no key)` / `cloud Voyage AI (paste key, lower latency, higher quality)` / `cloud OpenAI (paste key, fallback)`
+2. **LLM source** = `BYOK Anthropic (paste key, required for AI entity extraction)` / `skip for now (recall works, entity extraction stays inactive)`
+3. **Phase 1 preview** = `Local Ollama integration arrives in Phase 1+ as a BYOK alternative.`
+
+Anthropic key skip 시 = entity 추출 / conflict 감지 비활성, recall (local embedding) 만 작동. 사용자가 settings 에서 wizard 다시 띄울 수 있음.
+
+OS keyring 에 저장 (사용자 password 보호).
 
 ### 9.4 Anthropic client
 
@@ -440,21 +445,41 @@ pub async fn extract_entities(
 ) -> Result<Vec<EntityCard>, LlmError> {
     // POST https://api.anthropic.com/v1/messages
     // model: claude-haiku-4-5-20251001 (default) or claude-sonnet-4-6
-    // system: '당신은 한국 장편 소설의 등장인물·장소·물건·설정·약속·사건·떡밥을 추출합니다.'
+    // system: 'You extract characters, places, items, settings, promises, events, and foreshadowing from a long-form fiction manuscript. Reply in JSON.'
     // 응답: structured JSON (zod-equivalent serde struct)
+    // BYOK 검증: key 없으면 즉시 LlmError::NoKey 반환 (no network call)
 }
 ```
 
-### 9.5 Embedding client
+### 9.5 Embedding client (revised — local default)
 
-기본 = Voyage AI (`voyage-3` 한국어 우수). Fallback = OpenAI `text-embedding-3-small`.
+**Default = local fastembed-rs + BGE-m3** (multilingual: en/ko/ja/zh/es/etc, 1024 dim). First-run downloads model to app_data_dir/models/, then offline forever.
 
 ```rust
-pub async fn embed(text: &str) -> Result<Vec<f32>, EmbeddingError> {
-    // POST https://api.voyageai.com/v1/embeddings
-    // input: text, model: voyage-3
+// src-tauri/src/llm/embedding.rs
+pub enum EmbeddingBackend {
+    LocalBge,       // fastembed-rs, default
+    CloudVoyage,    // BYOK voyage-3
+    CloudOpenAi,    // BYOK text-embedding-3-small
+}
+
+pub async fn embed(text: &str, backend: EmbeddingBackend) -> Result<Vec<f32>, EmbeddingError> {
+    match backend {
+        EmbeddingBackend::LocalBge => {
+            // fastembed::TextEmbedding::try_new(InitOptions::new(EmbeddingModel::BGEM3))
+            // .embed(vec![text], None)
+        }
+        EmbeddingBackend::CloudVoyage => {
+            // POST https://api.voyageai.com/v1/embeddings (BYOK voyage key)
+        }
+        EmbeddingBackend::CloudOpenAi => {
+            // POST https://api.openai.com/v1/embeddings (BYOK openai key)
+        }
+    }
 }
 ```
+
+**Local model trade-off (lock):** BGE-m3 quality < voyage-3 약간, 한국어 OK. 절대 metric 보다 BYOK friction 0 + offline + privacy 우선. 사용자 cloud upgrade path 보존 (Phase 0.7 wizard 에서 선택).
 
 ### 9.6 SQLite schema
 
@@ -483,7 +508,7 @@ CREATE INDEX idx_entities_name ON entities(canonical_name);
 -- sqlite-vec virtual table for embedding
 CREATE VIRTUAL TABLE entities_vec USING vec0(
     id TEXT PRIMARY KEY,
-    embedding FLOAT[1024]               -- voyage-3 dimension
+    embedding FLOAT[1024]               -- BGE-m3 dimension (matches voyage-3 cloud alt)
 );
 
 CREATE TABLE conflicts (
@@ -530,19 +555,23 @@ async fn get_api_key_status() -> Result<KeyStatus, String> { ... }
 
 ### 9.8 Verify
 
-- 첫 실행 wizard 에서 Anthropic key 입력 → keyring 저장 → 재시작 후에도 보존
-- 1만 자 manuscript text → `index_manuscript` → 5~20 entity 추출 (Haiku 호출) → SQLite + embedding 저장 → 5~10초 이내
-- `recall("서윤")` → vector similarity + name match → top 5 entity card
-- 네트워크 끊겨도 SQLite 검색은 작동 (LLM 호출만 실패)
-- API key 비용 추적 (call count + token usage)
+- First-run wizard: embedding source (local default) + LLM source (BYOK / skip) flow OK; wizard re-openable from settings
+- BGE-m3 model auto-download to `app_data_dir/models/bge-m3/` on first embed call (~500MB, progress UI shown)
+- Anthropic key entered → keyring 저장 → 재시작 후에도 보존 (key 안 입력 시 entity 추출 비활성, recall 은 작동)
+- 10k chars manuscript → `index_manuscript` (BYOK 활성) → 5~20 entity 추출 ≤10s
+- `index_manuscript` 의 embedding step (no LLM) only → ≤2s for 10k chars (local CPU)
+- `recall("서윤" / "Suyoon")` → local BGE-m3 embed → sqlite-vec similarity → top 5 entity cards (≤100ms search after embed)
+- Offline (Wi-Fi off): recall + embedding 작동, LLM 호출만 실패 (graceful "Network unavailable, AI extraction skipped")
+- BYOK skip mode: recall + entity approve/edit/delete 모두 작동, entity 추출만 비활성
+- API key cost tracking (Anthropic call count + token usage) shown in settings
 
 ### 9.9 Commit
 
-```
-feat(memory): self-hosted backend - BYOK Anthropic + sqlite-vec + entity store
+```text
+feat(memory): self-hosted backend — local fastembed-rs + BYOK Anthropic + sqlite-vec entity store
 
 Phase: 0.7
-Verify: 1만자 → 5~20 entity 추출 ≤10초, recall vector search ≤100ms, BYOK keyring 보존
+Verify: wizard 3-step (embed source + LLM source + Phase 1 preview), 10k chars index ≤10s w/ BYOK, embedding-only ≤2s, recall ≤100ms, offline graceful, BYOK skip path OK.
 ```
 
 ---
