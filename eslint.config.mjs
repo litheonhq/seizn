@@ -10,6 +10,7 @@ const eslintConfig = [
       "node_modules/**/*",
       "mcp-server/**/*",
       "docs/architecture/designer-round-2-1/project/**/*",
+      "docs/design/dashboard-redesign-source/**/*",
       "scripts/**/*",
       "sdks/**/*",
       "packages/**/*",

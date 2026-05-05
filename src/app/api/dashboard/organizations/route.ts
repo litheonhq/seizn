@@ -4,7 +4,7 @@ import { getRequestUser } from '@/lib/api/request-user';
 import { normalizeSessionOrganizationId } from '@/lib/profile/organization';
 import { logServerError } from '@/lib/server/logger';
 
-// GET /api/dashboard/organizations - minimal org list for dashboard UIs
+// GET /api/dashboard/legacy/organizations - minimal org list for dashboard UIs
 export async function GET(request: NextRequest) {
   try {
     const user = await getRequestUser(request);

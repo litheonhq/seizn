@@ -42,7 +42,7 @@ export default function TopBar({ t, isAuthenticated, onCommandPaletteOpen }: Top
     }
 
     const requestId = ++organizationLoadRequestIdRef.current;
-    const response = await fetch("/api/dashboard/organizations", { cache: "no-store" });
+    const response = await fetch("/api/dashboard/legacy/organizations", { cache: "no-store" });
     const data = await response.json();
 
     if (!response.ok || !data.success || !Array.isArray(data.organizations)) {
@@ -218,7 +218,7 @@ export default function TopBar({ t, isAuthenticated, onCommandPaletteOpen }: Top
             ))}
             <div className="border-t border-szn-border-subtle my-1" />
             <Link
-              href="/dashboard/organizations"
+              href="/dashboard/legacy/organizations"
               onClick={() => setShowOrgDropdown(false)}
               className="w-full flex items-center gap-2 px-4 py-2 text-[13px] text-szn-text-3 hover:bg-szn-surface-1 hover:text-szn-text-1"
             >
@@ -282,7 +282,7 @@ export default function TopBar({ t, isAuthenticated, onCommandPaletteOpen }: Top
                 {t("dashboard.topBar.createApiKey")}
               </Link>
               <Link
-                href="/dashboard/organizations"
+                href="/dashboard/legacy/organizations"
                 onClick={() => setShowCreateDropdown(false)}
                 className="w-full flex items-center gap-2 px-4 py-2.5 text-[13px] text-szn-text-2 hover:bg-szn-surface-1 hover:text-szn-text-1"
               >

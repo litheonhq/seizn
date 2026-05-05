@@ -19,11 +19,11 @@ import type {
 
 const RELIABILITY_CARD_META = [
   {
-    href: "/dashboard/organizations",
+    href: "/dashboard/legacy/organizations",
     tone: "bg-szn-surface-1 border-szn-border-subtle hover:border-szn-signal-line",
   },
   {
-    href: "/dashboard/webhooks",
+    href: "/dashboard/legacy/webhooks",
     tone: "bg-szn-surface-1 border-szn-border-subtle hover:border-szn-signal-line",
   },
   {
@@ -317,7 +317,7 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
                 {t("dashboard.overviewPage.noActivityDescription")}
               </p>
               <Link
-                href={hasApiKeys ? "/dashboard/playground" : "/dashboard/keys"}
+                href={hasApiKeys ? "/dashboard/legacy/playground" : "/dashboard/keys"}
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-white text-sm font-medium theme-gradient-btn"
               >
                 <KeyIcon className="w-4 h-4" />
@@ -474,7 +474,7 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
           <h2 className="font-semibold text-szn-text-1 mb-4">{t("dashboard.overviewPage.quickStart")}</h2>
           <div className="space-y-3">
             <Link
-              href={hasApiKeys ? "/dashboard/playground" : "/dashboard/keys"}
+              href={hasApiKeys ? "/dashboard/legacy/playground" : "/dashboard/keys"}
               className="flex items-center gap-3 p-3 rounded-xl hover:bg-white/60 dark:hover:bg-gray-800/50 transition-colors group"
             >
               <div className="w-10 h-10 rounded-lg theme-gradient-btn flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -506,7 +506,7 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
               </div>
             </Link>
             <Link
-              href="/dashboard/organizations"
+              href="/dashboard/legacy/organizations"
               className="flex items-center gap-3 p-3 rounded-xl hover:bg-white/60 dark:hover:bg-gray-800/50 transition-colors group"
             >
               <div className="w-10 h-10 rounded-lg theme-gradient-btn flex items-center justify-center group-hover:scale-110 transition-transform" style={{ opacity: 0.7 }}>

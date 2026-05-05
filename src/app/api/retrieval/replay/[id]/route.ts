@@ -237,8 +237,8 @@ export async function POST(
       },
       // Quick navigation links
       links: {
-        compare_url: `/dashboard/devtools/${traceId}?compare=${handle.traceId}`,
-        replay_trace_url: `/dashboard/devtools/${handle.traceId}`,
+        compare_url: `/dashboard/legacy/devtools/${traceId}?compare=${handle.traceId}`,
+        replay_trace_url: `/dashboard/legacy/devtools/${handle.traceId}`,
       },
     });
   } catch (error) {

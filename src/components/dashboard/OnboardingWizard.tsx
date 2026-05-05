@@ -34,7 +34,7 @@ const STEPS: OnboardingStep[] = [
     iconType: "org",
     action: {
       labelKey: "dashboard.onboarding.steps.createOrg.action",
-      href: "/dashboard/organizations",
+      href: "/dashboard/legacy/organizations",
     },
   },
   {
@@ -63,7 +63,7 @@ const STEPS: OnboardingStep[] = [
     iconType: "query",
     action: {
       labelKey: "dashboard.onboarding.steps.firstQuery.action",
-      href: "/dashboard/playground",
+      href: "/dashboard/legacy/playground",
     },
   },
   {
@@ -73,7 +73,7 @@ const STEPS: OnboardingStep[] = [
     iconType: "trace",
     action: {
       labelKey: "dashboard.onboarding.steps.viewTrace.action",
-      href: "/dashboard/playground",
+      href: "/dashboard/legacy/playground",
     },
   },
 ];
