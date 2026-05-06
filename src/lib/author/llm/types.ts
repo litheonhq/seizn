@@ -1,4 +1,6 @@
-export type AuthorLlmProvider = 'anthropic';
+import type { AuthorLlmEffort } from './effort-mapping';
+
+export type AuthorLlmProvider = 'anthropic' | 'openai';
 export type AuthorLlmResponseFormat = 'text' | 'json';
 export type AuthorLlmKeySource = 'byok' | 'managed';
 
@@ -15,12 +17,16 @@ export interface AuthorLlmRequest {
   projectId: string;
   prompt: string;
   system?: string;
+  /** Optional — provider-router resolves to env default when omitted. */
+  provider?: AuthorLlmProvider;
   model?: string;
   maxTokens?: number;
   temperature?: number;
   responseFormat?: AuthorLlmResponseFormat;
   jsonSchema?: AuthorJsonSchema;
   requestId?: string;
+  /** Reasoning / extended-thinking effort. Defaults to AUTHOR_LLM_EFFORT env (xhigh). */
+  effort?: AuthorLlmEffort;
 }
 
 export interface AuthorLlmUsage {
@@ -47,6 +53,7 @@ export type AuthorLlmErrorCode =
   | 'LLM_NOT_CONFIGURED'
   | 'RATE_LIMITED'
   | 'ANTHROPIC_REQUEST_FAILED'
+  | 'OPENAI_REQUEST_FAILED'
   | 'INVALID_JSON_RESPONSE'
   | 'JSON_SCHEMA_VALIDATION_FAILED'
   | 'MODEL_USAGE_RECORD_FAILED'
