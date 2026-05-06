@@ -134,10 +134,13 @@ export function sleep(ms: number): Promise<void> {
  * content — defense-in-depth: redact patterns that look risky.
  */
 export function redactProviderError(message: string): string {
+  // The single `sk-…` pattern already catches `sk-ant-…`, `sk-svcacct-…`,
+  // `sk-proj-…`, and bare `sk-…`: the `[A-Za-z0-9_\-]{20,}` body matches the
+  // entire suffix including the dash-separated prefix tokens. Pre-audit the
+  // function listed three "specific" replaces after this one — they were dead
+  // (already-redacted strings can't match again).
   return message
     .replace(/sk-[A-Za-z0-9_\-]{20,}/g, '<redacted-api-key>')
-    .replace(/sk-ant-[A-Za-z0-9_\-]{20,}/g, '<redacted-api-key>')
-    .replace(/sk-svcacct-[A-Za-z0-9_\-]{20,}/g, '<redacted-api-key>')
     .replace(/Bearer\s+[A-Za-z0-9_\-.]{20,}/gi, 'Bearer <redacted>')
     .replace(/org-[A-Za-z0-9]{20,}/g, '<redacted-org-id>');
 }

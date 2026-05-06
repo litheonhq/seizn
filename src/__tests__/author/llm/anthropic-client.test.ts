@@ -126,8 +126,16 @@ describe('Author Anthropic client', () => {
     });
 
     expect(response.json).toEqual({ ok: true, items: ['a'] });
+    // Source resolves DEFAULT_AUTHOR_MODEL at module load as
+    //   AUTHOR_LLM_DEFAULT_MODEL_ANTHROPIC ?? AUTHOR_LLM_DEFAULT_MODEL ?? 'claude-opus-4-7'
+    // Mirror the same precedence here so the assertion is tight against the
+    // real contract (pre-audit version only checked AUTHOR_LLM_DEFAULT_MODEL,
+    // missing the per-provider override).
     expect(create).toHaveBeenCalledWith(expect.objectContaining({
-      model: process.env.AUTHOR_LLM_DEFAULT_MODEL ?? 'claude-opus-4-7',
+      model:
+        process.env.AUTHOR_LLM_DEFAULT_MODEL_ANTHROPIC
+        ?? process.env.AUTHOR_LLM_DEFAULT_MODEL
+        ?? 'claude-opus-4-7',
     }));
   });
 
@@ -245,13 +253,15 @@ describe('Author Anthropic client', () => {
     });
   });
 
-  it('does not meter when the Anthropic request fails', async () => {
+  it('does not meter or record usage when the Anthropic request fails', async () => {
     const meterOverage = vi.fn();
+    const recordUsage = vi.fn().mockResolvedValue(undefined);
+    const recordByokUsage = vi.fn().mockResolvedValue(undefined);
     const client = new AuthorAnthropicClient({
       resolveKey: async () => resolvedKey({ source: 'managed', byok: false, providerKeyId: undefined }),
       createClient: () => ({ messages: { create: vi.fn().mockRejectedValue(new Error('timeout')) } }),
-      recordUsage: vi.fn().mockResolvedValue(undefined),
-      recordByokUsage: vi.fn().mockResolvedValue(undefined),
+      recordUsage,
+      recordByokUsage,
       enforceBudget: allowBudget(),
       meterOverage,
       sleep: async () => undefined,
@@ -265,16 +275,23 @@ describe('Author Anthropic client', () => {
     })).rejects.toMatchObject<Partial<AuthorLlmError>>({
       code: 'ANTHROPIC_REQUEST_FAILED',
     });
+    // The user must NOT be billed for a failed request. If a future refactor
+    // moves recordUsage above the throw, this catches the regression at unit
+    // level rather than waiting for the next Stripe statement to surface it.
     expect(meterOverage).not.toHaveBeenCalled();
+    expect(recordUsage).not.toHaveBeenCalled();
+    expect(recordByokUsage).not.toHaveBeenCalled();
   });
 
-  it('does not meter when JSON validation fails after the Anthropic response', async () => {
+  it('does not meter or record usage when JSON validation fails after the Anthropic response', async () => {
     const meterOverage = vi.fn();
+    const recordUsage = vi.fn().mockResolvedValue(undefined);
+    const recordByokUsage = vi.fn().mockResolvedValue(undefined);
     const client = new AuthorAnthropicClient({
       resolveKey: async () => resolvedKey({ source: 'managed', byok: false, providerKeyId: undefined }),
       createClient: () => ({ messages: { create: vi.fn().mockResolvedValue(message('{"ok":"yes"}')) } }),
-      recordUsage: vi.fn().mockResolvedValue(undefined),
-      recordByokUsage: vi.fn().mockResolvedValue(undefined),
+      recordUsage,
+      recordByokUsage,
       enforceBudget: allowBudget(),
       meterOverage,
       sleep: async () => undefined,
@@ -294,5 +311,7 @@ describe('Author Anthropic client', () => {
       code: 'JSON_SCHEMA_VALIDATION_FAILED',
     });
     expect(meterOverage).not.toHaveBeenCalled();
+    expect(recordUsage).not.toHaveBeenCalled();
+    expect(recordByokUsage).not.toHaveBeenCalled();
   });
 });

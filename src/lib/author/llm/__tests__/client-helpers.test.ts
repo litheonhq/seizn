@@ -94,34 +94,42 @@ describe('matchesSchemaType (unified, strict)', () => {
 });
 
 describe('redactProviderError', () => {
-  it('redacts sk-* api keys', () => {
-    expect(
-      redactProviderError('Auth failed with sk-test-1234567890abcdefghijklmnop'),
-    ).toMatch(/<redacted-api-key>/);
+  it('redacts a bare sk-* API key', () => {
+    const out = redactProviderError('Auth failed with sk-test-1234567890abcdefghijklmnop');
+    expect(out).toMatch(/<redacted-api-key>/);
+    // Belt-and-braces: confirm the original key body is gone, not just "the
+    // placeholder appears somewhere alongside the leaked key".
+    expect(out).not.toMatch(/sk-test-1234567890/);
   });
 
-  it('redacts sk-ant-* api keys', () => {
-    expect(
-      redactProviderError('Bad request with sk-ant-api03-abcdef123456789012345678'),
-    ).toMatch(/<redacted-api-key>/);
+  it('redacts an sk-ant-* Anthropic key (covered by the unified sk-* pattern)', () => {
+    const out = redactProviderError('Bad request with sk-ant-api03-abcdef123456789012345678');
+    expect(out).toMatch(/<redacted-api-key>/);
+    expect(out).not.toMatch(/sk-ant-api03-abcdef/);
   });
 
-  it('redacts sk-svcacct-* service account keys', () => {
-    expect(
-      redactProviderError('Failed: sk-svcacct-LVkdBLpWfqBE9hgUcUykDQNglBTW1234567890'),
-    ).toMatch(/<redacted-api-key>/);
+  it('redacts an sk-svcacct-* OpenAI service-account key (covered by the unified sk-* pattern)', () => {
+    const out = redactProviderError('Failed: sk-svcacct-LVkdBLpWfqBE9hgUcUykDQNglBTW1234567890');
+    expect(out).toMatch(/<redacted-api-key>/);
+    expect(out).not.toMatch(/sk-svcacct-LVkdBLpWfqBE/);
+  });
+
+  it('redacts an sk-proj-* OpenAI project key', () => {
+    const out = redactProviderError('Trying sk-proj-aabbccddeeff00112233445566778899');
+    expect(out).toMatch(/<redacted-api-key>/);
+    expect(out).not.toMatch(/sk-proj-aabbcc/);
   });
 
   it('redacts Bearer tokens', () => {
-    expect(
-      redactProviderError('Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.abcdef'),
-    ).toMatch(/Bearer <redacted>/);
+    const out = redactProviderError('Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.abcdef');
+    expect(out).toMatch(/Bearer <redacted>/);
+    expect(out).not.toMatch(/eyJ0eXAiOiJKV1Q/);
   });
 
   it('redacts org-* org IDs', () => {
-    expect(
-      redactProviderError('Organization org-abcdef1234567890ABCDEF not found'),
-    ).toMatch(/<redacted-org-id>/);
+    const out = redactProviderError('Organization org-abcdef1234567890ABCDEF not found');
+    expect(out).toMatch(/<redacted-org-id>/);
+    expect(out).not.toMatch(/org-abcdef1234567890ABCDEF/);
   });
 
   it('passes through normal error text unchanged', () => {
@@ -130,10 +138,13 @@ describe('redactProviderError', () => {
     );
   });
 
-  it('handles multiple secrets in one message', () => {
+  it('handles multiple secrets in one message — both sk-* and Bearer redacted independently', () => {
     const out = redactProviderError(
-      'sk-real-1234567890abcdefghij also sk-ant-api03-anotherrealkey1234567890',
+      'sk-real-1234567890abcdefghij also Bearer ya29.AbCdEfGhIjKlMnOpQrStUvWxYz',
     );
-    expect(out.match(/<redacted-api-key>/g)?.length).toBe(2);
+    expect(out).toContain('<redacted-api-key>');
+    expect(out).toContain('Bearer <redacted>');
+    expect(out).not.toMatch(/sk-real-1234567890/);
+    expect(out).not.toMatch(/ya29\.AbCdEfGhIjKlMnOp/);
   });
 });
