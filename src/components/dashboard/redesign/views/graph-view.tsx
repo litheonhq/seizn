@@ -32,8 +32,35 @@ const COLOR_FOR_ROLE: Record<string, string> = {
   Minor: '#bfb39a',
 };
 
+const GRAPH_W = 580;
+const GRAPH_H = 380;
+const GRAPH_CENTER_X = GRAPH_W / 2;
+const GRAPH_CENTER_Y = GRAPH_H / 2;
+const LABEL_WIDTH_FACTOR = 6.5;
+const LABEL_HEIGHT = 12;
+const LABEL_EDGE_GAP = 4;
+const VERTICAL_LABEL_THRESHOLD = Math.cos(Math.PI / 3);
+
 function colorForRole(role: string): string {
   return COLOR_FOR_ROLE[role] ?? '#7a5c3a';
+}
+
+type GraphLabelAnchor = 'start' | 'middle' | 'end';
+
+interface LabelBox {
+  left: number;
+  right: number;
+  top: number;
+  bottom: number;
+}
+
+interface LabelLayout {
+  id: string;
+  x: number;
+  y: number;
+  anchor: GraphLabelAnchor;
+  box: LabelBox;
+  priority: number;
 }
 
 export interface GraphViewProps {
@@ -46,9 +73,6 @@ export function GraphView({ nodes, edges, characters }: GraphViewProps) {
   const { t } = useDashboardTranslation();
   const [selected, setSelected] = useState<string | null>(nodes[0]?.id ?? null);
   const [mode, setMode] = useState<GraphMode>('force');
-
-  const W = 580;
-  const H = 380;
 
   if (nodes.length === 0) {
     return (
@@ -65,6 +89,7 @@ export function GraphView({ nodes, edges, characters }: GraphViewProps) {
 
   const nodeMap = new Map<string, GraphNode>(nodes.map((n) => [n.id, n]));
   const node = (id: string) => nodeMap.get(id);
+  const labelLayouts = visibleLabelLayouts(nodes);
 
   const ties =
     selected != null
@@ -188,7 +213,7 @@ export function GraphView({ nodes, edges, characters }: GraphViewProps) {
           }}
         >
           <svg
-            viewBox={`0 0 ${W} ${H}`}
+            viewBox={`0 0 ${GRAPH_W} ${GRAPH_H}`}
             style={{ width: '100%', height: '100%', display: 'block' }}
             role="img"
             aria-label={t('dashboard.graph.title')}
@@ -272,6 +297,7 @@ export function GraphView({ nodes, edges, characters }: GraphViewProps) {
                     (e.b === selected && e.a === n.id)
                 );
               const fill = colorForRole(n.role);
+              const label = labelLayouts.get(n.id);
               return (
                 <g
                   key={n.id}
@@ -300,7 +326,9 @@ export function GraphView({ nodes, edges, characters }: GraphViewProps) {
                     fill={fill}
                     stroke="var(--bg-elevated)"
                     strokeWidth={isSel ? 3 : 2}
-                  />
+                  >
+                    <title>{n.label}</title>
+                  </circle>
                   <text
                     x={n.x}
                     y={n.y + 4}
@@ -313,17 +341,19 @@ export function GraphView({ nodes, edges, characters }: GraphViewProps) {
                   >
                     {n.label.charAt(0)}
                   </text>
-                  <text
-                    x={n.x}
-                    y={n.y + n.r + 14}
-                    textAnchor="middle"
-                    fontSize="11"
-                    fontWeight="500"
-                    fill="var(--text-secondary)"
-                    style={{ fontFamily: 'var(--font-sans)', pointerEvents: 'none' }}
-                  >
-                    {n.label}
-                  </text>
+                  {label && (
+                    <text
+                      x={label.x}
+                      y={label.y}
+                      textAnchor={label.anchor}
+                      fontSize="11"
+                      fontWeight="500"
+                      fill="var(--text-secondary)"
+                      style={{ fontFamily: 'var(--font-sans)', pointerEvents: 'none' }}
+                    >
+                      {n.label}
+                    </text>
+                  )}
                 </g>
               );
             })}
@@ -451,12 +481,12 @@ export function GraphView({ nodes, edges, characters }: GraphViewProps) {
           </div>
           <div style={{ flex: 1, overflowY: 'auto', padding: '14px 22px' }}>
             <div style={SECTION_LABEL}>{directTiesLabel}</div>
-            {ties.map((tie) => {
+            {ties.map((tie, index) => {
               const otherNode = node(tie.other);
               if (!otherNode) return null;
               return (
                 <button
-                  key={tie.other}
+                  key={`${tie.other}-${tie.kind}-${index}`}
                   type="button"
                   onClick={() => setSelected(tie.other)}
                   style={{
@@ -512,6 +542,110 @@ export function GraphView({ nodes, edges, characters }: GraphViewProps) {
       )}
     </div>
   );
+}
+
+function visibleLabelLayouts(nodes: GraphNode[]): Map<string, LabelLayout> {
+  const accepted: LabelLayout[] = [];
+  const candidates = nodes
+    .map((node) => createLabelLayout(node))
+    .sort(
+      (a, b) =>
+        b.priority - a.priority ||
+        a.id.localeCompare(b.id)
+    );
+
+  for (const candidate of candidates) {
+    if (!accepted.some((label) => boxesOverlap(label.box, candidate.box))) {
+      accepted.push(candidate);
+    }
+  }
+
+  return new Map(accepted.map((layout) => [layout.id, layout]));
+}
+
+function createLabelLayout(node: GraphNode): LabelLayout {
+  const angle = labelAngle(node);
+  const anchor = textAnchorForAngle(angle);
+  const width = Math.max(18, node.label.length * LABEL_WIDTH_FACTOR);
+  const offset = node.r + 14;
+  let x = node.x + Math.cos(angle) * offset;
+  let y = node.y + Math.sin(angle) * offset;
+
+  x = clampLabelX(x, width, anchor);
+  y = clamp(y, LABEL_HEIGHT + LABEL_EDGE_GAP, GRAPH_H - LABEL_EDGE_GAP);
+
+  return {
+    id: node.id,
+    x,
+    y,
+    anchor,
+    box: labelBox(x, y, width, anchor),
+    priority: rolePriority(node.role),
+  };
+}
+
+function labelAngle(node: GraphNode): number {
+  const dx = node.x - GRAPH_CENTER_X;
+  const dy = node.y - GRAPH_CENTER_Y;
+  if (Math.abs(dx) < 0.1 && Math.abs(dy) < 0.1) {
+    return Math.PI / 2;
+  }
+  return Math.atan2(dy, dx);
+}
+
+function textAnchorForAngle(angle: number): GraphLabelAnchor {
+  const xVector = Math.cos(angle);
+  if (xVector > VERTICAL_LABEL_THRESHOLD) return 'start';
+  if (xVector < -VERTICAL_LABEL_THRESHOLD) return 'end';
+  return 'middle';
+}
+
+function clampLabelX(x: number, width: number, anchor: GraphLabelAnchor): number {
+  if (anchor === 'start') {
+    return clamp(x, LABEL_EDGE_GAP, GRAPH_W - width - LABEL_EDGE_GAP);
+  }
+  if (anchor === 'end') {
+    return clamp(x, width + LABEL_EDGE_GAP, GRAPH_W - LABEL_EDGE_GAP);
+  }
+  return clamp(
+    x,
+    width / 2 + LABEL_EDGE_GAP,
+    GRAPH_W - width / 2 - LABEL_EDGE_GAP
+  );
+}
+
+function labelBox(x: number, y: number, width: number, anchor: GraphLabelAnchor): LabelBox {
+  const left =
+    anchor === 'middle'
+      ? x - width / 2
+      : anchor === 'end'
+        ? x - width
+        : x;
+  return {
+    left,
+    right: left + width,
+    top: y - 10,
+    bottom: y + 2,
+  };
+}
+
+function boxesOverlap(a: LabelBox, b: LabelBox): boolean {
+  return (
+    a.left < b.right &&
+    a.right > b.left &&
+    a.top < b.bottom &&
+    a.bottom > b.top
+  );
+}
+
+function rolePriority(role: GraphNode['role']): number {
+  if (role === 'Lead') return 3;
+  if (role === 'Supporting') return 2;
+  return 1;
+}
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.min(max, Math.max(min, value));
 }
 
 function LegendDot({ color, label }: { color: string; label: string }) {

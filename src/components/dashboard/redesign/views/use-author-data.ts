@@ -44,6 +44,11 @@ const ROLE_PALETTE: Record<string, string> = {
   Minor: '#bfb39a',
 };
 
+const GRAPH_VIEWBOX_WIDTH = 580;
+const GRAPH_VIEWBOX_HEIGHT = 380;
+const GRAPH_CENTER_X = GRAPH_VIEWBOX_WIDTH / 2;
+const GRAPH_CENTER_Y = GRAPH_VIEWBOX_HEIGHT / 2;
+
 function colorForRole(role: string, fallback = '#7a5c3a'): string {
   return ROLE_PALETTE[role] ?? fallback;
 }
@@ -156,8 +161,19 @@ export function useAuthorCharactersList(projectId: string | undefined): UseAutho
         detail: () => undefined,
       };
     }
-    const summaries: CharacterSummary[] = items.filter(isRecord).map((raw, index) => {
-      const id = toString(raw.id, `character-${index}`);
+    const seenCharacterIds = new Set<string>();
+    const characterRecords = items
+      .filter(isRecord)
+      .map((raw, sourceIndex) => ({
+        raw,
+        id: toString(raw.id, `character-${sourceIndex}`),
+      }))
+      .filter(({ id }) => {
+        if (seenCharacterIds.has(id)) return false;
+        seenCharacterIds.add(id);
+        return true;
+      });
+    const summaries: CharacterSummary[] = characterRecords.map(({ raw, id }, index) => {
       const name = toString(raw.name, 'Unnamed');
       const aliases = Array.isArray(raw.aliases) ? raw.aliases : [];
       return {
@@ -208,7 +224,24 @@ export function useAuthorGraphData(projectId: string | undefined): UseAuthorGrap
       };
     }
 
-    const nodeRecords = rawNodes.filter(isRecord);
+    const seenNodeIds = new Set<string>();
+    const nodeRecords = rawNodes
+      .filter(isRecord)
+      .map((record, sourceIndex) => ({
+        record,
+        sourceIndex,
+        sortId: toString(record.id, `node-${sourceIndex}`),
+      }))
+      .sort(
+        (a, b) =>
+          a.sortId.localeCompare(b.sortId) ||
+          a.sourceIndex - b.sourceIndex
+      )
+      .filter(({ sortId }) => {
+        if (seenNodeIds.has(sortId)) return false;
+        seenNodeIds.add(sortId);
+        return true;
+      });
     if (nodeRecords.length === 0) {
       return {
         data: { nodes: [], edges: [] },
@@ -218,20 +251,28 @@ export function useAuthorGraphData(projectId: string | undefined): UseAuthorGrap
       };
     }
 
-    const layout = circularLayout(nodeRecords.length, 290, 190, 130);
-    const nodes: GraphNode[] = nodeRecords.map((raw, index) => {
-      const id = toString(raw.id, `node-${index}`);
+    const drafts = nodeRecords.map(({ record, sortId }, index) => {
+      const role = graphRoleForIndex(index);
+      return {
+        raw: record,
+        sortId,
+        role,
+        r: radiusForRole(role),
+      };
+    });
+    const layout = graphLayout(drafts.map((draft) => draft.r));
+    const nodes: GraphNode[] = drafts.map((draft, index) => {
+      const raw = draft.raw;
+      const id = toString(raw.id, draft.sortId);
       const label = toString(raw.label, id);
-      const role: GraphNode['role'] =
-        index < 2 ? 'Lead' : index < 5 ? 'Supporting' : 'Minor';
-      const point = layout[index] ?? { x: 290, y: 190 };
+      const point = layout[index] ?? { x: GRAPH_CENTER_X, y: GRAPH_CENTER_Y };
       return {
         id,
         label,
-        role,
+        role: draft.role,
         x: point.x,
         y: point.y,
-        r: role === 'Lead' ? 32 : role === 'Supporting' ? 22 : 16,
+        r: draft.r,
       };
     });
 
@@ -252,15 +293,101 @@ export function useAuthorGraphData(projectId: string | undefined): UseAuthorGrap
   }, [projectId, graph.data, graph.isLoading, graph.error]);
 }
 
-function circularLayout(count: number, cx: number, cy: number, radius: number) {
+function graphRoleForIndex(index: number): GraphNode['role'] {
+  if (index < 2) return 'Lead';
+  if (index < 5) return 'Supporting';
+  return 'Minor';
+}
+
+function radiusForRole(role: GraphNode['role']): number {
+  if (role === 'Lead') return 32;
+  if (role === 'Supporting') return 22;
+  return 16;
+}
+
+function graphLayout(radii: number[]) {
+  const count = radii.length;
   if (count === 0) return [];
-  return Array.from({ length: count }, (_, i) => {
-    const angle = (i / count) * Math.PI * 2 - Math.PI / 2;
-    return {
-      x: cx + Math.cos(angle) * radius,
-      y: cy + Math.sin(angle) * radius,
-    };
-  });
+  if (count === 1) {
+    return [clampGraphPoint({ x: GRAPH_CENTER_X, y: GRAPH_CENTER_Y }, radii[0])];
+  }
+  if (count === 2) {
+    const horizontalGap = Math.max(86, radii[0] + radii[1] + 28);
+    return [
+      clampGraphPoint({ x: GRAPH_CENTER_X - horizontalGap, y: GRAPH_CENTER_Y }, radii[0]),
+      clampGraphPoint({ x: GRAPH_CENTER_X + horizontalGap, y: GRAPH_CENTER_Y }, radii[1]),
+    ];
+  }
+  if (count > 18) {
+    return twoRingLayout(radii);
+  }
+
+  const radius = Math.max(110, Math.min(160, 18 + (count * 50) / Math.PI));
+  const slots = distributedSlots(count);
+  return radii.map((r, index) =>
+    clampGraphPoint(pointOnRing(slots[index], count, radius), r)
+  );
+}
+
+function twoRingLayout(radii: number[]) {
+  const innerCount = 7;
+  const outerCount = radii.length - innerCount;
+  const points = new Array<{ x: number; y: number }>(radii.length);
+  const innerSlots = distributedSlots(innerCount);
+  const outerSlots = distributedSlots(outerCount);
+
+  for (let index = 0; index < innerCount; index += 1) {
+    points[index] = clampGraphPoint(
+      pointOnRing(innerSlots[index], innerCount, 95),
+      radii[index]
+    );
+  }
+
+  for (let index = 0; index < outerCount; index += 1) {
+    const nodeIndex = innerCount + index;
+    points[nodeIndex] = clampGraphPoint(
+      pointOnRing(outerSlots[index], outerCount, 160),
+      radii[nodeIndex]
+    );
+  }
+
+  return points;
+}
+
+function distributedSlots(count: number): number[] {
+  const slots: number[] = [];
+  const used = new Set<number>();
+  const oppositeOffset = Math.floor(count / 2);
+
+  for (let offset = 0; slots.length < count; offset += 1) {
+    for (const slot of [offset % count, (offset + oppositeOffset) % count]) {
+      if (!used.has(slot)) {
+        used.add(slot);
+        slots.push(slot);
+      }
+    }
+  }
+
+  return slots;
+}
+
+function pointOnRing(slot: number, count: number, radius: number) {
+  const angle = (slot / count) * Math.PI * 2 - Math.PI / 2;
+  return {
+    x: GRAPH_CENTER_X + Math.cos(angle) * radius,
+    y: GRAPH_CENTER_Y + Math.sin(angle) * radius,
+  };
+}
+
+function clampGraphPoint(point: { x: number; y: number }, r: number) {
+  return {
+    x: clamp(point.x, r + 4, GRAPH_VIEWBOX_WIDTH - r - 4),
+    y: clamp(point.y, r + 14, GRAPH_VIEWBOX_HEIGHT - r - 26),
+  };
+}
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.min(max, Math.max(min, value));
 }
 
 export type UseAuthorConflictsResult = DataState<ConflictItem[]>;
