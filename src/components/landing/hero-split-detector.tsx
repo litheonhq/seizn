@@ -33,6 +33,18 @@ export function HeroSplitDetector({
       <LandingNav copy={copy} locale={locale} />
       <div className="author-shell grid gap-10 px-4 py-14 sm:px-6 md:py-16 lg:grid-cols-[1.02fr_0.98fr] lg:items-center lg:px-8 lg:py-20 xl:px-0">
         <div className="min-w-0 text-[var(--ink-0)]">
+          <Link
+            href={`/${locale}/api`}
+            className="mb-5 inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[11px] font-medium uppercase tracking-[0.12em] transition-opacity hover:opacity-80"
+            style={{
+              borderColor: "oklch(0.71 0.16 39 / 0.4)",
+              background: "oklch(0.71 0.16 39 / 0.12)",
+              color: "oklch(0.78 0.14 39)",
+            }}
+          >
+            <span className="h-1.5 w-1.5 rounded-full" style={{ background: "oklch(0.78 0.14 39)" }} />
+            New · Seizn API + MCP server is live →
+          </Link>
           <p className="author-eyebrow mb-5" style={{ color: "oklch(1 0 0 / 0.58)" }}>
             {copy.hero.eyebrow}
           </p>
