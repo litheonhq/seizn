@@ -60,18 +60,27 @@ function Hero() {
       <h1 className="mt-3 font-serif text-4xl leading-tight text-szn-text-1 sm:text-5xl">
         Plug Seizn canon into your AI tool.
       </h1>
+      <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-szn-accent/30 bg-szn-accent/10 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.12em] text-szn-accent">
+        <span className="h-1.5 w-1.5 rounded-full bg-szn-accent" /> Live in production · 2026-05-06
+      </div>
       <p className="mt-4 max-w-2xl text-base text-szn-text-2">
         A REST API and an MCP server for fiction writers. Recall the canonical state of any character or world fact, run conflict checks against new passages, and explore timeline + graph from inside Claude Desktop, Claude Code, Cursor, Cline, and Continue. Bring your own LLM key, or use Studio Managed.
       </p>
       <p className="mt-3 text-sm text-szn-text-2">
         Base URL: <code className="rounded bg-szn-surface px-1 py-0.5">https://seizn.com/api/v1</code> · Versioned via <code className="rounded bg-szn-surface px-1 py-0.5">Seizn-Api-Version: 1.0</code>
       </p>
+      <p className="mt-3 max-w-2xl rounded-md border border-szn-border-subtle bg-szn-surface px-3 py-2 text-[13px] leading-relaxed text-szn-text-2">
+        <span className="text-szn-text-1">Already on Claude Pro / Max, Cursor Pro, or ChatGPT Plus?</span> The <code>recall</code>, <code>remember</code>, <code>graph</code>, and <code>search</code> tools work on the Free tier (100 calls/day) with no extra LLM key — your host AI handles chat, Seizn handles canon. Only <code>check</code> and <code>timeline</code> need a separate LLM key (BYOK) or Studio Managed.
+      </p>
       <div className="mt-6 flex flex-wrap gap-3 text-sm">
         <Link href="/dashboard/account/api-keys" className="szn-btn-glass px-4 py-2">
-          Get an API key
+          Get a Free API key
         </Link>
         <a href="/openapi.yaml" className="szn-btn-glass px-4 py-2">
           Download OpenAPI spec
+        </a>
+        <a href="https://www.npmjs.com/package/@seizn/author-mcp-server" target="_blank" rel="noopener noreferrer" className="szn-btn-glass px-4 py-2">
+          npm: @seizn/author-mcp-server
         </a>
       </div>
     </header>
