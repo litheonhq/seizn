@@ -29,6 +29,44 @@ function makeSupabase(rows: Row[]) {
   };
 }
 
+function makeSupabaseWithOwnership(rows: Row[], owns: boolean) {
+  return {
+    from(table: string) {
+      if (table === 'api_keys') {
+        return {
+          select() {
+            return {
+              eq() {
+                return {
+                  eq() {
+                    return {
+                      maybeSingle: async () => ({
+                        data: owns ? { id: 'owned' } : null,
+                      }),
+                    };
+                  },
+                };
+              },
+            };
+          },
+        };
+      }
+      // api_key_usage
+      return {
+        select() {
+          return {
+            eq() {
+              return {
+                gte: async () => ({ data: rows, error: null }),
+              };
+            },
+          };
+        },
+      };
+    },
+  };
+}
+
 describe('getApiKeyUsageBreakdown', () => {
   it('aggregates total + tool + model + daily counts', async () => {
     const rows: Row[] = [
@@ -98,6 +136,36 @@ describe('getApiKeyUsageBreakdown', () => {
       ]),
     });
     expect(result.byModel).toEqual([]);
+  });
+
+  it('returns empty breakdown when ownedBy guard fails (cross-tenant lookup blocked)', async () => {
+    const result = await getApiKeyUsageBreakdown('key-other-tenant', 'month', {
+      supabase: makeSupabaseWithOwnership(
+        [{ tool: 'recall', cost_units: 99, llm_cost_usd_milli: 0, llm_provider: null, llm_model: null, occurred_at: '2026-05-01T00:00:00Z' }],
+        false, // user does NOT own this key
+      ),
+      ownedBy: 'user-1',
+    });
+    expect(result).toEqual({
+      apiKeyId: 'key-other-tenant',
+      total: 0,
+      cost_usd_milli: 0,
+      byTool: [],
+      byModel: [],
+      daily: [],
+    });
+  });
+
+  it('returns real breakdown when ownedBy guard passes', async () => {
+    const result = await getApiKeyUsageBreakdown('key-mine', 'month', {
+      supabase: makeSupabaseWithOwnership(
+        [{ tool: 'recall', cost_units: 5, llm_cost_usd_milli: 0, llm_provider: null, llm_model: null, occurred_at: '2026-05-01T00:00:00Z' }],
+        true, // user owns this key
+      ),
+      ownedBy: 'user-1',
+    });
+    expect(result.total).toBe(5);
+    expect(result.byTool).toEqual([{ tool: 'recall', count: 5 }]);
   });
 });
 

@@ -1,4 +1,4 @@
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import {
   AuthorUiValidationError,
   readJsonBody,
@@ -10,8 +10,12 @@ import {
   setUserAuthorLlmProvider,
 } from '@/lib/author/llm';
 import type { AuthorLlmProvider } from '@/lib/author/llm';
+import { checkCustomRateLimitAsync, getRateLimitHeaders } from '@/lib/rate-limit';
 
 export const runtime = 'nodejs';
+
+const PROVIDER_TOGGLE_LIMIT_PER_MIN = 30;
+const PROVIDER_TOGGLE_WINDOW_MS = 60 * 1000;
 
 function normalizeProviderInput(value: unknown): AuthorLlmProvider | null | undefined {
   if (value === null) return null;
@@ -38,6 +42,22 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   return withAuthorUiService(request, async (_service, userId) => {
+    // Defense-in-depth: cap toggle frequency to PROVIDER_TOGGLE_LIMIT_PER_MIN
+    // per user. CSRF + auth already gate this to logged-in users only, so the
+    // blast radius is one user's profiles row, but a malicious script could
+    // still saturate write IOPS without this limit.
+    const rate = await checkCustomRateLimitAsync(
+      `author-llm-provider:${userId}`,
+      PROVIDER_TOGGLE_LIMIT_PER_MIN,
+      PROVIDER_TOGGLE_WINDOW_MS,
+    );
+    if (!rate.allowed) {
+      return NextResponse.json(
+        { error: 'rate_limited', limit: rate.limit, reset_at: rate.resetAt },
+        { status: 429, headers: getRateLimitHeaders(rate) },
+      );
+    }
+
     const body = await readJsonBody(request);
     const next = normalizeProviderInput(body.provider);
     if (next === undefined) {
