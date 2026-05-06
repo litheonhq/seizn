@@ -66,36 +66,49 @@ export async function POST(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
   return withAuthorUiService(request, async (service, userId) => {
     const targetProvider: ByokProvider = readProviderQuery(request) ?? 'anthropic';
+
+    // Step 1: deactivate the keys for the requested provider. CHECK the error
+    // — if the update silently fails, the key remains active in the DB but we
+    // would still proceed to remove the Stripe coupon. End state: user keeps
+    // using BYOK at full price (no discount + still-active key). Bail with a
+    // 503-equivalent so the dashboard retries instead of corrupting state.
     if (hasServerSupabaseServiceRoleConfig()) {
       const supabase = createServerClient();
-      await supabase
+      const { error: updateError } = await supabase
         .from('provider_keys')
         .update({ is_active: false, is_default: false })
         .eq('user_id', userId)
         .eq('provider', targetProvider);
+      if (updateError) {
+        throw new AuthorLlmError(
+          'LLM_NOT_CONFIGURED',
+          'Failed to deactivate BYOK key — please retry',
+          503,
+        );
+      }
     }
 
-    // Drop the discount only when the user is removing the LAST remaining
-    // author-stack key. We re-read the other provider's status; if it's still
-    // active, keep the discount. If the lookup itself fails (transient
-    // Supabase outage), fail CLOSED — assume no other key is active and remove
-    // the discount. Discount can be re-applied on the next BYOK save; leaving
-    // it stale would mean Litheon eats the 50% indefinitely.
+    // Step 2: figure out whether the OTHER provider is still active so we
+    // know whether to drop the BYOK 50% Stripe coupon.
+    //
+    // Only drop the coupon when we're CONFIDENT no key remains. If the
+    // status read itself fails (transient Supabase outage), we cannot
+    // distinguish "user has no other key" from "DB is unreachable" — both
+    // would have returned 'missing' under the old code, then dropped the
+    // coupon. That's fail-OPEN against Litheon if the user actually does
+    // still have an OpenAI key: they keep BYOK + lose the discount =
+    // billed full price for managed-LLM consumption they aren't doing.
+    //
+    // Better: surface the failure (503) and let the dashboard retry. Coupon
+    // state stays consistent until we have a reliable answer. Webhook /
+    // scheduled reconciliation can clean up if the user gives up retrying.
     const otherProvider: ByokProvider = targetProvider === 'anthropic' ? 'openai' : 'anthropic';
-    let otherActive = false;
-    let otherProviderResolved: ByokProvider | null = null;
-    try {
-      const otherStatus = await getAuthorByokStatus(userId, undefined, { provider: otherProvider });
-      otherActive = otherStatus.status === 'active';
-      // AuthorByokStatus.provider has a wider union ('google' included) but the
-      // author stack only ever stores Anthropic / OpenAI keys today.
-      const p = otherStatus.provider;
-      otherProviderResolved = otherActive && (p === 'anthropic' || p === 'openai') ? p : null;
-    } catch (lookupError) {
-      console.error('byok DELETE: failed to read other-provider status, defaulting to inactive', lookupError);
-      otherActive = false;
-      otherProviderResolved = null;
-    }
+    const otherStatus = await getAuthorByokStatus(userId, undefined, { provider: otherProvider });
+    const otherActive = otherStatus.status === 'active';
+    const otherProviderResolved: ByokProvider | null =
+      otherActive && (otherStatus.provider === 'anthropic' || otherStatus.provider === 'openai')
+        ? otherStatus.provider
+        : null;
 
     const discount = otherActive
       ? { coupon: '', status: 'applied' as const, applied: true }

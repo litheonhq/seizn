@@ -636,7 +636,15 @@ export async function POST(request: NextRequest) {
           eventData.metadata?.user_id
         );
 
-        if (user && priceId) {
+        if (!user) break;
+
+        // V8 Track 2 cancellations: downgrade api_keys quota first, THEN fall
+        // through to the profiles update so plan/subscription_id/cancellation
+        // flags stay consistent. Pre-audit, this `break`d after the api_keys
+        // downgrade and left profiles.plan stuck at 'studio_managed' forever
+        // — UI kept showing "Active subscription" after cancel, and
+        // resolveUsageBillingContext kept granting Studio Managed quota.
+        if (priceId) {
           const v8Tier = getV8Track2TierFromStripePriceId(priceId);
           if (v8Tier) {
             const downgrade = await applyV8Track2TierToApiKeys(
@@ -651,11 +659,11 @@ export async function POST(request: NextRequest) {
               downgraded_to: "free",
               ended_at: eventData.ended_at,
             }, downgrade.ok ? "success" : "failed", downgrade.ok ? undefined : downgrade.error);
-            break;
+            // Do NOT break — fall through to the profiles update below.
           }
         }
 
-        if (user) {
+        {
           const { error } = await supabase
             .from("profiles")
             .update({
@@ -705,14 +713,42 @@ export async function POST(request: NextRequest) {
         const user = await findUser(supabase, customerId, null);
 
         if (user) {
-          // Clear any payment failed flags
-          await supabase
+          // Only clear past_due when this paid invoice is unambiguously a
+          // current-cycle payment for the active subscription. Pre-audit code
+          // unconditionally cleared the flag, which meant: if today's invoice
+          // failed but tomorrow an old / unrelated invoice settled (e.g.
+          // dispute resolution, off-session retry on an older invoice, or a
+          // one-time charge for a different SKU), we'd silently mark the
+          // user "all caught up" even though the current cycle is still
+          // past_due. Three guards required:
+          //   (1) the invoice's subscription_id matches the user's active sub
+          //   (2) amount_paid >= amount_due (no partial payments)
+          //   (3) billing_reason is a subscription-cycle reason
+          const profileLookup = await supabase
             .from("profiles")
-            .update({
-              subscription_payment_failed: false,
-              subscription_payment_failed_at: null,
-            })
-            .eq("id", user.id);
+            .select("stripe_subscription_id")
+            .eq("id", user.id)
+            .maybeSingle();
+          const userActiveSubId = profileLookup.data?.stripe_subscription_id ?? null;
+          const subMatches = subscriptionId != null && subscriptionId === userActiveSubId;
+          const amountFull =
+            typeof eventData.amount_paid === "number" &&
+            typeof eventData.amount_due === "number" &&
+            eventData.amount_paid >= eventData.amount_due;
+          const subscriptionCycle =
+            eventData.billing_reason === "subscription_cycle" ||
+            eventData.billing_reason === "subscription_create" ||
+            eventData.billing_reason === "subscription_update";
+
+          if (subMatches && amountFull && subscriptionCycle) {
+            await supabase
+              .from("profiles")
+              .update({
+                subscription_payment_failed: false,
+                subscription_payment_failed_at: null,
+              })
+              .eq("id", user.id);
+          }
 
           await logBillingEvent(supabase, user.id, "invoice_paid", {
             subscription_id: subscriptionId,
@@ -720,6 +756,7 @@ export async function POST(request: NextRequest) {
             currency: eventData.currency,
             billing_reason: eventData.billing_reason,
             invoice_url: eventData.hosted_invoice_url,
+            past_due_cleared: subMatches && amountFull && subscriptionCycle,
           });
         }
         break;
@@ -782,24 +819,50 @@ export async function POST(request: NextRequest) {
           name: eventData.name,
         });
 
-        // Try to associate customer with existing user by email
+        // Account-takeover surface (post-audit fix 2026-05-07): anyone can
+        // create a Stripe Customer with an arbitrary email through Stripe
+        // Checkout — Stripe does not verify customer email ownership. If we
+        // auto-link by email, an attacker who guesses a victim's email can
+        // hijack that profile's stripe_customer_id, then route their
+        // subscription events into the victim's account.
+        //
+        // Two-layer guard:
+        //   1. only link when the profile has NO existing stripe_customer_id
+        //      (don't overwrite an existing legitimate link)
+        //   2. only link when checkout.session.completed for THIS customer
+        //      already wrote the link (proves the user themselves initiated
+        //      via our domain's Checkout flow). The checkout handler runs
+        //      first because it's idempotent + the customer ID is set
+        //      there. So at customer.created time, a legitimate link is
+        //      already present and we don't need to do anything; an
+        //      attacker-only flow will NOT have a checkout match, so we skip.
+        //
+        // Net: customer.created becomes audit-only. The legacy auto-link is
+        // gone; checkout.session.completed remains the single linker.
         if (eventData.email) {
           const { data: profile } = await supabase
             .from("profiles")
-            .select("id")
+            .select("id, stripe_customer_id")
             .eq("email", eventData.email)
-            .single();
+            .maybeSingle();
 
-          if (profile) {
-            await supabase
-              .from("profiles")
-              .update({ stripe_customer_id: eventData.id })
-              .eq("id", profile.id);
-
+          if (profile?.stripe_customer_id === eventData.id) {
+            // Already linked via checkout — log success but no DB write.
             await logBillingEvent(supabase, profile.id, "customer_created", {
               customer_id: eventData.id,
               email: eventData.email,
+              link_source: "checkout_pre_existing",
             });
+          } else if (profile) {
+            // Profile exists but is NOT linked to this customer. Refuse to
+            // overwrite — log and move on. Legitimate users go through
+            // checkout, which links explicitly.
+            await logBillingEvent(supabase, profile.id, "customer_created", {
+              customer_id: eventData.id,
+              email: eventData.email,
+              link_source: "skipped_email_only",
+              existing_customer_id: profile.stripe_customer_id ?? null,
+            }, "success");
           }
         }
         break;

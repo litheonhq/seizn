@@ -160,7 +160,19 @@ export async function getAuthorByokStatus(
     .limit(1)
     .single();
 
-  if (error || !data) {
+  // Discriminate "no row found" (PGRST116) from real DB errors. The old code
+  // collapsed both into status: 'missing', which made the BYOK DELETE flow
+  // silently drop the Stripe coupon on transient Supabase failures even when
+  // the user actually had another active key. Throw on real errors so callers
+  // can decide whether to retry vs assume nothing.
+  if (error && error.code !== 'PGRST116') {
+    throw new AuthorLlmError(
+      'LLM_NOT_CONFIGURED',
+      `Failed to read BYOK status for ${targetProvider}: ${error.message ?? error.code}`,
+      503,
+    );
+  }
+  if (!data) {
     return { enabled: false, provider: null, status: 'missing' };
   }
 

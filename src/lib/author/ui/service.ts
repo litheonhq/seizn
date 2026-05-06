@@ -1085,10 +1085,16 @@ export class AuthorUiService {
         provider: isProvider(provider) ? provider : null,
         status: 'invalid',
       };
+      // Audit-log the rejection WITHOUT the raw key. Earlier versions wrote
+      // `api_key: apiKey` here, which leaked plaintext keys into audit_logs on
+      // every malformed-key attempt — audit_logs is exported to log aggregators
+      // with weaker access than provider_keys, so this was a real key-leak
+      // surface (post-audit fix 2026-05-07).
       this.logAudit(DEFAULT_PROJECT_ID, 'byok.updated', {
         provider: isProvider(provider) ? provider : null,
         status: 'invalid',
-        api_key: apiKey,
+        key_last_4: apiKey ? apiKey.slice(-4) : null,
+        attempted_format_invalid: true,
       });
       throw new AuthorUiValidationError('invalid provider api key');
     }

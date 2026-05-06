@@ -24,8 +24,10 @@
         "GET",
         "POST"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "webhookSignature"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/account/llm-provider",
