@@ -5,6 +5,7 @@ import { RefreshCw, TriangleAlert } from "lucide-react";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
 import { getAuthorSettingsCopy } from "./author-settings-i18n";
 import { ByokSection } from "./byok-section";
+import { LlmProviderSection, type AuthorLlmProvider, type LlmProviderState } from "./llm-provider-section";
 import { SubscriptionSection } from "./subscription-section";
 import { SyncPlaceholder } from "./sync-placeholder";
 import { UsageSection } from "./usage-section";
@@ -19,7 +20,12 @@ import {
   normalizeByokDiscountStatus,
 } from "./author-settings-types";
 
-type SettingsAction = "idle" | "refresh" | "saving" | "removing" | "portal";
+const DEFAULT_LLM_PROVIDER_STATE: LlmProviderState = {
+  provider: null,
+  env_default: "anthropic",
+};
+
+type SettingsAction = "idle" | "refresh" | "saving" | "removing" | "portal" | "llmprov";
 
 interface AuthorSettingsClientProps {
   navigateToBilling?: (url: string) => void;
@@ -31,6 +37,7 @@ export function AuthorSettingsClient({ navigateToBilling = defaultNavigate }: Au
   const [byok, setByok] = useState<ByokState>(DEFAULT_BYOK_STATE);
   const [subscription, setSubscription] = useState<SubscriptionState>(DEFAULT_SUBSCRIPTION_STATE);
   const [usage, setUsage] = useState<UsageState>(DEFAULT_USAGE_STATE);
+  const [llmProvider, setLlmProvider] = useState<LlmProviderState>(DEFAULT_LLM_PROVIDER_STATE);
   const [action, setAction] = useState<SettingsAction>("refresh");
   const [error, setError] = useState<string | null>(null);
 
@@ -38,16 +45,36 @@ export function AuthorSettingsClient({ navigateToBilling = defaultNavigate }: Au
     setAction("refresh");
     setError(null);
     try {
-      const [byokResponse, subscriptionResponse, usageResponse] = await Promise.all([
+      const [byokResponse, subscriptionResponse, usageResponse, llmProviderResponse] = await Promise.all([
         fetchJson<ByokState>("/api/account/byok"),
         fetchJson<SubscriptionState>("/api/account/subscription"),
         fetchJson<UsageState>("/api/account/usage"),
+        fetchJson<LlmProviderState>("/api/account/llm-provider"),
       ]);
       setByok(normalizeByok(byokResponse));
       setSubscription(normalizeSubscription(subscriptionResponse));
       setUsage(normalizeUsage(usageResponse, subscriptionResponse));
+      setLlmProvider(llmProviderResponse ?? DEFAULT_LLM_PROVIDER_STATE);
     } catch (loadError) {
       setError(loadError instanceof Error ? loadError.message : copy.loadError);
+    } finally {
+      setAction("idle");
+    }
+  }, [copy.loadError]);
+
+  const saveLlmProvider = useCallback(async (provider: AuthorLlmProvider | null): Promise<void> => {
+    setAction("llmprov");
+    setError(null);
+    try {
+      const response = await fetchJson<{ provider: AuthorLlmProvider | null }>("/api/account/llm-provider", {
+        method: "POST",
+        headers: csrfHeaders({ "Content-Type": "application/json" }),
+        body: JSON.stringify({ provider }),
+      });
+      setLlmProvider((prev) => ({ ...prev, provider: response.provider ?? null }));
+    } catch (saveError) {
+      const message = saveError instanceof Error ? saveError.message : copy.loadError;
+      throw new Error(message);
     } finally {
       setAction("idle");
     }
@@ -153,6 +180,11 @@ export function AuthorSettingsClient({ navigateToBilling = defaultNavigate }: Au
       ) : null}
 
       <div className="grid gap-5">
+        <LlmProviderSection
+          state={llmProvider}
+          busy={action !== "idle"}
+          onSave={saveLlmProvider}
+        />
         <ByokSection
           byok={byok}
           discountStatus={subscription.byok_discount_status}
