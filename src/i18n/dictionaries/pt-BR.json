@@ -1,7 +1,7 @@
 {
   "metadata": {
     "title": "Seizn — Memória para NPCs com IA",
-    "description": "Conecte ao Inworld, Convai ou seu próprio LLM. O Seizn dá aos seus NPCs memória persistente, relacionamentos e lembrança entre gerações — cobrado por entidade, não por assento."
+    "description": "Plugue o Seizn no Inworld, Convai ou no seu LLM. Seus NPCs ganham memória, relacionamentos e lembranças entre gerações. Cobrança por entidade, não por assento."
   },
   "nav": {
     "features": "Recursos",
@@ -13,13 +13,13 @@
   },
   "hero": {
     "badge": "Demo ao vivo: smallgod",
-    "title": "Seus NPCs lembram",
-    "titleHighlight": "entre gerações.",
-    "subtitle": "Seizn é a camada de memória para NPCs com IA. Conecte ao Inworld, Convai ou seu próprio LLM — mantenha o motor de diálogo que você usa e adicione persistência que sobrevive a sessões e gerações.",
+    "title": "Seus NPCs lembram,",
+    "titleHighlight": "mesmo gerações depois.",
+    "subtitle": "Seizn é a camada de memória para NPCs com IA. Plugue no Inworld, Convai ou no seu próprio LLM, mantenha o motor de diálogo que você já usa e ganhe uma persistência que segura entre sessões e entre gerações.",
     "emailPlaceholder": "você@estudio.com",
     "joinWaitlist": "Agendar demo",
     "joining": "Agendando...",
-    "onTheList": "Entraremos em contato em breve.",
+    "onTheList": "A gente te chama em breve.",
     "stats": {
       "tokenSavings": "NPCs por projeto",
       "retrievalTime": "Recuperação de memória",
@@ -28,7 +28,7 @@
   },
   "features": {
     "title": "Feito para estúdios de games",
-    "subtitle": "Integre o Seizn e mantenha seu motor de diálogo. Os NPCs ganham memória, relacionamentos e persistência que sobrevive a sessões e gerações.",
+    "subtitle": "Mantenha seu motor de diálogo, encaixe o Seizn por baixo. Os NPCs ganham memória, relacionamentos e uma persistência que segura entre sessões e gerações.",
     "smartExtraction": {
       "title": "Grafo NPC / Facção / Evento",
       "description": "Modele NPCs, facções, missões e incidentes como grafo. Relacionamentos (confiança, rancor, parentesco) e eventos (testemunha, afetado, ator) são primitivos nativos, não esquemas que você precisa inventar."

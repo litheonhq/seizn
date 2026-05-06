@@ -1,7 +1,7 @@
 {
   "metadata": {
     "title": "Seizn — Memória para NPC com IA",
-    "description": "Liga ao Inworld, Convai ou ao teu próprio LLM. O Seizn dá aos teus NPC memória persistente, relações e recordação entre gerações — cobrado por entidade, não por lugar."
+    "description": "Liga o Seizn ao Inworld, Convai ou ao teu LLM. Os teus NPC ganham memória, relações e recordações que atravessam gerações. Cobrança por entidade, não por lugar."
   },
   "nav": {
     "features": "Funcionalidades",
@@ -13,13 +13,13 @@
   },
   "hero": {
     "badge": "Demo ao vivo: smallgod",
-    "title": "Os teus NPC lembram-se",
-    "titleHighlight": "entre gerações.",
-    "subtitle": "Seizn é a camada de memória para NPC com IA. Liga ao Inworld, Convai ou ao teu próprio LLM — mantém o motor de diálogo que usas e adiciona persistência que sobrevive a sessões e gerações.",
+    "title": "Os teus NPC lembram-se,",
+    "titleHighlight": "mesmo gerações depois.",
+    "subtitle": "Seizn é a camada de memória para NPC com IA. Liga-o ao Inworld, Convai ou ao teu próprio LLM, mantém o motor de diálogo que já usas e ganhas uma persistência que aguenta entre sessões e entre gerações.",
     "emailPlaceholder": "tu@estudio.com",
     "joinWaitlist": "Marcar demo",
     "joining": "A marcar...",
-    "onTheList": "Entraremos em contacto em breve.",
+    "onTheList": "Damos notícias em breve.",
     "stats": {
       "tokenSavings": "NPC por projeto",
       "retrievalTime": "Recuperação de memória",
@@ -27,8 +27,8 @@
     }
   },
   "features": {
-    "title": "Construído para estúdios de jogos",
-    "subtitle": "Integra o Seizn e mantém o teu motor de diálogo. Os NPC ganham memória, relações e persistência que sobrevive a sessões e gerações.",
+    "title": "Feito para estúdios de jogos",
+    "subtitle": "Mantém o motor de diálogo que tens, encaixa o Seizn por baixo. Os NPC ganham memória, relações e uma persistência que aguenta entre sessões e entre gerações.",
     "smartExtraction": {
       "title": "Grafo NPC / Facção / Evento",
       "description": "Modela NPC, facções, missões e incidentes como grafo. As relações (confiança, rancor, parentesco) e eventos (testemunha, afetado, ator) são primitivos nativos, não esquemas que tens de inventar."

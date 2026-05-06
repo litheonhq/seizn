@@ -1,7 +1,7 @@
 {
   "metadata": {
     "title": "Seizn — AI NPC 記憶層",
-    "description": "接入 Inworld、Convai，或您自己的 LLM。Seizn 為 NPC 提供跨 session 與跨世代的持久記憶、關係與派系圖譜 — 以實體計費，而非按席位收費。"
+    "description": "接到 Inworld、Convai，或你自己的 LLM。Seizn 給 NPC 跨 session、跨世代的記憶、關係與派系圖譜，按實體計價，不按席次。"
   },
   "nav": {
     "features": "功能",
@@ -13,13 +13,13 @@
   },
   "hero": {
     "badge": "線上示範：smallgod",
-    "title": "NPC 記得住",
-    "titleHighlight": "跨越世代。",
-    "subtitle": "Seizn 是 AI NPC 的記憶層。接入 Inworld、Convai，或您自己的 LLM — 保留您熟悉的對話引擎，加入跨工作階段 與跨世代存活的持久性。",
+    "title": "你的 NPC 還記得",
+    "titleHighlight": "上一個世代。",
+    "subtitle": "Seizn 是 AI NPC 的記憶層。接到 Inworld、Convai 或你自己的 LLM——對話引擎不用換，把跨 session、跨世代留得住的記憶交給我們。",
     "emailPlaceholder": "you@studio.com",
     "joinWaitlist": "預約示範",
-    "joining": "預約中...",
-    "onTheList": "我們將盡快與您聯繫。",
+    "joining": "預約中…",
+    "onTheList": "我們會盡快回覆你。",
     "stats": {
       "tokenSavings": "每專案 NPC 數",
       "retrievalTime": "記憶檢索",
@@ -27,8 +27,8 @@
     }
   },
   "features": {
-    "title": "專為遊戲工作室打造",
-    "subtitle": "嵌入 Seizn，對話引擎維持原樣。NPC 獲得跨 session 與跨世代存活的記憶、關係與持久性。",
+    "title": "為遊戲工作室而生",
+    "subtitle": "把 Seizn 接上去，對話引擎不動。NPC 多了記憶、人際關係，還有跨 session、跨世代留得住的那種念念不忘。",
     "smartExtraction": {
       "title": "NPC / 派系 / 事件圖譜",
       "description": "將 NPC、派系、任務與事件建模為圖譜。關係（信任、怨恨、血緣）與事件（目擊、受影響、行為者）是第一等基元，無需自行設計結構描述。"

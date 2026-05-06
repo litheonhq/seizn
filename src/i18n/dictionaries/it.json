@@ -1,7 +1,7 @@
 {
   "metadata": {
     "title": "Seizn — Memoria per NPC IA",
-    "description": "Collegati a Inworld, Convai o al tuo LLM. Seizn dà ai tuoi NPC memoria persistente, relazioni e ricordo intergenerazionale — prezzo per entità, non per postazione."
+    "description": "Collega Seizn a Inworld, Convai o al tuo LLM. I tuoi NPC guadagnano memoria, relazioni e ricordi tra le generazioni. Prezzo per entità, non per postazione."
   },
   "nav": {
     "features": "Funzionalità",
@@ -13,13 +13,13 @@
   },
   "hero": {
     "badge": "Demo live: smallgod",
-    "title": "I tuoi NPC ricordano",
-    "titleHighlight": "tra le generazioni.",
-    "subtitle": "Seizn è il livello memoria per NPC IA. Collegalo a Inworld, Convai o al tuo LLM — tieni il motore di dialogo che ami e aggiungi persistenza che sopravvive a sessioni e generazioni.",
+    "title": "I tuoi NPC ricordano,",
+    "titleHighlight": "anche generazioni dopo.",
+    "subtitle": "Seizn è il livello di memoria per NPC IA. Collegalo a Inworld, Convai o al tuo LLM, tieni il motore di dialogo che usi e aggiungi una persistenza che regge tra sessioni e tra generazioni.",
     "emailPlaceholder": "tu@studio.com",
     "joinWaitlist": "Prenota una demo",
     "joining": "Prenotazione...",
-    "onTheList": "Ti contatteremo presto.",
+    "onTheList": "Ti scriviamo a breve.",
     "stats": {
       "tokenSavings": "NPC per progetto",
       "retrievalTime": "Recupero memoria",
@@ -27,8 +27,8 @@
     }
   },
   "features": {
-    "title": "Pensato per i game studio",
-    "subtitle": "Integra Seizn, tieni il tuo motore di dialogo. Gli NPC ottengono memoria, relazioni e persistenza che sopravvive a sessioni e generazioni.",
+    "title": "Fatto per i game studio",
+    "subtitle": "Tieni il tuo motore di dialogo, infila Seizn sotto. Gli NPC guadagnano memoria, relazioni e una persistenza che regge tra sessioni e generazioni.",
     "smartExtraction": {
       "title": "Grafo NPC / Fazione / Evento",
       "description": "Modella NPC, fazioni, missioni e incidenti come grafo. Le relazioni (fiducia, rancore, parentela) e gli eventi (testimone, vittima, attore) sono primitive di primo livello, non schemi da inventare."
