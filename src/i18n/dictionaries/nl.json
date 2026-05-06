@@ -1,7 +1,7 @@
 {
   "metadata": {
     "title": "Seizn — Geheugen voor AI-NPC's",
-    "description": "Koppel aan Inworld, Convai of je eigen LLM. Seizn geeft je NPC's persistent geheugen, relaties en generatieoverschrijdende herinnering — prijs per entiteit, niet per seat."
+    "description": "Koppel Inworld, Convai of je eigen LLM. Seizn geeft NPC's geheugen, relaties en herinneringen door generaties heen. Prijs per entiteit, niet per seat."
   },
   "nav": {
     "features": "Functies",
@@ -13,12 +13,12 @@
   },
   "hero": {
     "badge": "Live demo: smallgod",
-    "title": "Je NPC's herinneren zich",
-    "titleHighlight": "over generaties heen.",
-    "subtitle": "Seizn is de geheugenlaag voor AI-NPC's. Koppel het aan Inworld, Convai of je eigen LLM — behoud de dialogue-engine die je al gebruikt en voeg persistentie toe die sessies en generaties overleeft.",
+    "title": "Je NPC's onthouden",
+    "titleHighlight": "door generaties heen.",
+    "subtitle": "Seizn is de geheugenlaag voor AI-NPC's. Koppel het aan Inworld, Convai of je eigen LLM, houd de dialogue-engine die je gebruikt, en voeg persistentie toe die sessies en generaties overleeft.",
     "emailPlaceholder": "jij@studio.com",
     "joinWaitlist": "Demo boeken",
-    "joining": "Boeken...",
+    "joining": "Bezig met boeken...",
     "onTheList": "We nemen snel contact op.",
     "stats": {
       "tokenSavings": "NPC's per project",
@@ -27,8 +27,8 @@
     }
   },
   "features": {
-    "title": "Gebouwd voor game studios",
-    "subtitle": "Voeg Seizn in, behoud je dialogue-engine. NPC's krijgen geheugen, relaties en persistentie die sessies en generaties overleeft.",
+    "title": "Gemaakt voor gamestudio's",
+    "subtitle": "Plug Seizn in, houd je dialogue-engine. NPC's krijgen geheugen, relaties en persistentie die sessies en generaties overleeft.",
     "smartExtraction": {
       "title": "NPC / Factie / Event-graaf",
       "description": "Modelleer NPC's, facties, quests en incidenten als graaf. Relaties (vertrouwen, wrok, verwantschap) en events (getuige, getroffen, actor) zijn eersteklas primitieven — geen zelf bedachte schema's."

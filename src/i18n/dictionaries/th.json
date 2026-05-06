@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "title": "Seizn — หน่วยความจำสำหรับ NPC พลัง AI",
-    "description": "เชื่อมต่อกับ Inworld, Convai หรือ LLM ของคุณ Seizn มอบหน่วยความจำถาวร ความสัมพันธ์ และการจดจำข้ามรุ่นให้กับ NPC ของคุณ — ราคาต่อ entity ไม่ใช่ต่อที่นั่ง"
+    "title": "Seizn — หน่วยความจำของ AI NPC",
+    "description": "ต่อเข้า Inworld, Convai หรือ LLM ของคุณเอง Seizn ทำให้ NPC จำได้ มีความสัมพันธ์ และความทรงจำที่ส่งต่อข้ามรุ่น คิดราคาตาม entity ไม่ใช่ตาม seat"
   },
   "nav": {
     "features": "ฟีเจอร์",
@@ -13,12 +13,12 @@
   },
   "hero": {
     "badge": "Demo สด: smallgod",
-    "title": "NPC ของคุณจดจำ",
-    "titleHighlight": "ข้ามรุ่น",
-    "subtitle": "Seizn คือ memory layer สำหรับ NPC พลัง AI เชื่อมต่อกับ Inworld, Convai หรือ LLM ของคุณ — รักษา dialogue engine ที่คุณชอบ เพิ่ม persistence ที่ยืนหยัดข้ามเซสชันและรุ่น",
+    "title": "NPC ของคุณยังจำได้",
+    "titleHighlight": "ข้ามรุ่นต่อรุ่น",
+    "subtitle": "Seizn คือ memory layer ของ AI NPC ต่อเข้า Inworld, Convai หรือ LLM ของคุณเอง dialogue engine ที่ใช้อยู่ไม่ต้องเปลี่ยน เติม persistence ที่อยู่ข้าม session อยู่ข้ามรุ่นเข้าไปได้เลย",
     "emailPlaceholder": "you@studio.com",
     "joinWaitlist": "จอง demo",
-    "joining": "กำลังจอง...",
+    "joining": "กำลังจอง…",
     "onTheList": "เราจะติดต่อกลับเร็ว ๆ นี้",
     "stats": {
       "tokenSavings": "NPC ต่อโปรเจกต์",
@@ -27,8 +27,8 @@
     }
   },
   "features": {
-    "title": "สร้างมาเพื่อ game studio",
-    "subtitle": "ใส่ Seizn รักษา dialogue engine ของคุณ NPC ได้รับหน่วยความจำ ความสัมพันธ์ และ persistence ที่ยืนหยัดข้ามเซสชันและรุ่น",
+    "title": "ทำมาเพื่อ game studio",
+    "subtitle": "วาง Seizn ลงไป dialogue engine เดิมไม่ต้องแตะ NPC จะมีความจำ มีความสัมพันธ์ และ persistence ที่อยู่ข้าม session อยู่ข้ามรุ่นได้",
     "smartExtraction": {
       "title": "กราฟ NPC / กลุ่ม / Event",
       "description": "จำลอง NPC กลุ่ม เควส และเหตุการณ์เป็นกราฟ ความสัมพันธ์ (ความไว้วางใจ ความแค้น ความเป็นเครือญาติ) และ event (เป็นพยาน ได้รับผลกระทบ ผู้กระทำ) เป็น primitive ชั้นแรก ไม่ใช่ schema ที่ต้องสร้างเอง"

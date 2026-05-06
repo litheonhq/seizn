@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "title": "Seizn — Memori untuk NPC bertenaga AI",
-    "description": "Hubungkan ke Inworld, Convai, atau LLM Anda sendiri. Seizn memberikan NPC Anda memori persisten, hubungan, dan ingatan lintas generasi — harga per entitas, bukan per kursi."
+    "title": "Seizn — Memori untuk NPC AI",
+    "description": "Colok ke Inworld, Convai, atau LLM Anda. Seizn memberi NPC memori yang menempel, hubungan, dan ingatan lintas generasi. Harga per entity, bukan per seat."
   },
   "nav": {
     "features": "Fitur",
@@ -13,13 +13,13 @@
   },
   "hero": {
     "badge": "Demo langsung: smallgod",
-    "title": "NPC Anda mengingat",
+    "title": "NPC Anda tetap ingat,",
     "titleHighlight": "lintas generasi.",
-    "subtitle": "Seizn adalah lapisan memori untuk NPC bertenaga AI. Hubungkan ke Inworld, Convai, atau LLM Anda — pertahankan dialogue engine yang Anda sukai, tambahkan persistensi yang bertahan lintas sesi dan generasi.",
+    "subtitle": "Seizn adalah memory layer untuk NPC AI. Colok ke Inworld, Convai, atau LLM Anda sendiri. Dialogue engine yang sudah Anda pakai tetap di tempatnya, Seizn yang menjaga ingatan tetap nempel lintas session dan lintas generasi.",
     "emailPlaceholder": "you@studio.com",
     "joinWaitlist": "Pesan demo",
-    "joining": "Memesan...",
-    "onTheList": "Kami akan segera menghubungi Anda.",
+    "joining": "Memesan…",
+    "onTheList": "Kami akan segera menghubungi.",
     "stats": {
       "tokenSavings": "NPC per proyek",
       "retrievalTime": "Pengambilan memori",
@@ -27,8 +27,8 @@
     }
   },
   "features": {
-    "title": "Dibangun untuk studio game",
-    "subtitle": "Pasang Seizn, pertahankan dialogue engine Anda. NPC mendapatkan memori, hubungan, dan persistensi yang bertahan lintas sesi dan generasi.",
+    "title": "Dibuat untuk game studio",
+    "subtitle": "Pasang Seizn, dialogue engine Anda biarkan apa adanya. NPC dapat memori, hubungan, dan persistence yang menempel lintas session dan lintas generasi.",
     "smartExtraction": {
       "title": "Graf NPC / Faksi / Event",
       "description": "Model NPC, faksi, quest, dan insiden sebagai graf. Hubungan (kepercayaan, dendam, kekerabatan) dan events (menyaksikan, terdampak, pelaku) adalah primitif kelas satu — bukan skema yang harus Anda ciptakan."

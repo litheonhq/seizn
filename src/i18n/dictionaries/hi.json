@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "title": "Seizn — AI NPC के लिए मेमोरी",
-    "description": "Inworld, Convai, या अपने LLM से जोड़ें। Seizn आपके NPC को स्थायी मेमोरी, रिश्ते और पीढ़ियों में याददाश्त देता है — entity pricing, per-seat नहीं।"
+    "title": "Seizn — AI NPC के लिए memory",
+    "description": "Inworld, Convai या अपने LLM से जोड़ें। Seizn आपके NPC को टिकी हुई memory, रिश्ते और पीढ़ियों भर की याद देता है। Pricing entity के हिसाब से, per-seat नहीं।"
   },
   "nav": {
     "features": "विशेषताएं",
@@ -13,13 +13,13 @@
   },
   "hero": {
     "badge": "लाइव demo: smallgod",
-    "title": "आपके NPC याद करते हैं",
-    "titleHighlight": "पीढ़ियों तक।",
-    "subtitle": "Seizn, AI NPC के लिए मेमोरी लेयर है। इसे Inworld, Convai, या अपने LLM से जोड़ें — पसंदीदा dialogue engine रखें, sessions और generations में persistence जोड़ें।",
+    "title": "आपके NPC नहीं भूलते,",
+    "titleHighlight": "पीढ़ियों के बाद भी।",
+    "subtitle": "Seizn, AI NPC की memory layer है। Inworld, Convai या अपने LLM से जोड़िए — अपना पसंदीदा dialogue engine वैसा ही रखिए, बस session और पीढ़ियों के पार टिकी रहने वाली persistence ऊपर जोड़ दीजिए।",
     "emailPlaceholder": "you@studio.com",
     "joinWaitlist": "Demo बुक करें",
-    "joining": "बुक हो रहा है...",
-    "onTheList": "हम जल्द संपर्क करेंगे।",
+    "joining": "बुक हो रहा है…",
+    "onTheList": "हम जल्द ही आपसे बात करेंगे।",
     "stats": {
       "tokenSavings": "प्रति project NPC",
       "retrievalTime": "Memory retrieval",
@@ -28,7 +28,7 @@
   },
   "features": {
     "title": "Game studios के लिए बना",
-    "subtitle": "Seizn जोड़ें, dialogue engine रखें। NPC को memory, relationships और sessions व generations में persistence मिलती है।",
+    "subtitle": "Seizn को drop in करिए, dialogue engine अपना ही रहने दीजिए। NPC को memory, रिश्ते और session व पीढ़ियों के पार टिकी रहने वाली persistence — सब अपने आप मिल जाता है।",
     "smartExtraction": {
       "title": "NPC / Faction / Event graph",
       "description": "NPC, factions, quests और incidents को graph में model करें। Relationships (trust, grudge, kinship) और events (witnessed, affected, actor) first-class primitives हैं — खुद schema नहीं बनाना पड़ता।"
