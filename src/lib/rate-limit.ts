@@ -288,6 +288,25 @@ export async function checkRateLimitAsync(
 
 
 /**
+ * Generic per-route rate limiter — caller controls limit + window.
+ *
+ * Use this when the per-plan default from `checkRateLimitAsync` is the wrong
+ * shape for the endpoint (e.g., low-frequency settings toggles where 30/min
+ * is plenty regardless of whether the user is on Free or Enterprise).
+ */
+export async function checkCustomRateLimitAsync(
+  identifier: string,
+  limit: number,
+  windowMs: number
+): Promise<RateLimitResult> {
+  const redis = getRedisClient();
+  if (redis) {
+    return checkRateLimitRedis(redis, identifier, limit, windowMs);
+  }
+  return checkRateLimitMemory(identifier, limit, windowMs);
+}
+
+/**
  * Get rate limit headers for response
  */
 export function getRateLimitHeaders(result: RateLimitResult): Record<string, string> {
