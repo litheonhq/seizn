@@ -1,7 +1,13 @@
 import type { Metadata } from "next";
 import { getAuthOrReview } from "@/lib/auth-or-review";
 import { createServerClient } from "@/lib/supabase";
-import { getUsage, type ApiKeyPeriod } from "@/lib/api-keys";
+import {
+  aggregateUserUsage,
+  getApiKeyUsageBreakdown,
+  getUsage,
+  type ApiKeyPeriod,
+  type UserUsageSummary,
+} from "@/lib/api-keys";
 import { isTrack2ApiEnabled } from "@/lib/feature-flags/track-2";
 import DashboardShell from "@/components/dashboard/DashboardShell";
 import ApiKeysClient from "./api-keys-client";
@@ -94,9 +100,27 @@ export default async function ApiKeysPage() {
     );
   }
   const keys = user.id === "review" ? [] : await loadKeys(user.id);
+  const usage = user.id === "review" ? null : await loadUsageSummary(keys);
   return (
     <DashboardShell>
-      <ApiKeysClient initialKeys={keys} cap={TRACK_2_KEY_CAP_PER_USER} />
+      <ApiKeysClient initialKeys={keys} cap={TRACK_2_KEY_CAP_PER_USER} initialUsage={usage} />
     </DashboardShell>
   );
+}
+
+async function loadUsageSummary(keys: ApiKeySummary[]): Promise<UserUsageSummary | null> {
+  if (keys.length === 0) {
+    return aggregateUserUsage([]);
+  }
+  const breakdowns = await Promise.all(
+    keys.map((key) => getApiKeyUsageBreakdown(key.id, "month").catch(() => ({
+      apiKeyId: key.id,
+      total: key.used,
+      cost_usd_milli: 0,
+      byTool: [],
+      byModel: [],
+      daily: [],
+    }))),
+  );
+  return aggregateUserUsage(breakdowns);
 }
