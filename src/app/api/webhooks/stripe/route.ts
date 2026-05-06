@@ -11,7 +11,10 @@ import {
   getV8Track2TierFromStripePriceId,
   type V8Track2Tier,
 } from "@/lib/billing/v8-products";
-import { ensureMeteredPriceAttached } from "@/lib/stripe-metered";
+import {
+  ensureMeteredPriceAttached,
+  ensureV8Track2OpusOverageAttached,
+} from "@/lib/stripe-metered";
 import { sendEmail, paymentFailedEmail } from "@/lib/email";
 
 // Stripe webhook event types we handle
@@ -290,6 +293,30 @@ async function attachMeteredOverageItems(subscriptionId: string, plan: string): 
   }
 }
 
+async function attachV8Track2ManagedOverage(
+  subscriptionId: string,
+  tier: V8Track2Tier,
+): Promise<void> {
+  try {
+    const result = await ensureV8Track2OpusOverageAttached(subscriptionId, tier);
+    if (result.attached) {
+      console.log("Attached v8 Track 2 Studio Managed Opus overage", {
+        subscription_id: subscriptionId,
+        tier,
+        price_id: result.priceId,
+      });
+    } else if (result.reason !== 'non_managed_tier' && result.reason !== 'already_attached') {
+      console.warn("v8 Track 2 Studio Managed Opus overage attach skipped", {
+        subscription_id: subscriptionId,
+        tier,
+        reason: result.reason,
+      });
+    }
+  } catch (error) {
+    console.error("Failed to attach v8 Track 2 Studio Managed Opus overage:", error);
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
@@ -438,6 +465,7 @@ export async function POST(request: NextRequest) {
             }, "failed", v8.error);
           } else {
             console.log(`v8 Track 2 subscription created for user ${user.id}: ${v8.tier}`);
+            await attachV8Track2ManagedOverage(subscriptionId, v8.tier);
             await logBillingEvent(supabase, user.id, "subscription_created", {
               subscription_id: subscriptionId,
               channel: "track2",
@@ -517,6 +545,7 @@ export async function POST(request: NextRequest) {
               }, "failed", v8.error);
             } else {
               console.log(`v8 Track 2 subscription updated for user ${user.id}: ${v8.tier}`);
+              await attachV8Track2ManagedOverage(subscriptionId, v8.tier);
               await logBillingEvent(supabase, user.id, "subscription_updated", {
                 subscription_id: subscriptionId,
                 channel: "track2",
