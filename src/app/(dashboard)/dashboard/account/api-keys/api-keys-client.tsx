@@ -4,12 +4,14 @@ import Link from "next/link";
 import { useReducer, useTransition, type FormEvent } from "react";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
 import { useToast } from "@/contexts/ToastContext";
+import type { UserUsageSummary } from "@/lib/api-keys";
 import {
   createApiKey,
   revokeApiKey,
   rotateApiKey,
 } from "./actions";
 import type { ApiKeySummary } from "./page";
+import { UsageSummary } from "./usage-summary";
 
 type DialogState =
   | { kind: "closed" }
@@ -92,9 +94,11 @@ function formatTimestamp(value: string | null): string {
 export default function ApiKeysClient({
   initialKeys,
   cap,
+  initialUsage = null,
 }: {
   initialKeys: ApiKeySummary[];
   cap: number;
+  initialUsage?: UserUsageSummary | null;
 }) {
   const { t } = useDashboardTranslation();
   const { toast } = useToast();
@@ -203,6 +207,10 @@ export default function ApiKeysClient({
           {t("dashboard.account.apiKeys.capHint").replace("{cap}", String(cap))}
         </p>
       </header>
+
+      <div className="mt-8">
+        <UsageSummary usage={initialUsage} keys={state.keys} />
+      </div>
 
       <div className="mt-6 flex items-center justify-between">
         <div className="text-sm text-ink/70">
