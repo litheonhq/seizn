@@ -116,7 +116,7 @@ export function PricingClient({ locale, copy }: PricingClientProps) {
           </div>
         </section>
 
-        <PricingTrack2Section />
+        <PricingTrack2Section locale={locale} />
 
         <section className="mx-auto max-w-3xl px-4 py-16 sm:px-6">
           <h2 className="author-serif text-3xl" style={{ color: "var(--ink-900)" }}>
