@@ -14,6 +14,7 @@ import {
 import {
   ensureMeteredPriceAttached,
   ensureV8Track2OpusOverageAttached,
+  ensureV8Track2OpusOverageDetached,
 } from "@/lib/stripe-metered";
 import { sendEmail, paymentFailedEmail } from "@/lib/email";
 
@@ -317,6 +318,34 @@ async function attachV8Track2ManagedOverage(
   }
 }
 
+async function detachV8Track2ManagedOverageIfDowngrade(
+  subscriptionId: string,
+  newTier: V8Track2Tier,
+): Promise<void> {
+  // Only fires on subscription.updated when the user moved OFF Studio Managed.
+  // No-op when the user is still on Studio Managed (the attach helper handles
+  // the upgrade case separately).
+  if (newTier === 'studio_managed') return;
+  try {
+    const result = await ensureV8Track2OpusOverageDetached(subscriptionId, newTier);
+    if (result.detached) {
+      console.log("Detached v8 Track 2 Studio Managed Opus overage on downgrade", {
+        subscription_id: subscriptionId,
+        new_tier: newTier,
+        subscription_item_id: result.subscriptionItemId,
+      });
+    } else if (result.reason !== 'still_managed_tier' && result.reason !== 'not_attached') {
+      console.warn("v8 Track 2 Studio Managed Opus overage detach skipped", {
+        subscription_id: subscriptionId,
+        new_tier: newTier,
+        reason: result.reason,
+      });
+    }
+  } catch (error) {
+    console.error("Failed to detach v8 Track 2 Studio Managed Opus overage:", error);
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
@@ -545,7 +574,11 @@ export async function POST(request: NextRequest) {
               }, "failed", v8.error);
             } else {
               console.log(`v8 Track 2 subscription updated for user ${user.id}: ${v8.tier}`);
+              // Symmetric upgrade/downgrade handling for the Studio Managed
+              // Opus overage line: attach if user is now on Studio Managed,
+              // detach if they moved off it. Both calls are idempotent.
               await attachV8Track2ManagedOverage(subscriptionId, v8.tier);
+              await detachV8Track2ManagedOverageIfDowngrade(subscriptionId, v8.tier);
               await logBillingEvent(supabase, user.id, "subscription_updated", {
                 subscription_id: subscriptionId,
                 channel: "track2",

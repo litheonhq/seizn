@@ -331,6 +331,64 @@ export async function ensureV8Track2OpusOverageAttached(
   return { attached: true, priceId: overagePriceId };
 }
 
+export type V8Track2OpusDetachResult =
+  | { detached: true; subscriptionItemId: string }
+  | { detached: false; reason: 'still_managed_tier' | 'missing_subscription' | 'missing_overage_price_env' | 'not_attached' };
+
+/**
+ * Symmetric counterpart to ensureV8Track2OpusOverageAttached. Runs when a user
+ * downgrades OUT of Studio Managed (e.g. studio_managed → studio); detaches
+ * the metered Opus overage subscription item so the user is no longer billed
+ * $0.15/Opus call on a non-managed plan.
+ *
+ * Caller passes the user's NEW tier — function detaches when tier is anything
+ * other than `studio_managed`. Idempotent: if the price isn't attached, returns
+ * { detached: false, reason: 'not_attached' } without erroring.
+ */
+export async function ensureV8Track2OpusOverageDetached(
+  subscriptionId: string | null | undefined,
+  newTier: V8Track2Tier,
+): Promise<V8Track2OpusDetachResult> {
+  if (newTier === 'studio_managed') {
+    return { detached: false, reason: 'still_managed_tier' };
+  }
+  if (!subscriptionId) {
+    return { detached: false, reason: 'missing_subscription' };
+  }
+
+  const overagePriceId = getV8Track2OpusOveragePriceId();
+  if (!overagePriceId) {
+    return { detached: false, reason: 'missing_overage_price_env' };
+  }
+
+  const subscription = await stripeRequest<StripeSubscription>(
+    'GET',
+    `/subscriptions/${encodeURIComponent(subscriptionId)}`,
+  );
+  const overageItem = subscription.items?.data?.find(
+    (item) => item.price?.id === overagePriceId,
+  );
+  if (!overageItem) {
+    return { detached: false, reason: 'not_attached' };
+  }
+
+  // Use the subscription-update form rather than DELETE on the item:
+  // - Existing stripeRequest only supports GET/POST.
+  // - Stripe accepts items[N][id]=si_xxx + items[N][deleted]=true on the
+  //   subscription update endpoint as the canonical way to drop an item.
+  await stripeRequest<StripeSubscription>(
+    'POST',
+    `/subscriptions/${encodeURIComponent(subscriptionId)}`,
+    {
+      proration_behavior: 'none',
+      'items[0][id]': overageItem.id,
+      'items[0][deleted]': 'true',
+    },
+  );
+
+  return { detached: true, subscriptionItemId: overageItem.id };
+}
+
 export async function resolveUsageBillingContext(
   supabase: SupabaseLike,
   userId: string,
