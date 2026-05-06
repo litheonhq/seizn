@@ -13,6 +13,7 @@ import {
   createServerClient,
   hasServerSupabaseServiceRoleConfig,
 } from '@/lib/supabase';
+import { getActiveAuthorProvider } from './active-provider';
 import {
   AuthorLlmError,
   type AuthorByokStatus,
@@ -136,8 +137,13 @@ export async function getAuthorByokStatus(
     return { enabled: false, provider: null, status: 'missing' };
   }
 
-  const targetProvider: Provider =
-    options.provider ?? (resolveActiveAuthorProvider() as Provider);
+  // Single source of truth for "active provider for this user" lives in
+  // active-provider.ts. Honors per-user dashboard preference + env. The
+  // explicit `options.provider` override still wins for callers that want
+  // to peek a specific provider's status (e.g., DELETE flow checking the
+  // OTHER provider after removing one).
+  const targetProvider: Provider = (options.provider
+    ?? (await getActiveAuthorProvider(userId))) as Provider;
 
   const supabase = (client ?? createServerClient()) as ProviderKeyClient;
   const query = supabase
@@ -167,10 +173,6 @@ export async function getAuthorByokStatus(
   };
 }
 
-function resolveActiveAuthorProvider(): 'anthropic' | 'openai' {
-  const raw = process.env.AUTHOR_LLM_PROVIDER?.trim().toLowerCase();
-  return raw === 'openai' ? 'openai' : 'anthropic';
-}
 
 const AUTHOR_BYOK_SUPPORTED_PROVIDERS: ReadonlySet<Provider> = new Set([
   AUTHOR_BYOK_PROVIDER,

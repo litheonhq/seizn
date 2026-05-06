@@ -11,6 +11,10 @@ export {
   resolveAuthorLlmProvider,
 } from './provider-router';
 export {
+  getActiveAuthorProvider,
+  getActiveAuthorProviderSync,
+} from './active-provider';
+export {
   getUserAuthorLlmProvider,
   setUserAuthorLlmProvider,
 } from './user-provider-pref';

@@ -1,6 +1,6 @@
 import { generateAuthorAnthropic } from './anthropic-client';
+import { getActiveAuthorProvider, getActiveAuthorProviderSync } from './active-provider';
 import { generateAuthorOpenAi } from './openai-client';
-import { getUserAuthorLlmProvider } from './user-provider-pref';
 import {
   AuthorLlmError,
   type AuthorLlmProvider,
@@ -8,24 +8,18 @@ import {
   type AuthorLlmResponse,
 } from './types';
 
-const VALID_PROVIDERS: ReadonlySet<AuthorLlmProvider> = new Set(['anthropic', 'openai']);
-
+/**
+ * Synchronous resolver — kept for callers that already have the user-pref
+ * value in hand and want to avoid the async DB hit in `getActiveAuthorProvider`.
+ * The full priority chain (override → user-pref → env → default) lives in
+ * `active-provider.ts` so this and the async path can never disagree.
+ */
 export function resolveAuthorLlmProvider(
   override: AuthorLlmProvider | undefined,
   env: NodeJS.ProcessEnv = process.env,
   userPreference?: AuthorLlmProvider | null,
 ): AuthorLlmProvider {
-  if (override && VALID_PROVIDERS.has(override)) {
-    return override;
-  }
-  if (userPreference && VALID_PROVIDERS.has(userPreference)) {
-    return userPreference;
-  }
-  const raw = env.AUTHOR_LLM_PROVIDER?.trim().toLowerCase();
-  if (raw === 'openai' || raw === 'anthropic') {
-    return raw;
-  }
-  return 'anthropic';
+  return getActiveAuthorProviderSync(override, userPreference ?? null, env);
 }
 
 /**
@@ -45,12 +39,11 @@ export function resolveAuthorLlmProvider(
 export async function generateAuthorLlm<TJson = unknown>(
   request: AuthorLlmRequest,
 ): Promise<AuthorLlmResponse<TJson>> {
-  // Per-user preference is only consulted when the caller didn't pin a
-  // provider — keeps the lookup off the hot path for hard-coded internals.
-  const userPreference = request.provider
-    ? null
-    : await getUserAuthorLlmProvider(request.userId);
-  const provider = resolveAuthorLlmProvider(request.provider, process.env, userPreference);
+  // Single source of truth: getActiveAuthorProvider runs the full priority
+  // chain (request override → user pref → env → default) and skips the DB
+  // lookup when override exists. BYOK status panel uses the same helper, so
+  // the two surfaces can never disagree about which provider is "active".
+  const provider = await getActiveAuthorProvider(request.userId, request.provider);
   switch (provider) {
     case 'anthropic':
       return generateAuthorAnthropic<TJson>(request);
