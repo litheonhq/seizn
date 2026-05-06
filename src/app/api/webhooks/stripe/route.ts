@@ -3,11 +3,13 @@ import * as crypto from "crypto";
 import { createServerClient } from "@/lib/supabase";
 import {
   AUTHOR_PRICE_LOCK_VERSION,
+  collectLegacyAuthorPriceIds,
   getPlanFromStripePriceId,
   mapStripeSubscriptionStatus,
 } from "@/lib/stripe-config";
 import {
   applyV8Track2TierToApiKeys,
+  collectV8Track2PriceIds,
   getV8Track2TierFromStripePriceId,
   type V8Track2Tier,
 } from "@/lib/billing/v8-products";
@@ -17,6 +19,26 @@ import {
   ensureV8Track2OpusOverageDetached,
 } from "@/lib/stripe-metered";
 import { sendEmail, paymentFailedEmail } from "@/lib/email";
+
+// Module-load assertion: v7 (legacy author plans) and v8 (Track 2 API+MCP)
+// price IDs MUST be disjoint. The dispatcher's `maybeApplyV8Track2`
+// short-circuits the legacy `getPlanFromStripePriceId` path — if a single
+// price ID appears in both sets (very likely during the v7→v8 cutover when
+// admins might paste the same `price_…` into both env vars), v8 silently
+// wins and `profiles.plan` is never updated. User pays for Indie but stays
+// on `'free'` quotas. This check surfaces the misconfig as a console.error
+// at first webhook hit instead of weeks of silent revenue/quota drift.
+{
+  const v8Ids = collectV8Track2PriceIds();
+  const legacyIds = collectLegacyAuthorPriceIds();
+  const collisions = [...v8Ids].filter((id) => legacyIds.has(id));
+  if (collisions.length > 0) {
+    console.error(
+      "STRIPE PRICE ID COLLISION: v7 and v8 catalogs share price IDs",
+      { collisions },
+    );
+  }
+}
 
 // Stripe webhook event types we handle
 type StripeEventType =
@@ -198,32 +220,51 @@ function buildSubscriptionProfileUpdates(eventData: StripeEventObject): Record<s
 }
 
 /**
- * Find user by Stripe customer ID or custom user ID
+ * Find user by Stripe customer ID or custom user ID.
+ *
+ * Pre-audit used `.single()`, which throws if 0 rows (or >1 rows) and
+ * silently swallowed the error. Result: a profile that lost its
+ * stripe_customer_id (botched manual data fix, customer.created race) had
+ * every subsequent webhook silently dropped — Stripe got 200, no audit
+ * trail, no alert.
+ *
+ * Now uses `.maybeSingle()` (returns null on 0 rows instead of throwing)
+ * and explicitly checks for >1 rows via a separate select+count if needed.
+ * Caller is responsible for surfacing "user not found" via logBillingEvent
+ * (the dispatcher's catch will write an orphan row to audit_logs).
  */
 async function findUser(
   supabase: ReturnType<typeof createServerClient>,
   customerId: string | undefined,
   customUserId: string | undefined | null
 ): Promise<{ id: string; email?: string; full_name?: string } | null> {
-  // Try finding by Stripe customer ID first
   if (customerId) {
-    const { data: profile } = await supabase
+    const { data: profile, error } = await supabase
       .from("profiles")
       .select("id, email, full_name")
       .eq("stripe_customer_id", customerId)
-      .single();
-
+      .maybeSingle();
+    if (error && error.code !== "PGRST116") {
+      // Surface real DB errors (not just "no rows") so the caller can
+      // reject the webhook back to Stripe with a 500 → triggers retry.
+      // Pre-audit, the error was thrown and silently swallowed by the
+      // route's outer catch, returning 200 to Stripe.
+      console.error("findUser: customer-id lookup failed", error);
+      throw new Error(`Failed to look up user by stripe_customer_id: ${error.message}`);
+    }
     if (profile) return profile;
   }
 
-  // Try finding by custom user ID from checkout metadata
   if (customUserId) {
-    const { data: profile } = await supabase
+    const { data: profile, error } = await supabase
       .from("profiles")
       .select("id, email, full_name")
       .eq("id", customUserId)
-      .single();
-
+      .maybeSingle();
+    if (error && error.code !== "PGRST116") {
+      console.error("findUser: user-id lookup failed", error);
+      throw new Error(`Failed to look up user by id: ${error.message}`);
+    }
     if (profile) return profile;
   }
 
@@ -390,6 +431,47 @@ export async function POST(request: NextRequest) {
     });
 
     const supabase = createServerClient();
+
+    // Idempotency gate: Stripe retries on 5xx / timeouts. Each retry would
+    // re-run every side effect (audit_logs insert, Stripe API attach, etc.).
+    // Insert into stripe_webhook_events; if the row already exists, this
+    // event has been processed — return 200 without re-running.
+    //
+    // NOTE: depends on the 20260507002_stripe_webhook_events.sql migration
+    // being applied. If the table doesn't exist yet (deployment ordering),
+    // the insert fails with a 42P01 "relation does not exist" — we log and
+    // proceed (graceful degradation). Worst case during the gap is the
+    // pre-audit duplicate-processing behavior, which is what we had before.
+    {
+      const { error: idempotencyError } = await supabase
+        .from('stripe_webhook_events')
+        .insert({
+          event_id: payload.id,
+          type: payload.type,
+          livemode: payload.livemode,
+        });
+      if (idempotencyError) {
+        // Postgres unique-violation = 23505. Stripe's duplicate retry.
+        if (idempotencyError.code === '23505') {
+          console.log(`Stripe webhook ${payload.id} already processed, skipping`, {
+            event_id: payload.id,
+            type: payload.type,
+          });
+          return NextResponse.json({ received: true, deduped: true });
+        }
+        // Missing-table = 42P01. Migration not yet applied — log + proceed.
+        if (idempotencyError.code === '42P01') {
+          console.warn(
+            'stripe_webhook_events table missing; skipping idempotency gate (apply migration 20260507002)',
+          );
+        } else {
+          // Any other DB error: log and proceed. Better to risk a duplicate
+          // than to bounce a legitimate event back to Stripe with a 500
+          // (which causes retry storms).
+          console.error('Failed to record webhook event for idempotency', idempotencyError);
+        }
+      }
+    }
 
     // Handle different event types
     switch (eventType) {

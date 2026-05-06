@@ -78,6 +78,24 @@ export function resolvePlanFromPriceId(priceId: string): PlanName | null {
   return getAuthorTierFromStripePriceId(priceId);
 }
 
+/**
+ * Collect every legacy v7 Stripe price ID configured for the author tiers,
+ * resolved against the supplied env. Counterpart to
+ * `collectV8Track2PriceIds` in v8-products.ts; the two sets must stay
+ * disjoint so the webhook dispatcher's "v8 short-circuits v7" branch
+ * doesn't accidentally swallow legitimate v7 events.
+ */
+export function collectLegacyAuthorPriceIds(
+  env: NodeJS.ProcessEnv = process.env,
+): Set<string> {
+  const out = new Set<string>();
+  for (const envName of Object.keys(STRIPE_PLAN_PRICES)) {
+    const id = env[envName]?.trim();
+    if (id && !id.startsWith('price_TODO')) out.add(id);
+  }
+  return out;
+}
+
 export const AUTHOR_BILLING_TIERS: Record<AuthorBillingTier, AuthorBillingTierConfig> = {
   indie: {
     id: 'indie',

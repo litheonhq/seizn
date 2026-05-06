@@ -242,6 +242,37 @@ export function getV8Track2TierFromStripePriceId(
   return null;
 }
 
+/**
+ * Collect every Stripe price ID configured for the v8 Track 2 catalog,
+ * resolved against the supplied env. Returns a Set so the caller can
+ * intersect it against legacy v7 price IDs to detect collisions.
+ *
+ * Audit Phase 2 (2026-05-07): the webhook dispatcher trusts that v7 and v8
+ * price IDs are disjoint — `maybeApplyV8Track2` short-circuits the legacy
+ * `getPlanFromStripePriceId` path. If an admin accidentally configures the
+ * same `price_…` for both `STRIPE_PRICE_ID_INDIE_MONTHLY` and
+ * `STRIPE_PRICE_ID_V8_INDIE_MONTHLY` (very likely during cutover), v8
+ * silently wins and `profiles.plan` is never updated — user pays for Indie
+ * but stays on `'free'` quotas. This helper lets a startup check assert the
+ * sets are disjoint.
+ */
+export function collectV8Track2PriceIds(
+  env: NodeJS.ProcessEnv = process.env,
+): Set<string> {
+  const out = new Set<string>();
+  for (const tier of Object.keys(V8_TRACK2_PRODUCTS) as V8Track2Tier[]) {
+    if (tier === 'free') continue;
+    for (const cadence of ['monthly', 'yearly'] as const) {
+      const id = getV8Track2StripePriceId(tier, cadence, env);
+      if (id && !id.startsWith('price_TODO')) out.add(id);
+    }
+  }
+  // Studio Managed Opus overage is a single env var, not per-tier.
+  const overage = getV8Track2OpusOveragePriceId(env);
+  if (overage && !overage.startsWith('price_TODO')) out.add(overage);
+  return out;
+}
+
 export function getV8Track2BillingCadenceFromPriceId(
   priceId: string,
   env: NodeJS.ProcessEnv = process.env,
