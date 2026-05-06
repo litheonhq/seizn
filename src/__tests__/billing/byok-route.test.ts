@@ -197,6 +197,65 @@ describe('account BYOK route', () => {
     });
     expect(JSON.stringify(body)).not.toContain('7890');
   });
+
+  it('saves an OpenAI BYOK key when provider=openai is sent in body', async () => {
+    mocks.saveAuthorByokKey.mockResolvedValueOnce({
+      enabled: true,
+      provider: 'openai',
+      key_last_4: 'abcd',
+      status: 'active',
+    });
+    const post = await POST(makeRequest('POST', {
+      provider: 'openai',
+      api_key: 'sk-test-openai-key-abcd',
+    }));
+    expect(post.status).toBe(200);
+    expect(mocks.saveAuthorByokKey).toHaveBeenCalledWith(
+      expect.objectContaining({ provider: 'openai', apiKey: 'sk-test-openai-key-abcd' }),
+    );
+    await expect(post.json()).resolves.toMatchObject({
+      provider: 'openai',
+      key_last_4: 'abcd',
+      byok_discount: { status: 'applied' },
+    });
+  });
+
+  it('DELETE ?provider=openai targets the openai keys, leaving anthropic intact', async () => {
+    // Other-provider check (anthropic) returns active → discount stays, service NOT cleared
+    mocks.byokStatus = { enabled: true, provider: 'anthropic', status: 'active' };
+    const deleted = await DELETE(
+      new NextRequest('https://app.seizn.test/api/account/byok?provider=openai', {
+        method: 'DELETE',
+        headers: { 'content-type': 'application/json' },
+      }),
+    );
+    expect(deleted.status).toBe(200);
+    expect(mocks.providerKeyUpdates).toContainEqual(expect.objectContaining({
+      column: 'provider',
+      value: 'openai',
+    }));
+    // The other (anthropic) provider remains active so the discount is preserved
+    await expect(deleted.json()).resolves.toMatchObject({
+      enabled: true,
+      provider: 'anthropic',
+    });
+    expect(mocks.removeDiscount).not.toHaveBeenCalled();
+  });
+
+  it('GET ?provider=openai forwards the provider override to getAuthorByokStatus', async () => {
+    mocks.byokStatus = { enabled: true, provider: 'openai', status: 'active' };
+    const get = await GET(
+      new NextRequest('https://app.seizn.test/api/account/byok?provider=openai', {
+        method: 'GET',
+      }),
+    );
+    expect(get.status).toBe(200);
+    await expect(get.json()).resolves.toMatchObject({
+      enabled: true,
+      provider: 'openai',
+      status: 'active',
+    });
+  });
 });
 
 function makeRequest(method: string, body?: Record<string, unknown>): NextRequest {
