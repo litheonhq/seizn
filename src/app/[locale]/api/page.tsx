@@ -28,6 +28,8 @@ export default async function PublicApiDocsPage({ params }: PageParams) {
         <QuickStartClaudeDesktop />
         <QuickStartClaudeCode />
         <QuickStartCursorClineContinue />
+        <QuickStartWsl />
+        <Troubleshooting />
         <RestReference />
         <SdkExamples />
         <Security />
@@ -110,13 +112,7 @@ function Why() {
 }
 
 function QuickStartClaudeDesktop() {
-  return (
-    <section>
-      <SectionHeading id="claude-desktop" title="Quick start — Claude Desktop" />
-      <p className="mt-3 text-sm text-szn-text-2">
-        Add the Seizn MCP server to Claude Desktop&apos;s config (<code>~/Library/Application Support/Claude/claude_desktop_config.json</code> on macOS, <code>%APPDATA%\\Claude\\claude_desktop_config.json</code> on Windows):
-      </p>
-      <Code>{`{
+  const baseConfig = `{
   "mcpServers": {
     "seizn": {
       "command": "npx",
@@ -126,9 +122,93 @@ function QuickStartClaudeDesktop() {
       }
     }
   }
+}`;
+
+  return (
+    <section>
+      <SectionHeading id="claude-desktop" title="Quick start — Claude Desktop" />
+      <p className="mt-3 text-sm text-szn-text-2">
+        The same JSON shape works on every OS. Only the config file location differs. Pick yours below, paste, restart Claude Desktop.
+      </p>
+
+      <h3 className="mt-6 font-serif text-lg">Config file location</h3>
+      <ul className="mt-2 space-y-2 text-sm text-szn-text-2">
+        <li>
+          <span className="text-szn-text-1">macOS:</span> <code>~/Library/Application Support/Claude/claude_desktop_config.json</code>
+        </li>
+        <li>
+          <span className="text-szn-text-1">Windows:</span> <code>%APPDATA%\\Claude\\claude_desktop_config.json</code>
+        </li>
+        <li>
+          <span className="text-szn-text-1">Linux:</span> <code>~/.config/Claude/claude_desktop_config.json</code> <span className="text-szn-text-2">(community / unofficial builds — Anthropic ships official binaries for macOS + Windows only)</span>
+        </li>
+      </ul>
+
+      <h3 className="mt-6 font-serif text-lg">Config (paste-ready)</h3>
+      <Code>{baseConfig}</Code>
+      <p className="mt-3 text-sm text-szn-text-2">
+        Restart Claude Desktop. The Seizn tools (<code>recall</code>, <code>remember</code>, <code>graph</code>, <code>search</code>, <code>check</code>, <code>timeline</code>) appear in the sidebar — Claude decides when to call them based on the conversation. You don&apos;t have to invoke them by name.
+      </p>
+
+      <h3 className="mt-6 font-serif text-lg">No <code>npx</code> on your PATH? Use the absolute Node path</h3>
+      <p className="mt-2 text-sm text-szn-text-2">
+        Claude Desktop launches MCP servers from a minimal shell — sometimes <code>npx</code> isn&apos;t on the PATH it sees. Replace <code>command</code> with the absolute path:
+      </p>
+      <ul className="mt-2 space-y-1 text-sm text-szn-text-2">
+        <li><span className="text-szn-text-1">macOS (nvm):</span> <code>~/.nvm/versions/node/v20.x.y/bin/npx</code> — find via <code>which npx</code></li>
+        <li><span className="text-szn-text-1">macOS (Homebrew):</span> <code>/opt/homebrew/bin/npx</code> (Apple Silicon) or <code>/usr/local/bin/npx</code> (Intel)</li>
+        <li><span className="text-szn-text-1">Windows:</span> <code>C:\\Program Files\\nodejs\\npx.cmd</code></li>
+      </ul>
+    </section>
+  );
+}
+
+function QuickStartWsl() {
+  return (
+    <section>
+      <SectionHeading id="wsl" title="Quick start — WSL (Windows Subsystem for Linux)" />
+      <p className="mt-3 text-sm text-szn-text-2">
+        WSL is just Linux as far as the MCP server cares — Node ≥20 + <code>npx</code> works the same. The only friction is when a Windows-side AI client (Claude Desktop, Cursor) needs to reach into WSL. Three patterns:
+      </p>
+
+      <h3 className="mt-6 font-serif text-lg">Pattern A — WSL Claude Code (most natural)</h3>
+      <p className="mt-2 text-sm text-szn-text-2">
+        Install Claude Code <em>inside</em> WSL Ubuntu. Then everything stays on the Linux side:
+      </p>
+      <Code>{`# Inside WSL
+SEIZN_API_KEY=sk_seizn_... claude mcp add seizn \\
+  --command "npx" \\
+  --arg "-y" --arg "@seizn/author-mcp-server" \\
+  --env SEIZN_API_KEY=$SEIZN_API_KEY`}</Code>
+
+      <h3 className="mt-6 font-serif text-lg">Pattern B — VS Code with WSL Remote (Cline / Continue)</h3>
+      <p className="mt-2 text-sm text-szn-text-2">
+        VS Code attached to WSL via the Remote-WSL extension runs every extension command inside WSL. Use the standard MCP JSON; the <code>npx</code> resolves to the WSL Node:
+      </p>
+      <Code>{`{
+  "name": "seizn",
+  "command": "npx",
+  "args": ["-y", "@seizn/author-mcp-server"],
+  "env": { "SEIZN_API_KEY": "sk_seizn_..." }
+}`}</Code>
+
+      <h3 className="mt-6 font-serif text-lg">Pattern C — Windows Claude Desktop spawning WSL</h3>
+      <p className="mt-2 text-sm text-szn-text-2">
+        If you want to keep using Windows-native Claude Desktop but the Seizn server should run on the WSL side, wrap it with <code>wsl.exe</code>:
+      </p>
+      <Code>{`{
+  "mcpServers": {
+    "seizn": {
+      "command": "wsl.exe",
+      "args": [
+        "-e", "bash", "-lc",
+        "SEIZN_API_KEY=sk_seizn_... npx -y @seizn/author-mcp-server"
+      ]
+    }
+  }
 }`}</Code>
       <p className="mt-3 text-sm text-szn-text-2">
-        Restart Claude Desktop. The Seizn tools (recall, check, timeline, graph) appear in the sidebar.
+        Pattern C crosses the Windows ↔ WSL boundary on every stdio frame; if you see occasional <em>tool call timed out</em> errors, switch to Pattern A. Pattern B is the most common in practice for fiction writers using VS Code.
       </p>
     </section>
   );
@@ -168,6 +248,67 @@ function QuickStartCursorClineContinue() {
 }`}</Code>
       <p className="mt-3 text-sm text-szn-text-2">
         Cline + Continue accept the same JSON in their respective MCP settings panels. The MCP server speaks JSON-RPC over stdio, so any compliant client works without further configuration.
+      </p>
+    </section>
+  );
+}
+
+function Troubleshooting() {
+  return (
+    <section>
+      <SectionHeading id="troubleshooting" title="Troubleshooting" />
+      <dl className="mt-4 space-y-5 text-sm text-szn-text-2">
+        <div>
+          <dt className="text-szn-text-1">My MCP client says <em>&quot;tool seizn_author_recall not found&quot;</em>.</dt>
+          <dd className="mt-1 text-szn-text-2">
+            The MCP server didn&apos;t finish handshaking. Check: (1) <code>SEIZN_API_KEY</code> env var is actually set inside the spawned process — Claude Desktop&apos;s shell does <em>not</em> source <code>~/.zshrc</code>, so <code>export</code>-only keys won&apos;t reach it. Put the key in the JSON <code>env</code> block. (2) <code>npx</code> is on the PATH — see the absolute-path workaround above.
+          </dd>
+        </div>
+        <div>
+          <dt className="text-szn-text-1">401 invalid_api_key — even though I just created the key.</dt>
+          <dd className="mt-1 text-szn-text-2">
+            Confirm the key actually starts with <code>sk_seizn_</code> (Seizn keys, not <code>sk-ant-</code> Anthropic keys). The dashboard shows the secret <em>once</em> at create time; if you closed the modal without copying, click <em>Rotate</em> to issue a new one. The old prefix immediately stops working.
+          </dd>
+        </div>
+        <div>
+          <dt className="text-szn-text-1">429 rate_limited &middot; <code>Retry-After</code> header.</dt>
+          <dd className="mt-1 text-szn-text-2">
+            You hit the per-minute rate limit (Free: 30/min, Indie/Pro: 60/min, Studio+: 600/min). Wait the seconds shown in <code>Retry-After</code> and retry. The MCP server propagates this as a tool error message to your host AI; Claude / GPT will usually wait and retry on its own.
+          </dd>
+        </div>
+        <div>
+          <dt className="text-szn-text-1">402 quota_exceeded — monthly quota hit.</dt>
+          <dd className="mt-1 text-szn-text-2">
+            Free is 100 calls/day, Indie is 1,000/month, Pro is 10,000/month, Studio+ is 100,000/month. Upgrade in <a className="underline" href="/dashboard/account/api-keys">/dashboard/account/api-keys</a> or wait for the period reset (UTC midnight for daily, UTC first-of-month for monthly).
+          </dd>
+        </div>
+        <div>
+          <dt className="text-szn-text-1">402 precondition_required — &quot;Add X-LLM-Provider and X-LLM-Key&quot;.</dt>
+          <dd className="mt-1 text-szn-text-2">
+            You called <code>check</code> or <code>timeline</code> without BYOK headers. These two endpoints run real LLM inference on Seizn&apos;s side, so you either supply your own LLM key (<code>X-LLM-Provider: anthropic</code> + <code>X-LLM-Key: sk-ant-…</code>) or upgrade to Studio Managed.
+          </dd>
+        </div>
+        <div>
+          <dt className="text-szn-text-1">503 feature_disabled.</dt>
+          <dd className="mt-1 text-szn-text-2">
+            The Track 2 surface is gated behind <code>TRACK_2_API_ENABLED</code>. Production has it on; if you&apos;re seeing 503 you&apos;re probably hitting a custom deployment with the flag off. Contact <a className="underline" href="mailto:support@seizn.com">support@seizn.com</a>.
+          </dd>
+        </div>
+        <div>
+          <dt className="text-szn-text-1">WSL: <code>npx: command not found</code> when Claude Desktop spawns me.</dt>
+          <dd className="mt-1 text-szn-text-2">
+            Pattern C from the WSL section uses <code>wsl.exe -e bash -lc &quot;…&quot;</code> — the <code>-l</code> (login shell) flag is required so <code>nvm</code> / <code>fnm</code> / <code>asdf</code> sources the Node version. Without it, the spawned shell has no Node on its PATH.
+          </dd>
+        </div>
+        <div>
+          <dt className="text-szn-text-1">Tool calls hang or time out (5+ seconds, no response).</dt>
+          <dd className="mt-1 text-szn-text-2">
+            Most often a stdio buffering issue. If you&apos;re on Pattern C (Windows Claude Desktop ↔ WSL), switch to Pattern A or B. If you&apos;re on Cline / Continue with VS Code WSL Remote, restart the VS Code window once after first install. If on Claude Desktop directly: quit and relaunch — it does not hot-reload MCP server config.
+          </dd>
+        </div>
+      </dl>
+      <p className="mt-6 text-sm text-szn-text-2">
+        Still stuck? File at <a className="underline" href="https://github.com/litheonhq/seizn/issues" target="_blank" rel="noopener noreferrer">github.com/litheonhq/seizn/issues</a> with the <code>X-Request-Id</code> from the failing response and your client / OS combo.
       </p>
     </section>
   );
