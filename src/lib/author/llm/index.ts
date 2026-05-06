@@ -3,9 +3,27 @@ export {
   generateAuthorAnthropic,
 } from './anthropic-client';
 export {
+  AuthorOpenAiClient,
+  generateAuthorOpenAi,
+} from './openai-client';
+export {
+  generateAuthorLlm,
+  resolveAuthorLlmProvider,
+} from './provider-router';
+export {
+  DEFAULT_AUTHOR_LLM_EFFORT,
+  getAnthropicThinkingBudget,
+  getOpenAiReasoningEffort,
+  isAuthorLlmEffort,
+  modelSupportsExtendedThinking,
+  resolveAuthorLlmEffort,
+} from './effort-mapping';
+export type { AuthorLlmEffort } from './effort-mapping';
+export {
   getAuthorByokStatus,
   recordAuthorByokUsage,
   resolveAuthorAnthropicKey,
+  resolveAuthorOpenAiKey,
   saveAuthorByokKey,
 } from './byok-resolver';
 export {
