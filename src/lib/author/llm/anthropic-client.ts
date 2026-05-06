@@ -10,6 +10,11 @@ import {
   recordAuthorByokUsage,
   resolveAuthorAnthropicKey,
 } from './byok-resolver';
+import {
+  getAnthropicThinkingBudget,
+  modelSupportsExtendedThinking,
+  resolveAuthorLlmEffort,
+} from './effort-mapping';
 import { recordAuthorModelUsage } from './usage-store';
 import {
   AuthorLlmError,
@@ -19,7 +24,10 @@ import {
   type ResolvedAuthorAnthropicKey,
 } from './types';
 
-const DEFAULT_AUTHOR_MODEL = process.env.AUTHOR_LLM_DEFAULT_MODEL ?? 'claude-opus-4-7';
+const DEFAULT_AUTHOR_MODEL =
+  process.env.AUTHOR_LLM_DEFAULT_MODEL_ANTHROPIC ??
+  process.env.AUTHOR_LLM_DEFAULT_MODEL ??
+  'claude-opus-4-7';
 const DEFAULT_MAX_TOKENS = 4096;
 const DEFAULT_RATE_LIMIT_BACKOFF_MS = [1000, 2000, 4000, 8000] as const;
 
@@ -195,14 +203,26 @@ function modelSupportsTemperature(model: string): boolean {
   return true;
 }
 
-function buildAnthropicMessageParams(request: AuthorLlmRequest, model: string): Record<string, unknown> {
+export function buildAnthropicMessageParams(request: AuthorLlmRequest, model: string): Record<string, unknown> {
   const system = buildSystemPrompt(request.system, request.responseFormat);
   const includeTemperature =
     typeof request.temperature === 'number' && modelSupportsTemperature(model);
+  const effort = request.effort ?? resolveAuthorLlmEffort();
+  const thinkingBudget = modelSupportsExtendedThinking(model)
+    ? getAnthropicThinkingBudget(effort)
+    : null;
+  // max_tokens must accommodate the thinking budget plus enough output room.
+  const requestedMaxTokens = request.maxTokens ?? DEFAULT_MAX_TOKENS;
+  const maxTokens =
+    thinkingBudget != null ? Math.max(requestedMaxTokens, thinkingBudget + DEFAULT_MAX_TOKENS) : requestedMaxTokens;
+
   return {
     model,
-    max_tokens: request.maxTokens ?? DEFAULT_MAX_TOKENS,
+    max_tokens: maxTokens,
     ...(includeTemperature ? { temperature: request.temperature } : {}),
+    ...(thinkingBudget != null
+      ? { thinking: { type: 'enabled', budget_tokens: thinkingBudget } }
+      : {}),
     ...(system ? { system } : {}),
     messages: [{
       role: 'user',
