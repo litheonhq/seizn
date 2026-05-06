@@ -129,11 +129,15 @@ export async function recordAuthorByokUsage(
 
 export async function getAuthorByokStatus(
   userId: string,
-  client?: ProviderKeyClient
+  client?: ProviderKeyClient,
+  options: { provider?: 'anthropic' | 'openai' } = {},
 ): Promise<AuthorByokStatus> {
   if (!hasServerSupabaseServiceRoleConfig()) {
     return { enabled: false, provider: null, status: 'missing' };
   }
+
+  const targetProvider: Provider =
+    options.provider ?? (resolveActiveAuthorProvider() as Provider);
 
   const supabase = (client ?? createServerClient()) as ProviderKeyClient;
   const query = supabase
@@ -143,7 +147,7 @@ export async function getAuthorByokStatus(
 
   const { data, error } = await query
     .eq('user_id', userId)
-    .eq('provider', AUTHOR_BYOK_PROVIDER)
+    .eq('provider', targetProvider)
     .eq('is_active', true)
     .order('is_default', { ascending: false })
     .order('created_at', { ascending: false })
@@ -156,26 +160,41 @@ export async function getAuthorByokStatus(
 
   return {
     enabled: true,
-    provider: 'anthropic',
+    provider: targetProvider as 'anthropic' | 'openai',
     key_last_4: keyHintToLast4(data.key_hint),
     verified_at: data.created_at ?? null,
     status: 'active',
   };
 }
 
+function resolveActiveAuthorProvider(): 'anthropic' | 'openai' {
+  const raw = process.env.AUTHOR_LLM_PROVIDER?.trim().toLowerCase();
+  return raw === 'openai' ? 'openai' : 'anthropic';
+}
+
+const AUTHOR_BYOK_SUPPORTED_PROVIDERS: ReadonlySet<Provider> = new Set([
+  AUTHOR_BYOK_PROVIDER,
+  AUTHOR_BYOK_OPENAI_PROVIDER,
+]);
+
+function isSupportedAuthorByokProvider(value: string): value is Provider {
+  return AUTHOR_BYOK_SUPPORTED_PROVIDERS.has(value as Provider);
+}
+
 export async function saveAuthorByokKey(
   input: { userId: string; provider: string; apiKey: string },
   client?: ProviderKeyClient
-): Promise<{ valid: true; key_last_4: string }> {
-  if (input.provider !== AUTHOR_BYOK_PROVIDER || !validateKeyFormat(input.provider, input.apiKey)) {
+): Promise<{ valid: true; key_last_4: string; provider: Provider }> {
+  if (!isSupportedAuthorByokProvider(input.provider) || !validateKeyFormat(input.provider, input.apiKey)) {
     throw new AuthorLlmError('LLM_NOT_CONFIGURED', 'invalid provider api key', 400);
   }
+  const provider: Provider = input.provider;
 
   if (!hasServerSupabaseServiceRoleConfig()) {
     if (process.env.NODE_ENV === 'production') {
       throw new AuthorLlmError('LLM_NOT_CONFIGURED', 'BYOK storage is not configured', 500);
     }
-    return { valid: true, key_last_4: input.apiKey.slice(-4) };
+    return { valid: true, key_last_4: input.apiKey.slice(-4), provider };
   }
 
   const supabase = (client ?? createServerClient()) as ProviderKeyClient;
@@ -184,20 +203,24 @@ export async function saveAuthorByokKey(
     await providerKeys
       .update({ is_default: false })
       .eq('user_id', input.userId)
-      .eq('provider', AUTHOR_BYOK_PROVIDER);
+      .eq('provider', provider);
   }
 
   if (typeof providerKeys.insert !== 'function') {
     throw new AuthorLlmError('LLM_NOT_CONFIGURED', 'BYOK storage client is unavailable', 500);
   }
 
+  const label = provider === AUTHOR_BYOK_OPENAI_PROVIDER
+    ? `Author Memory v3 OpenAI ${new Date().toISOString()}`
+    : `${AUTHOR_BYOK_LABEL} ${new Date().toISOString()}`;
+
   const { data, error } = await providerKeys
     .insert({
       user_id: input.userId,
-      provider: AUTHOR_BYOK_PROVIDER,
+      provider,
       key_encrypted: encryptApiKey(input.apiKey),
       key_hint: generateKeyHint(input.apiKey),
-      label: `${AUTHOR_BYOK_LABEL} ${new Date().toISOString()}`,
+      label,
       is_default: true,
       is_active: true,
       metadata: { source: 'author_memory_v3' },
@@ -209,7 +232,7 @@ export async function saveAuthorByokKey(
     throw new AuthorLlmError('LLM_NOT_CONFIGURED', 'Failed to save BYOK key', 500);
   }
 
-  return { valid: true, key_last_4: input.apiKey.slice(-4) };
+  return { valid: true, key_last_4: input.apiKey.slice(-4), provider };
 }
 
 function readManagedAnthropicKey(env: NodeJS.ProcessEnv): string | null {

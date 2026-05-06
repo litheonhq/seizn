@@ -5,7 +5,7 @@ export type ByokDiscountStatus = "inactive" | "pending" | "applied" | "error";
 
 export interface ByokState {
   enabled: boolean;
-  provider: "anthropic" | string | null;
+  provider: "anthropic" | "openai" | string | null;
   key_last_4?: string | null;
   verified_at?: string | null;
   status: ByokKeyStatus;
