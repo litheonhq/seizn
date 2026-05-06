@@ -33,8 +33,10 @@
         "GET",
         "POST"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "csrf"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/account/subscription",
