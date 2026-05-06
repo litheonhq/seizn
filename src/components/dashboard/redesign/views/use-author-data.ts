@@ -8,7 +8,6 @@ import {
   useAuthorProjects,
   useAuthorSyncStatus,
 } from '@/hooks/useAuthorMemoryV3';
-import { MOCK_AUTHOR_DATA } from './mock-data';
 import type {
   AuthorUiHealth,
   AuthorWorkspaceData,
@@ -58,14 +57,14 @@ export function useAuthorWorkspace(): UseAuthorWorkspaceResult {
   return useMemo(() => {
     if (project && typeof project === 'object') {
       const record = project as Record<string, unknown>;
-      const name = toString(record.name) || MOCK_AUTHOR_DATA.workspace.name;
+      const name = toString(record.name);
       const entityCount = toNumber(record.entity_count);
       const candidateCount = toNumber(record.candidate_count);
       return {
         data: {
           workspaceName: name,
           planLabel: 'Studio',
-          episodeCount: entityCount + candidateCount || MOCK_AUTHOR_DATA.workspace.episodes,
+          episodeCount: entityCount + candidateCount,
           hasMore: false,
         },
         isLoading: projects.isLoading,
@@ -75,14 +74,14 @@ export function useAuthorWorkspace(): UseAuthorWorkspaceResult {
     }
     return {
       data: {
-        workspaceName: MOCK_AUTHOR_DATA.workspace.name,
-        planLabel: 'Studio',
-        episodeCount: MOCK_AUTHOR_DATA.workspace.episodes,
+        workspaceName: 'dashboard.workspace.placeholderName',
+        planLabel: 'Free',
+        episodeCount: 0,
         hasMore: false,
       },
       isLoading: projects.isLoading,
       error: (projects.error as Error | undefined) ?? null,
-      isFallback: !projects.isLoading,
+      isFallback: false,
     };
   }, [project, projects.isLoading, projects.error]);
 }
@@ -96,10 +95,10 @@ export function useAuthorInbox(projectId: string | undefined): UseAuthorInboxRes
     const rawConflicts = (conflicts.data?.conflicts ?? []) as unknown[];
     if (!projectId || rawConflicts.length === 0) {
       return {
-        data: MOCK_AUTHOR_DATA.inbox,
+        data: [],
         isLoading: conflicts.isLoading,
         error: (conflicts.error as Error | undefined) ?? null,
-        isFallback: true,
+        isFallback: false,
       };
     }
     const rows: InboxRowDetail[] = rawConflicts
@@ -125,10 +124,10 @@ export function useAuthorInbox(projectId: string | undefined): UseAuthorInboxRes
         } satisfies InboxRowDetail;
       });
     return {
-      data: rows.length > 0 ? rows : MOCK_AUTHOR_DATA.inbox,
+      data: rows,
       isLoading: conflicts.isLoading,
       error: (conflicts.error as Error | undefined) ?? null,
-      isFallback: rows.length === 0,
+      isFallback: false,
     };
   }, [projectId, conflicts.data, conflicts.isLoading, conflicts.error]);
 }
@@ -150,12 +149,11 @@ export function useAuthorCharactersList(projectId: string | undefined): UseAutho
     const items = (characters.data?.characters ?? []) as unknown[];
     if (!projectId || items.length === 0) {
       return {
-        data: MOCK_AUTHOR_DATA.characters,
+        data: [],
         isLoading: characters.isLoading,
         error: (characters.error as Error | undefined) ?? null,
-        isFallback: true,
-        detail: (id: string) =>
-          MOCK_AUTHOR_DATA.characterDetails.find((c) => c.id === id),
+        isFallback: false,
+        detail: () => undefined,
       };
     }
     const summaries: CharacterSummary[] = items.filter(isRecord).map((raw, index) => {
@@ -178,9 +176,7 @@ export function useAuthorCharactersList(projectId: string | undefined): UseAutho
       isLoading: characters.isLoading,
       error: (characters.error as Error | undefined) ?? null,
       isFallback: false,
-      detail: (id: string) =>
-        MOCK_AUTHOR_DATA.characterDetails.find((c) => c.id === id) ??
-        synthesizeDetail(summaries.find((c) => c.id === id)),
+      detail: (id: string) => synthesizeDetail(summaries.find((c) => c.id === id)),
     };
   }, [projectId, characters.data, characters.isLoading, characters.error]);
 }
@@ -205,18 +201,25 @@ export function useAuthorGraphData(projectId: string | undefined): UseAuthorGrap
 
     if (!projectId || rawNodes.length === 0) {
       return {
-        data: {
-          nodes: MOCK_AUTHOR_DATA.graphNodes,
-          edges: MOCK_AUTHOR_DATA.graphEdges,
-        },
+        data: { nodes: [], edges: [] },
         isLoading: graph.isLoading,
         error: (graph.error as Error | undefined) ?? null,
-        isFallback: true,
+        isFallback: false,
       };
     }
 
-    const layout = circularLayout(rawNodes.length, 290, 190, 130);
-    const nodes: GraphNode[] = rawNodes.filter(isRecord).map((raw, index) => {
+    const nodeRecords = rawNodes.filter(isRecord);
+    if (nodeRecords.length === 0) {
+      return {
+        data: { nodes: [], edges: [] },
+        isLoading: graph.isLoading,
+        error: (graph.error as Error | undefined) ?? null,
+        isFallback: false,
+      };
+    }
+
+    const layout = circularLayout(nodeRecords.length, 290, 190, 130);
+    const nodes: GraphNode[] = nodeRecords.map((raw, index) => {
       const id = toString(raw.id, `node-${index}`);
       const label = toString(raw.label, id);
       const role: GraphNode['role'] =
@@ -270,10 +273,10 @@ export function useAuthorConflictsList(projectId: string | undefined): UseAuthor
 
     if (!projectId || raw.length === 0) {
       return {
-        data: MOCK_AUTHOR_DATA.conflicts,
+        data: [],
         isLoading: conflicts.isLoading,
         error: (conflicts.error as Error | undefined) ?? null,
-        isFallback: true,
+        isFallback: false,
       };
     }
 
@@ -294,10 +297,10 @@ export function useAuthorConflictsList(projectId: string | undefined): UseAuthor
     });
 
     return {
-      data: items.length > 0 ? items : MOCK_AUTHOR_DATA.conflicts,
+      data: items,
       isLoading: conflicts.isLoading,
       error: (conflicts.error as Error | undefined) ?? null,
-      isFallback: items.length === 0,
+      isFallback: false,
     };
   }, [projectId, conflicts.data, conflicts.isLoading, conflicts.error]);
 }
@@ -308,6 +311,19 @@ export function useAuthorUiHealth(projectId: string | undefined): UseAuthorUiHea
   const sync = useAuthorSyncStatus(projectId);
 
   return useMemo(() => {
+    if (!projectId) {
+      return {
+        data: {
+          status: 'synced',
+          lastSyncedAt: new Date(0),
+          factsCount: 0,
+        },
+        isLoading: sync.isLoading,
+        error: (sync.error as Error | undefined) ?? null,
+        isFallback: false,
+      };
+    }
+
     const status = sync.data as Record<string, unknown> | undefined;
     if (status) {
       const ts = toString(status.last_synced_at);
@@ -330,9 +346,9 @@ export function useAuthorUiHealth(projectId: string | undefined): UseAuthorUiHea
       },
       isLoading: sync.isLoading,
       error: (sync.error as Error | undefined) ?? null,
-      isFallback: !sync.isLoading,
+      isFallback: false,
     };
-  }, [sync.data, sync.isLoading, sync.error]);
+  }, [projectId, sync.data, sync.isLoading, sync.error]);
 }
 
 export function useAuthorProjectId(): string | undefined {

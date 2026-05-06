@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useDashboardTranslation } from '@/contexts/DashboardLocaleContext';
 import { Avatar, Tag } from '../atoms';
+import { EmptyState } from '../empty-state';
 import {
   BookmarkIcon,
   FilterIcon,
@@ -426,22 +427,38 @@ export interface InboxViewProps {
   rows: InboxRowDetail[];
 }
 
+type InboxFilterId = 'all' | 'conflicts' | 'reviews' | 'characters';
+
 export function InboxView({ rows }: InboxViewProps) {
   const { t } = useDashboardTranslation();
   const [selected, setSelected] = useState(rows[0]?.id ?? '');
+  const [filter, setFilter] = useState<InboxFilterId>('all');
+
+  if (rows.length === 0) {
+    return (
+      <div style={{ flex: 1, background: 'var(--bg-elevated)', display: 'flex' }}>
+        <EmptyState
+          kind="inbox"
+          title={t('dashboard.inbox.empty')}
+          body={t('dashboard.inbox.emptyBody')}
+          primary={t('dashboard.inbox.emptyCta')}
+        />
+      </div>
+    );
+  }
+
   const row = rows.find((r) => r.id === selected) ?? rows[0];
   const unreadCount = rows.filter((r) => r.unread).length;
   const conflictsCount = rows.filter((r) => r.kind === 'Conflict').length;
   const reviewsCount = rows.filter((r) => r.kind === 'Review').length;
   const charactersCount = rows.filter((r) => r.kind === 'Character').length;
 
-  const filters: { id: 'all' | 'conflicts' | 'reviews' | 'characters'; labelKey: string; n: number }[] = [
+  const filters: { id: InboxFilterId; labelKey: string; n: number }[] = [
     { id: 'all', labelKey: 'dashboard.inbox.filter.all', n: rows.length },
     { id: 'conflicts', labelKey: 'dashboard.inbox.filter.conflicts', n: conflictsCount },
     { id: 'reviews', labelKey: 'dashboard.inbox.filter.reviews', n: reviewsCount },
     { id: 'characters', labelKey: 'dashboard.inbox.filter.characters', n: charactersCount },
   ];
-  const [filter, setFilter] = useState<typeof filters[number]['id']>('all');
 
   const visibleRows = rows.filter((r) => {
     if (filter === 'all') return true;

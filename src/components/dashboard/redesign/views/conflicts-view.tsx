@@ -3,6 +3,7 @@
 import { useDashboardTranslation } from '@/contexts/DashboardLocaleContext';
 import { Tag } from '../atoms';
 import { ConflictCard } from '../conflict-card';
+import { EmptyState } from '../empty-state';
 import type { ConflictItem } from './types';
 
 export interface ConflictsViewProps {
@@ -13,6 +14,18 @@ export function ConflictsView({ conflicts }: ConflictsViewProps) {
   const { t } = useDashboardTranslation();
   const critical = conflicts.filter((c) => c.severity === 'P1').length;
   const warning = conflicts.filter((c) => c.severity === 'P2').length;
+
+  if (conflicts.length === 0) {
+    return (
+      <div style={{ flex: 1, background: 'var(--bg-elevated)', display: 'flex' }}>
+        <EmptyState
+          kind="characters"
+          title={t('dashboard.conflicts.empty')}
+          body={t('dashboard.conflicts.emptyBody')}
+        />
+      </div>
+    );
+  }
 
   return (
     <div

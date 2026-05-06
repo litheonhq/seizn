@@ -1631,6 +1631,7 @@
       "tagline": "作者记忆 · 在线"
     },
     "workspace": {
+      "placeholderName": "未命名工作区",
       "switcher": {
         "studio": "Studio",
         "entries": "{count}个条目"
@@ -1653,6 +1654,7 @@
       },
       "empty": "收件箱已清空。",
       "emptyBody": "Memory v3 会在你写作时把规范、人物和时间线冲突汇集到这里。",
+      "emptyCta": "导入章节",
       "detail": {
         "evidence": "证据",
         "suggestion": "建议的解决方案",
@@ -1713,6 +1715,8 @@
     },
     "conflicts": {
       "title": "冲突",
+      "empty": "没有未解决冲突。",
+      "emptyBody": "当设定事实与草稿文本相矛盾时，冲突会显示在这里。现在一切正常。",
       "criticalCount": "严重 {count} 条",
       "warningCount": "警告 {count} 条",
       "severity": {

@@ -1535,6 +1535,7 @@
       "tagline": "オーサー メモリ · ライブ"
     },
     "workspace": {
+      "placeholderName": "無題のワークスペース",
       "switcher": {
         "studio": "Studio",
         "entries": "{count}件のエントリ"
@@ -1557,6 +1558,7 @@
       },
       "empty": "インボックスは空です。",
       "emptyBody": "下書き中にMemory v3がキャノン・人物・タイムラインの対立をここに集めます。",
+      "emptyCta": "チャプターを取り込む",
       "detail": {
         "evidence": "根拠",
         "suggestion": "提案された解決",
@@ -1617,6 +1619,8 @@
     },
     "conflicts": {
       "title": "対立",
+      "empty": "未解決の衝突はありません。",
+      "emptyBody": "カノンの事実と下書きの本文が矛盾すると、ここに表示されます。今は問題ありません。",
       "criticalCount": "重大 {count}件",
       "warningCount": "警告 {count}件",
       "severity": {

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useDashboardTranslation } from '@/contexts/DashboardLocaleContext';
 import { Avatar, Tag } from '../atoms';
+import { EmptyState } from '../empty-state';
 import { FilterIcon, PlusIcon } from '../icons';
 import { ICON_BTN_TOPBAR } from '../top-bar';
 import type { CharacterSummary } from './types';
@@ -48,6 +49,19 @@ export function GraphView({ nodes, edges, characters }: GraphViewProps) {
 
   const W = 580;
   const H = 380;
+
+  if (nodes.length === 0) {
+    return (
+      <div style={{ flex: 1, background: 'var(--bg-elevated)', display: 'flex' }}>
+        <EmptyState
+          kind="graph"
+          title={t('dashboard.graph.empty')}
+          body={t('dashboard.graph.emptyBody')}
+          primary={t('dashboard.graph.emptyCta')}
+        />
+      </div>
+    );
+  }
 
   const nodeMap = new Map<string, GraphNode>(nodes.map((n) => [n.id, n]));
   const node = (id: string) => nodeMap.get(id);

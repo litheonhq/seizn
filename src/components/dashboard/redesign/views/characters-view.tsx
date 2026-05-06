@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useDashboardTranslation } from '@/contexts/DashboardLocaleContext';
 import { Avatar, Tag } from '../atoms';
+import { EmptyState } from '../empty-state';
 import { ChevronRightIcon, MoreIcon, PlusIcon, SearchIcon } from '../icons';
 import { ICON_BTN_TOPBAR } from '../top-bar';
 import type { CharacterDetail, CharacterSummary } from './types';
@@ -298,6 +299,20 @@ export interface CharactersViewProps {
 export function CharactersView({ characters, detail }: CharactersViewProps) {
   const { t } = useDashboardTranslation();
   const [selectedId, setSelectedId] = useState(characters[0]?.id ?? '');
+
+  if (characters.length === 0) {
+    return (
+      <div style={{ flex: 1, background: 'var(--bg-elevated)', display: 'flex' }}>
+        <EmptyState
+          kind="characters"
+          title={t('dashboard.characters.empty')}
+          body={t('dashboard.characters.emptyBody')}
+          primary={t('dashboard.characters.emptyCta')}
+        />
+      </div>
+    );
+  }
+
   const selected = characters.find((c) => c.id === selectedId) ?? characters[0];
   const selectedDetail = selected
     ? detail(selected.id) ?? {

@@ -1674,6 +1674,7 @@
       "tagline": "AUTHOR MEMORY · LIVE"
     },
     "workspace": {
+      "placeholderName": "Untitled workspace",
       "switcher": {
         "studio": "Studio",
         "entries": "{count} entries"
@@ -1696,6 +1697,7 @@
       },
       "empty": "Inbox is clear.",
       "emptyBody": "Memory v3 will surface canon, character, and timeline conflicts here as you draft.",
+      "emptyCta": "Import a chapter",
       "detail": {
         "evidence": "Evidence",
         "suggestion": "Suggested resolution",
@@ -1756,6 +1758,8 @@
     },
     "conflicts": {
       "title": "Conflicts",
+      "empty": "No open conflicts.",
+      "emptyBody": "Conflicts appear here when canon facts contradict draft prose. You're clear for now.",
       "criticalCount": "{count} critical",
       "warningCount": "{count} warning",
       "severity": {

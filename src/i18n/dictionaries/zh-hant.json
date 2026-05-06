@@ -1631,6 +1631,7 @@
       "tagline": "作者記憶 · 在線"
     },
     "workspace": {
+      "placeholderName": "未命名工作區",
       "switcher": {
         "studio": "Studio",
         "entries": "{count} 筆條目"
@@ -1653,6 +1654,7 @@
       },
       "empty": "收件匣已清空。",
       "emptyBody": "Memory v3 會在你寫作時，把規範、人物與時間軸的衝突彙整到這裡。",
+      "emptyCta": "匯入章節",
       "detail": {
         "evidence": "證據",
         "suggestion": "建議的解法",
@@ -1713,6 +1715,8 @@
     },
     "conflicts": {
       "title": "衝突",
+      "empty": "沒有未解決衝突。",
+      "emptyBody": "當設定事實與草稿文本相矛盾時，衝突會顯示在這裡。目前一切正常。",
       "criticalCount": "重大 {count} 筆",
       "warningCount": "警告 {count} 筆",
       "severity": {

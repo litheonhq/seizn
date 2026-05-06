@@ -3,6 +3,7 @@
 import { Newsreader } from 'next/font/google';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useMemo, useState } from 'react';
+import { useDashboardTranslation } from '@/contexts/DashboardLocaleContext';
 import { Sidebar } from './sidebar/sidebar';
 import { TopBar, type TopBarTab } from './top-bar';
 import type { Density } from './types';
@@ -62,6 +63,7 @@ export function WorkspaceShell({
 }: WorkspaceShellProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { t } = useDashboardTranslation();
   const tabFromUrl = searchParams?.get('tab') ?? null;
   const tab: TopBarTab = isValidTab(tabFromUrl) ? tabFromUrl : defaultTab;
 
@@ -104,6 +106,10 @@ export function WorkspaceShell({
     [conflicts.data]
   );
 
+  const workspaceName = workspace.data.workspaceName.startsWith('dashboard.')
+    ? t(workspace.data.workspaceName)
+    : workspace.data.workspaceName;
+
   const view = (() => {
     switch (tab) {
       case 'inbox':
@@ -139,7 +145,7 @@ export function WorkspaceShell({
       <Sidebar
         collapsed={collapsed}
         density={density}
-        workspaceName={workspace.data.workspaceName}
+        workspaceName={workspaceName}
         workspacePlanLabel={workspace.data.planLabel}
         workspaceEntries={workspace.data.episodeCount}
         workspaceHasMore={workspace.data.hasMore ?? false}
@@ -154,7 +160,7 @@ export function WorkspaceShell({
           tab={tab}
           onTab={setTab}
           density={density}
-          workspaceLabel={workspace.data.workspaceName}
+          workspaceLabel={workspaceName}
           onToggleSidebar={toggleSidebar}
         />
         <div style={{ flex: 1, display: 'flex', minHeight: 0, minWidth: 0 }}>{view}</div>
