@@ -42,15 +42,45 @@ function periodStart(now: Date, period: ApiKeyPeriod): Date {
  *
  * For the dashboard summary page we run this in parallel across the user's
  * keys (typically 1-5 keys per user, capped at TRACK_2_KEY_CAP_PER_USER).
+ *
+ * IMPORTANT: when `ownedBy` is provided, results are scoped to that user.
+ * Callers should ALWAYS pass `ownedBy` when the apiKeyId originates from
+ * untrusted input (URL param, body, etc.). Without it, a caller that
+ * forwards a user-supplied apiKeyId could read another tenant's per-tool /
+ * per-model breakdown. The dashboard caller filters keys by user_id first
+ * and then iterates, so it can safely omit `ownedBy`.
  */
 export async function getApiKeyUsageBreakdown(
   apiKeyId: string,
   period: ApiKeyPeriod = 'month',
-  deps: { supabase?: SupabaseLike; now?: Date } = {},
+  deps: { supabase?: SupabaseLike; now?: Date; ownedBy?: string } = {},
 ): Promise<ApiKeyUsageBreakdown> {
   const supabase = deps.supabase ?? createServerClient();
   const now = deps.now ?? new Date();
   const startIso = periodStart(now, period).toISOString();
+
+  if (deps.ownedBy) {
+    // Defensive: confirm ownership before reading usage rows. If the key
+    // doesn't belong to the user, return an empty breakdown rather than
+    // throwing — that way a misrouted dashboard request just shows zeros
+    // instead of leaking the existence of another tenant's key id.
+    const { data: keyRow } = await supabase
+      .from('api_keys')
+      .select('id')
+      .eq('id', apiKeyId)
+      .eq('user_id', deps.ownedBy)
+      .maybeSingle();
+    if (!keyRow) {
+      return {
+        apiKeyId,
+        total: 0,
+        cost_usd_milli: 0,
+        byTool: [],
+        byModel: [],
+        daily: [],
+      };
+    }
+  }
 
   const { data, error } = await supabase
     .from('api_key_usage')
