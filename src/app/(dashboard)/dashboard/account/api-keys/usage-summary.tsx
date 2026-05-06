@@ -49,17 +49,17 @@ export function UsageSummary({ usage, keys }: UsageSummaryProps) {
 
   return (
     <section
-      className="rounded-lg border border-szn-border-subtle bg-szn-surface p-5 mb-6"
+      className="rounded-lg border border-[var(--ink-200)] bg-[var(--ink-0)] p-5 mb-6"
       aria-labelledby="track2-usage-summary"
     >
       <header className="flex flex-col gap-1 mb-5">
         <div className="flex items-center gap-2">
-          <Activity className="h-5 w-5 text-szn-text-1" aria-hidden="true" />
-          <h2 id="track2-usage-summary" className="font-serif text-lg text-szn-text-1">
+          <Activity className="h-5 w-5 text-[var(--ink-900)]" aria-hidden="true" />
+          <h2 id="track2-usage-summary" className="font-serif text-lg text-[var(--ink-900)]">
             This month — usage
           </h2>
         </div>
-        <p className="text-sm text-szn-text-2">
+        <p className="text-sm text-[var(--ink-600)]">
           Live counts pulled from <code className="font-mono text-xs">api_key_usage</code>. Period resets on the
           1st (UTC).
         </p>
@@ -86,9 +86,9 @@ export function UsageSummary({ usage, keys }: UsageSummaryProps) {
         />
       </div>
 
-      <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-szn-bg">
+      <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-[var(--ink-50)]">
         <div
-          className="h-full bg-szn-accent transition-all"
+          className="h-full bg-[var(--ink-900)] transition-all"
           style={{ width: `${overallPct}%` }}
           aria-label={`${overallPct}% of monthly quota used`}
         />
@@ -96,7 +96,7 @@ export function UsageSummary({ usage, keys }: UsageSummaryProps) {
 
       {usage.byTool.length > 0 ? (
         <div className="mt-6">
-          <h3 className="mb-3 flex items-center gap-2 text-sm font-medium text-szn-text-1">
+          <h3 className="mb-3 flex items-center gap-2 text-sm font-medium text-[var(--ink-900)]">
             <Wrench className="h-4 w-4" aria-hidden="true" /> By tool
           </h3>
           <ul className="grid gap-2 sm:grid-cols-2">
@@ -105,14 +105,14 @@ export function UsageSummary({ usage, keys }: UsageSummaryProps) {
                 ? Math.round((row.count / usage.totalRequests) * 100)
                 : 0;
               return (
-                <li key={row.tool} className="flex items-center justify-between gap-3 rounded-md border border-szn-border-subtle bg-szn-bg px-3 py-2 text-sm">
+                <li key={row.tool} className="flex items-center justify-between gap-3 rounded-md border border-[var(--ink-200)] bg-[var(--ink-50)] px-3 py-2 text-sm">
                   <div>
-                    <span className="font-medium text-szn-text-1">
+                    <span className="font-medium text-[var(--ink-900)]">
                       {TOOL_LABELS[row.tool] ?? row.tool}
                     </span>
-                    <span className="ml-2 text-xs text-szn-text-2">{pct}%</span>
+                    <span className="ml-2 text-xs text-[var(--ink-600)]">{pct}%</span>
                   </div>
-                  <span className="font-mono text-szn-text-1">{formatNumber(row.count)}</span>
+                  <span className="font-mono text-[var(--ink-900)]">{formatNumber(row.count)}</span>
                 </li>
               );
             })}
@@ -122,24 +122,24 @@ export function UsageSummary({ usage, keys }: UsageSummaryProps) {
 
       {usage.byModel.length > 0 ? (
         <div className="mt-6">
-          <h3 className="mb-3 flex items-center gap-2 text-sm font-medium text-szn-text-1">
+          <h3 className="mb-3 flex items-center gap-2 text-sm font-medium text-[var(--ink-900)]">
             <Bot className="h-4 w-4" aria-hidden="true" /> By model
           </h3>
           <ul className="grid gap-2 sm:grid-cols-2">
             {usage.byModel.map((row, index) => (
               <li
                 key={`${row.provider ?? '_'}-${row.model ?? '_'}-${index}`}
-                className="flex items-center justify-between gap-3 rounded-md border border-szn-border-subtle bg-szn-bg px-3 py-2 text-sm"
+                className="flex items-center justify-between gap-3 rounded-md border border-[var(--ink-200)] bg-[var(--ink-50)] px-3 py-2 text-sm"
               >
                 <div className="min-w-0">
-                  <span className="block truncate font-medium text-szn-text-1">
+                  <span className="block truncate font-medium text-[var(--ink-900)]">
                     {formatProviderModel(row.provider, row.model)}
                   </span>
                   {row.cost_usd_milli > 0 ? (
-                    <span className="text-xs text-szn-text-2">{formatUsd(row.cost_usd_milli)} metered</span>
+                    <span className="text-xs text-[var(--ink-600)]">{formatUsd(row.cost_usd_milli)} metered</span>
                   ) : null}
                 </div>
-                <span className="font-mono text-szn-text-1">{formatNumber(row.count)}</span>
+                <span className="font-mono text-[var(--ink-900)]">{formatNumber(row.count)}</span>
               </li>
             ))}
           </ul>
@@ -147,13 +147,13 @@ export function UsageSummary({ usage, keys }: UsageSummaryProps) {
       ) : null}
 
       {usage.perKey.length > 1 ? (
-        <details className="mt-6 rounded-md border border-szn-border-subtle bg-szn-bg p-3">
-          <summary className="cursor-pointer text-sm font-medium text-szn-text-1">
+        <details className="mt-6 rounded-md border border-[var(--ink-200)] bg-[var(--ink-50)] p-3">
+          <summary className="cursor-pointer text-sm font-medium text-[var(--ink-900)]">
             Per-key breakdown ({usage.perKey.length} keys)
           </summary>
           <table className="mt-3 w-full text-left text-sm">
             <thead>
-              <tr className="text-xs uppercase tracking-wide text-szn-text-2">
+              <tr className="text-xs uppercase tracking-wide text-[var(--ink-600)]">
                 <th className="px-2 py-1.5 font-medium">Key</th>
                 <th className="px-2 py-1.5 font-medium text-right">Requests</th>
                 <th className="px-2 py-1.5 font-medium text-right">Quota</th>
@@ -165,10 +165,10 @@ export function UsageSummary({ usage, keys }: UsageSummaryProps) {
                 const used = breakdown?.total ?? 0;
                 const pct = key.monthlyQuota > 0 ? Math.round((used / key.monthlyQuota) * 100) : 0;
                 return (
-                  <tr key={key.id} className="border-t border-szn-border-subtle">
-                    <td className="px-2 py-2 font-medium text-szn-text-1">{key.name}</td>
+                  <tr key={key.id} className="border-t border-[var(--ink-200)]">
+                    <td className="px-2 py-2 font-medium text-[var(--ink-900)]">{key.name}</td>
                     <td className="px-2 py-2 text-right font-mono">{formatNumber(used)}</td>
-                    <td className="px-2 py-2 text-right text-szn-text-2">{pct}% of {formatNumber(key.monthlyQuota)}</td>
+                    <td className="px-2 py-2 text-right text-[var(--ink-600)]">{pct}% of {formatNumber(key.monthlyQuota)}</td>
                   </tr>
                 );
               })}
@@ -192,13 +192,13 @@ function StatTile({
   sublabel: string;
 }) {
   return (
-    <div className="rounded-md border border-szn-border-subtle bg-szn-bg p-4">
-      <div className="flex items-center gap-2 text-xs uppercase tracking-wide text-szn-text-2">
+    <div className="rounded-md border border-[var(--ink-200)] bg-[var(--ink-50)] p-4">
+      <div className="flex items-center gap-2 text-xs uppercase tracking-wide text-[var(--ink-600)]">
         {icon}
         <span>{label}</span>
       </div>
-      <div className="mt-2 text-2xl font-semibold text-szn-text-1">{value}</div>
-      <div className="mt-1 text-xs text-szn-text-2">{sublabel}</div>
+      <div className="mt-2 text-2xl font-semibold text-[var(--ink-900)]">{value}</div>
+      <div className="mt-1 text-xs text-[var(--ink-600)]">{sublabel}</div>
     </div>
   );
 }
