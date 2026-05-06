@@ -57,7 +57,7 @@ export function AuthorSettingsClient({ navigateToBilling = defaultNavigate }: Au
     refresh();
   }, [refresh]);
 
-  const saveByok = useCallback(async (apiKey: string): Promise<ByokDiscountState> => {
+  const saveByok = useCallback(async (apiKey: string, provider: "anthropic" | "openai" = "anthropic"): Promise<ByokDiscountState> => {
     if (!apiKey) {
       throw new Error(copy.byok.missing);
     }
@@ -67,7 +67,7 @@ export function AuthorSettingsClient({ navigateToBilling = defaultNavigate }: Au
       const response = await fetchJson<ByokState & { byok_discount?: ByokDiscountState }>("/api/account/byok", {
         method: "POST",
         headers: csrfHeaders({ "Content-Type": "application/json" }),
-        body: JSON.stringify({ provider: "anthropic", api_key: apiKey }),
+        body: JSON.stringify({ provider, api_key: apiKey }),
       });
       setByok(normalizeByok(response));
       await refresh();
@@ -80,14 +80,17 @@ export function AuthorSettingsClient({ navigateToBilling = defaultNavigate }: Au
     }
   }, [copy.byok.error, copy.byok.missing, refresh]);
 
-  const removeByok = useCallback(async (): Promise<ByokDiscountState> => {
+  const removeByok = useCallback(async (provider: "anthropic" | "openai" = "anthropic"): Promise<ByokDiscountState> => {
     setAction("removing");
     setError(null);
     try {
-      const response = await fetchJson<ByokState & { byok_discount?: ByokDiscountState }>("/api/account/byok", {
-        method: "DELETE",
-        headers: csrfHeaders(),
-      });
+      const response = await fetchJson<ByokState & { byok_discount?: ByokDiscountState }>(
+        `/api/account/byok?provider=${encodeURIComponent(provider)}`,
+        {
+          method: "DELETE",
+          headers: csrfHeaders(),
+        },
+      );
       setByok(normalizeByok(response));
       await refresh();
       return response.byok_discount ?? { status: "inactive", removed: true };

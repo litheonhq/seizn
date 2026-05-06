@@ -4,6 +4,7 @@ import { type FormEvent, useId, useState } from "react";
 import { AlertCircle, CheckCircle2, ExternalLink, KeyRound, Trash2 } from "lucide-react";
 
 const ANTHROPIC_CONSOLE_KEYS_URL = "https://console.anthropic.com/settings/keys";
+const OPENAI_CONSOLE_KEYS_URL = "https://platform.openai.com/api-keys";
 import type {
   AuthorSettingsCopy,
   ByokDiscountState,
@@ -11,14 +12,16 @@ import type {
 } from "./author-settings-types";
 import { normalizeByokDiscountStatus } from "./author-settings-types";
 
+export type ByokProvider = "anthropic" | "openai";
+
 interface ByokSectionProps {
   byok: ByokState;
   discountStatus: unknown;
   discountError?: string | null;
   copy: AuthorSettingsCopy["byok"];
   action: "idle" | "saving" | "removing";
-  onSave: (apiKey: string) => Promise<ByokDiscountState | void>;
-  onRemove: () => Promise<ByokDiscountState | void>;
+  onSave: (apiKey: string, provider: ByokProvider) => Promise<ByokDiscountState | void>;
+  onRemove: (provider: ByokProvider) => Promise<ByokDiscountState | void>;
 }
 
 export function ByokSection({
@@ -31,19 +34,25 @@ export function ByokSection({
   onRemove,
 }: ByokSectionProps) {
   const inputId = useId();
+  const providerRadioId = useId();
   const [apiKey, setApiKey] = useState("");
+  const initialProvider: ByokProvider = byok.provider === "openai" ? "openai" : "anthropic";
+  const [provider, setProvider] = useState<ByokProvider>(initialProvider);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const normalizedDiscountStatus = normalizeByokDiscountStatus(discountStatus);
   const isActive = byok.enabled && byok.status === "active";
   const busy = action !== "idle";
+  const consoleUrl = provider === "openai" ? OPENAI_CONSOLE_KEYS_URL : ANTHROPIC_CONSOLE_KEYS_URL;
+  const consoleLabel = provider === "openai" ? "OpenAI Platform" : "Anthropic Console";
+  const keyPrefixHint = provider === "openai" ? "sk-..." : "sk-ant-...";
 
   async function handleSave(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setMessage(null);
     setError(null);
     try {
-      const discount = await onSave(apiKey.trim());
+      const discount = await onSave(apiKey.trim(), provider);
       setApiKey("");
       setMessage(formatDiscountResult(discount, copy));
     } catch (saveError) {
@@ -55,7 +64,7 @@ export function ByokSection({
     setMessage(null);
     setError(null);
     try {
-      const discount = await onRemove();
+      const discount = await onRemove(provider);
       setMessage(formatDiscountResult(discount, copy));
     } catch (removeError) {
       setError(removeError instanceof Error ? removeError.message : copy.error);
@@ -101,6 +110,30 @@ export function ByokSection({
         </div>
       </dl>
 
+      <fieldset className="mt-5" aria-labelledby={`${providerRadioId}-legend`}>
+        <legend id={`${providerRadioId}-legend`} className="text-sm font-medium text-[var(--ink-900)]">
+          Provider
+        </legend>
+        <div className="mt-2 inline-flex rounded-md border border-[var(--ink-200)] bg-[var(--ink-50)] p-0.5">
+          <ProviderRadio
+            id={`${providerRadioId}-anthropic`}
+            name={providerRadioId}
+            value="anthropic"
+            label="Anthropic"
+            checked={provider === "anthropic"}
+            onChange={() => setProvider("anthropic")}
+          />
+          <ProviderRadio
+            id={`${providerRadioId}-openai`}
+            name={providerRadioId}
+            value="openai"
+            label="OpenAI"
+            checked={provider === "openai"}
+            onChange={() => setProvider("openai")}
+          />
+        </div>
+      </fieldset>
+
       {!isActive ? (
         <div
           className="mt-5 rounded-md border border-[var(--ink-200)] bg-[var(--ink-50)] p-4"
@@ -113,13 +146,13 @@ export function ByokSection({
             {copy.helper.title}
           </p>
           <a
-            href={ANTHROPIC_CONSOLE_KEYS_URL}
+            href={consoleUrl}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label={copy.helper.buttonAriaLabel}
+            aria-label={`Open ${consoleLabel} API keys page`}
             className="mt-3 inline-flex min-h-10 items-center justify-center gap-2 rounded-md border border-[var(--ink-200)] bg-[var(--ink-0)] px-4 text-sm font-medium text-[var(--ink-900)] transition-colors hover:bg-[var(--ink-50)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ink-900)]/40"
           >
-            {copy.helper.buttonLabel}
+            Open {consoleLabel}
             <ExternalLink className="h-4 w-4" aria-hidden="true" />
           </a>
           <ol className="mt-3 list-decimal space-y-1 pl-5 text-xs leading-5 text-[var(--ink-600)]">
@@ -133,7 +166,7 @@ export function ByokSection({
 
       <form onSubmit={handleSave} className="mt-5">
         <label htmlFor={inputId} className="block text-sm font-medium text-[var(--ink-900)]">
-          {copy.keyLabel}
+          {copy.keyLabel} <span className="font-mono text-xs text-[var(--ink-500)]">({keyPrefixHint})</span>
         </label>
         <div className="mt-2 flex flex-col gap-2 sm:flex-row sm:items-stretch">
           <input
@@ -180,6 +213,44 @@ export function ByokSection({
         </div>
       ) : null}
     </section>
+  );
+}
+
+function ProviderRadio({
+  id,
+  name,
+  value,
+  label,
+  checked,
+  onChange,
+}: {
+  id: string;
+  name: string;
+  value: string;
+  label: string;
+  checked: boolean;
+  onChange: () => void;
+}) {
+  return (
+    <label
+      htmlFor={id}
+      className={`min-h-10 cursor-pointer rounded px-3 py-1.5 text-sm font-medium transition-colors ${
+        checked
+          ? "bg-[var(--ink-900)] text-white"
+          : "text-[var(--ink-700)] hover:bg-[var(--ink-0)]"
+      }`}
+    >
+      <input
+        type="radio"
+        id={id}
+        name={name}
+        value={value}
+        checked={checked}
+        onChange={onChange}
+        className="sr-only"
+      />
+      {label}
+    </label>
   );
 }
 
