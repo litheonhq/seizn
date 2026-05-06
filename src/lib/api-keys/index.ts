@@ -6,4 +6,5 @@ export * from './rate-limit';
 export * from './redis-config';
 export * from './rotate';
 export * from './types';
+export * from './usage-breakdown';
 export * from './validate';
