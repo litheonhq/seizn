@@ -5,14 +5,14 @@ import Link from "next/link";
 const providers = [
   {
     name: "OpenAI",
-    models: ["text-embedding-3-small", "text-embedding-3-large", "gpt-4o"],
-    useCase: "Embedding, RAG Generation",
+    models: ["GPT-5.5", "GPT-5", "gpt-4o", "text-embedding-3-large", "text-embedding-3-small"],
+    useCase: "Author LLM (xhigh reasoning), Embedding, RAG Generation",
     icon: "🟢",
   },
   {
     name: "Anthropic",
-    models: ["Claude 3.5 Sonnet", "Claude 3.5 Haiku"],
-    useCase: "RAG Generation",
+    models: ["Claude Opus 4.7 (1M context, extended thinking)", "Claude Sonnet 4.6", "Claude Haiku 4.5"],
+    useCase: "Author LLM (xhigh extended thinking), RAG Generation",
     icon: "🟠",
   },
   {
