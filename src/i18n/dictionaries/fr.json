@@ -1,7 +1,7 @@
 {
   "metadata": {
     "title": "Seizn — Mémoire pour NPC IA",
-    "description": "Connectez-vous à Inworld, Convai ou votre propre LLM. Seizn donne à vos NPC une mémoire persistante, des relations et un rappel transgénérationnel — facturé par entité, pas par siège."
+    "description": "Branchez Seizn sur Inworld, Convai ou votre propre LLM. Vos NPC gardent mémoire, relations et souvenirs au fil des générations. Tarif par entité, pas par siège."
   },
   "nav": {
     "features": "Fonctionnalités",
@@ -13,13 +13,13 @@
   },
   "hero": {
     "badge": "Démo en direct : smallgod",
-    "title": "Vos NPC se souviennent",
-    "titleHighlight": "d'une génération à l'autre.",
-    "subtitle": "Seizn est la couche mémoire pour NPC IA. Branchez-le sur Inworld, Convai ou votre propre LLM — gardez le moteur de dialogue que vous aimez et ajoutez une persistance qui survive aux sessions et aux générations.",
+    "title": "Vos NPC se souviennent,",
+    "titleHighlight": "même des générations plus tard.",
+    "subtitle": "Seizn, c'est la couche mémoire pour NPC IA. Branchez-le sur Inworld, Convai ou votre propre LLM, gardez le moteur de dialogue que vous utilisez et ajoutez une persistance qui tient entre les sessions et entre les générations.",
     "emailPlaceholder": "vous@studio.com",
     "joinWaitlist": "Réserver une démo",
     "joining": "Réservation...",
-    "onTheList": "Nous vous contacterons rapidement.",
+    "onTheList": "On vous recontacte vite.",
     "stats": {
       "tokenSavings": "NPC par projet",
       "retrievalTime": "Récupération mémoire",
@@ -27,8 +27,8 @@
     }
   },
   "features": {
-    "title": "Conçu pour les studios de jeux",
-    "subtitle": "Intégrez Seizn, conservez votre moteur de dialogue. Les NPC obtiennent mémoire, relations et persistance qui survivent aux sessions et aux générations.",
+    "title": "Pensé pour les studios de jeux",
+    "subtitle": "Gardez votre moteur de dialogue, glissez Seizn dessous. Vos NPC gagnent mémoire, relations et une persistance qui tient entre sessions et entre générations.",
     "smartExtraction": {
       "title": "Graphe NPC / Faction / Événement",
       "description": "Modélisez NPC, factions, quêtes et incidents sous forme de graphe. Les relations (confiance, rancune, parenté) et événements (témoin, affecté, acteur) sont des primitives de premier ordre, sans schéma à inventer."
