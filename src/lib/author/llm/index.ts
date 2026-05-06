@@ -11,6 +11,10 @@ export {
   resolveAuthorLlmProvider,
 } from './provider-router';
 export {
+  getUserAuthorLlmProvider,
+  setUserAuthorLlmProvider,
+} from './user-provider-pref';
+export {
   DEFAULT_AUTHOR_LLM_EFFORT,
   getAnthropicThinkingBudget,
   getOpenAiReasoningEffort,
