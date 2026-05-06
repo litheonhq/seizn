@@ -2,8 +2,12 @@
 
 import { useState } from "react";
 import { Bot, CheckCircle2, AlertCircle } from "lucide-react";
+import type { AuthorLlmProvider } from "@/lib/author/llm";
 
-export type AuthorLlmProvider = "anthropic" | "openai";
+// Re-export so existing imports `import { type AuthorLlmProvider } from
+// "./llm-provider-section"` keep working without churn. The canonical
+// definition lives in @/lib/author/llm/types.ts.
+export type { AuthorLlmProvider };
 
 export interface LlmProviderState {
   /** null = user hasn't set a preference, falls through to env default */

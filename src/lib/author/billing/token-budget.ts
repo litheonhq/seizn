@@ -134,7 +134,13 @@ export async function enforceAuthorTokenBudget(
   const used = state.tokensUsedMonth;
   const projected = used + Math.max(0, input.requestedTokens);
 
-  if (input.byokActive || state.byokActive || state.tokenCapMonth === null) {
+  // `input.byokActive` short-circuited at the top of the function and
+  // `state.byokActive` is just `currentByokActive` echoed back from
+  // `getAuthorBillingUsageState`, which itself was passed `input.byokActive`.
+  // The pre-audit condition `input.byokActive || state.byokActive ||
+  // state.tokenCapMonth === null` had two dead disjuncts — only the cap
+  // check ever fires here. Keep just the live branch.
+  if (state.tokenCapMonth === null) {
     return {
       allowed: true,
       cap: state.tokenCapMonth,

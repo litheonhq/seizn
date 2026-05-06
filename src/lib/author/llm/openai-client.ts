@@ -11,6 +11,8 @@ import {
 } from './byok-resolver';
 import {
   buildSystemPrompt,
+  DEFAULT_AUTHOR_MAX_TOKENS,
+  DEFAULT_AUTHOR_RATE_LIMIT_BACKOFF_MS,
   parseAndValidateJson,
   redactProviderError,
   sleep,
@@ -29,8 +31,8 @@ import {
 
 const DEFAULT_OPENAI_MODEL =
   process.env.AUTHOR_LLM_DEFAULT_MODEL_OPENAI?.trim() || 'gpt-5.5';
-const DEFAULT_MAX_COMPLETION_TOKENS = 4_096;
-const DEFAULT_RATE_LIMIT_BACKOFF_MS = [1_000, 2_000, 4_000, 8_000] as const;
+const DEFAULT_MAX_COMPLETION_TOKENS = DEFAULT_AUTHOR_MAX_TOKENS;
+const DEFAULT_RATE_LIMIT_BACKOFF_MS = DEFAULT_AUTHOR_RATE_LIMIT_BACKOFF_MS;
 
 type OpenAiClientLike = {
   chat: {

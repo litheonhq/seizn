@@ -12,6 +12,8 @@ import {
 } from './byok-resolver';
 import {
   buildSystemPrompt,
+  DEFAULT_AUTHOR_MAX_TOKENS,
+  DEFAULT_AUTHOR_RATE_LIMIT_BACKOFF_MS,
   parseAndValidateJson,
   redactProviderError,
   sleep,
@@ -33,8 +35,8 @@ const DEFAULT_AUTHOR_MODEL =
   process.env.AUTHOR_LLM_DEFAULT_MODEL_ANTHROPIC ??
   process.env.AUTHOR_LLM_DEFAULT_MODEL ??
   'claude-opus-4-7';
-const DEFAULT_MAX_TOKENS = 4096;
-const DEFAULT_RATE_LIMIT_BACKOFF_MS = [1000, 2000, 4000, 8000] as const;
+const DEFAULT_MAX_TOKENS = DEFAULT_AUTHOR_MAX_TOKENS;
+const DEFAULT_RATE_LIMIT_BACKOFF_MS = DEFAULT_AUTHOR_RATE_LIMIT_BACKOFF_MS;
 
 type AnthropicClientLike = {
   messages: {

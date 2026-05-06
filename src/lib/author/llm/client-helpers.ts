@@ -128,6 +128,21 @@ export function sleep(ms: number): Promise<void> {
 }
 
 /**
+ * Default max-output tokens both providers use when the request doesn't pin
+ * its own. Hoisted from the two clients (post-dedup, they were independent
+ * constants with the same value — drift risk).
+ */
+export const DEFAULT_AUTHOR_MAX_TOKENS = 4_096;
+
+/**
+ * Exponential backoff schedule for rate-limit retries (1s, 2s, 4s, 8s).
+ * Both clients should use the same retry budget — pre-audit they had identical
+ * arrays declared independently; one drifting silently would have made one
+ * provider noticeably more / less aggressive on Stripe outages.
+ */
+export const DEFAULT_AUTHOR_RATE_LIMIT_BACKOFF_MS = [1_000, 2_000, 4_000, 8_000] as const;
+
+/**
  * Strip provider-specific identifiers from SDK error messages before they reach
  * the response body. Today neither Anthropic nor OpenAI SDK error strings leak
  * keys, but they can include request URLs, organization IDs, and partial body

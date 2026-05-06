@@ -142,8 +142,8 @@ export async function getAuthorByokStatus(
   // explicit `options.provider` override still wins for callers that want
   // to peek a specific provider's status (e.g., DELETE flow checking the
   // OTHER provider after removing one).
-  const targetProvider: Provider = (options.provider
-    ?? (await getActiveAuthorProvider(userId))) as Provider;
+  const targetProvider: 'anthropic' | 'openai' = options.provider
+    ?? (await getActiveAuthorProvider(userId));
 
   const supabase = (client ?? createServerClient()) as ProviderKeyClient;
   const query = supabase
@@ -166,7 +166,7 @@ export async function getAuthorByokStatus(
 
   return {
     enabled: true,
-    provider: targetProvider as 'anthropic' | 'openai',
+    provider: targetProvider,
     key_last_4: keyHintToLast4(data.key_hint),
     verified_at: data.created_at ?? null,
     status: 'active',

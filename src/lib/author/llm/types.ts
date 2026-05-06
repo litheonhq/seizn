@@ -100,7 +100,11 @@ export interface AuthorModelUsageRecord {
 
 export interface AuthorByokStatus {
   enabled: boolean;
-  provider: 'anthropic' | 'google' | 'openai' | null;
+  /** Author stack only stores anthropic | openai today. Pre-audit this union
+   * also included 'google', forcing every consumer to defensively narrow.
+   * If/when Google joins the supported list, widen this field AND update the
+   * AuthorLlmProvider union together. */
+  provider: AuthorLlmProvider | null;
   key_last_4?: string;
   verified_at?: string | null;
   status: 'active' | 'invalid' | 'missing';

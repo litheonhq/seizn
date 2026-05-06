@@ -8,6 +8,7 @@ import {
   AuthorLlmError,
   getAuthorByokStatus,
   saveAuthorByokKey,
+  type AuthorLlmProvider,
 } from '@/lib/author/llm';
 import { createServerClient, hasServerSupabaseServiceRoleConfig } from '@/lib/supabase';
 import {
@@ -17,7 +18,9 @@ import {
 
 export const runtime = 'nodejs';
 
-type ByokProvider = 'anthropic' | 'openai';
+// Route-local alias kept short; the union itself is canonical in
+// @/lib/author/llm/types.ts as AuthorLlmProvider.
+type ByokProvider = AuthorLlmProvider;
 
 function readProviderQuery(request: NextRequest): ByokProvider | undefined {
   const value = request.nextUrl.searchParams.get('provider')?.trim().toLowerCase();
@@ -87,10 +90,9 @@ export async function DELETE(request: NextRequest) {
     try {
       const otherStatus = await getAuthorByokStatus(userId, undefined, { provider: otherProvider });
       otherActive = otherStatus.status === 'active';
-      // AuthorByokStatus.provider has a wider union ('google' included) but the
-      // author stack only ever stores Anthropic / OpenAI keys today.
-      const p = otherStatus.provider;
-      otherProviderResolved = otherActive && (p === 'anthropic' || p === 'openai') ? p : null;
+      // AuthorByokStatus.provider is now narrowed to AuthorLlmProvider | null,
+      // matching the AuthorByokProvider union — direct assignment, no narrow.
+      otherProviderResolved = otherActive ? otherStatus.provider : null;
     } catch (lookupError) {
       console.error('byok DELETE: failed to read other-provider status, defaulting to inactive', lookupError);
       otherActive = false;

@@ -2,9 +2,7 @@
 
 import { type FormEvent, useId, useState } from "react";
 import { AlertCircle, CheckCircle2, ExternalLink, KeyRound, Trash2 } from "lucide-react";
-
-const ANTHROPIC_CONSOLE_KEYS_URL = "https://console.anthropic.com/settings/keys";
-const OPENAI_CONSOLE_KEYS_URL = "https://platform.openai.com/api-keys";
+import type { AuthorLlmProvider } from "@/lib/author/llm";
 import type {
   AuthorSettingsCopy,
   ByokDiscountState,
@@ -12,7 +10,14 @@ import type {
 } from "./author-settings-types";
 import { normalizeByokDiscountStatus } from "./author-settings-types";
 
-export type ByokProvider = "anthropic" | "openai";
+const ANTHROPIC_CONSOLE_KEYS_URL = "https://console.anthropic.com/settings/keys";
+const OPENAI_CONSOLE_KEYS_URL = "https://platform.openai.com/api-keys";
+
+// ByokProvider is the same union as AuthorLlmProvider — keep one canonical
+// definition (@/lib/author/llm/types.ts) and re-export under the local name
+// so existing settings imports don't churn. If/when "google" becomes
+// supported, widen the lib union and this re-export updates with it.
+export type ByokProvider = AuthorLlmProvider;
 
 interface ByokSectionProps {
   byok: ByokState;
