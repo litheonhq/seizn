@@ -1,7 +1,7 @@
 {
   "version": 1,
   "generatedBy": "scripts/verify-api-auth-surface.mjs",
-  "routeCount": 547,
+  "routeCount": 548,
   "routes": [
     {
       "route": "/api",
@@ -21,6 +21,15 @@
       "route": "/api/account/byok",
       "methods": [
         "DELETE",
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/account/llm-provider",
+      "methods": [
         "GET",
         "POST"
       ],
