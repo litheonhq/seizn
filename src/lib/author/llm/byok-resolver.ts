@@ -231,6 +231,17 @@ export async function saveAuthorByokKey(
     .single();
 
   if (error || !data) {
+    // 23505 = unique-violation on provider_keys_default_per_user_provider_idx
+    // (added 2026-05-07 to close the saveAuthorByokKey race). A concurrent
+    // save just won the default slot; surface a 409 so the dashboard can
+    // either retry or refresh the displayed key.
+    if (error?.code === '23505') {
+      throw new AuthorLlmError(
+        'LLM_NOT_CONFIGURED',
+        'Another save was in flight for this provider — please retry',
+        409,
+      );
+    }
     throw new AuthorLlmError('LLM_NOT_CONFIGURED', 'Failed to save BYOK key', 500);
   }
 
