@@ -13,6 +13,7 @@ import {
 import type { Locale } from "@/i18n/config";
 import { formatTokenLabel, formatUsd } from "@/components/landing/section-pricing";
 import type { PricingPageCopy } from "./pricing-copy";
+import { PricingTrack2Section } from "./pricing-track2-section";
 
 interface PricingClientProps {
   locale: Locale;
@@ -114,6 +115,8 @@ export function PricingClient({ locale, copy }: PricingClientProps) {
             ))}
           </div>
         </section>
+
+        <PricingTrack2Section />
 
         <section className="mx-auto max-w-3xl px-4 py-16 sm:px-6">
           <h2 className="author-serif text-3xl" style={{ color: "var(--ink-900)" }}>
