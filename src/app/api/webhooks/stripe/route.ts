@@ -383,9 +383,11 @@ export async function POST(request: NextRequest) {
     const eventType = payload.type;
     const eventData = payload.data.object;
 
+    // Per-event log line — keep PII out of the per-event row. Customer ID
+    // can be linked back to a real user via Stripe; the event_id alone is
+    // enough to correlate with the audit_logs row written by handlers below.
     console.log(`Received Stripe webhook: ${eventType}`, {
       event_id: payload.id,
-      customer: eventData.customer,
       livemode: payload.livemode,
     });
 

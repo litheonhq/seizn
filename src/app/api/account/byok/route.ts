@@ -1,4 +1,4 @@
-﻿import { NextRequest } from 'next/server';
+﻿import { NextRequest, NextResponse } from 'next/server';
 import {
   AuthorUiValidationError,
   readJsonBody,
@@ -9,6 +9,9 @@ import {
   getAuthorByokStatus,
   saveAuthorByokKey,
 } from '@/lib/author/llm';
+import { getRequestUser } from '@/lib/api/request-user';
+import { checkCustomRateLimitAsync, getRateLimitHeaders } from '@/lib/rate-limit';
+import { logServerError } from '@/lib/server/logger';
 import { createServerClient, hasServerSupabaseServiceRoleConfig } from '@/lib/supabase';
 import {
   applyAuthorByokDiscount,
@@ -18,6 +21,31 @@ import {
 export const runtime = 'nodejs';
 
 type ByokProvider = 'anthropic' | 'openai';
+
+// Per-user rate limit on BYOK write paths (POST + DELETE). 10/min covers all
+// legitimate UX (save / replace / remove); above that is either UI thrash
+// (double-click), a session-hijack abuse pattern (spam toggle to confuse
+// Stripe coupon reconciliation), or a key-format probe loop. Each call hits
+// Stripe (customer / subscription update) so the upstream cost of abuse is
+// real even before any DB write. Keyed on userId so attackers cannot share
+// the bucket across accounts.
+const BYOK_WRITE_RATE_LIMIT = 10;
+const BYOK_WRITE_RATE_WINDOW_MS = 60_000;
+
+async function rateLimitByokWrite(request: NextRequest): Promise<NextResponse | null> {
+  const user = await getRequestUser(request);
+  if (!user?.id) return null; // Auth check happens inside withAuthorUiService.
+  const result = await checkCustomRateLimitAsync(
+    `byok-write:${user.id}`,
+    BYOK_WRITE_RATE_LIMIT,
+    BYOK_WRITE_RATE_WINDOW_MS,
+  );
+  if (result.allowed) return null;
+  return NextResponse.json(
+    { error: 'Too many BYOK write attempts. Please wait a moment and try again.' },
+    { status: 429, headers: getRateLimitHeaders(result) },
+  );
+}
 
 function readProviderQuery(request: NextRequest): ByokProvider | undefined {
   const value = request.nextUrl.searchParams.get('provider')?.trim().toLowerCase();
@@ -39,6 +67,8 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const limited = await rateLimitByokWrite(request);
+  if (limited) return limited;
   return withAuthorUiService(request, async (service, userId) => {
     const body = await readJsonBody(request);
     try {
@@ -64,6 +94,8 @@ export async function POST(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
+  const limited = await rateLimitByokWrite(request);
+  if (limited) return limited;
   return withAuthorUiService(request, async (service, userId) => {
     const targetProvider: ByokProvider = readProviderQuery(request) ?? 'anthropic';
     if (hasServerSupabaseServiceRoleConfig()) {
@@ -92,7 +124,11 @@ export async function DELETE(request: NextRequest) {
       const p = otherStatus.provider;
       otherProviderResolved = otherActive && (p === 'anthropic' || p === 'openai') ? p : null;
     } catch (lookupError) {
-      console.error('byok DELETE: failed to read other-provider status, defaulting to inactive', lookupError);
+      logServerError(
+        'byok DELETE: failed to read other-provider status, defaulting to inactive',
+        lookupError,
+        { otherProvider, targetProvider },
+      );
       otherActive = false;
       otherProviderResolved = null;
     }
