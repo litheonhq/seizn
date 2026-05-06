@@ -26,7 +26,7 @@ import {
   AuthorLlmError,
   type AuthorLlmRequest,
   type AuthorLlmResponse,
-  type ResolvedAuthorAnthropicKey,
+  type ResolvedAuthorProviderKey,
 } from './types';
 
 const DEFAULT_AUTHOR_MODEL =
@@ -258,4 +258,5 @@ function readErrorStatus(error: unknown): number | undefined {
   return typeof status === 'number' ? status : undefined;
 }
 
-export type { ResolvedAuthorAnthropicKey };
+/** @deprecated Re-exported for backward compat — import from `@/lib/author/llm` instead. */
+export type { ResolvedAuthorProviderKey, ResolvedAuthorAnthropicKey } from './types';

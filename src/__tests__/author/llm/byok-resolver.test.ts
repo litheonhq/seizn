@@ -2,6 +2,8 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   AuthorLlmError,
   resolveAuthorAnthropicKey,
+  resolveAuthorOpenAiKey,
+  resolveAuthorProviderKey,
   saveAuthorByokKey,
 } from '@/lib/author/llm';
 
@@ -9,7 +11,8 @@ vi.mock('@/lib/byok/encryption', () => ({
   encryptApiKey: (apiKey: string) => `encrypted:${apiKey.slice(-4)}`,
   generateKeyHint: (apiKey: string) => `...${apiKey.slice(-4)}`,
   validateKeyFormat: (provider: string, apiKey: string) =>
-    provider === 'anthropic' && /^sk-ant-[a-zA-Z0-9-]{32,}$/.test(apiKey),
+    (provider === 'anthropic' && /^sk-ant-[a-zA-Z0-9-]{32,}$/.test(apiKey))
+    || (provider === 'openai' && /^sk-[a-zA-Z0-9_-]{32,}$/.test(apiKey)),
 }));
 
 const ORIGINAL_ENV = {
@@ -178,3 +181,160 @@ function restoreEnv(name: keyof typeof ORIGINAL_ENV, value: string | undefined):
     process.env[name] = value;
   }
 }
+
+describe('resolveAuthorProviderKey (unified)', () => {
+  it('routes to OpenAI BYOK when provider=openai', async () => {
+    const lookups: Array<[string, string]> = [];
+    const resolved = await resolveAuthorProviderKey(
+      'openai',
+      { userId: 'user-1', projectId: 'knot' },
+      {
+        lookupProviderKey: async (userId, provider) => {
+          lookups.push([userId, provider]);
+          return {
+            id: 'provider-key-openai-1',
+            provider: 'openai',
+            apiKey: 'openai-user-key',
+            isDefault: true,
+          };
+        },
+      },
+    );
+    expect(lookups).toEqual([['user-1', 'openai']]);
+    expect(resolved).toMatchObject({
+      apiKey: 'openai-user-key',
+      source: 'byok',
+      byok: true,
+      providerKeyId: 'provider-key-openai-1',
+    });
+  });
+
+  it('falls back to managed OpenAI env key when BYOK is missing', async () => {
+    const resolved = await resolveAuthorProviderKey(
+      'openai',
+      { userId: 'user-1', projectId: 'knot' },
+      {
+        lookupProviderKey: async () => null,
+        env: { LITHEON_OPENAI_API_KEY: 'openai-managed-key' },
+      },
+    );
+    expect(resolved).toEqual({
+      apiKey: 'openai-managed-key',
+      source: 'managed',
+      byok: false,
+    });
+  });
+
+  it('throws LLM_NOT_CONFIGURED with OpenAI label when no key for openai', async () => {
+    await expect(resolveAuthorProviderKey(
+      'openai',
+      { userId: 'user-1', projectId: 'knot' },
+      {
+        lookupProviderKey: async () => null,
+        env: {},
+      },
+    )).rejects.toMatchObject({
+      code: 'LLM_NOT_CONFIGURED',
+    });
+  });
+
+  it('OpenAI error message identifies the provider', async () => {
+    let captured: AuthorLlmError | null = null;
+    try {
+      await resolveAuthorProviderKey('openai', { userId: 'u' }, {
+        lookupProviderKey: async () => null,
+        env: {},
+      });
+    } catch (err) {
+      captured = err as AuthorLlmError;
+    }
+    expect(captured?.message).toMatch(/OpenAI/);
+  });
+
+  it('Anthropic error message identifies the provider', async () => {
+    let captured: AuthorLlmError | null = null;
+    try {
+      await resolveAuthorProviderKey('anthropic', { userId: 'u' }, {
+        lookupProviderKey: async () => null,
+        env: {},
+      });
+    } catch (err) {
+      captured = err as AuthorLlmError;
+    }
+    expect(captured?.message).toMatch(/Anthropic/);
+  });
+
+  it('legacy resolveAuthorAnthropicKey delegates to unified resolver with anthropic provider', async () => {
+    const seen: string[] = [];
+    await resolveAuthorAnthropicKey(
+      { userId: 'u', projectId: 'p' },
+      {
+        lookupProviderKey: async (_userId, provider) => {
+          seen.push(provider);
+          return null;
+        },
+        env: { ANTHROPIC_API_KEY: 'managed' },
+      },
+    );
+    expect(seen).toEqual(['anthropic']);
+  });
+
+  it('legacy resolveAuthorOpenAiKey delegates to unified resolver with openai provider', async () => {
+    const seen: string[] = [];
+    await resolveAuthorOpenAiKey(
+      { userId: 'u', projectId: 'p' },
+      {
+        lookupProviderKey: async (_userId, provider) => {
+          seen.push(provider);
+          return null;
+        },
+        env: { OPENAI_API_KEY: 'managed' },
+      },
+    );
+    expect(seen).toEqual(['openai']);
+  });
+
+  it('env precedence: AUTHOR_OPENAI_DEV_API_KEY > LITHEON_OPENAI_API_KEY > OPENAI_API_KEY', async () => {
+    const resolved = await resolveAuthorProviderKey(
+      'openai',
+      { userId: 'u', projectId: 'p' },
+      {
+        lookupProviderKey: async () => null,
+        env: {
+          AUTHOR_OPENAI_DEV_API_KEY: 'dev',
+          LITHEON_OPENAI_API_KEY: 'litheon',
+          OPENAI_API_KEY: 'bare',
+        },
+      },
+    );
+    expect(resolved.apiKey).toBe('dev');
+  });
+
+  it('env precedence: AUTHOR_ANTHROPIC_DEV_API_KEY > LITHEON_ANTHROPIC_API_KEY > ANTHROPIC_API_KEY', async () => {
+    const resolved = await resolveAuthorProviderKey(
+      'anthropic',
+      { userId: 'u', projectId: 'p' },
+      {
+        lookupProviderKey: async () => null,
+        env: {
+          AUTHOR_ANTHROPIC_DEV_API_KEY: 'dev',
+          LITHEON_ANTHROPIC_API_KEY: 'litheon',
+          ANTHROPIC_API_KEY: 'bare',
+        },
+      },
+    );
+    expect(resolved.apiKey).toBe('dev');
+  });
+
+  it('falls through env precedence to bare key when higher-priority env missing', async () => {
+    const resolved = await resolveAuthorProviderKey(
+      'openai',
+      { userId: 'u', projectId: 'p' },
+      {
+        lookupProviderKey: async () => null,
+        env: { OPENAI_API_KEY: 'bare' },
+      },
+    );
+    expect(resolved.apiKey).toBe('bare');
+  });
+});

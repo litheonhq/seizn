@@ -79,12 +79,25 @@ export class AuthorLlmError extends Error {
   }
 }
 
-export interface ResolvedAuthorAnthropicKey {
+/**
+ * Provider-agnostic resolved-key shape returned by `resolveAuthorProviderKey`.
+ * Identical structure regardless of which provider (anthropic/openai) was
+ * resolved — the calling client picks the right SDK by other means.
+ */
+export interface ResolvedAuthorProviderKey {
   apiKey: string;
   source: AuthorLlmKeySource;
   byok: boolean;
   providerKeyId?: string;
 }
+
+/**
+ * @deprecated Use `ResolvedAuthorProviderKey` — the type was provider-agnostic
+ * from day one but historically named after Anthropic. Kept as an alias so the
+ * `byokResolver` re-export in `@/lib/byok` and any external consumers do not
+ * break. Will be removed once all internal callers migrate.
+ */
+export type ResolvedAuthorAnthropicKey = ResolvedAuthorProviderKey;
 
 export interface AuthorModelUsageRecord {
   userId: string;

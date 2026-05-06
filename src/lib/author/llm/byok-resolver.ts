@@ -17,12 +17,13 @@ import { getActiveAuthorProvider } from './active-provider';
 import {
   AuthorLlmError,
   type AuthorByokStatus,
-  type ResolvedAuthorAnthropicKey,
+  type ResolvedAuthorProviderKey,
 } from './types';
 
-const AUTHOR_BYOK_LABEL = 'Author Memory v3 Anthropic';
-const AUTHOR_BYOK_PROVIDER: Provider = 'anthropic';
-const AUTHOR_BYOK_OPENAI_PROVIDER: Provider = 'openai';
+type AuthorByokProvider = Extract<Provider, 'anthropic' | 'openai'>;
+
+const AUTHOR_BYOK_PROVIDER: AuthorByokProvider = 'anthropic';
+const AUTHOR_BYOK_OPENAI_PROVIDER: AuthorByokProvider = 'openai';
 
 interface ProviderKeyLookup {
   (userId: string, provider: Provider): Promise<ProviderKey | null>;
@@ -84,16 +85,26 @@ interface ProviderKeyRow {
   created_at?: string | null;
 }
 
-export async function resolveAuthorAnthropicKey(
+interface ResolveAuthorProviderKeyDeps {
+  lookupProviderKey?: ProviderKeyLookup;
+  nodeEnv?: string;
+  env?: NodeJS.ProcessEnv;
+}
+
+/**
+ * Provider-agnostic key resolver. Picks the user's BYOK key for the requested
+ * provider when present, otherwise falls back to the managed env key. Both
+ * `resolveAuthorAnthropicKey` and `resolveAuthorOpenAiKey` are now thin
+ * wrappers around this single implementation so future env-fallback or BYOK
+ * lookup changes land in one place.
+ */
+export async function resolveAuthorProviderKey(
+  provider: AuthorByokProvider,
   input: { userId: string; projectId?: string },
-  deps: {
-    lookupProviderKey?: ProviderKeyLookup;
-    nodeEnv?: string;
-    env?: NodeJS.ProcessEnv;
-  } = {}
-): Promise<ResolvedAuthorAnthropicKey> {
+  deps: ResolveAuthorProviderKeyDeps = {},
+): Promise<ResolvedAuthorProviderKey> {
   const lookupProviderKey = deps.lookupProviderKey ?? getUserProviderKey;
-  const userKey = await lookupProviderKey(input.userId, AUTHOR_BYOK_PROVIDER);
+  const userKey = await lookupProviderKey(input.userId, provider);
   if (userKey) {
     return {
       apiKey: userKey.apiKey,
@@ -104,11 +115,11 @@ export async function resolveAuthorAnthropicKey(
   }
 
   const env = deps.env ?? process.env;
-  const managedKey = readManagedAnthropicKey(env);
+  const managedKey = readManagedKey(provider, env);
   if (!managedKey) {
     throw new AuthorLlmError(
       'LLM_NOT_CONFIGURED',
-      'Managed Anthropic key is not configured for Author Memory v3'
+      `Managed ${providerLabel(provider)} key is not configured for Author Memory v3`,
     );
   }
 
@@ -119,8 +130,22 @@ export async function resolveAuthorAnthropicKey(
   };
 }
 
+export function resolveAuthorAnthropicKey(
+  input: { userId: string; projectId?: string },
+  deps: ResolveAuthorProviderKeyDeps = {},
+): Promise<ResolvedAuthorProviderKey> {
+  return resolveAuthorProviderKey(AUTHOR_BYOK_PROVIDER, input, deps);
+}
+
+export function resolveAuthorOpenAiKey(
+  input: { userId: string; projectId?: string },
+  deps: ResolveAuthorProviderKeyDeps = {},
+): Promise<ResolvedAuthorProviderKey> {
+  return resolveAuthorProviderKey(AUTHOR_BYOK_OPENAI_PROVIDER, input, deps);
+}
+
 export async function recordAuthorByokUsage(
-  resolved: ResolvedAuthorAnthropicKey,
+  resolved: ResolvedAuthorProviderKey,
   costUsd = 0,
   recorder: ProviderKeyUsageRecorder = recordKeyUsage
 ): Promise<void> {
@@ -174,13 +199,13 @@ export async function getAuthorByokStatus(
 }
 
 
-const AUTHOR_BYOK_SUPPORTED_PROVIDERS: ReadonlySet<Provider> = new Set([
+const AUTHOR_BYOK_SUPPORTED_PROVIDERS: ReadonlySet<AuthorByokProvider> = new Set([
   AUTHOR_BYOK_PROVIDER,
   AUTHOR_BYOK_OPENAI_PROVIDER,
 ]);
 
-function isSupportedAuthorByokProvider(value: string): value is Provider {
-  return AUTHOR_BYOK_SUPPORTED_PROVIDERS.has(value as Provider);
+function isSupportedAuthorByokProvider(value: string): value is AuthorByokProvider {
+  return AUTHOR_BYOK_SUPPORTED_PROVIDERS.has(value as AuthorByokProvider);
 }
 
 export async function saveAuthorByokKey(
@@ -190,7 +215,7 @@ export async function saveAuthorByokKey(
   if (!isSupportedAuthorByokProvider(input.provider) || !validateKeyFormat(input.provider, input.apiKey)) {
     throw new AuthorLlmError('LLM_NOT_CONFIGURED', 'invalid provider api key', 400);
   }
-  const provider: Provider = input.provider;
+  const provider: AuthorByokProvider = input.provider;
 
   if (!hasServerSupabaseServiceRoleConfig()) {
     if (process.env.NODE_ENV === 'production') {
@@ -212,9 +237,7 @@ export async function saveAuthorByokKey(
     throw new AuthorLlmError('LLM_NOT_CONFIGURED', 'BYOK storage client is unavailable', 500);
   }
 
-  const label = provider === AUTHOR_BYOK_OPENAI_PROVIDER
-    ? `Author Memory v3 OpenAI ${new Date().toISOString()}`
-    : `${AUTHOR_BYOK_LABEL} ${new Date().toISOString()}`;
+  const label = `Author Memory v3 ${providerLabel(provider)} ${new Date().toISOString()}`;
 
   const { data, error } = await providerKeys
     .insert({
@@ -237,59 +260,38 @@ export async function saveAuthorByokKey(
   return { valid: true, key_last_4: input.apiKey.slice(-4), provider };
 }
 
-function readManagedAnthropicKey(env: NodeJS.ProcessEnv): string | null {
-  return (
-    env.AUTHOR_ANTHROPIC_DEV_API_KEY ||
-    env.AUTHOR_LLM_ANTHROPIC_API_KEY ||
-    env.LITHEON_ANTHROPIC_API_KEY ||
-    env.ANTHROPIC_API_KEY ||
-    null
-  );
+/**
+ * Resolve the managed (server-side, non-BYOK) API key for a provider. Looks up
+ * env vars in priority order: provider-specific dev key → namespaced LLM key →
+ * Litheon-prefixed key → bare provider key. Same fallback chain for both
+ * providers so deployments can be configured uniformly.
+ */
+function readManagedKey(provider: AuthorByokProvider, env: NodeJS.ProcessEnv): string | null {
+  const candidates = MANAGED_KEY_ENV_VARS[provider];
+  for (const name of candidates) {
+    const value = env[name];
+    if (value) return value;
+  }
+  return null;
 }
 
-export async function resolveAuthorOpenAiKey(
-  input: { userId: string; projectId?: string },
-  deps: {
-    lookupProviderKey?: ProviderKeyLookup;
-    nodeEnv?: string;
-    env?: NodeJS.ProcessEnv;
-  } = {},
-): Promise<ResolvedAuthorAnthropicKey> {
-  const lookupProviderKey = deps.lookupProviderKey ?? getUserProviderKey;
-  const userKey = await lookupProviderKey(input.userId, AUTHOR_BYOK_OPENAI_PROVIDER);
-  if (userKey) {
-    return {
-      apiKey: userKey.apiKey,
-      source: 'byok',
-      byok: true,
-      providerKeyId: userKey.id,
-    };
-  }
+const MANAGED_KEY_ENV_VARS: Record<AuthorByokProvider, readonly string[]> = {
+  anthropic: [
+    'AUTHOR_ANTHROPIC_DEV_API_KEY',
+    'AUTHOR_LLM_ANTHROPIC_API_KEY',
+    'LITHEON_ANTHROPIC_API_KEY',
+    'ANTHROPIC_API_KEY',
+  ],
+  openai: [
+    'AUTHOR_OPENAI_DEV_API_KEY',
+    'AUTHOR_LLM_OPENAI_API_KEY',
+    'LITHEON_OPENAI_API_KEY',
+    'OPENAI_API_KEY',
+  ],
+};
 
-  const env = deps.env ?? process.env;
-  const managedKey = readManagedOpenAiKey(env);
-  if (!managedKey) {
-    throw new AuthorLlmError(
-      'LLM_NOT_CONFIGURED',
-      'Managed OpenAI key is not configured for Author Memory v3',
-    );
-  }
-
-  return {
-    apiKey: managedKey,
-    source: 'managed',
-    byok: false,
-  };
-}
-
-function readManagedOpenAiKey(env: NodeJS.ProcessEnv): string | null {
-  return (
-    env.AUTHOR_OPENAI_DEV_API_KEY ||
-    env.AUTHOR_LLM_OPENAI_API_KEY ||
-    env.LITHEON_OPENAI_API_KEY ||
-    env.OPENAI_API_KEY ||
-    null
-  );
+function providerLabel(provider: AuthorByokProvider): string {
+  return provider === 'anthropic' ? 'Anthropic' : 'OpenAI';
 }
 
 function keyHintToLast4(keyHint?: string | null): string | undefined {

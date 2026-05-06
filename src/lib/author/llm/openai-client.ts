@@ -24,7 +24,6 @@ import {
   AuthorLlmError,
   type AuthorLlmRequest,
   type AuthorLlmResponse,
-  type ResolvedAuthorAnthropicKey,
 } from './types';
 
 const DEFAULT_OPENAI_MODEL =

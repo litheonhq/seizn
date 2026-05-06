@@ -32,6 +32,7 @@ export {
   recordAuthorByokUsage,
   resolveAuthorAnthropicKey,
   resolveAuthorOpenAiKey,
+  resolveAuthorProviderKey,
   saveAuthorByokKey,
 } from './byok-resolver';
 export {
@@ -48,5 +49,6 @@ export type {
   AuthorLlmUsage,
   AuthorModelUsageRecord,
   ResolvedAuthorAnthropicKey,
+  ResolvedAuthorProviderKey,
 } from './types';
 export { AuthorLlmError } from './types';
