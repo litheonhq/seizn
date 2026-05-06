@@ -6,6 +6,10 @@ import {
   type LegacyPlanName,
   type PlanName,
 } from '@/lib/stripe-config';
+import {
+  getV8Track2OpusOveragePriceId,
+  type V8Track2Tier,
+} from '@/lib/billing/v8-products';
 import { logServerError, logServerWarn } from '@/lib/server/logger';
 
 export type UsageDimension = 'memories' | 'ops';
@@ -273,6 +277,58 @@ export async function ensureMeteredPriceAttached(
   );
 
   return { attached: missingPriceIds };
+}
+
+export type V8Track2OpusAttachResult =
+  | { attached: true; priceId: string }
+  | { attached: false; reason: 'non_managed_tier' | 'missing_subscription' | 'missing_overage_price_env' | 'already_attached' };
+
+/**
+ * Studio Managed (Track 2 v8) gets a metered Opus overage price attached on top of
+ * its base $299/mo subscription. This runs from the Stripe webhook the moment the
+ * subscription transitions into `studio_managed`, so the user can spend without
+ * needing a manual attach by support.
+ */
+export async function ensureV8Track2OpusOverageAttached(
+  subscriptionId: string | null | undefined,
+  tier: V8Track2Tier,
+): Promise<V8Track2OpusAttachResult> {
+  if (tier !== 'studio_managed') {
+    return { attached: false, reason: 'non_managed_tier' };
+  }
+  if (!subscriptionId) {
+    return { attached: false, reason: 'missing_subscription' };
+  }
+
+  const overagePriceId = getV8Track2OpusOveragePriceId();
+  if (!overagePriceId) {
+    return { attached: false, reason: 'missing_overage_price_env' };
+  }
+
+  const subscription = await stripeRequest<StripeSubscription>(
+    'GET',
+    `/subscriptions/${encodeURIComponent(subscriptionId)}`,
+  );
+  const existing = new Set(
+    subscription.items?.data
+      ?.map((item) => item.price?.id)
+      .filter((value): value is string => Boolean(value)) || [],
+  );
+  if (existing.has(overagePriceId)) {
+    return { attached: false, reason: 'already_attached' };
+  }
+
+  await stripeRequest<StripeSubscription>(
+    'POST',
+    `/subscriptions/${encodeURIComponent(subscriptionId)}`,
+    {
+      proration_behavior: 'none',
+      payment_behavior: 'pending_if_incomplete',
+      'items[0][price]': overagePriceId,
+    },
+  );
+
+  return { attached: true, priceId: overagePriceId };
 }
 
 export async function resolveUsageBillingContext(
