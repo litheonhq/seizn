@@ -77,20 +77,36 @@ export async function DELETE(request: NextRequest) {
 
     // Drop the discount only when the user is removing the LAST remaining
     // author-stack key. We re-read the other provider's status; if it's still
-    // active, keep the discount.
+    // active, keep the discount. If the lookup itself fails (transient
+    // Supabase outage), fail CLOSED — assume no other key is active and remove
+    // the discount. Discount can be re-applied on the next BYOK save; leaving
+    // it stale would mean Litheon eats the 50% indefinitely.
     const otherProvider: ByokProvider = targetProvider === 'anthropic' ? 'openai' : 'anthropic';
-    const otherStatus = await getAuthorByokStatus(userId, undefined, { provider: otherProvider });
-    const discount =
-      otherStatus.status === 'active'
-        ? { coupon: '', status: 'applied' as const, applied: true }
-        : await removeAuthorByokDiscount(userId);
-    if (otherStatus.status !== 'active') {
+    let otherActive = false;
+    let otherProviderResolved: ByokProvider | null = null;
+    try {
+      const otherStatus = await getAuthorByokStatus(userId, undefined, { provider: otherProvider });
+      otherActive = otherStatus.status === 'active';
+      // AuthorByokStatus.provider has a wider union ('google' included) but the
+      // author stack only ever stores Anthropic / OpenAI keys today.
+      const p = otherStatus.provider;
+      otherProviderResolved = otherActive && (p === 'anthropic' || p === 'openai') ? p : null;
+    } catch (lookupError) {
+      console.error('byok DELETE: failed to read other-provider status, defaulting to inactive', lookupError);
+      otherActive = false;
+      otherProviderResolved = null;
+    }
+
+    const discount = otherActive
+      ? { coupon: '', status: 'applied' as const, applied: true }
+      : await removeAuthorByokDiscount(userId);
+    if (!otherActive) {
       service.clearByok();
     }
     return {
-      enabled: otherStatus.status === 'active',
-      provider: otherStatus.status === 'active' ? otherStatus.provider : null,
-      status: otherStatus.status === 'active' ? otherStatus.status : 'missing',
+      enabled: otherActive,
+      provider: otherProviderResolved,
+      status: otherActive ? 'active' : 'missing',
       byok_discount: discount,
     };
   });
