@@ -89,18 +89,22 @@ export function GraphView({ nodes, edges, characters }: GraphViewProps) {
 
   const nodeMap = new Map<string, GraphNode>(nodes.map((n) => [n.id, n]));
   const node = (id: string) => nodeMap.get(id);
+  const selectedId =
+    selected != null && nodeMap.has(selected)
+      ? selected
+      : nodes[0]?.id ?? null;
   const labelLayouts = visibleLabelLayouts(nodes);
 
   const ties =
-    selected != null
+    selectedId != null
       ? edges
-          .filter((e) => e.a === selected || e.b === selected)
-          .map((e) => ({ ...e, other: e.a === selected ? e.b : e.a }))
+          .filter((e) => e.a === selectedId || e.b === selectedId)
+          .map((e) => ({ ...e, other: e.a === selectedId ? e.b : e.a }))
       : [];
 
-  const selectedNode = selected ? node(selected) : undefined;
-  const selectedCharacter = selected
-    ? characters.find((c) => c.id === selected)
+  const selectedNode = selectedId ? node(selectedId) : undefined;
+  const selectedCharacter = selectedId
+    ? characters.find((c) => c.id === selectedId)
     : undefined;
 
   const summary = t('dashboard.graph.summary', {
@@ -236,10 +240,10 @@ export function GraphView({ nodes, edges, characters }: GraphViewProps) {
               const a = node(e.a);
               const b = node(e.b);
               if (!a || !b) return null;
-              const isSel = selected != null && (e.a === selected || e.b === selected);
+              const isSel = selectedId != null && (e.a === selectedId || e.b === selectedId);
               const stroke = e.conflict ? 'var(--terracotta-500)' : 'rgba(74, 67, 56, 0.35)';
               const dash = e.conflict ? '4 3' : 'none';
-              const opacity = selected ? (isSel ? 1 : 0.25) : 0.7;
+              const opacity = selectedId ? (isSel ? 1 : 0.25) : 0.7;
               const mid = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
               const lw = 1 + e.strength * 1.5;
               return (
@@ -287,14 +291,14 @@ export function GraphView({ nodes, edges, characters }: GraphViewProps) {
             })}
 
             {nodes.map((n) => {
-              const isSel = selected === n.id;
+              const isSel = selectedId === n.id;
               const isFaded =
-                selected != null &&
+                selectedId != null &&
                 !isSel &&
                 !edges.some(
                   (e) =>
-                    (e.a === selected && e.b === n.id) ||
-                    (e.b === selected && e.a === n.id)
+                    (e.a === selectedId && e.b === n.id) ||
+                    (e.b === selectedId && e.a === n.id)
                 );
               const fill = colorForRole(n.role);
               const label = labelLayouts.get(n.id);

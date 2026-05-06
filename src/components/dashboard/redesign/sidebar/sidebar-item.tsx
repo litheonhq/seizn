@@ -39,6 +39,17 @@ function getAuthorTab(href: string): TopBarTab | null {
   return isAuthorTab(tab) ? tab : null;
 }
 
+function shouldUseNativeNavigation(event: MouseEvent<HTMLAnchorElement>): boolean {
+  return (
+    event.defaultPrevented ||
+    event.button !== 0 ||
+    event.metaKey ||
+    event.ctrlKey ||
+    event.shiftKey ||
+    event.altKey
+  );
+}
+
 export function SidebarItem({
   item,
   label,
@@ -62,6 +73,7 @@ export function SidebarItem({
 
   const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {
     if (!authorTab || !onSelect) return;
+    if (shouldUseNativeNavigation(event)) return;
     event.preventDefault();
     onSelect(authorTab);
   };
