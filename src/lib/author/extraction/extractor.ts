@@ -1,7 +1,7 @@
 import characterRegistry from '../../../../docs/knot-input/character_registry.json';
 import worldRuleRegistry from '../../../../docs/knot-input/world_rule_registry.json';
 import type { AuthorJsonSchema, AuthorLlmRequest, AuthorLlmResponse } from '@/lib/author/llm';
-import { generateAuthorAnthropic } from '@/lib/author/llm';
+import { generateAuthorLlm } from '@/lib/author/llm';
 import characterSchema from './schemas/candidate-character.json';
 import worldRuleSchema from './schemas/candidate-world-rule.json';
 import eventSchema from './schemas/candidate-event.json';
@@ -94,7 +94,7 @@ export async function extractAuthorCandidates(
 
   const mode = defaultMode(deps.mode);
   const rawCandidates = mode === 'llm'
-    ? await extractWithLlm(input, text, deps.generate ?? generateAuthorAnthropic)
+    ? await extractWithLlm(input, text, deps.generate ?? generateAuthorLlm)
     : heuristicExtract(input, text);
 
   const validated = validateExtractedCandidates({
@@ -124,7 +124,7 @@ export async function generateBacklogForCharacter(
   const categories = input.categories?.length ? input.categories : BACKLOG_CATEGORIES;
   const itemsPerCategory = Math.max(5, Math.min(7, input.itemsPerCategory ?? 5));
   const rawCandidates = mode === 'llm'
-    ? await generateBacklogWithLlm(input, categories, itemsPerCategory, deps.generate ?? generateAuthorAnthropic)
+    ? await generateBacklogWithLlm(input, categories, itemsPerCategory, deps.generate ?? generateAuthorLlm)
     : generateBacklogHeuristic(input, categories, itemsPerCategory);
   const validated = validateBacklogCandidates(input, rawCandidates);
 
