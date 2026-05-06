@@ -1,7 +1,7 @@
 'use client';
 
 import { Newsreader } from 'next/font/google';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useCallback, useMemo, useState } from 'react';
 import { useDashboardTranslation } from '@/contexts/DashboardLocaleContext';
 import { Sidebar } from './sidebar/sidebar';
@@ -61,12 +61,13 @@ export function WorkspaceShell({
   userName,
   userPlanLabel,
 }: WorkspaceShellProps) {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const { t } = useDashboardTranslation();
-  const tabFromUrl = searchParams?.get('tab') ?? null;
-  const tab: TopBarTab = isValidTab(tabFromUrl) ? tabFromUrl : defaultTab;
 
+  const [tab, setTab] = useState<TopBarTab>(() => {
+    const initial = searchParams?.get('tab') ?? null;
+    return isValidTab(initial) ? initial : defaultTab;
+  });
   const [collapsed, setCollapsed] = useState(initialCollapsed);
   const projectId = useAuthorProjectId();
   const workspace = useAuthorWorkspace();
@@ -76,13 +77,15 @@ export function WorkspaceShell({
   const conflicts = useAuthorConflictsList(projectId);
   const memoryHealth = useAuthorUiHealth(projectId);
 
-  const setTab = useCallback(
+  const handleTabChange = useCallback(
     (next: TopBarTab) => {
-      const params = new URLSearchParams(Array.from(searchParams?.entries() ?? []));
-      params.set('tab', next);
-      router.push(`/dashboard/author?${params.toString()}`);
+      setTab(next);
+      if (typeof window === 'undefined') return;
+      const url = new URL(window.location.href);
+      url.searchParams.set('tab', next);
+      window.history.replaceState(null, '', url.toString());
     },
-    [router, searchParams]
+    []
   );
 
   const toggleSidebar = useCallback(() => setCollapsed((c) => !c), []);
@@ -154,11 +157,13 @@ export function WorkspaceShell({
         memoryHealth={memoryHealth.data}
         badges={badges}
         dots={dots}
+        tab={tab}
+        onSelect={handleTabChange}
       />
       <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
         <TopBar
           tab={tab}
-          onTab={setTab}
+          onTab={handleTabChange}
           density={density}
           workspaceLabel={workspaceName}
           onToggleSidebar={toggleSidebar}

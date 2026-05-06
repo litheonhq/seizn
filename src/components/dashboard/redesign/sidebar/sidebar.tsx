@@ -1,10 +1,11 @@
 'use client';
 
-import { usePathname, useSearchParams } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { useMemo } from 'react';
 import { useDashboardTranslation } from '@/contexts/DashboardLocaleContext';
 import { Kbd } from '../atoms';
 import { SearchIcon } from '../icons';
+import type { TopBarTab } from '../top-bar';
 import type { Density, MemoryHealthState } from '../types';
 import { MemoryHealth } from './memory-health';
 import {
@@ -30,6 +31,8 @@ export interface SidebarProps {
   memoryHealth: MemoryHealthState;
   badges?: NavBadgeMap;
   dots?: NavDotMap;
+  tab: TopBarTab;
+  onSelect?: (tab: TopBarTab) => void;
   onCommandPalette?: () => void;
 }
 
@@ -77,12 +80,12 @@ export function Sidebar({
   memoryHealth,
   badges = {},
   dots = {},
+  tab,
+  onSelect,
   onCommandPalette,
 }: SidebarProps) {
   const { t } = useDashboardTranslation();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const tab = searchParams?.get('tab') ?? null;
 
   const entriesLabel = t('dashboard.workspace.switcher.entries', { count: workspaceEntries });
   const searchLabel = t('dashboard.topBar.search');
@@ -110,12 +113,13 @@ export function Sidebar({
                 density={density}
                 badge={badge}
                 showDot={showDot}
+                onSelect={onSelect}
               />
             );
           })}
         </SidebarGroup>
       )),
-    [t, collapsed, pathname, tab, badges, dots, density]
+    [t, collapsed, pathname, tab, badges, dots, density, onSelect]
   );
 
   return (

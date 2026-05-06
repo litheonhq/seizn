@@ -1,10 +1,22 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { type MouseEvent, useState } from 'react';
 import { Kbd } from '../atoms';
+import type { TopBarTab } from '../top-bar';
 import type { Density } from '../types';
 import type { NavItem } from './nav-config';
+
+const AUTHOR_TABS: TopBarTab[] = [
+  'inbox',
+  'review',
+  'characters',
+  'graph',
+  'timeline',
+  'conflicts',
+  'simulate',
+  'audit',
+];
 
 export interface SidebarItemProps {
   item: NavItem;
@@ -14,6 +26,17 @@ export interface SidebarItemProps {
   density?: Density;
   badge?: number | string;
   showDot?: boolean;
+  onSelect?: (tab: TopBarTab) => void;
+}
+
+function isAuthorTab(value: string | null): value is TopBarTab {
+  return value != null && (AUTHOR_TABS as string[]).includes(value);
+}
+
+function getAuthorTab(href: string): TopBarTab | null {
+  if (!href.startsWith('/dashboard/author?tab=')) return null;
+  const tab = new URLSearchParams(href.split('?')[1] ?? '').get('tab');
+  return isAuthorTab(tab) ? tab : null;
 }
 
 export function SidebarItem({
@@ -24,10 +47,12 @@ export function SidebarItem({
   density = 'comfortable',
   badge,
   showDot = false,
+  onSelect,
 }: SidebarItemProps) {
   const [hover, setHover] = useState(false);
   const padY = density === 'compact' ? 4 : density === 'spacious' ? 8 : 6;
   const Icon = item.icon;
+  const authorTab = getAuthorTab(item.href);
 
   const background = active
     ? 'rgba(201, 100, 66, 0.10)'
@@ -35,9 +60,16 @@ export function SidebarItem({
     ? 'rgba(74, 67, 56, 0.05)'
     : 'transparent';
 
+  const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {
+    if (!authorTab || !onSelect) return;
+    event.preventDefault();
+    onSelect(authorTab);
+  };
+
   return (
     <Link
       href={item.href}
+      onClick={handleClick}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       title={collapsed ? label : undefined}
