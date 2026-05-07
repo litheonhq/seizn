@@ -1,6 +1,5 @@
-# Thin caller — logic lives in iruhana/claude-workflows
-# CLI: gh workflow run claude-audit.yml -f depth=full
 name: Claude Audit
+
 on:
   workflow_dispatch:
     inputs:
@@ -10,27 +9,108 @@ on:
         options: [quick, full, strategic]
         default: full
       auto_commit:
-        description: Auto-commit changes
+        description: Auto-commit changes. Unsupported in the repo-local audit workflow.
         type: boolean
         default: false
       provider:
-        description: AI provider
+        description: Accepted for CLI compatibility only. No external AI provider is called.
         type: choice
         options: [claude, codex]
         default: claude
 
+permissions:
+  contents: read
+
 concurrency:
-  group: claude-audit-${{ inputs.depth }}
+  group: claude-audit-${{ github.ref }}-${{ inputs.depth }}
   cancel-in-progress: true
 
+env:
+  CI: true
+  NODE_VERSION: '20'
+  NEXT_TELEMETRY_DISABLED: '1'
+
 jobs:
-  run:
-    uses: iruhana/claude-workflows/.github/workflows/claude-audit.yml@v1
-    with:
-      depth: ${{ inputs.depth }}
-      auto_commit: ${{ inputs.auto_commit }}
-      provider: ${{ inputs.provider }}
-    secrets: inherit
-    permissions:
-      contents: write
-      pull-requests: write
+  audit:
+    name: Repo-local code audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Reject unsupported auto-commit mode
+        if: ${{ inputs.auto_commit == true }}
+        run: |
+          echo "auto_commit=true is not supported by the repo-local audit workflow." >&2
+          echo "Run the audit, inspect the results, and commit changes from a normal Litheon checkout." >&2
+          exit 1
+
+      - name: Write audit context
+        run: |
+          {
+            echo "## Seizn Code Audit"
+            echo
+            echo "- Repository: ${{ github.repository }}"
+            echo "- Ref: ${{ github.ref }}"
+            echo "- Commit: ${{ github.sha }}"
+            echo "- Depth: ${{ inputs.depth }}"
+            echo "- Provider input: ${{ inputs.provider }} (compatibility-only)"
+            echo "- Auto-commit: ${{ inputs.auto_commit }}"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Production dependency audit
+        run: npm audit --omit=dev
+
+      - name: Check route conflicts
+        run: npm run check:routes
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Lint
+        if: ${{ inputs.depth != 'quick' }}
+        run: npm run lint
+
+      - name: Unit and integration tests
+        if: ${{ inputs.depth != 'quick' }}
+        run: npm run test:run
+
+      - name: Production build
+        if: ${{ inputs.depth == 'full' || inputs.depth == 'strategic' }}
+        run: npm run build
+
+      - name: Policy consistency scan (advisory)
+        if: ${{ inputs.depth == 'strategic' }}
+        continue-on-error: true
+        run: npm run check:policy
+
+      - name: Strategic security and web surface checks
+        if: ${{ inputs.depth == 'strategic' }}
+        run: |
+          npm run test:security
+          npm run verify:seo-surface
+          npm run verify:security-headers
+          npm run verify:telemetry-privacy
+          npm run verify:api-auth-surface
+
+      - name: Finish summary
+        if: always()
+        run: |
+          {
+            echo
+            echo "### Result"
+            echo
+            echo "- Job status: ${{ job.status }}"
+            echo "- Workflow run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          } >> "$GITHUB_STEP_SUMMARY"

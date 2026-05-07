@@ -65,10 +65,10 @@ curl "https://www.seizn.com/api/v1/memories?query=...&mode=hybrid" \
 - Update after any tech changes (new libs, API routes, architecture)
 - Regenerate: `gh workflow run claude-audit.yml -f depth="strategic"`
 
-## CI/CD Workflows (GitHub Actions, Self-hosted Runner)
+## CI/CD Workflows (GitHub Actions)
 
-Central repo `iruhana/claude-workflows@v1`. All workflows are manual trigger (workflow_dispatch).
-Provider: `claude` (default) or `codex` (add `-f provider="codex"`).
+`claude-audit.yml` is repo-local and Litheon-only. It runs deterministic npm audit gates; the `provider` input is kept only for CLI compatibility and does not call an external AI workflow.
+Legacy Claude automation workflows may still be disabled until they are migrated off stale external references.
 
 ### Code Improvement (claude-improve.yml)
 

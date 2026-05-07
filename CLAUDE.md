@@ -117,10 +117,10 @@ Seizn MCP 서버가 로드되지 않았을 때의 대체 방법:
 - 새 라이브러리 추가, API 라우트 생성, 아키텍처 변경 시 해당 섹션 수정
 - `claude-audit.yml` 워크플로우로 전체 재생성 가능
 
-## CI/CD 워크플로우 (GitHub Actions, Self-hosted Runner)
+## CI/CD 워크플로우 (GitHub Actions)
 
-중앙 레포 `iruhana/claude-workflows@v1` 기반. 모든 워크플로우는 **수동 트리거(workflow_dispatch)** 전용.
-프로바이더: `claude` (기본) 또는 `codex` (`-f provider="codex"` 추가).
+`claude-audit.yml`은 repo-local, Litheon-only 워크플로우이며 결정적 npm 감사 게이트를 실행한다. `provider` 입력은 기존 CLI 호환용으로만 남아 있고 외부 AI 워크플로우를 호출하지 않는다.
+기타 legacy Claude 자동화 워크플로우는 stale 외부 참조 제거 전까지 비활성 상태일 수 있다.
 
 ### 코드 개선 (claude-improve.yml)
 seizn 전용 프리셋 우선. 기본값: `mcp-protocol`.
