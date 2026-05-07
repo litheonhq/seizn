@@ -8,7 +8,7 @@ import {
   recordAudit,
   rotateApiKey as rotateApiKeyService,
 } from "@/lib/api-keys";
-import { V8_TRACK2_QUOTA } from "@/lib/billing/v8-products";
+import { V9_TRACK2_QUOTA } from "@/lib/billing/v9-products";
 import {
   TRACK_2_KEY_CAP_PER_USER,
   type CreateApiKeyResult,
@@ -16,7 +16,7 @@ import {
   type RotateApiKeyResult,
 } from "./constants";
 
-const DEFAULT_SCOPES = V8_TRACK2_QUOTA.free.scopes;
+const DEFAULT_SCOPES = V9_TRACK2_QUOTA.free.scopes;
 const ALLOWED_SCOPES = new Set([
   "*",
   "recall",
@@ -25,6 +25,7 @@ const ALLOWED_SCOPES = new Set([
   "search",
   "check",
   "timeline",
+  "usage",
   "projects:read",
   "projects:write",
   "audit:read",
@@ -78,7 +79,10 @@ export async function createApiKey(input: {
 
   const generated = generateApiKey();
   const scopes = sanitizeScopes(input.scopes);
-  const tierQuota = V8_TRACK2_QUOTA.free;
+  // v9 Free tier defaults: 50/day, scopes recall/remember/graph/search.
+  // Webhook upgrades quota on subscription.created. Until then the user
+  // gets v9 free regardless of any pending Stripe state.
+  const tierQuota = V9_TRACK2_QUOTA.free;
 
   const { data, error } = await supabase
     .from("api_keys")
