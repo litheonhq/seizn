@@ -16,6 +16,7 @@ import { createServerClient, hasServerSupabaseServiceRoleConfig } from '@/lib/su
 export type FunnelEventType =
   | 'signup'
   | 'byok_key_added'
+  | 'byok_test_attempt'
   | 'first_extract'
   | 'first_check'
   | 'first_dialog'
@@ -26,6 +27,22 @@ export type FunnelEventType =
   | 'subscription_created'
   | 'subscription_canceled'
   | 'charter_swap_to_regular';
+
+export const FUNNEL_EVENT_TYPES: readonly FunnelEventType[] = [
+  'signup',
+  'byok_key_added',
+  'byok_test_attempt',
+  'first_extract',
+  'first_check',
+  'first_dialog',
+  'hit_check_limit',
+  'hit_dialog_limit',
+  'hit_chapter_limit',
+  'advanced_feature_blocked',
+  'subscription_created',
+  'subscription_canceled',
+  'charter_swap_to_regular',
+] as const;
 
 export interface FunnelEventInput {
   userId: string;

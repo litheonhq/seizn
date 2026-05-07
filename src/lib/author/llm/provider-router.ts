@@ -1,6 +1,7 @@
 import { generateAuthorAnthropic } from './anthropic-client';
 import { getActiveAuthorProvider, getActiveAuthorProviderSync } from './active-provider';
 import { generateAuthorOpenAi } from './openai-client';
+import { getManagedEntitlements } from '@/lib/author/billing/managed-entitlements';
 import {
   AuthorLlmError,
   type AuthorLlmProvider,
@@ -43,7 +44,42 @@ export async function generateAuthorLlm<TJson = unknown>(
   // chain (request override → user pref → env → default) and skips the DB
   // lookup when override exists. BYOK status panel uses the same helper, so
   // the two surfaces can never disagree about which provider is "active".
-  const provider = await getActiveAuthorProvider(request.userId, request.provider);
+  const primary = await getActiveAuthorProvider(request.userId, request.provider);
+
+  try {
+    return await invokeProvider<TJson>(primary, request);
+  } catch (error) {
+    if (!shouldFailover(error)) throw error;
+    // Charter Managed perk: on rate-limit or 5xx from the primary provider,
+    // try the secondary. Only fires when the user has a Managed entitlement
+    // (we ship both server keys to Managed users; BYOK users would need
+    // both keys registered, which is a separate code path not covered here).
+    // We never failover when the request explicitly named a provider — that
+    // signals the caller wants that exact provider's behavior (e.g., for
+    // schema-strict JSON mode that only one provider supports cleanly).
+    if (request.provider) throw error;
+    if (!(await isMultiProviderFailoverEnabled(request.userId))) throw error;
+    const secondary = otherProvider(primary);
+    if (!secondary) throw error;
+    console.warn(
+      `[author-llm] failover ${primary} → ${secondary} for user ${request.userId}: ${describeError(error)}`,
+    );
+    try {
+      return await invokeProvider<TJson>(secondary, { ...request, provider: secondary });
+    } catch (failoverError) {
+      console.error(
+        `[author-llm] failover ${primary} → ${secondary} also failed for user ${request.userId}: ${describeError(failoverError)}`,
+      );
+      // Surface the secondary's error so caller sees the most recent failure.
+      throw failoverError;
+    }
+  }
+}
+
+function invokeProvider<TJson>(
+  provider: AuthorLlmProvider,
+  request: AuthorLlmRequest,
+): Promise<AuthorLlmResponse<TJson>> {
   switch (provider) {
     case 'anthropic':
       return generateAuthorAnthropic<TJson>(request);
@@ -54,5 +90,47 @@ export async function generateAuthorLlm<TJson = unknown>(
         'LLM_NOT_CONFIGURED',
         `Unsupported author LLM provider: ${provider}`,
       );
+  }
+}
+
+function otherProvider(p: AuthorLlmProvider): AuthorLlmProvider | null {
+  if (p === 'anthropic') return 'openai';
+  if (p === 'openai') return 'anthropic';
+  return null;
+}
+
+function shouldFailover(error: unknown): boolean {
+  if (error instanceof AuthorLlmError) {
+    if (error.code === 'RATE_LIMITED') return true;
+    if (typeof error.status === 'number' && error.status >= 500 && error.status < 600) return true;
+    return false;
+  }
+  // Defensive: a non-AuthorLlmError reaching this layer means the client
+  // didn't wrap it. We never failover on unknown errors — they could be
+  // schema/validation issues that would also fail on the secondary.
+  return false;
+}
+
+function describeError(error: unknown): string {
+  if (error instanceof AuthorLlmError) {
+    return `${error.code}${error.status ? ` (${error.status})` : ''}: ${error.message}`;
+  }
+  return error instanceof Error ? error.message : String(error);
+}
+
+async function isMultiProviderFailoverEnabled(userId: string): Promise<boolean> {
+  // CLAUDE.md: "모든 Managed 공통: Multi-provider Auto-failover".
+  // Any active Managed entitlement row → failover enabled. BYOK-only tiers
+  // (Enterprise) get the perk too because requiresUserApiKey just means
+  // they supply their own LLM key — but we still proxy and can still
+  // failover if they registered keys for both providers. The byok-resolver
+  // will throw BYOK_REQUIRED on the secondary if no key exists, which is
+  // not a failover-eligible error per shouldFailover() — so we'll surface
+  // the original error instead. Net: safe to enable for all Managed.
+  try {
+    const entitlements = await getManagedEntitlements(userId);
+    return entitlements !== null;
+  } catch {
+    return false;
   }
 }

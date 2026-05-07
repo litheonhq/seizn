@@ -127,7 +127,7 @@ interface StripeSubscriptionItem {
 function verifyStripeSignature(
   payload: string,
   signature: string,
-  secret: string
+  secrets: readonly string[]
 ): boolean {
   try {
     // Parse Stripe-Signature header: t=xxx,v1=xxx,v0=xxx (v0 is deprecated)
@@ -161,20 +161,41 @@ function verifyStripeSignature(
 
     // Build signed payload: timestamp.payload
     const signedPayload = `${timestamp}.${payload}`;
+    const expectedBuf = Buffer.from(expectedSignature);
 
-    // Compute HMAC SHA256
-    const hmac = crypto.createHmac("sha256", secret);
-    const digest = hmac.update(signedPayload).digest("hex");
-
-    // Timing-safe comparison
-    return crypto.timingSafeEqual(
-      Buffer.from(expectedSignature),
-      Buffer.from(digest)
-    );
+    // Try every configured secret. We always test all of them to keep
+    // verification time independent of which secret matches (no timing
+    // oracle for "is the next secret rotated yet"). Returns true if ANY
+    // secret produces a matching HMAC.
+    let matched = false;
+    for (const secret of secrets) {
+      const hmac = crypto.createHmac("sha256", secret);
+      const digest = hmac.update(signedPayload).digest("hex");
+      const digestBuf = Buffer.from(digest);
+      if (digestBuf.length !== expectedBuf.length) continue;
+      if (crypto.timingSafeEqual(digestBuf, expectedBuf)) {
+        matched = true;
+        // Don't break — keep going so wall-clock is constant across secrets.
+      }
+    }
+    return matched;
   } catch (error) {
     console.error("Error verifying Stripe signature:", error);
     return false;
   }
+}
+
+/**
+ * Returns the active set of webhook signing secrets. STRIPE_WEBHOOK_SECRET
+ * is the primary; STRIPE_WEBHOOK_SECRET_NEXT is set during rotation so the
+ * receiver accepts both old and new signatures while operations swaps the
+ * Stripe Dashboard endpoint. After rotation, drop the old secret and unset
+ * NEXT.
+ */
+function getStripeWebhookSecrets(): string[] {
+  const primary = process.env.STRIPE_WEBHOOK_SECRET?.trim();
+  const next = process.env.STRIPE_WEBHOOK_SECRET_NEXT?.trim();
+  return [primary, next].filter((s): s is string => typeof s === 'string' && s.length > 0);
 }
 
 /**
@@ -410,9 +431,9 @@ async function detachV8Track2ManagedOverageIfDowngrade(
 
 export async function POST(request: NextRequest) {
   try {
-    const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+    const webhookSecrets = getStripeWebhookSecrets();
 
-    if (!webhookSecret) {
+    if (webhookSecrets.length === 0) {
       console.error("STRIPE_WEBHOOK_SECRET not configured");
       return NextResponse.json(
         { error: "Webhook secret not configured" },
@@ -432,8 +453,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Verify signature
-    if (!verifyStripeSignature(rawBody, signature, webhookSecret)) {
+    // Verify signature against all active secrets (rotation support)
+    if (!verifyStripeSignature(rawBody, signature, webhookSecrets)) {
       console.error("Invalid Stripe webhook signature");
       return NextResponse.json(
         { error: "Invalid signature" },
@@ -456,26 +477,45 @@ export async function POST(request: NextRequest) {
     // v9 idempotency dedupe (audit follow-up). Stripe retries on 5xx /
     // >20s timeout re-deliver the same event ID. Without this, retries
     // doubled funnel_events rows + audit_log rows + Stripe Schedule
-    // creation attempts. Insert into stripe_webhook_events with the
-    // event ID as PK; on conflict short-circuit to 200.
-    const { error: dedupeError } = await supabase
+    // creation attempts.
+    //
+    // Round 2 refinement: dedupe is keyed on (event_id, processed_at IS NOT
+    // NULL). Insert always; on conflict, look at processed_at:
+    //   - processed_at IS NOT NULL → already finished, return 200 and skip.
+    //   - processed_at IS NULL → previous attempt failed mid-processing
+    //     (e.g., 5xx return triggered Stripe retry). Allow re-processing
+    //     so late-arriving customer.subscription.updated events that beat
+    //     their .created sibling can succeed on the next attempt.
+    //
+    // Concurrent same-event retries race on INSERT; loser sees PK conflict
+    // and treats it as "another worker is on it" → returns 200 (Stripe will
+    // retry on its next schedule if the in-flight worker also failed).
+    const { error: dedupeInsertError } = await supabase
       .from('stripe_webhook_events')
       .insert({
         id: payload.id,
         type: eventType,
         livemode: Boolean(payload.livemode),
       });
-    if (dedupeError) {
-      // Postgres duplicate-key code 23505. Other errors fall through to
-      // normal processing (best-effort dedupe is preferable to dropping
-      // legitimate webhooks if the table is briefly unavailable).
-      const message = dedupeError.message || '';
-      if (
+    if (dedupeInsertError) {
+      const message = dedupeInsertError.message || '';
+      const isDuplicate =
         message.includes('duplicate key') ||
-        message.includes('stripe_webhook_events_pkey')
-      ) {
-        console.log(`Skipping duplicate Stripe webhook ${payload.id}`);
-        return NextResponse.json({ received: true, deduped: true });
+        message.includes('stripe_webhook_events_pkey');
+      if (isDuplicate) {
+        const { data: existing } = await supabase
+          .from('stripe_webhook_events')
+          .select('processed_at')
+          .eq('id', payload.id)
+          .maybeSingle();
+        if (existing?.processed_at) {
+          console.log(`Skipping completed Stripe webhook ${payload.id}`);
+          return NextResponse.json({ received: true, deduped: true });
+        }
+        // Concurrent in-flight attempt — back off and let the other worker
+        // finish. If it fails, Stripe will retry with backoff.
+        console.log(`Skipping in-flight Stripe webhook ${payload.id}`);
+        return NextResponse.json({ received: true, in_flight: true });
       }
       console.warn(`stripe_webhook_events insert failed (continuing): ${message}`);
     }
@@ -772,8 +812,17 @@ export async function POST(request: NextRequest) {
         );
 
         if (!user) {
-          console.error(`User not found for customer: ${customerId}`);
-          break;
+          // Late-arrival ordering: customer.subscription.updated can land
+          // before customer.subscription.created (Stripe doesn't guarantee
+          // event order across topics). Return 503 so Stripe retries with
+          // backoff. The dedupe table tracks processed_at — since we
+          // never reach the markEventProcessed call below on this path,
+          // the retry will be allowed through.
+          console.warn(`User not found for customer ${customerId} on subscription.updated — returning 503 for Stripe retry`);
+          return NextResponse.json(
+            { error: "user_not_found_retry" },
+            { status: 503 }
+          );
         }
 
         if (priceId) {
@@ -900,7 +949,20 @@ export async function POST(request: NextRequest) {
           eventData.metadata?.user_id
         );
 
-        if (user && priceId) {
+        if (!user) {
+          // Late-arrival ordering or pre-link manual cancellation.
+          // We've already released any Charter Schedule above (idempotent
+          // and side-effect-safe), so it's OK to bail here. Return 503 so
+          // Stripe retries; by the next attempt customer.subscription.created
+          // should have linked the profile.
+          console.warn(`User not found for customer ${customerId} on subscription.deleted — returning 503 for Stripe retry`);
+          return NextResponse.json(
+            { error: "user_not_found_retry" },
+            { status: 503 }
+          );
+        }
+
+        if (priceId) {
           // v9 first: downgrade Track 2 v9 subscriptions to free.
           const v9Tier = getV9Track2TierFromStripePriceId(priceId);
           if (v9Tier) {
@@ -1181,9 +1243,20 @@ export async function POST(request: NextRequest) {
         console.log(`Unhandled Stripe event: ${eventType}`);
     }
 
+    // Mark this event finalized so subsequent retries see processed_at
+    // and short-circuit. Failure paths above return early WITHOUT reaching
+    // here, leaving processed_at NULL so Stripe retries can complete the
+    // work (e.g., late-arriving subscription.created lands first).
+    await supabase
+      .from('stripe_webhook_events')
+      .update({ processed_at: new Date().toISOString() })
+      .eq('id', payload.id)
+      .is('processed_at', null);
+
     return NextResponse.json({ received: true });
   } catch (error) {
     console.error("Stripe webhook error:", error);
+    // Intentionally do NOT mark processed_at — Stripe retries this event.
     return NextResponse.json(
       { error: "Webhook processing failed" },
       { status: 500 }
