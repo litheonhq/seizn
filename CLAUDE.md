@@ -120,60 +120,51 @@ Seizn MCP 서버가 로드되지 않았을 때의 대체 방법:
 ## CI/CD 워크플로우 (GitHub Actions)
 
 `claude-audit.yml`은 repo-local, Litheon-only 워크플로우이며 결정적 npm 감사 게이트를 실행한다. `provider` 입력은 기존 CLI 호환용으로만 남아 있고 외부 AI 워크플로우를 호출하지 않는다.
-기타 legacy Claude 자동화 워크플로우는 stale 외부 참조 제거 전까지 비활성 상태일 수 있다.
+다른 `claude-*`, `auto-fix`, `issue-to-code` 워크플로우 파일은 같은 repo-local audit을 호출하는 호환 래퍼다. 자체적으로 코드 변경, 댓글, 이슈, 커밋을 만들지 않는다.
 
-### 코드 개선 (claude-improve.yml)
-seizn 전용 프리셋 우선. 기본값: `mcp-protocol`.
+### 결정적 감사 래퍼
 
-| 프리셋 | 설명 | 모델 |
-|--------|------|------|
-| `mcp-protocol` | MCP SDK 스펙 준수, tool/resource 핸들러, JSON-RPC | **opus** |
-| `memory-graph` | 메모리 CRUD, 지식 그래프 무결성, 검색 관련성 | **opus** |
-| `ai-context` | session_init 프로젝트 감지, 8개 AI 도구 설정 동기화 | sonnet |
-| `security` | XSS, CSRF, 인젝션, 시크릿 노출 감사 | **opus** |
-| `code-quality` | DRY, 네이밍, 타입, 패턴 일관성 | sonnet |
-| `performance` | N+1 쿼리, memo, 동적 임포트, 캐싱 | **opus** |
-| `dead-code` / `tech-debt` / `deps-update` / `accessibility` / `seo` | 범용 | 자동 |
+예전 CLI entrypoint는 보존하되 실행은 `litheonhq/seizn` 내부에 고정한다.
 
 ```bash
-# 기본 (MCP 프로토콜 감사)
+# 기본 결정적 게이트
 gh workflow run claude-improve.yml
 
-# 특정 프리셋 + Codex
-gh workflow run claude-improve.yml -f task_type="memory-graph" -f provider="codex"
+# security 프리셋은 strategic checks 실행
+gh workflow run claude-improve.yml -f task_type="security" -f provider="codex"
 
-# 커스텀 작업 + 범위 제한
+# 커스텀 작업/범위는 operator context로만 기록
 gh workflow run claude-improve.yml -f task_type="custom" -f task="Refactor webhook delivery retry logic" -f scope="src/app/api/webhooks"
 
-# 모델 강제 + 웹 검색
+# provider/model/web-search 입력은 호환용
 gh workflow run claude-improve.yml -f task_type="security" -f model="opus" -f use_web_search="true"
 ```
 
 ### 기타 워크플로우
 
 ```bash
-# PR 코드 리뷰
+# PR review readiness gate
 gh workflow run claude-review.yml -f pr_number="5"
 
-# 빌드 에러 자동 수정 (3라운드 에스컬레이션)
+# auto-fix 호환 게이트; 코드 변경 없음
 gh workflow run auto-fix.yml -f pr_number="5"
 
-# Issue → 구현 → PR
+# issue implementation readiness gate; 코드 변경 없음
 gh workflow run issue-to-code.yml -f issue_number="3"
 
 # 기술 스택 문서 생성
 gh workflow run claude-audit.yml -f depth="strategic"
 
-# 연속 개선 (기본: mcp-protocol,memory-graph,ai-context,security,...)
+# continuous 호환 게이트; 결정적 1회 pass
 gh workflow run claude-continuous.yml
 gh workflow run claude-continuous.yml -f tasks="mcp-protocol,security" -f max_cycles=3
 
-# 연속 실행 중지
+# 실행 중인 호환 게이트 중지
 gh run cancel $(gh run list -w claude-continuous.yml -L 1 --json databaseId -q '.[0].databaseId')
 ```
 
-### 자동 머지
-저위험 프리셋(`dead-code`, `seo`, `accessibility`, `code-quality`, `ai-context`, `deps-update`)은 빌드 통과 시 자동 squash merge.
+### 머지 정책
+호환 래퍼는 자동 머지하지 않는다. green gate 이후 일반 Litheon review/commit 경로로만 반영한다.
 
 ## 참고 문서
 

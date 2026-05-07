@@ -1,42 +1,41 @@
-# Thin caller — logic lives in iruhana/claude-workflows
-# CLI: gh workflow run auto-fix.yml -f pr_number=123 -f max_retries=3
 name: Auto Fix
+
 on:
   workflow_dispatch:
     inputs:
       pr_number:
-        description: Pull request number (optional — fixes default branch if omitted)
+        description: Pull request number. Recorded for operator context only.
         required: false
         type: string
       max_retries:
-        description: Maximum retry attempts
+        description: Compatibility-only retry count. Repo-local workflow does not mutate code.
         type: choice
         options: ['1', '2', '3']
         default: '3'
       model:
-        description: Model tier
+        description: Compatibility-only model label.
         type: choice
         options: [sonnet, opus]
         default: sonnet
       provider:
-        description: AI provider
+        description: Compatibility-only provider label.
         type: choice
         options: [claude, codex]
         default: claude
+
+permissions:
+  contents: read
+  pull-requests: read
 
 concurrency:
   group: auto-fix-pr-${{ inputs.pr_number || 'default' }}
   cancel-in-progress: true
 
 jobs:
-  run:
-    uses: iruhana/claude-workflows/.github/workflows/auto-fix.yml@v1
+  audit:
+    name: Repo-local diagnostic gate
+    uses: ./.github/workflows/claude-audit.yml
     with:
-      pr_number: ${{ inputs.pr_number }}
-      max_retries: ${{ inputs.max_retries }}
-      model: ${{ inputs.model }}
+      depth: full
+      auto_commit: false
       provider: ${{ inputs.provider }}
-    secrets: inherit
-    permissions:
-      contents: write
-      pull-requests: write

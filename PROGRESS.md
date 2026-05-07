@@ -5,7 +5,7 @@
 ## 프로젝트 정보
 
 - **도메인:** seizn.com (Cloudflare)
-- **GitHub:** https://github.com/iruhana/seizn
+- **GitHub:** https://github.com/litheonhq/seizn
 - **호스팅:** Vercel
 - **데이터베이스:** Supabase (mefsiztbcwknpoqglwmw.supabase.co)
 

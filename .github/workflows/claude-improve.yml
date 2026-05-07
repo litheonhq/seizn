@@ -1,7 +1,5 @@
-# Thin caller — logic lives in iruhana/claude-workflows
-# seizn: AI 메모리 OS + MCP 서버 → MCP/메모리/AI 컨텍스트 우선
-# CLI: gh workflow run claude-improve.yml -f task_type="mcp-protocol"
 name: Claude Improve
+
 on:
   workflow_dispatch:
     inputs:
@@ -23,55 +21,50 @@ on:
           - seo
         default: mcp-protocol
       task:
-        description: Custom task description (used when task_type is custom)
+        description: Custom task description. Recorded for operator context only.
         required: false
         type: string
       scope:
-        description: File/directory scope
+        description: File/directory scope. Recorded for operator context only.
         required: false
         type: string
         default: all
       model:
-        description: Model tier
+        description: Compatibility-only model label.
         type: choice
         options: [auto, sonnet, opus]
         default: auto
       max_turns:
-        description: Maximum conversation turns
+        description: Compatibility-only turn limit.
         required: false
         type: string
         default: '60'
       use_web_search:
-        description: Enable web search
+        description: Compatibility-only flag. No external web search is called.
         type: boolean
         default: false
       auto_commit:
-        description: Auto-commit changes
+        description: Auto-commit changes. Unsupported by repo-local workflows.
         type: boolean
         default: false
       provider:
-        description: AI provider
+        description: Compatibility-only provider label.
         type: choice
         options: [claude, codex]
         default: claude
+
+permissions:
+  contents: read
 
 concurrency:
   group: claude-improve-${{ inputs.task_type }}-${{ inputs.scope }}
   cancel-in-progress: true
 
 jobs:
-  run:
-    uses: iruhana/claude-workflows/.github/workflows/claude-improve.yml@v1
+  audit:
+    name: Repo-local improvement gate
+    uses: ./.github/workflows/claude-audit.yml
     with:
-      task_type: ${{ inputs.task_type }}
-      task: ${{ inputs.task }}
-      scope: ${{ inputs.scope }}
-      model: ${{ inputs.model }}
-      max_turns: ${{ inputs.max_turns }}
-      use_web_search: ${{ inputs.use_web_search }}
+      depth: ${{ inputs.task_type == 'security' && 'strategic' || 'full' }}
       auto_commit: ${{ inputs.auto_commit }}
       provider: ${{ inputs.provider }}
-    secrets: inherit
-    permissions:
-      contents: write
-      pull-requests: write

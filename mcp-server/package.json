@@ -34,11 +34,11 @@
   "homepage": "https://seizn.com",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/iruhana/seizn.git",
+    "url": "git+https://github.com/litheonhq/seizn.git",
     "directory": "mcp-server"
   },
   "bugs": {
-    "url": "https://github.com/iruhana/seizn/issues"
+    "url": "https://github.com/litheonhq/seizn/issues"
   },
   "engines": {
     "node": ">=18.0.0"

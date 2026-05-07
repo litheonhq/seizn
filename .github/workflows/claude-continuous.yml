@@ -1,53 +1,51 @@
-# Thin caller — logic lives in iruhana/claude-workflows
-# seizn: AI 메모리 OS + MCP 서버 → MCP/메모리/AI 컨텍스트 우선
-# CLI: gh workflow run claude-continuous.yml -f tasks="mcp-protocol,memory-graph" -f max_cycles=3
 name: Claude Continuous
+
 on:
   workflow_dispatch:
     inputs:
       tasks:
-        description: Comma-separated task presets to run
+        description: Comma-separated task presets. Used to choose audit depth only.
         required: false
         type: string
         default: 'mcp-protocol,memory-graph,ai-context,security,code-quality,performance,dead-code'
       scope:
-        description: File/directory scope
+        description: File/directory scope. Recorded for operator context only.
         required: false
         type: string
         default: 'all'
       max_cycles:
-        description: Maximum cycles (0 = unlimited)
+        description: Compatibility-only cycle count. Repo-local workflow runs one deterministic pass.
         required: false
         type: string
-        default: '0'
+        default: '1'
       cooldown:
-        description: Cooldown seconds between cycles
+        description: Compatibility-only cooldown seconds.
         required: false
         type: string
         default: '120'
       idle_cycles:
-        description: Stop after N consecutive cycles with zero changes (0 = disable)
+        description: Compatibility-only idle cycle count.
         required: false
         type: string
         default: '2'
       provider:
-        description: AI provider
+        description: Compatibility-only provider label.
         type: choice
         options: [claude, codex]
         default: claude
 
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
+
+concurrency:
+  group: claude-continuous-${{ github.ref }}-${{ inputs.tasks }}-${{ inputs.scope }}
+  cancel-in-progress: true
 
 jobs:
-  run:
-    uses: iruhana/claude-workflows/.github/workflows/claude-continuous.yml@v1
+  audit:
+    name: Repo-local continuous gate
+    uses: ./.github/workflows/claude-audit.yml
     with:
-      tasks: ${{ inputs.tasks }}
-      scope: ${{ inputs.scope }}
-      max_cycles: ${{ inputs.max_cycles }}
-      cooldown: ${{ inputs.cooldown }}
-      idle_cycles: ${{ inputs.idle_cycles }}
+      depth: ${{ contains(inputs.tasks, 'security') && 'strategic' || 'full' }}
+      auto_commit: false
       provider: ${{ inputs.provider }}
-    secrets: inherit

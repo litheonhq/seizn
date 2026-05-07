@@ -43,8 +43,8 @@ dev = [
 [project.urls]
 Homepage = "https://seizn.com"
 Documentation = "https://docs.seizn.com"
-Repository = "https://github.com/iruhana/seizn"
-Issues = "https://github.com/iruhana/seizn/issues"
+Repository = "https://github.com/litheonhq/seizn"
+Issues = "https://github.com/litheonhq/seizn/issues"
 
 [tool.setuptools.packages.find]
 where = ["src"]
