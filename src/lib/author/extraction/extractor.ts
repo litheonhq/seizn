@@ -61,6 +61,20 @@ const SCHEMAS: Record<string, AuthorJsonSchema> = {
 
 const MAX_PROMPT_CHARS = 12000;
 const BACKLOG_CATEGORIES: AuthorBacklogCategory[] = ['좋아하는 것', '싫어하는 것', '작은 보상', '작은 짜증'];
+// Hard caps on LLM-returned shapes — pre-audit, the schemas had no
+// maxItems, no maxLength, and no additionalProperties:false. A model
+// (or an attacker via prompt injection) could return 10,000 candidates
+// each with a 100KB content field, exhausting server memory before the
+// validator caught it. Each cap is conservative w.r.t. actual UI use:
+//   - 30 candidates × 4 categories = 120 max per character (UI shows 5-7)
+//   - 600 char content body (a typical line of dialogue/cue)
+//   - 1KB rationale (longer reasoning permitted but bounded)
+const BACKLOG_MAX_CANDIDATES = 60;
+const BACKLOG_MAX_CONTENT_LEN = 600;
+const BACKLOG_MAX_RATIONALE_LEN = 1024;
+const BACKLOG_MAX_CATEGORY_LEN = 64;
+const BACKLOG_MAX_SCOPE_LEN = 32;
+
 const BACKLOG_SCHEMA = {
   type: 'object',
   required: ['candidates'],
@@ -81,6 +95,61 @@ const BACKLOG_SCHEMA = {
     },
   },
 } as AuthorJsonSchema;
+
+/**
+ * Post-LLM size guard. The shape validator (`parseAndValidateJson`)
+ * doesn't currently enforce maxItems / maxLength, so an oversized payload
+ * passes shape-validation but blows up downstream. Reject early.
+ */
+function enforceBacklogResponseLimits(
+  candidates: Array<Record<string, unknown>>,
+): Array<Record<string, unknown>> {
+  if (!Array.isArray(candidates)) return [];
+  if (candidates.length > BACKLOG_MAX_CANDIDATES) {
+    candidates = candidates.slice(0, BACKLOG_MAX_CANDIDATES);
+  }
+  return candidates.filter((c) => {
+    if (!c || typeof c !== 'object') return false;
+    const r = c as Record<string, unknown>;
+    if (typeof r.content === 'string' && r.content.length > BACKLOG_MAX_CONTENT_LEN) return false;
+    if (typeof r.rationale === 'string' && r.rationale.length > BACKLOG_MAX_RATIONALE_LEN) return false;
+    if (typeof r.category === 'string' && r.category.length > BACKLOG_MAX_CATEGORY_LEN) return false;
+    if (typeof r.scope === 'string' && r.scope.length > BACKLOG_MAX_SCOPE_LEN) return false;
+    // Reject candidates whose content looks like an injection payload trying
+    // to land HTML/script through the dashboard. Defense-in-depth — the
+    // dashboard should also escape on render.
+    if (typeof r.content === 'string' && /<script|<\/|data:text\/html|javascript:/i.test(r.content)) {
+      return false;
+    }
+    return true;
+  });
+}
+
+/**
+ * Same caps for the per-task extraction (character/world_rule/event/...).
+ * Bounded by the same per-document max so a single import can't write
+ * thousands of candidates at once.
+ */
+const EXTRACT_MAX_CANDIDATES = 50;
+const EXTRACT_MAX_CONTENT_LEN = 2000;
+
+function enforceExtractResponseLimits(
+  candidates: Array<Record<string, unknown>>,
+): Array<Record<string, unknown>> {
+  if (!Array.isArray(candidates)) return [];
+  if (candidates.length > EXTRACT_MAX_CANDIDATES) {
+    candidates = candidates.slice(0, EXTRACT_MAX_CANDIDATES);
+  }
+  return candidates.filter((c) => {
+    if (!c || typeof c !== 'object') return false;
+    const r = c as Record<string, unknown>;
+    if (typeof r.content === 'string' && r.content.length > EXTRACT_MAX_CONTENT_LEN) return false;
+    if (typeof r.content === 'string' && /<script|<\/|data:text\/html|javascript:/i.test(r.content)) {
+      return false;
+    }
+    return true;
+  });
+}
 const BACKLOG_FORBIDDEN_TERMS = ['author_only', 'Tier 2', '고양이 귀', '성인 마녀풍'];
 
 export async function extractAuthorCandidates(
@@ -167,7 +236,13 @@ async function generateBacklogWithLlm(
     temperature: 0.2,
   });
 
-  return (response.json?.candidates ?? [])
+  // Apply DoS / injection caps before normalization. Pre-audit, an
+  // unbounded array of 100KB content fields would buffer fully, then walk
+  // through normalize / dedup, blowing memory before validation.
+  const safeCandidates = enforceBacklogResponseLimits(
+    (response.json?.candidates ?? []) as Array<Record<string, unknown>>,
+  );
+  return safeCandidates
     .map((candidate) => normalizeBacklogCandidate(candidate))
     .filter((candidate): candidate is AuthorBacklogCandidate => candidate !== null);
 }
@@ -263,16 +338,19 @@ function mapLlmResponse(
   task: AuthorExtractionPromptTask,
   response: AuthorLlmResponse<LlmCandidateResponse>
 ): ExtractedAuthorCandidate[] {
-  const candidates = response.json?.candidates ?? [];
-  return candidates
-    .filter((candidate) => typeof candidate.content === 'string' && candidate.content.trim().length > 0)
+  // DoS / injection cap before mapping (see enforceExtractResponseLimits).
+  const safeCandidates = enforceExtractResponseLimits(
+    (response.json?.candidates ?? []) as Array<Record<string, unknown>>,
+  );
+  return safeCandidates
+    .filter((candidate) => typeof candidate.content === 'string' && (candidate.content as string).trim().length > 0)
     .map((candidate, index) => buildCandidate({
       input,
       type: task.type,
-      content: candidate.content ?? '',
-      confidence: candidate.confidence ?? 0.72,
-      tags: candidate.tags ?? ['short1', 'tier:1'],
-      targetEntityId: candidate.target_entity_id,
+      content: (candidate.content as string) ?? '',
+      confidence: typeof candidate.confidence === 'number' ? candidate.confidence : 0.72,
+      tags: Array.isArray(candidate.tags) ? candidate.tags as string[] : ['short1', 'tier:1'],
+      targetEntityId: typeof candidate.target_entity_id === 'string' ? candidate.target_entity_id : undefined,
       index,
     }));
 }
