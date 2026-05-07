@@ -7,27 +7,21 @@ const ANTHROPIC_CONSOLE_KEYS_URL = "https://console.anthropic.com/settings/keys"
 const OPENAI_CONSOLE_KEYS_URL = "https://platform.openai.com/api-keys";
 import type {
   AuthorSettingsCopy,
-  ByokDiscountState,
   ByokState,
 } from "./author-settings-types";
-import { normalizeByokDiscountStatus } from "./author-settings-types";
 
 export type ByokProvider = "anthropic" | "openai";
 
 interface ByokSectionProps {
   byok: ByokState;
-  discountStatus: unknown;
-  discountError?: string | null;
   copy: AuthorSettingsCopy["byok"];
   action: "idle" | "saving" | "removing";
-  onSave: (apiKey: string, provider: ByokProvider) => Promise<ByokDiscountState | void>;
-  onRemove: (provider: ByokProvider) => Promise<ByokDiscountState | void>;
+  onSave: (apiKey: string, provider: ByokProvider) => Promise<void>;
+  onRemove: (provider: ByokProvider) => Promise<void>;
 }
 
 export function ByokSection({
   byok,
-  discountStatus,
-  discountError,
   copy,
   action,
   onSave,
@@ -40,7 +34,6 @@ export function ByokSection({
   const [provider, setProvider] = useState<ByokProvider>(initialProvider);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const normalizedDiscountStatus = normalizeByokDiscountStatus(discountStatus);
   const isActive = byok.enabled && byok.status === "active";
   const busy = action !== "idle";
   const consoleUrl = provider === "openai" ? OPENAI_CONSOLE_KEYS_URL : ANTHROPIC_CONSOLE_KEYS_URL;
@@ -52,9 +45,9 @@ export function ByokSection({
     setMessage(null);
     setError(null);
     try {
-      const discount = await onSave(apiKey.trim(), provider);
+      await onSave(apiKey.trim(), provider);
       setApiKey("");
-      setMessage(formatDiscountResult(discount, copy));
+      setMessage(copy.active);
     } catch (saveError) {
       setError(saveError instanceof Error ? saveError.message : copy.error);
     }
@@ -64,8 +57,8 @@ export function ByokSection({
     setMessage(null);
     setError(null);
     try {
-      const discount = await onRemove(provider);
-      setMessage(formatDiscountResult(discount, copy));
+      await onRemove(provider);
+      setMessage(copy.missing);
     } catch (removeError) {
       setError(removeError instanceof Error ? removeError.message : copy.error);
     }
@@ -86,7 +79,7 @@ export function ByokSection({
         <StatusBadge active={isActive} activeLabel={copy.active} missingLabel={copy.missing} />
       </div>
 
-      <dl className="mt-5 grid gap-3 sm:grid-cols-3">
+      <dl className="mt-5 grid gap-3 sm:grid-cols-2">
         <div className="rounded-md border border-[var(--ink-200)] bg-[var(--ink-50)] p-3">
           <dt className="text-xs font-medium uppercase text-[var(--ink-500)]">{copy.status}</dt>
           <dd className="mt-1 text-sm font-semibold text-[var(--ink-900)]">
@@ -98,15 +91,6 @@ export function ByokSection({
           <dd className="mt-1 text-sm font-semibold text-[var(--ink-900)]">
             {byok.key_last_4 ? `•••• ${byok.key_last_4}` : "—"}
           </dd>
-        </div>
-        <div className="rounded-md border border-[var(--ink-200)] bg-[var(--ink-50)] p-3">
-          <dt className="text-xs font-medium uppercase text-[var(--ink-500)]">{copy.discount}</dt>
-          <dd className="mt-1 text-sm font-semibold text-[var(--ink-900)]">
-            {copy.discountStates[normalizedDiscountStatus]}
-          </dd>
-          {normalizedDiscountStatus === "error" && discountError ? (
-            <p className="mt-1 text-xs text-[var(--signal-conflict-ink)]">{discountError}</p>
-          ) : null}
         </div>
       </dl>
 
@@ -276,10 +260,3 @@ function StatusBadge({
   );
 }
 
-function formatDiscountResult(
-  discount: ByokDiscountState | void,
-  copy: AuthorSettingsCopy["byok"]
-): string {
-  const status = normalizeByokDiscountStatus(discount?.status);
-  return `${copy.discount}: ${copy.discountStates[status]}`;
-}
