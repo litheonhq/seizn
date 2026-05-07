@@ -41,7 +41,7 @@ jobs:
       spec_valid: ${{ steps.validate.outputs.valid }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Node.js
         uses: actions/setup-node@v6
@@ -72,7 +72,7 @@ jobs:
       changes_detected: ${{ steps.check-changes.outputs.changes }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -363,7 +363,7 @@ jobs:
       (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.event.inputs.create_pr == 'true'))
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -422,7 +422,7 @@ jobs:
       github.event.inputs.create_pr == 'false'
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
