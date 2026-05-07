@@ -52,6 +52,13 @@ export interface AuthorAuditLogEntry {
   decisionId: string;
   parentDecisionId?: string;
   createdAt: string;
+  /** sha256 hex of the parent's entry_hash. NULL for root entries.
+   *  Set by the Supabase store at write time; in-memory entries are NULL. */
+  previousHash?: string | null;
+  /** sha256 hex of canonical JSON of (previous_hash, project_id, user_id,
+   *  event_type, payload, llm_meta, source_span, decision_id,
+   *  parent_decision_id, created_at). Set by the store at write time. */
+  entryHash?: string | null;
 }
 
 export interface AuthorAuditLogInput {
@@ -79,7 +86,7 @@ export interface AuthorAuditSearchFilter {
 
 export interface AuthorAuditReplayResult {
   decisionId: string;
-  replayStatus: 'deterministic' | 'not_found' | 'drift_risk';
+  replayStatus: 'deterministic' | 'not_found' | 'drift_risk' | 'tampered';
   chain: AuthorAuditLogEntry[];
   chainLength: number;
   startCreatedAt?: string;
@@ -87,6 +94,15 @@ export interface AuthorAuditReplayResult {
   payloadHash?: string;
   llmMetaHash?: string;
   warnings: string[];
+  /** Per-entry hash verification result. Populated when the chain has
+   *  post-migration entries (with stored entry_hash); null for fully
+   *  in-memory replays. */
+  hashVerification?: {
+    verified: number;
+    tampered: number;
+    grandfathered: number;
+    chainBroken: number;
+  };
 }
 
 export interface AuthorAuditLogStore {
