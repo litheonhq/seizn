@@ -10,12 +10,13 @@ interface BillingProfile {
   byok_discount_coupon?: string | null;
 }
 
-export type ByokDiscountStatus = "inactive" | "pending" | "applied" | "error";
+export type ByokDiscountStatus = "inactive" | "pending" | "applied" | "error" | "deprecated";
 export type ByokDiscountSyncReason =
   | "missing_billing_customer"
   | "pending_subscription"
   | "stripe_not_configured"
-  | "stripe_sync_failed";
+  | "stripe_sync_failed"
+  | "deprecated_in_v9";
 
 export interface ByokDiscountSyncResult {
   applied: boolean;
@@ -39,6 +40,18 @@ async function syncAuthorByokDiscount(
   enabled: boolean
 ): Promise<ByokDiscountSyncResult> {
   const coupon = process.env.STRIPE_BYOK_COUPON_ID?.trim() || BYOK_COUPON_ID;
+  // v9 retires the BYOK coupon path: BYOK becomes its own Stripe price column,
+  // so applying a coupon on top would double-discount. Return early as a no-op
+  // when neither the env var nor the constant supplies a coupon ID.
+  if (!coupon) {
+    return {
+      applied: false,
+      removed: !enabled,
+      coupon: '',
+      status: 'deprecated',
+      reason: 'deprecated_in_v9',
+    };
+  }
   const supabase = createServerClient();
   const { data: profile } = await supabase
     .from("profiles")

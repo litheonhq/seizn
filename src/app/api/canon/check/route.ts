@@ -6,6 +6,8 @@ import { validateCanonContent } from "@/lib/canon/validator";
 import { resolveMemoryBudgetOrganizationId } from "@/lib/memory/budget";
 import { logServerError } from "@/lib/server/logger";
 import { createServerClient } from "@/lib/supabase";
+import { checkFeatureGate, recordFeatureUsage } from "@/lib/author/billing/feature-gate";
+import { recordFirstFunnelEvent } from "@/lib/analytics/funnel";
 
 async function resolveContext(request: NextRequest): Promise<
   | { userId: string; keyId: string | null; organizationId: string }
@@ -67,6 +69,24 @@ export async function POST(request: NextRequest) {
     const context = await resolveContext(request);
     if ("error" in context) return context.error;
 
+    // v9 Free tier gate: 5 Check operations per calendar month.
+    const gate = await checkFeatureGate({ userId: context.userId, feature: 'check' });
+    if (!gate.allowed) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: {
+            code: gate.reason,
+            message:
+              gate.reason === 'free_check_limit_exceeded'
+                ? `Free tier limit reached (${gate.cap} Checks/month). Upgrade to Charter for unlimited.`
+                : 'Feature unavailable on Free tier.',
+          },
+        },
+        { status: 402 },
+      );
+    }
+
     const body = (await request.json().catch(() => ({}))) as Record<string, unknown>;
     const proposedContent = normalizeContent(body);
     if (!proposedContent) {
@@ -88,6 +108,11 @@ export async function POST(request: NextRequest) {
       (lock) => lock.active && (!lock.npcId || (npcId && lock.npcId === npcId))
     );
     const result = await validateCanonContent({ content: proposedContent, locks });
+
+    // v9 funnel + usage tracking. Free users hit a 5/mo cap; Charter users
+    // bypass the cap but we still record for analytics.
+    await recordFeatureUsage({ userId: context.userId, feature: 'check' });
+    void recordFirstFunnelEvent({ userId: context.userId, eventType: 'first_check' });
 
     return NextResponse.json({
       success: true,

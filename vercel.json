@@ -76,6 +76,14 @@
     {
       "path": "/api/cron/tier-demotion",
       "schedule": "0 3 * * *"
+    },
+    {
+      "path": "/api/cron/mrr-snapshot",
+      "schedule": "5 0 * * *"
+    },
+    {
+      "path": "/api/cron/continuity-reports",
+      "schedule": "0 2 * * *"
     }
   ]
 }

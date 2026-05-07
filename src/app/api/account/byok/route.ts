@@ -14,6 +14,7 @@ import {
   applyAuthorByokDiscount,
   removeAuthorByokDiscount,
 } from '@/lib/stripe/byok-discount';
+import { recordFirstFunnelEvent } from '@/lib/analytics/funnel';
 
 export const runtime = 'nodejs';
 
@@ -47,9 +48,17 @@ export async function POST(request: NextRequest) {
       const saved = await saveAuthorByokKey({ userId, provider, apiKey });
       // BYOK 50% discount applies the moment any author-stack key is registered;
       // saving an OpenAI key on top of an Anthropic one (or vice versa) is a
-      // no-op for the discount sync.
+      // no-op for the discount sync. (v9 retires the coupon path — discount
+      // returns deprecated when no STRIPE_BYOK_COUPON_ID is configured.)
       const discount = await applyAuthorByokDiscount(userId);
       service.saveByok({ ...body, provider });
+      // v9 funnel: first BYOK key registration unlocks Free tier and Charter
+      // BYOK pricing. Record once per user.
+      void recordFirstFunnelEvent({
+        userId,
+        eventType: 'byok_key_added',
+        metadata: { provider },
+      });
       return {
         ...saved,
         byok_discount: discount,

@@ -8,8 +8,8 @@ import { CHECKOUT_LEGAL_VERSIONS } from "@/lib/checkout-copy";
 import { createServerClient } from "@/lib/supabase";
 import {
   AUTHOR_PRICE_LOCK_VERSION,
-  AUTHOR_TRIAL_DAYS,
   BYOK_COUPON_ID,
+  getAuthorActivePriceId,
   getAuthorStripePriceId,
   getAuthorTierFromStripePriceId,
   getBillingCadenceFromStripePriceId,
@@ -227,7 +227,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const resolvedPriceId = getAuthorStripePriceId(selection.tier, selection.cadence);
+    // v9: BYOK is now its own price column. Pick the column from the BYOK
+    // toggle the user already saved (resolved below into `byokStatus.enabled`).
+    // We have to query that here so we know which column to look up.
+    const byokColumnLookup = await getAuthorByokStatus(session.user.id);
+    const selectedColumn = byokColumnLookup.enabled ? 'byok' : 'managed';
+    const resolvedPriceId = getAuthorActivePriceId(
+      selection.tier,
+      selectedColumn,
+      selection.cadence,
+    );
     if (!resolvedPriceId) {
       return NextResponse.json(
         { error: "Stripe price is not configured for this tier" },
@@ -257,10 +266,15 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    const byokStatus = await getAuthorByokStatus(session.user.id);
-    const discounts = byokStatus.enabled
-      ? [{ coupon: process.env.STRIPE_BYOK_COUPON_ID?.trim() || BYOK_COUPON_ID }]
-      : undefined;
+    const byokStatus = byokColumnLookup;
+    // v9 retires the BYOK coupon — BYOK is its own price column. The legacy
+    // STRIPE_BYOK_COUPON_ID env still applies a discount when set, but new
+    // installs leave it unset so no coupon is attached.
+    const legacyByokCoupon = process.env.STRIPE_BYOK_COUPON_ID?.trim() || BYOK_COUPON_ID;
+    const discounts =
+      byokStatus.enabled && legacyByokCoupon
+        ? [{ coupon: legacyByokCoupon }]
+        : undefined;
     const resolvedSuccessUrl = resolveSameOriginUrl(
       successUrl,
       origin,
@@ -294,13 +308,8 @@ export async function POST(request: NextRequest) {
       customer: customerState.customerId,
       allow_promotion_codes: !discounts,
       ...(discounts ? { discounts } : {}),
+      // v9 has no built-in Stripe trial. Free tier (BYOK) is the trial path.
       subscription_data: {
-        trial_period_days: AUTHOR_TRIAL_DAYS,
-        trial_settings: {
-          end_behavior: {
-            missing_payment_method: "cancel",
-          },
-        },
         metadata: checkoutMetadata,
       },
       success_url: resolvedSuccessUrl,
