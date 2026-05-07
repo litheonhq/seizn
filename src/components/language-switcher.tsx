@@ -1,6 +1,6 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useState, useRef, useEffect } from 'react';
 import { locales, localeNames, type Locale } from '@/i18n/config';
 
@@ -42,7 +42,7 @@ const languageGroups = {
   americas: ['pt-BR'] as Locale[],
 };
 
-function changeLocale(newLocale: Locale, currentLocale: Locale, pathname: string) {
+function changeLocale(newLocale: Locale, currentLocale: Locale, pathname: string, navigate: (path: string) => void) {
   if (newLocale === currentLocale) return;
 
   // Remove current locale from pathname and add new one
@@ -63,12 +63,12 @@ function changeLocale(newLocale: Locale, currentLocale: Locale, pathname: string
     // ignore errors (e.g., anonymous user)
   });
 
-  // Force full page reload to load new dictionary from server
-  window.location.href = newPath;
+  navigate(newPath);
 }
 
 export function LanguageSwitcher({ currentLocale, className = '' }: LanguageSwitcherProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -96,7 +96,7 @@ export function LanguageSwitcher({ currentLocale, className = '' }: LanguageSwit
 
   const handleSelect = (locale: Locale) => {
     setIsOpen(false);
-    changeLocale(locale, currentLocale, pathname);
+    changeLocale(locale, currentLocale, pathname, (path) => router.push(path));
   };
 
   return (
@@ -230,12 +230,13 @@ function LanguageOption({
 // Icon version for mobile/compact layouts
 export function LanguageSwitcherIcon({ currentLocale, className = '' }: LanguageSwitcherProps) {
   const pathname = usePathname();
+  const router = useRouter();
 
   const cycleLocale = () => {
     const currentIndex = locales.indexOf(currentLocale);
     const nextIndex = (currentIndex + 1) % locales.length;
     const newLocale = locales[nextIndex];
-    changeLocale(newLocale, currentLocale, pathname);
+    changeLocale(newLocale, currentLocale, pathname, (path) => router.push(path));
   };
 
   return (
