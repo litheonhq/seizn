@@ -19,6 +19,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { timingSafeEqual } from 'node:crypto';
 import { createServerClient, hasServerSupabaseServiceRoleConfig } from '@/lib/supabase';
 import { getManagedEntitlements } from '@/lib/author/billing/managed-entitlements';
+import { generateContinuityReport } from '@/lib/author/continuity-report/generate';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -131,24 +132,36 @@ async function runReport(
     return { status: 'skipped', reason: lockError.message };
   }
 
-  // Stub generator: in Phase 1 we mark the row completed with a stub R2
-  // key. The full implementation pulls every chapter from author_imports,
-  // runs check.ts in batch, and writes a markdown summary. That work is
-  // tracked separately to keep the v9 launch cron observable end-to-end.
-  // The stub still exercises the row lifecycle so the dashboard reflects
-  // real data on day one.
-  const reportR2Key = `continuity-reports/${row.user_id}/${row.scheduled_for}.md`;
-  await supabase
-    .from('continuity_reports')
-    .update({
-      status: 'completed',
-      report_r2_key: reportR2Key,
-      llm_cost_cents: 0,
-      generated_at: new Date().toISOString(),
-    })
-    .eq('id', row.id);
-
-  return { status: 'completed' };
+  // Real generator (round 2 audit): aggregates the user's last calendar
+  // month of imports, characters, conflicts, and feature usage, renders a
+  // markdown summary, and uploads it to R2. Deterministic, no LLM call,
+  // so llm_cost_cents stays 0 — a future iteration can layer LLM-driven
+  // highlights on top.
+  try {
+    const result = await generateContinuityReport(supabase, row.user_id, row.scheduled_for);
+    await supabase
+      .from('continuity_reports')
+      .update({
+        status: 'completed',
+        report_r2_key: result.r2Key,
+        llm_cost_cents: 0,
+        generated_at: new Date().toISOString(),
+      })
+      .eq('id', row.id);
+    return { status: 'completed' };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.error(`[continuity] generation failed for user ${row.user_id}: ${message}`);
+    await supabase
+      .from('continuity_reports')
+      .update({
+        status: 'failed',
+        failure_reason: message.slice(0, 500),
+        generated_at: new Date().toISOString(),
+      })
+      .eq('id', row.id);
+    return { status: 'failed', reason: message };
+  }
 }
 
 function verifyCronSecret(received: string, expected: string): boolean {
