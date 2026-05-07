@@ -21,6 +21,13 @@ import {
   getCharterStatusFromStripePriceId,
   getAuthorStripePriceId,
 } from '@/lib/stripe-config';
+import {
+  V9_TRACK2_CHARTER_END_AT,
+  getV9Track2BillingCadenceFromPriceId,
+  getV9Track2CharterStatusFromPriceId,
+  getV9Track2StripePriceId,
+  getV9Track2TierFromStripePriceId,
+} from '@/lib/billing/v9-products';
 
 /**
  * Convert an existing subscription paying a Charter price into a Stripe
@@ -103,6 +110,113 @@ export async function scheduleCharterToRegularSwap(
         },
         {
           items: [{ price: regularPriceId, quantity: charterItem.quantity ?? 1 }],
+          proration_behavior: 'none',
+        },
+      ],
+      end_behavior: 'release',
+    });
+    return { ok: true, scheduleId: schedule.id };
+  } catch (error) {
+    return {
+      ok: false,
+      reason: error instanceof Error ? `schedule_failed: ${error.message}` : 'schedule_failed',
+    };
+  }
+}
+
+/**
+ * Track 2 (API + MCP) variant of the Charter→regular swap. Same mechanics
+ * as the Track 1 helper above but resolves the price IDs against the
+ * v9-products.ts catalog. Without this, Track 2 Charter customers would
+ * pay Charter pricing forever — Track 1's helper can't recognize Track 2
+ * price IDs because the catalogs are separate.
+ */
+export async function scheduleTrack2CharterToRegularSwap(
+  subscriptionId: string,
+): Promise<
+  | { ok: true; scheduleId: string }
+  | { ok: false; reason: string }
+> {
+  if (!process.env.STRIPE_SECRET_KEY) {
+    return { ok: false, reason: 'stripe_not_configured' };
+  }
+  const stripe = getStripeClient();
+  let subscription: Stripe.Subscription;
+  try {
+    subscription = await stripe.subscriptions.retrieve(subscriptionId, {
+      expand: ['items.data.price'],
+    });
+  } catch (error) {
+    return {
+      ok: false,
+      reason: error instanceof Error ? `subscription_retrieve_failed: ${error.message}` : 'subscription_retrieve_failed',
+    };
+  }
+
+  if (subscription.schedule) {
+    return { ok: false, reason: 'already_scheduled' };
+  }
+
+  const charterEnd = Math.floor(new Date(V9_TRACK2_CHARTER_END_AT).getTime() / 1000);
+  if (charterEnd <= Math.floor(Date.now() / 1000)) {
+    return { ok: false, reason: 'charter_window_already_ended' };
+  }
+
+  // Find the BASE Track 2 subscription line item (not the metered Opus
+  // overage line for Studio Managed). Iterate items, pick the first one
+  // that resolves to a Track 2 price.
+  const baseItem = subscription.items.data.find((item) => {
+    const id = item.price?.id;
+    return Boolean(id && getV9Track2TierFromStripePriceId(id));
+  });
+  const charterPriceId = baseItem?.price.id;
+  if (!charterPriceId) {
+    return { ok: false, reason: 'no_track2_price_on_subscription' };
+  }
+
+  const charterStatus = getV9Track2CharterStatusFromPriceId(charterPriceId);
+  if (charterStatus !== 'charter') {
+    return { ok: false, reason: 'not_charter_price' };
+  }
+
+  const tier = getV9Track2TierFromStripePriceId(charterPriceId);
+  const cadence = getV9Track2BillingCadenceFromPriceId(charterPriceId);
+  if (!tier || !cadence) {
+    return { ok: false, reason: 'price_not_recognized' };
+  }
+
+  const regularPriceId = getV9Track2StripePriceId(tier, cadence, 'regular');
+  if (!regularPriceId) {
+    return { ok: false, reason: 'regular_price_not_configured' };
+  }
+
+  // Schedule must mirror ALL existing items, not just the base — otherwise
+  // Stripe drops metered overage lines on the swap. Keep overage items as-is
+  // across both phases.
+  const allItems = subscription.items.data.map((item) => ({
+    priceId: item.price.id,
+    quantity: item.quantity ?? 1,
+  }));
+  const phaseOneItems = allItems.map(({ priceId, quantity }) =>
+    priceId === charterPriceId ? { price: charterPriceId, quantity } : { price: priceId, quantity },
+  );
+  const phaseTwoItems = allItems.map(({ priceId, quantity }) =>
+    priceId === charterPriceId ? { price: regularPriceId, quantity } : { price: priceId, quantity },
+  );
+
+  try {
+    const schedule = await stripe.subscriptionSchedules.create({
+      from_subscription: subscriptionId,
+    });
+    await stripe.subscriptionSchedules.update(schedule.id, {
+      phases: [
+        {
+          items: phaseOneItems,
+          end_date: charterEnd,
+          proration_behavior: 'none',
+        },
+        {
+          items: phaseTwoItems,
           proration_behavior: 'none',
         },
       ],

@@ -23,7 +23,10 @@ import {
 } from "@/lib/stripe-metered";
 import { sendEmail, paymentFailedEmail } from "@/lib/email";
 import { recordFunnelEvent } from "@/lib/analytics/funnel";
-import { scheduleCharterToRegularSwap } from "@/lib/billing/charter-schedule";
+import {
+  scheduleCharterToRegularSwap,
+  scheduleTrack2CharterToRegularSwap,
+} from "@/lib/billing/charter-schedule";
 import { syncManagedEntitlements } from "@/lib/author/billing/managed-entitlements";
 import {
   getAuthorTierFromStripePriceId,
@@ -573,6 +576,20 @@ export async function POST(request: NextRequest) {
                 channel: 'track2',
               },
             });
+            // v9 Track 2 Charter → regular auto-swap. Track 1 helper above
+            // can't recognize Track 2 price IDs, so without this Track 2
+            // Charter customers would pay Charter price forever after the
+            // 2027-05-01 cutoff (revenue leak).
+            try {
+              const swap = await scheduleTrack2CharterToRegularSwap(subscriptionId);
+              if (!swap.ok) {
+                console.log(`[charter track2] swap not scheduled for ${subscriptionId}: ${swap.reason}`);
+              } else {
+                console.log(`[charter track2] swap scheduled ${swap.scheduleId} for ${subscriptionId}`);
+              }
+            } catch (swapError) {
+              console.error(`[charter track2] swap unexpected error for ${subscriptionId}`, swapError);
+            }
           }
           break;
         }
@@ -836,6 +853,21 @@ export async function POST(request: NextRequest) {
               downgraded_to: "free",
               ended_at: eventData.ended_at,
             }, downgrade.ok ? "success" : "failed", downgrade.ok ? undefined : downgrade.error);
+            // v9 funnel: Track 2 cancellation. Pre-fix this branch broke
+            // out before the Track 1 funnel hook below, silently dropping
+            // Track 2 cancel events from cohort/retention analytics.
+            void recordFunnelEvent({
+              userId: user.id,
+              eventType: 'subscription_canceled',
+              metadata: {
+                subscription_id: subscriptionId,
+                channel: 'track2',
+                catalog: 'v9',
+                previous_tier: v9Tier,
+                ended_at: eventData.ended_at,
+                canceled_at: eventData.canceled_at,
+              },
+            });
             break;
           }
           const v8Tier = getV8Track2TierFromStripePriceId(priceId);
@@ -853,6 +885,19 @@ export async function POST(request: NextRequest) {
               downgraded_to: "free",
               ended_at: eventData.ended_at,
             }, downgrade.ok ? "success" : "failed", downgrade.ok ? undefined : downgrade.error);
+            // Same Track 2 cancel funnel for v8 fallback path.
+            void recordFunnelEvent({
+              userId: user.id,
+              eventType: 'subscription_canceled',
+              metadata: {
+                subscription_id: subscriptionId,
+                channel: 'track2',
+                catalog: 'v8',
+                previous_tier: v8Tier,
+                ended_at: eventData.ended_at,
+                canceled_at: eventData.canceled_at,
+              },
+            });
             break;
           }
         }

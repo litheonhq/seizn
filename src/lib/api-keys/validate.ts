@@ -22,14 +22,20 @@ function safeEqualString(a: string, b: string): boolean {
 }
 
 function normalizeRecord(row: ApiKeyRecord): ValidatedApiKey {
+  // Defaults match v9 free tier: 50 calls/day, 30 req/min. A NULL row
+  // (legacy data or migration race) used to fall through to 100/month
+  // — that gave 3.3 calls/day on average AND let the user spike to 100
+  // in a single day, which is neither v8 (100/day) nor v9 (50/day). Now
+  // we hard-code v9 free defaults so a missing column never grants a
+  // higher tier than the user paid for.
   return {
     apiKeyId: row.id,
     userId: row.user_id,
     orgId: row.org_id ?? row.organization_id ?? null,
     scopes: row.scopes ?? [],
     rateLimitPerMinute: row.rate_limit_per_minute ?? 30,
-    monthlyQuota: row.monthly_quota ?? 100,
-    monthlyQuotaPeriod: row.monthly_quota_period ?? 'month',
+    monthlyQuota: row.monthly_quota ?? 50,
+    monthlyQuotaPeriod: row.monthly_quota_period ?? 'day',
   };
 }
 
