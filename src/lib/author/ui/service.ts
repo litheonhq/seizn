@@ -408,15 +408,49 @@ export class AuthorUiService {
     }
   ): Promise<{ import_id: string }> {
     this.ensureProject(projectId);
-    const declaredFileSize = input.fileSize ?? input.fileBytes?.length ?? 0;
-    if (declaredFileSize <= AUTHOR_IMPORT_MAX_BYTES && (!input.fileBytes || input.fileBytes.length === 0)) {
+    // Reconcile declared vs actual file size BEFORE writing any DB row or
+    // audit-log entry. Pre-audit, the inverted guard let a client send
+    // `fileSize: 999_000_000` with no body — the row got inserted with the
+    // bogus declared size, audit-log got polluted, then the > MAX branch
+    // marked it `failed` and returned 200. Equally, a client could claim
+    // `fileSize: 1024` but ship 50MB to R2 since the actual bytes were
+    // never compared to the declaration.
+    //
+    // Now: if both are present, they must match within 1 byte (defensive
+    // wiggle for transport quirks). If only `fileBytes` is present, trust
+    // its length. If only `fileSize` is present (oversized declared
+    // upload, no body shipped), allow the route's "too-large" path to
+    // record the failed attempt — but reject other zero-body cases.
+    const declaredFileSize = input.fileSize ?? null;
+    const actualByteLength = input.fileBytes?.length ?? null;
+    if (declaredFileSize != null && actualByteLength != null) {
+      if (Math.abs(declaredFileSize - actualByteLength) > 1) {
+        throw new AuthorUiValidationError(
+          `declared fileSize (${declaredFileSize}) does not match actual bytes (${actualByteLength})`,
+        );
+      }
+    }
+    const fileSize = actualByteLength ?? declaredFileSize ?? 0;
+    if (fileSize <= AUTHOR_IMPORT_MAX_BYTES && (!input.fileBytes || input.fileBytes.length === 0)) {
       throw new AuthorUiValidationError('file is required');
     }
 
     const id = newPersistedAuthorUiId('import');
     const fileName = input.fileName ?? 'untitled.md';
     const contentType = input.fileType;
-    const fileSize = declaredFileSize;
+    // Magic-number sniff: refuse uploads where the first bytes don't match
+    // the declared file_type. Pre-audit a client could name a .docx with
+    // .txt extension and the parser would feed zip bytes to iconv —
+    // garbage in, garbage out at best, parser-confusion bug at worst.
+    if (input.fileBytes && input.fileBytes.length >= 4) {
+      const declaredType = normalizeFileType(contentType ?? fileName);
+      const sniffedType = sniffFileType(input.fileBytes);
+      if (sniffedType && sniffedType !== declaredType) {
+        throw new AuthorUiValidationError(
+          `file_type mismatch: declared ${declaredType}, content magic-number suggests ${sniffedType}`,
+        );
+      }
+    }
     const item: AuthorUiImport = {
       id,
       file_name: fileName,
@@ -2290,6 +2324,46 @@ function normalizeFileType(value: string | undefined): AuthorUiImport['file_type
   if (lower.includes('notion')) return 'notion_export';
   if (lower.includes('obsidian')) return 'obsidian_md';
   return 'md';
+}
+
+/**
+ * Best-effort file-type sniff based on magic bytes. Returns one of the
+ * AuthorUiImport.file_type literals when a confident match is found, or
+ * `null` when ambiguous (caller trusts the declared file_type).
+ *
+ * Defense-in-depth against parser-confusion: pre-audit a client could
+ * upload a .docx with a .txt extension, the parser dispatched to iconv
+ * on zip bytes (garbage at best, parser-confusion bug at worst). Or
+ * label arbitrary bytes as .pdf to point pdf-parse at a hostile
+ * payload. Magic-number agreement isn't a security guarantee but it
+ * shuts down the obvious vectors.
+ */
+function sniffFileType(buffer: Buffer): AuthorUiImport['file_type'] | null {
+  if (buffer.length < 4) return null;
+  // PDF: %PDF
+  if (buffer[0] === 0x25 && buffer[1] === 0x50 && buffer[2] === 0x44 && buffer[3] === 0x46) {
+    return 'pdf';
+  }
+  // ZIP family (DOCX is a ZIP, Notion exports are ZIPs): PK\x03\x04
+  if (buffer[0] === 0x50 && buffer[1] === 0x4b && buffer[2] === 0x03 && buffer[3] === 0x04) {
+    // Can't distinguish DOCX vs Notion-export here without unzipping;
+    // accept as DOCX (the more common case) and let the parser dispatch
+    // handle the actual content. Notion exports declared as docx will
+    // fail later at parse-time with a clear error.
+    return 'docx';
+  }
+  // JSON: starts with { or [ (after optional BOM/whitespace)
+  let i = 0;
+  if (buffer[0] === 0xef && buffer[1] === 0xbb && buffer[2] === 0xbf) i = 3; // UTF-8 BOM
+  while (
+    i < buffer.length
+    && (buffer[i] === 0x20 || buffer[i] === 0x09 || buffer[i] === 0x0a || buffer[i] === 0x0d)
+  ) i++;
+  if (i < buffer.length && (buffer[i] === 0x7b || buffer[i] === 0x5b)) {
+    return 'json';
+  }
+  // Plain text / markdown — too ambiguous to sniff. Return null.
+  return null;
 }
 
 function markImportFailed(item: AuthorUiImport, message: string): void {
