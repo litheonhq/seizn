@@ -103,7 +103,7 @@ export default function ByokWizardClient() {
       <h1 className="text-2xl font-semibold mb-2">Connect your API key</h1>
       <p className="text-sm text-muted-foreground mb-8">
         Bring your own Anthropic or OpenAI key to use Author Memory v3. Free tier
-        includes 50 calls/day, 5 Checks and 5 Dialogs per month.
+        includes 50 calls/day, 15 Checks and 15 Dialogs per month, first 20 chapters analyzed.
       </p>
 
       <ol className="flex gap-3 text-xs text-muted-foreground mb-8">
@@ -263,7 +263,7 @@ export default function ByokWizardClient() {
             <p className="text-2xl">🎉</p>
             <p className="text-lg font-medium text-green-900 mt-2">You&apos;re ready</p>
             <p className="text-sm text-green-800 mt-1">
-              Free tier active: 50 calls/day, 5 Checks &amp; 5 Dialogs per month.
+              Free tier active: 50 calls/day, 15 Checks &amp; 15 Dialogs per month, first 20 chapters analyzed.
             </p>
           </div>
           <button
