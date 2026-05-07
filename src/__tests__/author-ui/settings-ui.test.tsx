@@ -128,7 +128,7 @@ describe("Author settings UI", () => {
     const requests = installFetchMocks();
     await render(<AuthorSettingsClient />);
 
-    const input = await findInputByLabel("Anthropic API key");
+    const input = await findInputByLabel("API key (sk-ant-...)");
     await changeInput(input, "sk-ant-test-secret");
     await click(getButton("Save key"));
 
@@ -150,7 +150,7 @@ describe("Author settings UI", () => {
 
     await waitForCondition(() => {
       expect(requests.some((request) =>
-        request.url === "/api/account/byok" && request.method === "DELETE"
+        request.url === "/api/account/byok?provider=anthropic" && request.method === "DELETE"
       )).toBe(true);
     });
   });
@@ -397,6 +397,9 @@ function installFetchMocks() {
     }
     if (url === "/api/account/billing-portal" && method === "POST") {
       return jsonResponse({ url: "https://billing.stripe.test/session" });
+    }
+    if (url === "/api/account/llm-provider") {
+      return jsonResponse({ provider: "anthropic", env_default: "anthropic" });
     }
     if (url === "/api/account/byok") return jsonResponse(activeByok);
     if (url === "/api/account/subscription") return jsonResponse(subscription);

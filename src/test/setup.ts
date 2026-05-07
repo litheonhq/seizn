@@ -60,14 +60,16 @@ const mockCreateHash = vi.fn(() => ({
 const mockRandomUUID = vi.fn(() => 'test-uuid-12345678');
 
 vi.mock('crypto', async () => {
-  const actual = await vi.importActual<typeof import('crypto')>('crypto');
+  const actual = await vi.importActual<typeof import('crypto')>('node:crypto');
   return {
     ...actual,
     default: {
       ...actual,
+      randomBytes: actual.randomBytes,
       randomUUID: mockRandomUUID,
       createHash: mockCreateHash,
     },
+    randomBytes: actual.randomBytes,
     randomUUID: mockRandomUUID,
     createHash: mockCreateHash,
   };

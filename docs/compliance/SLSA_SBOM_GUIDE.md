@@ -106,7 +106,7 @@ on:
       "name": "seizn",
       "versionInfo": "2.1.0",
       "supplier": "Organization: Seizn Inc.",
-      "downloadLocation": "https://github.com/iruhana/seizn",
+      "downloadLocation": "https://github.com/litheonhq/seizn",
       "filesAnalyzed": true,
       "checksums": [
         {
@@ -180,7 +180,7 @@ on:
   "_type": "https://in-toto.io/Statement/v1",
   "subject": [
     {
-      "name": "ghcr.io/iruhana/seizn",
+      "name": "ghcr.io/litheonhq/seizn",
       "digest": {
         "sha256": "abc123..."
       }
@@ -193,12 +193,12 @@ on:
       "externalParameters": {
         "workflow": {
           "ref": "refs/tags/v2.1.0",
-          "repository": "https://github.com/iruhana/seizn"
+          "repository": "https://github.com/litheonhq/seizn"
         }
       },
       "resolvedDependencies": [
         {
-          "uri": "git+https://github.com/iruhana/seizn@refs/tags/v2.1.0",
+          "uri": "git+https://github.com/litheonhq/seizn@refs/tags/v2.1.0",
           "digest": {
             "gitCommit": "abc123..."
           }
@@ -210,7 +210,7 @@ on:
         "id": "https://github.com/slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@refs/tags/v2.0.0"
       },
       "metadata": {
-        "invocationId": "https://github.com/iruhana/seizn/actions/runs/12345"
+        "invocationId": "https://github.com/litheonhq/seizn/actions/runs/12345"
       }
     }
   }
@@ -225,14 +225,14 @@ cosign verify-attestation \
   --type slsaprovenance \
   --certificate-identity-regexp '^https://github.com/slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@refs/tags/v[0-9]+.[0-9]+.[0-9]+$' \
   --certificate-oidc-issuer https://token.actions.githubusercontent.com \
-  ghcr.io/iruhana/seizn:v2.1.0
+  ghcr.io/litheonhq/seizn:v2.1.0
 
 # Verify SBOM
 cosign verify-attestation \
   --type cyclonedx \
-  --certificate-identity-regexp '^https://github.com/iruhana/seizn/.github/workflows/release-slsa.yml@refs/tags/v' \
+  --certificate-identity-regexp '^https://github.com/litheonhq/seizn/.github/workflows/release-slsa.yml@refs/tags/v' \
   --certificate-oidc-issuer https://token.actions.githubusercontent.com \
-  ghcr.io/iruhana/seizn:v2.1.0
+  ghcr.io/litheonhq/seizn:v2.1.0
 ```
 
 ---

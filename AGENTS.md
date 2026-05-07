@@ -65,70 +65,60 @@ curl "https://www.seizn.com/api/v1/memories?query=...&mode=hybrid" \
 - Update after any tech changes (new libs, API routes, architecture)
 - Regenerate: `gh workflow run claude-audit.yml -f depth="strategic"`
 
-## CI/CD Workflows (GitHub Actions, Self-hosted Runner)
+## CI/CD Workflows (GitHub Actions)
 
-Central repo `iruhana/claude-workflows@v1`. All workflows are manual trigger (workflow_dispatch).
-Provider: `claude` (default) or `codex` (add `-f provider="codex"`).
+`claude-audit.yml` is repo-local and Litheon-only. It runs deterministic npm audit gates; the `provider` input is kept only for CLI compatibility and does not call an external AI workflow.
+The other `claude-*`, `auto-fix`, and `issue-to-code` workflow files are compatibility wrappers around the same repo-local audit workflow. They do not create code changes, comments, issues, or commits by themselves.
 
-### Code Improvement (claude-improve.yml)
+### Deterministic Audit Wrappers
 
-Seizn-specific presets first. Default: `mcp-protocol`.
-
-| Preset | Description | Model |
-|--------|-------------|-------|
-| `mcp-protocol` | MCP SDK spec compliance, tool/resource handlers, JSON-RPC | **opus** |
-| `memory-graph` | Memory CRUD, knowledge graph integrity, search relevance | **opus** |
-| `ai-context` | session_init project detection, 8 AI tool config sync | sonnet |
-| `security` | XSS, CSRF, injection, secret exposure audit | **opus** |
-| `code-quality` | DRY, naming, types, pattern consistency | sonnet |
-| `performance` | N+1 queries, memo, dynamic imports, caching | **opus** |
-| `dead-code` / `tech-debt` / `deps-update` / `accessibility` / `seo` | General | auto |
+These preserve old CLI entry points while keeping execution inside `litheonhq/seizn`.
 
 ```bash
-# Default (MCP protocol audit)
+# Default deterministic gate
 gh workflow run claude-improve.yml
 
-# Specific preset
-gh workflow run claude-improve.yml -f task_type="memory-graph"
+# Security preset runs strategic checks
+gh workflow run claude-improve.yml -f task_type="security"
 
-# Custom task + scope
+# Custom task and scope are recorded for operator context only
 gh workflow run claude-improve.yml -f task_type="custom" -f task="Refactor webhook delivery retry logic" -f scope="src/app/api/webhooks"
 
-# Force model + web search
+# Provider/model/search inputs are compatibility-only
 gh workflow run claude-improve.yml -f task_type="security" -f model="opus" -f use_web_search="true"
 ```
 
 ### Other Workflows
 
 ```bash
-# PR code review
+# PR review readiness gate
 gh workflow run claude-review.yml -f pr_number="5"
 
-# Auto-fix build errors (3-round escalation)
+# Auto-fix compatibility gate; does not mutate code
 gh workflow run auto-fix.yml -f pr_number="5"
 
-# Issue → implementation → PR
+# Issue implementation readiness gate; does not mutate code
 gh workflow run issue-to-code.yml -f issue_number="3"
 
 # Tech stack docs
 gh workflow run claude-audit.yml -f depth="strategic"
 
-# Continuous improvement
+# Continuous compatibility gate; runs one deterministic pass
 gh workflow run claude-continuous.yml
 gh workflow run claude-continuous.yml -f tasks="mcp-protocol,security" -f max_cycles=3
 
-# Stop continuous run
+# Stop a running compatibility gate
 gh run cancel $(gh run list -w claude-continuous.yml -L 1 --json databaseId -q '.[0].databaseId')
 
-# AI Research (하루 1회, 논문/기술/보안 → Issue 생성)
+# AI Research compatibility gate; does not create issues
 gh workflow run claude-research.yml -f focus="all"
 gh workflow run claude-research.yml -f focus="security-advisories"
 gh workflow run claude-research.yml -f focus="papers"
 ```
 
-### Auto-merge
+### Merge Policy
 
-Low-risk presets (`dead-code`, `seo`, `accessibility`, `code-quality`, `ai-context`, `deps-update`) auto squash merge on build pass.
+These compatibility wrappers never merge changes. Land code through the normal Litheon review and commit path after green gates.
 
 ## Rules
 
