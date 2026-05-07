@@ -1069,6 +1069,15 @@ export class AuthorUiService {
     if (!field) {
       throw new AuthorUiValidationError('field is required');
     }
+    // Allowlist user-writable settings paths. Pre-audit, ANY dotted path
+    // was accepted, including `byok.enabled`, `byok.key_last_4`, `tier`,
+    // `usage.tokens_used_month` — letting a client bypass saveByok
+    // validation, claim higher tier, or zero out their own metering.
+    // Only the sync.* family is user-facing; byok/usage/tier are
+    // server-managed and updated through their dedicated endpoints.
+    if (!isAllowedSettingsField(field)) {
+      throw new AuthorUiValidationError(`field "${field}" is not user-writable`);
+    }
     setDeepValue(settings, field, input.value);
     this.state.settingsByProject.set(projectId, settings);
     this.touchProject(projectId);
@@ -1423,11 +1432,27 @@ export class AuthorUiService {
       write = Promise.reject(error);
     }
     this.state.auditLogWrites.add(write);
-    void write.then(() => {
-      this.state.auditLogWrites.delete(write);
-    }, () => {
-      this.state.auditLogWrites.delete(write);
-    });
+    void write.then(
+      () => {
+        this.state.auditLogWrites.delete(write);
+      },
+      (error) => {
+        // Pre-audit, the rejection handler was `() => { delete }` — silently
+        // swallowing audit-log write failures. The hash-chain integrity
+        // claim becomes vacuous if any write can fail without surfacing.
+        // Now log the error with enough context to correlate against the
+        // returned decision_id so an operator can see "API said
+        // decision_id=foo, but the chain has a gap there".
+        this.state.auditLogWrites.delete(write);
+        console.error('[author-ui] audit_log write failed', {
+          decision_id: entry.decisionId,
+          event_type: eventType,
+          project_id: projectId,
+          user_id: this.userId,
+          error: error instanceof Error ? error.message : String(error),
+        });
+      },
+    );
     return entry;
   }
 }
@@ -2210,6 +2235,14 @@ function applyCharacterPatch(character: AuthorUiCharacterDetail, field: string, 
 
 function setDeepValue(target: JsonRecord, field: string, value: unknown): void {
   const parts = parseFieldPath(field);
+  // Defense-in-depth: even though parseFieldPath rejects __proto__ etc. in
+  // the path, the value side could still contain `{"__proto__": {...}}`.
+  // Recursively scan and reject. This caps the prototype-pollution attack
+  // surface a level above canonicalize's own skip (which only protects the
+  // hash output, not the in-memory mutation).
+  if (containsPollutionKey(value)) {
+    throw new AuthorUiValidationError('value contains forbidden keys (__proto__, prototype, constructor)');
+  }
   let cursor: JsonRecord = target;
   for (const part of parts.slice(0, -1)) {
     if (!cursor[part] || typeof cursor[part] !== 'object' || Array.isArray(cursor[part])) {
@@ -2218,6 +2251,39 @@ function setDeepValue(target: JsonRecord, field: string, value: unknown): void {
     cursor = cursor[part] as JsonRecord;
   }
   cursor[parts[parts.length - 1]] = value;
+}
+
+function containsPollutionKey(value: unknown, depth = 0): boolean {
+  if (depth > 16) return false; // bound recursion; deeply-nested junk is rejected by other validators
+  if (!value || typeof value !== 'object') return false;
+  if (Array.isArray(value)) {
+    return value.some((item) => containsPollutionKey(item, depth + 1));
+  }
+  for (const key of Object.keys(value as object)) {
+    if (FORBIDDEN_FIELD_PATH_SEGMENTS.has(key)) return true;
+    if (containsPollutionKey((value as Record<string, unknown>)[key], depth + 1)) return true;
+  }
+  return false;
+}
+
+/**
+ * Allowlist of user-writable settings paths. Anything not matching is
+ * rejected by `updateSettings`. Server-managed surfaces (byok, usage, tier)
+ * deliberately excluded — those have dedicated endpoints with their own
+ * validation, encryption, and Stripe coupon syncing.
+ */
+const USER_WRITABLE_SETTINGS_PATHS = new Set<string>([
+  'sync.obsidian_enabled',
+  'sync.obsidian_vault_path',
+  'sync.notion_enabled',
+  'sync.notion_workspace_id',
+  'sync.sync_direction',
+  'sync.sync_frequency',
+  'sync.conflict_resolution',
+]);
+
+function isAllowedSettingsField(field: string): boolean {
+  return USER_WRITABLE_SETTINGS_PATHS.has(field);
 }
 
 function parseFieldPath(field: string): string[] {
