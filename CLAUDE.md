@@ -18,13 +18,92 @@
 ## 타겟 시장
 - 한국, 영어권, 일본 (3개국)
 
-## 가격 정책
-| 플랜 | 가격 | AI 엔진 | 메모리 | API 호출 | 망각 곡선 |
-|-----|------|---------|--------|---------|----------|
-| Free | $0 | Haiku | 10,000 | 1,000/월 | 60일 |
-| Plus | $9 | Sonnet | 50,000 | 10,000/월 | 120일 |
-| Pro | $29 | Sonnet | 200,000 | 50,000/월 | ON/OFF 가능 |
-| Enterprise | 문의 | Sonnet+Opus | 무제한 | 무제한 | ON/OFF 가능 |
+## 가격 정책 (Author Memory v3 — Locked 2026-05-07, v9 catalog)
+
+### Free 티어
+- BYOK 강제 (Anthropic 또는 OpenAI 키 등록 필수)
+- 50 calls/day, 사용자 모델 자유 선택 (default Opus 4.7)
+- 기능 제한: Check 5/월, Dialog 5/월, 첫 5 챕터 / 25K words 분석 한도
+- 차단: Backlog generation, Knowledge partitioning, Timeline/Relationship 추출
+- 우리 비용: $0 (인프라 $0.04/인/월만)
+
+### Track 1 (웹) 가격표 — 2-column (Managed/BYOK) × 2-cadence (Monthly/Annual)
+| Tier | Managed 정착 / Charter Monthly / Charter Annual | BYOK 정착 / Charter Monthly / Charter Annual |
+|---|---|---|
+| Indie | $39 / $29 / $324yr ($27/mo) | $19 / $11 / $114yr ($9.50/mo) |
+| Pro | $149 / $112 / $1,250yr ($104/mo) | $79 / $47 / $474yr ($39.50/mo) |
+| Studio | $499 / $374 / $4,190yr ($349/mo) | $249 / $149 / $1,494yr ($124.50/mo) |
+| Enterprise | $2,500 / $1,875 (BYOK 강제) | — |
+
+### Track 2 (API/MCP)
+| Tier | 정착 / Charter Monthly / Charter Annual |
+|---|---|
+| Free | $0 (50/일 BYOK 강제) |
+| Indie (BYOK) | $19 / $11 / $108yr ($9/mo) |
+| Pro (BYOK) | $39 / $23 / $228yr ($19/mo) |
+| Studio (BYOK) | $199 / $119 / $1,188yr ($99/mo) |
+| Studio Managed | $999 / $599 / $5,988yr ($499/mo) — medium effort, $0.50/콜 overage |
+| Enterprise | Contact |
+
+### Charter 정책 (단순 시간창)
+- **2027-05-01까지** Charter 가격 적용 (lifetime lock 폐기)
+- 2027-05-01 이후 결제건은 정상가
+- Annual 가입자: 결제 시점이 2027-05-01 이전이면 그 1년치 Charter 가격 보장
+- Monthly 가입자: 매월 결제 시점이 기준
+- Charter 할인폭: Managed Monthly -25% / Annual -30%, BYOK Monthly -40% / Annual -50%
+- Stripe Schedule 객체로 swap 자동화
+
+### Trial 정책
+- **별도 Trial 없음** (Free와 통합)
+- Free에서 5/5 Check/Dialog 한계 hit하면 결제 trigger
+- Smart sample 추천 + cost preview UI로 마찰 완화
+
+### Charter Managed 혜택
+**모든 Managed 공통**: Priority Queue / 48h Priority Support / Beta Features Access / Multi-provider Auto-failover / Founding Member 배지
+**Pro+ 가산**: Premium quality (xhigh) included / Monthly Continuity Report / 2 Collaborator Seats
+**Studio+ 가산**: 5 Seats / Quarterly Strategy Call / Custom Prompt Overrides / White-label Export
+**Enterprise**: 무제한 seats / Custom SLA / Dedicated success manager
+
+### Effort 정책
+- BYOK 모든 티어: 사용자 자유 선택 (default Opus 4.7 medium)
+- Indie Managed: medium 강제 (마진 보호)
+- Pro/Studio/Enterprise Managed: xhigh 포함
+
+### LLM 단가 (lock 2026-05-07, `src/lib/author/llm/pricing-rates.ts` 단일 소스)
+- Claude Opus 4.7: $5/$25 per MTok (input/output), 5min cache write $6.25, cache read $0.50
+- Claude Sonnet 4.6: $3/$15 per MTok
+- GPT-5.5: $5/$30 per MTok, cached input $1.25
+- 가격 변경 시 `pricing-rates.ts` 단일 파일만 수정
+
+## 마케팅 / 광고 정책 (Lock 2026-05-07)
+- **광고비 cap: 월 $500**, dynamic ($200-500 channel 효율 기반)
+- Month 1-3 점진 ($300/$400/$500), 3개월 KPI 검증
+- 채널: Reddit Ads + Newsletter sponsorship + Google Ads + Micro-influencer
+- KPI 임계치: CAC < $20/signup, trial 전환 > 20%, 월 churn < 7%
+- 미달 시 광고 중단 + 채널 재검토
+
+## 핵심 측정 지표 (Admin Dashboard `/admin/metrics`)
+- CAC per signup (channel별) — alert >$25
+- 전환율 30/90일 (signup → paid) — target 12% blended, 18% optimistic
+- MRR (월간 snapshot) — growth target +10%/mo
+- Monthly churn — target <5%, alert >10%
+- Free 사용자 인프라 비용 — $0.04/인/월 baseline
+
+## 12개월 재무 예상 (lock)
+- 광고 $500/월, 12% blended conversion, $13 평균 MRR, 5% churn
+- 12개월차: 53 active paid, ARR $8K, 누적 손익 **-$530**
+- 23개월차: break-even
+- 36개월차: ARR $15K, 누적 +$7K
+- Steady state: 120 paid, ARR $19K
+
+## 성장 가속 plan (organic > paid)
+**원칙**: 광고만 늘리는 건 단기 자살. Organic + conversion 개선이 진짜 lever.
+- M1-3 (학습): 광고 채널 검증
+- M4-6 (검증): SEO 콘텐츠 시작 (월 2-4편 블로그)
+- M7-12 (확장): 작가 커뮤니티 침투, Founding Member 추천 프로그램, case study
+- M12-24: AI 작가 도구 비교 사이트 등재, 작가 인플루언서 연계
+
+**Best case (organic 2x + conversion 18% 달성)**: M12 +$3-5K 흑자, M24 ARR $35K, M36 누적 +$30K
 
 ## 폴더 구조
 ```

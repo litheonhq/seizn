@@ -3,8 +3,8 @@ import * as crypto from "crypto";
 import { createServerClient } from "@/lib/supabase";
 import {
   AUTHOR_PRICE_LOCK_VERSION,
-  getPlanFromStripePriceId,
   mapStripeSubscriptionStatus,
+  resolveCharterStatus,
 } from "@/lib/stripe-config";
 import {
   applyV8Track2TierToApiKeys,
@@ -12,11 +12,25 @@ import {
   type V8Track2Tier,
 } from "@/lib/billing/v8-products";
 import {
+  applyV9Track2TierToApiKeys,
+  getV9Track2TierFromStripePriceId,
+  type V9Track2Tier,
+} from "@/lib/billing/v9-products";
+import {
   ensureMeteredPriceAttached,
   ensureV8Track2OpusOverageAttached,
   ensureV8Track2OpusOverageDetached,
 } from "@/lib/stripe-metered";
 import { sendEmail, paymentFailedEmail } from "@/lib/email";
+import { recordFunnelEvent } from "@/lib/analytics/funnel";
+import { scheduleCharterToRegularSwap } from "@/lib/billing/charter-schedule";
+import { syncManagedEntitlements } from "@/lib/author/billing/managed-entitlements";
+import {
+  getAuthorTierFromStripePriceId,
+  getBillingColumnFromStripePriceId,
+  getCharterStatusFromStripePriceId,
+  isAuthorBillingTier,
+} from "@/lib/stripe-config";
 
 // Stripe webhook event types we handle
 type StripeEventType =
@@ -72,6 +86,7 @@ interface StripeEventObject {
   ended_at?: number | null;
   trial_start?: number | null;
   trial_end?: number | null;
+  start_date?: number | null;
   // Invoice fields
   billing_reason?: string;
   amount_paid?: number;
@@ -171,9 +186,20 @@ function stripeTimestampToIso(value?: number | null): string | null {
 
 function buildSubscriptionProfileUpdates(eventData: StripeEventObject): Record<string, unknown> {
   const priceId = extractPriceId(eventData.items);
-  const plan = priceId ? getPlanFromStripePriceId(priceId) : null;
+  const plan = priceId ? getAuthorTierFromStripePriceId(priceId) : null;
   const periodEnd = stripeTimestampToIso(eventData.current_period_end);
   const cancelAtPeriodEnd = eventData.cancel_at_period_end === true;
+  // Prefer start_date → current_period_start → fallback to now(). Late
+  // webhook retries (delivered after CHARTER_WINDOW_END_AT) for pre-cutoff
+  // subs need start_date, otherwise charterEligible flips false incorrectly.
+  const startedAtIso =
+    stripeTimestampToIso(eventData.start_date) ??
+    stripeTimestampToIso(eventData.current_period_start) ??
+    new Date().toISOString();
+  // v9: Charter eligibility = subscription started before CHARTER_WINDOW_END_AT.
+  // Single source of truth: resolveCharterStatus() — keeps this in lock-step
+  // with checkout / Stripe Schedule / pricing UI.
+  const charterEligible = resolveCharterStatus(startedAtIso) === 'charter';
   const updates: Record<string, unknown> = {
     stripe_subscription_id: eventData.id,
     stripe_subscription_status: eventData.status ?? null,
@@ -181,17 +207,24 @@ function buildSubscriptionProfileUpdates(eventData: StripeEventObject): Record<s
     stripe_price_id: priceId,
     stripe_current_period_start: stripeTimestampToIso(eventData.current_period_start),
     stripe_current_period_end: periodEnd,
+    subscription_started_at: startedAtIso,
+    subscription_ended_at: null,
     subscription_ends_at: periodEnd,
     subscription_renews_at: cancelAtPeriodEnd ? null : periodEnd,
     subscription_trial_ends_at: stripeTimestampToIso(eventData.trial_end),
     subscription_cancelled: cancelAtPeriodEnd || eventData.status === "canceled",
     subscription_payment_failed: eventData.status === "past_due" || eventData.status === "unpaid",
-    price_lock_version: AUTHOR_PRICE_LOCK_VERSION,
+    charter_eligible: charterEligible,
+    charter_signup_at: charterEligible ? startedAtIso : null,
   };
 
+  // Only set price_lock_version when the price ID actually resolves to a v9
+  // catalog entry. Legacy v7/v8 grandfathered subs (none expected at v9
+  // launch but possible later) keep their original lock_version on disk.
   if (plan) {
     updates.plan = plan;
     updates.plan_updated_at = new Date().toISOString();
+    updates.price_lock_version = AUTHOR_PRICE_LOCK_VERSION;
   }
 
   return updates;
@@ -259,6 +292,10 @@ type V8AdjustmentResult =
   | { matched: true; tier: V8Track2Tier; updated: boolean; error?: string }
   | { matched: false };
 
+type V9AdjustmentResult =
+  | { matched: true; tier: V9Track2Tier; updated: boolean; error?: string }
+  | { matched: false };
+
 async function maybeApplyV8Track2(
   supabase: ReturnType<typeof createServerClient>,
   userId: string,
@@ -272,6 +309,26 @@ async function maybeApplyV8Track2(
     userId,
     tier,
     supabase as unknown as Parameters<typeof applyV8Track2TierToApiKeys>[2],
+  );
+  if (!result.ok) {
+    return { matched: true, tier, updated: false, error: result.error };
+  }
+  return { matched: true, tier, updated: true };
+}
+
+async function maybeApplyV9Track2(
+  supabase: ReturnType<typeof createServerClient>,
+  userId: string,
+  priceId: string,
+): Promise<V9AdjustmentResult> {
+  const tier = getV9Track2TierFromStripePriceId(priceId);
+  if (!tier) {
+    return { matched: false };
+  }
+  const result = await applyV9Track2TierToApiKeys(
+    userId,
+    tier,
+    supabase as unknown as Parameters<typeof applyV9Track2TierToApiKeys>[2],
   );
   if (!result.ok) {
     return { matched: true, tier, updated: false, error: result.error };
@@ -482,6 +539,44 @@ export async function POST(request: NextRequest) {
           break;
         }
 
+        // v9 Track 2 lookup runs BEFORE v8 fallback. v9 is the active catalog
+        // for new subscriptions; v8 only matches grandfathered/test prices.
+        const v9 = await maybeApplyV9Track2(supabase, user.id, priceId);
+        if (v9.matched) {
+          if (!v9.updated) {
+            console.error("Failed to apply v9 Track 2 tier on api_keys:", v9.error);
+            await logBillingEvent(supabase, user.id, "subscription_created", {
+              subscription_id: subscriptionId,
+              channel: "track2",
+              catalog: "v9",
+              tier: v9.tier,
+              price_id: priceId,
+            }, "failed", v9.error);
+          } else {
+            console.log(`v9 Track 2 subscription created for user ${user.id}: ${v9.tier}`);
+            await attachV8Track2ManagedOverage(subscriptionId, v9.tier);
+            await logBillingEvent(supabase, user.id, "subscription_created", {
+              subscription_id: subscriptionId,
+              channel: "track2",
+              catalog: "v9",
+              tier: v9.tier,
+              price_id: priceId,
+              current_period_end: eventData.current_period_end,
+            });
+            void recordFunnelEvent({
+              userId: user.id,
+              eventType: 'subscription_created',
+              metadata: {
+                subscription_id: subscriptionId,
+                tier: v9.tier,
+                price_id: priceId,
+                channel: 'track2',
+              },
+            });
+          }
+          break;
+        }
+
         const v8 = await maybeApplyV8Track2(supabase, user.id, priceId);
         if (v8.matched) {
           if (!v8.updated) {
@@ -489,6 +584,7 @@ export async function POST(request: NextRequest) {
             await logBillingEvent(supabase, user.id, "subscription_created", {
               subscription_id: subscriptionId,
               channel: "track2",
+              catalog: "v8",
               tier: v8.tier,
               price_id: priceId,
             }, "failed", v8.error);
@@ -498,6 +594,7 @@ export async function POST(request: NextRequest) {
             await logBillingEvent(supabase, user.id, "subscription_created", {
               subscription_id: subscriptionId,
               channel: "track2",
+              catalog: "v8",
               tier: v8.tier,
               price_id: priceId,
               current_period_end: eventData.current_period_end,
@@ -506,7 +603,7 @@ export async function POST(request: NextRequest) {
           break;
         }
 
-        const plan = getPlanFromStripePriceId(priceId);
+        const plan = getAuthorTierFromStripePriceId(priceId);
         if (!plan) {
           console.error(`Unknown price ID: ${priceId}`);
           break;
@@ -536,6 +633,59 @@ export async function POST(request: NextRequest) {
             price_id: priceId,
             current_period_end: eventData.current_period_end,
           });
+          // v9 funnel: record paid conversion for cohort/CAC analytics.
+          void recordFunnelEvent({
+            userId: user.id,
+            eventType: 'subscription_created',
+            metadata: {
+              subscription_id: subscriptionId,
+              plan,
+              price_id: priceId,
+              channel: 'track1',
+            },
+          });
+          // v9 Charter: schedule the price swap to regular at 2027-05-01.
+          // Idempotent on Stripe side (skips if already scheduled). We await
+          // because if Stripe rate-limits this, a fire-and-forget loses the
+          // schedule entirely with no retry — Charter customers would then
+          // pay Charter price forever (revenue leak).
+          try {
+            const swap = await scheduleCharterToRegularSwap(subscriptionId);
+            if (!swap.ok) {
+              console.log(`[charter] swap not scheduled for ${subscriptionId}: ${swap.reason}`);
+            } else {
+              console.log(`[charter] swap scheduled ${swap.scheduleId} for ${subscriptionId}`);
+            }
+          } catch (swapError) {
+            console.error(`[charter] swap unexpected error for ${subscriptionId}`, swapError);
+            await logBillingEvent(supabase, user.id, "subscription_created", {
+              subscription_id: subscriptionId,
+              charter_swap: "failed",
+            }, "failed", swapError instanceof Error ? swapError.message : 'unknown');
+          }
+          // v9 Managed: sync entitlements (priority queue, seats, xhigh, etc.).
+          // Awaited because feature gates (xhighEffortIncluded, seats) read
+          // managed_entitlements directly. A missing row silently demotes a
+          // paid Pro+ user to medium-effort LLM responses.
+          const tierForEnt = getAuthorTierFromStripePriceId(priceId);
+          const columnForEnt = getBillingColumnFromStripePriceId(priceId);
+          const charterForEnt = getCharterStatusFromStripePriceId(priceId);
+          if (tierForEnt && columnForEnt && isAuthorBillingTier(tierForEnt)) {
+            try {
+              await syncManagedEntitlements({
+                userId: user.id,
+                tier: tierForEnt,
+                column: columnForEnt,
+                charterEligible: charterForEnt === 'charter',
+              });
+            } catch (entError) {
+              console.error(`[entitlements] sync failed for ${user.id}`, entError);
+              await logBillingEvent(supabase, user.id, "subscription_created", {
+                subscription_id: subscriptionId,
+                entitlements_sync: "failed",
+              }, "failed", entError instanceof Error ? entError.message : 'unknown');
+            }
+          }
         }
         break;
       }
@@ -562,6 +712,37 @@ export async function POST(request: NextRequest) {
         }
 
         if (priceId) {
+          // v9 first — handles in-portal Pro→Studio Managed upgrades and
+          // downgrades. Pre-fix, v9 subs silently skipped api_keys sync on
+          // upgrade because only v8 was checked here.
+          const v9Update = await maybeApplyV9Track2(supabase, user.id, priceId);
+          if (v9Update.matched) {
+            if (!v9Update.updated) {
+              console.error("Failed to apply v9 Track 2 tier on api_keys:", v9Update.error);
+              await logBillingEvent(supabase, user.id, "subscription_updated", {
+                subscription_id: subscriptionId,
+                channel: "track2",
+                catalog: "v9",
+                tier: v9Update.tier,
+                price_id: priceId,
+              }, "failed", v9Update.error);
+            } else {
+              console.log(`v9 Track 2 subscription updated for user ${user.id}: ${v9Update.tier}`);
+              await attachV8Track2ManagedOverage(subscriptionId, v9Update.tier);
+              await detachV8Track2ManagedOverageIfDowngrade(subscriptionId, v9Update.tier);
+              await logBillingEvent(supabase, user.id, "subscription_updated", {
+                subscription_id: subscriptionId,
+                channel: "track2",
+                catalog: "v9",
+                tier: v9Update.tier,
+                price_id: priceId,
+                cancel_at_period_end: eventData.cancel_at_period_end,
+                status: eventData.status,
+              });
+            }
+            break;
+          }
+
           const v8 = await maybeApplyV8Track2(supabase, user.id, priceId);
           if (v8.matched) {
             if (!v8.updated) {
@@ -569,6 +750,7 @@ export async function POST(request: NextRequest) {
               await logBillingEvent(supabase, user.id, "subscription_updated", {
                 subscription_id: subscriptionId,
                 channel: "track2",
+                catalog: "v8",
                 tier: v8.tier,
                 price_id: priceId,
               }, "failed", v8.error);
@@ -582,6 +764,7 @@ export async function POST(request: NextRequest) {
               await logBillingEvent(supabase, user.id, "subscription_updated", {
                 subscription_id: subscriptionId,
                 channel: "track2",
+                catalog: "v8",
                 tier: v8.tier,
                 price_id: priceId,
                 cancel_at_period_end: eventData.cancel_at_period_end,
@@ -637,6 +820,24 @@ export async function POST(request: NextRequest) {
         );
 
         if (user && priceId) {
+          // v9 first: downgrade Track 2 v9 subscriptions to free.
+          const v9Tier = getV9Track2TierFromStripePriceId(priceId);
+          if (v9Tier) {
+            const downgrade = await applyV9Track2TierToApiKeys(
+              user.id,
+              "free",
+              supabase as unknown as Parameters<typeof applyV9Track2TierToApiKeys>[2],
+            );
+            await logBillingEvent(supabase, user.id, "subscription_deleted", {
+              subscription_id: subscriptionId,
+              channel: "track2",
+              catalog: "v9",
+              previous_tier: v9Tier,
+              downgraded_to: "free",
+              ended_at: eventData.ended_at,
+            }, downgrade.ok ? "success" : "failed", downgrade.ok ? undefined : downgrade.error);
+            break;
+          }
           const v8Tier = getV8Track2TierFromStripePriceId(priceId);
           if (v8Tier) {
             const downgrade = await applyV8Track2TierToApiKeys(
@@ -647,6 +848,7 @@ export async function POST(request: NextRequest) {
             await logBillingEvent(supabase, user.id, "subscription_deleted", {
               subscription_id: subscriptionId,
               channel: "track2",
+              catalog: "v8",
               previous_tier: v8Tier,
               downgraded_to: "free",
               ended_at: eventData.ended_at,
@@ -656,6 +858,7 @@ export async function POST(request: NextRequest) {
         }
 
         if (user) {
+          const endedAtIso = stripeTimestampToIso(eventData.ended_at) ?? new Date().toISOString();
           const { error } = await supabase
             .from("profiles")
             .update({
@@ -665,9 +868,10 @@ export async function POST(request: NextRequest) {
               stripe_subscription_status: "canceled",
               subscription_status: "cancelled",
               stripe_price_id: null,
-              stripe_current_period_end: stripeTimestampToIso(eventData.ended_at) ?? new Date().toISOString(),
+              stripe_current_period_end: endedAtIso,
               subscription_cancelled: true,
-              subscription_ends_at: stripeTimestampToIso(eventData.ended_at) ?? new Date().toISOString(),
+              subscription_ends_at: endedAtIso,
+              subscription_ended_at: endedAtIso,
               subscription_renews_at: null,
             })
             .eq("id", user.id);
@@ -684,6 +888,30 @@ export async function POST(request: NextRequest) {
               ended_at: eventData.ended_at,
               canceled_at: eventData.canceled_at,
             });
+            // v9 funnel: record churn for cohort retention analytics.
+            void recordFunnelEvent({
+              userId: user.id,
+              eventType: 'subscription_canceled',
+              metadata: {
+                subscription_id: subscriptionId,
+                ended_at: eventData.ended_at,
+                canceled_at: eventData.canceled_at,
+              },
+            });
+            // v9 Managed: explicit downgrade path — clears entitlements row.
+            // Without this signal, syncManagedEntitlements would preserve
+            // the existing row (audit round 3 hardening).
+            try {
+              await syncManagedEntitlements({
+                userId: user.id,
+                tier: 'indie', // tier value is unused on downgrade path
+                column: 'managed',
+                charterEligible: false,
+                downgrade: true,
+              });
+            } catch (entError) {
+              console.error(`[entitlements] downgrade failed for ${user.id}`, entError);
+            }
           }
         }
         break;

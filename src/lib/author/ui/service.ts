@@ -37,6 +37,8 @@ import {
   type AuthorBacklogCategory,
   type ExtractedAuthorCandidate,
 } from '@/lib/author/extraction';
+import { checkFeatureGate, recordFeatureUsage } from '@/lib/author/billing/feature-gate';
+import { recordFirstFunnelEvent } from '@/lib/analytics/funnel';
 import { InMemoryAuthorUiStore } from './in-memory-store';
 import { conflictStatusForDecision, normalizeConflictResolution } from './conflict-resolution';
 import { seedAuthorUiProject, type AuthorUiSeedRows } from './seed-project';
@@ -435,6 +437,27 @@ export class AuthorUiService {
       throw new AuthorUiValidationError('file is required');
     }
 
+    // v9 Free tier: chapter cap enforced as ~150KB upload size proxy
+    // (≈ 25K English words / 50K Korean characters). Charter tiers have
+    // no per-upload cap (up to AUTHOR_IMPORT_MAX_BYTES). The gate also
+    // counts as 'extract' feature for the funnel.
+    const FREE_TIER_UPLOAD_MAX_BYTES = 150 * 1024;
+    const extractGate = await checkFeatureGate({
+      userId: this.userId,
+      feature: 'extract',
+      // Use byte-size as a chapter/word proxy. checkExtractScope reports
+      // by chapter or word — neither is precisely known here, so we set a
+      // synthetic chapter count derived from size to land in the right
+      // failure mode for the alert messaging.
+      chapterCount: fileSize > FREE_TIER_UPLOAD_MAX_BYTES ? 6 : 1,
+      wordCount: fileSize > FREE_TIER_UPLOAD_MAX_BYTES ? 25_001 : 1,
+    });
+    if (!extractGate.allowed) {
+      throw new AuthorUiValidationError(
+        'Free tier upload cap reached (~25K words / 5 chapters). Upgrade to Charter for full novels.',
+      );
+    }
+
     const id = newPersistedAuthorUiId('import');
     const fileName = input.fileName ?? 'untitled.md';
     const contentType = input.fileType;
@@ -826,6 +849,18 @@ export class AuthorUiService {
   }
 
   async generateCharacterBacklog(projectId: string, characterId: string, input: JsonRecord = {}) {
+    // v9 feature gate: backlog generation is Charter-only on Free tier.
+    const gate = await checkFeatureGate({
+      userId: this.userId,
+      feature: 'backlog',
+    });
+    if (!gate.allowed) {
+      throw new AuthorUiValidationError(
+        gate.reason === 'feature_charter_only'
+          ? 'Backlog generation is available on Charter plans. Upgrade to unlock.'
+          : 'Feature limit reached for this month.',
+      );
+    }
     const character = await this.findCharacter(projectId, characterId);
     const existingCandidates = (await this.store.listCandidates(this.userId, projectId, {}))
       .map((candidate) => ({
@@ -1034,6 +1069,15 @@ export class AuthorUiService {
 
   async runSimulation(projectId: string, input: JsonRecord) {
     this.ensureProject(projectId);
+    // v9 feature gate: simulation = Dialog generation. Free tier 5/month cap.
+    const gate = await checkFeatureGate({ userId: this.userId, feature: 'dialog' });
+    if (!gate.allowed) {
+      throw new AuthorUiValidationError(
+        gate.reason === 'free_dialog_limit_exceeded'
+          ? `Free tier limit reached (${gate.cap} Dialogs/month). Upgrade to Charter for unlimited.`
+          : 'Dialog generation unavailable on Free tier.',
+      );
+    }
     const simulationId = newAuthorUiId('sim');
     const simulation = this.buildSimulation(projectId, simulationId, input);
     await this.store.upsertSimulation(authorSimulationToRow(simulation, this.userId, projectId));
@@ -1052,6 +1096,9 @@ export class AuthorUiService {
         prompt_hash: hashAuthorAuditPrompt(input),
       },
     });
+    // v9 funnel + usage tracking. Free users hit 5/mo cap; Charter bypasses.
+    await recordFeatureUsage({ userId: this.userId, feature: 'dialog' });
+    void recordFirstFunnelEvent({ userId: this.userId, eventType: 'first_dialog' });
     return {
       simulation_id: simulationId,
       status: 'running' as const,

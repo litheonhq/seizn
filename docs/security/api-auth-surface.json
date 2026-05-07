@@ -1,7 +1,7 @@
 {
   "version": 1,
   "generatedBy": "scripts/verify-api-auth-surface.mjs",
-  "routeCount": 548,
+  "routeCount": 552,
   "routes": [
     {
       "route": "/api",
@@ -166,6 +166,16 @@
       ],
       "authMarkers": [
         "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/admin/metrics",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "sessionUser"
       ],
       "authState": "auth-marker-present"
     },
@@ -951,6 +961,16 @@
       "authState": "auth-marker-present"
     },
     {
+      "route": "/api/cron/continuity-reports",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "cronSecret"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
       "route": "/api/cron/drift-analysis",
       "methods": [
         "GET",
@@ -974,6 +994,16 @@
     },
     {
       "route": "/api/cron/monthly-reset",
+      "methods": [
+        "GET"
+      ],
+      "authMarkers": [
+        "cronSecret"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/cron/mrr-snapshot",
       "methods": [
         "GET"
       ],
@@ -2352,6 +2382,16 @@
       ],
       "authMarkers": [
         "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/onboarding/byok/test",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "sessionUser"
       ],
       "authState": "auth-marker-present"
     },
