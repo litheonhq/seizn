@@ -1277,6 +1277,15 @@ export class AuthorUiService {
   }
 
   private ensureProject(projectId: string): void {
+    // IDOR defense: state.projects is per-user (keyed by this.userId in
+    // statesByUser). It only contains DEFAULT_PROJECT_ID and projects
+    // the user created via createProject() in the current cached
+    // session. An attacker passing another user's projectId hits
+    // AuthorUiNotFoundError → 404. Verified by audit 2026-05-08.
+    //
+    // Future-proofing: when persistent multi-project loads are added,
+    // every code path that populates state.projects.set(id, …) MUST
+    // first verify the project's ownership by user_id.
     if (this.state.projects.has(projectId)) {
       return;
     }

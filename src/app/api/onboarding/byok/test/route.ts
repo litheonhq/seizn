@@ -14,6 +14,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
+import { createServerClient, hasServerSupabaseServiceRoleConfig } from '@/lib/supabase';
 
 export const runtime = 'nodejs';
 
@@ -22,10 +23,58 @@ interface RequestBody {
   api_key?: unknown;
 }
 
+const PER_USER_HOURLY_LIMIT = 10;
+
+// Audit follow-up: prefix-validate before any outbound call so we don't
+// turn this endpoint into a key-enumeration oracle. Anthropic uses
+// `sk-ant-`, OpenAI uses `sk-proj-` (project-scoped) or `sk-` (legacy).
+// Strict character set bans \r\n header-injection vectors.
+const KEY_PREFIX_BY_PROVIDER: Record<'anthropic' | 'openai', RegExp> = {
+  anthropic: /^sk-ant-[A-Za-z0-9_\-]{20,}$/,
+  openai: /^sk-(?:proj-)?[A-Za-z0-9_\-]{20,}$/,
+};
+
+async function checkPerUserRateLimit(userId: string): Promise<boolean> {
+  // funnel_events double-duty as a generic per-user counter. Within the
+  // last hour, count this specific event_type. PR cap is 10/hour to
+  // bound key-enumeration throughput while still letting honest users
+  // retry typos.
+  if (!hasServerSupabaseServiceRoleConfig()) return true;
+  const supabase = createServerClient();
+  const sinceIso = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+  const { count } = await supabase
+    .from('funnel_events')
+    .select('*', { count: 'exact', head: true })
+    .eq('user_id', userId)
+    .eq('event_type', 'byok_test_attempt')
+    .gte('occurred_at', sinceIso);
+  return (count ?? 0) < PER_USER_HOURLY_LIMIT;
+}
+
+async function recordByokTestAttempt(userId: string, provider: string): Promise<void> {
+  if (!hasServerSupabaseServiceRoleConfig()) return;
+  const supabase = createServerClient();
+  await supabase.from('funnel_events').insert({
+    user_id: userId,
+    event_type: 'byok_test_attempt',
+    metadata: { provider },
+  });
+}
+
 export async function POST(request: NextRequest): Promise<NextResponse> {
   const session = await auth();
   if (!session?.user?.id) {
     return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
+  }
+
+  if (!(await checkPerUserRateLimit(session.user.id))) {
+    return NextResponse.json(
+      {
+        valid: false,
+        error: `Too many key tests this hour (limit ${PER_USER_HOURLY_LIMIT}). Try again later.`,
+      },
+      { status: 429 },
+    );
   }
 
   const body = (await request.json().catch(() => ({}))) as RequestBody;
@@ -47,6 +96,23 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       { status: 200 },
     );
   }
+  // Strict prefix + character-set validation. Rejects keys not matching
+  // the provider's known shape — also blocks CRLF / control-char header
+  // injection because the regex is [A-Za-z0-9_-] only.
+  if (!KEY_PREFIX_BY_PROVIDER[provider].test(apiKey)) {
+    await recordByokTestAttempt(session.user.id, provider);
+    return NextResponse.json(
+      {
+        valid: false,
+        error:
+          provider === 'anthropic'
+            ? 'Anthropic keys must start with sk-ant- and contain only letters, digits, hyphens, underscores.'
+            : 'OpenAI keys must start with sk- (or sk-proj-) and contain only letters, digits, hyphens, underscores.',
+      },
+      { status: 200 },
+    );
+  }
+  await recordByokTestAttempt(session.user.id, provider);
 
   try {
     if (provider === 'anthropic') {
