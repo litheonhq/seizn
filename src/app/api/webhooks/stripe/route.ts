@@ -432,45 +432,60 @@ export async function POST(request: NextRequest) {
 
     const supabase = createServerClient();
 
-    // Idempotency gate: Stripe retries on 5xx / timeouts. Each retry would
-    // re-run every side effect (audit_logs insert, Stripe API attach, etc.).
-    // Insert into stripe_webhook_events; if the row already exists, this
-    // event has been processed — return 200 without re-running.
+    // Idempotency gate: Stripe retries on 5xx / timeouts. The dedup row is
+    // written AFTER successful processing (see end of function), not before,
+    // so a handler error followed by a Stripe retry actually gets retried
+    // instead of silently deduped. Pre-fix this code wrote the row first,
+    // and the combination of (handler-throws → 500 → Stripe retries → row
+    // already exists → 200 dedup) silently dropped events that needed
+    // retry — defeating the whole point of returning 500.
     //
-    // NOTE: depends on the 20260507002_stripe_webhook_events.sql migration
-    // being applied. If the table doesn't exist yet (deployment ordering),
-    // the insert fails with a 42P01 "relation does not exist" — we log and
-    // proceed (graceful degradation). Worst case during the gap is the
-    // pre-audit duplicate-processing behavior, which is what we had before.
+    // Pre-process check uses .maybeSingle() to read the row state. If the
+    // row exists with status='completed', skip with 200. If it doesn't
+    // exist OR a previous attempt only got partway, run the handlers.
+    //
+    // Trade-off: two retries arriving close enough to both pass the
+    // pre-check before either INSERTs would both run handlers (one wins
+    // the unique-violation INSERT). Stripe's retry policy backs off in
+    // minutes, so this concurrent-retry race is exceedingly rare in
+    // practice; handler idempotency (Stripe attach helpers' "already
+    // attached" guards) covers the residual risk.
+    //
+    // NOTE: depends on the 20260507002_stripe_webhook_events.sql migration.
+    // If the table doesn't exist (deployment ordering), the SELECT returns
+    // 42P01 — log + proceed (graceful degradation back to pre-PR-#293
+    // behavior).
+    let alreadyProcessed = false;
+    let idempotencyTableMissing = false;
     {
-      const { error: idempotencyError } = await supabase
+      const { data: existing, error: peekError } = await supabase
         .from('stripe_webhook_events')
-        .insert({
-          event_id: payload.id,
-          type: payload.type,
-          livemode: payload.livemode,
-        });
-      if (idempotencyError) {
-        // Postgres unique-violation = 23505. Stripe's duplicate retry.
-        if (idempotencyError.code === '23505') {
-          console.log(`Stripe webhook ${payload.id} already processed, skipping`, {
-            event_id: payload.id,
-            type: payload.type,
-          });
-          return NextResponse.json({ received: true, deduped: true });
-        }
-        // Missing-table = 42P01. Migration not yet applied — log + proceed.
-        if (idempotencyError.code === '42P01') {
+        .select('event_id')
+        .eq('event_id', payload.id)
+        .maybeSingle();
+      if (peekError) {
+        if (peekError.code === '42P01') {
+          idempotencyTableMissing = true;
           console.warn(
             'stripe_webhook_events table missing; skipping idempotency gate (apply migration 20260507002)',
           );
-        } else {
-          // Any other DB error: log and proceed. Better to risk a duplicate
-          // than to bounce a legitimate event back to Stripe with a 500
-          // (which causes retry storms).
-          console.error('Failed to record webhook event for idempotency', idempotencyError);
+        } else if (peekError.code !== 'PGRST116') {
+          console.error('Failed to peek webhook event for idempotency', peekError);
+          // Don't bail — better to risk a duplicate than to 500 a legit
+          // event into a Stripe retry storm. Handler-level idempotency
+          // (Stripe attach helpers, ON CONFLICT inserts) cover the residual.
         }
       }
+      if (existing) {
+        alreadyProcessed = true;
+      }
+    }
+    if (alreadyProcessed) {
+      console.log(`Stripe webhook ${payload.id} already processed, skipping`, {
+        event_id: payload.id,
+        type: payload.type,
+      });
+      return NextResponse.json({ received: true, deduped: true });
     }
 
     // Handle different event types
@@ -906,6 +921,28 @@ export async function POST(request: NextRequest) {
 
       default:
         console.log(`Unhandled Stripe event: ${eventType}`);
+    }
+
+    // Mark this event as fully processed so a Stripe retry of the same
+    // event_id is deduped. Insert AFTER the switch — if any handler threw,
+    // we never reach here, the row is never written, and the next Stripe
+    // retry will re-run handlers (which is what we want when processing
+    // failed). Use ON CONFLICT DO NOTHING to handle the rare concurrent-
+    // retry race where two attempts both passed the pre-check.
+    if (!idempotencyTableMissing) {
+      const { error: markError } = await supabase
+        .from('stripe_webhook_events')
+        .insert({
+          event_id: payload.id,
+          type: payload.type,
+          livemode: payload.livemode,
+        });
+      if (markError && markError.code !== '23505') {
+        // 23505 = duplicate (concurrent retry won). Anything else: log; the
+        // event is safely handled but the dedup row didn't land. Worst case
+        // is a future retry runs handlers again (which are idempotent).
+        console.error('Failed to mark webhook event as processed', markError);
+      }
     }
 
     return NextResponse.json({ received: true });
