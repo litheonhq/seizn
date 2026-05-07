@@ -5,6 +5,7 @@ import { sendEmail } from '@/lib/email';
 import { welcomeEmail } from '@/lib/email/templates';
 import { upsertProfileWithFallback } from '@/lib/profile/upsert';
 import { logServerError, logServerWarn } from '@/lib/server/logger';
+import { recordFunnelEvent } from '@/lib/analytics/funnel';
 
 const TURNSTILE_SECRET_KEY = process.env.TURNSTILE_SECRET_KEY;
 const TURNSTILE_VERIFY_URL = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
@@ -249,6 +250,13 @@ export async function POST(request: NextRequest) {
         html: welcomeEmail(name || ''),
       }).catch((error) => logServerError('Failed to send welcome email', error));
     }
+
+    // v9 funnel: signup event for cohort/conversion analytics. Non-blocking.
+    void recordFunnelEvent({
+      userId: authData.user.id,
+      eventType: 'signup',
+      metadata: { email },
+    });
 
     return NextResponse.json({
       success: true,

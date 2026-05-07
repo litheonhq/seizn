@@ -1,14 +1,27 @@
 /**
  * Track 2 v8 product catalog (API + MCP channel only, USD).
  *
- * Track 1 (Web KRW) and Track 3 (Tauri KRW) products are owned by their own
- * track cycles. v7 (`stripe-config.ts`) stays active for grandfathered Track 1
- * subscribers; the live Stripe price IDs for v8 are populated in Phase 8 by a
- * human (env vars below default to `price_TODO`).
+ * @deprecated As of 2026-05-07 the v9 catalog (`v9-products.ts`) is the
+ * source of truth for new Track 2 subscriptions. v8 helpers are retained
+ * for two reasons:
+ *   1. Grandfathered v8 subscribers (none expected at launch but possible
+ *      via manual Stripe entry) still resolve through `getV8Track2*` helpers
+ *      in the webhook fallback chain.
+ *   2. Existing tests reference v8 names; deleting outright would cascade.
  *
- * Tier → quota / rate / scopes follows the task pack Appendix B contract; the
- * api_keys table mirrors these values, so changing one without the other
- * silently drifts the rate-limit middleware.
+ * Migration path:
+ *   - Webhook reads v9-products.ts FIRST, falls back to v8 only if the
+ *     priceId doesn't resolve under v9.
+ *   - Stripe-metered's `resolveOpusOveragePriceId` checks attached items
+ *     and prefers whichever catalog is already in use on the subscription.
+ *   - When v8 env vars are removed from production, v8 helpers return null
+ *     and the fallback chain becomes a no-op.
+ *
+ * Do not add new callers of v8 helpers. Use v9 equivalents.
+ *
+ * Tier → quota / rate / scopes follows the task pack Appendix B contract;
+ * the api_keys table mirrors these values, so changing one without the
+ * other silently drifts the rate-limit middleware.
  */
 export type V8Track2Tier =
   | 'free'
