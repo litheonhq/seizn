@@ -10,7 +10,7 @@ const en: AuthorSettingsCopy = {
   loadError: "Unable to load settings. Check your session and try again.",
   byok: {
     title: "API Keys",
-    description: "Connect an Anthropic or OpenAI key for unlimited BYOK tokens and the 50% BYOK plan discount.",
+    description: "Connect an Anthropic or OpenAI key. BYOK tier prices apply automatically at checkout.",
     status: "Key status",
     active: "Active",
     missing: "Missing",
@@ -23,13 +23,6 @@ const en: AuthorSettingsCopy = {
     remove: "Remove key",
     removing: "Removing...",
     keyHint: "Only the last 4 characters are shown after save.",
-    discount: "Discount",
-    discountStates: {
-      applied: "Applied",
-      pending: "Pending",
-      error: "Error",
-      inactive: "Inactive",
-    },
     helper: {
       title: "Don't have a key yet?",
       buttonLabel: "Open the provider console",
@@ -78,7 +71,7 @@ const ko: AuthorSettingsCopy = {
   loadError: "설정을 불러오지 못했습니다. 세션을 확인한 뒤 다시 시도하세요.",
   byok: {
     title: "API 키",
-    description: "Anthropic 또는 OpenAI 키를 연결하면 BYOK 토큰 무제한과 50% BYOK 플랜 할인이 적용됩니다.",
+    description: "Anthropic 또는 OpenAI 키를 연결하면 결제 시 BYOK 티어 가격이 자동으로 적용됩니다.",
     status: "키 상태",
     active: "활성",
     missing: "미등록",
@@ -91,13 +84,6 @@ const ko: AuthorSettingsCopy = {
     remove: "키 삭제",
     removing: "삭제 중...",
     keyHint: "저장 후에는 마지막 4자리만 표시됩니다.",
-    discount: "할인",
-    discountStates: {
-      applied: "적용됨",
-      pending: "대기 중",
-      error: "오류",
-      inactive: "비활성",
-    },
     helper: {
       title: "아직 키가 없으신가요?",
       buttonLabel: "공급자 콘솔 열기",
@@ -146,7 +132,7 @@ const ja: AuthorSettingsCopy = {
   loadError: "設定を読み込めませんでした。セッションを確認して再試行してください。",
   byok: {
     title: "API キー",
-    description: "Anthropic または OpenAI キーを接続すると、BYOK トークン無制限と 50% BYOK プラン割引が適用されます。",
+    description: "Anthropic または OpenAI のキーを接続すると、チェックアウト時に BYOK ティア価格が自動適用されます。",
     status: "キー状態",
     active: "有効",
     missing: "未設定",
@@ -159,13 +145,6 @@ const ja: AuthorSettingsCopy = {
     remove: "キーを削除",
     removing: "削除中...",
     keyHint: "保存後は末尾 4 文字のみ表示されます。",
-    discount: "割引",
-    discountStates: {
-      applied: "適用済み",
-      pending: "保留中",
-      error: "エラー",
-      inactive: "無効",
-    },
     helper: {
       title: "まだキーをお持ちでない場合",
       buttonLabel: "プロバイダコンソールを開く",
@@ -214,7 +193,7 @@ const zhHans: AuthorSettingsCopy = {
   loadError: "无法加载设置。请检查会话后重试。",
   byok: {
     title: "API 密钥",
-    description: "连接 Anthropic 或 OpenAI 密钥后，可使用 BYOK 无限 tokens 和 50% BYOK 计划折扣。",
+    description: "连接 Anthropic 或 OpenAI 密钥后，结账时将自动应用 BYOK 套餐价格。",
     status: "密钥状态",
     active: "已启用",
     missing: "未设置",
@@ -227,13 +206,6 @@ const zhHans: AuthorSettingsCopy = {
     remove: "移除密钥",
     removing: "移除中...",
     keyHint: "保存后仅显示后 4 位字符。",
-    discount: "折扣",
-    discountStates: {
-      applied: "已应用",
-      pending: "待处理",
-      error: "错误",
-      inactive: "未启用",
-    },
     helper: {
       title: "还没有密钥？",
       buttonLabel: "打开供应商控制台",
@@ -295,12 +267,6 @@ const zhHant: AuthorSettingsCopy = {
     remove: "移除金鑰",
     removing: "移除中...",
     keyHint: "儲存後僅顯示後 4 碼字元。",
-    discountStates: {
-      applied: "已套用",
-      pending: "待處理",
-      error: "錯誤",
-      inactive: "未啟用",
-    },
   },
   subscription: {
     ...zhHans.subscription,

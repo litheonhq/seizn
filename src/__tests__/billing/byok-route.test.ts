@@ -17,8 +17,6 @@ const mocks = vi.hoisted(() => ({
     status: 'missing' as 'active' | 'invalid' | 'missing',
   },
   saveAuthorByokKey: vi.fn(),
-  applyDiscount: vi.fn(),
-  removeDiscount: vi.fn(),
   providerKeyUpdates: [] as Record<string, unknown>[],
 }));
 
@@ -99,11 +97,6 @@ vi.mock('@/lib/supabase', () => ({
   }),
 }));
 
-vi.mock('@/lib/stripe/byok-discount', () => ({
-  applyAuthorByokDiscount: mocks.applyDiscount,
-  removeAuthorByokDiscount: mocks.removeDiscount,
-}));
-
 describe('account BYOK route', () => {
   beforeEach(() => {
     mocks.serviceState = {
@@ -120,8 +113,6 @@ describe('account BYOK route', () => {
       key_last_4: '7890',
       status: 'active',
     });
-    mocks.applyDiscount.mockResolvedValue({ status: 'applied', applied: true });
-    mocks.removeDiscount.mockResolvedValue({ status: 'inactive', removed: true });
     mocks.providerKeyUpdates = [];
     vi.clearAllMocks();
   });
@@ -135,7 +126,6 @@ describe('account BYOK route', () => {
     await expect(post.json()).resolves.toMatchObject({
       enabled: true,
       status: 'active',
-      byok_discount: { status: 'applied' },
     });
 
     mocks.byokStatus = { enabled: true, provider: 'anthropic', status: 'active' };
@@ -161,7 +151,6 @@ describe('account BYOK route', () => {
       enabled: false,
       provider: null,
       status: 'missing',
-      byok_discount: { status: 'inactive' },
     });
     expect(mocks.providerKeyUpdates).toContainEqual(expect.objectContaining({
       column: 'user_id',
@@ -216,12 +205,11 @@ describe('account BYOK route', () => {
     await expect(post.json()).resolves.toMatchObject({
       provider: 'openai',
       key_last_4: 'abcd',
-      byok_discount: { status: 'applied' },
     });
   });
 
   it('DELETE ?provider=openai targets the openai keys, leaving anthropic intact', async () => {
-    // Other-provider check (anthropic) returns active → discount stays, service NOT cleared
+    // Other-provider check (anthropic) returns active → service NOT cleared
     mocks.byokStatus = { enabled: true, provider: 'anthropic', status: 'active' };
     const deleted = await DELETE(
       new NextRequest('https://app.seizn.test/api/account/byok?provider=openai', {
@@ -234,12 +222,10 @@ describe('account BYOK route', () => {
       column: 'provider',
       value: 'openai',
     }));
-    // The other (anthropic) provider remains active so the discount is preserved
     await expect(deleted.json()).resolves.toMatchObject({
       enabled: true,
       provider: 'anthropic',
     });
-    expect(mocks.removeDiscount).not.toHaveBeenCalled();
   });
 
   it('GET ?provider=openai forwards the provider override to getAuthorByokStatus', async () => {
