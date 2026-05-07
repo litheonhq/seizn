@@ -20,12 +20,13 @@
 
 ## 가격 정책 (Author Memory v3 — Locked 2026-05-07, v9 catalog)
 
-### Free 티어
+### Free 티어 (W2 — 2026-05-08 완화)
 - BYOK 강제 (Anthropic 또는 OpenAI 키 등록 필수)
 - 50 calls/day, 사용자 모델 자유 선택 (default Opus 4.7)
-- 기능 제한: Check 5/월, Dialog 5/월, 첫 5 챕터 / 25K words 분석 한도
+- 기능 제한: Check 15/월, Dialog 15/월, 첫 20 챕터 / 100K words 분석 한도
 - 차단: Backlog generation, Knowledge partitioning, Timeline/Relationship 추출
-- 우리 비용: $0 (인프라 $0.04/인/월만)
+- 우리 비용: $0 (인프라 $0.04/인/월만) — Free는 BYOK라 LLM 비용 0
+- W2 근거: 우리 비용 변화 없음 + advanced features 9개가 conversion driver 충분 + signup 마찰 감소
 
 ### Track 1 (웹) 가격표 — 2-column (Managed/BYOK) × 2-cadence (Monthly/Annual)
 | Tier | Managed 정착 / Charter Monthly / Charter Annual | BYOK 정착 / Charter Monthly / Charter Annual |
@@ -55,7 +56,7 @@
 
 ### Trial 정책
 - **별도 Trial 없음** (Free와 통합)
-- Free에서 5/5 Check/Dialog 한계 hit하면 결제 trigger
+- Free에서 15/15 Check/Dialog 한계 (W2) 또는 advanced features 차단으로 결제 trigger
 - Smart sample 추천 + cost preview UI로 마찰 완화
 
 ### Charter Managed 혜택

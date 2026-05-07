@@ -49,10 +49,17 @@ interface GateContext {
 }
 
 const FREE_LIMITS = {
-  checkPerMonth: 5,
-  dialogPerMonth: 5,
-  extractMaxChapters: 5,
-  extractMaxWords: 25_000,
+  // W2 (2026-05-08): loosened from 5/5/5/25K. Web Free is BYOK-strict so
+  // these caps don't protect our LLM budget — they're only conversion
+  // triggers. The 9 advanced-feature gates below (Backlog/Knowledge/
+  // Timeline/Relationship/Continuity/seats/etc.) carry the conversion
+  // weight; the quota gates can run looser without meaningful funnel
+  // impact. Trade-off: -1-2pp conversion vs +10-15% signup volume from
+  // the friendlier "generous Free" framing.
+  checkPerMonth: 15,
+  dialogPerMonth: 15,
+  extractMaxChapters: 20,
+  extractMaxWords: 100_000,
   // Backlog generation, knowledge partitioning, timeline / relationship
   // extraction are Charter-only — no quota counter, just blocked.
 } as const;
