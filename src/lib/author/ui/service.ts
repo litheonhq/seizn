@@ -437,11 +437,11 @@ export class AuthorUiService {
       throw new AuthorUiValidationError('file is required');
     }
 
-    // v9 Free tier: chapter cap enforced as ~150KB upload size proxy
-    // (≈ 25K English words / 50K Korean characters). Charter tiers have
-    // no per-upload cap (up to AUTHOR_IMPORT_MAX_BYTES). The gate also
-    // counts as 'extract' feature for the funnel.
-    const FREE_TIER_UPLOAD_MAX_BYTES = 150 * 1024;
+    // v9 W2 (2026-05-08): chapter cap enforced as ~600KB upload size proxy
+    // (≈ 100K English words / 200K Korean characters / ~20 chapters).
+    // Charter tiers have no per-upload cap (up to AUTHOR_IMPORT_MAX_BYTES).
+    // The gate also counts as 'extract' feature for the funnel.
+    const FREE_TIER_UPLOAD_MAX_BYTES = 600 * 1024;
     const extractGate = await checkFeatureGate({
       userId: this.userId,
       feature: 'extract',
@@ -449,12 +449,12 @@ export class AuthorUiService {
       // by chapter or word — neither is precisely known here, so we set a
       // synthetic chapter count derived from size to land in the right
       // failure mode for the alert messaging.
-      chapterCount: fileSize > FREE_TIER_UPLOAD_MAX_BYTES ? 6 : 1,
-      wordCount: fileSize > FREE_TIER_UPLOAD_MAX_BYTES ? 25_001 : 1,
+      chapterCount: fileSize > FREE_TIER_UPLOAD_MAX_BYTES ? 21 : 1,
+      wordCount: fileSize > FREE_TIER_UPLOAD_MAX_BYTES ? 100_001 : 1,
     });
     if (!extractGate.allowed) {
       throw new AuthorUiValidationError(
-        'Free tier upload cap reached (~25K words / 5 chapters). Upgrade to Charter for full novels.',
+        'Free tier upload cap reached (~100K words / 20 chapters). Upgrade to Charter for full novels.',
       );
     }
 

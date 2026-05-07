@@ -13,7 +13,7 @@ import ByokWizardClient from './wizard-client';
 export const metadata: Metadata = {
   title: 'Connect your API key — Seizn Author Memory',
   description:
-    'Bring your own Anthropic or OpenAI key to start using Seizn Author Memory v3. Free tier includes 50 calls/day and 5 monthly Checks/Dialogs.',
+    'Bring your own Anthropic or OpenAI key to start using Seizn Author Memory v3. Free tier includes 50 calls/day, 15 monthly Checks/Dialogs, first 20 chapters analyzed.',
 };
 
 export default function ByokOnboardingPage() {
