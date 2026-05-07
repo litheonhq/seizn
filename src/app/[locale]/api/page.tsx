@@ -279,7 +279,7 @@ function Troubleshooting() {
         <div>
           <dt className="text-szn-text-1">402 quota_exceeded — monthly quota hit.</dt>
           <dd className="mt-1 text-szn-text-2">
-            Free is 100 calls/day, Indie is 1,000/month, Pro is 10,000/month, Studio+ is 100,000/month. Upgrade in <a className="underline" href="/dashboard/account/api-keys">/dashboard/account/api-keys</a> or wait for the period reset (UTC midnight for daily, UTC first-of-month for monthly).
+            Free is 100 calls/day, Indie is 1,000/month, Pro is 10,000/month, Studio+ is 100,000/month. Upgrade in <Link className="underline" href="/dashboard/account/api-keys">/dashboard/account/api-keys</Link> or wait for the period reset (UTC midnight for daily, UTC first-of-month for monthly).
           </dd>
         </div>
         <div>
