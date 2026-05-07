@@ -38,9 +38,6 @@ interface BillingProfile {
   subscription_cancelled?: boolean | null;
   subscription_payment_failed?: boolean | null;
   subscription_payment_failed_at?: string | null;
-  byok_discount_active?: boolean | null;
-  byok_discount_status?: "inactive" | "pending" | "applied" | "error" | null;
-  byok_discount_error?: string | null;
   price_lock_version?: string | null;
 }
 
@@ -66,9 +63,6 @@ export async function GET(request: NextRequest) {
         "subscription_cancelled",
         "subscription_payment_failed",
         "subscription_payment_failed_at",
-        "byok_discount_active",
-        "byok_discount_status",
-        "byok_discount_error",
         "price_lock_version",
       ].join(","))
       .eq("id", userId)
@@ -107,12 +101,6 @@ export async function GET(request: NextRequest) {
       payment_failed: profile.subscription_payment_failed === true,
       payment_failed_at: profile.subscription_payment_failed_at ?? null,
       byok_active: byokStatus.enabled,
-      byok_discount_active: profile.byok_discount_active === true,
-      byok_discount_status: normalizeByokDiscountStatus(
-        profile.byok_discount_status,
-        profile.byok_discount_active
-      ),
-      byok_discount_error: profile.byok_discount_error ?? null,
       price_lock_version: profile.price_lock_version ?? AUTHOR_PRICE_LOCK_VERSION,
       usage: {
         tokens_used_month: usage?.total_tokens ?? 0,
@@ -197,12 +185,3 @@ function readStripeTimestamp(value: unknown, key: string): string | null {
   return typeof timestamp === "number" ? new Date(timestamp * 1000).toISOString() : null;
 }
 
-function normalizeByokDiscountStatus(
-  status?: BillingProfile["byok_discount_status"],
-  active?: boolean | null
-): "inactive" | "pending" | "applied" | "error" {
-  if (status === "inactive" || status === "pending" || status === "applied" || status === "error") {
-    return status;
-  }
-  return active === true ? "applied" : "inactive";
-}

@@ -17,9 +17,6 @@ interface SubscriptionState {
   cancel_at_period_end: boolean;
   payment_failed: boolean;
   byok_active: boolean;
-  byok_discount_active: boolean;
-  byok_discount_status?: "inactive" | "pending" | "applied" | "error";
-  byok_discount_error?: string | null;
   price_lock_version: string;
   usage: {
     tokens_used_month: number;
@@ -226,7 +223,7 @@ export function BillingDashboardClient() {
             </div>
           </div>
 
-          <dl className="mt-6 grid gap-4 sm:grid-cols-3">
+          <dl className="mt-6 grid gap-4 sm:grid-cols-2">
             <div>
               <dt className="text-xs uppercase text-[var(--ink-600)]">Renews</dt>
               <dd className="mt-1 text-sm font-medium text-[var(--ink-900)]">{formatDate(subscription?.renews_at ?? null)}</dd>
@@ -234,12 +231,6 @@ export function BillingDashboardClient() {
             <div>
               <dt className="text-xs uppercase text-[var(--ink-600)]">Access ends</dt>
               <dd className="mt-1 text-sm font-medium text-[var(--ink-900)]">{formatDate(subscription?.current_period_end ?? null)}</dd>
-            </div>
-            <div>
-              <dt className="text-xs uppercase text-[var(--ink-600)]">BYOK discount</dt>
-              <dd className="mt-1 text-sm font-medium text-[var(--ink-900)]">
-                {formatByokDiscountLabel(subscription)}
-              </dd>
             </div>
           </dl>
         </div>
@@ -285,18 +276,3 @@ export function BillingDashboardClient() {
   );
 }
 
-function formatByokDiscountLabel(subscription: SubscriptionState | null): string {
-  if (!subscription) return "Not active";
-  switch (subscription.byok_discount_status) {
-    case "applied":
-      return "Applied";
-    case "pending":
-      return "Pending";
-    case "error":
-      return "Error";
-    case "inactive":
-      return "Not active";
-    default:
-      return subscription.byok_discount_active ? "Applied" : subscription.byok_active ? "Pending" : "Not active";
-  }
-}

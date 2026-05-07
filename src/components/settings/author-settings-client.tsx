@@ -13,11 +13,9 @@ import {
   DEFAULT_BYOK_STATE,
   DEFAULT_SUBSCRIPTION_STATE,
   DEFAULT_USAGE_STATE,
-  type ByokDiscountState,
   type ByokState,
   type SubscriptionState,
   type UsageState,
-  normalizeByokDiscountStatus,
 } from "./author-settings-types";
 
 const DEFAULT_LLM_PROVIDER_STATE: LlmProviderState = {
@@ -84,21 +82,20 @@ export function AuthorSettingsClient({ navigateToBilling = defaultNavigate }: Au
     refresh();
   }, [refresh]);
 
-  const saveByok = useCallback(async (apiKey: string, provider: "anthropic" | "openai" = "anthropic"): Promise<ByokDiscountState> => {
+  const saveByok = useCallback(async (apiKey: string, provider: "anthropic" | "openai" = "anthropic"): Promise<void> => {
     if (!apiKey) {
       throw new Error(copy.byok.missing);
     }
     setAction("saving");
     setError(null);
     try {
-      const response = await fetchJson<ByokState & { byok_discount?: ByokDiscountState }>("/api/account/byok", {
+      const response = await fetchJson<ByokState>("/api/account/byok", {
         method: "POST",
         headers: csrfHeaders({ "Content-Type": "application/json" }),
         body: JSON.stringify({ provider, api_key: apiKey }),
       });
       setByok(normalizeByok(response));
       await refresh();
-      return response.byok_discount ?? { status: "inactive" };
     } catch (saveError) {
       const message = saveError instanceof Error ? saveError.message : copy.byok.error;
       throw new Error(message);
@@ -107,11 +104,11 @@ export function AuthorSettingsClient({ navigateToBilling = defaultNavigate }: Au
     }
   }, [copy.byok.error, copy.byok.missing, refresh]);
 
-  const removeByok = useCallback(async (provider: "anthropic" | "openai" = "anthropic"): Promise<ByokDiscountState> => {
+  const removeByok = useCallback(async (provider: "anthropic" | "openai" = "anthropic"): Promise<void> => {
     setAction("removing");
     setError(null);
     try {
-      const response = await fetchJson<ByokState & { byok_discount?: ByokDiscountState }>(
+      const response = await fetchJson<ByokState>(
         `/api/account/byok?provider=${encodeURIComponent(provider)}`,
         {
           method: "DELETE",
@@ -120,7 +117,6 @@ export function AuthorSettingsClient({ navigateToBilling = defaultNavigate }: Au
       );
       setByok(normalizeByok(response));
       await refresh();
-      return response.byok_discount ?? { status: "inactive", removed: true };
     } catch (removeError) {
       const message = removeError instanceof Error ? removeError.message : copy.byok.error;
       throw new Error(message);
@@ -187,8 +183,6 @@ export function AuthorSettingsClient({ navigateToBilling = defaultNavigate }: Au
         />
         <ByokSection
           byok={byok}
-          discountStatus={subscription.byok_discount_status}
-          discountError={subscription.byok_discount_error}
           copy={copy.byok}
           action={action === "saving" || action === "removing" ? action : "idle"}
           onSave={saveByok}
@@ -250,7 +244,6 @@ function normalizeSubscription(value: Partial<SubscriptionState>): SubscriptionS
   return {
     ...DEFAULT_SUBSCRIPTION_STATE,
     ...value,
-    byok_discount_status: normalizeByokDiscountStatus(value.byok_discount_status),
     usage: {
       ...DEFAULT_SUBSCRIPTION_STATE.usage,
       ...(value.usage ?? {}),
