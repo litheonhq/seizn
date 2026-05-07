@@ -729,6 +729,16 @@ export async function POST(request: NextRequest) {
             .select("stripe_subscription_id")
             .eq("id", user.id)
             .maybeSingle();
+          // Surface real DB errors so the route returns 500 → Stripe retries.
+          // Otherwise a transient profile read failure would silently set
+          // `userActiveSubId = null`, fail the sub-match guard, and skip the
+          // past_due clear for legitimate cycle payments — leaving the user
+          // stuck on "payment failed" UX forever.
+          if (profileLookup.error && profileLookup.error.code !== "PGRST116") {
+            throw new Error(
+              `invoice.paid: profiles read failed for user ${user.id}: ${profileLookup.error.message}`,
+            );
+          }
           const userActiveSubId = profileLookup.data?.stripe_subscription_id ?? null;
           const subMatches = subscriptionId != null && subscriptionId === userActiveSubId;
           const amountFull =
