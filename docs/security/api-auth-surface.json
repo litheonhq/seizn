@@ -1,7 +1,7 @@
 {
   "version": 1,
   "generatedBy": "scripts/verify-api-auth-surface.mjs",
-  "routeCount": 552,
+  "routeCount": 553,
   "routes": [
     {
       "route": "/api",
@@ -166,6 +166,17 @@
       ],
       "authMarkers": [
         "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/admin/marketing/spend",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "sessionUser"
       ],
       "authState": "auth-marker-present"
     },
