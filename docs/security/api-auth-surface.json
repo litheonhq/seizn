@@ -5124,8 +5124,7 @@
         "POST"
       ],
       "authMarkers": [
-        "apiKey",
-        "sessionUser"
+        "apiKey"
       ],
       "authState": "auth-marker-present"
     },
