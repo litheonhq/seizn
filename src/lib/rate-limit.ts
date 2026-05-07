@@ -144,10 +144,32 @@ async function checkRateLimitRedis(
       limit,
     };
   } catch (error) {
-    console.error('[RateLimit] Redis error, falling back to in-memory:', error);
-    // Fall back to in-memory on Redis error
+    console.error('[RateLimit] Redis error:', error);
+    // Audit follow-up: in production, fall CLOSED on Redis errors. The
+    // in-memory store is per-lambda-instance on Vercel; falling back
+    // there means an attacker can fan-out across instances and bypass
+    // the rate-limit entirely. In dev (no UPSTASH_REDIS_REST_URL set
+    // intentionally), checkRateLimit() never reaches Redis, so this
+    // branch is production-only.
+    if (isProductionRuntime()) {
+      return {
+        allowed: false,
+        remaining: 0,
+        resetAt: Date.now() + windowMs,
+        limit,
+      };
+    }
     return checkRateLimitMemory(key, limit, windowMs);
   }
+}
+
+/**
+ * True iff this process is running in a Vercel production environment.
+ * Used by rate-limit fail-closed logic to distinguish dev-bench fallback
+ * from a real outage.
+ */
+function isProductionRuntime(): boolean {
+  return process.env.VERCEL_ENV === 'production' || process.env.NODE_ENV === 'production';
 }
 
 /**
@@ -173,7 +195,18 @@ async function peekRateLimitRedis(
       limit,
     };
   } catch (error) {
-    console.error('[RateLimit] Redis peek error, falling back to in-memory:', error);
+    console.error('[RateLimit] Redis peek error:', error);
+    // Same fail-closed pattern as checkRateLimitRedis. Auth-failure
+    // brute-force protection lives on this path; falling open in prod
+    // would let an attacker enumerate credentials.
+    if (isProductionRuntime()) {
+      return {
+        allowed: false,
+        remaining: 0,
+        resetAt: Date.now() + windowMs,
+        limit,
+      };
+    }
     return peekRateLimitMemory(key, limit, windowMs);
   }
 }

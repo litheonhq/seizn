@@ -87,17 +87,19 @@ async function enqueueUpcomingReports(
   const nextMonthIso = nextMonth.toISOString().slice(0, 10);
 
   for (const ent of entitlements as Array<{ user_id: string }>) {
-    const { count } = await supabase
-      .from('continuity_reports')
-      .select('*', { count: 'exact', head: true })
-      .eq('user_id', ent.user_id)
-      .gte('scheduled_for', today.toISOString().slice(0, 10));
-    if (count && count > 0) continue;
-    await supabase.from('continuity_reports').insert({
-      user_id: ent.user_id,
-      scheduled_for: nextMonthIso,
-      status: 'pending',
-    });
+    // Pre-fix the check-then-insert pattern raced under concurrent cron
+    // invocations: two passes could both observe count=0 and both insert,
+    // doubling the LLM spend per Pro+ Managed user. The 20260508002
+    // migration adds UNIQUE (user_id, scheduled_for); upsert with
+    // ignoreDuplicates makes the second insert a no-op.
+    await supabase.from('continuity_reports').upsert(
+      {
+        user_id: ent.user_id,
+        scheduled_for: nextMonthIso,
+        status: 'pending',
+      },
+      { onConflict: 'user_id,scheduled_for', ignoreDuplicates: true },
+    );
   }
 }
 

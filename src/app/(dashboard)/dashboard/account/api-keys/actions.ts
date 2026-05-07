@@ -8,7 +8,7 @@ import {
   recordAudit,
   rotateApiKey as rotateApiKeyService,
 } from "@/lib/api-keys";
-import { V9_TRACK2_QUOTA } from "@/lib/billing/v9-products";
+import { V9_TRACK2_QUOTA, type V9Track2Tier, isV9Track2Tier } from "@/lib/billing/v9-products";
 import {
   TRACK_2_KEY_CAP_PER_USER,
   type CreateApiKeyResult,
@@ -79,10 +79,37 @@ export async function createApiKey(input: {
 
   const generated = generateApiKey();
   const scopes = sanitizeScopes(input.scopes);
-  // v9 Free tier defaults: 50/day, scopes recall/remember/graph/search.
-  // Webhook upgrades quota on subscription.created. Until then the user
-  // gets v9 free regardless of any pending Stripe state.
-  const tierQuota = V9_TRACK2_QUOTA.free;
+  // Resolve the user's actual paid tier from existing api_keys (webhook
+  // already wrote tier-defining quota on subscription.created). If the
+  // user has no prior key OR is on Free, fall back to V9_TRACK2_QUOTA.free.
+  // Pre-fix this hardcoded Free → a paying Pro user creating a fresh
+  // key got 50/day instead of 10K/month until the next webhook fire.
+  const { data: priorKeys } = await supabase
+    .from('api_keys')
+    .select('monthly_quota, monthly_quota_period')
+    .eq('user_id', userId)
+    .is('revoked_at', null)
+    .limit(1);
+  let tierQuota = V9_TRACK2_QUOTA.free;
+  const priorRow = (priorKeys ?? [])[0] as
+    | { monthly_quota: number | null; monthly_quota_period: string | null }
+    | undefined;
+  if (priorRow && priorRow.monthly_quota != null && priorRow.monthly_quota_period) {
+    // Match the prior row's quota to a known v9 tier. If the user is on
+    // Indie/Pro/Studio/StudioManaged/Enterprise the prior key carries the
+    // tier-defining quota. Reverse-lookup so a new key inherits.
+    for (const tier of Object.keys(V9_TRACK2_QUOTA) as V9Track2Tier[]) {
+      const q = V9_TRACK2_QUOTA[tier];
+      if (
+        q.monthlyQuota === priorRow.monthly_quota &&
+        q.monthlyQuotaPeriod === priorRow.monthly_quota_period &&
+        isV9Track2Tier(tier)
+      ) {
+        tierQuota = q;
+        break;
+      }
+    }
+  }
 
   const { data, error } = await supabase
     .from("api_keys")

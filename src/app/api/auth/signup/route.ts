@@ -94,13 +94,34 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-    const { email, password, name, turnstileToken, signupTemplate, signupSource } = body as {
+    const {
+      email,
+      password,
+      name,
+      turnstileToken,
+      signupTemplate,
+      signupSource,
+      utm_source: utmSource,
+      utm_medium: utmMedium,
+      utm_campaign: utmCampaign,
+      utm_content: utmContent,
+      utm_term: utmTerm,
+      referrer,
+      landing_path: landingPath,
+    } = body as {
       email?: string;
       password?: string;
       name?: string;
       turnstileToken?: string;
       signupTemplate?: string | null;
       signupSource?: string | null;
+      utm_source?: string | null;
+      utm_medium?: string | null;
+      utm_campaign?: string | null;
+      utm_content?: string | null;
+      utm_term?: string | null;
+      referrer?: string | null;
+      landing_path?: string | null;
     };
     const normalizedSignupTemplate = signupTemplate === 'archivist-vale' ? signupTemplate : null;
     const normalizedSignupSource =
@@ -257,6 +278,43 @@ export async function POST(request: NextRequest) {
       eventType: 'signup',
       metadata: { email },
     });
+
+    // v9 marketing attribution: capture UTM + referrer + landing path so
+    // the admin metrics dashboard can compute CAC per channel. Without
+    // this insert the CAC denominator is 0 and the dashboard divides
+    // ad_spend_log by 0. Insert-once via service-role client; ON
+    // CONFLICT DO NOTHING covers the duplicate-PK case (rerun signup
+    // path) although in practice signup creates exactly one row per user.
+    const sanitizeUtm = (value: unknown): string | null => {
+      if (typeof value !== 'string') return null;
+      const trimmed = value.trim();
+      // Cap at 500 chars to bound row size; UTM params are short.
+      if (!trimmed || trimmed.length > 500) return null;
+      return trimmed;
+    };
+    void supabase
+      .from('marketing_attributions')
+      .upsert(
+        {
+          user_id: authData.user.id,
+          utm_source: sanitizeUtm(utmSource),
+          utm_medium: sanitizeUtm(utmMedium),
+          utm_campaign: sanitizeUtm(utmCampaign),
+          utm_content: sanitizeUtm(utmContent),
+          utm_term: sanitizeUtm(utmTerm),
+          referrer: sanitizeUtm(referrer),
+          landing_path: sanitizeUtm(landingPath),
+        },
+        { onConflict: 'user_id', ignoreDuplicates: true },
+      )
+      .then(({ error }: { error: { message: string } | null }) => {
+        if (error) {
+          logServerWarn('marketing_attributions insert failed', undefined, {
+            userId: authData.user.id,
+            error: error.message,
+          });
+        }
+      });
 
     return NextResponse.json({
       success: true,

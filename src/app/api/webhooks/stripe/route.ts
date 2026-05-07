@@ -13,6 +13,7 @@ import {
 } from "@/lib/billing/v8-products";
 import {
   applyV9Track2TierToApiKeys,
+  getV9Track2CharterStatusFromPriceId,
   getV9Track2TierFromStripePriceId,
   type V9Track2Tier,
 } from "@/lib/billing/v9-products";
@@ -24,6 +25,7 @@ import {
 import { sendEmail, paymentFailedEmail } from "@/lib/email";
 import { recordFunnelEvent } from "@/lib/analytics/funnel";
 import {
+  releaseChartersOnCancel,
   scheduleCharterToRegularSwap,
   scheduleTrack2CharterToRegularSwap,
 } from "@/lib/billing/charter-schedule";
@@ -451,6 +453,33 @@ export async function POST(request: NextRequest) {
 
     const supabase = createServerClient();
 
+    // v9 idempotency dedupe (audit follow-up). Stripe retries on 5xx /
+    // >20s timeout re-deliver the same event ID. Without this, retries
+    // doubled funnel_events rows + audit_log rows + Stripe Schedule
+    // creation attempts. Insert into stripe_webhook_events with the
+    // event ID as PK; on conflict short-circuit to 200.
+    const { error: dedupeError } = await supabase
+      .from('stripe_webhook_events')
+      .insert({
+        id: payload.id,
+        type: eventType,
+        livemode: Boolean(payload.livemode),
+      });
+    if (dedupeError) {
+      // Postgres duplicate-key code 23505. Other errors fall through to
+      // normal processing (best-effort dedupe is preferable to dropping
+      // legitimate webhooks if the table is briefly unavailable).
+      const message = dedupeError.message || '';
+      if (
+        message.includes('duplicate key') ||
+        message.includes('stripe_webhook_events_pkey')
+      ) {
+        console.log(`Skipping duplicate Stripe webhook ${payload.id}`);
+        return NextResponse.json({ received: true, deduped: true });
+      }
+      console.warn(`stripe_webhook_events insert failed (continuing): ${message}`);
+    }
+
     // Handle different event types
     switch (eventType) {
       case "checkout.session.completed": {
@@ -589,6 +618,25 @@ export async function POST(request: NextRequest) {
               }
             } catch (swapError) {
               console.error(`[charter track2] swap unexpected error for ${subscriptionId}`, swapError);
+            }
+            // v9 audit follow-up: Studio Managed and Enterprise Track 2
+            // tiers grant Managed perks (xhigh, seats, founding badge,
+            // 48h support, Continuity Report). Map to the Track 1
+            // entitlements row so author/billing reads them. Other Track 2
+            // tiers (BYOK Indie/Pro/Studio) get no Managed perks — skip.
+            if (v9.tier === 'studio_managed' || v9.tier === 'enterprise') {
+              const charterStatusForEnt = getV9Track2CharterStatusFromPriceId(priceId);
+              const mappedTier = v9.tier === 'studio_managed' ? 'studio' : 'enterprise';
+              try {
+                await syncManagedEntitlements({
+                  userId: user.id,
+                  tier: mappedTier,
+                  column: 'managed',
+                  charterEligible: charterStatusForEnt === 'charter',
+                });
+              } catch (entError) {
+                console.error(`[entitlements track2] sync failed for ${user.id}`, entError);
+              }
             }
           }
           break;
@@ -830,6 +878,22 @@ export async function POST(request: NextRequest) {
           break;
         }
 
+        // v9 audit follow-up: release any attached Charter Schedule so it
+        // doesn't outlive the subscription (orphan schedules pollute
+        // reporting and break re-subscribe via from_subscription).
+        // Idempotent — releaseChartersOnCancel returns early when no
+        // schedule is attached. Errors logged but not blocking.
+        try {
+          const release = await releaseChartersOnCancel(subscriptionId);
+          if (release.released) {
+            console.log(`[charter] schedule released for ${subscriptionId}`);
+          } else if (release.reason && release.reason !== 'no_schedule') {
+            console.log(`[charter] schedule release skipped for ${subscriptionId}: ${release.reason}`);
+          }
+        } catch (releaseError) {
+          console.error(`[charter] release unexpected error for ${subscriptionId}`, releaseError);
+        }
+
         const user = await findUser(
           supabase,
           customerId,
@@ -868,6 +932,24 @@ export async function POST(request: NextRequest) {
                 canceled_at: eventData.canceled_at,
               },
             });
+            // v9 audit follow-up: Track 2 Studio Managed / Enterprise had
+            // a managed_entitlements row written on subscription.created.
+            // Pre-fix the deleted branch broke out before the Track 1
+            // entitlements downgrade below, leaving the row alive — user
+            // retained xhigh/seats/badge after cancellation (free perks).
+            if (v9Tier === 'studio_managed' || v9Tier === 'enterprise') {
+              try {
+                await syncManagedEntitlements({
+                  userId: user.id,
+                  tier: 'indie', // unused on downgrade path
+                  column: 'managed',
+                  charterEligible: false,
+                  downgrade: true,
+                });
+              } catch (entError) {
+                console.error(`[entitlements track2] downgrade failed for ${user.id}`, entError);
+              }
+            }
             break;
           }
           const v8Tier = getV8Track2TierFromStripePriceId(priceId);
