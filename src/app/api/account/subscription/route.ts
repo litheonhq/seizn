@@ -78,7 +78,17 @@ export async function GET(request: NextRequest) {
       throw new AuthorUiNotFoundError("Subscription profile not found");
     }
 
-    const byokStatus = await getAuthorByokStatus(userId);
+    // Degrade gracefully if BYOK status read fails — show "no BYOK" rather
+    // than 503 the whole subscription endpoint. The DELETE-flow in
+    // /api/account/byok still propagates the throw because there it's
+    // load-bearing for billing decisions; here it's a display field.
+    let byokStatus;
+    try {
+      byokStatus = await getAuthorByokStatus(userId);
+    } catch (byokError) {
+      console.error('subscription route: getAuthorByokStatus failed, degrading to no-BYOK', byokError);
+      byokStatus = { enabled: false, provider: null, status: 'missing' as const };
+    }
     const usage = await getAuthorModelUsageSummary(userId, undefined, byokStatus.enabled);
     const tier = isAuthorBillingTier(profile.plan) ? profile.plan : null;
     const tierConfig = tier ? getAuthorTierConfig(tier) : null;

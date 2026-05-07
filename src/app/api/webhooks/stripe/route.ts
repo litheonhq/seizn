@@ -745,10 +745,24 @@ export async function POST(request: NextRequest) {
             typeof eventData.amount_paid === "number" &&
             typeof eventData.amount_due === "number" &&
             eventData.amount_paid >= eventData.amount_due;
+          // Allowed billing_reason values that legitimately clear past_due:
+          //   subscription_cycle / _create / _update — Stripe's auto-billing
+          //   manual — admin-issued invoice from Stripe Dashboard, common
+          //     past_due recovery flow ("create invoice for back-payment,
+          //     customer pays it manually")
+          //   subscription_threshold — usage-based subscription threshold
+          //     hit (Stripe's metered-billing trigger; treated as a cycle
+          //     payment)
+          // Anything else (one-off invoices, dispute settlements, partial
+          // off-session payments) is intentionally NOT allowed to clear
+          // past_due — those are out-of-band events and shouldn't auto-
+          // resolve the subscription's billing state.
           const subscriptionCycle =
             eventData.billing_reason === "subscription_cycle" ||
             eventData.billing_reason === "subscription_create" ||
-            eventData.billing_reason === "subscription_update";
+            eventData.billing_reason === "subscription_update" ||
+            eventData.billing_reason === "subscription_threshold" ||
+            eventData.billing_reason === "manual";
 
           if (subMatches && amountFull && subscriptionCycle) {
             await supabase
