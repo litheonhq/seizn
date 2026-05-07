@@ -21,6 +21,27 @@
 --
 -- The index is partial — non-default rows are unconstrained, so users
 -- can still keep historical / fallback keys around.
+--
+-- Pre-clean step (CRITICAL): the very race this index is meant to close
+-- might have ALREADY written multi-default rows to production. CREATE
+-- UNIQUE INDEX would FAIL on existing duplicates with code 23505 and
+-- abort the migration. Before the index, demote all-but-one default per
+-- (user_id, provider) — keep the most recently created one. This is
+-- conservative (no data loss; keys remain active, just stop being the
+-- "default" pick) and idempotent (running twice is a no-op).
+
+WITH ranked_defaults AS (
+  SELECT id,
+         row_number() OVER (
+           PARTITION BY user_id, provider
+           ORDER BY created_at DESC, id DESC
+         ) AS rn
+  FROM public.provider_keys
+  WHERE is_default = true
+)
+UPDATE public.provider_keys
+SET is_default = false
+WHERE id IN (SELECT id FROM ranked_defaults WHERE rn > 1);
 
 CREATE UNIQUE INDEX IF NOT EXISTS provider_keys_default_per_user_provider_idx
   ON public.provider_keys (user_id, provider)
