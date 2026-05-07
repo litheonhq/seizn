@@ -320,18 +320,26 @@ async function maybeApplyV8Track2(
   return { matched: true, tier, updated: true };
 }
 
+// Stripe-attach helpers RE-THROW on failure so the route returns 500 →
+// Stripe retries the webhook → idempotency row (written only on success at
+// end of POST) is missing → handlers re-run. The underlying ensure*Attached
+// helpers have their own "already attached" guards so re-running them on
+// retry is a no-op when the previous attempt actually landed.
+//
+// Pre-fix these caught errors and console.error'd silently. Combined with
+// the idempotency layer that wrote the dedup row before this code path,
+// any transient Stripe API blip during attach silently dropped the metered
+// item permanently. The user kept getting their plan but no overage
+// metering. The audit caught this on the meta-review.
+
 async function attachMeteredOverageItems(subscriptionId: string, plan: string): Promise<void> {
-  try {
-    const result = await ensureMeteredPriceAttached(subscriptionId, plan);
-    if (result.attached.length > 0) {
-      console.log("Attached metered overage subscription items", {
-        subscription_id: subscriptionId,
-        plan,
-        attached_count: result.attached.length,
-      });
-    }
-  } catch (error) {
-    console.error("Failed to attach metered overage subscription items:", error);
+  const result = await ensureMeteredPriceAttached(subscriptionId, plan);
+  if (result.attached.length > 0) {
+    console.log("Attached metered overage subscription items", {
+      subscription_id: subscriptionId,
+      plan,
+      attached_count: result.attached.length,
+    });
   }
 }
 
@@ -339,23 +347,19 @@ async function attachV8Track2ManagedOverage(
   subscriptionId: string,
   tier: V8Track2Tier,
 ): Promise<void> {
-  try {
-    const result = await ensureV8Track2OpusOverageAttached(subscriptionId, tier);
-    if (result.attached) {
-      console.log("Attached v8 Track 2 Studio Managed Opus overage", {
-        subscription_id: subscriptionId,
-        tier,
-        price_id: result.priceId,
-      });
-    } else if (result.reason !== 'non_managed_tier' && result.reason !== 'already_attached') {
-      console.warn("v8 Track 2 Studio Managed Opus overage attach skipped", {
-        subscription_id: subscriptionId,
-        tier,
-        reason: result.reason,
-      });
-    }
-  } catch (error) {
-    console.error("Failed to attach v8 Track 2 Studio Managed Opus overage:", error);
+  const result = await ensureV8Track2OpusOverageAttached(subscriptionId, tier);
+  if (result.attached) {
+    console.log("Attached v8 Track 2 Studio Managed Opus overage", {
+      subscription_id: subscriptionId,
+      tier,
+      price_id: result.priceId,
+    });
+  } else if (result.reason !== 'non_managed_tier' && result.reason !== 'already_attached') {
+    console.warn("v8 Track 2 Studio Managed Opus overage attach skipped", {
+      subscription_id: subscriptionId,
+      tier,
+      reason: result.reason,
+    });
   }
 }
 
@@ -367,23 +371,19 @@ async function detachV8Track2ManagedOverageIfDowngrade(
   // No-op when the user is still on Studio Managed (the attach helper handles
   // the upgrade case separately).
   if (newTier === 'studio_managed') return;
-  try {
-    const result = await ensureV8Track2OpusOverageDetached(subscriptionId, newTier);
-    if (result.detached) {
-      console.log("Detached v8 Track 2 Studio Managed Opus overage on downgrade", {
-        subscription_id: subscriptionId,
-        new_tier: newTier,
-        subscription_item_id: result.subscriptionItemId,
-      });
-    } else if (result.reason !== 'still_managed_tier' && result.reason !== 'not_attached') {
-      console.warn("v8 Track 2 Studio Managed Opus overage detach skipped", {
-        subscription_id: subscriptionId,
-        new_tier: newTier,
-        reason: result.reason,
-      });
-    }
-  } catch (error) {
-    console.error("Failed to detach v8 Track 2 Studio Managed Opus overage:", error);
+  const result = await ensureV8Track2OpusOverageDetached(subscriptionId, newTier);
+  if (result.detached) {
+    console.log("Detached v8 Track 2 Studio Managed Opus overage on downgrade", {
+      subscription_id: subscriptionId,
+      new_tier: newTier,
+      subscription_item_id: result.subscriptionItemId,
+    });
+  } else if (result.reason !== 'still_managed_tier' && result.reason !== 'not_attached') {
+    console.warn("v8 Track 2 Studio Managed Opus overage detach skipped", {
+      subscription_id: subscriptionId,
+      new_tier: newTier,
+      reason: result.reason,
+    });
   }
 }
 
