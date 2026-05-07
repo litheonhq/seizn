@@ -7,7 +7,7 @@ import { getAuthorSettingsCopy, authorSettingsI18nLocales } from "@/components/s
 import { ByokSection } from "@/components/settings/byok-section";
 import { SubscriptionSection } from "@/components/settings/subscription-section";
 import { UsageSection } from "@/components/settings/usage-section";
-import type { ByokDiscountStatus, ByokState, SubscriptionState, UsageState } from "@/components/settings/author-settings-types";
+import type { ByokState, SubscriptionState, UsageState } from "@/components/settings/author-settings-types";
 
 vi.mock("@/contexts/DashboardLocaleContext", () => ({
   useDashboardTranslation: () => ({
@@ -46,9 +46,6 @@ const subscription: SubscriptionState = {
   cancel_at_period_end: false,
   payment_failed: false,
   byok_active: true,
-  byok_discount_active: true,
-  byok_discount_status: "applied",
-  byok_discount_error: null,
   price_lock_version: "v7",
   usage: {
     tokens_used_month: 1_250_000,
@@ -113,15 +110,6 @@ describe("Author settings UI", () => {
     expect(getText("Applied")).toBeTruthy();
     expect(queryText("sk-ant-test-secret")).toBeNull();
   });
-
-  it.each<ByokDiscountStatus>(["applied", "pending", "error", "inactive"])(
-    "renders BYOK discount state %s",
-    async (status) => {
-      await renderByokStatus(status);
-
-      expect(getText(getAuthorSettingsCopy("en").byok.discountStates[status])).toBeTruthy();
-    }
-  );
 
   it("saves an Anthropic BYOK key with the provider hard-coded", async () => {
     document.cookie = "seizn_csrf_token=csrf-123; path=/";
@@ -249,20 +237,6 @@ describe("Author settings UI", () => {
   });
 });
 
-async function renderByokStatus(status: ByokDiscountStatus): Promise<void> {
-  await render(
-    <ByokSection
-      byok={status === "inactive" ? missingByok : activeByok}
-      discountStatus={status}
-      discountError={status === "error" ? "stripe_not_configured" : null}
-      copy={getAuthorSettingsCopy("en").byok}
-      action="idle"
-      onSave={async () => ({ status })}
-      onRemove={async () => ({ status: "inactive" })}
-    />
-  );
-}
-
 async function renderSubscription(overrides: Partial<SubscriptionState>): Promise<void> {
   await render(
     <SubscriptionSection
@@ -384,16 +358,10 @@ function installFetchMocks() {
     });
 
     if (url === "/api/account/byok" && method === "POST") {
-      return jsonResponse({
-        ...activeByok,
-        byok_discount: { status: "applied", applied: true },
-      });
+      return jsonResponse(activeByok);
     }
     if (url === "/api/account/byok" && method === "DELETE") {
-      return jsonResponse({
-        ...missingByok,
-        byok_discount: { status: "inactive", removed: true },
-      });
+      return jsonResponse(missingByok);
     }
     if (url === "/api/account/billing-portal" && method === "POST") {
       return jsonResponse({ url: "https://billing.stripe.test/session" });

@@ -10,10 +10,6 @@ import {
   saveAuthorByokKey,
 } from '@/lib/author/llm';
 import { createServerClient, hasServerSupabaseServiceRoleConfig } from '@/lib/supabase';
-import {
-  applyAuthorByokDiscount,
-  removeAuthorByokDiscount,
-} from '@/lib/stripe/byok-discount';
 import { recordFirstFunnelEvent } from '@/lib/analytics/funnel';
 
 export const runtime = 'nodejs';
@@ -46,11 +42,9 @@ export async function POST(request: NextRequest) {
       const provider = readProviderFromBody(body.provider) ?? 'anthropic';
       const apiKey = typeof body.api_key === 'string' ? body.api_key : '';
       const saved = await saveAuthorByokKey({ userId, provider, apiKey });
-      // BYOK 50% discount applies the moment any author-stack key is registered;
-      // saving an OpenAI key on top of an Anthropic one (or vice versa) is a
-      // no-op for the discount sync. (v9 retires the coupon path — discount
-      // returns deprecated when no STRIPE_BYOK_COUPON_ID is configured.)
-      const discount = await applyAuthorByokDiscount(userId);
+      // v9 catalog encodes BYOK pricing as separate Charter price IDs, so
+      // the legacy "50% Stripe coupon" discount sync is no longer applied
+      // here. (Removed in round 3 cleanup with the byok_discount_* columns.)
       service.saveByok({ ...body, provider });
       // v9 funnel: first BYOK key registration unlocks Free tier and Charter
       // BYOK pricing. Record once per user.
@@ -59,10 +53,7 @@ export async function POST(request: NextRequest) {
         eventType: 'byok_key_added',
         metadata: { provider },
       });
-      return {
-        ...saved,
-        byok_discount: discount,
-      };
+      return saved;
     } catch (error) {
       if (error instanceof AuthorLlmError && error.status === 400) {
         throw new AuthorUiValidationError(error.message);
@@ -84,12 +75,9 @@ export async function DELETE(request: NextRequest) {
         .eq('provider', targetProvider);
     }
 
-    // Drop the discount only when the user is removing the LAST remaining
-    // author-stack key. We re-read the other provider's status; if it's still
-    // active, keep the discount. If the lookup itself fails (transient
-    // Supabase outage), fail CLOSED — assume no other key is active and remove
-    // the discount. Discount can be re-applied on the next BYOK save; leaving
-    // it stale would mean Litheon eats the 50% indefinitely.
+    // Round 3 cleanup: legacy BYOK Stripe coupon sync removed. v9 prices
+    // BYOK separately, so deleting a key no longer needs to mutate Stripe.
+    // Still report the other provider's status so the UI can stay in sync.
     const otherProvider: ByokProvider = targetProvider === 'anthropic' ? 'openai' : 'anthropic';
     let otherActive = false;
     let otherProviderResolved: ByokProvider | null = null;
@@ -106,9 +94,6 @@ export async function DELETE(request: NextRequest) {
       otherProviderResolved = null;
     }
 
-    const discount = otherActive
-      ? { coupon: '', status: 'applied' as const, applied: true }
-      : await removeAuthorByokDiscount(userId);
     if (!otherActive) {
       service.clearByok();
     }
@@ -116,7 +101,6 @@ export async function DELETE(request: NextRequest) {
       enabled: otherActive,
       provider: otherProviderResolved,
       status: otherActive ? 'active' : 'missing',
-      byok_discount: discount,
     };
   });
 }

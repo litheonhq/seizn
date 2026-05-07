@@ -21,9 +21,6 @@ const mocks = vi.hoisted(() => ({
     subscription_cancelled: false,
     subscription_payment_failed: false,
     subscription_payment_failed_at: null,
-    byok_discount_active: false,
-    byok_discount_status: 'pending',
-    byok_discount_error: null,
     price_lock_version: 'v7',
   } as Record<string, unknown> | null,
   filters: [] as Array<[string, string]>,
@@ -146,7 +143,7 @@ describe('account subscription route guard', () => {
     expect(response.status).toBe(403);
   });
 
-  it('uses the normalized Author UI user id and returns BYOK discount status', async () => {
+  it('uses the normalized Author UI user id and returns subscription state', async () => {
     const response = await GET(new NextRequest('https://example.com/api/account/subscription'));
     const body = await response.json();
 
@@ -154,9 +151,6 @@ describe('account subscription route guard', () => {
     expect(mocks.filters).toContainEqual(['id', 'profile-user-1']);
     expect(body).toMatchObject({
       plan: 'pro',
-      byok_discount_active: false,
-      byok_discount_status: 'pending',
-      byok_discount_error: null,
       stripe_price_id: 'price_pro_monthly_v7',
       billing_cadence: 'monthly',
     });
