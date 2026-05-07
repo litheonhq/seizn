@@ -5,18 +5,18 @@ describe('autopilot github webhook reconcile', () => {
   describe('extractRepoFullNameFromUrl', () => {
     it('extracts owner/repo from GitHub UI PR URL', () => {
       expect(
-        extractRepoFullNameFromUrl('https://github.com/iruhana/seizn/pull/123')
-      ).toBe('iruhana/seizn');
+        extractRepoFullNameFromUrl('https://github.com/litheonhq/seizn/pull/123')
+      ).toBe('litheonhq/seizn');
     });
 
     it('extracts owner/repo from GitHub API PR URL', () => {
       expect(
-        extractRepoFullNameFromUrl('https://api.github.com/repos/iruhana/seizn/pulls/123')
-      ).toBe('iruhana/seizn');
+        extractRepoFullNameFromUrl('https://api.github.com/repos/litheonhq/seizn/pulls/123')
+      ).toBe('litheonhq/seizn');
     });
 
     it('returns null for non-PR URLs', () => {
-      expect(extractRepoFullNameFromUrl('https://github.com/iruhana/seizn')).toBeNull();
+      expect(extractRepoFullNameFromUrl('https://github.com/litheonhq/seizn')).toBeNull();
       expect(extractRepoFullNameFromUrl('not-a-url')).toBeNull();
     });
   });
@@ -26,39 +26,38 @@ describe('autopilot github webhook reconcile', () => {
       const prData = {
         context: {
           metadata: {
-            repoFullName: 'IruHana/SeIzN',
+            repoFullName: 'LitheonHQ/SeIzN',
           },
         },
         pr_url: 'https://github.com/other/repo/pull/1',
       };
 
-      expect(matchesRepoFullName(prData as Record<string, unknown>, 'iruhana/seizn')).toBe(true);
+      expect(matchesRepoFullName(prData as Record<string, unknown>, 'litheonhq/seizn')).toBe(true);
     });
 
     it('matches based on URL fields when context metadata missing', () => {
       const prData = {
-        external_pr_url: 'https://github.com/iruhana/seizn/pull/99',
+        external_pr_url: 'https://github.com/litheonhq/seizn/pull/99',
       };
 
-      expect(matchesRepoFullName(prData as Record<string, unknown>, 'iruhana/seizn')).toBe(true);
+      expect(matchesRepoFullName(prData as Record<string, unknown>, 'litheonhq/seizn')).toBe(true);
     });
 
     it('returns false when repo does not match', () => {
       const prData = {
-        external_pr_url: 'https://github.com/iruhana/other/pull/99',
-        context: { metadata: { repoFullName: 'iruhana/other' } },
+        external_pr_url: 'https://github.com/litheonhq/other/pull/99',
+        context: { metadata: { repoFullName: 'litheonhq/other' } },
       };
 
-      expect(matchesRepoFullName(prData as Record<string, unknown>, 'iruhana/seizn')).toBe(false);
+      expect(matchesRepoFullName(prData as Record<string, unknown>, 'litheonhq/seizn')).toBe(false);
     });
 
     it('returns false when repoFullName is blank', () => {
       const prData = {
-        external_pr_url: 'https://github.com/iruhana/seizn/pull/99',
+        external_pr_url: 'https://github.com/litheonhq/seizn/pull/99',
       };
 
       expect(matchesRepoFullName(prData as Record<string, unknown>, '   ')).toBe(false);
     });
   });
 });
-

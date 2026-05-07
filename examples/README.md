@@ -58,6 +58,6 @@ npm install @seizn/spring @seizn/summer
 
 ## Support
 
-- [GitHub Issues](https://github.com/iruhana/seizn/issues)
+- [GitHub Issues](https://github.com/litheonhq/seizn/issues)
 - [Discord Community](https://discord.gg/seizn)
 - Email: support@seizn.com

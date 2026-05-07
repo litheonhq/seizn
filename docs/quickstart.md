@@ -149,4 +149,4 @@ memories = client.add_messages(messages, user_id="user123")
 ## Support
 
 - Docs: [docs.seizn.com](https://docs.seizn.com)
-- GitHub: [github.com/iruhana/seizn](https://github.com/iruhana/seizn)
+- GitHub: [github.com/litheonhq/seizn](https://github.com/litheonhq/seizn)

@@ -55,16 +55,16 @@ describe('autopilot webhook delivery lock', () => {
       supabase,
       'delivery-1',
       'pull_request',
-      'iruhana/seizn',
+      'litheonhq/seizn',
       {
         event: 'pull_request',
         deliveryId: 'delivery-1',
         signatureValid: true,
         receivedAt: new Date().toISOString(),
         repository: {
-          owner: 'iruhana',
+          owner: 'litheonhq',
           name: 'seizn',
-          fullName: 'iruhana/seizn',
+          fullName: 'litheonhq/seizn',
         },
         payload: { action: 'opened' },
       }

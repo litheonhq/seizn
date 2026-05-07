@@ -161,12 +161,12 @@ jobs:
             "license": "MIT",
             "repository": {
               "type": "git",
-              "url": "https://github.com/iruhana/seizn.git",
+              "url": "https://github.com/litheonhq/seizn.git",
               "directory": "packages/sdk-typescript"
             },
             "homepage": "https://docs.seizn.com/sdk/typescript",
             "bugs": {
-              "url": "https://github.com/iruhana/seizn/issues"
+              "url": "https://github.com/litheonhq/seizn/issues"
             },
             "engines": {
               "node": ">=18.0.0"

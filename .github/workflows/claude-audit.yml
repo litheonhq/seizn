@@ -17,6 +17,20 @@ on:
         type: choice
         options: [claude, codex]
         default: claude
+  workflow_call:
+    inputs:
+      depth:
+        description: Audit depth
+        type: string
+        default: full
+      auto_commit:
+        description: Auto-commit changes. Unsupported in the repo-local audit workflow.
+        type: boolean
+        default: false
+      provider:
+        description: Compatibility-only provider label.
+        type: string
+        default: claude
 
 permissions:
   contents: read
