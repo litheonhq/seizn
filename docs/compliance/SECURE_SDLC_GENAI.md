@@ -525,7 +525,7 @@ jobs:
   static-analysis:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Run CodeQL
         uses: github/codeql-action/analyze@v3
       - name: Run Semgrep
@@ -536,7 +536,7 @@ jobs:
   dependency-scan:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Run npm audit
         run: npm audit --audit-level=high
       - name: Check for known vulnerabilities
@@ -545,9 +545,9 @@ jobs:
   owasp-llm-tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
       - name: Run OWASP LLM Top 10 Tests
         run: npm run test:owasp-llm
         env:
@@ -556,7 +556,7 @@ jobs:
   model-security:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Verify model provenance
         run: npm run verify:models
       - name: Check model signatures
@@ -669,7 +669,7 @@ jobs:
       digest: ${{ steps.build.outputs.digest }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Install dependencies
         run: npm ci
@@ -703,7 +703,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Run OWASP LLM Tests
         run: npm run test:owasp-llm
