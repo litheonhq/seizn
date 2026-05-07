@@ -13,6 +13,44 @@
 
 import type Stripe from 'stripe';
 import { getStripeClient } from '@/lib/stripe';
+
+/**
+ * Release a Stripe Subscription Schedule when its parent subscription is
+ * canceled. Without this, schedules outlive cancellation and pollute
+ * reporting; on resubscribe Stripe rejects `from_subscription` create
+ * because the customer already has an attached schedule.
+ *
+ * Idempotent: returns false if no schedule exists or release fails.
+ */
+export async function releaseChartersOnCancel(
+  subscriptionId: string,
+): Promise<{ released: boolean; reason?: string }> {
+  if (!process.env.STRIPE_SECRET_KEY) {
+    return { released: false, reason: 'stripe_not_configured' };
+  }
+  const stripe = getStripeClient();
+  let subscription: Stripe.Subscription;
+  try {
+    subscription = await stripe.subscriptions.retrieve(subscriptionId);
+  } catch {
+    return { released: false, reason: 'subscription_retrieve_failed' };
+  }
+  const scheduleId = typeof subscription.schedule === 'string'
+    ? subscription.schedule
+    : subscription.schedule?.id;
+  if (!scheduleId) {
+    return { released: false, reason: 'no_schedule' };
+  }
+  try {
+    await stripe.subscriptionSchedules.release(scheduleId);
+    return { released: true };
+  } catch (error) {
+    return {
+      released: false,
+      reason: error instanceof Error ? `release_failed: ${error.message}` : 'release_failed',
+    };
+  }
+}
 import {
   CHARTER_WINDOW_END_AT,
   getAuthorTierFromStripePriceId,

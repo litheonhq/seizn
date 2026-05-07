@@ -48,13 +48,16 @@ export interface V9Track2QuotaConfig {
   scopes: string[];
 }
 
+import { CHARTER_WINDOW_END_AT } from '@/lib/stripe-config';
+
 export const V9_PRICE_LOCK_VERSION = 'v9';
 
 /**
- * Charter launch window cutoff for Track 2. Mirrors Track 1
- * CHARTER_WINDOW_END_AT to keep messaging consistent across products.
+ * Charter launch window cutoff for Track 2. Re-exports Track 1's constant
+ * so the two catalogs cannot drift — a previous audit flagged the risk
+ * that two independent string literals would silently desync.
  */
-export const V9_TRACK2_CHARTER_END_AT = '2027-05-01T00:00:00Z';
+export const V9_TRACK2_CHARTER_END_AT = CHARTER_WINDOW_END_AT;
 
 export const V9_TRACK2_PRODUCTS: Record<V9Track2Tier, V9Track2ProductConfig> = {
   free: {
@@ -345,6 +348,20 @@ type SupabaseLike = {
     update(values: Record<string, unknown>): {
       eq(column: string, value: string): Promise<{ error: { message: string } | null }>;
     };
+    select(columns: string): {
+      eq(column: string, value: string): Promise<{
+        data:
+          | Array<{
+              id?: string;
+              scopes?: string[] | null;
+              monthly_quota?: number | null;
+              monthly_quota_period?: string | null;
+              rate_limit_per_minute?: number | null;
+            }>
+          | null;
+        error: { message: string } | null;
+      }>;
+    };
   };
 };
 
@@ -352,26 +369,65 @@ export type ApplyTierResult =
   | { ok: true; updated: number }
   | { ok: false; error: string };
 
+/**
+ * Apply a v9 Track 2 tier's quota / rate-limit / scopes to every api_keys
+ * row owned by the user.
+ *
+ * Audit follow-up: the previous implementation overwrote `scopes`
+ * unconditionally on every webhook fire. subscription.updated runs at
+ * every billing cycle (and again on proration), so a user who narrowed
+ * their key scopes for least-privilege got them silently re-broadened.
+ *
+ * Now: monthly_quota / period / rate_limit_per_minute always sync (those
+ * are tier-defining and can't be customized). Scopes only get rewritten
+ * when transitioning between tiers — detected by comparing the existing
+ * row's quota to the new tier's quota. Same-tier resync (the common
+ * case at billing renewal) leaves scopes alone.
+ */
 export async function applyV9Track2TierToApiKeys(
   userId: string,
   tier: V9Track2Tier,
   supabase: SupabaseLike,
 ): Promise<ApplyTierResult> {
   const quota = V9_TRACK2_QUOTA[tier];
+  // Detect tier transition by reading existing rows. If quota matches the
+  // target tier already, this is a re-sync — write only the rate-limit
+  // (defensive) and skip scopes overwrite. If quota differs, it's a real
+  // transition — write everything including scopes.
+  const existingResult = await supabase
+    .from('api_keys')
+    .select('id, scopes, monthly_quota, monthly_quota_period, rate_limit_per_minute')
+    .eq('user_id', userId);
+  const existingKeys = existingResult.data ?? [];
+  const isTransition =
+    existingKeys.length === 0 ||
+    existingKeys.some(
+      (row) =>
+        row.monthly_quota !== quota.monthlyQuota ||
+        row.monthly_quota_period !== quota.monthlyQuotaPeriod,
+    );
+
+  const updates: Record<string, unknown> = {
+    monthly_quota: quota.monthlyQuota,
+    monthly_quota_period: quota.monthlyQuotaPeriod,
+    rate_limit_per_minute: quota.rateLimitPerMinute,
+  };
+  if (isTransition) {
+    // Real tier change — reset scopes to the new tier's defaults so the
+    // user gains/loses access cleanly. User-customized scope narrowing
+    // is acceptable to lose at upgrade time (they can re-narrow after).
+    updates.scopes = quota.scopes;
+  }
+
   const { error } = await supabase
     .from('api_keys')
-    .update({
-      monthly_quota: quota.monthlyQuota,
-      monthly_quota_period: quota.monthlyQuotaPeriod,
-      rate_limit_per_minute: quota.rateLimitPerMinute,
-      scopes: quota.scopes,
-    })
+    .update(updates)
     .eq('user_id', userId);
 
   if (error) {
     return { ok: false, error: error.message };
   }
-  return { ok: true, updated: 1 };
+  return { ok: true, updated: existingKeys.length };
 }
 
 function readEnv(env: NodeJS.ProcessEnv, names: string[]): string | null {

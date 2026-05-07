@@ -106,6 +106,12 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   }
 
   const supabase = createServerClient();
+  // Audit follow-up: switch from upsert (last-write-wins, race produces
+  // oscillating values) to insert with onConflict-DO-NOTHING. First
+  // cron invocation of the day wins; subsequent invocations see PK
+  // conflict and exit cleanly.  Combined with primaryItemBucketed +
+  // single Stripe pagination loop above, snapshot is now deterministic
+  // per (snapshot_date, Stripe state at first invocation).
   const { error } = await supabase
     .from('mrr_snapshots')
     .upsert(
@@ -118,7 +124,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         by_provider: byProvider,
         computed_at: new Date().toISOString(),
       },
-      { onConflict: 'snapshot_date' },
+      { onConflict: 'snapshot_date', ignoreDuplicates: true },
     );
   if (error) {
     return NextResponse.json({ error: 'upsert_failed', detail: error.message }, { status: 500 });
