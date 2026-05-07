@@ -46,8 +46,8 @@ export function ConflictCard({ conflict, characterNameMap, onResolve, isMutating
   const [customText, setCustomText] = useState('');
   const [customEdits, setCustomEdits] = useState('');
   const [customError, setCustomError] = useState<string | null>(null);
-  const existingFact = conflict.existing_fact ?? {};
-  const newFact = conflict.new_fact ?? {};
+  const existingFact = useMemo(() => conflict.existing_fact ?? {}, [conflict.existing_fact]);
+  const newFact = useMemo(() => conflict.new_fact ?? {}, [conflict.new_fact]);
   const resolution = normalizeResolution(conflict.resolution);
   const resolved = Boolean(resolution) || conflict.status === 'resolved' || conflict.status === 'deferred';
   const affectedEntityId = conflict.affected_entities?.[0];
