@@ -77,16 +77,18 @@ export function validateJsonSchema(value: unknown, schema: AuthorJsonSchema, pat
     return errors;
   }
 
-  if (schema.type === 'object' && schema.properties && value && typeof value === 'object' && !Array.isArray(value)) {
+  if (schema.type === 'object' && value && typeof value === 'object' && !Array.isArray(value)) {
     const record = value as Record<string, unknown>;
     for (const required of schema.required ?? []) {
       if (!(required in record)) {
         errors.push(`${path}.${required} is required`);
       }
     }
-    for (const [key, childSchema] of Object.entries(schema.properties)) {
-      if (key in record) {
-        errors.push(...validateJsonSchema(record[key], childSchema, `${path}.${key}`));
+    if (schema.properties) {
+      for (const [key, childSchema] of Object.entries(schema.properties)) {
+        if (key in record) {
+          errors.push(...validateJsonSchema(record[key], childSchema, `${path}.${key}`));
+        }
       }
     }
   }

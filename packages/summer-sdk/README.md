@@ -275,4 +275,4 @@ MIT - see [LICENSE](LICENSE) for details.
 
 - [Documentation](https://docs.seizn.com/summer)
 - [API Reference](https://docs.seizn.com/api-reference)
-- [GitHub](https://github.com/iruhana/seizn)
+- [GitHub](https://github.com/litheonhq/seizn)

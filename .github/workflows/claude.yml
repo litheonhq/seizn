@@ -1,5 +1,5 @@
-# Thin caller — @claude mentions + PR auto-review (CLI 기반, API 키 불필요)
 name: Claude Interactive
+
 on:
   issue_comment:
     types: [created]
@@ -8,30 +8,24 @@ on:
   pull_request:
     types: [opened, synchronize]
 
+permissions:
+  contents: read
+  issues: read
+  pull-requests: read
+
 concurrency:
   group: claude-${{ github.event.pull_request.number || github.event.issue.number || github.run_id }}
   cancel-in-progress: true
 
 jobs:
-  claude:
+  audit:
+    name: Repo-local interactive gate
     if: |
       (github.event_name == 'pull_request') ||
       (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude')) ||
       (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude'))
-    runs-on: [self-hosted, claude]
-    timeout-minutes: 30
-    permissions:
-      contents: write
-      pull-requests: write
-      issues: write
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - uses: iruhana/claude-workflows/actions/claude-interactive@v1
-        with:
-          event_name: ${{ github.event_name }}
-          pr_number: ${{ github.event.pull_request.number || '' }}
-          issue_number: ${{ github.event.issue.number || '' }}
-          comment_body: ${{ github.event.comment.body || '' }}
-          github_token: ${{ github.token }}
+    uses: ./.github/workflows/claude-audit.yml
+    with:
+      depth: quick
+      auto_commit: false
+      provider: claude
