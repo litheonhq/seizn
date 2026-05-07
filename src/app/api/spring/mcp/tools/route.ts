@@ -23,6 +23,42 @@ import {
 } from '@/lib/spring/memory-v4';
 
 /**
+ * MCP tool → Track 2 scope mapping. Audit follow-up: pre-fix the route
+ * authenticated and quota-gated but never enforced scopes per tool, so
+ * a Free key with the default `recall/remember/graph/search` scope
+ * could call timeline/temporal tools that should require `timeline`.
+ *
+ * The mapping is deliberately strict — every tool maps to exactly one
+ * scope from the v9 catalog. Unknown tools fall through to a deny-all
+ * default at the route handler.
+ */
+const MCP_TOOL_SCOPE: Record<string, string> = {
+  'spring.memory.save': 'remember',
+  'spring.memory.search': 'search',
+  'spring.memory.update': 'remember',
+  'spring.memory.delete': 'remember',
+  'spring.memory.get': 'recall',
+  'spring.memory.bulk_ingest': 'remember',
+  'spring.context.get': 'recall',
+  'spring.temporal.search': 'timeline',
+  'spring.temporal.timeline': 'timeline',
+};
+
+async function loadKeyScopes(keyId: string): Promise<string[]> {
+  const supabase = createServerClient();
+  const { data } = await supabase
+    .from('api_keys')
+    .select('scopes')
+    .eq('id', keyId)
+    .single<{ scopes: string[] | null }>();
+  return data?.scopes ?? [];
+}
+
+function hasScope(scopes: string[], required: string): boolean {
+  return scopes.includes('*') || scopes.includes(required);
+}
+
+/**
  * Resolve Track 2 quota fields for a given api_key. Returns null when the
  * key isn't a Track 2 key (no monthly_quota row) so the caller can skip
  * Track 2 enforcement gracefully.
@@ -142,6 +178,34 @@ export async function POST(request: NextRequest) {
     const validTools = Object.keys(SPRING_MEMORY_TOOLS);
     if (!validTools.includes(toolName)) {
       return ValidationErrors.invalidValue('tool', toolName, validTools.join(', '));
+    }
+
+    // v9 audit follow-up: per-tool scope check. Pre-fix any authenticated
+    // key could invoke any tool — a Free key with the default
+    // recall/remember/graph/search scopes could call timeline tools.
+    const requiredScope = MCP_TOOL_SCOPE[toolName];
+    if (!requiredScope) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: { code: 'TOOL_SCOPE_NOT_MAPPED', message: `Tool ${toolName} is not mapped to a scope` },
+        },
+        { status: 500 },
+      );
+    }
+    const keyScopes = await loadKeyScopes(keyId);
+    if (!hasScope(keyScopes, requiredScope)) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: {
+            code: 'SCOPE_DENIED',
+            message: `Tool ${toolName} requires '${requiredScope}' scope. Your key has: ${keyScopes.join(', ') || '(none)'}.`,
+            required_scope: requiredScope,
+          },
+        },
+        { status: 403 },
+      );
     }
 
     // Get arguments

@@ -119,6 +119,39 @@ export async function handleApiV1(
       });
     }
 
+    // Audit follow-up: BYOK strict enforcement for v9 Free tier. Pre-fix
+    // a Free Track 2 user could call any LLM-consuming endpoint without
+    // ever registering a BYOK key — middleware only checked x-llm-key
+    // header for `requiresLlmKey` routes and never validated tier.
+    //
+    // Now: when costUnits > 0 (LLM-consuming op) and the key lacks the
+    // `managed_llm` scope (only Studio Managed / Enterprise grant it),
+    // require a registered active provider_keys row OR a valid x-llm-key
+    // header. Free + BYOK paid Track 2 tiers fall under this gate.
+    const hasManagedLlmScope =
+      apiKey.scopes.includes('*') || apiKey.scopes.includes('managed_llm');
+    if (options.costUnits > 0 && !hasManagedLlmScope) {
+      const hasInlineLlmKey = Boolean(
+        request.headers.get('x-llm-key')?.trim() &&
+          request.headers.get('x-llm-provider')?.trim(),
+      );
+      if (!hasInlineLlmKey) {
+        const hasRegisteredByok = await byokKeyRegistered(
+          apiKey.userId,
+          options.supabase,
+        );
+        if (!hasRegisteredByok) {
+          throw new ApiV1ProblemError({
+            status: 402,
+            title: 'BYOK key required',
+            detail:
+              'This tier requires you to register an Anthropic or OpenAI API key. Visit /onboarding/byok or pass an x-llm-key header.',
+            code: 'byok_required',
+          });
+        }
+      }
+    }
+
     const llm = options.requiresLlmKey ? readLlmKey(request) : undefined;
     const idempotencyKey = options.idempotent ? request.headers.get('idempotency-key') : null;
     const cacheKey = idempotencyKey
@@ -210,6 +243,29 @@ function parseBearerToken(request: NextRequest): string {
     throw new InvalidApiKeyError('API key required. Use Authorization: Bearer <api-key>');
   }
   return match[1].trim();
+}
+
+/**
+ * Audit follow-up: BYOK strict gate. Returns true if the user has at least
+ * one active provider_keys row (Anthropic or OpenAI). Used to block Free
+ * Track 2 users from calling LLM-consuming endpoints without registering
+ * their own API key.
+ *
+ * Performance: a single point query on user_id + is_active. Could be
+ * cached per request but the latency cost (single index lookup) is
+ * negligible vs the LLM call itself.
+ */
+async function byokKeyRegistered(
+  userId: string,
+  supabase?: SupabaseLike,
+): Promise<boolean> {
+  const client = supabase ?? (await import('@/lib/supabase')).createServerClient();
+  const { count } = await (client as ReturnType<typeof import('@/lib/supabase').createServerClient>)
+    .from('provider_keys')
+    .select('*', { count: 'exact', head: true })
+    .eq('user_id', userId)
+    .eq('is_active', true);
+  return (count ?? 0) > 0;
 }
 
 function readLlmKey(request: NextRequest): ApiV1Context['llm'] {
