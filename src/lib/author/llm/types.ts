@@ -27,6 +27,21 @@ export interface AuthorLlmRequest {
   requestId?: string;
   /** Reasoning / extended-thinking effort. Defaults to AUTHOR_LLM_EFFORT env (xhigh). */
   effort?: AuthorLlmEffort;
+  /**
+   * Prompt-cache policy (R13 C7).
+   *   - 'auto' (default): respect ANTHROPIC_PROMPT_CACHING env flag — cache
+   *     when enabled, plain otherwise. Right choice for warm paths where
+   *     the same system prompt repeats inside a 5-min window (Check loops,
+   *     Dialog turns, Backlog generation).
+   *   - 'cold': force-disable caching even when env enabled. Use for Free
+   *     BYOK one-off paths (rare/ad-hoc requests) where the cache write
+   *     surcharge (~25% over normal input tokens) won't pay back since
+   *     the system prompt won't be re-read inside TTL. Caller is expected
+   *     to know its access pattern; the LLM stack does NOT auto-detect.
+   *   - 'warm': force-enable caching even when env disabled. Reserved for
+   *     local dev / migration testing; not a production setting.
+   */
+  cachePolicy?: 'auto' | 'cold' | 'warm';
 }
 
 export interface AuthorLlmUsage {
