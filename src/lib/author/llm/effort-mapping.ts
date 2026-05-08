@@ -31,6 +31,19 @@ const OPENAI_REASONING_EFFORT: Record<AuthorLlmEffort, 'low' | 'medium' | 'high'
   max: 'xhigh',
 };
 
+// Gemini 2.5 Pro accepts a `thinkingConfig: { thinkingBudget: <tokens> }` block.
+// Setting -1 enables dynamic thinking (model decides). Setting 0 disables
+// thinking entirely (faster, cheaper, lower quality on reasoning tasks). For
+// Author Memory v3 we always opt-in with explicit budgets matching the same
+// effort scale we use on Anthropic — keeps quality comparable across providers.
+const GEMINI_THINKING_BUDGET_TOKENS: Record<AuthorLlmEffort, number> = {
+  low: 4_000,
+  medium: 8_000,
+  high: 16_000,
+  xhigh: 24_000,  // Gemini 2.5 Pro caps thinking at 24,576 tokens
+  max: 24_000,
+};
+
 export function isAuthorLlmEffort(value: unknown): value is AuthorLlmEffort {
   return (
     value === 'low' ||
@@ -54,6 +67,10 @@ export function getOpenAiReasoningEffort(effort: AuthorLlmEffort): 'low' | 'medi
   return OPENAI_REASONING_EFFORT[effort];
 }
 
+export function getGeminiThinkingBudget(effort: AuthorLlmEffort): number {
+  return GEMINI_THINKING_BUDGET_TOKENS[effort];
+}
+
 /**
  * Anthropic Opus 4.7 (and later extended-thinking models) accept a
  * `thinking: { type: 'enabled', budget_tokens }` block. Older Sonnet / Opus
@@ -63,4 +80,13 @@ export function getOpenAiReasoningEffort(effort: AuthorLlmEffort): 'low' | 'medi
  */
 export function modelSupportsExtendedThinking(model: string): boolean {
   return /claude-opus-4-7/i.test(model) || /claude-(opus|sonnet)-(?:5|6|7|8|9)/i.test(model);
+}
+
+/**
+ * Gemini 2.5 Pro / Flash support `thinkingConfig`. Older Gemini 1.x models
+ * do not — calling with thinking on those is silently ignored or rejected
+ * depending on the SDK version.
+ */
+export function modelSupportsGeminiThinking(model: string): boolean {
+  return /gemini-2\.5/i.test(model);
 }

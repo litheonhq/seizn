@@ -21,7 +21,7 @@
  *   xhigh effort on Opus 4.7 = 32k thinking tokens; on GPT-5.5 ≈ 20k reasoning.
  */
 
-export type LlmProvider = 'anthropic' | 'openai';
+export type LlmProvider = 'anthropic' | 'google' | 'openai';
 
 export interface LlmModelRates {
   /** Provider identifier — used to route cost calculations. */
@@ -45,10 +45,18 @@ export interface LlmModelRates {
 }
 
 /**
- * Verified rates as of 2026-05-07.
+ * Verified rates as of 2026-05-08.
  *
  * Anthropic source: https://platform.claude.com/docs/en/about-claude/pricing
  * OpenAI source:    https://developers.openai.com/api/docs/pricing (2026-04-23 GPT-5.5 release)
+ * Google source:    https://ai.google.dev/gemini-api/docs/pricing
+ *
+ * Note for Gemini 2.5 Pro: tiered pricing kicks in at >200K input tokens per
+ * call — input doubles to $2.50/M, output rises to $15-20/M. The rates below
+ * are the standard tier (≤200K). Author Memory v3 paths typically stay under
+ * 200K (system + most prompts ~50-100K), so the standard tier covers ~95% of
+ * billable calls; long-context whole-novel pass (Premier R&D) crosses the
+ * threshold and needs separate cost projection.
  */
 export const LLM_RATES: Record<string, LlmModelRates> = {
   'claude-opus-4-7': {
@@ -88,6 +96,28 @@ export const LLM_RATES: Record<string, LlmModelRates> = {
     outputPerMTokUsd: 30.00,
     cacheReadPerMTokUsd: 1.25,
     cachedInputPerMTokUsd: 1.25,
+    thinkingBilledAsOutput: true,
+  },
+  'gemini-2.5-pro': {
+    provider: 'google',
+    displayName: 'Gemini 2.5 Pro',
+    // Standard tier (≤200K input). Beyond 200K input the rates double per
+    // Google's tiered model — see header comment. cacheReadPerMTokUsd uses
+    // Google's "context caching" read rate ($0.315/M).
+    inputPerMTokUsd: 1.25,
+    outputPerMTokUsd: 10.00,
+    cacheReadPerMTokUsd: 0.315,
+    cachedInputPerMTokUsd: 0.315,
+    thinkingBilledAsOutput: true,
+  },
+  'gemini-2.5-flash': {
+    provider: 'google',
+    displayName: 'Gemini 2.5 Flash',
+    // Flash tier — designed for cost-sensitive Free / Indie BYOK fallback.
+    inputPerMTokUsd: 0.30,
+    outputPerMTokUsd: 2.50,
+    cacheReadPerMTokUsd: 0.075,
+    cachedInputPerMTokUsd: 0.075,
     thinkingBilledAsOutput: true,
   },
 };

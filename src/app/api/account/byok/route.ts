@@ -14,17 +14,21 @@ import { recordFirstFunnelEvent } from '@/lib/analytics/funnel';
 
 export const runtime = 'nodejs';
 
-type ByokProvider = 'anthropic' | 'openai';
+type ByokProvider = 'anthropic' | 'google' | 'openai';
+
+function isByokProvider(value: string): value is ByokProvider {
+  return value === 'openai' || value === 'anthropic' || value === 'google';
+}
 
 function readProviderQuery(request: NextRequest): ByokProvider | undefined {
   const value = request.nextUrl.searchParams.get('provider')?.trim().toLowerCase();
-  return value === 'openai' || value === 'anthropic' ? value : undefined;
+  return value && isByokProvider(value) ? value : undefined;
 }
 
 function readProviderFromBody(value: unknown): ByokProvider | undefined {
   if (typeof value !== 'string') return undefined;
   const normalized = value.trim().toLowerCase();
-  return normalized === 'openai' || normalized === 'anthropic' ? normalized : undefined;
+  return isByokProvider(normalized) ? normalized : undefined;
 }
 
 export async function GET(request: NextRequest) {
@@ -77,21 +81,29 @@ export async function DELETE(request: NextRequest) {
 
     // Round 3 cleanup: legacy BYOK Stripe coupon sync removed. v9 prices
     // BYOK separately, so deleting a key no longer needs to mutate Stripe.
-    // Still report the other provider's status so the UI can stay in sync.
-    const otherProvider: ByokProvider = targetProvider === 'anthropic' ? 'openai' : 'anthropic';
+    // R22 — 3-provider awareness: probe each remaining provider and report
+    // the first active one, so the UI stays in sync after a delete. If none
+    // are active, clear the BYOK panel state.
+    const remainingProviders: ByokProvider[] = (
+      ['anthropic', 'openai', 'google'] as ByokProvider[]
+    ).filter((p) => p !== targetProvider);
     let otherActive = false;
     let otherProviderResolved: ByokProvider | null = null;
-    try {
-      const otherStatus = await getAuthorByokStatus(userId, undefined, { provider: otherProvider });
-      otherActive = otherStatus.status === 'active';
-      // AuthorByokStatus.provider has a wider union ('google' included) but the
-      // author stack only ever stores Anthropic / OpenAI keys today.
-      const p = otherStatus.provider;
-      otherProviderResolved = otherActive && (p === 'anthropic' || p === 'openai') ? p : null;
-    } catch (lookupError) {
-      console.error('byok DELETE: failed to read other-provider status, defaulting to inactive', lookupError);
-      otherActive = false;
-      otherProviderResolved = null;
+    for (const provider of remainingProviders) {
+      try {
+        const status = await getAuthorByokStatus(userId, undefined, { provider });
+        if (status.status === 'active') {
+          otherActive = true;
+          const p = status.provider;
+          otherProviderResolved = p && isByokProvider(p) ? p : null;
+          break;
+        }
+      } catch (lookupError) {
+        console.error(
+          `byok DELETE: failed to read ${provider} status, treating as inactive`,
+          lookupError,
+        );
+      }
     }
 
     if (!otherActive) {
