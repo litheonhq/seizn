@@ -1,4 +1,5 @@
 import OpenAI from 'openai';
+import { randomUUID } from 'crypto';
 import {
   calculateAuthorBillableUsageTokens,
   enforceAuthorTokenBudget,
@@ -115,7 +116,9 @@ export class AuthorOpenAiClient {
       input_tokens: response.usage?.prompt_tokens ?? null,
       output_tokens: response.usage?.completion_tokens ?? null,
     });
-    const requestId = response.id ?? request.requestId ?? `author-openai-${Date.now()}`;
+    // R28 M4 — server-side requestId; never honor caller-supplied value
+    // (it lands in audit log / billing record / webhook delivery).
+    const requestId = response.id ?? `author-openai-${randomUUID()}`;
     const json = request.responseFormat === 'json'
       ? parseAndValidateJson<TJson>(text, request.jsonSchema, 'OpenAI')
       : undefined;
