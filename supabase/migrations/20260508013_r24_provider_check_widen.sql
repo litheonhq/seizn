@@ -37,17 +37,34 @@ ALTER TABLE public.model_usage
   ADD CONSTRAINT model_usage_provider_check
   CHECK (provider IN ('anthropic', 'openai', 'google'));
 
-ALTER TABLE public.profiles
-  DROP CONSTRAINT IF EXISTS profiles_author_llm_provider_check;
-
-ALTER TABLE public.profiles
-  ADD CONSTRAINT profiles_author_llm_provider_check
-  CHECK (
-    author_llm_provider IS NULL
-    OR author_llm_provider IN ('anthropic', 'openai', 'google')
-  );
-
-COMMENT ON COLUMN public.profiles.author_llm_provider IS
-  'Per-user Author Memory v3 LLM provider preference: anthropic | openai | google | NULL (inherit env default).';
+-- Conditional on the column existing — migration 20260507001 was supposed
+-- to add `profiles.author_llm_provider` but appears not to have been
+-- applied in prod (R24 first attempt hit "column does not exist"). When
+-- 20260507001 lands, this DO block flips to active without re-running
+-- this file.
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns
+     WHERE table_schema = 'public'
+       AND table_name = 'profiles'
+       AND column_name = 'author_llm_provider'
+  ) THEN
+    EXECUTE 'ALTER TABLE public.profiles
+      DROP CONSTRAINT IF EXISTS profiles_author_llm_provider_check';
+    EXECUTE $sql$ALTER TABLE public.profiles
+      ADD CONSTRAINT profiles_author_llm_provider_check
+      CHECK (
+        author_llm_provider IS NULL
+        OR author_llm_provider IN ('anthropic', 'openai', 'google')
+      )$sql$;
+    EXECUTE $sql$COMMENT ON COLUMN public.profiles.author_llm_provider IS
+      'Per-user Author Memory v3 LLM provider preference: anthropic | openai | google | NULL (inherit env default).'$sql$;
+  ELSE
+    RAISE NOTICE
+      'profiles.author_llm_provider does not exist; skipping CHECK widen. '
+      'Apply migration 20260507001 first, then re-run this migration.';
+  END IF;
+END $$;
 
 COMMIT;
