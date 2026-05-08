@@ -1,5 +1,6 @@
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
+import type { Profile } from 'next-auth';
 import { authConfig } from '@/auth.config';
 import { normalizeProfileUserId } from './profile/normalize';
 import { normalizeSessionOrganizationId } from './profile/organization';
@@ -75,6 +76,17 @@ const sharedCookieOptions = {
   ...(cookieDomain ? { domain: cookieDomain } : {}),
 };
 
+function getOAuthEmailVerified(token: { email_verified?: unknown }, profile?: Profile): boolean {
+  const profileRecord = profile as Record<string, unknown> | undefined;
+  const raw =
+    token.email_verified ??
+    profileRecord?.email_verified ??
+    profileRecord?.emailVerified ??
+    profileRecord?.verified_email;
+
+  return raw === true || raw === 'true';
+}
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
   ...authConfig,
   providers: [
@@ -127,7 +139,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   ],
   callbacks: {
     ...authConfig.callbacks,
-    async jwt({ token, user, account }) {
+    async jwt({ token, user, account, profile }) {
       if (user) {
         token.id = user.id;
         if (user.organizationSelection === 'personal') {
@@ -142,29 +154,54 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       // For OAuth providers, create/link Supabase user
       if (account && account.provider !== 'credentials') {
         const supabase = createServerClient();
+        const profileId =
+          typeof token.sub === 'string' && token.sub.trim()
+            ? token.sub
+            : typeof token.id === 'string' && token.id.trim()
+              ? token.id
+              : null;
+        const email = typeof token.email === 'string' ? token.email.trim().toLowerCase() : null;
+        const emailVerified = getOAuthEmailVerified(token, profile);
+        token.oauthEmailVerified = emailVerified;
 
-        // Check if user exists in profiles
-        const { data: profile } = await supabase
+        if (!profileId) {
+          return token;
+        }
+
+        // Prefer an exact provider-account profile. Only link an existing
+        // email profile when the provider explicitly attests that email.
+        const { data: idProfile } = await supabase
           .from('profiles')
           .select('id')
-          .eq('email', token.email)
+          .eq('id', profileId)
           .single();
+        let linkedProfile = idProfile;
 
-        if (!profile) {
+        if (!linkedProfile && email && emailVerified) {
+          const { data: emailProfile } = await supabase
+            .from('profiles')
+            .select('id')
+            .eq('email', email)
+            .single();
+          linkedProfile = emailProfile;
+        }
+
+        if (!linkedProfile) {
           // Create profile for OAuth user
           await supabase.from('profiles').insert({
-            id: token.id || token.sub,
-            email: token.email,
+            id: profileId,
+            email,
             full_name: token.name,
             avatar_url: token.picture,
             plan: 'free',
           });
         }
 
-        token.id = profile?.id || token.sub;
+        token.id = linkedProfile?.id || profileId;
       }
 
       if (token.email && (!token.id || token.id === token.sub)) {
+        const canResolveByEmail = token.oauthEmailVerified !== false;
         const resolvedProfileId = await normalizeProfileUserId({
           userId:
             typeof token.id === 'string'
@@ -172,7 +209,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               : typeof token.sub === 'string'
                 ? token.sub
                 : null,
-          email: typeof token.email === 'string' ? token.email : null,
+          email: canResolveByEmail && typeof token.email === 'string' ? token.email : null,
         });
 
         if (resolvedProfileId) {
@@ -188,7 +225,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               : typeof token.sub === 'string'
                 ? token.sub
                 : null,
-          email: typeof token.email === 'string' ? token.email : null,
+          email:
+            token.oauthEmailVerified !== false && typeof token.email === 'string'
+              ? token.email
+              : null,
           organizationSelection: null,
         });
 
@@ -209,7 +249,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               : typeof token.sub === 'string'
                 ? token.sub
                 : null,
-          email: session.user.email ?? (typeof token.email === 'string' ? token.email : null),
+          email:
+            token.oauthEmailVerified !== false
+              ? session.user.email ?? (typeof token.email === 'string' ? token.email : null)
+              : null,
         });
 
         if (resolvedProfileId) {
@@ -227,8 +270,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             (await normalizeSessionOrganizationId({
               userId: session.user.id,
               email:
-                session.user.email ??
-                (typeof token.email === 'string' ? token.email : null),
+                token.oauthEmailVerified !== false
+                  ? session.user.email ??
+                    (typeof token.email === 'string' ? token.email : null)
+                  : null,
               organizationSelection: null,
             })) ||
             (typeof token.organizationId === 'string' && token.organizationId.trim()

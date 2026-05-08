@@ -9,6 +9,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { normalizeSessionOrganizationId } from '@/lib/profile/organization';
+import { createServerClient } from '@/lib/supabase';
 import { hasPermission } from '@/lib/rbac/permissions';
 import { Permissions } from '@/lib/rbac/types';
 import { logServerError } from '@/lib/server/logger';
@@ -46,6 +47,13 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(
         { error: 'Organization ID required' },
         { status: 400 }
+      );
+    }
+
+    if (!(await isOrganizationMember(session.user.id, orgId))) {
+      return NextResponse.json(
+        { error: 'Forbidden: not a member of this organization' },
+        { status: 403 }
       );
     }
 
@@ -195,6 +203,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    if (!(await isOrganizationMember(session.user.id, orgId))) {
+      return NextResponse.json(
+        { error: 'Forbidden: not a member of this organization' },
+        { status: 403 }
+      );
+    }
+
     // Verify user has admin access to this org
     const permCheck = await hasPermission(session.user.id, orgId, Permissions.AUDIT_LOG_VIEW);
     if (!permCheck.allowed) {
@@ -243,4 +258,22 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
+}
+
+async function isOrganizationMember(userId: string, orgId: string): Promise<boolean> {
+  const supabase = createServerClient();
+  const { data, error } = await supabase
+    .from('organization_members')
+    .select('user_id')
+    .eq('organization_id', orgId)
+    .eq('user_id', userId)
+    .limit(1)
+    .maybeSingle();
+
+  if (error) {
+    logServerError('Audit membership precheck error', error, { userId, orgId });
+    return false;
+  }
+
+  return Boolean(data);
 }

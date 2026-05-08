@@ -2,6 +2,7 @@ import type { NextRequest } from 'next/server';
 import { getAuthorUiService, type AuthorUiService } from '@/lib/author/ui/service';
 import { getUsage } from '@/lib/api-keys';
 import type { ApiKeyPeriod, ValidatedApiKey } from '@/lib/api-keys';
+import { escapePostgrestOrFilter } from '@/lib/postgrest-filters';
 
 type JsonRecord = Record<string, unknown>;
 
@@ -179,7 +180,10 @@ export async function searchEntities(
   query: string,
   request: NextRequest
 ) {
-  const result = await service.search(toInternalProjectId(publicProjectId), query);
+  const safeQuery = escapePostgrestOrFilter(query);
+  const result = safeQuery
+    ? await service.search(toInternalProjectId(publicProjectId), safeQuery)
+    : { results: [] };
   const entities = result.results.map((item, index) => toRecallEntity(item, index));
   const page = paginate(entities, request);
   return {
