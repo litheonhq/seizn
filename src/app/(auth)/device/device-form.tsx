@@ -7,6 +7,16 @@ import { getErrorMessage } from "@/lib/ui-error";
 
 type Step = "input" | "confirming" | "approved" | "denied" | "error" | "expired";
 
+function getCsrfToken(): string | null {
+  const match = document.cookie.match(/(?:^|;\s*)seizn_csrf_token=([^;]+)/);
+  return match ? decodeURIComponent(match[1]) : null;
+}
+
+function csrfHeaders(base: Record<string, string>): Record<string, string> {
+  const token = getCsrfToken();
+  return token ? { ...base, "x-csrf-token": token } : base;
+}
+
 export default function DeviceForm() {
   const router = useRouter();
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
@@ -71,7 +81,7 @@ export default function DeviceForm() {
     try {
       const res = await fetch("/api/auth/device/approve", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: csrfHeaders({ "Content-Type": "application/json" }),
         body: JSON.stringify({ user_code: userCode, action: "approve" }),
       });
 
@@ -95,7 +105,7 @@ export default function DeviceForm() {
     try {
       await fetch("/api/auth/device/approve", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: csrfHeaders({ "Content-Type": "application/json" }),
         body: JSON.stringify({ user_code: userCode, action: "deny" }),
       });
       setStep("denied");

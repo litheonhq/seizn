@@ -340,6 +340,21 @@ export async function checkCustomRateLimitAsync(
 }
 
 /**
+ * Peek a caller-defined rate limit without incrementing it.
+ */
+export async function peekCustomRateLimitAsync(
+  identifier: string,
+  limit: number,
+  windowMs: number
+): Promise<RateLimitResult> {
+  const redis = getRedisClient();
+  if (redis) {
+    return peekRateLimitRedis(redis, identifier, limit, windowMs);
+  }
+  return peekRateLimitMemory(identifier, limit, windowMs);
+}
+
+/**
  * Get rate limit headers for response
  */
 export function getRateLimitHeaders(result: RateLimitResult): Record<string, string> {
