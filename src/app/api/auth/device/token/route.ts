@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { hashApiKey } from '@/lib/api-key';
 import { createServerClient } from '@/lib/supabase';
 import { logServerError } from '@/lib/server/logger';
 
@@ -44,17 +45,47 @@ export async function POST(request: NextRequest) {
     }
 
     if (authCode.status === 'approved' && authCode.api_key_id) {
-      // Fetch the API key to return the token
+      if (!authCode.access_token) {
+        return NextResponse.json({ error: 'token_already_retrieved' }, { status: 410 });
+      }
+
+      const tokenHash = hashApiKey(authCode.access_token);
+      if (authCode.access_token_hash && authCode.access_token_hash !== tokenHash) {
+        logServerError('Device token hash mismatch', new Error('access_token_hash mismatch'), {
+          deviceAuthCodeId: authCode.id,
+        });
+        return NextResponse.json({ error: 'invalid_grant' }, { status: 400 });
+      }
+
       const { data: apiKey } = await supabase
         .from('api_keys')
-        .select('key_prefix')
+        .select('id')
         .eq('id', authCode.api_key_id)
+        .eq('key_hash', tokenHash)
+        .eq('is_active', true)
         .single();
 
-      // The actual key was stored temporarily in the device auth record
-      // when the user approved it on the verification page
+      if (!apiKey) {
+        return NextResponse.json({ error: 'invalid_grant' }, { status: 400 });
+      }
+
+      const { data: claimed, error: claimError } = await supabase
+        .from('device_auth_codes')
+        .update({
+          access_token: null,
+          access_token_hash: tokenHash,
+        })
+        .eq('id', authCode.id)
+        .eq('access_token', authCode.access_token)
+        .select('id')
+        .single();
+
+      if (claimError || !claimed) {
+        return NextResponse.json({ error: 'token_already_retrieved' }, { status: 410 });
+      }
+
       return NextResponse.json({
-        access_token: authCode.access_token || apiKey?.key_prefix,
+        access_token: authCode.access_token,
         token_type: 'bearer',
         expires_in: 31536000, // 1 year
       });
@@ -66,4 +97,3 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'server_error' }, { status: 500 });
   }
 }
-

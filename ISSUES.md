@@ -131,3 +131,9 @@
 **Symptom:** Scoped API keys could carry an organization binding that did not match the validated scope owner, and legacy API key validation trusted `api_keys.organization_id` directly.
 **Cause:** Scope configuration validation did not reject user-scoped organization/project bindings, and API key authentication did not re-check organization membership before returning an organization context.
 **Resolution:** Added scoped config validation, membership checks for organization/project scoped API keys, normalized user-scope updates, and route-level `graph:*` / `fall:*` scope enforcement with focused regression tests.
+
+### Device Flow Plaintext Token Persistence
+**Date:** 2026-05-09
+**Symptom:** Approved device-flow rows kept the raw API token in `device_auth_codes.access_token`, and repeated token polls could receive the same bearer token.
+**Cause:** The device authorization flow used the DB row as temporary token transfer storage but did not retain a hash-only record after first retrieval.
+**Resolution:** Added `device_auth_codes.access_token_hash`, backfilled SHA-256 hashes for existing active flows without dropping `access_token`, wrote hashes during approval, and changed `/api/auth/device/token` to atomically clear the raw token on first successful poll. A later cleanup migration can drop `access_token` after all flows older than 15 minutes have expired.

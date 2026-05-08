@@ -11,6 +11,7 @@
  */
 
 import { createServerClient } from '@/lib/supabase';
+import { escapePostgrestOrFilter } from '@/lib/postgrest-filters';
 import Anthropic from '@anthropic-ai/sdk';
 
 // ============================================
@@ -438,11 +439,16 @@ export class KnowledgeGraphStore {
     query: string,
     limit: number = 10
   ): Promise<Entity[]> {
+    const safeQuery = escapePostgrestOrFilter(query);
+    if (!safeQuery) {
+      return [];
+    }
+
     const { data, error } = await this.supabase
       .from('graph_entities')
       .select('*')
       .eq('graph_id', graphId)
-      .or(`name.ilike.%${query}%,aliases.cs.{${query}}`)
+      .or(`name.ilike.%${safeQuery}%,aliases.cs.{${safeQuery}}`)
       .limit(limit);
 
     if (error) throw new Error(`Failed to search entities: ${error.message}`);
