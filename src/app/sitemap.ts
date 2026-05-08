@@ -75,6 +75,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/legal/refund', priority: 0.5, changeFreq: 'monthly' as const },
     { path: '/legal/subprocessors', priority: 0.5, changeFreq: 'monthly' as const },
     { path: '/legal/ai-disclosure', priority: 0.6, changeFreq: 'monthly' as const },
+    { path: '/legal/dpa', priority: 0.5, changeFreq: 'monthly' as const },
   ];
 
   for (const route of localizedLegalRoutes) {

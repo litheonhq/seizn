@@ -8,6 +8,7 @@ export default function NotFound() {
       style={{ background: "var(--ink-50)" }}
     >
       <div className="w-full max-w-lg">
+        <h1 className="sr-only">Page not found</h1>
         <ErrorState
           title="Page not found"
           body={

@@ -34,7 +34,7 @@ export const LEGAL_DOCUMENT_LABELS: Record<LegalContentLocale, Record<LegalDocum
     refund: "환불 정책",
     subprocessors: "수탁 처리자",
     "ai-disclosure": "AI 공시",
-    dpa: "DPA",
+    dpa: "데이터 처리 계약",
   },
   ja: {
     privacy: "プライバシー",
@@ -43,7 +43,7 @@ export const LEGAL_DOCUMENT_LABELS: Record<LegalContentLocale, Record<LegalDocum
     refund: "返金ポリシー",
     subprocessors: "再委託先",
     "ai-disclosure": "AI 開示",
-    dpa: "DPA",
+    dpa: "データ処理契約",
   },
   zh: {
     privacy: "隐私",
@@ -52,7 +52,7 @@ export const LEGAL_DOCUMENT_LABELS: Record<LegalContentLocale, Record<LegalDocum
     refund: "退款政策",
     subprocessors: "次处理方",
     "ai-disclosure": "AI 披露",
-    dpa: "DPA",
+    dpa: "数据处理协议",
   },
 };
 

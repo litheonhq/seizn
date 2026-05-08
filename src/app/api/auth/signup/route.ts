@@ -263,12 +263,18 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Send welcome email (non-blocking)
+    // Send welcome email (non-blocking).
+    // Locale derived from Accept-Language so KR signups get a ko greeting.
+    // profiles.locale column would be more durable; tracked for a follow-up.
     if (!DISABLE_WELCOME_EMAIL) {
+      const acceptLang = (request.headers.get('accept-language') ?? '').toLowerCase();
+      const emailLocale = acceptLang.startsWith('ko') ? 'ko' : 'en';
       sendEmail({
         to: email,
-        subject: 'Welcome to Seizn!',
-        html: welcomeEmail(name || ''),
+        subject: emailLocale === 'ko'
+          ? 'Seizn에 오신 것을 환영합니다.'
+          : 'Welcome to Seizn!',
+        html: welcomeEmail(name || '', emailLocale),
       }).catch((error) => logServerError('Failed to send welcome email', error));
     }
 

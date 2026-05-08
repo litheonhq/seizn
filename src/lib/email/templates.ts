@@ -4,6 +4,22 @@ function tBilingual(en: string, ko: string, locale: EmailLocale): string {
   return locale === 'ko' ? ko : en;
 }
 
+/**
+ * Defense-in-depth href sanitizer. Today every caller passes a backend-built
+ * https URL (Stripe invoice URL, internal /confirm endpoint, etc.). If a future
+ * caller ever passes a user-controlled value through, this guard prevents
+ * `javascript:` / `data:` schemes from rendering as a clickable link in the
+ * email body. Returns `#` for any non-http(s) input.
+ */
+function safeUrl(value: string): string {
+  if (typeof value !== 'string') return '#';
+  const lower = value.trim().toLowerCase();
+  if (!lower.startsWith('http://') && !lower.startsWith('https://')) {
+    return '#';
+  }
+  return escapeHtml(value);
+}
+
 function escapeHtml(value: string): string {
   return value
     .replace(/&/g, '&amp;')
@@ -76,12 +92,12 @@ function baseTemplate(content: string, previewText?: string) {
 
 // Welcome email when user signs up
 export function welcomeEmail(name: string, locale: EmailLocale = 'en') {
-  const safeName = escapeHtml(name || (locale === 'ko' ? '작가님' : 'there'));
+  const safeName = escapeHtml(name || (locale === 'ko' ? '고객님' : 'there'));
   const heading = tBilingual('Welcome to Seizn!', 'Seizn에 오신 것을 환영합니다.', locale);
-  const greeting = tBilingual(`Hi ${safeName},`, `${safeName}, 안녕하세요.`, locale);
+  const greeting = tBilingual(`Hi ${safeName},`, `안녕하세요, ${safeName}님.`, locale);
   const intro = tBilingual(
     'Thanks for joining Seizn! You now have access to powerful AI memory infrastructure that helps your applications remember everything.',
-    'Seizn 가입을 축하드립니다. 이제 작품·앱이 일관된 기억을 갖도록 도와주는 AI 메모리 인프라를 사용할 수 있습니다.',
+    'Seizn 가입을 축하드립니다. 이제 앱이 일관된 기억을 갖도록 도와주는 AI 메모리 인프라를 사용하실 수 있습니다.',
     locale
   );
   const guideLead = tBilingual("Here's how to get started:", '시작 안내는 다음과 같습니다.', locale);
@@ -236,7 +252,7 @@ export function organizationInviteEmail(
   );
   const subject = tBilingual(
     `${inviterName} invited you to ${organizationName}`,
-    `${inviterName} 님이 ${organizationName}로 초대했습니다`,
+    `${inviterName} 님이 ${organizationName} 조직으로 초대했습니다`,
     locale
   );
 
@@ -244,7 +260,7 @@ export function organizationInviteEmail(
     <h1 style="margin:0 0 16px;font-size:24px;font-weight:600;color:#111827;">${heading}</h1>
     <p style="margin:0 0 24px;font-size:16px;color:#4b5563;line-height:1.6;">${lead}</p>
     <p style="margin:0 0 24px;font-size:16px;color:#4b5563;line-height:1.6;">${body}</p>
-    <a href="${inviteLink}" style="display:inline-block;padding:12px 24px;background-color:#000;color:#fff;text-decoration:none;border-radius:9999px;font-weight:500;">
+    <a href="${safeUrl(inviteLink)}" style="display:inline-block;padding:12px 24px;background-color:#000;color:#fff;text-decoration:none;border-radius:9999px;font-weight:500;">
       ${cta}
     </a>
     <p style="margin:24px 0 0;font-size:14px;color:#6b7280;">${expiry}</p>
@@ -271,7 +287,7 @@ export function passwordResetEmail(resetLink: string, locale: EmailLocale = 'en'
   const content = `
     <h1 style="margin:0 0 16px;font-size:24px;font-weight:600;color:#111827;">${heading}</h1>
     <p style="margin:0 0 24px;font-size:16px;color:#4b5563;line-height:1.6;">${body}</p>
-    <a href="${resetLink}" style="display:inline-block;padding:12px 24px;background-color:#000;color:#fff;text-decoration:none;border-radius:9999px;font-weight:500;">
+    <a href="${safeUrl(resetLink)}" style="display:inline-block;padding:12px 24px;background-color:#000;color:#fff;text-decoration:none;border-radius:9999px;font-weight:500;">
       ${cta}
     </a>
     <p style="margin:24px 0 0;font-size:14px;color:#6b7280;">${note}</p>
@@ -349,16 +365,16 @@ export function paymentFailedEmail(
   invoiceUrl?: string,
   locale: EmailLocale = 'en'
 ) {
-  const safeName = escapeHtml(name || (locale === 'ko' ? '작가님' : 'there'));
+  const safeName = escapeHtml(name || (locale === 'ko' ? '고객님' : 'there'));
   const amountDisplay = amount && currency
     ? `${currency.toUpperCase()} ${(Number(amount) / 100).toFixed(2)}`
     : null;
 
   const heading = tBilingual('Payment failed', '결제가 실패했습니다', locale);
-  const greeting = tBilingual(`Hi ${safeName},`, `${safeName}, 안녕하세요.`, locale);
+  const greeting = tBilingual(`Hi ${safeName},`, `안녕하세요, ${safeName}님.`, locale);
   const body = tBilingual(
     `We were unable to process your latest payment${amountDisplay ? ` of <strong>${amountDisplay}</strong>` : ''}. Please update your payment method to avoid any service interruptions.`,
-    `최근 결제${amountDisplay ? ` (<strong>${amountDisplay}</strong>)` : ''}가 처리되지 않았습니다. 서비스 중단을 막기 위해 결제 수단을 업데이트해주세요.`,
+    `최근 결제${amountDisplay ? ` (<strong>${amountDisplay}</strong>)` : ''}가 처리되지 않았습니다. 서비스 중단을 막기 위해 결제 수단을 업데이트해 주시기 바랍니다.`,
     locale
   );
   const warningBox = tBilingual(
@@ -383,7 +399,7 @@ export function paymentFailedEmail(
       <p style="margin:0;font-size:14px;color:#991b1b;">${warningBox}</p>
     </div>
     ${invoiceUrl ? `
-    <a href="${invoiceUrl}" style="display:inline-block;padding:12px 24px;background-color:#000;color:#fff;text-decoration:none;border-radius:9999px;font-weight:500;margin-bottom:12px;">
+    <a href="${safeUrl(invoiceUrl)}" style="display:inline-block;padding:12px 24px;background-color:#000;color:#fff;text-decoration:none;border-radius:9999px;font-weight:500;margin-bottom:12px;">
       ${ctaInvoice}
     </a>
     <br>` : ''}
@@ -407,9 +423,9 @@ export function signupConfirmEmail(
   confirmLink: string,
   locale: EmailLocale = 'en'
 ) {
-  const safeName = escapeHtml(name || (locale === 'ko' ? '작가님' : 'there'));
+  const safeName = escapeHtml(name || (locale === 'ko' ? '고객님' : 'there'));
   const heading = tBilingual('Confirm your email', '이메일 인증', locale);
-  const greeting = tBilingual(`Hi ${safeName},`, `${safeName}, 안녕하세요.`, locale);
+  const greeting = tBilingual(`Hi ${safeName},`, `안녕하세요, ${safeName}님.`, locale);
   const body = tBilingual(
     'Click below to confirm your email and activate your Seizn account. Without confirmation, your API access stays disabled.',
     '아래 버튼을 눌러 이메일을 인증해주세요. 인증을 마쳐야 Seizn 계정이 활성화되고 API 사용이 시작됩니다.',
@@ -431,7 +447,7 @@ export function signupConfirmEmail(
     <h1 style="margin:0 0 16px;font-size:24px;font-weight:600;color:#1a1612;">${heading}</h1>
     <p style="margin:0 0 24px;font-size:16px;color:#4a4338;line-height:1.6;">${greeting}</p>
     <p style="margin:0 0 24px;font-size:16px;color:#4a4338;line-height:1.6;">${body}</p>
-    <a href="${confirmLink}" style="display:inline-block;padding:12px 24px;background-color:#c96442;color:#fbf8f2;text-decoration:none;border-radius:9999px;font-weight:500;">
+    <a href="${safeUrl(confirmLink)}" style="display:inline-block;padding:12px 24px;background-color:#c96442;color:#fbf8f2;text-decoration:none;border-radius:9999px;font-weight:500;">
       ${cta}
     </a>
     <p style="margin:24px 0 0;font-size:14px;color:#6f6655;">${expiry}</p>
@@ -454,10 +470,10 @@ export function paymentReceiptEmail(
   },
   locale: EmailLocale = 'en'
 ) {
-  const safeName = escapeHtml(params.name || (locale === 'ko' ? '작가님' : 'there'));
+  const safeName = escapeHtml(params.name || (locale === 'ko' ? '고객님' : 'there'));
   const amountDisplay = `${params.currency.toUpperCase()} ${(Number(params.amount) / 100).toFixed(2)}`;
   const heading = tBilingual('Payment Receipt', '결제 영수증', locale);
-  const greeting = tBilingual(`Hi ${safeName},`, `${safeName}, 안녕하세요.`, locale);
+  const greeting = tBilingual(`Hi ${safeName},`, `안녕하세요, ${safeName}님.`, locale);
   const body = tBilingual(
     'Thank you for your payment. Here are the details:',
     '결제가 완료되었습니다. 상세 내역은 아래와 같습니다.',
@@ -482,7 +498,7 @@ export function paymentReceiptEmail(
       </table>
     </div>
     ${params.invoiceUrl ? `
-    <a href="${params.invoiceUrl}" style="display:inline-block;padding:12px 24px;background-color:#c96442;color:#fbf8f2;text-decoration:none;border-radius:9999px;font-weight:500;">
+    <a href="${safeUrl(params.invoiceUrl)}" style="display:inline-block;padding:12px 24px;background-color:#c96442;color:#fbf8f2;text-decoration:none;border-radius:9999px;font-weight:500;">
       ${cta}
     </a>` : ''}
   `;
@@ -527,10 +543,10 @@ export function foundingMemberRelaunchEmail(
     <p style="margin:0 0 16px;font-size:16px;color:#4a4338;line-height:1.6;">${greeting}</p>
     <p style="margin:0 0 16px;font-size:16px;color:#4a4338;line-height:1.6;">${body1}</p>
     <p style="margin:0 0 24px;font-size:16px;color:#4a4338;line-height:1.6;">${body2}</p>
-    <a href="${params.reconsentUrl}" style="display:inline-block;padding:12px 24px;background-color:#c96442;color:#fbf8f2;text-decoration:none;border-radius:9999px;font-weight:500;margin-right:8px;">
+    <a href="${safeUrl(params.reconsentUrl)}" style="display:inline-block;padding:12px 24px;background-color:#c96442;color:#fbf8f2;text-decoration:none;border-radius:9999px;font-weight:500;margin-right:8px;">
       ${ctaPrimary}
     </a>
-    <a href="${params.legalDiffUrl}" style="display:inline-block;padding:12px 20px;color:#4a4338;text-decoration:underline;font-size:14px;">
+    <a href="${safeUrl(params.legalDiffUrl)}" style="display:inline-block;padding:12px 20px;color:#4a4338;text-decoration:underline;font-size:14px;">
       ${ctaSecondary}
     </a>
     <p style="margin:24px 0 0;font-size:13px;color:#6f6655;">${footer}</p>
@@ -570,7 +586,7 @@ export function waitlistConfirmEmail(
   const content = `
     <h1 style="margin:0 0 16px;font-size:24px;font-weight:600;color:#1a1612;">${heading}</h1>
     <p style="margin:0 0 24px;font-size:16px;color:#4a4338;line-height:1.6;">${body}</p>
-    <a href="${confirmLink}" style="display:inline-block;padding:12px 24px;background-color:#c96442;color:#fbf8f2;text-decoration:none;border-radius:9999px;font-weight:500;">
+    <a href="${safeUrl(confirmLink)}" style="display:inline-block;padding:12px 24px;background-color:#c96442;color:#fbf8f2;text-decoration:none;border-radius:9999px;font-weight:500;">
       ${cta}
     </a>
     <p style="margin:24px 0 0;font-size:14px;color:#6f6655;">${expiry}</p>

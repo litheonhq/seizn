@@ -6,7 +6,7 @@ generated_at: 2026-05-09
 status: draft (lawyer review pending)
 master: true
 applies_to: seizn.com (Author flagship), engine.seizn.com (NPC SDK surface)
-data_controller: Litheon LLC, Wyoming, USA
+data_processor: Litheon LLC, Wyoming, USA
 ---
 
 # Data Processing Agreement (DPA)

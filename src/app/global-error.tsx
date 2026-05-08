@@ -10,12 +10,13 @@ export default function GlobalError({
   reset: () => void;
 }) {
   return (
-    <html>
+    <html lang="en">
       <body
         className="min-h-screen flex items-center justify-center p-4"
         style={{ background: "var(--ink-50)" }}
       >
         <main className="w-full max-w-lg">
+          <h1 className="sr-only">Something went wrong</h1>
           <ErrorState
             title="Something went wrong"
             body="We apologize for the inconvenience. Our team has been notified."

@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
 import { locales, type Locale, isRtl } from "@/i18n/config";
 import { getDictionary } from "@/i18n/get-dictionary";
@@ -163,16 +164,16 @@ export default async function LocaleLayout({
         {/* DNS prefetch for API endpoints */}
         <link rel="dns-prefetch" href="https://api.seizn.com" />
         <link rel="dns-prefetch" href="https://analytics.seizn.com" />
-        {/* Plausible — cookieless, IP-anonymized, GDPR/PIPA exempt from consent gate */}
-        <script
-          defer
-          data-domain="seizn.com"
-          src="https://analytics.seizn.com/js/script.js"
-        />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable} antialiased`}
       >
+        {/* Plausible — cookieless, IP-anonymized, GDPR/PIPA exempt from consent gate */}
+        <Script
+          src="https://analytics.seizn.com/js/script.js"
+          data-domain="seizn.com"
+          strategy="afterInteractive"
+        />
         <GoogleAnalytics />
         {children}
         <CookieBanner locale={locale} />

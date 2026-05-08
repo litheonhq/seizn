@@ -51,6 +51,7 @@ const nextConfig: NextConfig = {
         isProduction ? '' : "'unsafe-eval'",
         'https://challenges.cloudflare.com',
         'https://js.stripe.com',
+        'https://analytics.seizn.com',
       ].filter(Boolean).join(' '),
       "connect-src 'self' https: wss:",
       "frame-src 'self' https://challenges.cloudflare.com https://js.stripe.com https://checkout.stripe.com",
