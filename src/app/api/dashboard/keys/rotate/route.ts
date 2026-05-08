@@ -77,9 +77,10 @@ export async function POST(request: NextRequest) {
     if (user.email && !DISABLE_KEY_EMAILS) {
       const acceptLang = (request.headers.get('accept-language') ?? '').toLowerCase();
       const emailLocale: 'ko' | 'en' = acceptLang.startsWith('ko') ? 'ko' : 'en';
+      const safeNameForSubject = existingKey.name.replace(/[\r\n]+/g, ' ');
       sendEmail({
         to: user.email,
-        subject: emailLocale === 'ko' ? `API 키 회전: ${existingKey.name}` : `API Key Rotated: ${existingKey.name}`,
+        subject: emailLocale === 'ko' ? `API 키 회전: ${safeNameForSubject}` : `API Key Rotated: ${safeNameForSubject}`,
         html: apiKeyRotatedEmail(existingKey.name, prefix, emailLocale),
       }).catch((error) => logServerError('Failed to send API key rotation notification', error));
     }

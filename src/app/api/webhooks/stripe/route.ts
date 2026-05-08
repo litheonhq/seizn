@@ -263,12 +263,12 @@ async function findUser(
   supabase: ReturnType<typeof createServerClient>,
   customerId: string | undefined,
   customUserId: string | undefined | null
-): Promise<{ id: string; email?: string; full_name?: string } | null> {
+): Promise<{ id: string; email?: string; full_name?: string; language?: string } | null> {
   // Try finding by Stripe customer ID first
   if (customerId) {
     const { data: profile } = await supabase
       .from("profiles")
-      .select("id, email, full_name")
+      .select("id, email, full_name, language")
       .eq("stripe_customer_id", customerId)
       .single();
 
@@ -279,7 +279,7 @@ async function findUser(
   if (customUserId) {
     const { data: profile } = await supabase
       .from("profiles")
-      .select("id, email, full_name")
+      .select("id, email, full_name, language")
       .eq("id", customUserId)
       .single();
 
@@ -1200,14 +1200,18 @@ export async function POST(request: NextRequest) {
 
         // Send payment failed notification email
         if (user?.email) {
+          const emailLocale: 'ko' | 'en' = user.language === 'ko' ? 'ko' : 'en';
           await sendEmail({
             to: user.email,
-            subject: 'Action required: Your Seizn payment failed',
+            subject: emailLocale === 'ko'
+              ? '확인 필요: Seizn 결제가 실패했습니다'
+              : 'Action required: Your Seizn payment failed',
             html: paymentFailedEmail(
               user.full_name || 'there',
               String(eventData.amount_due),
               eventData.currency,
-              eventData.hosted_invoice_url
+              eventData.hosted_invoice_url,
+              emailLocale
             ),
           }).catch((err) => console.error('Failed to send payment failure email:', err));
         }
