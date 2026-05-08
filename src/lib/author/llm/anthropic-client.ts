@@ -1,4 +1,5 @@
 import Anthropic from '@anthropic-ai/sdk';
+import { randomUUID } from 'crypto';
 import {
   buildAnthropicSdkDefaultHeaders,
   buildCachedSystemPrompt,
@@ -114,7 +115,11 @@ export class AuthorAnthropicClient {
     const response = await this.createWithRetry(client, request, model);
     const text = extractText(response);
     const usage = calculateAuthorBillableUsageTokens(response.usage);
-    const requestId = response._request_id ?? response.id ?? request.requestId ?? `author-${Date.now()}`;
+    // R28 M4 — never honor caller-supplied request.requestId for the
+    // recorded value. Pre-fix, a malicious client could pin downstream
+    // dedup / tracing identifiers. Server-side fallback uses a fresh
+    // UUID-shaped string when neither provider response carries one.
+    const requestId = response._request_id ?? response.id ?? `author-anthropic-${randomUUID()}`;
     const json = request.responseFormat === 'json'
       ? parseAndValidateJson<TJson>(text, request.jsonSchema, 'Anthropic')
       : undefined;
