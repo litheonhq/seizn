@@ -162,6 +162,13 @@ export default async function LocaleLayout({
       <head>
         {/* DNS prefetch for API endpoints */}
         <link rel="dns-prefetch" href="https://api.seizn.com" />
+        <link rel="dns-prefetch" href="https://analytics.seizn.com" />
+        {/* Plausible — cookieless, IP-anonymized, GDPR/PIPA exempt from consent gate */}
+        <script
+          defer
+          data-domain="seizn.com"
+          src="https://analytics.seizn.com/js/script.js"
+        />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable} antialiased`}
