@@ -170,13 +170,16 @@ export default async function LocaleLayout({
       >
         {/*
          * Plausible — cookieless, IP-anonymized, GDPR/PIPA exempt from consent gate.
-         * beforeInteractive injects in <head> so the first auto-pageview fires
-         * synchronously with page load (matches Plausible's documented placement).
+         * Uses afterInteractive (default for body-rendered Script). beforeInteractive
+         * is invalid here because [locale]/layout.tsx is a NESTED layout, not the
+         * root layout — Next.js throws in production. The single-pageview-drop
+         * concern that motivated beforeInteractive is mitigated by Plausible's
+         * History API patch attaching once and persisting across SPA nav.
          */}
         <Script
           src="https://analytics.seizn.com/js/script.js"
           data-domain="seizn.com"
-          strategy="beforeInteractive"
+          strategy="afterInteractive"
         />
         <GoogleAnalytics />
         {children}
