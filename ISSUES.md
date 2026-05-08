@@ -1,3 +1,18 @@
+### BYOK Encryption KDF Collapse — Re-encryption Pending
+**날짜:** 2026-05-09  
+**증상:** R27 보안 audit에서 `getEncryptionKey()`가 `BYOK_ENCRYPTION_SECRET || NEXTAUTH_SECRET` + `BYOK_ENCRYPTION_SALT || NEXTAUTH_SECRET`로 fallback. 두 환경변수 모두 미설정 시 scrypt(NEXTAUTH_SECRET, NEXTAUTH_SECRET) — salt 효과 무력화.  
+**원인:** R-prior 시점부터 dev ergonomics 위해 fallback 허용했지만 prod 검증 부재.  
+**해결 (R28.1):** `src/lib/byok/encryption.ts`에서 prod 시 `BYOK_ENCRYPTION_SECRET`/`BYOK_ENCRYPTION_SALT` 명시 필수 + 두 값이 같으면 throw. dev는 fallback 허용 + console.warn 1회.  
+**잔여 작업 (operator action):**  
+1. Vercel prod env에 `BYOK_ENCRYPTION_SECRET` (랜덤 32+ bytes base64), `BYOK_ENCRYPTION_SALT` (다른 32+ bytes base64) 설정.  
+2. R28 배포 후 prod 시작 실패 시 위 1번 조치.  
+3. **기존 암호화된 BYOK 키 row 재암호화**: 현재 prod의 `provider_keys.key_encrypted`는 collapsed KDF로 암호화됨. 새 KEK으로 교체하려면:  
+   - 임시로 `BYOK_ENCRYPTION_SECRET=BYOK_ENCRYPTION_SALT=<NEXTAUTH_SECRET 값>` 으로 호환 시작  
+   - 백그라운드 작업 또는 마이그레이션 스크립트로 row별 decrypt → 새 KEK으로 re-encrypt → key_version column 갱신  
+   - operator가 새 SECRET/SALT 값으로 env 교체  
+   - **현재는 사용자 0명, encrypted row 0개 — 재암호화 마이그레이션 우선순위 낮음**. Charter 모집 + 첫 BYOK 등록 시점에 이 잔여 작업 재평가.  
+**참조:** `src/lib/byok/encryption.ts:28-77`, R27 audit (이 세션).
+
 ### Supabase Autopilot Migration Prerequisite Missing
 **날짜:** 2026-02-14  
 **증상:** `20260214_autopilot_prbot_schema.sql` 적용 시 `autopilot_analyses` 등 base autopilot 테이블이 없어 실패.  

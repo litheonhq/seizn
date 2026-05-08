@@ -1,4 +1,5 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import { randomUUID } from 'crypto';
 import {
   calculateAuthorBillableUsageTokens,
   enforceAuthorTokenBudget,
@@ -120,7 +121,9 @@ export class AuthorGeminiClient {
       input_tokens: usageMetadata.promptTokenCount ?? null,
       output_tokens: usageMetadata.candidatesTokenCount ?? null,
     });
-    const requestId = request.requestId ?? `author-google-${Date.now()}`;
+    // R28 M4 — server-side requestId; Gemini SDK 0.24.1 doesn't carry
+    // a response-level request id, so we always mint server-side.
+    const requestId = `author-google-${randomUUID()}`;
     const json = request.responseFormat === 'json'
       ? parseAndValidateJson<TJson>(text, request.jsonSchema, 'Gemini')
       : undefined;
@@ -282,8 +285,15 @@ function extractText(result: GeminiGenerateContentResultLike): string {
     // confusing INVALID_JSON_RESPONSE, and the user gets billed for a
     // black-box failure. Surface explicitly so admin logs / alerts
     // attribute the failure correctly.
+    //
+    // R28 M2 — pass the SDK's err.message through redactProviderError
+    // before embedding into the thrown AuthorLlmError. Today SDK 0.24.1
+    // only includes finishReason in this path, but a future version
+    // could include blocked-content snippets that would otherwise leak
+    // through the error envelope (and onto admin dashboards / Datadog).
     const finishReason = result.response.candidates?.[0]?.finishReason ?? 'unknown';
-    const cause = err instanceof Error ? err.message : String(err);
+    const rawCause = err instanceof Error ? err.message : String(err);
+    const cause = redactProviderError(rawCause);
     throw new AuthorLlmError(
       'GEMINI_REQUEST_FAILED',
       `Gemini response could not be read (finishReason=${finishReason}): ${cause}`,
