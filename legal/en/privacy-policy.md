@@ -134,7 +134,7 @@ We may update this policy. Material changes will be announced by email and an in
 
 - Privacy questions: privacy@seizn.com
 - Data protection officer: dpo@seizn.com
-- Postal: Litheon LLC, [Wyoming registered agent address — TBD before launch]
+- Postal: Litheon LLC, 30 N Gould St Ste R, Sheridan, WY 82801, USA
 
 ---
 
