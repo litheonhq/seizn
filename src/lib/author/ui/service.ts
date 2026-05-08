@@ -38,6 +38,7 @@ import {
   type ExtractedAuthorCandidate,
 } from '@/lib/author/extraction';
 import { checkFeatureGate, recordFeatureUsage } from '@/lib/author/billing/feature-gate';
+import { isByokProvider, type ByokProvider } from '@/lib/author/llm';
 import { recordFirstFunnelEvent } from '@/lib/analytics/funnel';
 import { InMemoryAuthorUiStore } from './in-memory-store';
 import { conflictStatusForDecision, normalizeConflictResolution } from './conflict-resolution';
@@ -263,7 +264,7 @@ interface AuthorUiState {
   uiStore?: AuthorUiStore;
   byok: {
     enabled: boolean;
-    provider: 'anthropic' | 'google' | 'openai' | null;
+    provider: ByokProvider | null;
     key_last_4?: string | null;
     verified_at?: string | null;
     status: 'active' | 'invalid' | 'revoked' | 'missing' | null;
@@ -2102,7 +2103,7 @@ function buildDefaultSettings() {
     },
     byok: {
       enabled: false,
-      provider: null as 'anthropic' | 'google' | 'openai' | null,
+      provider: null as ByokProvider | null,
       key_last_4: null as string | null,
     },
     usage: {
@@ -2499,11 +2500,11 @@ function actionToStatus(action: string): FactStatus {
   }
 }
 
-function isProvider(value: unknown): value is 'anthropic' | 'google' | 'openai' {
-  return value === 'anthropic' || value === 'google' || value === 'openai';
+function isProvider(value: unknown): value is ByokProvider {
+  return isByokProvider(value);
 }
 
-function isProviderKey(provider: 'anthropic' | 'google' | 'openai', key: string): boolean {
+function isProviderKey(provider: ByokProvider, key: string): boolean {
   if (provider === 'anthropic') {
     return key.startsWith('sk-ant-') && key.length >= 14;
   }
