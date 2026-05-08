@@ -64,13 +64,29 @@ export async function generateAuthorLlm<TJson = unknown>(
     console.warn(
       `[author-llm] failover ${primary} → ${secondary} for user ${request.userId}: ${describeError(error)}`,
     );
+    // Round 5 audit fix: shallow-spread `request` so any caller-supplied
+    // effort/model/maxTokens survives the failover; only the provider
+    // field gets overridden. AUTHOR_LLM_EFFORT env stays the fallback
+    // for callers that didn't set effort explicitly.
     try {
       return await invokeProvider<TJson>(secondary, { ...request, provider: secondary });
     } catch (failoverError) {
       console.error(
         `[author-llm] failover ${primary} → ${secondary} also failed for user ${request.userId}: ${describeError(failoverError)}`,
       );
-      // Surface the secondary's error so caller sees the most recent failure.
+      // Round 5 audit fix: don't mask the original primary error with a
+      // misleading "secondary not configured" message. If the secondary
+      // failed because the server doesn't have a key for it (Managed
+      // setup with only one provider configured), surface the primary
+      // error since that's what the user actually hit.
+      if (
+        failoverError instanceof AuthorLlmError &&
+        failoverError.code === 'LLM_NOT_CONFIGURED'
+      ) {
+        throw error;
+      }
+      // Otherwise the secondary's error is informative (e.g., its own
+      // rate limit, schema validation). Surface it.
       throw failoverError;
     }
   }

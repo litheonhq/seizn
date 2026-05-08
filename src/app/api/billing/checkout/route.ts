@@ -285,7 +285,6 @@ export async function POST(request: NextRequest) {
       userId: session.user.id,
       tier: selection.tier,
       cadence: selection.cadence,
-      byokEnabled: byokStatus.enabled,
     });
     const reusableCheckoutSession = await findReusableCheckoutSession(stripe, {
       customerId: customerState.customerId,
@@ -473,14 +472,16 @@ function createCheckoutMetadata(input: {
   userId: string;
   tier: AuthorBillingTier;
   cadence: BillingCadence;
-  byokEnabled: boolean;
 }): Record<string, string> {
+  // Round 5 audit fix: dropped legacy `byok_discount` metadata key. v9
+  // encodes BYOK pricing as separate Charter price IDs, so the field
+  // was never read back. Stripe-side metadata can only be removed
+  // forward-compat — old sessions still carry it but no code reads it.
   return {
     user_id: input.userId,
     author_billing_tier: input.tier,
     billing_cadence: input.cadence,
     price_lock_version: AUTHOR_PRICE_LOCK_VERSION,
-    byok_discount: input.byokEnabled ? "true" : "false",
     legal_terms_version: CHECKOUT_LEGAL_VERSIONS.terms,
     legal_privacy_version: CHECKOUT_LEGAL_VERSIONS.privacy,
     legal_accepted: "true",
