@@ -99,7 +99,12 @@ export function validateKeyFormat(provider: string, apiKey: string): boolean {
     anthropic: /^sk-ant-[a-zA-Z0-9_-]{32,}$/,
     cohere: /^[a-zA-Z0-9]{32,}$/,
     voyage: /^[a-zA-Z0-9-]{32,}$/,
-    google: /^[a-zA-Z0-9_-]{32,}$/,
+    // R24 H3 — real Google AI Studio keys are exactly `AIza` + 35 chars
+    // (`[0-9A-Za-z_-]`). The pre-fix permissive regex accepted any 32+ char
+    // alphanumeric string; typos / wrong keys passed validation, got stored,
+    // then failed with a 401 on the first generate call. Tighter shape
+    // catches the common copy-paste mistakes upfront.
+    google: /^AIza[0-9A-Za-z_-]{35}$/,
     azure: /^[a-zA-Z0-9]{32}$/,
   };
 

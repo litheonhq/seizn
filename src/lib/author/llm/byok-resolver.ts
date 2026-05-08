@@ -333,12 +333,17 @@ export async function resolveAuthorGoogleKey(
 }
 
 function readManagedGoogleKey(env: NodeJS.ProcessEnv): string | null {
+  // R24 M2 — keep the chain Author-namespaced. Pre-fix included
+  // GOOGLE_API_KEY (used for Maps / other Google services) and
+  // GEMINI_API_KEY (generic) as fallbacks. On Vercel a non-Author key
+  // for some other feature could silently leak into Author Memory v3
+  // calls under "managed" status and bill the wrong budget. The
+  // openai chain has a similar (but less risky) catch-all OPENAI_API_KEY;
+  // Google's surface is broader so we tighten here.
   return (
     env.AUTHOR_GOOGLE_DEV_API_KEY ||
     env.AUTHOR_LLM_GOOGLE_API_KEY ||
     env.LITHEON_GOOGLE_API_KEY ||
-    env.GOOGLE_API_KEY ||
-    env.GEMINI_API_KEY ||
     null
   );
 }
