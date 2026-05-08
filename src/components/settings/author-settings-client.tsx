@@ -82,7 +82,7 @@ export function AuthorSettingsClient({ navigateToBilling = defaultNavigate }: Au
     refresh();
   }, [refresh]);
 
-  const saveByok = useCallback(async (apiKey: string, provider: "anthropic" | "openai" = "anthropic"): Promise<void> => {
+  const saveByok = useCallback(async (apiKey: string, provider: "anthropic" | "google" | "openai" = "anthropic"): Promise<void> => {
     if (!apiKey) {
       throw new Error(copy.byok.missing);
     }
@@ -104,7 +104,7 @@ export function AuthorSettingsClient({ navigateToBilling = defaultNavigate }: Au
     }
   }, [copy.byok.error, copy.byok.missing, refresh]);
 
-  const removeByok = useCallback(async (provider: "anthropic" | "openai" = "anthropic"): Promise<void> => {
+  const removeByok = useCallback(async (provider: "anthropic" | "google" | "openai" = "anthropic"): Promise<void> => {
     setAction("removing");
     setError(null);
     try {

@@ -1,11 +1,18 @@
 import { getUserAuthorLlmProvider } from './user-provider-pref';
 import type { AuthorLlmProvider } from './types';
 
-const VALID_PROVIDERS: ReadonlySet<AuthorLlmProvider> = new Set(['anthropic', 'openai']);
+const VALID_PROVIDERS: ReadonlySet<AuthorLlmProvider> = new Set([
+  'anthropic',
+  'google',
+  'openai',
+]);
 
 function readEnvProvider(env: NodeJS.ProcessEnv = process.env): AuthorLlmProvider | null {
   const raw = env.AUTHOR_LLM_PROVIDER?.trim().toLowerCase();
-  return raw === 'openai' || raw === 'anthropic' ? raw : null;
+  if (raw === 'openai' || raw === 'anthropic' || raw === 'google') {
+    return raw;
+  }
+  return null;
 }
 
 /**
