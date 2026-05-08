@@ -56,6 +56,33 @@ export interface TemporalQueryOptions {
   includeHistory?: boolean;
 }
 
+export interface TemporalQueryInput {
+  asOf?: string | null;
+  supersedesId?: string | null;
+  invalidatedById?: string | null;
+}
+
+const ISO_DATE_OR_TIMESTAMP_PATTERN =
+  /^\d{4}-\d{2}-\d{2}(?:T\d{2}:\d{2}:\d{2}(?:\.\d{1,6})?(?:Z|[+-]\d{2}:\d{2}))?$/;
+
+function isIsoDateOrTimestamp(value: string): boolean {
+  return ISO_DATE_OR_TIMESTAMP_PATTERN.test(value) && !Number.isNaN(Date.parse(value));
+}
+
+export function validateTemporalQuery(input: TemporalQueryInput): void {
+  if (input.asOf != null && !isIsoDateOrTimestamp(input.asOf)) {
+    throw new TemporalValidationError('as_of must be a valid ISO timestamp');
+  }
+
+  if (input.supersedesId != null && !isUuid(input.supersedesId)) {
+    throw new TemporalValidationError('supersedes_id must be a valid UUID');
+  }
+
+  if (input.invalidatedById != null && !isUuid(input.invalidatedById)) {
+    throw new TemporalValidationError('invalidated_by_id must be a valid UUID');
+  }
+}
+
 /**
  * Apply temporal filters to a Supabase query builder. Returns the
  * query unchanged when no filters apply. Caller is responsible for

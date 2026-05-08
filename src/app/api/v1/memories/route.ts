@@ -36,6 +36,7 @@ import {
   applyTemporalFilters,
   isMemoryCanonStatus,
   validateTemporalInputs,
+  validateTemporalQuery,
   TemporalValidationError,
   type MemoryCanonStatus,
 } from '@/lib/temporal/v1';
@@ -1327,6 +1328,18 @@ async function handleGet(request: NextRequest) {
     const before = searchParams.get('before');
     const perspectiveEntityId = searchParams.get('perspective_entity_id')?.trim() || null;
     const asOfParam = searchParams.get('as_of');
+    try {
+      validateTemporalQuery({
+        asOf: asOfParam,
+        supersedesId: searchParams.get('supersedes_id'),
+        invalidatedById: searchParams.get('invalidated_by_id'),
+      });
+    } catch (error) {
+      if (error instanceof TemporalValidationError) {
+        return ValidationErrors.invalidField('as_of', error.message);
+      }
+      throw error;
+    }
     const sortRaw = searchParams.get('sort') || 'created_at';
     const sort: BrowseSortColumn = BROWSE_SORT_COLUMNS.includes(sortRaw as BrowseSortColumn)
       ? (sortRaw as BrowseSortColumn)

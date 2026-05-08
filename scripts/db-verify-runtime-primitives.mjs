@@ -191,11 +191,13 @@ async function main() {
       'status',
       'expires_at',
       'access_token',
+      'access_token_hash',
       'approved_at',
     ]);
     await assertIndexExists(client, 'idx_device_auth_codes_device_code');
     await assertIndexExists(client, 'idx_device_auth_codes_user_code');
     await assertIndexExists(client, 'idx_device_auth_codes_expires_at');
+    await assertIndexExists(client, 'idx_device_auth_codes_access_token_hash');
     await assertFunctionExists(client, 'cleanup_expired_device_codes');
     await assertMatchingColumnTypes(client, 'device_auth_codes', 'user_id', 'profiles', 'id');
     await assertMatchingColumnTypes(client, 'device_auth_codes', 'api_key_id', 'api_keys', 'id');

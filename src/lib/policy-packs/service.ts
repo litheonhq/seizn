@@ -6,6 +6,7 @@
 
 import { SupabaseClient } from '@supabase/supabase-js';
 import crypto from 'crypto';
+import { escapePostgrestOrFilter } from '@/lib/postgrest-filters';
 import type {
   PolicyPack,
   PolicyPackVersion,
@@ -418,8 +419,12 @@ export class PolicyPackService {
       query = query.gte('avg_rating', options.minRating);
     }
     if (options.query) {
+      const safeQuery = escapePostgrestOrFilter(options.query);
+      if (!safeQuery) {
+        return [];
+      }
       query = query.or(
-        `name.ilike.%${options.query}%,display_name.ilike.%${options.query}%,description.ilike.%${options.query}%`
+        `name.ilike.%${safeQuery}%,display_name.ilike.%${safeQuery}%,description.ilike.%${safeQuery}%`
       );
     }
 

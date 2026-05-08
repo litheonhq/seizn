@@ -34,8 +34,8 @@ export async function GET() {
     const supabase = createServerClient();
 
     const { data, error } = await supabase
-      .from("provider_keys")
-      .select("id, provider, key_hint, is_active, is_default, label, last_used_at, usage_count, total_cost_usd, created_at")
+      .from("provider_keys_public")
+      .select("id, provider, key_last_4, is_active, is_default, label, last_used_at, usage_count, total_cost_usd, created_at")
       .eq("user_id", session.user.id)
       .order("created_at", { ascending: false });
 
@@ -126,7 +126,7 @@ export async function POST(request: NextRequest) {
         label: label || `${provider} key`,
         is_default: isDefault || false,
       })
-      .select("id, provider, key_hint, label, is_default, created_at")
+      .select("id, provider, label, is_default, created_at")
       .single();
 
     if (error) {
@@ -152,7 +152,7 @@ export async function POST(request: NextRequest) {
     });
 
     return successResponse(
-      { key: data, message: "Provider key added successfully" },
+      { key: { ...data, key_last_4: apiKey.slice(-4) }, message: "Provider key added successfully" },
       context
     );
   } catch (error) {
