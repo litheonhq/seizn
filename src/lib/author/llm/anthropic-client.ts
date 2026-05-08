@@ -1,5 +1,8 @@
 import Anthropic from '@anthropic-ai/sdk';
-import { buildAnthropicSdkDefaultHeaders } from '@/lib/anthropic/prompt-caching';
+import {
+  buildAnthropicSdkDefaultHeaders,
+  buildCachedSystemPrompt,
+} from '@/lib/anthropic/prompt-caching';
 import {
   calculateAuthorBillableUsageTokens,
   enforceAuthorTokenBudget,
@@ -210,6 +213,14 @@ function modelSupportsTemperature(model: string): boolean {
 
 export function buildAnthropicMessageParams(request: AuthorLlmRequest, model: string): Record<string, unknown> {
   const system = buildSystemPrompt(request.system, request.responseFormat);
+  // R7 (2026-05-08): wrap system prompt with cache_control: ephemeral when
+  // ANTHROPIC_PROMPT_CACHING is enabled. Prior to this, the Author stack
+  // imported `buildAnthropicSdkDefaultHeaders` (sets the beta header) but
+  // never called `buildCachedSystemPrompt` — so the SDK was authorized to
+  // use caching but the request payload had no cache markers. Net cost
+  // savings: ~70% input tokens on Check/Dialog where the system prompt is
+  // the dominant stable prefix.
+  const cachedSystem = buildCachedSystemPrompt(system);
   const includeTemperature =
     typeof request.temperature === 'number' && modelSupportsTemperature(model);
   const effort = request.effort ?? resolveAuthorLlmEffort();
@@ -228,7 +239,7 @@ export function buildAnthropicMessageParams(request: AuthorLlmRequest, model: st
     ...(thinkingBudget != null
       ? { thinking: { type: 'enabled', budget_tokens: thinkingBudget } }
       : {}),
-    ...(system ? { system } : {}),
+    ...(cachedSystem ? { system: cachedSystem } : {}),
     messages: [{
       role: 'user',
       content: request.prompt,
