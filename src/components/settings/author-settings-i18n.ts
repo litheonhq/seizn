@@ -35,7 +35,7 @@ const en: AuthorSettingsCopy = {
   },
   subscription: {
     title: "Subscription & Billing",
-    description: "Review your v7 plan, trial state, billing status, and Stripe portal access.",
+    description: "Review your plan, billing status, and Stripe portal access.",
     currentPlan: "Current plan",
     status: "Status",
     trial: "Trial",
@@ -96,7 +96,7 @@ const ko: AuthorSettingsCopy = {
   },
   subscription: {
     title: "구독 및 결제",
-    description: "v7 플랜, 체험 상태, 결제 상태, Stripe 포털 접근을 확인합니다.",
+    description: "현재 플랜, 결제 상태, Stripe 포털 접근을 확인합니다.",
     currentPlan: "현재 플랜",
     status: "상태",
     trial: "체험",
@@ -157,7 +157,7 @@ const ja: AuthorSettingsCopy = {
   },
   subscription: {
     title: "サブスクリプションと請求",
-    description: "v7 プラン、トライアル状態、請求状態、Stripe ポータルへのアクセスを確認します。",
+    description: "現在のプラン、請求状態、Stripe ポータルへのアクセスを確認します。",
     currentPlan: "現在のプラン",
     status: "状態",
     trial: "トライアル",
@@ -218,7 +218,7 @@ const zhHans: AuthorSettingsCopy = {
   },
   subscription: {
     title: "订阅与账单",
-    description: "查看 v7 计划、试用状态、账单状态和 Stripe 门户访问。",
+    description: "查看当前计划、账单状态和 Stripe 门户访问。",
     currentPlan: "当前计划",
     status: "状态",
     trial: "试用",
@@ -256,7 +256,7 @@ const zhHant: AuthorSettingsCopy = {
   byok: {
     ...zhHans.byok,
     title: "API 金鑰",
-    description: "連接 Anthropic 金鑰後，可使用 BYOK 無限 tokens 和 BYOK 方案折扣。",
+    description: "連接 Anthropic 或 OpenAI 金鑰後，結帳時將自動套用 BYOK 方案價格。",
     status: "金鑰狀態",
     active: "已啟用",
     missing: "未設定",
@@ -271,7 +271,7 @@ const zhHant: AuthorSettingsCopy = {
   subscription: {
     ...zhHans.subscription,
     title: "訂閱與帳單",
-    description: "查看 v7 方案、試用狀態、帳單狀態和 Stripe 入口。",
+    description: "查看目前方案、帳單狀態和 Stripe 入口。",
     currentPlan: "目前方案",
     noTrial: "無有效試用",
     renews: "續訂日期",

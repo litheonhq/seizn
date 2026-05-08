@@ -123,7 +123,7 @@ export const DEFAULT_SUBSCRIPTION_STATE: SubscriptionState = {
   cancel_at_period_end: false,
   payment_failed: false,
   byok_active: false,
-  price_lock_version: "v7",
+  price_lock_version: "v9",
   usage: {
     tokens_used_month: 0,
     tokens_cap_month: null,

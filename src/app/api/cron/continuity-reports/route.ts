@@ -123,13 +123,21 @@ async function runReport(
   }
 
   // Mark running so concurrent cron invocations don't race.
-  const { error: lockError } = await supabase
+  // Round 5 audit fix: the previous version omitted .select(), so
+  // Supabase returned data=null with no way to detect "lost the race".
+  // Now we chain .select('id') and treat zero affected rows as the
+  // already-claimed signal.
+  const { data: locked, error: lockError } = await supabase
     .from('continuity_reports')
     .update({ status: 'running' })
     .eq('id', row.id)
-    .eq('status', 'pending');
+    .eq('status', 'pending')
+    .select('id');
   if (lockError) {
     return { status: 'skipped', reason: lockError.message };
+  }
+  if (!locked || locked.length === 0) {
+    return { status: 'skipped', reason: 'already_claimed' };
   }
 
   // Real generator (round 2 audit): aggregates the user's last calendar
