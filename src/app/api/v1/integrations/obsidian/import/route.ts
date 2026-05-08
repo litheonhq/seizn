@@ -90,6 +90,22 @@ const MAX_VAULT_NAME_LEN = 64;
 const MAX_PATH_LEN = 512;
 const VAULT_NAME_RE = /^[A-Za-z0-9_\-:.]+$/;
 
+// R12 audit fix (A3): metadata keys reserved for cross-channel identity
+// or trust-decisions. Strip these from caller-supplied frontmatter so
+// an Obsidian plugin can't shadow R8 (anthropic-tool) memories or
+// inject security-relevant fields.
+const RESERVED_METADATA_KEYS: readonly string[] = [
+  'anthropic_tool_name',
+  'anthropic_tool_path',
+  'obsidian_path',
+  'obsidian_vault',
+  'obsidian_frontmatter',
+  'role',
+  'user_id',
+  'org_id',
+  'organization_id',
+];
+
 export async function POST(request: NextRequest): Promise<NextResponse> {
   const authResult = await authenticateRequest(request, { skipUsageCheck: false });
   if (isAuthError(authResult)) {
@@ -167,7 +183,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         .contains('metadata', { obsidian_path: p })
         .eq('is_deleted', false);
       if (error) {
-        errors.push({ path: p, reason: `replace_existing failed: ${error.message}` });
+        // R12 audit fix (A2): don't echo Postgres error message to the caller.
+        console.error(`[obsidian-import] replace_existing failed: ${error.message ?? 'unknown'}`);
+        errors.push({ path: p, reason: 'replace_existing failed' });
       }
     }
   }
@@ -177,6 +195,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
   for (const note of normalized) {
     const tags = extractTagsFromFrontmatter(note.frontmatter);
+    // R12 audit fix (A3): strip reserved metadata keys so an Obsidian
+    // plugin can't shadow anthropic-tool paths or inject role/user_id.
+    const sanitizedFrontmatter = stripReservedMetadataKeys(note.frontmatter ?? {});
     const insertPayload = {
       user_id: userId,
       namespace,
@@ -188,7 +209,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       ...(note.modifiedAt ? { valid_at: note.modifiedAt } : {}),
       metadata: {
         obsidian_path: note.path,
-        obsidian_frontmatter: note.frontmatter ?? {},
+        obsidian_frontmatter: sanitizedFrontmatter,
         obsidian_vault: vaultName,
       },
     };
@@ -197,17 +218,22 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       imported += 1;
       continue;
     }
-    // Unique index on (user_id, namespace, content_hash) → duplicate is the
-    // happy-path "skipped". Surface other errors to the caller.
-    const message = error.message || '';
+    // R12 audit fix (B7): partial unique on (user_id, namespace,
+    // metadata->>obsidian_path) catches concurrent imports racing on
+    // the same path. Existing dedup via (user_id, namespace, content_hash)
+    // also fires. Both classify as 'skipped' from the caller's view.
+    const message = error.message ?? '';
     if (
       message.includes('duplicate key') ||
-      message.includes('idx_memories_content_hash')
+      message.includes('idx_memories_content_hash') ||
+      message.includes('idx_memories_obsidian_path_unique')
     ) {
       skipped += 1;
       continue;
     }
-    errors.push({ path: note.path, reason: message });
+    // R12 audit fix (A2): never surface raw Postgres error.message.
+    console.error(`[obsidian-import] insert ${note.path} failed: ${message || 'unknown'}`);
+    errors.push({ path: note.path, reason: 'insert failed' });
   }
 
   return NextResponse.json({
@@ -232,6 +258,21 @@ function normalizeNote(
   if (!path.endsWith('.md')) {
     return { error: 'path must end with .md' };
   }
+  // R12 audit fix (A7+C8): path traversal hardening. Reject leading /,
+  // backslashes, drive letters (Windows-style), .. segments, control
+  // chars, and anything that would let metadata.obsidian_path become
+  // a filesystem or URL path elsewhere. Obsidian itself emits forward-
+  // slash vault-relative paths, so this matches the canonical form.
+  if (
+    path.startsWith('/') ||
+    path.startsWith('\\') ||
+    path.includes('\\') ||
+    /^[A-Za-z]:/.test(path) ||
+    path.split('/').some((seg) => seg === '..' || seg === '.') ||
+    /[\x00-\x1f]/.test(path)
+  ) {
+    return { error: 'path must be a forward-slash vault-relative path with no .. segments' };
+  }
   const content = typeof raw.content === 'string' ? raw.content : '';
   const bytes = Buffer.byteLength(content, 'utf8');
   if (bytes > MAX_BYTES_PER_NOTE) {
@@ -254,13 +295,13 @@ function normalizeNote(
     }
     modifiedAt = raw.modified_at;
   }
-  // Hash on (path, content) so two notes with identical content but
-  // different paths are NOT treated as duplicates — the user often
-  // wants both, and the path itself is meaningful canonical identity.
-  const contentHash = crypto
-    .createHash('sha256')
-    .update(`${path} ${content}`)
-    .digest('hex');
+  // R12 audit fix (C1): content_hash is on body alone now. Vault
+  // identity (path) lives in metadata.obsidian_path with its own
+  // partial unique index (migration 20260508010). Pre-fix the hash
+  // mixed path with content, so an Obsidian rename produced a brand-
+  // new memory while the old one stayed alive — silent vault
+  // divergence. Path uniqueness and content dedup are now independent.
+  const contentHash = crypto.createHash('sha256').update(content).digest('hex');
   return {
     note: {
       path,
@@ -280,18 +321,39 @@ function extractTagsFromFrontmatter(
   if (Array.isArray(raw)) {
     return raw
       .filter((t): t is string => typeof t === 'string')
-      .map((t) => t.trim())
+      .map(normalizeTag)
       .filter(Boolean)
       .slice(0, 20);
   }
   if (typeof raw === 'string') {
-    return raw
-      .split(/[,\s]+/)
-      .map((t) => t.trim())
-      .filter(Boolean)
-      .slice(0, 20);
+    // R12 audit fix (C9): Obsidian YAML can be `tags: foo, bar` or
+    // `tags: '#foo #bar'` (hashtag-prefixed). Split on commas first; if
+    // no comma, fall back to whitespace. normalizeTag strips leading #.
+    const parts = raw.includes(',') ? raw.split(',') : raw.split(/\s+/);
+    return parts.map(normalizeTag).filter(Boolean).slice(0, 20);
   }
   return [];
+}
+
+function normalizeTag(value: string): string {
+  return value.trim().replace(/^#+/, '').trim();
+}
+
+// R12 audit fix (A3): metadata keys reserved for cross-channel identity
+// or trust-decisions are stripped from caller-supplied frontmatter so
+// an Obsidian plugin can't shadow R8 anthropic-tool memories or inject
+// security-relevant fields. Underscore-prefixed keys (convention for
+// internal flags) and exact reserved names are removed.
+function stripReservedMetadataKeys(
+  frontmatter: Record<string, unknown>,
+): Record<string, unknown> {
+  const result: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(frontmatter)) {
+    if (key.startsWith('_')) continue;
+    if (RESERVED_METADATA_KEYS.includes(key)) continue;
+    result[key] = value;
+  }
+  return result;
 }
 
 function jsonError(code: string, message: string, status: number): NextResponse {
