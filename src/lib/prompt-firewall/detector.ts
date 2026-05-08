@@ -38,10 +38,19 @@ export const DEFAULT_CONFIG: FirewallConfig = {
 export class PromptInjectionDetector {
   private config: FirewallConfig;
   private patterns: ThreatPattern[];
+  // R19 M1 — pre-compile each pattern's global-flag regex once at
+  // construction time. Pre-fix, `findMatches` allocated a fresh
+  // `new RegExp(pattern.pattern.source, flags)` on every scan; bulk
+  // callers (Obsidian import: 200 notes × ~21 scans = ~4,200 scans ×
+  // ~35 patterns = 147k RegExp allocations per request).
+  private compiledRegexes: RegExp[];
 
   constructor(config: Partial<FirewallConfig> = {}) {
     this.config = { ...DEFAULT_CONFIG, ...config };
     this.patterns = this.buildPatternList();
+    this.compiledRegexes = this.patterns.map((p) =>
+      new RegExp(p.pattern.source, p.pattern.flags.includes('g') ? p.pattern.flags : `${p.pattern.flags}g`)
+    );
   }
 
   /**
@@ -105,9 +114,9 @@ export class PromptInjectionDetector {
       });
     }
 
-    // Check each pattern
-    for (const pattern of this.patterns) {
-      const matches = this.findMatches(input, pattern);
+    // Check each pattern (uses pre-compiled regex from the constructor).
+    for (let i = 0; i < this.patterns.length; i++) {
+      const matches = this.findMatches(input, this.patterns[i], this.compiledRegexes[i]);
       threats.push(...matches);
     }
 
@@ -130,14 +139,13 @@ export class PromptInjectionDetector {
   }
 
   /**
-   * Find all matches for a pattern in the input
+   * Find all matches for a pattern in the input. R19 M1 — caller passes
+   * a pre-compiled global-flag RegExp; lastIndex is reset here so the
+   * same RegExp object is reusable across scans.
    */
-  private findMatches(input: string, pattern: ThreatPattern): DetectedThreat[] {
+  private findMatches(input: string, pattern: ThreatPattern, regex: RegExp): DetectedThreat[] {
     const threats: DetectedThreat[] = [];
-    const flags = pattern.pattern.flags.includes('g')
-      ? pattern.pattern.flags
-      : `${pattern.pattern.flags}g`;
-    const regex = new RegExp(pattern.pattern.source, flags);
+    regex.lastIndex = 0;
     let match: RegExpExecArray | null;
 
     while ((match = regex.exec(input)) !== null) {
@@ -214,6 +222,9 @@ export class PromptInjectionDetector {
   updateConfig(config: Partial<FirewallConfig>): void {
     this.config = { ...this.config, ...config };
     this.patterns = this.buildPatternList();
+    this.compiledRegexes = this.patterns.map((p) =>
+      new RegExp(p.pattern.source, p.pattern.flags.includes('g') ? p.pattern.flags : `${p.pattern.flags}g`)
+    );
   }
 
   /**

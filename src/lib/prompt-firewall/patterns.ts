@@ -108,7 +108,12 @@ export const THREAT_PATTERNS: ThreatPattern[] = [
     id: 'pi-009',
     name: 'Zero-width obfuscation',
     description: 'Obfuscates malicious text using zero-width unicode characters',
-    pattern: /[\u200b-\u200f\u2060\ufeff]/i,
+    // R19 LOW 1 \u2014 exclude U+200D ZERO WIDTH JOINER. ZWJ is legitimately
+    // used in emoji ZWJ sequences (\ud83d\udc68\u200d\ud83d\udc69\u200d\ud83d\udc67, \ud83c\udff3\ufe0f\u200d\ud83c\udf08), Devanagari/Bengali
+    // ligatures, and some Arabic shaping. Pre-fix, Korean/Japanese/Hindi
+    // authors using emoji or script ligatures in tags or content would
+    // trip this rule. Range now covers ZWSP/ZWNJ/LRM/RLM/WJ/BOM only.
+    pattern: /[\u200b\u200c\u200e\u200f\u2060\ufeff]/,
     level: 'medium',
     enabled: true,
     category: 'encoding_attack',

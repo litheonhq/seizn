@@ -86,6 +86,14 @@ import crypto from 'crypto';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
+// R19 M1 — module-scope detector. createDetector compiles ~35 pattern
+// regexes once (R19 also memoized the per-pattern global-flag RegExp);
+// scan() is stateless (only mutates regex.lastIndex which it resets per
+// call), so reuse across the lifetime of the serverless instance is
+// safe. Pre-fix instantiated a fresh detector per content + per tag
+// (4,200 detectors per 200-note import worst case).
+const importFirewall = createDetector({ mode: 'sanitize' });
+
 interface NoteInput {
   path: unknown;
   content: unknown;
@@ -291,8 +299,7 @@ function normalizeNote(
   const rawContent = typeof raw.content === 'string' ? raw.content : '';
   let content = rawContent.replace(/\x00/g, '');
   if (content) {
-    const detector = createDetector({ mode: 'sanitize' });
-    const firewall = detector.scan(content);
+    const firewall = importFirewall.scan(content);
     if (firewall.detected && compareThreatLevel(firewall.threatLevel, 'critical') >= 0) {
       return {
         error: `content blocked by prompt firewall (${firewall.threatLevel})`,
@@ -346,45 +353,51 @@ function extractTagsFromFrontmatter(
 ): string[] {
   if (!frontmatter) return [];
   const raw = frontmatter.tags ?? frontmatter.tag;
+  // R19 — dedup defensively. Vault YAML occasionally emits the same tag
+  // twice (e.g. `tags: [foo, foo]` from a buggy plugin), and dropping
+  // duplicates keeps memories.tags compact for the partial GIN index.
   if (Array.isArray(raw)) {
-    return raw
-      .filter((t): t is string => typeof t === 'string')
-      .map(normalizeTag)
-      .filter(Boolean)
-      .slice(0, 20);
+    return Array.from(
+      new Set(
+        raw
+          .filter((t): t is string => typeof t === 'string')
+          .map(normalizeTag)
+          .filter(Boolean),
+      ),
+    ).slice(0, 20);
   }
   if (typeof raw === 'string') {
     // R12 audit fix (C9): Obsidian YAML can be `tags: foo, bar` or
     // `tags: '#foo #bar'` (hashtag-prefixed). Split on commas first; if
     // no comma, fall back to whitespace. normalizeTag strips leading #.
     const parts = raw.includes(',') ? raw.split(',') : raw.split(/\s+/);
-    return parts.map(normalizeTag).filter(Boolean).slice(0, 20);
+    return Array.from(
+      new Set(parts.map(normalizeTag).filter(Boolean)),
+    ).slice(0, 20);
   }
   return [];
 }
 
-// R17 M1 — tags reach LLM contexts that ingest tag arrays (extractor
-// prompts, search-result formatting). Same threat class as R13 A4
-// content scan: caller-supplied text can carry prompt-injection. Apply
-// the same firewall + null-strip + length cap to each tag string before
-// it lands in memories.tags. Returns empty string on critical threat so
-// the .filter(Boolean) downstream drops it; sanitized form replaces
-// lower-severity matches.
+// R17 M1 + R19 M2 — tags reach LLM contexts (extractor prompts, search-
+// result formatting). Same threat class as R13 A4 content scan, but
+// tags have stricter semantics than free-form content:
+//   - Tags are atomic identifiers used as filter keys / facets.
+//   - A partial-redaction "[REDACTED]" tag is meaningless and pollutes
+//     memories.tags with a literal that collides across notes.
+// So tags drop on ANY detected threat (low/medium/high/critical), not
+// just critical. Length cap + null-strip stay the same.
 const MAX_TAG_LEN = 100;
 
 function normalizeTag(value: string): string {
   const stripped = value.replace(/\x00/g, '').trim().replace(/^#+/, '').trim();
   if (!stripped) return '';
   if (stripped.length > MAX_TAG_LEN) {
-    return ''; // drop overflow tags rather than silently truncating
-  }
-  const detector = createDetector({ mode: 'sanitize' });
-  const firewall = detector.scan(stripped);
-  if (firewall.detected && compareThreatLevel(firewall.threatLevel, 'critical') >= 0) {
+    // drop overflow tags rather than silently truncating
     return '';
   }
-  if (firewall.sanitizedInput && firewall.sanitizedInput.trim().length > 0) {
-    return firewall.sanitizedInput.trim();
+  const firewall = importFirewall.scan(stripped);
+  if (firewall.detected) {
+    return '';
   }
   return stripped;
 }
