@@ -213,20 +213,24 @@ export async function POST(request: NextRequest) {
         .eq('id', orgId)
         .single();
 
-      // Get inviter name
-      const { data: inviter } = await supabase
-        .from('profiles')
-        .select('full_name')
-        .eq('id', user.id)
-        .single();
+      // Get inviter name + language; invitee profile lookup may miss (email-only)
+      const [{ data: inviter }, { data: invitee }] = await Promise.all([
+        supabase.from('profiles').select('full_name, language').eq('id', user.id).single(),
+        supabase.from('profiles').select('language').eq('email', emailLower).maybeSingle(),
+      ]);
+      const emailLocale: 'ko' | 'en' =
+        invitee?.language === 'ko' || inviter?.language === 'ko' ? 'ko' : 'en';
 
       await sendEmail({
         to: emailLower,
-        subject: `You've been invited to join ${org?.name || 'an organization'} on Seizn`,
+        subject: emailLocale === 'ko'
+          ? `${org?.name || '조직'}에서 Seizn 초대장이 도착했습니다`
+          : `You've been invited to join ${org?.name || 'an organization'} on Seizn`,
         html: organizationInviteEmail(
           inviter?.full_name || 'A team member',
           org?.name || 'Organization',
-          `${process.env.NEXT_PUBLIC_APP_URL}/invite/${token}`
+          `${process.env.NEXT_PUBLIC_APP_URL}/invite/${token}`,
+          emailLocale
         ),
       });
     } catch (emailError) {

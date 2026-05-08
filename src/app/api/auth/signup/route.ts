@@ -263,12 +263,25 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Send welcome email (non-blocking)
+    // Send welcome email (non-blocking).
+    // Locale priority: landing_path (`/ko/auth/signup` reflects user's deliberate
+    // language choice) → Accept-Language header → 'en'. profiles.locale column
+    // would be more durable; tracked for a follow-up.
     if (!DISABLE_WELCOME_EMAIL) {
+      const pathLocale = landingPath?.match(/^\/(ko|en)(?:\/|$)/)?.[1];
+      const acceptLang = (request.headers.get('accept-language') ?? '').toLowerCase();
+      const emailLocale: 'ko' | 'en' =
+        pathLocale === 'ko' || pathLocale === 'en'
+          ? pathLocale
+          : acceptLang.startsWith('ko')
+            ? 'ko'
+            : 'en';
       sendEmail({
         to: email,
-        subject: 'Welcome to Seizn!',
-        html: welcomeEmail(name || ''),
+        subject: emailLocale === 'ko'
+          ? 'Seizn에 오신 것을 환영합니다.'
+          : 'Welcome to Seizn!',
+        html: welcomeEmail(name || '', emailLocale),
       }).catch((error) => logServerError('Failed to send welcome email', error));
     }
 

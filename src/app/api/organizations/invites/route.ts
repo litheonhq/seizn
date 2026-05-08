@@ -167,21 +167,31 @@ export async function POST(request: NextRequest) {
 
     // Send email (best-effort)
     try {
-      const [{ data: org }, { data: inviter }] = await Promise.all([
+      const [{ data: org }, { data: inviter }, { data: invitee }] = await Promise.all([
         supabase.from('organizations').select('name').eq('id', orgId).single(),
         supabase.from('profiles').select('full_name').eq('id', user.id).single(),
+        // Invitee may not yet exist as a profile (email-only invite); fall back
+        // to inviter's locale assumption (likely same org/team).
+        supabase.from('profiles').select('language').eq('email', emailLower).maybeSingle(),
       ]);
+      const inviterLanguage = await supabase
+        .from('profiles').select('language').eq('id', user.id).single();
+      const emailLocale: 'ko' | 'en' =
+        invitee?.language === 'ko' || inviterLanguage.data?.language === 'ko' ? 'ko' : 'en';
 
       const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.seizn.com';
       const inviteUrl = `${baseUrl}/invite/${token}`;
 
       await sendEmail({
         to: emailLower,
-        subject: `You've been invited to join ${org?.name || 'an organization'} on Seizn`,
+        subject: emailLocale === 'ko'
+          ? `${org?.name || '조직'}에서 Seizn 초대장이 도착했습니다`
+          : `You've been invited to join ${org?.name || 'an organization'} on Seizn`,
         html: organizationInviteEmail(
           inviter?.full_name || 'A team member',
           org?.name || 'Organization',
-          inviteUrl
+          inviteUrl,
+          emailLocale
         ),
       });
     } catch (emailError) {

@@ -20,7 +20,7 @@ last_reviewed: 2026-05-09 (W3.3 / lawyer review pending)
 ## 1. Controller information
 
 - **Name:** Litheon LLC (Wyoming, USA)
-- **Address:** <<Wyoming registered agent address>>
+- **Address:** 30 N Gould St Ste R, Sheridan, WY 82801, USA
 - **EU Representative (Article 27):** <<Name + address — REQUIRED for non-EU controllers offering services to EU subjects unless exempt>>
 - **Data Protection Officer (DPO):** <<Name>> · dpo@seizn.com
 - **Primary contact:** privacy@seizn.com · <<phone>>
