@@ -321,3 +321,191 @@ export function paymentFailedEmail(
   `;
   return baseTemplate(content, 'Action required: Your payment failed');
 }
+
+// =============================================================================
+// W2.5 — added 2026-05-09. signup-confirm, payment-receipt, waitlist-confirm.
+// =============================================================================
+
+export type EmailLocale = 'en' | 'ko';
+
+function tBilingual(en: string, ko: string, locale: EmailLocale): string {
+  return locale === 'ko' ? ko : en;
+}
+
+// Signup email confirmation (free-tier abuse defense per W3.9)
+export function signupConfirmEmail(
+  name: string,
+  confirmLink: string,
+  locale: EmailLocale = 'en'
+) {
+  const safeName = escapeHtml(name || (locale === 'ko' ? '작가님' : 'there'));
+  const heading = tBilingual('Confirm your email', '이메일 인증', locale);
+  const greeting = tBilingual(`Hi ${safeName},`, `${safeName}, 안녕하세요.`, locale);
+  const body = tBilingual(
+    'Click below to confirm your email and activate your Seizn account. Without confirmation, your API access stays disabled.',
+    '아래 버튼을 눌러 이메일을 인증해주세요. 인증을 마쳐야 Seizn 계정이 활성화되고 API 사용이 시작됩니다.',
+    locale
+  );
+  const cta = tBilingual('Confirm Email', '이메일 인증하기', locale);
+  const expiry = tBilingual(
+    'This link expires in 24 hours.',
+    '이 링크는 24시간 내에 만료됩니다.',
+    locale
+  );
+  const ignore = tBilingual(
+    "If you didn't sign up for Seizn, you can safely ignore this email.",
+    'Seizn에 가입한 적이 없다면 이 메일은 무시하셔도 됩니다.',
+    locale
+  );
+
+  const content = `
+    <h1 style="margin:0 0 16px;font-size:24px;font-weight:600;color:#1a1612;">${heading}</h1>
+    <p style="margin:0 0 24px;font-size:16px;color:#4a4338;line-height:1.6;">${greeting}</p>
+    <p style="margin:0 0 24px;font-size:16px;color:#4a4338;line-height:1.6;">${body}</p>
+    <a href="${confirmLink}" style="display:inline-block;padding:12px 24px;background-color:#c96442;color:#fbf8f2;text-decoration:none;border-radius:9999px;font-weight:500;">
+      ${cta}
+    </a>
+    <p style="margin:24px 0 0;font-size:14px;color:#6f6655;">${expiry}</p>
+    <p style="margin:8px 0 0;font-size:14px;color:#6f6655;">${ignore}</p>
+  `;
+  return baseTemplate(content, heading);
+}
+
+// Payment receipt (Stripe webhook invoice.paid)
+export function paymentReceiptEmail(
+  params: {
+    name: string;
+    amount: string; // cents
+    currency: string;
+    invoiceNumber: string;
+    invoiceUrl?: string;
+    planLabel: string;
+    periodStart: string; // ISO date
+    periodEnd: string; // ISO date
+  },
+  locale: EmailLocale = 'en'
+) {
+  const safeName = escapeHtml(params.name || (locale === 'ko' ? '작가님' : 'there'));
+  const amountDisplay = `${params.currency.toUpperCase()} ${(Number(params.amount) / 100).toFixed(2)}`;
+  const heading = tBilingual('Payment Receipt', '결제 영수증', locale);
+  const greeting = tBilingual(`Hi ${safeName},`, `${safeName}, 안녕하세요.`, locale);
+  const body = tBilingual(
+    'Thank you for your payment. Here are the details:',
+    '결제가 완료되었습니다. 상세 내역은 아래와 같습니다.',
+    locale
+  );
+  const labelInvoice = tBilingual('Invoice', '청구서', locale);
+  const labelPlan = tBilingual('Plan', '플랜', locale);
+  const labelPeriod = tBilingual('Period', '기간', locale);
+  const labelAmount = tBilingual('Amount', '금액', locale);
+  const cta = tBilingual('View Invoice', '청구서 보기', locale);
+
+  const content = `
+    <h1 style="margin:0 0 16px;font-size:24px;font-weight:600;color:#1a1612;">${heading}</h1>
+    <p style="margin:0 0 24px;font-size:16px;color:#4a4338;line-height:1.6;">${greeting}</p>
+    <p style="margin:0 0 24px;font-size:16px;color:#4a4338;line-height:1.6;">${body}</p>
+    <div style="background:#f5f0e6;padding:20px;border-radius:8px;margin:0 0 24px;border:1px solid #ddd3bd;">
+      <table width="100%" cellpadding="0" cellspacing="0" style="font-size:14px;color:#1a1612;">
+        <tr><td style="padding:6px 0;color:#6f6655;width:120px;">${labelInvoice}</td><td style="padding:6px 0;font-family:monospace;">${escapeHtml(params.invoiceNumber)}</td></tr>
+        <tr><td style="padding:6px 0;color:#6f6655;">${labelPlan}</td><td style="padding:6px 0;">${escapeHtml(params.planLabel)}</td></tr>
+        <tr><td style="padding:6px 0;color:#6f6655;">${labelPeriod}</td><td style="padding:6px 0;">${escapeHtml(params.periodStart)} — ${escapeHtml(params.periodEnd)}</td></tr>
+        <tr><td style="padding:6px 0;color:#6f6655;">${labelAmount}</td><td style="padding:6px 0;font-weight:600;">${amountDisplay}</td></tr>
+      </table>
+    </div>
+    ${params.invoiceUrl ? `
+    <a href="${params.invoiceUrl}" style="display:inline-block;padding:12px 24px;background-color:#c96442;color:#fbf8f2;text-decoration:none;border-radius:9999px;font-weight:500;">
+      ${cta}
+    </a>` : ''}
+  `;
+  return baseTemplate(content, `${heading} — ${params.invoiceNumber}`);
+}
+
+// Founding member relaunch announcement + re-consent ask (W5.9).
+// Sent at Wave 2 launch gate to existing dogfood users when ToS/Privacy version
+// bumps from v1 → v2 (sub-processor + EU AI Act §50 + Cookie Consent additions).
+export function foundingMemberRelaunchEmail(
+  params: {
+    name: string;
+    legalDiffUrl: string;          // e.g. https://www.seizn.com/legal/privacy?diff=v2
+    reconsentUrl: string;          // dashboard re-consent action URL
+    charterEndDate: string;        // pre-formatted date string
+  },
+  locale: EmailLocale = 'en'
+) {
+  const safeName = escapeHtml(params.name || (locale === 'ko' ? '작가님' : 'there'));
+  const heading = tBilingual('Welcome back — Seizn relaunches', '돌아오신 것을 환영합니다 — Seizn 재출시', locale);
+  const greeting = tBilingual(`Hi ${safeName},`, `${safeName}, 안녕하세요.`, locale);
+  const body1 = tBilingual(
+    "We've shipped a major update: warm cream identity across landing + dashboard, full Track 1/2/3 pricing, EU AI Act Article 50 transparency, GDPR-aligned sub-processor disclosures, and self-hosted observability for stronger data residency.",
+    '큰 업데이트를 출시했습니다: 랜딩 + 대시보드 통합 웜 크림 정체성, 전체 Track 1/2/3 가격, EU AI Act 제50조 공시, GDPR 정렬 수탁 처리자 명시, 데이터 거주지 강화를 위한 자체 호스팅 모니터링.',
+    locale
+  );
+  const body2 = tBilingual(
+    "Because this changes how we describe data handling, we're asking founding members to re-consent. It takes one click and you'll keep your Charter pricing locked through " + escapeHtml(params.charterEndDate) + '.',
+    '데이터 처리 설명이 바뀌어 파운딩 멤버 분들의 재동의를 요청드립니다. 한 번의 클릭으로 끝나며, Charter 가격은 ' + escapeHtml(params.charterEndDate) + '까지 그대로 유지됩니다.',
+    locale
+  );
+  const ctaPrimary = tBilingual('Review and re-consent', '변경 내용 확인 및 재동의', locale);
+  const ctaSecondary = tBilingual('See what changed', '변경 내역 보기', locale);
+  const footer = tBilingual(
+    "If you don't re-consent within 30 days, your account stays active in read-only mode until you do. No data is deleted.",
+    '30일 내에 재동의하지 않으면 계정은 읽기 전용 모드로 유지됩니다. 데이터는 삭제되지 않습니다.',
+    locale
+  );
+
+  const content = `
+    <h1 style="margin:0 0 16px;font-size:24px;font-weight:600;color:#1a1612;">${heading}</h1>
+    <p style="margin:0 0 16px;font-size:16px;color:#4a4338;line-height:1.6;">${greeting}</p>
+    <p style="margin:0 0 16px;font-size:16px;color:#4a4338;line-height:1.6;">${body1}</p>
+    <p style="margin:0 0 24px;font-size:16px;color:#4a4338;line-height:1.6;">${body2}</p>
+    <a href="${params.reconsentUrl}" style="display:inline-block;padding:12px 24px;background-color:#c96442;color:#fbf8f2;text-decoration:none;border-radius:9999px;font-weight:500;margin-right:8px;">
+      ${ctaPrimary}
+    </a>
+    <a href="${params.legalDiffUrl}" style="display:inline-block;padding:12px 20px;color:#4a4338;text-decoration:underline;font-size:14px;">
+      ${ctaSecondary}
+    </a>
+    <p style="margin:24px 0 0;font-size:13px;color:#6f6655;">${footer}</p>
+  `;
+  return baseTemplate(content, heading);
+}
+
+// Track 3 desktop waitlist confirmation (W3.1)
+export function waitlistConfirmEmail(
+  email: string,
+  confirmLink: string,
+  locale: EmailLocale = 'en'
+) {
+  const safeEmail = escapeHtml(email);
+  const heading = tBilingual(
+    "You're on the list",
+    '대기 명단에 등록되었습니다',
+    locale
+  );
+  const body = tBilingual(
+    `Thanks for joining the Seizn Desktop waitlist. To confirm <strong>${safeEmail}</strong>, click the button below.`,
+    `Seizn Desktop 대기 명단에 등록해주셔서 감사합니다. <strong>${safeEmail}</strong> 인증을 위해 아래 버튼을 눌러주세요.`,
+    locale
+  );
+  const cta = tBilingual('Confirm Email', '이메일 인증하기', locale);
+  const expiry = tBilingual(
+    'This link expires in 7 days. Once Desktop launches, you will be among the first to hear.',
+    '이 링크는 7일 동안 유효합니다. Desktop이 출시되면 가장 먼저 알려드립니다.',
+    locale
+  );
+  const ignore = tBilingual(
+    "If you didn't sign up, you can ignore this email.",
+    '대기 명단에 등록하신 적이 없다면 이 메일은 무시하셔도 됩니다.',
+    locale
+  );
+
+  const content = `
+    <h1 style="margin:0 0 16px;font-size:24px;font-weight:600;color:#1a1612;">${heading}</h1>
+    <p style="margin:0 0 24px;font-size:16px;color:#4a4338;line-height:1.6;">${body}</p>
+    <a href="${confirmLink}" style="display:inline-block;padding:12px 24px;background-color:#c96442;color:#fbf8f2;text-decoration:none;border-radius:9999px;font-weight:500;">
+      ${cta}
+    </a>
+    <p style="margin:24px 0 0;font-size:14px;color:#6f6655;">${expiry}</p>
+    <p style="margin:8px 0 0;font-size:14px;color:#6f6655;">${ignore}</p>
+  `;
+  return baseTemplate(content, heading);
+}

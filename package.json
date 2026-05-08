@@ -35,7 +35,11 @@
     "test:e2e:auth": "playwright test e2e/auth-v1-token-smoke.spec.ts",
     "vercel:ignore-build": "node scripts/vercel-ignore-build.mjs",
     "refresh:competitive-research": "node scripts/market/update-competitive-research.mjs",
-    "security:red-team": "npx ts-node --project tsconfig.node.json scripts/red-team-ci.ts"
+    "security:red-team": "npx ts-node --project tsconfig.node.json scripts/red-team-ci.ts",
+    "check:i18n-coverage": "node scripts/check-i18n-coverage.mjs",
+    "check:a11y-static": "node scripts/check-a11y-static.mjs",
+    "check:knot-isolation": "node scripts/check-knot-isolation.mjs",
+    "qa:static": "npm run typecheck && npm run lint && npm run check:i18n-coverage && npm run check:a11y-static && npm run check:knot-isolation"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.71.2",

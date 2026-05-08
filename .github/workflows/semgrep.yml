@@ -1,0 +1,53 @@
+name: Semgrep SAST
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    # Weekly Monday 02:00 UTC = 11:00 KST scan against latest rule packs
+    - cron: '0 2 * * 1'
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  semgrep:
+    name: Semgrep scan
+    runs-on: ubuntu-latest
+    container:
+      image: semgrep/semgrep
+    if: (github.actor != 'dependabot[bot]')
+    steps:
+      - uses: actions/checkout@v4
+
+      # Auto-config: Semgrep loads `p/default` + `p/javascript` + `p/typescript`
+      # + `p/owasp-top-ten` + `p/nextjs` from registry. Findings posted as SARIF
+      # to GitHub Security tab and as inline PR review comments on critical hits.
+      - name: Run Semgrep
+        run: |
+          semgrep ci \
+            --config p/default \
+            --config p/javascript \
+            --config p/typescript \
+            --config p/owasp-top-ten \
+            --config p/nextjs \
+            --config p/secrets \
+            --severity ERROR \
+            --severity WARNING \
+            --sarif-output=semgrep.sarif \
+            --exclude='node_modules' \
+            --exclude='.next' \
+            --exclude='playwright-report' \
+            --exclude='test-results'
+        env:
+          SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
+
+      - name: Upload SARIF to GitHub Security
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: semgrep.sarif
+        continue-on-error: true
