@@ -189,8 +189,10 @@ export class AuthorGeminiClient {
     const cause = lastError instanceof Error ? lastError.message : String(lastError ?? '');
     // Map a 5xx to status so provider-router can decide failover; otherwise
     // leave status undefined (validation, schema, etc. are not failover-eligible).
+    // R24 C3 — use the dedicated GEMINI_REQUEST_FAILED code so admin alerts
+    // and dashboards don't mis-attribute Gemini outages to OpenAI.
     throw new AuthorLlmError(
-      'OPENAI_REQUEST_FAILED', // shared error code for provider failures
+      'GEMINI_REQUEST_FAILED',
       cause
         ? `Gemini request failed for Author Memory v3: ${redactProviderError(cause)}`
         : 'Gemini request failed for Author Memory v3',
@@ -272,8 +274,20 @@ export function buildGeminiGenerationParams(
 function extractText(result: GeminiGenerateContentResultLike): string {
   try {
     return result.response.text().trim();
-  } catch {
-    return '';
+  } catch (err) {
+    // R24 H1 — Gemini SDK throws GoogleGenerativeAIResponseError when the
+    // candidate has finishReason='SAFETY' or another non-STOP terminator.
+    // Returning '' silently masks safety blocks: the caller would see an
+    // empty response, parseAndValidateJson would later fail with a
+    // confusing INVALID_JSON_RESPONSE, and the user gets billed for a
+    // black-box failure. Surface explicitly so admin logs / alerts
+    // attribute the failure correctly.
+    const finishReason = result.response.candidates?.[0]?.finishReason ?? 'unknown';
+    const cause = err instanceof Error ? err.message : String(err);
+    throw new AuthorLlmError(
+      'GEMINI_REQUEST_FAILED',
+      `Gemini response could not be read (finishReason=${finishReason}): ${cause}`,
+    );
   }
 }
 
