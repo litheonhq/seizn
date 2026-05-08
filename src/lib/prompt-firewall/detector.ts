@@ -48,9 +48,21 @@ export class PromptInjectionDetector {
   constructor(config: Partial<FirewallConfig> = {}) {
     this.config = { ...DEFAULT_CONFIG, ...config };
     this.patterns = this.buildPatternList();
-    this.compiledRegexes = this.patterns.map((p) =>
-      new RegExp(p.pattern.source, p.pattern.flags.includes('g') ? p.pattern.flags : `${p.pattern.flags}g`)
-    );
+    this.compiledRegexes = PromptInjectionDetector.compileRegexes(this.patterns);
+  }
+
+  /**
+   * Compile each pattern's global-flag regex once. Single source of
+   * truth for the flag-merge rule used by both the constructor and
+   * `updateConfig`.
+   */
+  private static compileRegexes(patterns: ThreatPattern[]): RegExp[] {
+    return patterns.map((p) => {
+      const flags = p.pattern.flags.includes('g')
+        ? p.pattern.flags
+        : `${p.pattern.flags}g`;
+      return new RegExp(p.pattern.source, flags);
+    });
   }
 
   /**
@@ -217,14 +229,27 @@ export class PromptInjectionDetector {
   }
 
   /**
-   * Update configuration
+   * Update configuration. R21 M1 — build the new patterns + regex
+   * arrays into locals first and assign atomically. If compileRegexes
+   * throws (e.g., a malformed pattern in customPatterns), neither
+   * `this.patterns` nor `this.compiledRegexes` mutates, so subsequent
+   * `scan()` calls keep working against the prior configuration.
    */
   updateConfig(config: Partial<FirewallConfig>): void {
-    this.config = { ...this.config, ...config };
-    this.patterns = this.buildPatternList();
-    this.compiledRegexes = this.patterns.map((p) =>
-      new RegExp(p.pattern.source, p.pattern.flags.includes('g') ? p.pattern.flags : `${p.pattern.flags}g`)
-    );
+    const nextConfig = { ...this.config, ...config };
+    const prevConfig = this.config;
+    this.config = nextConfig;
+    let nextPatterns: ThreatPattern[];
+    let nextRegexes: RegExp[];
+    try {
+      nextPatterns = this.buildPatternList();
+      nextRegexes = PromptInjectionDetector.compileRegexes(nextPatterns);
+    } catch (err) {
+      this.config = prevConfig;
+      throw err;
+    }
+    this.patterns = nextPatterns;
+    this.compiledRegexes = nextRegexes;
   }
 
   /**
