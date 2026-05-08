@@ -220,7 +220,10 @@ export function buildAnthropicMessageParams(request: AuthorLlmRequest, model: st
   // use caching but the request payload had no cache markers. Net cost
   // savings: ~70% input tokens on Check/Dialog where the system prompt is
   // the dominant stable prefix.
-  const cachedSystem = buildCachedSystemPrompt(system);
+  // R13 C7 — caller-supplied cachePolicy controls cache_control wrapping.
+  // 'cold' avoids the write surcharge for Free BYOK ad-hoc calls; 'auto'
+  // (default) respects the ANTHROPIC_PROMPT_CACHING env flag.
+  const cachedSystem = buildCachedSystemPrompt(system, request.cachePolicy ?? 'auto');
   const includeTemperature =
     typeof request.temperature === 'number' && modelSupportsTemperature(model);
   const effort = request.effort ?? resolveAuthorLlmEffort();

@@ -49,6 +49,24 @@
  *
  * Limits: max 200 notes per request, max 200KB per note (matches the
  * Anthropic memory tool adapter ceiling for parity).
+ *
+ * Content-security pipeline (R13 A4):
+ *   Applied per-note synchronously:
+ *     1. Strip null bytes (Postgres rejects \0 in text columns).
+ *     2. Prompt-firewall scan (createDetector mode=sanitize). Critical
+ *        threats reject the individual note; lower threats sanitize.
+ *   Skipped (vs /api/v1/memories POST):
+ *     - LLM moderation (`moderate()`) — would burn ~200 LLM calls per
+ *       batch, breaks Free-tier cost model. Notes are tagged with
+ *       `metadata.moderation_pending = true` so an async sweep can
+ *       process them; consumers needing strict moderation should call
+ *       /api/v1/memories POST per-note instead.
+ *     - Canon enforcement — Studio-tier feature with NPC/session scope
+ *       that doesn't fit a vault-bulk model. Re-evaluate when an
+ *       Author-vertical Obsidian plugin needs it.
+ *     - Hot memory budget reservation — the bulk path operates on
+ *       cold-tier rows by default; budget enforcement happens at the
+ *       organization level on next promote/recall.
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -58,6 +76,8 @@ import {
   authErrorResponse,
 } from '@/lib/api-auth';
 import { createServerClient } from '@/lib/supabase';
+import { createDetector } from '@/lib/prompt-firewall/scanner';
+import { compareThreatLevel } from '@/lib/prompt-firewall/patterns';
 import crypto from 'crypto';
 
 export const runtime = 'nodejs';
@@ -211,6 +231,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         obsidian_path: note.path,
         obsidian_frontmatter: sanitizedFrontmatter,
         obsidian_vault: vaultName,
+        // R13 A4 — flag for async moderation sweep. /api/v1/memories
+        // POST runs LLM moderation synchronously; bulk import defers it
+        // to keep token cost bounded. A future cron task can scan rows
+        // where metadata->>'moderation_pending' = 'true' and apply
+        // moderate() in batches.
+        moderation_pending: true,
       },
     };
     const { error } = await supabase.from('memories').insert(insertPayload);
@@ -273,7 +299,28 @@ function normalizeNote(
   ) {
     return { error: 'path must be a forward-slash vault-relative path with no .. segments' };
   }
-  const content = typeof raw.content === 'string' ? raw.content : '';
+  // R13 A4 — apply the same content-security primitives as
+  // /api/v1/memories POST: strip null bytes (Postgres text columns
+  // reject \0 and pad attacks), then run the prompt-firewall scanner.
+  // Critical threats abort the note (vault import is bulk so we soft-
+  // fail per-note rather than the whole batch); lower-severity threats
+  // get sanitized in-place. Moderation + canon enforcement are NOT
+  // applied here — see the route comment for rationale and the async
+  // follow-up plan.
+  const rawContent = typeof raw.content === 'string' ? raw.content : '';
+  let content = rawContent.replace(/\x00/g, '');
+  if (content) {
+    const detector = createDetector({ mode: 'sanitize' });
+    const firewall = detector.scan(content);
+    if (firewall.detected && compareThreatLevel(firewall.threatLevel, 'critical') >= 0) {
+      return {
+        error: `content blocked by prompt firewall (${firewall.threatLevel})`,
+      };
+    }
+    if (firewall.sanitizedInput && firewall.sanitizedInput.trim().length > 0) {
+      content = firewall.sanitizedInput;
+    }
+  }
   const bytes = Buffer.byteLength(content, 'utf8');
   if (bytes > MAX_BYTES_PER_NOTE) {
     return { error: `content exceeds ${MAX_BYTES_PER_NOTE} bytes` };
