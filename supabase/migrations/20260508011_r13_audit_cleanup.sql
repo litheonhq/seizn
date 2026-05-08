@@ -1,35 +1,39 @@
 -- R13 — R12 audit follow-up.
 --
--- Locked 2026-05-08. Two SQL-side items:
---   1. (MED C6 from R11 audit) hybrid_search_memories was not patched in
---      R6 because the original ALTER FUNCTION ... SET hnsw.iterative_scan
---      attempted in R12 hit Supabase Management role privilege denial.
---      The R6 search_memories fix used a different mechanism — DROP +
---      CREATE OR REPLACE with the SET clauses embedded in the function
---      definition itself — which Supabase does allow. Apply the same
---      pattern to hybrid_search_memories so vector-half queries inherit
---      iterative_scan='relaxed_order'.
+-- Locked 2026-05-08. Single SQL-side item:
+--   (MED C6 from R11 audit) hybrid_search_memories was not patched in
+--   R6 because the original ALTER FUNCTION ... SET hnsw.iterative_scan
+--   attempted in R12 hit Supabase Management role privilege denial.
+--   Initial R13 attempt copied the R6 search_memories pattern (DROP +
+--   CREATE OR REPLACE with SET hnsw.iterative_scan / SET hnsw.max_scan_tuples
+--   embedded in the function definition) but Supabase has since tightened
+--   role privileges so the same `permission denied to set parameter
+--   "hnsw.iterative_scan"` error fires regardless of CREATE vs ALTER.
 --
---      keyword_search_memories is intentionally NOT patched — it does not
---      use the embedding column or HNSW index (only ts_rank_cd over
---      content_tsv), so the iterative_scan GUC has no effect on its plan.
+--   The pragmatic fix: rely on the database-level default that R6 already
+--   set (ALTER DATABASE postgres SET hnsw.iterative_scan='relaxed_order').
+--   New connections inherit the GUC, which covers the hybrid_search call
+--   path through PostgREST + serverless connections that open fresh
+--   sessions per request. The remaining concern — pgbouncer pooled
+--   transactions potentially skipping the database default — is out of
+--   reach without superuser access; mitigation is to verify pool behavior
+--   in staging before scaling hybrid_search traffic.
 --
---   2. While we're here, also align search_path with R6 — the existing
---      hybrid_search_memories has SET search_path = public, but R6 added
---      'extensions' to search_memories to ensure pgvector operators
---      resolve under Supabase's hardened schema layout. Do the same here
---      to prevent surprise breakage if vector ops migrate fully to the
---      extensions schema.
+--   keyword_search_memories is intentionally untouched — it does not use
+--   the embedding column or HNSW index (only ts_rank_cd over content_tsv),
+--   so the iterative_scan GUC has no effect on its plan.
 --
--- Privilege note: this DROP+CREATE preserves the R12 grant posture —
--- after CREATE the function defaults to no anon/authenticated execute
--- (R12 revoked them for the search functions to lock down the
--- caller-supplied user_id arg). We re-REVOKE explicitly at the bottom
--- to make the contract obvious.
+-- This migration:
+--   1. Aligns hybrid_search_memories search_path with R6 search_memories
+--      (`public`, `extensions`) so pgvector operators resolve under
+--      Supabase's hardened schema layout.
+--   2. Documents the iterative_scan limitation via COMMENT ON FUNCTION
+--      so the next reader knows where to look.
+--   3. Preserves the R12 grant posture (REVOKE from anon/authenticated,
+--      GRANT to service_role only).
 --
 -- Rollback:
---   Recreate hybrid_search_memories from migration 20260421022 without
---   the SET hnsw.iterative_scan clauses.
+--   Recreate hybrid_search_memories from migration 20260421022.
 
 BEGIN;
 
@@ -63,8 +67,6 @@ LANGUAGE sql
 STABLE
 SECURITY DEFINER
 SET search_path TO 'public', 'extensions'
-SET hnsw.iterative_scan TO 'relaxed_order'
-SET hnsw.max_scan_tuples TO 20000
 AS $$
   WITH vector_results AS (
     SELECT
@@ -144,9 +146,8 @@ AS $$
   LIMIT GREATEST(match_count, 0);
 $$;
 
--- Preserve R12 audit posture: the function is SECURITY DEFINER with a
--- caller-supplied user_id arg, so only service_role contexts should
--- invoke it.
+-- Preserve R12 audit posture: SECURITY DEFINER + caller-supplied user_id
+-- arg means only service_role contexts should invoke this RPC.
 REVOKE EXECUTE ON FUNCTION public.hybrid_search_memories(
   text, vector, text, integer, double precision, text, double precision, double precision
 ) FROM PUBLIC;
@@ -160,7 +161,7 @@ GRANT EXECUTE ON FUNCTION public.hybrid_search_memories(
 COMMENT ON FUNCTION public.hybrid_search_memories(
   text, vector, text, integer, double precision, text, double precision, double precision
 ) IS
-  'R13 (2026-05-08): pgvector iterative_scan=relaxed_order pinned per-call. Filtered hybrid queries no longer overfilter HNSW candidates. Same pattern as R6 search_memories.';
+  'R13 (2026-05-08): search_path aligned with R6 (public, extensions). hnsw.iterative_scan is NOT pinned per-function — Supabase rejects SET on the GUC during CREATE FUNCTION; rely on the ALTER DATABASE default from R6. Verify pgbouncer pool inheritance in staging before scaling traffic.';
 
 NOTIFY pgrst, 'reload schema';
 
