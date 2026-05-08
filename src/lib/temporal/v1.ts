@@ -116,9 +116,9 @@ export class TemporalValidationError extends Error {
 
 // R15 — moved to shared src/lib/uuid.ts so MCP routes and other UUID
 // surfaces (memory_id, session_id, agent_id, entity_id) can use the same
-// validator. Re-exported here for back-compat with existing callers.
+// validator. R17 dropped the back-compat re-export — no callers imported
+// isUuid from this module.
 import { isUuid } from '@/lib/uuid';
-export { isUuid } from '@/lib/uuid';
 
 export function validateTemporalInputs(input: TemporalInputs): void {
   if (input.canon_status != null && !isMemoryCanonStatus(input.canon_status)) {
