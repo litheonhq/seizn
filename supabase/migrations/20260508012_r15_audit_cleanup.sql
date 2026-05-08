@@ -69,17 +69,37 @@ END $$;
 -- (only the hnsw GUC is locked down). search_path = ('public',
 -- 'extensions') matches R6 / R13 posture so future direct pgvector
 -- calls inside the wrapper body resolve.
-ALTER FUNCTION public.keyword_search_memories_bounded(
-  text, text, integer, text, integer
-) SET search_path TO 'public', 'extensions';
-
-ALTER FUNCTION public.search_memories_bounded(
-  vector, text, integer, double precision, text, integer
-) SET search_path TO 'public', 'extensions';
-
-ALTER FUNCTION public.hybrid_search_memories_bounded(
-  text, vector, text, integer, double precision, text, double precision, double precision, integer
-) SET search_path TO 'public', 'extensions';
+--
+-- Conditional via DO loop because hybrid_search_memories_bounded and
+-- search_memories_bounded exist only in migration history; only
+-- keyword_search_memories_bounded ever shipped to prod. ALTER FUNCTION
+-- on a non-existent function would error and roll back the whole
+-- transaction, including the REVOKE pass and the moderation_pending
+-- index. The loop touches every bounded wrapper that actually exists.
+DO $$
+DECLARE
+  proc RECORD;
+BEGIN
+  FOR proc IN
+    SELECT format('%I.%I(%s)',
+                  n.nspname,
+                  p.proname,
+                  pg_get_function_identity_arguments(p.oid)) AS sig
+      FROM pg_proc p
+      JOIN pg_namespace n ON n.oid = p.pronamespace
+     WHERE n.nspname = 'public'
+       AND p.proname IN (
+         'hybrid_search_memories_bounded',
+         'keyword_search_memories_bounded',
+         'search_memories_bounded'
+       )
+  LOOP
+    EXECUTE format(
+      'ALTER FUNCTION %s SET search_path TO ''public'', ''extensions''',
+      proc.sig
+    );
+  END LOOP;
+END $$;
 
 -- 4. Atomic Obsidian path upsert ----------------------------------------
 -- Pre-fix: route did UPDATE-then-INSERT in two HTTP calls. Race: caller B's
