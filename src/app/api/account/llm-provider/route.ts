@@ -24,7 +24,14 @@ function normalizeProviderInput(value: unknown): AuthorLlmProvider | null | unde
   if (normalized === '' || normalized === 'default' || normalized === 'inherit') {
     return null;
   }
-  if (normalized === 'anthropic' || normalized === 'openai') {
+  // R26 — 'google' added so users can pick Gemini as their default provider.
+  // Pre-fix the route 400'd on Google input even though the type system + DB
+  // CHECK both already admit it (after migration 20260507001 + 20260508013).
+  if (
+    normalized === 'anthropic' ||
+    normalized === 'openai' ||
+    normalized === 'google'
+  ) {
     return normalized;
   }
   return undefined;
@@ -62,7 +69,7 @@ export async function POST(request: NextRequest) {
     const next = normalizeProviderInput(body.provider);
     if (next === undefined) {
       throw new AuthorUiValidationError(
-        "provider must be 'anthropic', 'openai', or null/'default' to clear",
+        "provider must be 'anthropic', 'openai', 'google', or null/'default' to clear",
       );
     }
     try {
