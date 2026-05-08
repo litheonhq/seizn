@@ -363,8 +363,30 @@ function extractTagsFromFrontmatter(
   return [];
 }
 
+// R17 M1 — tags reach LLM contexts that ingest tag arrays (extractor
+// prompts, search-result formatting). Same threat class as R13 A4
+// content scan: caller-supplied text can carry prompt-injection. Apply
+// the same firewall + null-strip + length cap to each tag string before
+// it lands in memories.tags. Returns empty string on critical threat so
+// the .filter(Boolean) downstream drops it; sanitized form replaces
+// lower-severity matches.
+const MAX_TAG_LEN = 100;
+
 function normalizeTag(value: string): string {
-  return value.trim().replace(/^#+/, '').trim();
+  const stripped = value.replace(/\x00/g, '').trim().replace(/^#+/, '').trim();
+  if (!stripped) return '';
+  if (stripped.length > MAX_TAG_LEN) {
+    return ''; // drop overflow tags rather than silently truncating
+  }
+  const detector = createDetector({ mode: 'sanitize' });
+  const firewall = detector.scan(stripped);
+  if (firewall.detected && compareThreatLevel(firewall.threatLevel, 'critical') >= 0) {
+    return '';
+  }
+  if (firewall.sanitizedInput && firewall.sanitizedInput.trim().length > 0) {
+    return firewall.sanitizedInput.trim();
+  }
+  return stripped;
 }
 
 // R12 audit fix (A3): metadata keys reserved for cross-channel identity
