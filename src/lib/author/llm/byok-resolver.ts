@@ -17,6 +17,7 @@ import { getActiveAuthorProvider } from './active-provider';
 import {
   AuthorLlmError,
   type AuthorByokStatus,
+  type ByokProvider as AuthorByokProvider,
   type ResolvedAuthorAnthropicKey,
 } from './types';
 
@@ -132,7 +133,7 @@ export async function recordAuthorByokUsage(
 export async function getAuthorByokStatus(
   userId: string,
   client?: ProviderKeyClient,
-  options: { provider?: 'anthropic' | 'google' | 'openai' } = {},
+  options: { provider?: AuthorByokProvider } = {},
 ): Promise<AuthorByokStatus> {
   if (!hasServerSupabaseServiceRoleConfig()) {
     return { enabled: false, provider: null, status: 'missing' };
@@ -167,7 +168,7 @@ export async function getAuthorByokStatus(
 
   return {
     enabled: true,
-    provider: targetProvider as 'anthropic' | 'google' | 'openai',
+    provider: targetProvider as AuthorByokProvider,
     key_last_4: keyHintToLast4(data.key_hint),
     verified_at: data.created_at ?? null,
     status: 'active',

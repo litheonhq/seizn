@@ -10,8 +10,9 @@ import type {
   AuthorSettingsCopy,
   ByokState,
 } from "./author-settings-types";
+import type { ByokProvider } from "@/lib/author/llm";
 
-export type ByokProvider = "anthropic" | "google" | "openai";
+export type { ByokProvider };
 
 const PROVIDER_CONSOLES: Record<ByokProvider, { url: string; label: string; keyPrefix: string }> = {
   anthropic: {

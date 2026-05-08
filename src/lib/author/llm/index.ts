@@ -54,6 +54,11 @@ export type {
   AuthorLlmResponseFormat,
   AuthorLlmUsage,
   AuthorModelUsageRecord,
+  ByokProvider,
   ResolvedAuthorAnthropicKey,
 } from './types';
-export { AuthorLlmError } from './types';
+export {
+  AuthorLlmError,
+  BYOK_PROVIDERS,
+  isByokProvider,
+} from './types';
