@@ -161,29 +161,46 @@ export function apiKeyCreatedEmail(keyName: string, keyPreview: string, locale: 
 }
 
 // API Key rotated notification
-export function apiKeyRotatedEmail(keyName: string, keyPreview: string) {
+export function apiKeyRotatedEmail(keyName: string, keyPreview: string, locale: EmailLocale = 'en') {
+  const safeKeyName = escapeHtml(keyName);
+  const safeKeyPreview = escapeHtml(keyPreview);
+  const heading = tBilingual('API Key Rotated', 'API 키가 회전되었습니다', locale);
+  const intro = tBilingual(
+    'Your API key has been rotated. The old key is no longer valid.',
+    'API 키가 회전되었습니다. 이전 키는 더 이상 사용할 수 없습니다.',
+    locale
+  );
+  const labelName = tBilingual('Key Name', '키 이름', locale);
+  const labelPreview = tBilingual('New Key Preview', '새 키 미리보기', locale);
+  const updateNote = tBilingual(
+    'Please update your applications with the new key immediately.',
+    '연결된 앱에서 새 키로 즉시 업데이트해 주시기 바랍니다.',
+    locale
+  );
+  const securityNote = tBilingual(
+    "If you didn't rotate this key, please secure your account immediately.",
+    '본인이 회전한 키가 아니라면 즉시 계정 보안을 점검해 주십시오.',
+    locale
+  );
+  const cta = tBilingual('View API Keys', 'API 키 보기', locale);
+  const subject = tBilingual(`API Key Rotated: ${keyName}`, `API 키 회전: ${keyName}`, locale);
+
   const content = `
-    <h1 style="margin:0 0 16px;font-size:24px;font-weight:600;color:#111827;">API Key Rotated</h1>
-    <p style="margin:0 0 24px;font-size:16px;color:#4b5563;line-height:1.6;">
-      Your API key has been rotated. The old key is no longer valid.
-    </p>
+    <h1 style="margin:0 0 16px;font-size:24px;font-weight:600;color:#111827;">${heading}</h1>
+    <p style="margin:0 0 24px;font-size:16px;color:#4b5563;line-height:1.6;">${intro}</p>
     <div style="background:#f3f4f6;padding:16px;border-radius:8px;margin:0 0 24px;">
-      <p style="margin:0 0 8px;font-size:14px;color:#6b7280;">Key Name</p>
-      <p style="margin:0;font-size:16px;font-weight:500;color:#111827;">${keyName}</p>
-      <p style="margin:16px 0 8px;font-size:14px;color:#6b7280;">New Key Preview</p>
-      <p style="margin:0;font-size:16px;font-family:monospace;color:#111827;">${keyPreview}...</p>
+      <p style="margin:0 0 8px;font-size:14px;color:#6b7280;">${labelName}</p>
+      <p style="margin:0;font-size:16px;font-weight:500;color:#111827;">${safeKeyName}</p>
+      <p style="margin:16px 0 8px;font-size:14px;color:#6b7280;">${labelPreview}</p>
+      <p style="margin:0;font-size:16px;font-family:monospace;color:#111827;">${safeKeyPreview}...</p>
     </div>
-    <p style="margin:0 0 24px;font-size:14px;color:#f59e0b;">
-      Please update your applications with the new key immediately.
-    </p>
-    <p style="margin:0 0 24px;font-size:14px;color:#ef4444;">
-      If you didn't rotate this key, please secure your account immediately.
-    </p>
+    <p style="margin:0 0 24px;font-size:14px;color:#f59e0b;">${updateNote}</p>
+    <p style="margin:0 0 24px;font-size:14px;color:#ef4444;">${securityNote}</p>
     <a href="https://www.seizn.com/dashboard/keys" style="display:inline-block;padding:12px 24px;background-color:#000;color:#fff;text-decoration:none;border-radius:9999px;font-weight:500;">
-      View API Keys
+      ${cta}
     </a>
   `;
-  return baseTemplate(content, `API Key Rotated: ${keyName}`);
+  return baseTemplate(content, subject);
 }
 
 // Usage alert email
