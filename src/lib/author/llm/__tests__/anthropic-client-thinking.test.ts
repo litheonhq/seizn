@@ -71,8 +71,41 @@ describe('buildAnthropicMessageParams (extended thinking)', () => {
       { ...baseRequest, system: 'You are a novelist.', responseFormat: 'json' },
       'claude-opus-4-7',
     );
-    expect(params.system).toMatch(/Return valid JSON only/);
-    expect(params.system).toMatch(/You are a novelist/);
+    // R7: system is wrapped as cache-control array when prompt caching is on
+    // (default-enabled). Pull the text out before asserting content.
+    const sys = params.system as Array<{ type: string; text: string; cache_control?: unknown }>;
+    expect(Array.isArray(sys)).toBe(true);
+    expect(sys[0]?.text).toMatch(/Return valid JSON only/);
+    expect(sys[0]?.text).toMatch(/You are a novelist/);
+    expect(sys[0]?.cache_control).toEqual({ type: 'ephemeral' });
+  });
+
+  it('R7: wraps system prompt with cache_control: ephemeral when caching enabled', () => {
+    const params = buildAnthropicMessageParams(
+      { ...baseRequest, system: 'You are an editor.' },
+      'claude-opus-4-7',
+    );
+    const sys = params.system as Array<{ type: string; text: string; cache_control: { type: string } }>;
+    expect(Array.isArray(sys)).toBe(true);
+    expect(sys[0]).toEqual({
+      type: 'text',
+      text: 'You are an editor.',
+      cache_control: { type: 'ephemeral' },
+    });
+  });
+
+  it('R7: returns plain string system when ANTHROPIC_PROMPT_CACHING is disabled', () => {
+    process.env.ANTHROPIC_PROMPT_CACHING = '0';
+    const params = buildAnthropicMessageParams(
+      { ...baseRequest, system: 'You are an editor.' },
+      'claude-opus-4-7',
+    );
+    expect(params.system).toBe('You are an editor.');
+  });
+
+  it('R7: omits system entirely when caller did not provide one', () => {
+    const params = buildAnthropicMessageParams(baseRequest, 'claude-opus-4-7');
+    expect(params).not.toHaveProperty('system');
   });
 
   it('preserves caller maxTokens when it already exceeds thinking budget + output room', () => {
