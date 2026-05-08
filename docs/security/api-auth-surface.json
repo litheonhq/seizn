@@ -1,7 +1,7 @@
 {
   "version": 1,
   "generatedBy": "scripts/verify-api-auth-surface.mjs",
-  "routeCount": 553,
+  "routeCount": 554,
   "routes": [
     {
       "route": "/api",
@@ -4878,6 +4878,17 @@
       "authMarkers": [
         "apiKey",
         "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/v1/memories/anthropic-tool",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey",
+        "webhookSignature"
       ],
       "authState": "auth-marker-present"
     },
