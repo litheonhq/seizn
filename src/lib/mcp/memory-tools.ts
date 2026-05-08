@@ -14,6 +14,7 @@
 
 import { createServerClient } from '@/lib/supabase';
 import { generateEmbedding } from '@/lib/embeddings';
+import { isUuid } from '@/lib/uuid';
 import type { MemoryScope } from '@/lib/winter/scope';
 
 // ============================================
@@ -429,6 +430,11 @@ async function handleMemoryUpdate(
   if (!memoryId) {
     return { success: false, error: 'memory_id is required' };
   }
+  // R15 H3 — surface bad UUID as 400-equivalent before Postgres returns
+  // 22P02 with column-name leak.
+  if (!isUuid(memoryId)) {
+    return { success: false, error: 'memory_id must be a valid UUID' };
+  }
 
   // Fetch existing memory
   const { data: existing, error: fetchError } = await supabase
@@ -442,23 +448,24 @@ async function handleMemoryUpdate(
     return { success: false, error: 'Memory not found' };
   }
 
+  // R15 M4 — refuse all updates on encrypted rows, not just content. Tag,
+  // importance, and metadata writes can fingerprint an encrypted row
+  // (caller writes a marker, then reads back via memory.get to confirm
+  // existence). Original R13 guard only caught args.content. Caller must
+  // decrypt via REST PATCH (/api/memories/[id]) before touching any field.
+  if (existing.is_encrypted === true) {
+    return {
+      success: false,
+      error: 'cannot update an encrypted memory via MCP; disable encryption via REST PATCH first',
+    };
+  }
+
   // Build update object
   const updates: Record<string, unknown> = {
     updated_at: new Date().toISOString(),
   };
 
   if (args.content) {
-    // R13 B3 — refuse content updates on encrypted rows. The legacy /api/memories/[id]
-    // PATCH route enforces this; MCP previously bypassed it, which would have left
-    // is_encrypted=true alongside fresh plaintext content + embedding (leaking the
-    // would-be-encrypted body and wasting an embedding write since the partial HNSW
-    // index excludes is_encrypted rows). Caller must decrypt via REST PATCH first.
-    if (existing.is_encrypted === true) {
-      return {
-        success: false,
-        error: 'content cannot be updated on an encrypted memory; disable encryption via REST PATCH first',
-      };
-    }
     updates.content = args.content;
     updates.embedding = await generateEmbedding(args.content as string);
   }
@@ -479,10 +486,16 @@ async function handleMemoryUpdate(
     };
   }
 
+  // R15 M5 — chain user_id on the UPDATE itself, not just the prior fetch.
+  // Pre-fix the fetch confirmed ownership but the UPDATE only had .eq('id'),
+  // a TOCTOU window where context.userId could in theory change between
+  // the two HTTP calls. Closes the gap so ownership re-checks atomically
+  // with the write.
   const { data, error } = await supabase
     .from('memories')
     .update(updates)
     .eq('id', memoryId)
+    .eq('user_id', context.userId)
     .select('id, content, memory_type, tags, importance, updated_at')
     .single();
 
@@ -512,6 +525,9 @@ async function handleMemoryDelete(
   const memoryId = args.memory_id as string;
   if (!memoryId) {
     return { success: false, error: 'memory_id is required' };
+  }
+  if (!isUuid(memoryId)) {
+    return { success: false, error: 'memory_id must be a valid UUID' };
   }
 
   // Soft delete
@@ -553,6 +569,9 @@ async function handleMemoryGet(
   const memoryId = args.memory_id as string;
   if (!memoryId) {
     return { success: false, error: 'memory_id is required' };
+  }
+  if (!isUuid(memoryId)) {
+    return { success: false, error: 'memory_id must be a valid UUID' };
   }
 
   const { data, error } = await supabase
