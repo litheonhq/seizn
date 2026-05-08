@@ -114,15 +114,11 @@ export class TemporalValidationError extends Error {
   }
 }
 
-// R13 C11 — UUID v4-shape regex. Rough permissive form so any RFC4122
-// variant (v1-v5) passes; we only need to keep obviously-bad strings out
-// of postgres before they trigger generic 22P02 errors that the audit
-// flagged as leaking column names.
-const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-
-export function isUuid(value: string): boolean {
-  return UUID_RE.test(value);
-}
+// R15 — moved to shared src/lib/uuid.ts so MCP routes and other UUID
+// surfaces (memory_id, session_id, agent_id, entity_id) can use the same
+// validator. Re-exported here for back-compat with existing callers.
+import { isUuid } from '@/lib/uuid';
+export { isUuid } from '@/lib/uuid';
 
 export function validateTemporalInputs(input: TemporalInputs): void {
   if (input.canon_status != null && !isMemoryCanonStatus(input.canon_status)) {
