@@ -1,3 +1,9 @@
+export type EmailLocale = 'en' | 'ko';
+
+function tBilingual(en: string, ko: string, locale: EmailLocale): string {
+  return locale === 'ko' ? ko : en;
+}
+
 function escapeHtml(value: string): string {
   return value
     .replace(/&/g, '&amp;')
@@ -69,51 +75,73 @@ function baseTemplate(content: string, previewText?: string) {
 }
 
 // Welcome email when user signs up
-export function welcomeEmail(name: string) {
+export function welcomeEmail(name: string, locale: EmailLocale = 'en') {
+  const safeName = escapeHtml(name || (locale === 'ko' ? '작가님' : 'there'));
+  const heading = tBilingual('Welcome to Seizn!', 'Seizn에 오신 것을 환영합니다.', locale);
+  const greeting = tBilingual(`Hi ${safeName},`, `${safeName}, 안녕하세요.`, locale);
+  const intro = tBilingual(
+    'Thanks for joining Seizn! You now have access to powerful AI memory infrastructure that helps your applications remember everything.',
+    'Seizn 가입을 축하드립니다. 이제 작품·앱이 일관된 기억을 갖도록 도와주는 AI 메모리 인프라를 사용할 수 있습니다.',
+    locale
+  );
+  const guideLead = tBilingual("Here's how to get started:", '시작 안내는 다음과 같습니다.', locale);
+  const step1 = tBilingual('Create your first API key in the dashboard', '대시보드에서 첫 API 키를 만드세요.', locale);
+  const step2Prefix = tBilingual('Install our SDK: ', 'SDK를 설치합니다: ', locale);
+  const step3 = tBilingual('Start adding memories to your AI', 'AI에 메모리를 추가하기 시작하세요.', locale);
+  const cta = tBilingual('Go to Dashboard', '대시보드로 이동', locale);
+  const subject = tBilingual('Welcome to Seizn — AI memory infrastructure', 'Seizn에 오신 것을 환영합니다 — AI 메모리 인프라', locale);
+
   const content = `
-    <h1 style="margin:0 0 16px;font-size:24px;font-weight:600;color:#111827;">Welcome to Seizn!</h1>
-    <p style="margin:0 0 24px;font-size:16px;color:#4b5563;line-height:1.6;">
-      Hi ${name || 'there'},
-    </p>
-    <p style="margin:0 0 24px;font-size:16px;color:#4b5563;line-height:1.6;">
-      Thanks for joining Seizn! You now have access to powerful AI memory infrastructure that helps your applications remember everything.
-    </p>
-    <p style="margin:0 0 24px;font-size:16px;color:#4b5563;line-height:1.6;">
-      Here's how to get started:
-    </p>
+    <h1 style="margin:0 0 16px;font-size:24px;font-weight:600;color:#111827;">${heading}</h1>
+    <p style="margin:0 0 24px;font-size:16px;color:#4b5563;line-height:1.6;">${greeting}</p>
+    <p style="margin:0 0 24px;font-size:16px;color:#4b5563;line-height:1.6;">${intro}</p>
+    <p style="margin:0 0 24px;font-size:16px;color:#4b5563;line-height:1.6;">${guideLead}</p>
     <ol style="margin:0 0 24px;padding-left:20px;font-size:16px;color:#4b5563;line-height:1.8;">
-      <li>Create your first API key in the dashboard</li>
-      <li>Install our SDK: <code style="background:#f3f4f6;padding:2px 6px;border-radius:4px;">npm install seizn</code></li>
-      <li>Start adding memories to your AI</li>
+      <li>${step1}</li>
+      <li>${step2Prefix}<code style="background:#f3f4f6;padding:2px 6px;border-radius:4px;">npm install seizn</code></li>
+      <li>${step3}</li>
     </ol>
     <a href="https://www.seizn.com/dashboard" style="display:inline-block;padding:12px 24px;background-color:#000;color:#fff;text-decoration:none;border-radius:9999px;font-weight:500;">
-      Go to Dashboard
+      ${cta}
     </a>
   `;
-  return baseTemplate(content, 'Welcome to Seizn - AI Memory Infrastructure');
+  return baseTemplate(content, subject);
 }
 
 // API Key created notification
-export function apiKeyCreatedEmail(keyName: string, keyPreview: string) {
+export function apiKeyCreatedEmail(keyName: string, keyPreview: string, locale: EmailLocale = 'en') {
+  const safeKeyName = escapeHtml(keyName);
+  const heading = tBilingual('New API Key Created', 'API 키가 발급되었습니다', locale);
+  const intro = tBilingual(
+    'A new API key has been created for your Seizn account.',
+    'Seizn 계정에 새 API 키가 발급되었습니다.',
+    locale
+  );
+  const labelName = tBilingual('Key Name', '키 이름', locale);
+  const labelPreview = tBilingual('Key Preview', '키 미리보기', locale);
+  const warning = tBilingual(
+    "If you didn't create this key, please secure your account immediately.",
+    '본인이 발급한 키가 아니라면 즉시 계정 보안을 점검해주세요.',
+    locale
+  );
+  const cta = tBilingual('View API Keys', 'API 키 보기', locale);
+  const subject = tBilingual(`New API Key: ${keyName}`, `API 키 발급: ${keyName}`, locale);
+
   const content = `
-    <h1 style="margin:0 0 16px;font-size:24px;font-weight:600;color:#111827;">New API Key Created</h1>
-    <p style="margin:0 0 24px;font-size:16px;color:#4b5563;line-height:1.6;">
-      A new API key has been created for your Seizn account.
-    </p>
+    <h1 style="margin:0 0 16px;font-size:24px;font-weight:600;color:#111827;">${heading}</h1>
+    <p style="margin:0 0 24px;font-size:16px;color:#4b5563;line-height:1.6;">${intro}</p>
     <div style="background:#f3f4f6;padding:16px;border-radius:8px;margin:0 0 24px;">
-      <p style="margin:0 0 8px;font-size:14px;color:#6b7280;">Key Name</p>
-      <p style="margin:0;font-size:16px;font-weight:500;color:#111827;">${keyName}</p>
-      <p style="margin:16px 0 8px;font-size:14px;color:#6b7280;">Key Preview</p>
-      <p style="margin:0;font-size:16px;font-family:monospace;color:#111827;">${keyPreview}...</p>
+      <p style="margin:0 0 8px;font-size:14px;color:#6b7280;">${labelName}</p>
+      <p style="margin:0;font-size:16px;font-weight:500;color:#111827;">${safeKeyName}</p>
+      <p style="margin:16px 0 8px;font-size:14px;color:#6b7280;">${labelPreview}</p>
+      <p style="margin:0;font-size:16px;font-family:monospace;color:#111827;">${escapeHtml(keyPreview)}...</p>
     </div>
-    <p style="margin:0 0 24px;font-size:14px;color:#ef4444;">
-      If you didn't create this key, please secure your account immediately.
-    </p>
+    <p style="margin:0 0 24px;font-size:14px;color:#ef4444;">${warning}</p>
     <a href="https://www.seizn.com/dashboard" style="display:inline-block;padding:12px 24px;background-color:#000;color:#fff;text-decoration:none;border-radius:9999px;font-weight:500;">
-      View API Keys
+      ${cta}
     </a>
   `;
-  return baseTemplate(content, `New API Key: ${keyName}`);
+  return baseTemplate(content, subject);
 }
 
 // API Key rotated notification
@@ -184,41 +212,71 @@ export function usageAlertEmail(
 export function organizationInviteEmail(
   inviterName: string,
   organizationName: string,
-  inviteLink: string
+  inviteLink: string,
+  locale: EmailLocale = 'en'
 ) {
+  const safeInviter = escapeHtml(inviterName);
+  const safeOrg = escapeHtml(organizationName);
+  const heading = tBilingual("You're invited", '초대장이 도착했습니다', locale);
+  const lead = tBilingual(
+    `<strong>${safeInviter}</strong> has invited you to join <strong>${safeOrg}</strong> on Seizn.`,
+    `<strong>${safeInviter}</strong> 님이 Seizn의 <strong>${safeOrg}</strong> 조직으로 초대했습니다.`,
+    locale
+  );
+  const body = tBilingual(
+    'Click the button below to accept the invitation and start collaborating.',
+    '아래 버튼을 눌러 초대를 수락하고 함께 작업을 시작하세요.',
+    locale
+  );
+  const cta = tBilingual('Accept Invitation', '초대 수락', locale);
+  const expiry = tBilingual(
+    'This invitation will expire in 7 days.',
+    '이 초대는 7일 뒤에 만료됩니다.',
+    locale
+  );
+  const subject = tBilingual(
+    `${inviterName} invited you to ${organizationName}`,
+    `${inviterName} 님이 ${organizationName}로 초대했습니다`,
+    locale
+  );
+
   const content = `
-    <h1 style="margin:0 0 16px;font-size:24px;font-weight:600;color:#111827;">You're Invited!</h1>
-    <p style="margin:0 0 24px;font-size:16px;color:#4b5563;line-height:1.6;">
-      <strong>${inviterName}</strong> has invited you to join <strong>${organizationName}</strong> on Seizn.
-    </p>
-    <p style="margin:0 0 24px;font-size:16px;color:#4b5563;line-height:1.6;">
-      Click the button below to accept the invitation and start collaborating.
-    </p>
+    <h1 style="margin:0 0 16px;font-size:24px;font-weight:600;color:#111827;">${heading}</h1>
+    <p style="margin:0 0 24px;font-size:16px;color:#4b5563;line-height:1.6;">${lead}</p>
+    <p style="margin:0 0 24px;font-size:16px;color:#4b5563;line-height:1.6;">${body}</p>
     <a href="${inviteLink}" style="display:inline-block;padding:12px 24px;background-color:#000;color:#fff;text-decoration:none;border-radius:9999px;font-weight:500;">
-      Accept Invitation
+      ${cta}
     </a>
-    <p style="margin:24px 0 0;font-size:14px;color:#6b7280;">
-      This invitation will expire in 7 days.
-    </p>
+    <p style="margin:24px 0 0;font-size:14px;color:#6b7280;">${expiry}</p>
   `;
-  return baseTemplate(content, `${inviterName} invited you to ${organizationName}`);
+  return baseTemplate(content, subject);
 }
 
 // Password reset email
-export function passwordResetEmail(resetLink: string) {
+export function passwordResetEmail(resetLink: string, locale: EmailLocale = 'en') {
+  const heading = tBilingual('Reset your password', '비밀번호 재설정', locale);
+  const body = tBilingual(
+    'We received a request to reset your password. Click the button below to create a new password.',
+    '비밀번호 재설정 요청을 받았습니다. 아래 버튼을 눌러 새 비밀번호를 설정해주세요.',
+    locale
+  );
+  const cta = tBilingual('Reset Password', '비밀번호 재설정', locale);
+  const note = tBilingual(
+    "If you didn't request this, you can safely ignore this email. This link will expire in 1 hour.",
+    '본인이 요청하지 않았다면 이 메일은 무시하셔도 됩니다. 이 링크는 1시간 뒤에 만료됩니다.',
+    locale
+  );
+  const subject = tBilingual('Reset your Seizn password', 'Seizn 비밀번호 재설정', locale);
+
   const content = `
-    <h1 style="margin:0 0 16px;font-size:24px;font-weight:600;color:#111827;">Reset Your Password</h1>
-    <p style="margin:0 0 24px;font-size:16px;color:#4b5563;line-height:1.6;">
-      We received a request to reset your password. Click the button below to create a new password.
-    </p>
+    <h1 style="margin:0 0 16px;font-size:24px;font-weight:600;color:#111827;">${heading}</h1>
+    <p style="margin:0 0 24px;font-size:16px;color:#4b5563;line-height:1.6;">${body}</p>
     <a href="${resetLink}" style="display:inline-block;padding:12px 24px;background-color:#000;color:#fff;text-decoration:none;border-radius:9999px;font-weight:500;">
-      Reset Password
+      ${cta}
     </a>
-    <p style="margin:24px 0 0;font-size:14px;color:#6b7280;">
-      If you didn't request this, you can safely ignore this email. This link will expire in 1 hour.
-    </p>
+    <p style="margin:24px 0 0;font-size:14px;color:#6b7280;">${note}</p>
   `;
-  return baseTemplate(content, 'Reset your Seizn password');
+  return baseTemplate(content, subject);
 }
 
 // Weekly usage summary
@@ -288,49 +346,60 @@ export function paymentFailedEmail(
   name: string,
   amount?: string,
   currency?: string,
-  invoiceUrl?: string
+  invoiceUrl?: string,
+  locale: EmailLocale = 'en'
 ) {
+  const safeName = escapeHtml(name || (locale === 'ko' ? '작가님' : 'there'));
   const amountDisplay = amount && currency
     ? `${currency.toUpperCase()} ${(Number(amount) / 100).toFixed(2)}`
     : null;
 
+  const heading = tBilingual('Payment failed', '결제가 실패했습니다', locale);
+  const greeting = tBilingual(`Hi ${safeName},`, `${safeName}, 안녕하세요.`, locale);
+  const body = tBilingual(
+    `We were unable to process your latest payment${amountDisplay ? ` of <strong>${amountDisplay}</strong>` : ''}. Please update your payment method to avoid any service interruptions.`,
+    `최근 결제${amountDisplay ? ` (<strong>${amountDisplay}</strong>)` : ''}가 처리되지 않았습니다. 서비스 중단을 막기 위해 결제 수단을 업데이트해주세요.`,
+    locale
+  );
+  const warningBox = tBilingual(
+    'Your account access may be restricted if payment is not resolved within 7 days.',
+    '7일 이내에 결제가 정상화되지 않으면 계정 사용이 제한될 수 있습니다.',
+    locale
+  );
+  const ctaInvoice = tBilingual('View Invoice', '청구서 보기', locale);
+  const ctaUpdate = tBilingual('Update Payment Method', '결제 수단 변경', locale);
+  const supportNote = tBilingual(
+    'If you believe this is an error, please contact us at',
+    '오류라고 판단되시면 다음으로 문의해주세요:',
+    locale
+  );
+  const subject = tBilingual('Action required: your payment failed', '확인 필요: 결제가 실패했습니다', locale);
+
   const content = `
-    <h1 style="margin:0 0 16px;font-size:24px;font-weight:600;color:#111827;">Payment Failed</h1>
-    <p style="margin:0 0 24px;font-size:16px;color:#4b5563;line-height:1.6;">
-      Hi ${name || 'there'},
-    </p>
-    <p style="margin:0 0 24px;font-size:16px;color:#4b5563;line-height:1.6;">
-      We were unable to process your latest payment${amountDisplay ? ` of <strong>${amountDisplay}</strong>` : ''}. Please update your payment method to avoid any service interruptions.
-    </p>
+    <h1 style="margin:0 0 16px;font-size:24px;font-weight:600;color:#111827;">${heading}</h1>
+    <p style="margin:0 0 24px;font-size:16px;color:#4b5563;line-height:1.6;">${greeting}</p>
+    <p style="margin:0 0 24px;font-size:16px;color:#4b5563;line-height:1.6;">${body}</p>
     <div style="background:#fef2f2;padding:16px;border-radius:8px;margin:0 0 24px;border:1px solid #fecaca;">
-      <p style="margin:0;font-size:14px;color:#991b1b;">
-        Your account access may be restricted if payment is not resolved within 7 days.
-      </p>
+      <p style="margin:0;font-size:14px;color:#991b1b;">${warningBox}</p>
     </div>
     ${invoiceUrl ? `
     <a href="${invoiceUrl}" style="display:inline-block;padding:12px 24px;background-color:#000;color:#fff;text-decoration:none;border-radius:9999px;font-weight:500;margin-bottom:12px;">
-      View Invoice
+      ${ctaInvoice}
     </a>
     <br>` : ''}
     <a href="https://www.seizn.com/dashboard/billing" style="display:inline-block;padding:12px 24px;background-color:#fff;color:#111827;text-decoration:none;border-radius:9999px;font-weight:500;border:1px solid #d1d5db;margin-top:8px;">
-      Update Payment Method
+      ${ctaUpdate}
     </a>
     <p style="margin:24px 0 0;font-size:14px;color:#6b7280;">
-      If you believe this is an error, please contact us at <a href="mailto:support@seizn.com" style="color:#4b5563;">support@seizn.com</a>.
+      ${supportNote} <a href="mailto:support@seizn.com" style="color:#4b5563;">support@seizn.com</a>.
     </p>
   `;
-  return baseTemplate(content, 'Action required: Your payment failed');
+  return baseTemplate(content, subject);
 }
 
 // =============================================================================
-// W2.5 — added 2026-05-09. signup-confirm, payment-receipt, waitlist-confirm.
+// W2.5 — signup-confirm, payment-receipt, waitlist-confirm.
 // =============================================================================
-
-export type EmailLocale = 'en' | 'ko';
-
-function tBilingual(en: string, ko: string, locale: EmailLocale): string {
-  return locale === 'ko' ? ko : en;
-}
 
 // Signup email confirmation (free-tier abuse defense per W3.9)
 export function signupConfirmEmail(
