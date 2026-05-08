@@ -1,7 +1,7 @@
 {
   "version": 1,
   "generatedBy": "scripts/verify-api-auth-surface.mjs",
-  "routeCount": 554,
+  "routeCount": 558,
   "routes": [
     {
       "route": "/api",
@@ -2132,6 +2132,17 @@
       ],
       "authMarkers": [
         "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/legal/reconsent",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "sessionUser"
       ],
       "authState": "auth-marker-present"
     },
@@ -4846,6 +4857,16 @@
       "authState": "auth-marker-present"
     },
     {
+      "route": "/api/v1/integrations/obsidian/import",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
       "route": "/api/v1/memories",
       "methods": [
         "DELETE",
@@ -5356,6 +5377,14 @@
       "authState": "no-auth-marker-detected"
     },
     {
+      "route": "/api/waitlist/desktop",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
       "route": "/api/webhooks",
       "methods": [
         "DELETE",
@@ -5393,6 +5422,16 @@
     },
     {
       "route": "/api/webhooks/github",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "webhookSignature"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/webhooks/resend",
       "methods": [
         "POST"
       ],
