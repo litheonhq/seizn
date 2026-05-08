@@ -17,7 +17,11 @@ interface ProfilesProviderPrefClient {
   };
 }
 
-const VALID_PROVIDERS: ReadonlySet<AuthorLlmProvider> = new Set(['anthropic', 'openai']);
+const VALID_PROVIDERS: ReadonlySet<AuthorLlmProvider> = new Set([
+  'anthropic',
+  'google',
+  'openai',
+]);
 
 function normalize(value: string | null | undefined): AuthorLlmProvider | null {
   const candidate = value?.trim().toLowerCase();

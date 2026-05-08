@@ -1,6 +1,6 @@
 import type { AuthorLlmEffort } from './effort-mapping';
 
-export type AuthorLlmProvider = 'anthropic' | 'openai';
+export type AuthorLlmProvider = 'anthropic' | 'google' | 'openai';
 export type AuthorLlmResponseFormat = 'text' | 'json';
 export type AuthorLlmKeySource = 'byok' | 'managed';
 

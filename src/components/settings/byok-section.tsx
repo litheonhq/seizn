@@ -5,12 +5,31 @@ import { AlertCircle, CheckCircle2, ExternalLink, KeyRound, Trash2 } from "lucid
 
 const ANTHROPIC_CONSOLE_KEYS_URL = "https://console.anthropic.com/settings/keys";
 const OPENAI_CONSOLE_KEYS_URL = "https://platform.openai.com/api-keys";
+const GOOGLE_AI_STUDIO_KEYS_URL = "https://aistudio.google.com/apikey";
 import type {
   AuthorSettingsCopy,
   ByokState,
 } from "./author-settings-types";
 
-export type ByokProvider = "anthropic" | "openai";
+export type ByokProvider = "anthropic" | "google" | "openai";
+
+const PROVIDER_CONSOLES: Record<ByokProvider, { url: string; label: string; keyPrefix: string }> = {
+  anthropic: {
+    url: ANTHROPIC_CONSOLE_KEYS_URL,
+    label: "Anthropic Console",
+    keyPrefix: "sk-ant-...",
+  },
+  openai: {
+    url: OPENAI_CONSOLE_KEYS_URL,
+    label: "OpenAI Platform",
+    keyPrefix: "sk-...",
+  },
+  google: {
+    url: GOOGLE_AI_STUDIO_KEYS_URL,
+    label: "Google AI Studio",
+    keyPrefix: "AIza...",
+  },
+};
 
 interface ByokSectionProps {
   byok: ByokState;
@@ -30,15 +49,19 @@ export function ByokSection({
   const inputId = useId();
   const providerRadioId = useId();
   const [apiKey, setApiKey] = useState("");
-  const initialProvider: ByokProvider = byok.provider === "openai" ? "openai" : "anthropic";
+  const initialProvider: ByokProvider =
+    byok.provider === "openai" || byok.provider === "google" || byok.provider === "anthropic"
+      ? byok.provider
+      : "anthropic";
   const [provider, setProvider] = useState<ByokProvider>(initialProvider);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const isActive = byok.enabled && byok.status === "active";
   const busy = action !== "idle";
-  const consoleUrl = provider === "openai" ? OPENAI_CONSOLE_KEYS_URL : ANTHROPIC_CONSOLE_KEYS_URL;
-  const consoleLabel = provider === "openai" ? "OpenAI Platform" : "Anthropic Console";
-  const keyPrefixHint = provider === "openai" ? "sk-..." : "sk-ant-...";
+  const consoleEntry = PROVIDER_CONSOLES[provider];
+  const consoleUrl = consoleEntry.url;
+  const consoleLabel = consoleEntry.label;
+  const keyPrefixHint = consoleEntry.keyPrefix;
 
   async function handleSave(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -114,6 +137,14 @@ export function ByokSection({
             label="OpenAI"
             checked={provider === "openai"}
             onChange={() => setProvider("openai")}
+          />
+          <ProviderRadio
+            id={`${providerRadioId}-google`}
+            name={providerRadioId}
+            value="google"
+            label="Google"
+            checked={provider === "google"}
+            onChange={() => setProvider("google")}
           />
         </div>
       </fieldset>
