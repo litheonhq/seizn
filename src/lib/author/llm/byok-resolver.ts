@@ -23,6 +23,7 @@ import {
 const AUTHOR_BYOK_LABEL = 'Author Memory v3 Anthropic';
 const AUTHOR_BYOK_PROVIDER: Provider = 'anthropic';
 const AUTHOR_BYOK_OPENAI_PROVIDER: Provider = 'openai';
+const AUTHOR_BYOK_GOOGLE_PROVIDER: Provider = 'google';
 
 interface ProviderKeyLookup {
   (userId: string, provider: Provider): Promise<ProviderKey | null>;
@@ -131,7 +132,7 @@ export async function recordAuthorByokUsage(
 export async function getAuthorByokStatus(
   userId: string,
   client?: ProviderKeyClient,
-  options: { provider?: 'anthropic' | 'openai' } = {},
+  options: { provider?: 'anthropic' | 'google' | 'openai' } = {},
 ): Promise<AuthorByokStatus> {
   if (!hasServerSupabaseServiceRoleConfig()) {
     return { enabled: false, provider: null, status: 'missing' };
@@ -166,7 +167,7 @@ export async function getAuthorByokStatus(
 
   return {
     enabled: true,
-    provider: targetProvider as 'anthropic' | 'openai',
+    provider: targetProvider as 'anthropic' | 'google' | 'openai',
     key_last_4: keyHintToLast4(data.key_hint),
     verified_at: data.created_at ?? null,
     status: 'active',
@@ -177,6 +178,7 @@ export async function getAuthorByokStatus(
 const AUTHOR_BYOK_SUPPORTED_PROVIDERS: ReadonlySet<Provider> = new Set([
   AUTHOR_BYOK_PROVIDER,
   AUTHOR_BYOK_OPENAI_PROVIDER,
+  AUTHOR_BYOK_GOOGLE_PROVIDER,
 ]);
 
 function isSupportedAuthorByokProvider(value: string): value is Provider {
@@ -212,9 +214,12 @@ export async function saveAuthorByokKey(
     throw new AuthorLlmError('LLM_NOT_CONFIGURED', 'BYOK storage client is unavailable', 500);
   }
 
-  const label = provider === AUTHOR_BYOK_OPENAI_PROVIDER
-    ? `Author Memory v3 OpenAI ${new Date().toISOString()}`
-    : `${AUTHOR_BYOK_LABEL} ${new Date().toISOString()}`;
+  const labelStem = provider === AUTHOR_BYOK_OPENAI_PROVIDER
+    ? 'Author Memory v3 OpenAI'
+    : provider === AUTHOR_BYOK_GOOGLE_PROVIDER
+      ? 'Author Memory v3 Google'
+      : AUTHOR_BYOK_LABEL;
+  const label = `${labelStem} ${new Date().toISOString()}`;
 
   const { data, error } = await providerKeys
     .insert({
@@ -288,6 +293,52 @@ function readManagedOpenAiKey(env: NodeJS.ProcessEnv): string | null {
     env.AUTHOR_LLM_OPENAI_API_KEY ||
     env.LITHEON_OPENAI_API_KEY ||
     env.OPENAI_API_KEY ||
+    null
+  );
+}
+
+export async function resolveAuthorGoogleKey(
+  input: { userId: string; projectId?: string },
+  deps: {
+    lookupProviderKey?: ProviderKeyLookup;
+    nodeEnv?: string;
+    env?: NodeJS.ProcessEnv;
+  } = {},
+): Promise<ResolvedAuthorAnthropicKey> {
+  const lookupProviderKey = deps.lookupProviderKey ?? getUserProviderKey;
+  const userKey = await lookupProviderKey(input.userId, AUTHOR_BYOK_GOOGLE_PROVIDER);
+  if (userKey) {
+    return {
+      apiKey: userKey.apiKey,
+      source: 'byok',
+      byok: true,
+      providerKeyId: userKey.id,
+    };
+  }
+
+  const env = deps.env ?? process.env;
+  const managedKey = readManagedGoogleKey(env);
+  if (!managedKey) {
+    throw new AuthorLlmError(
+      'LLM_NOT_CONFIGURED',
+      'Managed Google key is not configured for Author Memory v3',
+    );
+  }
+
+  return {
+    apiKey: managedKey,
+    source: 'managed',
+    byok: false,
+  };
+}
+
+function readManagedGoogleKey(env: NodeJS.ProcessEnv): string | null {
+  return (
+    env.AUTHOR_GOOGLE_DEV_API_KEY ||
+    env.AUTHOR_LLM_GOOGLE_API_KEY ||
+    env.LITHEON_GOOGLE_API_KEY ||
+    env.GOOGLE_API_KEY ||
+    env.GEMINI_API_KEY ||
     null
   );
 }

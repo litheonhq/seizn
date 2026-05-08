@@ -7,6 +7,10 @@ export {
   generateAuthorOpenAi,
 } from './openai-client';
 export {
+  AuthorGeminiClient,
+  generateAuthorGemini,
+} from './gemini-client';
+export {
   generateAuthorLlm,
   resolveAuthorLlmProvider,
 } from './provider-router';
@@ -21,9 +25,11 @@ export {
 export {
   DEFAULT_AUTHOR_LLM_EFFORT,
   getAnthropicThinkingBudget,
+  getGeminiThinkingBudget,
   getOpenAiReasoningEffort,
   isAuthorLlmEffort,
   modelSupportsExtendedThinking,
+  modelSupportsGeminiThinking,
   resolveAuthorLlmEffort,
 } from './effort-mapping';
 export type { AuthorLlmEffort } from './effort-mapping';
@@ -31,6 +37,7 @@ export {
   getAuthorByokStatus,
   recordAuthorByokUsage,
   resolveAuthorAnthropicKey,
+  resolveAuthorGoogleKey,
   resolveAuthorOpenAiKey,
   saveAuthorByokKey,
 } from './byok-resolver';

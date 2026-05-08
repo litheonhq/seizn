@@ -1,5 +1,6 @@
 import { generateAuthorAnthropic } from './anthropic-client';
 import { getActiveAuthorProvider, getActiveAuthorProviderSync } from './active-provider';
+import { generateAuthorGemini } from './gemini-client';
 import { generateAuthorOpenAi } from './openai-client';
 import { getManagedEntitlements } from '@/lib/author/billing/managed-entitlements';
 import {
@@ -101,6 +102,8 @@ function invokeProvider<TJson>(
       return generateAuthorAnthropic<TJson>(request);
     case 'openai':
       return generateAuthorOpenAi<TJson>(request);
+    case 'google':
+      return generateAuthorGemini<TJson>(request);
     default:
       throw new AuthorLlmError(
         'LLM_NOT_CONFIGURED',
@@ -109,9 +112,16 @@ function invokeProvider<TJson>(
   }
 }
 
+// R22 — 3-way failover map. Single secondary per primary keeps the failover
+// path bounded (we don't chain through all 3 on cascading failures). Order
+// chosen so each primary's secondary is the closest in capability:
+//   anthropic → openai (both best at literary prose)
+//   openai → anthropic (same)
+//   google → anthropic (Gemini → Claude as the literary-quality fallback)
 function otherProvider(p: AuthorLlmProvider): AuthorLlmProvider | null {
   if (p === 'anthropic') return 'openai';
   if (p === 'openai') return 'anthropic';
+  if (p === 'google') return 'anthropic';
   return null;
 }
 
