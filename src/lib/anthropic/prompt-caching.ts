@@ -71,12 +71,30 @@ export function buildAnthropicSdkDefaultHeaders(): Record<string, string> | unde
   };
 }
 
+export type PromptCachePolicy = 'auto' | 'cold' | 'warm';
+
+/**
+ * R13 A9 — caller-side hygiene reminder. Ephemeral cache keys are derived
+ * from the exact text of the cached block. Inserting per-request tokens —
+ * userId/projectId UUIDs, request_id, timestamp — into the system prompt
+ * defeats the cache (every call gets a unique key, paying write surcharge
+ * on every call without ever reading). Keep system prompts identifier-
+ * free; pass tenant-scoped data in the user message or via SDK metadata
+ * instead. Today no Author Memory v3 path violates this; this comment
+ * exists so future system-prompt changes are aware of the constraint.
+ */
 export function buildCachedSystemPrompt(
-  systemPrompt: string | undefined
+  systemPrompt: string | undefined,
+  policy: PromptCachePolicy = 'auto',
 ): string | AnthropicTextBlockWithCache[] | undefined {
   if (!systemPrompt) return undefined;
 
-  if (!isAnthropicPromptCachingEnabled()) {
+  // R13 C7 — policy-aware gate. 'cold' bypasses caching even when env
+  // enabled (Free BYOK one-off paths shouldn't pay the write surcharge);
+  // 'warm' forces caching even when env disabled (local dev / migration
+  // testing only); 'auto' respects the env flag.
+  if (policy === 'cold') return systemPrompt;
+  if (policy === 'auto' && !isAnthropicPromptCachingEnabled()) {
     return systemPrompt;
   }
 

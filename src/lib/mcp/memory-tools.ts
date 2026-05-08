@@ -448,6 +448,17 @@ async function handleMemoryUpdate(
   };
 
   if (args.content) {
+    // R13 B3 — refuse content updates on encrypted rows. The legacy /api/memories/[id]
+    // PATCH route enforces this; MCP previously bypassed it, which would have left
+    // is_encrypted=true alongside fresh plaintext content + embedding (leaking the
+    // would-be-encrypted body and wasting an embedding write since the partial HNSW
+    // index excludes is_encrypted rows). Caller must decrypt via REST PATCH first.
+    if (existing.is_encrypted === true) {
+      return {
+        success: false,
+        error: 'content cannot be updated on an encrypted memory; disable encryption via REST PATCH first',
+      };
+    }
     updates.content = args.content;
     updates.embedding = await generateEmbedding(args.content as string);
   }

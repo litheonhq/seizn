@@ -114,6 +114,16 @@ export class TemporalValidationError extends Error {
   }
 }
 
+// R13 C11 — UUID v4-shape regex. Rough permissive form so any RFC4122
+// variant (v1-v5) passes; we only need to keep obviously-bad strings out
+// of postgres before they trigger generic 22P02 errors that the audit
+// flagged as leaking column names.
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+export function isUuid(value: string): boolean {
+  return UUID_RE.test(value);
+}
+
 export function validateTemporalInputs(input: TemporalInputs): void {
   if (input.canon_status != null && !isMemoryCanonStatus(input.canon_status)) {
     throw new TemporalValidationError(
@@ -133,6 +143,14 @@ export function validateTemporalInputs(input: TemporalInputs): void {
   ) {
     throw new TemporalValidationError(
       'invalidated_at cannot be earlier than valid_at',
+    );
+  }
+  // R13 C11 — surface bad supersedes_id as a clean 400 instead of letting
+  // it reach Postgres and trigger a generic '22P02 invalid input syntax
+  // for type uuid' that the audit flagged as a column-name leak risk.
+  if (input.supersedes_id != null && !isUuid(input.supersedes_id)) {
+    throw new TemporalValidationError(
+      'supersedes_id must be a valid UUID',
     );
   }
 }
