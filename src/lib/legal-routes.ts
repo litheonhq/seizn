@@ -1,7 +1,7 @@
 export const LEGAL_CONTENT_LOCALES = ["en", "ko", "ja", "zh"] as const;
 export type LegalContentLocale = (typeof LEGAL_CONTENT_LOCALES)[number];
 
-export const LEGAL_DOCUMENTS = ["privacy", "terms", "beta-disclosure", "refund", "subprocessors", "ai-disclosure"] as const;
+export const LEGAL_DOCUMENTS = ["privacy", "terms", "beta-disclosure", "refund", "subprocessors", "ai-disclosure", "dpa"] as const;
 export type LegalDocumentSlug = (typeof LEGAL_DOCUMENTS)[number];
 
 export const LEGAL_DOCUMENT_FILES: Record<LegalDocumentSlug, string> = {
@@ -11,6 +11,7 @@ export const LEGAL_DOCUMENT_FILES: Record<LegalDocumentSlug, string> = {
   refund: "refund-policy.md",
   subprocessors: "subprocessors.md",
   "ai-disclosure": "ai-disclosure.md",
+  dpa: "dpa.md",
 };
 
 export const LEGAL_DOCUMENT_LABELS: Record<LegalContentLocale, Record<LegalDocumentSlug, string>> = {
@@ -24,6 +25,7 @@ export const LEGAL_DOCUMENT_LABELS: Record<LegalContentLocale, Record<LegalDocum
     refund: "Refund Policy",
     subprocessors: "Sub-processors",
     "ai-disclosure": "AI Transparency",
+    dpa: "DPA",
   },
   ko: {
     privacy: "개인정보",
@@ -32,6 +34,7 @@ export const LEGAL_DOCUMENT_LABELS: Record<LegalContentLocale, Record<LegalDocum
     refund: "환불 정책",
     subprocessors: "수탁 처리자",
     "ai-disclosure": "AI 공시",
+    dpa: "DPA",
   },
   ja: {
     privacy: "プライバシー",
@@ -40,6 +43,7 @@ export const LEGAL_DOCUMENT_LABELS: Record<LegalContentLocale, Record<LegalDocum
     refund: "返金ポリシー",
     subprocessors: "再委託先",
     "ai-disclosure": "AI 開示",
+    dpa: "DPA",
   },
   zh: {
     privacy: "隐私",
@@ -48,6 +52,7 @@ export const LEGAL_DOCUMENT_LABELS: Record<LegalContentLocale, Record<LegalDocum
     refund: "退款政策",
     subprocessors: "次处理方",
     "ai-disclosure": "AI 披露",
+    dpa: "DPA",
   },
 };
 
