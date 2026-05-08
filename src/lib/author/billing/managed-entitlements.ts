@@ -69,10 +69,11 @@ export function deriveEntitlements(
     prioritySupportSlaHours: 48,
     collaboratorSeats: SEATS_BY_TIER[tier],
     // Indie Managed runs medium effort to protect $27/mo margin. Pro+ gets
-    // xhigh by default. Enterprise's effort is decided per-contract; default
-    // to xhigh = false because Enterprise BYOK runs on the user's key with
-    // user-chosen effort.
-    xhighEffortIncluded: tier !== 'indie' && !tierConfig.byokOnly,
+    // xhigh by default per CLAUDE.md "Effort 정책: Pro/Studio/Enterprise
+    // Managed: xhigh 포함". Enterprise is byokOnly (user-supplied LLM key)
+    // but the perk pipeline still defaults their effort to xhigh — round 4
+    // audit caught the prior `!byokOnly` clause incorrectly degrading them.
+    xhighEffortIncluded: tier !== 'indie',
     continuityReportEnabled: tier !== 'indie',
     customPromptsEnabled: tier === 'studio' || tier === 'enterprise',
     requiresUserApiKey: Boolean(tierConfig.byokOnly),
@@ -171,7 +172,7 @@ export async function getManagedEntitlements(
     betaFeaturesEnabled: data.beta_features_enabled,
     prioritySupportSlaHours: data.priority_support_sla_hours,
     collaboratorSeats: data.collaborator_seats,
-    xhighEffortIncluded: data.tier !== 'indie' && !tierConfig.byokOnly,
+    xhighEffortIncluded: data.tier !== 'indie',
     continuityReportEnabled: data.tier !== 'indie',
     customPromptsEnabled: data.tier === 'studio' || data.tier === 'enterprise',
     requiresUserApiKey: Boolean(tierConfig.byokOnly),

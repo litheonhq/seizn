@@ -18,6 +18,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { isSuperAdminEmail } from '@/lib/admin/auth';
+import { verifyCsrfToken } from '@/lib/csrf';
 import { createServerClient, hasServerSupabaseServiceRoleConfig } from '@/lib/supabase';
 
 export const runtime = 'nodejs';
@@ -48,6 +49,12 @@ const CHANNEL_MAX = 64;
 const CAMPAIGN_MAX = 128;
 const NOTES_MAX = 2_000;
 
+// CLAUDE.md "광고비 cap: 월 $500". Soft guard: warn + require ?force=true
+// over $600 (cap + 20% buffer) so a typo of $5000 doesn't silently corrupt
+// CAC math. Operator can still record legitimately higher quarterly figures
+// by passing ?force=true.
+const SOFT_SPEND_CAP_USD = 600;
+
 export async function GET(request: NextRequest): Promise<NextResponse> {
   const guard = await requireAdmin();
   if (!guard.ok) return guard.response;
@@ -75,6 +82,13 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 }
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  // Round 5 audit fix: state-changing admin route requires CSRF token
+  // (Origin/Referer + double-submit cookie) on top of the super-admin
+  // session check. Without it a logged-in founder visiting an attacker
+  // page could be CSRF'd into corrupting the CAC dashboard.
+  const csrfError = verifyCsrfToken(request);
+  if (csrfError) return csrfError;
+
   const guard = await requireAdmin();
   if (!guard.ok) return guard.response;
 
@@ -84,63 +98,48 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: 'bad_request', detail: normalized.error }, { status: 400 });
   }
 
-  const supabase = createServerClient();
-  // Find the existing row for (channel, period_start) so re-posts overwrite
-  // rather than insert duplicates. ad_spend_log has no UNIQUE on this pair
-  // because period_end can vary by a day for partial-month corrections.
-  const { data: existing, error: lookupError } = await supabase
-    .from('ad_spend_log')
-    .select('id')
-    .eq('channel', normalized.channel)
-    .eq('period_start', normalized.period_start)
-    .maybeSingle();
-  if (lookupError) {
+  // Soft cap warning. Pass ?force=true to override (legitimate quarterly
+  // figures may exceed the monthly cap).
+  const force = request.nextUrl.searchParams.get('force') === 'true';
+  if (normalized.spend_usd > SOFT_SPEND_CAP_USD && !force) {
     return NextResponse.json(
-      { error: 'lookup_failed', detail: lookupError.message },
-      { status: 500 },
+      {
+        error: 'spend_exceeds_cap',
+        detail: `spend_usd ${normalized.spend_usd} exceeds soft cap ${SOFT_SPEND_CAP_USD}. Pass ?force=true to override.`,
+        soft_cap_usd: SOFT_SPEND_CAP_USD,
+      },
+      { status: 422 },
     );
   }
 
-  if (existing?.id) {
-    const { error: updateError } = await supabase
-      .from('ad_spend_log')
-      .update({
+  const supabase = createServerClient();
+  // Round 5 audit fix: replace lookup-then-insert/update with a real
+  // upsert backed by UNIQUE (channel, period_start) added in migration
+  // 20260508007. Removes the two-tab race that produced duplicate rows
+  // and double-counted in CAC math.
+  const { data: upserted, error: upsertError } = await supabase
+    .from('ad_spend_log')
+    .upsert(
+      {
+        channel: normalized.channel,
         campaign: normalized.campaign,
         spend_usd: normalized.spend_usd,
+        period_start: normalized.period_start,
         period_end: normalized.period_end,
         notes: normalized.notes,
         recorded_by: guard.userId,
-      })
-      .eq('id', existing.id);
-    if (updateError) {
-      return NextResponse.json(
-        { error: 'update_failed', detail: updateError.message },
-        { status: 500 },
-      );
-    }
-    return NextResponse.json({ id: existing.id, mode: 'updated' });
-  }
-
-  const { data: inserted, error: insertError } = await supabase
-    .from('ad_spend_log')
-    .insert({
-      channel: normalized.channel,
-      campaign: normalized.campaign,
-      spend_usd: normalized.spend_usd,
-      period_start: normalized.period_start,
-      period_end: normalized.period_end,
-      notes: normalized.notes,
-      recorded_by: guard.userId,
-    })
+      },
+      { onConflict: 'channel,period_start' },
+    )
     .select('id')
     .single();
-  if (insertError) {
+  if (upsertError) {
     return NextResponse.json(
-      { error: 'insert_failed', detail: insertError.message },
+      { error: 'upsert_failed', detail: upsertError.message },
       { status: 500 },
     );
   }
-  return NextResponse.json({ id: inserted.id, mode: 'inserted' });
+  return NextResponse.json({ id: upserted.id });
 }
 
 interface AdminGuard {

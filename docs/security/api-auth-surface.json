@@ -1,7 +1,7 @@
 {
   "version": 1,
   "generatedBy": "scripts/verify-api-auth-surface.mjs",
-  "routeCount": 552,
+  "routeCount": 553,
   "routes": [
     {
       "route": "/api",
@@ -23,6 +23,14 @@
         "DELETE",
         "GET",
         "POST"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
+      "route": "/api/account/continuity-reports",
+      "methods": [
+        "GET"
       ],
       "authMarkers": [],
       "authState": "no-auth-marker-detected"
@@ -176,6 +184,7 @@
         "POST"
       ],
       "authMarkers": [
+        "csrf",
         "sessionUser"
       ],
       "authState": "auth-marker-present"

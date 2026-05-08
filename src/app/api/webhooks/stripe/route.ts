@@ -479,17 +479,23 @@ export async function POST(request: NextRequest) {
     // doubled funnel_events rows + audit_log rows + Stripe Schedule
     // creation attempts.
     //
-    // Round 2 refinement: dedupe is keyed on (event_id, processed_at IS NOT
-    // NULL). Insert always; on conflict, look at processed_at:
-    //   - processed_at IS NOT NULL → already finished, return 200 and skip.
-    //   - processed_at IS NULL → previous attempt failed mid-processing
-    //     (e.g., 5xx return triggered Stripe retry). Allow re-processing
-    //     so late-arriving customer.subscription.updated events that beat
-    //     their .created sibling can succeed on the next attempt.
+    // Round 5 refinement: round-2's "in_flight" return-200 path was a
+    // foot-gun. If the original worker crashed (OOM / SIGKILL / late-
+    // arrival 503) before reaching the markEventProcessed UPDATE at the
+    // bottom, processed_at stays NULL and Stripe stops retrying because
+    // round-2 returned 200. Effect: events permanently dropped.
     //
-    // Concurrent same-event retries race on INSERT; loser sees PK conflict
-    // and treats it as "another worker is on it" → returns 200 (Stripe will
-    // retry on its next schedule if the in-flight worker also failed).
+    // New rule on duplicate-key:
+    //   - processed_at IS NOT NULL  → finished, return 200 (true dedupe).
+    //   - processed_at IS NULL AND created_at < NOW() - 30s
+    //                                → presumed crashed, allow reprocess.
+    //   - processed_at IS NULL AND created_at within 30s
+    //                                → genuine concurrent in-flight; return
+    //                                  200 in_flight so the other worker
+    //                                  can finish without contention.
+    // 30s is comfortably above the typical webhook latency (~2-5s) and
+    // below Stripe's first retry interval (~5min).
+    const STALE_INFLIGHT_THRESHOLD_MS = 30_000;
     const { error: dedupeInsertError } = await supabase
       .from('stripe_webhook_events')
       .insert({
@@ -505,19 +511,34 @@ export async function POST(request: NextRequest) {
       if (isDuplicate) {
         const { data: existing } = await supabase
           .from('stripe_webhook_events')
-          .select('processed_at')
+          .select('processed_at, created_at')
           .eq('id', payload.id)
           .maybeSingle();
         if (existing?.processed_at) {
           console.log(`Skipping completed Stripe webhook ${payload.id}`);
           return NextResponse.json({ received: true, deduped: true });
         }
-        // Concurrent in-flight attempt — back off and let the other worker
-        // finish. If it fails, Stripe will retry with backoff.
-        console.log(`Skipping in-flight Stripe webhook ${payload.id}`);
-        return NextResponse.json({ received: true, in_flight: true });
+        const createdAtMs = existing?.created_at
+          ? new Date(existing.created_at).getTime()
+          : 0;
+        const ageMs = Date.now() - createdAtMs;
+        if (ageMs < STALE_INFLIGHT_THRESHOLD_MS) {
+          console.log(
+            `Skipping in-flight Stripe webhook ${payload.id} (age ${ageMs}ms)`,
+          );
+          return NextResponse.json({ received: true, in_flight: true });
+        }
+        // Stale — the previous attempt likely crashed before marking
+        // processed_at. Fall through to reprocess. Side effects below
+        // (Stripe Schedule.create, funnel_events writes) must remain
+        // idempotent on retry; that's a pre-existing requirement for
+        // Stripe's own retries.
+        console.warn(
+          `Reprocessing stale Stripe webhook ${payload.id} (age ${ageMs}ms, processed_at NULL)`,
+        );
+      } else {
+        console.warn(`stripe_webhook_events insert failed (continuing): ${message}`);
       }
-      console.warn(`stripe_webhook_events insert failed (continuing): ${message}`);
     }
 
     // Handle different event types
