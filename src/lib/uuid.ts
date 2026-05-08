@@ -20,22 +20,3 @@ const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
 export function isUuid(value: unknown): value is string {
   return typeof value === 'string' && UUID_RE.test(value);
 }
-
-/**
- * Helper for the common "validate-or-400" pattern. Returns the validated
- * string on success, throws on miss. The thrown error is shaped for
- * direct propagation to a route handler that catches by name.
- */
-export class UuidValidationError extends Error {
-  constructor(public readonly field: string) {
-    super(`${field} must be a valid UUID`);
-    this.name = 'UuidValidationError';
-  }
-}
-
-export function requireUuid(value: unknown, field: string): string {
-  if (!isUuid(value)) {
-    throw new UuidValidationError(field);
-  }
-  return value;
-}
