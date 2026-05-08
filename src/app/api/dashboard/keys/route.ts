@@ -115,12 +115,15 @@ export async function POST(request: NextRequest) {
       return ServerErrors.database('create_key');
     }
 
-    // Send API key created notification email (non-blocking)
+    // Send API key created notification email (non-blocking).
+    // Locale from Accept-Language; profiles.locale migration is the durable fix.
     if (user.email && !DISABLE_KEY_EMAILS) {
+      const acceptLang = (request.headers.get('accept-language') ?? '').toLowerCase();
+      const emailLocale: 'ko' | 'en' = acceptLang.startsWith('ko') ? 'ko' : 'en';
       sendEmail({
         to: user.email,
-        subject: `New API Key Created: ${name}`,
-        html: apiKeyCreatedEmail(name, prefix),
+        subject: emailLocale === 'ko' ? `API 키 발급: ${name}` : `New API Key Created: ${name}`,
+        html: apiKeyCreatedEmail(name, prefix, emailLocale),
       }).catch((error) => logServerError('Failed to send API key notification', error));
     }
 

@@ -319,10 +319,12 @@ export function weeklyUsageSummaryEmail(
   apiCallsCount: number,
   topTags: string[]
 ) {
+  const safeName = escapeHtml(name || 'there');
+  const safeTags = topTags.map(escapeHtml);
   const content = `
     <h1 style="margin:0 0 16px;font-size:24px;font-weight:600;color:#111827;">Your Weekly Summary</h1>
     <p style="margin:0 0 24px;font-size:16px;color:#4b5563;line-height:1.6;">
-      Hi ${name || 'there'}, here's your Seizn usage for the past week:
+      Hi ${safeName}, here's your Seizn usage for the past week:
     </p>
     <div style="background:#f3f4f6;padding:20px;border-radius:8px;margin:0 0 24px;">
       <table width="100%" cellpadding="0" cellspacing="0">
@@ -338,10 +340,10 @@ export function weeklyUsageSummaryEmail(
         </tr>
       </table>
     </div>
-    ${topTags.length > 0 ? `
+    ${safeTags.length > 0 ? `
     <p style="margin:0 0 12px;font-size:16px;color:#4b5563;">Top Tags:</p>
     <p style="margin:0 0 24px;font-size:14px;color:#6b7280;">
-      ${topTags.map(tag => `<span style="display:inline-block;background:#e5e7eb;padding:4px 12px;border-radius:9999px;margin:4px 4px 4px 0;">${tag}</span>`).join('')}
+      ${safeTags.map(tag => `<span style="display:inline-block;background:#e5e7eb;padding:4px 12px;border-radius:9999px;margin:4px 4px 4px 0;">${tag}</span>`).join('')}
     </p>
     ` : ''}
     <a href="https://www.seizn.com/dashboard" style="display:inline-block;padding:12px 24px;background-color:#000;color:#fff;text-decoration:none;border-radius:9999px;font-weight:500;">

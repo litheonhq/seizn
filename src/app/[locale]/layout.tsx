@@ -168,11 +168,15 @@ export default async function LocaleLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable} antialiased`}
       >
-        {/* Plausible — cookieless, IP-anonymized, GDPR/PIPA exempt from consent gate */}
+        {/*
+         * Plausible — cookieless, IP-anonymized, GDPR/PIPA exempt from consent gate.
+         * beforeInteractive injects in <head> so the first auto-pageview fires
+         * synchronously with page load (matches Plausible's documented placement).
+         */}
         <Script
           src="https://analytics.seizn.com/js/script.js"
           data-domain="seizn.com"
-          strategy="afterInteractive"
+          strategy="beforeInteractive"
         />
         <GoogleAnalytics />
         {children}
