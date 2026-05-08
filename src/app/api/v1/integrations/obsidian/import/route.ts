@@ -50,23 +50,26 @@
  * Limits: max 200 notes per request, max 200KB per note (matches the
  * Anthropic memory tool adapter ceiling for parity).
  *
- * Content-security pipeline (R13 A4):
+ * Content-security pipeline (R13 A4 + R15 H1):
  *   Applied per-note synchronously:
  *     1. Strip null bytes (Postgres rejects \0 in text columns).
  *     2. Prompt-firewall scan (createDetector mode=sanitize). Critical
  *        threats reject the individual note; lower threats sanitize.
- *   Skipped (vs /api/v1/memories POST):
+ *   NOT applied (security gap, opt-in only):
  *     - LLM moderation (`moderate()`) — would burn ~200 LLM calls per
- *       batch, breaks Free-tier cost model. Notes are tagged with
- *       `metadata.moderation_pending = true` so an async sweep can
- *       process them; consumers needing strict moderation should call
- *       /api/v1/memories POST per-note instead.
+ *       batch, breaks Free-tier cost model. Notes are flagged with
+ *       `metadata.moderation_pending = true` and indexed by
+ *       `idx_memories_moderation_pending` (migration 20260508012) so
+ *       an async sweep can be added later. NO sweep ships today —
+ *       imported rows enter without moderation. Callers needing strict
+ *       moderation must call /api/v1/memories POST per-note instead.
  *     - Canon enforcement — Studio-tier feature with NPC/session scope
- *       that doesn't fit a vault-bulk model. Re-evaluate when an
- *       Author-vertical Obsidian plugin needs it.
- *     - Hot memory budget reservation — the bulk path operates on
- *       cold-tier rows by default; budget enforcement happens at the
- *       organization level on next promote/recall.
+ *       that doesn't fit a vault-bulk model.
+ *     - Hot memory budget reservation — cold-tier path; budget
+ *       enforcement happens at organization level on next promote.
+ *   This gap is intentional but loud-fail: any future SECURITY.md must
+ *   note that Obsidian-imported rows are equivalent to /api/v1/memories
+ *   POST with moderation disabled.
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -189,77 +192,55 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
   const supabase = createServerClient();
 
-  // When replace_existing=true, soft-delete previous memories at the same
-  // obsidian_path before insert so the import is idempotent on re-runs.
-  // Path-keyed delete uses metadata.obsidian_path (jsonb @> match).
-  if (replaceExisting && normalized.length > 0) {
-    const paths = normalized.map((n) => n.path);
-    for (const p of paths) {
-      const { error } = await supabase
-        .from('memories')
-        .update({ is_deleted: true, updated_at: new Date().toISOString() })
-        .eq('user_id', userId)
-        .eq('namespace', namespace)
-        .contains('metadata', { obsidian_path: p })
-        .eq('is_deleted', false);
-      if (error) {
-        // R12 audit fix (A2): don't echo Postgres error message to the caller.
-        console.error(`[obsidian-import] replace_existing failed: ${error.message ?? 'unknown'}`);
-        errors.push({ path: p, reason: 'replace_existing failed' });
-      }
-    }
-  }
-
   let imported = 0;
   let skipped = 0;
 
+  // R15 M6 — single atomic RPC per note. Pre-fix used a 2-step
+  // UPDATE-then-INSERT flow that raced concurrent callers
+  // re-importing the same path. obsidian_upsert_note (migration
+  // 20260508012) wraps the lookup + upsert in one Postgres
+  // transaction with FOR UPDATE; partial unique index is the backstop.
   for (const note of normalized) {
     const tags = extractTagsFromFrontmatter(note.frontmatter);
-    // R12 audit fix (A3): strip reserved metadata keys so an Obsidian
-    // plugin can't shadow anthropic-tool paths or inject role/user_id.
     const sanitizedFrontmatter = stripReservedMetadataKeys(note.frontmatter ?? {});
-    const insertPayload = {
-      user_id: userId,
-      namespace,
-      content: note.content,
-      content_hash: note.contentHash,
-      source: 'obsidian',
-      memory_type: 'fact',
-      tags,
-      ...(note.modifiedAt ? { valid_at: note.modifiedAt } : {}),
-      metadata: {
-        obsidian_path: note.path,
-        obsidian_frontmatter: sanitizedFrontmatter,
-        obsidian_vault: vaultName,
-        // R13 A4 — flag for async moderation sweep. /api/v1/memories
-        // POST runs LLM moderation synchronously; bulk import defers it
-        // to keep token cost bounded. A future cron task can scan rows
-        // where metadata->>'moderation_pending' = 'true' and apply
-        // moderate() in batches.
-        moderation_pending: true,
-      },
+    const metadata = {
+      obsidian_path: note.path,
+      obsidian_frontmatter: sanitizedFrontmatter,
+      obsidian_vault: vaultName,
+      // R13 A4 + R15 H1 — flag intended for an async moderation sweep
+      // job. The sweep itself is NOT implemented today; rows ship into
+      // prod without LLM moderation, equivalent to /api/v1/memories
+      // POST with moderation disabled. The flag + supporting index
+      // (idx_memories_moderation_pending) lets a future cron pick up
+      // pending rows in bounded batches without a full-table scan.
+      moderation_pending: true,
     };
-    const { error } = await supabase.from('memories').insert(insertPayload);
-    if (!error) {
-      imported += 1;
+    const { data, error } = await supabase.rpc('obsidian_upsert_note', {
+      p_user_id: userId,
+      p_namespace: namespace,
+      p_path: note.path,
+      p_content: note.content,
+      p_content_hash: note.contentHash,
+      p_tags: tags,
+      p_modified_at: note.modifiedAt,
+      p_metadata: metadata,
+      p_replace_existing: replaceExisting,
+    });
+    if (error) {
+      // R12 audit fix (A2): never surface raw Postgres error.message.
+      console.error(`[obsidian-import] upsert ${note.path} failed: ${error.message ?? 'unknown'}`);
+      errors.push({ path: note.path, reason: 'upsert failed' });
       continue;
     }
-    // R12 audit fix (B7): partial unique on (user_id, namespace,
-    // metadata->>obsidian_path) catches concurrent imports racing on
-    // the same path. Existing dedup via (user_id, namespace, content_hash)
-    // also fires. Both classify as 'skipped' from the caller's view.
-    const message = error.message ?? '';
-    if (
-      message.includes('duplicate key') ||
-      message.includes('idx_memories_content_hash') ||
-      message.includes('idx_memories_obsidian_path_unique')
-    ) {
+    // RPC returns 'imported' | 'updated' | 'skipped'. 'updated' counts as
+    // imported from the caller's view (their note is now in the system);
+    // 'skipped' covers concurrent-insert race + replace_existing=false
+    // path collision.
+    if (data === 'skipped') {
       skipped += 1;
-      continue;
+    } else {
+      imported += 1;
     }
-    // R12 audit fix (A2): never surface raw Postgres error.message.
-    console.error(`[obsidian-import] insert ${note.path} failed: ${message || 'unknown'}`);
-    errors.push({ path: note.path, reason: 'insert failed' });
   }
 
   return NextResponse.json({
@@ -391,6 +372,12 @@ function normalizeTag(value: string): string {
 // an Obsidian plugin can't shadow R8 anthropic-tool memories or inject
 // security-relevant fields. Underscore-prefixed keys (convention for
 // internal flags) and exact reserved names are removed.
+//
+// R15 LOW 8: recurse into nested plain objects so a frontmatter shaped
+// like { custom: { anthropic_tool_path: '...' } } can't smuggle reserved
+// keys past a top-level filter. Today no consumer queries nested paths
+// (all checks use top-level metadata->>'<reserved>'), so this is purely
+// defensive — any future path-expression query stays safe.
 function stripReservedMetadataKeys(
   frontmatter: Record<string, unknown>,
 ): Record<string, unknown> {
@@ -398,6 +385,14 @@ function stripReservedMetadataKeys(
   for (const [key, value] of Object.entries(frontmatter)) {
     if (key.startsWith('_')) continue;
     if (RESERVED_METADATA_KEYS.includes(key)) continue;
+    if (
+      value !== null &&
+      typeof value === 'object' &&
+      !Array.isArray(value)
+    ) {
+      result[key] = stripReservedMetadataKeys(value as Record<string, unknown>);
+      continue;
+    }
     result[key] = value;
   }
   return result;
