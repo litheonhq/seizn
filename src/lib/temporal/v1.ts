@@ -71,6 +71,15 @@ export function applyTemporalFilters<Q extends {
   options: TemporalQueryOptions = {},
 ): Q {
   let q = query;
+  // R12 audit fix (C3): pre-fix, the asOf branch and the default-current
+  // branch both correctly excluded already-invalidated rows, but the
+  // include_history+canon_status combination passed through with no
+  // invalidated_at filter — returning rows whose `invalidated_at` was
+  // already in the future (logically inconsistent for a non-asOf read).
+  // Now: when caller did NOT pass asOf, we always exclude invalidated
+  // rows regardless of include_history. include_history just bypasses
+  // the canon_status enum filter (so all 7 states are visible), not the
+  // basic "is this currently true" predicate.
   if (!options.includeHistory) {
     q = q.in('canon_status', ACTIVE_CANON_STATUSES);
   }
@@ -78,8 +87,10 @@ export function applyTemporalFilters<Q extends {
     // valid_at <= asOf AND (invalidated_at IS NULL OR invalidated_at > asOf)
     q = q.lte('valid_at', options.asOf);
     q = q.or(`invalidated_at.is.null,invalidated_at.gt.${options.asOf}`);
-  } else if (!options.includeHistory) {
-    // Default current view: drop already-invalidated rows.
+  } else {
+    // Default and include_history-without-asOf both: drop rows that
+    // have already been invalidated. include_history was meant to
+    // surface non-canon STATUSES, not stale invalidated_at rows.
     q = q.is('invalidated_at', 'null');
   }
   return q;

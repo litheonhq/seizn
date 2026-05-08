@@ -149,6 +149,18 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   }
 }
 
+// R12 audit fix (A2): never echo raw Postgres error messages to the
+// client. They leak column names, constraint names, and SQL fragments.
+// Use this wrapper for every supabase error path: log server-side,
+// return a generic message to the caller.
+function reportDbError(
+  context: string,
+  error: { message?: string | null; code?: string | null } | null | undefined,
+): never {
+  console.error(`[anthropic-tool] ${context}: ${error?.message ?? 'unknown'}`);
+  throw new ToolError('database_error', 'Storage error', 500);
+}
+
 // ---------- Command handlers ----------
 
 async function handleView(
@@ -156,32 +168,44 @@ async function handleView(
   userId: string,
   parsed: ParsedPath,
 ): Promise<NextResponse> {
-  // /memories → list namespaces the caller has used
+  // R12 audit fix (C2): scope all listing to memories THIS TOOL created.
+  // Pre-fix, view of /memories surfaced every memory the user had — from
+  // /api/v1/memories, Obsidian import, Author Memory v3, etc. — into the
+  // Anthropic tool-use loop, leaking internal namespaces. Filter to
+  // metadata.anthropic_tool_path IS NOT NULL so only tool-owned rows
+  // show up. Add LIMIT to prevent unbounded scans (audit A5).
+
+  // /memories → list namespaces the tool has used
   if (!parsed.namespace) {
     const { data, error } = await supabase
       .from('memories')
       .select('namespace')
       .eq('user_id', userId)
       .eq('is_deleted', false)
-      .not('namespace', 'is', null);
-    if (error) throw new ToolError('query_failed', error.message, 500);
+      .not('namespace', 'is', null)
+      .not('metadata->anthropic_tool_path', 'is', null)
+      .limit(1000);
+    if (error) reportDbError('view root', error);
     const namespaces = Array.from(
       new Set((data ?? []).map((r) => r.namespace).filter((n): n is string => typeof n === 'string')),
     ).sort();
     return toolOk(formatListing(ROOT_PATH, namespaces.map((n) => `${n}/`)));
   }
 
-  // /memories/<ns> → list files in namespace
+  // /memories/<ns> → list files in namespace (tool-owned only)
   if (!parsed.name) {
     const { data, error } = await supabase
       .from('memories')
       .select('id, metadata')
       .eq('user_id', userId)
       .eq('is_deleted', false)
-      .eq('namespace', parsed.namespace);
-    if (error) throw new ToolError('query_failed', error.message, 500);
+      .eq('namespace', parsed.namespace)
+      .not('metadata->anthropic_tool_path', 'is', null)
+      .limit(1000);
+    if (error) reportDbError('view namespace', error);
     const names = (data ?? [])
-      .map((r) => extractToolName(r.metadata as Record<string, unknown> | null) ?? r.id)
+      .map((r) => extractToolName(r.metadata as Record<string, unknown> | null))
+      .filter((n): n is string => typeof n === 'string' && n.length > 0)
       .sort();
     return toolOk(formatListing(`${PATH_PREFIX}${parsed.namespace}`, names));
   }
@@ -220,7 +244,7 @@ async function handleCreate(
       })
       .eq('id', existing.id)
       .eq('user_id', userId);
-    if (error) throw new ToolError('update_failed', error.message, 500);
+    if (error) reportDbError('create update', error);
     return toolOk(`Updated ${parsed.raw}`);
   }
   const { error } = await supabase.from('memories').insert({
@@ -229,7 +253,14 @@ async function handleCreate(
     namespace: parsed.namespace,
     metadata: { anthropic_tool_name: parsed.name, anthropic_tool_path: parsed.raw },
   });
-  if (error) throw new ToolError('insert_failed', error.message, 500);
+  if (error) {
+    // R12 audit fix (B5): partial unique on (user_id, namespace,
+    // anthropic_tool_name) catches concurrent inserts. Surface as 409.
+    if (isUniqueViolation(error)) {
+      throw new ToolError('exists', `Path ${parsed.raw} was created concurrently`, 409);
+    }
+    reportDbError('create insert', error);
+  }
   return toolOk(`Created ${parsed.raw}`);
 }
 
@@ -265,12 +296,26 @@ async function handleStrReplace(
       413,
     );
   }
-  const { error } = await supabase
+  // R12 audit fix (B4): compare-and-swap on the content we just read.
+  // Two concurrent str_replace calls would otherwise both load identical
+  // content, both apply distinct replacements, and the second UPDATE
+  // silently overwrites the first. Chain .eq('content', row.content)
+  // and .select('id') so a row count of 0 surfaces as 'conflict'.
+  const { data: updated, error } = await supabase
     .from('memories')
     .update({ content: next, updated_at: new Date().toISOString() })
     .eq('id', row.id)
-    .eq('user_id', userId);
-  if (error) throw new ToolError('update_failed', error.message, 500);
+    .eq('user_id', userId)
+    .eq('content', row.content)
+    .select('id');
+  if (error) reportDbError('str_replace update', error);
+  if (!updated || updated.length === 0) {
+    throw new ToolError(
+      'conflict',
+      `${parsed.raw} was modified concurrently; reload and retry`,
+      409,
+    );
+  }
   return toolOk(`Replaced 1 occurrence in ${parsed.raw}`);
 }
 
@@ -301,7 +346,7 @@ async function handleInsert(
     .update({ content: next, updated_at: new Date().toISOString() })
     .eq('id', row.id)
     .eq('user_id', userId);
-  if (error) throw new ToolError('update_failed', error.message, 500);
+  if (error) reportDbError('update', error);
   return toolOk(`Inserted at line ${insertLine} of ${parsed.raw}`);
 }
 
@@ -317,7 +362,7 @@ async function handleDelete(
     .update({ is_deleted: true, updated_at: new Date().toISOString() })
     .eq('id', row.id)
     .eq('user_id', userId);
-  if (error) throw new ToolError('update_failed', error.message, 500);
+  if (error) reportDbError('update', error);
   return toolOk(`Deleted ${parsed.raw}`);
 }
 
@@ -349,8 +394,22 @@ async function handleRename(
     })
     .eq('id', row.id)
     .eq('user_id', userId);
-  if (error) throw new ToolError('update_failed', error.message, 500);
+  if (error) {
+    // R12 audit fix (B9): partial unique catches concurrent renames to
+    // the same destination.
+    if (isUniqueViolation(error)) {
+      throw new ToolError('exists', `${newPath.raw} was created concurrently`, 409);
+    }
+    reportDbError('rename update', error);
+  }
   return toolOk(`Renamed ${oldPath.raw} → ${newPath.raw}`);
+}
+
+function isUniqueViolation(
+  error: { message?: string | null; code?: string | null },
+): boolean {
+  const msg = error?.message ?? '';
+  return error?.code === '23505' || msg.includes('duplicate key') || msg.includes('unique');
 }
 
 // ---------- Helpers ----------
@@ -440,6 +499,12 @@ async function findMemoryByPath(
   parsed: ParsedPath,
 ): Promise<MemoryRow | null> {
   if (!parsed.namespace || !parsed.name) return null;
+  // R12 audit fix (B6): .maybeSingle() throws PGRST116 if multiple rows
+  // share the same metadata.anthropic_tool_name (race in handleCreate or
+  // collision with a /api/v1/memories caller that put the same key in
+  // their metadata). Order by created_at DESC and take the most recent
+  // row instead — the partial unique index from migration 20260508010
+  // prevents new collisions, but old rows may still exist.
   const { data, error } = await supabase
     .from('memories')
     .select('id, content, namespace, metadata, is_deleted, user_id')
@@ -447,12 +512,10 @@ async function findMemoryByPath(
     .eq('is_deleted', false)
     .eq('namespace', parsed.namespace)
     .contains('metadata', { anthropic_tool_name: parsed.name })
-    .limit(1)
-    .maybeSingle<MemoryRow>();
-  if (error) {
-    throw new ToolError('query_failed', error.message, 500);
-  }
-  return data ?? null;
+    .order('created_at', { ascending: false })
+    .limit(1);
+  if (error) reportDbError('findMemoryByPath', error);
+  return (data && data[0] as MemoryRow) || null;
 }
 
 async function requireMemoryAtPath(
