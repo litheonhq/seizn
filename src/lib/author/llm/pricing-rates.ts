@@ -42,6 +42,17 @@ export interface LlmModelRates {
   cachedInputPerMTokUsd?: number;
   /** Whether this model bills extended-thinking / reasoning tokens as output. */
   thinkingBilledAsOutput: boolean;
+  /**
+   * Long-context tier rates (Google's only). When input tokens exceed
+   * `tierThresholdInputTokens`, the elevated rates apply for the entire
+   * call. Rates marked optional so other providers can omit. Only set for
+   * Gemini 2.5 Pro today (>200K → $2.50/$15).
+   */
+  tierThresholdInputTokens?: number;
+  inputPerMTokTier2Usd?: number;
+  outputPerMTokTier2Usd?: number;
+  cacheReadPerMTokTier2Usd?: number;
+  cachedInputPerMTokTier2Usd?: number;
 }
 
 /**
@@ -101,14 +112,21 @@ export const LLM_RATES: Record<string, LlmModelRates> = {
   'gemini-2.5-pro': {
     provider: 'google',
     displayName: 'Gemini 2.5 Pro',
-    // Standard tier (≤200K input). Beyond 200K input the rates double per
-    // Google's tiered model — see header comment. cacheReadPerMTokUsd uses
-    // Google's "context caching" read rate ($0.315/M).
+    // Standard tier (≤200K input). cacheReadPerMTokUsd uses Google's
+    // "context caching" read rate ($0.315/M).
     inputPerMTokUsd: 1.25,
     outputPerMTokUsd: 10.00,
     cacheReadPerMTokUsd: 0.315,
     cachedInputPerMTokUsd: 0.315,
     thinkingBilledAsOutput: true,
+    // R25 H1 — long-context tier. Beyond 200K input tokens, all rates
+    // for the call elevate per Google's pricing page. estimateLlmCallCostUsd
+    // branches on the input total when these fields are set.
+    tierThresholdInputTokens: 200_000,
+    inputPerMTokTier2Usd: 2.50,
+    outputPerMTokTier2Usd: 15.00,
+    cacheReadPerMTokTier2Usd: 0.625,
+    cachedInputPerMTokTier2Usd: 0.625,
   },
   'gemini-2.5-flash': {
     provider: 'google',
@@ -150,18 +168,37 @@ export function estimateLlmCallCostUsd(
   const cacheRead = readNonNeg(usage.cacheReadInputTokens);
   const cachedInput = readNonNeg(usage.cachedInputTokens);
 
+  // R25 H1 — long-context tier. Google's Gemini 2.5 Pro elevates rates
+  // for the entire call when input tokens cross 200K. Other providers'
+  // rates have no tier branching, so the inputPerMTokTier2Usd etc. fall
+  // back to the standard rates and the math is unchanged.
+  const isTier2 =
+    typeof rates.tierThresholdInputTokens === 'number' &&
+    input + cacheRead + cachedInput > rates.tierThresholdInputTokens;
+  const inputRate = isTier2
+    ? (rates.inputPerMTokTier2Usd ?? rates.inputPerMTokUsd)
+    : rates.inputPerMTokUsd;
+  const outputRate = isTier2
+    ? (rates.outputPerMTokTier2Usd ?? rates.outputPerMTokUsd)
+    : rates.outputPerMTokUsd;
+  const cacheReadRate = isTier2
+    ? (rates.cacheReadPerMTokTier2Usd ?? rates.cacheReadPerMTokUsd)
+    : rates.cacheReadPerMTokUsd;
+
   const cacheWriteRate =
     cacheWriteTtl === '1h'
-      ? (rates.cacheWrite1HourPerMTokUsd ?? rates.inputPerMTokUsd * 2)
-      : (rates.cacheWrite5MinPerMTokUsd ?? rates.inputPerMTokUsd * 1.25);
+      ? (rates.cacheWrite1HourPerMTokUsd ?? inputRate * 2)
+      : (rates.cacheWrite5MinPerMTokUsd ?? inputRate * 1.25);
 
-  const cachedInputRate = rates.cachedInputPerMTokUsd ?? rates.cacheReadPerMTokUsd;
+  const cachedInputRate = isTier2
+    ? (rates.cachedInputPerMTokTier2Usd ?? rates.cachedInputPerMTokUsd ?? cacheReadRate)
+    : (rates.cachedInputPerMTokUsd ?? cacheReadRate);
 
   return (
-    (input * rates.inputPerMTokUsd) / 1_000_000 +
-    (output * rates.outputPerMTokUsd) / 1_000_000 +
+    (input * inputRate) / 1_000_000 +
+    (output * outputRate) / 1_000_000 +
     (cacheCreation * cacheWriteRate) / 1_000_000 +
-    (cacheRead * rates.cacheReadPerMTokUsd) / 1_000_000 +
+    (cacheRead * cacheReadRate) / 1_000_000 +
     (cachedInput * cachedInputRate) / 1_000_000
   );
 }

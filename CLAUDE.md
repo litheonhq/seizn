@@ -70,10 +70,12 @@
 - Indie Managed: medium 강제 (마진 보호)
 - Pro/Studio/Enterprise Managed: xhigh 포함
 
-### LLM 단가 (lock 2026-05-07, `src/lib/author/llm/pricing-rates.ts` 단일 소스)
+### LLM 단가 (lock 2026-05-08, `src/lib/author/llm/pricing-rates.ts` 단일 소스)
 - Claude Opus 4.7: $5/$25 per MTok (input/output), 5min cache write $6.25, cache read $0.50
 - Claude Sonnet 4.6: $3/$15 per MTok
 - GPT-5.5: $5/$30 per MTok, cached input $1.25
+- Gemini 2.5 Pro: $1.25/$10 per MTok ≤200K input, $2.50/$15 per MTok >200K (R25)
+- Gemini 2.5 Flash: $0.30/$2.50 per MTok
 - 가격 변경 시 `pricing-rates.ts` 단일 파일만 수정
 
 ## 마케팅 / 광고 정책 (Lock 2026-05-07)
@@ -126,6 +128,23 @@ src/
 ## 환경 변수
 - `.env.local` 파일 참조
 - 절대 커밋하지 말 것
+
+### Author LLM Managed keys (Charter Managed perk)
+3-provider failover 활성화하려면 모든 키 등록 필요. 1-2개만 있으면 부분 failover.
+
+| 변수 | 우선순위 chain | 비고 |
+|---|---|---|
+| `AUTHOR_ANTHROPIC_DEV_API_KEY` → `AUTHOR_LLM_ANTHROPIC_API_KEY` → `LITHEON_ANTHROPIC_API_KEY` → `ANTHROPIC_API_KEY` | Anthropic Claude | catch-all 허용 |
+| `AUTHOR_OPENAI_DEV_API_KEY` → `AUTHOR_LLM_OPENAI_API_KEY` → `LITHEON_OPENAI_API_KEY` → `OPENAI_API_KEY` | OpenAI GPT | catch-all 허용 |
+| `AUTHOR_GOOGLE_DEV_API_KEY` → `AUTHOR_LLM_GOOGLE_API_KEY` → `LITHEON_GOOGLE_API_KEY` | Google Gemini | **catch-all 없음** — Author 전용 namespace만 |
+
+R24에서 Google chain은 `GOOGLE_API_KEY` / `GEMINI_API_KEY` catch-all을 의도적으로 제외 (Maps / 다른 Google 서비스와 budget 혼선 방지).
+미설정 provider로 failover 시도 시 `LLM_NOT_CONFIGURED` → 다음 provider로 walk (R25 M1).
+
+### Author LLM provider preference (사용자별)
+- 기본 default: `AUTHOR_LLM_PROVIDER` env (`anthropic` | `google` | `openai`)
+- 사용자 override: `profiles.author_llm_provider` column (migration 20260507001 필요 — prod 미적용 상태)
+- Override 적용 시 BYOK 키 등록 필수 (해당 provider만)
 
 ## 개발 명령어
 ```bash
