@@ -5,7 +5,6 @@ import { useSession, signIn } from "next-auth/react";
 import Link from "next/link";
 import { locales, localeNames, type Locale } from "@/i18n/config";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
-import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { createLatestRequestGuard, isAbortError } from "@/lib/client-request";
 import { getErrorMessage } from "@/lib/ui-error";
 import { RTBFModal, DataExportModal, DeleteMemoriesModal } from '@/components/settings';
@@ -454,12 +453,7 @@ export function SettingsClient() {
                 ))}
               </select>
             </div>
-            <div className="pt-4 border-t border-[var(--ink-200)]">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="text-base font-medium text-[var(--ink-900)]">{t("dashboard.theme.toggle")}</h3>
-              </div>
-              <ThemeToggle variant="dropdown" />
-            </div>
+            {/* Theme toggle moved to sidebar (DashboardShell.ThemeToggleSidebar) — single entry point per W2.4 */}
           </div>
         )}
 

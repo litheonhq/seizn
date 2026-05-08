@@ -101,7 +101,7 @@ const TIERS: Track2Tier[] = [
 export function PricingTrack2Section({ locale }: { locale: string }) {
   const copy = getTrack2PricingCopy(locale);
   return (
-    <section id="api-mcp" className="mt-24 border-t border-szn-border-subtle pt-16">
+    <section id="track-2" className="mt-24 border-t border-szn-border-subtle pt-16">
       <header className="mx-auto max-w-3xl text-center">
         <p className="text-xs uppercase tracking-[0.18em] text-szn-text-2">{copy.eyebrow}</p>
         <h2 className="mt-3 font-serif text-3xl text-szn-text-1 sm:text-4xl">{copy.title}</h2>

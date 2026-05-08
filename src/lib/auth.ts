@@ -1,7 +1,6 @@
 import NextAuth from 'next-auth';
-import GitHub from 'next-auth/providers/github';
-import Google from 'next-auth/providers/google';
 import Credentials from 'next-auth/providers/credentials';
+import { authConfig } from '@/auth.config';
 import { normalizeProfileUserId } from './profile/normalize';
 import { normalizeSessionOrganizationId } from './profile/organization';
 import { createServerClient } from './supabase';
@@ -77,18 +76,10 @@ const sharedCookieOptions = {
 };
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  ...authConfig,
   providers: [
-    // GitHub OAuth
-    GitHub({
-      clientId: process.env.GITHUB_CLIENT_ID || process.env.GITHUB_ID || '',
-      clientSecret: process.env.GITHUB_CLIENT_SECRET || process.env.GITHUB_SECRET || '',
-    }),
-    // Google OAuth
-    Google({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    }),
-    // Email/Password via Supabase
+    ...authConfig.providers,
+    // Email/Password via Supabase (node-runtime only — uses @supabase/supabase-js)
     Credentials({
       name: 'credentials',
       credentials: {
@@ -135,6 +126,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
   callbacks: {
+    ...authConfig.callbacks,
     async jwt({ token, user, account }) {
       if (user) {
         token.id = user.id;
@@ -269,11 +261,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
     },
   },
-  pages: {
-    signIn: '/login',
-    error: '/login',
-  },
-  trustHost: true,
+  // pages, trustHost, session, secret inherited from authConfig (W2.6 split).
   cookies: {
     sessionToken: {
       name: `${cookiePrefix}authjs.session-token`,
@@ -300,10 +288,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       options: { ...sharedCookieOptions, maxAge: 60 * 15 },
     },
   },
-  session: {
-    strategy: 'jwt',
-  },
-  secret: process.env.NEXTAUTH_SECRET,
 });
 
 // Type augmentation moved to src/types/next-auth.d.ts

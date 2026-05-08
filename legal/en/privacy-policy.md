@@ -68,11 +68,11 @@ Provider data retention follows each provider's published policy. We document th
 
 We share personal information only with:
 
-- Service providers acting on our instructions (subprocessors): Stripe (billing), Cloudflare (CDN, R2 object storage), Vercel (hosting), Sentry (error monitoring), PostHog or Plausible (privacy-respecting analytics), Anthropic (AI inference, default routing), Google or GitHub (OAuth sign-in only).
+- Service providers acting on our instructions (sub-processors): Stripe (billing), Cloudflare (CDN, R2 object storage), Vercel (hosting), Supabase (database/auth), Hetzner (self-hosted observability + backups, Germany), GlitchTip (self-hosted error tracking on Hetzner; replaces Sentry), Plausible Analytics (self-hosted on Hetzner, Community Edition, cookieless), Plus Five Five Inc. dba Resend (transactional email; EU-US DPF certified, SCCs Commission Decision 2021/914 Module Two), Anthropic (AI inference, default routing), Google or GitHub (OAuth sign-in only).
 - Legal authorities when required by law (court order, subpoena, lawful request).
 - Acquirers in the event of merger or acquisition, with prior notice.
 
-A current list of subprocessors is maintained at seizn.com/docs/subprocessors.
+A current list of sub-processors with full safeguards, locations, and DPA references is maintained at [/legal/subprocessors](/legal/subprocessors). For AI-specific transparency see [/legal/ai-disclosure](/legal/ai-disclosure) (EU AI Act Article 50 effective 2026-08-02).
 
 ## 7. Data residency
 

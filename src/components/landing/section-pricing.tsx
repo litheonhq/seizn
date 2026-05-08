@@ -14,7 +14,7 @@ const SECONDARY_TIERS = ["studio", "enterprise"] as const satisfies readonly Aut
 
 export function SectionPricing({ copy, locale }: { copy: AuthorLandingCopy; locale: Locale }) {
   return (
-    <section id="pricing" className="author-section" style={{ background: "var(--ink-0)" }}>
+    <section id="pricing" className="author-section" style={{ background: "var(--bg)" }}>
       <div className="author-shell">
         <SectionHeader eyebrow={copy.pricing.eyebrow} title={copy.pricing.title} subtitle={copy.pricing.subtitle} />
         <div className="mt-12 grid gap-5 lg:grid-cols-2">
@@ -41,9 +41,9 @@ function PricingCardPrimary({ tier, copy, locale }: { tier: AuthorBillingTier; c
     <article
       className="relative flex h-full flex-col rounded-[var(--radius-lg)] border p-6 md:p-8"
       style={{
-        borderColor: highlight ? "var(--ink-900)" : "var(--ink-200)",
-        background: highlight ? "var(--ink-900)" : "var(--ink-0)",
-        color: highlight ? "var(--ink-0)" : "var(--ink-900)",
+        borderColor: highlight ? "var(--accent-primary)" : "var(--ink-200)",
+        background: highlight ? "var(--accent-primary)" : "var(--bg-elevated)",
+        color: highlight ? "var(--accent-on-primary)" : "var(--text-primary)",
         boxShadow: highlight ? "var(--shadow-lg)" : "var(--shadow-sm)",
       }}
     >

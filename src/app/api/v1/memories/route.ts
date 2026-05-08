@@ -33,6 +33,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
 import { createEmbedding, createQueryEmbedding } from '@/lib/ai';
 import {
+  applyTemporalFilters,
+  isMemoryCanonStatus,
+  validateTemporalInputs,
+  TemporalValidationError,
+  type MemoryCanonStatus,
+} from '@/lib/temporal/v1';
+import {
   authenticateRequest,
   isAuthError,
   authErrorResponse,
@@ -808,6 +815,28 @@ async function handlePost(request: NextRequest) {
       importance = await scoreImportance(sanitizedContent);
     }
 
+    // R9: optional bi-temporal fields. Validate up front; reject 400 on
+    // bad input. Defaults: canon_status='canon', valid_at=created_at.
+    const temporalIn = {
+      canon_status: typeof rawBody.canon_status === 'string'
+        ? (rawBody.canon_status as MemoryCanonStatus)
+        : null,
+      valid_at: typeof rawBody.valid_at === 'string' ? rawBody.valid_at : null,
+      invalidated_at: typeof rawBody.invalidated_at === 'string' ? rawBody.invalidated_at : null,
+      supersedes_id: typeof rawBody.supersedes_id === 'string' ? rawBody.supersedes_id : null,
+    };
+    try {
+      validateTemporalInputs(temporalIn);
+    } catch (error) {
+      if (error instanceof TemporalValidationError) {
+        return NextResponse.json(
+          { error: { code: 'invalid_temporal_input', message: error.message } },
+          { status: 400 },
+        );
+      }
+      throw error;
+    }
+
     // Compute content hash for dedup safety net (unique index on user_id + namespace + content_hash)
     const contentHash =
       isEncrypted || hasImageAttachment
@@ -848,6 +877,13 @@ async function handlePost(request: NextRequest) {
       last_recalled_at: null,
       recall_count: 0,
       size_bytes: sizeBytes,
+      // R9 bi-temporal fields. Omit when caller didn't supply so DB
+      // defaults apply (canon_status='canon', valid_at=created_at via
+      // the migration backfill trigger).
+      ...(temporalIn.canon_status ? { canon_status: temporalIn.canon_status } : {}),
+      ...(temporalIn.valid_at ? { valid_at: temporalIn.valid_at } : {}),
+      ...(temporalIn.invalidated_at ? { invalidated_at: temporalIn.invalidated_at } : {}),
+      ...(temporalIn.supersedes_id ? { supersedes_id: temporalIn.supersedes_id } : {}),
       ...(moderationResult
         ? {
             moderation_status: moderationResult.status,
@@ -1276,6 +1312,23 @@ async function handleGet(request: NextRequest) {
       if (tagsParam) {
         const tags = tagsParam.split(',').map((t) => t.trim()).filter(Boolean);
         if (tags.length > 0) q = q.overlaps('tags', tags);
+      }
+
+      // R9: bi-temporal filter. as_of=ISO returns memories whose
+      // validity window contains that instant (valid_at <= as_of AND
+      // (invalidated_at IS NULL OR invalidated_at > as_of)).
+      // include_history=true bypasses canon_status filtering so callers
+      // can audit the full timeline. Default view = currently-canon rows.
+      const includeHistory = searchParams.get('include_history') === 'true';
+      q = applyTemporalFilters(q as never, {
+        asOf: asOfParam,
+        includeHistory,
+      });
+      // Optional explicit canon_status filter (subset of the active set
+      // when not in history mode, or arbitrary when include_history=true).
+      const canonStatusFilter = searchParams.get('canon_status');
+      if (canonStatusFilter && isMemoryCanonStatus(canonStatusFilter)) {
+        q = q.eq('canon_status', canonStatusFilter);
       }
 
       // Sort & paginate

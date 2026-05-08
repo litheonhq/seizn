@@ -71,6 +71,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/legal/privacy', priority: 0.5, changeFreq: 'monthly' as const },
     { path: '/legal/terms', priority: 0.5, changeFreq: 'monthly' as const },
     { path: '/legal/beta-disclosure', priority: 0.5, changeFreq: 'monthly' as const },
+    // W3.7 additions
+    { path: '/legal/refund', priority: 0.5, changeFreq: 'monthly' as const },
+    { path: '/legal/subprocessors', priority: 0.5, changeFreq: 'monthly' as const },
+    { path: '/legal/ai-disclosure', priority: 0.6, changeFreq: 'monthly' as const },
   ];
 
   for (const route of localizedLegalRoutes) {
@@ -106,9 +110,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return sitemapEntries;
 }
 
+// hreflang strategy parallels [locale]/layout.tsx (W4.4): only en + ko declare
+// their own URL; the other 22 fallback locales point at /en so Google doesn't
+// treat each fallback URL as a distinct translated version.
+const FULLY_TRANSLATED = new Set<string>(['en', 'ko']);
 function buildLanguageAlternates(baseUrl: string, routePath: string) {
   return {
-    ...Object.fromEntries(locales.map((locale) => [locale, `${baseUrl}/${locale}${routePath}`])),
+    ...Object.fromEntries(
+      locales.map((locale) => [
+        locale,
+        FULLY_TRANSLATED.has(locale)
+          ? `${baseUrl}/${locale}${routePath}`
+          : `${baseUrl}/en${routePath}`,
+      ])
+    ),
     'x-default': `${baseUrl}/${defaultLocale}${routePath}`,
   };
 }

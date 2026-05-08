@@ -30,28 +30,63 @@
   font-display: swap;
 }
 
-/* V1 design tokens — monochrome ink slate + 3 semantic signals (canon/conflict/pending).
-   Locked in Phase D'' (commit 1d3a3c49) and adopted by auth pages in 9aaaaea6.
-   Preview env: Turnstile keys removed for unblocked dogfood signup/login.
-   Google OAuth swapped to Litheon GCP project (litheon-seizn-prod). */
+/* === Seizn Author SSOT — warm cream + terracotta accent ============================
+   Single base palette, applied everywhere (landing + dashboard). The previous split
+   (.author-landing cool ink monochrome vs .dashboard-redesign warm cream) is gone.
+   Author Mark A monochrome (`public/`) and NPC SDK S wave (`docs/brand/...`) brand
+   identities are scoped per surface; the visual base for `seizn.com` Author flagship
+   is unified to warm cream as decided 2026-05-08 (plan W2.1).
+   =================================================================================== */
 :root {
   --font-sans: "Pretendard", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-serif: "Source Serif 4", "Charter", "Iowan Old Style", Georgia, serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --font-display-serif: 'Newsreader', 'Iowan Old Style', 'Apple Garamond', Georgia, serif;
 
-  --ink-0: oklch(0.99 0.003 250);
-  --ink-50: oklch(0.975 0.005 250);
-  --ink-100: oklch(0.95 0.006 250);
-  --ink-200: oklch(0.90 0.008 250);
-  --ink-300: oklch(0.80 0.010 250);
-  --ink-400: oklch(0.65 0.012 250);
-  --ink-500: oklch(0.50 0.014 250);
-  --ink-600: oklch(0.38 0.016 250);
-  --ink-700: oklch(0.28 0.016 250);
-  --ink-800: oklch(0.20 0.014 250);
-  --ink-900: oklch(0.14 0.012 250);
-  --ink-950: oklch(0.09 0.010 250);
+  /* Raw warm ink scale — promoted from former .dashboard-redesign scope so that
+     existing `var(--ink-*)` references across 168 files render warm cream by default.
+     Cool monochrome values are retired. */
+  --ink-0: #ffffff;
+  --ink-25: #fbf8f2;
+  --ink-50: #f5f0e6;
+  --ink-75: #ece5d5;
+  --ink-100: #ddd3bd;
+  --ink-200: #bfb39a;
+  --ink-300: #948872;
+  --ink-400: #6f6655;
+  --ink-500: #4a4338;
+  --ink-600: #3a352c;
+  --ink-700: #2c2820;
+  --ink-800: #221e18;
+  --ink-900: #1a1612;
+  --ink-950: #110e0a;
 
+  /* Accent — terracotta + dawn (warm complementary) */
+  --terracotta-50: #fbeee6;
+  --terracotta-100: #f4d6c2;
+  --terracotta-300: #d99877;
+  --terracotta-500: #c96442;
+  --terracotta-600: #a94e2f;
+  --terracotta-700: #8a3d22;
+
+  --dawn-50: #fdf3da;
+  --dawn-200: #f5dca5;
+  --dawn-500: #d9a847;
+  --dawn-700: #8a6818;
+
+  /* Severity tiers (P1/P2/P3) — used by conflict cards, audit log */
+  --sev-p1-bg: #fbeee6;
+  --sev-p1-border: var(--terracotta-500);
+  --sev-p1-text: var(--terracotta-700);
+  --sev-p2-bg: #fdf3da;
+  --sev-p2-border: var(--dawn-500);
+  --sev-p2-text: var(--dawn-700);
+  --sev-p3-bg: #f5f0e6;
+  --sev-p3-border: #bfb39a;
+  --sev-p3-text: #4a4338;
+
+  /* Semantic signals — kept as oklch for canon/conflict/pending hue meaning,
+     but tuned to harmonize with the warm cream base. */
   --signal-canon: oklch(0.62 0.16 148);
   --signal-canon-soft: oklch(0.94 0.05 148);
   --signal-canon-ink: oklch(0.32 0.10 148);
@@ -62,12 +97,32 @@
   --signal-pending-soft: oklch(0.96 0.05 85);
   --signal-pending-ink: oklch(0.40 0.12 85);
 
+  /* Plan W2.1 semantic anchors — the recommended surface-level tokens for new code.
+     Existing code keeps using --ink-* / --szn-* aliases until each callsite is touched. */
+  --bg: #fbf8f2;
+  --bg-app: #fbf8f2;
+  --bg-sidebar: #f5f0e6;
+  --bg-elevated: #ffffff;
+  --bg-muted: #f5f0e6;
+  --border-subtle: rgba(74, 67, 56, 0.10);
+  --border-strong: rgba(74, 67, 56, 0.20);
+  --text-primary: #1a1612;
+  --text-secondary: #4a4338;
+  --text-tertiary: #6f6655;
+  --text-muted: #948872;
+  --accent-primary: var(--terracotta-500);
+  --accent-primary-hover: var(--terracotta-600);
+  --accent-secondary: var(--dawn-500);
+  --accent-on-primary: #fbf8f2;
+  --shadow-card: 0 1px 2px rgba(26, 22, 18, 0.04), 0 4px 12px rgba(26, 22, 18, 0.04);
+  --shadow-pop: 0 4px 12px rgba(26, 22, 18, 0.08), 0 16px 32px rgba(26, 22, 18, 0.08);
+
   --radius-sm: 6px;
   --radius-md: 8px;
   --radius-lg: 8px;
-  --shadow-sm: 0 1px 2px oklch(0.14 0.012 250 / 0.06), 0 1px 1px oklch(0.14 0.012 250 / 0.04);
-  --shadow-md: 0 4px 12px oklch(0.14 0.012 250 / 0.06), 0 1px 3px oklch(0.14 0.012 250 / 0.04);
-  --shadow-lg: 0 18px 40px oklch(0.14 0.012 250 / 0.10), 0 2px 6px oklch(0.14 0.012 250 / 0.04);
+  --shadow-sm: 0 1px 2px rgba(26, 22, 18, 0.06), 0 1px 1px rgba(26, 22, 18, 0.04);
+  --shadow-md: 0 4px 12px rgba(26, 22, 18, 0.06), 0 1px 3px rgba(26, 22, 18, 0.04);
+  --shadow-lg: 0 18px 40px rgba(26, 22, 18, 0.10), 0 2px 6px rgba(26, 22, 18, 0.04);
 
   --t-display: clamp(42px, 5.2vw, 82px);
   --t-h1: clamp(36px, 4vw, 60px);
@@ -78,11 +133,45 @@
   --t-eyebrow: 12px;
 }
 
+/* Warm-dark mode — toggled via <html class="dark">. The previous "force dark on
+   dashboard" cascade is gone (DashboardShell strips the `dark` class). */
+.dark {
+  --ink-0: #0d0a08;
+  --ink-25: #110e0a;
+  --ink-50: #16120e;
+  --ink-75: #1d1813;
+  --ink-100: #271f18;
+  --ink-200: #3a2f24;
+  --ink-300: #564633;
+  --ink-400: #786144;
+  --ink-500: #9c8569;
+  --ink-600: #b8a386;
+  --ink-700: #d4c2a6;
+  --ink-800: #e9dcc4;
+  --ink-900: #f4ebd6;
+  --ink-950: #faf3e2;
+
+  --bg: #110e0a;
+  --bg-app: #110e0a;
+  --bg-sidebar: #16120e;
+  --bg-elevated: #1d1813;
+  --bg-muted: #16120e;
+  --border-subtle: rgba(244, 235, 214, 0.08);
+  --border-strong: rgba(244, 235, 214, 0.16);
+  --text-primary: #f4ebd6;
+  --text-secondary: #d4c2a6;
+  --text-tertiary: #9c8569;
+  --text-muted: #786144;
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 4px 12px rgba(0, 0, 0, 0.32);
+  --shadow-pop: 0 4px 12px rgba(0, 0, 0, 0.5), 0 16px 32px rgba(0, 0, 0, 0.4);
+}
+
+/* Layout-only landing scope (color overrides removed — base palette now applies) */
 .author-landing {
   min-height: 100vh;
   overflow-x: clip;
-  background: var(--ink-0);
-  color: var(--ink-900);
+  background: var(--bg);
+  color: var(--text-primary);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -105,7 +194,7 @@
 }
 
 .author-eyebrow {
-  color: var(--ink-500);
+  color: var(--text-tertiary);
   font-family: var(--font-mono);
   font-size: var(--t-eyebrow);
   font-weight: 500;
@@ -160,7 +249,7 @@
 
 .author-focus:focus-visible,
 .author-landing :focus-visible {
-  outline: 2px solid var(--signal-canon);
+  outline: 2px solid var(--accent-primary);
   outline-offset: 2px;
 }
 
@@ -170,61 +259,10 @@
   }
 }
 
-/* === Dashboard redesign — 2nd UX rebrand cycle (2026-05-05) ===
-   Warm paper-tone ink palette + terracotta/dawn accents + severity tier.
-   Scoped to .dashboard-redesign so the V1 cool-tone OKLCH :root palette is
-   untouched. WorkspaceShell mounts this class on its root. */
-:root {
-  --terracotta-50: #fbeee6;
-  --terracotta-100: #f4d6c2;
-  --terracotta-300: #d99877;
-  --terracotta-500: #c96442;
-  --terracotta-600: #a94e2f;
-  --terracotta-700: #8a3d22;
-
-  --dawn-50: #fdf3da;
-  --dawn-200: #f5dca5;
-  --dawn-500: #d9a847;
-  --dawn-700: #8a6818;
-
-  --sev-p1-bg: #fbeee6;
-  --sev-p1-border: var(--terracotta-500);
-  --sev-p1-text: var(--terracotta-700);
-  --sev-p2-bg: #fdf3da;
-  --sev-p2-border: var(--dawn-500);
-  --sev-p2-text: var(--dawn-700);
-  --sev-p3-bg: #f5f0e6;
-  --sev-p3-border: #bfb39a;
-  --sev-p3-text: #4a4338;
-
-  --font-display-serif: 'Newsreader', 'Iowan Old Style', 'Apple Garamond', Georgia, serif;
-}
-
+/* Dashboard scope — kept as a no-op marker class (workspace-shell.tsx uses it for
+   selectors like .dashboard-redesign .paper-bg, .serif, .mono, ::selection).
+   All token values are now from :root, so adding/removing the class doesn't repaint. */
 .dashboard-redesign {
-  --ink-25: #fbf8f2;
-  --ink-50: #f5f0e6;
-  --ink-75: #ece5d5;
-  --ink-100: #ddd3bd;
-  --ink-200: #bfb39a;
-  --ink-300: #948872;
-  --ink-400: #6f6655;
-  --ink-500: #4a4338;
-  --ink-700: #2c2820;
-  --ink-900: #1a1612;
-
-  --bg-app: var(--ink-25);
-  --bg-sidebar: var(--ink-50);
-  --bg-elevated: #ffffff;
-  --bg-muted: var(--ink-50);
-  --border-subtle: rgba(74, 67, 56, 0.10);
-  --border-strong: rgba(74, 67, 56, 0.20);
-  --text-primary: var(--ink-900);
-  --text-secondary: var(--ink-500);
-  --text-tertiary: var(--ink-400);
-  --text-muted: var(--ink-300);
-  --shadow-card: 0 1px 2px rgba(26, 22, 18, 0.04), 0 4px 12px rgba(26, 22, 18, 0.04);
-  --shadow-pop: 0 4px 12px rgba(26, 22, 18, 0.08), 0 16px 32px rgba(26, 22, 18, 0.08);
-
   font-family: var(--font-sans);
   color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
@@ -274,6 +312,11 @@
   50% {
     opacity: 1;
   }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
 }
 
 .dashboard-redesign .dot-live {

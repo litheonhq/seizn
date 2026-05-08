@@ -17,6 +17,7 @@ import type { Locale } from "@/i18n/config";
 import { formatTokenLabel, formatUsd } from "@/components/landing/section-pricing";
 import type { PricingPageCopy } from "./pricing-copy";
 import { PricingTrack2Section } from "./pricing-track2-section";
+import { PricingTrack3Section } from "./pricing-track3-section";
 
 interface PricingClientProps {
   locale: Locale;
@@ -161,7 +162,25 @@ export function PricingClient({ locale, copy }: PricingClientProps) {
           </div>
         </section>
 
-        <section className="px-4 pb-16 sm:px-6 lg:px-8">
+        {/* Track tab nav (W3.1) — anchor-jump between Track 1 / 2 / 3 sections */}
+        <nav aria-label="Pricing tracks" className="px-4 sm:px-6 lg:px-8">
+          <div className="author-shell flex flex-wrap items-center gap-2 border-b pb-3" style={{ borderColor: "var(--ink-200)" }}>
+            <a href="#track-1" className="rounded-full px-4 py-2 text-sm font-medium" style={{ background: "var(--ink-100)", color: "var(--text-primary)" }}>
+              Web (Author Memory)
+            </a>
+            <a href="#track-2" className="rounded-full px-4 py-2 text-sm" style={{ color: "var(--text-secondary)" }}>
+              API · MCP
+            </a>
+            <a href="#track-3" className="rounded-full px-4 py-2 text-sm inline-flex items-center gap-2" style={{ color: "var(--text-secondary)" }}>
+              Desktop
+              <span className="rounded-full px-2 py-0.5 text-[10px] font-medium" style={{ background: "var(--sev-p2-bg)", color: "var(--sev-p2-text)" }}>
+                Soon
+              </span>
+            </a>
+          </div>
+        </nav>
+
+        <section id="track-1" className="px-4 pb-16 pt-8 sm:px-6 lg:px-8">
           <div className="author-shell grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             {plans.map((plan) => {
               const pair = resolvePricePair(plan, plan.byokOnly && column === 'byok' ? 'managed' : column, cadence);
@@ -197,6 +216,10 @@ export function PricingClient({ locale, copy }: PricingClientProps) {
         </section>
 
         <PricingTrack2Section locale={locale} />
+
+        <section id="track-3" className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
+          <PricingTrack3Section locale={locale} />
+        </section>
 
         <section className="mx-auto max-w-3xl px-4 py-16 sm:px-6">
           <h2 className="author-serif text-3xl" style={{ color: "var(--ink-900)" }}>

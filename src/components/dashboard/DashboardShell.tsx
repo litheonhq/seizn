@@ -107,11 +107,9 @@ export default function DashboardShell({ children }: { children: React.ReactNode
   }
 
   return (
-    // Force dark on the dashboard surface — the Living Memory palette is the
-    // primary mode here. Theme-{season} is kept for legacy --theme-* variables
-    // used by older widgets (charts, gradients), which now resolve underneath
-    // the dark cascade.
-    <div className={`dark theme-${season} min-h-screen bg-szn-bg text-szn-text-1`}>
+    // Unified warm cream identity (plan W2.2) — `dark` class no longer forced.
+    // Mode is controlled solely by user via ThemeToggle on <html>.
+    <div className={`theme-${season} min-h-screen bg-szn-bg text-szn-text-1`}>
       {/* Skip to content */}
       <a
         href="#dashboard-main"
