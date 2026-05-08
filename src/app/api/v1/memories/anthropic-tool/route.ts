@@ -34,6 +34,13 @@
  *
  * `name` is stored on memories.metadata.anthropic_tool_name so the same
  * memory row can be addressed by both v1 API id and tool-style path.
+ *
+ * Response content negotiation (R13 C5):
+ *   default — `Content-Type: application/json` `{ result: string }` on OK,
+ *             `{ error: { code, message } }` + HTTP status on failure.
+ *   `Accept: text/plain` — bare text body, suitable for piping straight
+ *             into the Anthropic `tool_result.content` text field. Errors
+ *             arrive as `<code>: <message>` in plain text + HTTP status.
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -87,11 +94,18 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   }
   const userId = authResult.userId;
 
+  // R13 C5 — content negotiation. Default JSON `{result:text}` envelope is
+  // ergonomic for a customer-side adapter that maps it into a tool_result
+  // block. Callers that want to pipe the body straight into the Anthropic
+  // tool_result.content text field can send `Accept: text/plain` and get
+  // bare text back (errors arrive as plain-text with the HTTP status).
+  const wantsPlain = preferPlainText(request.headers.get('accept'));
+
   let body: ToolBody;
   try {
     body = (await request.json()) as ToolBody;
   } catch {
-    return toolErr('invalid_body', 'Request body must be valid JSON', 400);
+    return toolErr('invalid_body', 'Request body must be valid JSON', 400, wantsPlain);
   }
 
   const command = typeof body.command === 'string' ? body.command : '';
@@ -100,13 +114,14 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     switch (command) {
       case 'view':
-        return await handleView(supabase, userId, parsePath(asString(body.path)));
+        return await handleView(supabase, userId, parsePath(asString(body.path)), wantsPlain);
       case 'create':
         return await handleCreate(
           supabase,
           userId,
           parsePath(asString(body.path)),
           asString(body.file_text),
+          wantsPlain,
         );
       case 'str_replace':
         return await handleStrReplace(
@@ -115,6 +130,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           parsePath(asString(body.path)),
           asString(body.old_str),
           asString(body.new_str),
+          wantsPlain,
         );
       case 'insert':
         return await handleInsert(
@@ -123,30 +139,43 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           parsePath(asString(body.path)),
           asNumber(body.insert_line),
           asString(body.new_str),
+          wantsPlain,
         );
       case 'delete':
-        return await handleDelete(supabase, userId, parsePath(asString(body.path)));
+        return await handleDelete(supabase, userId, parsePath(asString(body.path)), wantsPlain);
       case 'rename':
         return await handleRename(
           supabase,
           userId,
           parsePath(asString(body.old_path)),
           parsePath(asString(body.new_path)),
+          wantsPlain,
         );
       default:
         return toolErr(
           'unknown_command',
           `command must be one of view/create/str_replace/insert/delete/rename`,
           400,
+          wantsPlain,
         );
     }
   } catch (error) {
     if (error instanceof ToolError) {
-      return toolErr(error.code, error.message, error.status);
+      return toolErr(error.code, error.message, error.status, wantsPlain);
     }
     console.error('[anthropic-tool] unexpected error', error);
-    return toolErr('internal_error', 'Memory tool adapter failed', 500);
+    return toolErr('internal_error', 'Memory tool adapter failed', 500, wantsPlain);
   }
+}
+
+function preferPlainText(accept: string | null): boolean {
+  if (!accept) return false;
+  // Honor explicit text/plain; ignore */* (too broad — defaulting to JSON
+  // keeps existing JSON callers stable).
+  return accept.toLowerCase().split(',').some((part) => {
+    const media = part.split(';')[0].trim();
+    return media === 'text/plain';
+  });
 }
 
 // R12 audit fix (A2): never echo raw Postgres error messages to the
@@ -167,6 +196,7 @@ async function handleView(
   supabase: ReturnType<typeof createServerClient>,
   userId: string,
   parsed: ParsedPath,
+  wantsPlain: boolean,
 ): Promise<NextResponse> {
   // R12 audit fix (C2): scope all listing to memories THIS TOOL created.
   // Pre-fix, view of /memories surfaced every memory the user had — from
@@ -189,7 +219,7 @@ async function handleView(
     const namespaces = Array.from(
       new Set((data ?? []).map((r) => r.namespace).filter((n): n is string => typeof n === 'string')),
     ).sort();
-    return toolOk(formatListing(ROOT_PATH, namespaces.map((n) => `${n}/`)));
+    return toolOk(formatListing(ROOT_PATH, namespaces.map((n) => `${n}/`)), wantsPlain);
   }
 
   // /memories/<ns> → list files in namespace (tool-owned only)
@@ -207,7 +237,7 @@ async function handleView(
       .map((r) => extractToolName(r.metadata as Record<string, unknown> | null))
       .filter((n): n is string => typeof n === 'string' && n.length > 0)
       .sort();
-    return toolOk(formatListing(`${PATH_PREFIX}${parsed.namespace}`, names));
+    return toolOk(formatListing(`${PATH_PREFIX}${parsed.namespace}`, names), wantsPlain);
   }
 
   // /memories/<ns>/<name> → file content
@@ -215,7 +245,7 @@ async function handleView(
   if (!row) {
     throw new ToolError('not_found', `No memory at ${parsed.raw}`, 404);
   }
-  return toolOk(row.content);
+  return toolOk(row.content, wantsPlain);
 }
 
 async function handleCreate(
@@ -223,6 +253,7 @@ async function handleCreate(
   userId: string,
   parsed: ParsedPath,
   fileText: string,
+  wantsPlain: boolean,
 ): Promise<NextResponse> {
   if (!parsed.namespace || !parsed.name) {
     throw new ToolError('bad_path', `create requires /memories/<ns>/<name>`, 400);
@@ -245,7 +276,7 @@ async function handleCreate(
       .eq('id', existing.id)
       .eq('user_id', userId);
     if (error) reportDbError('create update', error);
-    return toolOk(`Updated ${parsed.raw}`);
+    return toolOk(`Updated ${parsed.raw}`, wantsPlain);
   }
   const { error } = await supabase.from('memories').insert({
     user_id: userId,
@@ -261,7 +292,7 @@ async function handleCreate(
     }
     reportDbError('create insert', error);
   }
-  return toolOk(`Created ${parsed.raw}`);
+  return toolOk(`Created ${parsed.raw}`, wantsPlain);
 }
 
 async function handleStrReplace(
@@ -270,6 +301,7 @@ async function handleStrReplace(
   parsed: ParsedPath,
   oldStr: string,
   newStr: string,
+  wantsPlain: boolean,
 ): Promise<NextResponse> {
   const row = await requireMemoryAtPath(supabase, userId, parsed);
   if (!oldStr) {
@@ -316,7 +348,7 @@ async function handleStrReplace(
       409,
     );
   }
-  return toolOk(`Replaced 1 occurrence in ${parsed.raw}`);
+  return toolOk(`Replaced 1 occurrence in ${parsed.raw}`, wantsPlain);
 }
 
 async function handleInsert(
@@ -325,6 +357,7 @@ async function handleInsert(
   parsed: ParsedPath,
   insertLine: number,
   newStr: string,
+  wantsPlain: boolean,
 ): Promise<NextResponse> {
   const row = await requireMemoryAtPath(supabase, userId, parsed);
   const lines = row.content.split('\n');
@@ -347,13 +380,20 @@ async function handleInsert(
     .eq('id', row.id)
     .eq('user_id', userId);
   if (error) reportDbError('update', error);
-  return toolOk(`Inserted at line ${insertLine} of ${parsed.raw}`);
+  // R13 C12 — Anthropic spec uses 1-based line numbers when describing
+  // "insert AFTER line N" in tool documentation. Our implementation treats
+  // insert_line as 0-based offset (0 = top of file, N = before line N+1).
+  // The two semantics agree at insert_line=0 ("insert at the very top"),
+  // which is the common case. Document the divergence so callers porting
+  // from other memory_20250818 backends know.
+  return toolOk(`Inserted at line ${insertLine} of ${parsed.raw}`, wantsPlain);
 }
 
 async function handleDelete(
   supabase: ReturnType<typeof createServerClient>,
   userId: string,
   parsed: ParsedPath,
+  wantsPlain: boolean,
 ): Promise<NextResponse> {
   const row = await requireMemoryAtPath(supabase, userId, parsed);
   // Soft delete to preserve memory_content_history audit trail.
@@ -363,7 +403,7 @@ async function handleDelete(
     .eq('id', row.id)
     .eq('user_id', userId);
   if (error) reportDbError('update', error);
-  return toolOk(`Deleted ${parsed.raw}`);
+  return toolOk(`Deleted ${parsed.raw}`, wantsPlain);
 }
 
 async function handleRename(
@@ -371,6 +411,7 @@ async function handleRename(
   userId: string,
   oldPath: ParsedPath,
   newPath: ParsedPath,
+  wantsPlain: boolean,
 ): Promise<NextResponse> {
   if (!newPath.namespace || !newPath.name) {
     throw new ToolError('bad_path', 'rename requires new_path = /memories/<ns>/<name>', 400);
@@ -402,7 +443,7 @@ async function handleRename(
     }
     reportDbError('rename update', error);
   }
-  return toolOk(`Renamed ${oldPath.raw} → ${newPath.raw}`);
+  return toolOk(`Renamed ${oldPath.raw} → ${newPath.raw}`, wantsPlain);
 }
 
 function isUniqueViolation(
@@ -425,11 +466,23 @@ class ToolError extends Error {
   }
 }
 
-function toolOk(text: string): NextResponse {
+function toolOk(text: string, wantsPlain: boolean): NextResponse {
+  if (wantsPlain) {
+    return new NextResponse(text, {
+      status: 200,
+      headers: { 'content-type': 'text/plain; charset=utf-8' },
+    });
+  }
   return NextResponse.json({ result: text });
 }
 
-function toolErr(code: string, message: string, status: number): NextResponse {
+function toolErr(code: string, message: string, status: number, wantsPlain: boolean): NextResponse {
+  if (wantsPlain) {
+    return new NextResponse(`${code}: ${message}`, {
+      status,
+      headers: { 'content-type': 'text/plain; charset=utf-8' },
+    });
+  }
   return NextResponse.json({ error: { code, message } }, { status });
 }
 
