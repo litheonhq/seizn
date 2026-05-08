@@ -816,7 +816,10 @@ async function handlePost(request: NextRequest) {
     }
 
     // R9: optional bi-temporal fields. Validate up front; reject 400 on
-    // bad input. Defaults: canon_status='canon', valid_at=created_at.
+    // bad input. Defaults: canon_status='canon', valid_at=now() (column
+    // default added in R12 migration 20260508010 — pre-R12 the column
+    // had no DEFAULT, so omitted valid_at became NULL and time-travel
+    // queries silently dropped the row).
     const temporalIn = {
       canon_status: typeof rawBody.canon_status === 'string'
         ? (rawBody.canon_status as MemoryCanonStatus)
@@ -835,6 +838,59 @@ async function handlePost(request: NextRequest) {
         );
       }
       throw error;
+    }
+    // R12 audit fix (L10): reject canon states that don't make sense for
+    // a fresh row. The 7-state FSM accepts past_only / superseded /
+    // invalidated as quote-states, but you reach those via transitions,
+    // not direct insert. Author Memory v3 follows this rule.
+    if (
+      temporalIn.canon_status &&
+      temporalIn.canon_status !== 'canon' &&
+      temporalIn.canon_status !== 'candidate'
+    ) {
+      return NextResponse.json(
+        {
+          error: {
+            code: 'invalid_temporal_input',
+            message: "canon_status on insert must be 'canon' or 'candidate'",
+          },
+        },
+        { status: 400 },
+      );
+    }
+    // R12 audit fix (CRITICAL A1): supersedes_id IDOR. Pre-fix, POST
+    // accepted any UUID and the FK only enforced "row exists" — not
+    // "row belongs to me". Verify ownership before insert. Same check
+    // for invalidated_by_id when it lands in a future patch.
+    let supersededRow: { id: string; valid_at: string | null } | null = null;
+    if (temporalIn.supersedes_id) {
+      const { data: target, error: lookupErr } = await supabase
+        .from('memories')
+        .select('id, valid_at, user_id, is_deleted')
+        .eq('id', temporalIn.supersedes_id)
+        .maybeSingle();
+      if (lookupErr) {
+        logServerError('[v1/memories] supersedes_id lookup failed', lookupErr, {
+          userId,
+          supersedesId: temporalIn.supersedes_id,
+        });
+        return NextResponse.json(
+          { error: { code: 'database_error', message: 'Storage error' } },
+          { status: 500 },
+        );
+      }
+      if (!target || target.user_id !== userId || target.is_deleted) {
+        return NextResponse.json(
+          {
+            error: {
+              code: 'invalid_supersedes_id',
+              message: 'supersedes_id does not refer to a memory you own',
+            },
+          },
+          { status: 400 },
+        );
+      }
+      supersededRow = { id: target.id, valid_at: target.valid_at };
     }
 
     // Compute content hash for dedup safety net (unique index on user_id + namespace + content_hash)
@@ -917,6 +973,34 @@ async function handlePost(request: NextRequest) {
         .single();
       memory = result.data;
       insertError = result.error;
+    }
+
+    // R12 audit fix (CRITICAL B2): apply planSupersedence so the
+    // predecessor flips canon_status='superseded' + invalidated_at=now.
+    // Pre-fix, supersedes_id only set the new row's pointer but the old
+    // row stayed canon — default GET returned both rows as truth, and
+    // as_of queries the same. Now the FSM is consistent.
+    if (memory && supersededRow) {
+      const validAt = temporalIn.valid_at ?? memory.created_at ?? new Date().toISOString();
+      const { error: supersedeErr } = await supabase
+        .from('memories')
+        .update({
+          canon_status: 'superseded',
+          invalidated_at: validAt,
+          invalidated_by_id: memory.id,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', supersededRow.id)
+        .eq('user_id', userId);
+      if (supersedeErr) {
+        logServerError('[v1/memories] supersedence flip failed', supersedeErr, {
+          userId,
+          newId: memory.id,
+          supersededId: supersededRow.id,
+        });
+        // Non-fatal: surface in audit logs but the new row is committed.
+        // A reconciliation cron can repair this later if needed.
+      }
     }
 
     // Backward compatibility: if recent additive migrations are not applied yet,
