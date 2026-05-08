@@ -1,6 +1,27 @@
 import type { AuthorLlmEffort } from './effort-mapping';
 
 export type AuthorLlmProvider = 'anthropic' | 'google' | 'openai';
+
+/**
+ * Alias used by BYOK / settings surfaces. Today identical to AuthorLlmProvider
+ * — kept as a separate name so future divergence (e.g., a Cohere BYOK option
+ * for embeddings that doesn't appear in the Author LLM router) doesn't force
+ * either side to widen prematurely. R25 M4: replaces three duplicate inline
+ * unions across byok-section.tsx / api/account/byok/route.ts / byok-resolver.ts.
+ */
+export type ByokProvider = AuthorLlmProvider;
+
+export const BYOK_PROVIDERS: readonly ByokProvider[] = [
+  'anthropic',
+  'google',
+  'openai',
+] as const;
+
+export function isByokProvider(value: unknown): value is ByokProvider {
+  return (
+    value === 'anthropic' || value === 'google' || value === 'openai'
+  );
+}
 export type AuthorLlmResponseFormat = 'text' | 'json';
 export type AuthorLlmKeySource = 'byok' | 'managed';
 
@@ -116,7 +137,7 @@ export interface AuthorModelUsageRecord {
 
 export interface AuthorByokStatus {
   enabled: boolean;
-  provider: 'anthropic' | 'google' | 'openai' | null;
+  provider: ByokProvider | null;
   key_last_4?: string;
   verified_at?: string | null;
   status: 'active' | 'invalid' | 'missing';

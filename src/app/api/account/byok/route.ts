@@ -6,19 +6,16 @@ import {
 } from '@/lib/author/ui';
 import {
   AuthorLlmError,
+  BYOK_PROVIDERS,
   getAuthorByokStatus,
+  isByokProvider,
   saveAuthorByokKey,
+  type ByokProvider,
 } from '@/lib/author/llm';
 import { createServerClient, hasServerSupabaseServiceRoleConfig } from '@/lib/supabase';
 import { recordFirstFunnelEvent } from '@/lib/analytics/funnel';
 
 export const runtime = 'nodejs';
-
-type ByokProvider = 'anthropic' | 'google' | 'openai';
-
-function isByokProvider(value: string): value is ByokProvider {
-  return value === 'openai' || value === 'anthropic' || value === 'google';
-}
 
 function readProviderQuery(request: NextRequest): ByokProvider | undefined {
   const value = request.nextUrl.searchParams.get('provider')?.trim().toLowerCase();
@@ -84,9 +81,9 @@ export async function DELETE(request: NextRequest) {
     // R22 — 3-provider awareness: probe each remaining provider and report
     // the first active one, so the UI stays in sync after a delete. If none
     // are active, clear the BYOK panel state.
-    const remainingProviders: ByokProvider[] = (
-      ['anthropic', 'openai', 'google'] as ByokProvider[]
-    ).filter((p) => p !== targetProvider);
+    const remainingProviders: ByokProvider[] = BYOK_PROVIDERS.filter(
+      (p) => p !== targetProvider,
+    );
     let otherActive = false;
     let otherProviderResolved: ByokProvider | null = null;
     for (const provider of remainingProviders) {

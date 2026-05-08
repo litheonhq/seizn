@@ -52,44 +52,50 @@ export async function generateAuthorLlm<TJson = unknown>(
   } catch (error) {
     if (!shouldFailover(error)) throw error;
     // Charter Managed perk: on rate-limit or 5xx from the primary provider,
-    // try the secondary. Only fires when the user has a Managed entitlement
-    // (we ship both server keys to Managed users; BYOK users would need
-    // both keys registered, which is a separate code path not covered here).
-    // We never failover when the request explicitly named a provider — that
-    // signals the caller wants that exact provider's behavior (e.g., for
-    // schema-strict JSON mode that only one provider supports cleanly).
+    // walk the secondary chain. Only fires when the user has a Managed
+    // entitlement. We never failover when the request explicitly named a
+    // provider — that signals the caller wants that exact provider's
+    // behavior (schema-strict JSON, etc.).
     if (request.provider) throw error;
     if (!(await isMultiProviderFailoverEnabled(request.userId))) throw error;
-    const secondary = otherProvider(primary);
-    if (!secondary) throw error;
-    console.warn(
-      `[author-llm] failover ${primary} → ${secondary} for user ${request.userId}: ${describeError(error)}`,
-    );
-    // Round 5 audit fix: shallow-spread `request` so any caller-supplied
-    // effort/model/maxTokens survives the failover; only the provider
-    // field gets overridden. AUTHOR_LLM_EFFORT env stays the fallback
-    // for callers that didn't set effort explicitly.
-    try {
-      return await invokeProvider<TJson>(secondary, { ...request, provider: secondary });
-    } catch (failoverError) {
-      console.error(
-        `[author-llm] failover ${primary} → ${secondary} also failed for user ${request.userId}: ${describeError(failoverError)}`,
+    // R25 M1 — walk ALL other providers in priority order, not just one.
+    // Pre-fix: anthropic+google user (no openai key) would fail anthropic
+    // → fallback to openai → LLM_NOT_CONFIGURED → router throws original
+    // anthropic error. Now: anthropic → openai (no key) → google (works).
+    const fallbackChain = otherProviders(primary);
+    let lastInformativeError: unknown = error;
+    for (const secondary of fallbackChain) {
+      console.warn(
+        `[author-llm] failover ${primary} → ${secondary} for user ${request.userId}: ${describeError(lastInformativeError)}`,
       );
-      // Round 5 audit fix: don't mask the original primary error with a
-      // misleading "secondary not configured" message. If the secondary
-      // failed because the server doesn't have a key for it (Managed
-      // setup with only one provider configured), surface the primary
-      // error since that's what the user actually hit.
-      if (
-        failoverError instanceof AuthorLlmError &&
-        failoverError.code === 'LLM_NOT_CONFIGURED'
-      ) {
-        throw error;
+      try {
+        // Round 5 audit fix: shallow-spread `request` so any caller-supplied
+        // effort/model/maxTokens survives the failover; only the provider
+        // field gets overridden.
+        return await invokeProvider<TJson>(secondary, { ...request, provider: secondary });
+      } catch (failoverError) {
+        console.error(
+          `[author-llm] failover ${primary} → ${secondary} also failed for user ${request.userId}: ${describeError(failoverError)}`,
+        );
+        // Round 5 audit fix carried forward: LLM_NOT_CONFIGURED on a
+        // secondary doesn't update lastInformativeError — keep walking
+        // the chain so users with only 2-of-3 providers still benefit.
+        if (
+          failoverError instanceof AuthorLlmError &&
+          failoverError.code === 'LLM_NOT_CONFIGURED'
+        ) {
+          continue;
+        }
+        // An informative failure (rate limit, validation, schema) becomes
+        // the new "last error" — we'll surface it if no later secondary
+        // succeeds.
+        lastInformativeError = failoverError;
       }
-      // Otherwise the secondary's error is informative (e.g., its own
-      // rate limit, schema validation). Surface it.
-      throw failoverError;
     }
+    // All secondaries exhausted. Surface the most informative error we
+    // saw — either the original primary failure (if every secondary just
+    // returned LLM_NOT_CONFIGURED) or the last secondary's actual fault.
+    throw lastInformativeError;
   }
 }
 
@@ -112,17 +118,19 @@ function invokeProvider<TJson>(
   }
 }
 
-// R22 — 3-way failover map. Single secondary per primary keeps the failover
-// path bounded (we don't chain through all 3 on cascading failures). Order
-// chosen so each primary's secondary is the closest in capability:
-//   anthropic → openai (both best at literary prose)
-//   openai → anthropic (same)
-//   google → anthropic (Gemini → Claude as the literary-quality fallback)
-function otherProvider(p: AuthorLlmProvider): AuthorLlmProvider | null {
-  if (p === 'anthropic') return 'openai';
-  if (p === 'openai') return 'anthropic';
-  if (p === 'google') return 'anthropic';
-  return null;
+// R25 M1 — 3-way failover chain (was single-secondary). Walk in priority
+// order so users with any 2-of-3 providers configured still get failover.
+// Priority chosen by literary-prose quality:
+//   anthropic → openai → google
+//   openai    → anthropic → google
+//   google    → anthropic → openai
+// First in each chain is the closest-capability secondary; the third is
+// the catch-all that exists for the "I have keys for X+Z but not Y" case.
+function otherProviders(p: AuthorLlmProvider): readonly AuthorLlmProvider[] {
+  if (p === 'anthropic') return ['openai', 'google'];
+  if (p === 'openai') return ['anthropic', 'google'];
+  if (p === 'google') return ['anthropic', 'openai'];
+  return [];
 }
 
 function shouldFailover(error: unknown): boolean {
