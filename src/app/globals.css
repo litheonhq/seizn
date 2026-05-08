@@ -6,14 +6,17 @@
 
 
 :root {
-  --background: #fafaf9;
-  --foreground: #1a1a1b;
+  /* Unified warm cream base — promoted from former .dashboard-redesign scope.
+     Plan W2.1 (2026-05-08): single Author identity across landing + dashboard. */
+  --background: #fbf8f2;
+  --foreground: #1a1612;
 }
 
-/* Dark mode using class strategy */
+/* Warm-dark mode (class strategy). DashboardShell no longer force-applies .dark;
+   user toggles via ThemeToggle. */
 .dark {
-  --background: #070a12;
-  --foreground: #f8fafc;
+  --background: #110e0a;
+  --foreground: #f4ebd6;
 }
 
 /* ===== Seizn Design Tokens — V1 monochrome ink + 3 semantic signals =====
@@ -21,32 +24,32 @@
    --szn-* are remapped to V1 ink + signal tokens for visual brand consistency
    while we incrementally rewrite Tailwind class strings off the legacy aliases. */
 :root {
-  --szn-bg: var(--ink-50);
-  --szn-surface: var(--ink-50);
-  --szn-card: var(--ink-0);
-  --szn-text-1: var(--ink-900);
-  --szn-text-2: var(--ink-600);
-  --szn-text-3: var(--ink-500);
-  --szn-accent: var(--ink-900);
-  --szn-accent-2: var(--ink-700);
+  --szn-bg: var(--bg);
+  --szn-surface: var(--bg-muted);
+  --szn-card: var(--bg-elevated);
+  --szn-text-1: var(--text-primary);
+  --szn-text-2: var(--text-secondary);
+  --szn-text-3: var(--text-tertiary);
+  --szn-accent: var(--accent-primary);
+  --szn-accent-2: var(--terracotta-700);
   --szn-danger: var(--signal-conflict);
   --szn-success: var(--signal-canon);
   --szn-warning: var(--signal-pending);
   --szn-border: var(--ink-200);
-  --szn-border-subtle: oklch(0.50 0.014 250 / 0.25);
-  --szn-surface-1: oklch(0.14 0.012 250 / 0.04);
-  --szn-surface-2: oklch(0.14 0.012 250 / 0.07);
+  --szn-border-subtle: rgba(74, 67, 56, 0.10);
+  --szn-surface-1: rgba(26, 22, 18, 0.03);
+  --szn-surface-2: rgba(26, 22, 18, 0.06);
   --szn-radius-sm: 8px;
   --szn-radius-md: 10px;
   --szn-radius-lg: 16px;
-  /* 7-tier shadow system (Vercel/Stripe inspired) */
-  --szn-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
-  --szn-shadow-sm: 0 2px 8px rgba(0, 55, 112, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
-  --szn-shadow-md: 0 6px 22px rgba(0, 55, 112, 0.08), 0 4px 8px rgba(0, 0, 0, 0.02);
-  --szn-shadow-lg: 0 15px 40px -2px rgba(0, 55, 112, 0.08), 0 5px 20px -2px rgba(0, 0, 0, 0.04);
-  --szn-shadow-xl: 0 20px 60px -16px rgba(0, 55, 112, 0.12), 0 10px 40px -16px rgba(0, 0, 0, 0.06);
-  --szn-shadow-modal: 0 1px 1px rgba(0, 0, 0, 0.02), 0 8px 16px -4px rgba(0, 0, 0, 0.04), 0 24px 32px -8px rgba(0, 0, 0, 0.06);
-  --szn-shadow-tooltip: 0 2px 4px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.04);
+  /* 7-tier shadow system — warm tint (terracotta-toned) */
+  --szn-shadow-xs: 0 1px 2px rgba(26, 22, 18, 0.04);
+  --szn-shadow-sm: 0 2px 8px rgba(138, 61, 34, 0.06), 0 1px 3px rgba(26, 22, 18, 0.04);
+  --szn-shadow-md: 0 6px 22px rgba(138, 61, 34, 0.08), 0 4px 8px rgba(26, 22, 18, 0.02);
+  --szn-shadow-lg: 0 15px 40px -2px rgba(138, 61, 34, 0.08), 0 5px 20px -2px rgba(26, 22, 18, 0.04);
+  --szn-shadow-xl: 0 20px 60px -16px rgba(138, 61, 34, 0.12), 0 10px 40px -16px rgba(26, 22, 18, 0.06);
+  --szn-shadow-modal: 0 1px 1px rgba(26, 22, 18, 0.02), 0 8px 16px -4px rgba(26, 22, 18, 0.04), 0 24px 32px -8px rgba(26, 22, 18, 0.06);
+  --szn-shadow-tooltip: 0 2px 4px rgba(26, 22, 18, 0.08), 0 0 0 1px rgba(26, 22, 18, 0.04);
   --szn-card-gradient: var(--szn-card);
   /* Motion — easing curves */
   --szn-ease-swift: cubic-bezier(0.175, 0.885, 0.32, 1.1);
@@ -64,25 +67,26 @@
 }
 
 .dark {
-  /* Dark mode keeps V1 ink scale meaning by inverting the light/dark anchor.
-     ink-0 is page surface (deepest), ink-900 is highest-contrast text. */
-  --szn-bg: var(--ink-950);
-  --szn-surface: var(--ink-900);
-  --szn-card: var(--ink-900);
-  --szn-text-1: var(--ink-50);
-  --szn-text-2: var(--ink-200);
-  --szn-text-3: var(--ink-300);
-  --szn-border: var(--ink-700);
-  --szn-border-subtle: oklch(0.80 0.010 250 / 0.15);
-  --szn-surface-1: oklch(0.99 0.003 250 / 0.06);
-  --szn-surface-2: oklch(0.99 0.003 250 / 0.10);
-  --szn-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.12);
-  --szn-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.16), 0 1px 3px rgba(0, 0, 0, 0.1);
-  --szn-shadow-md: 0 6px 22px rgba(0, 0, 0, 0.2), 0 4px 8px rgba(0, 0, 0, 0.08);
-  --szn-shadow-lg: 0 15px 40px -2px rgba(0, 0, 0, 0.22), 0 5px 20px -2px rgba(0, 0, 0, 0.1);
-  --szn-shadow-xl: 0 20px 60px -16px rgba(0, 0, 0, 0.28), 0 10px 40px -16px rgba(0, 0, 0, 0.12);
-  --szn-shadow-modal: 0 1px 1px rgba(0, 0, 0, 0.06), 0 8px 16px -4px rgba(0, 0, 0, 0.12), 0 24px 32px -8px rgba(0, 0, 0, 0.16);
-  --szn-shadow-tooltip: 0 2px 4px rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(255, 255, 255, 0.06);
+  /* Warm-dark mode — token meanings are stable (text-1 = highest contrast text,
+     bg/surface = page background) but the palette warms instead of inverting cool. */
+  --szn-bg: var(--bg);
+  --szn-surface: var(--bg-muted);
+  --szn-card: var(--bg-elevated);
+  --szn-text-1: var(--text-primary);
+  --szn-text-2: var(--text-secondary);
+  --szn-text-3: var(--text-tertiary);
+  --szn-accent: var(--accent-primary);
+  --szn-border: var(--ink-200);
+  --szn-border-subtle: rgba(244, 235, 214, 0.08);
+  --szn-surface-1: rgba(244, 235, 214, 0.04);
+  --szn-surface-2: rgba(244, 235, 214, 0.07);
+  --szn-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --szn-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(0, 0, 0, 0.32);
+  --szn-shadow-md: 0 6px 22px rgba(0, 0, 0, 0.45), 0 4px 8px rgba(0, 0, 0, 0.32);
+  --szn-shadow-lg: 0 15px 40px -2px rgba(0, 0, 0, 0.5), 0 5px 20px -2px rgba(0, 0, 0, 0.32);
+  --szn-shadow-xl: 0 20px 60px -16px rgba(0, 0, 0, 0.55), 0 10px 40px -16px rgba(0, 0, 0, 0.4);
+  --szn-shadow-modal: 0 1px 1px rgba(0, 0, 0, 0.3), 0 8px 16px -4px rgba(0, 0, 0, 0.4), 0 24px 32px -8px rgba(0, 0, 0, 0.45);
+  --szn-shadow-tooltip: 0 2px 4px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(244, 235, 214, 0.06);
   --szn-card-gradient: var(--szn-card);
 }
 
@@ -122,12 +126,12 @@ body {
 }
 
 :root:not(.dark) body {
-  color: #1a1a1b;
+  color: var(--text-primary);
 }
 
 /* Dark mode text color */
 .dark body {
-  color: #e8e8ed;
+  color: var(--text-primary);
 }
 
 /* Focus styles for accessibility */

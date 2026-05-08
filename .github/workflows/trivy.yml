@@ -1,0 +1,53 @@
+name: Trivy Dependency Scan
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    # Daily 03:00 UTC scan to catch newly disclosed CVEs in pinned deps.
+    - cron: '0 3 * * *'
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  trivy-fs:
+    name: Trivy filesystem scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run Trivy vulnerability scanner (FS mode)
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH'
+          ignore-unfixed: true
+          # OS and config scanners disabled — Trivy in FS mode only inspects
+          # package-lock.json + pnpm-lock.yaml + requirements.txt for known CVEs.
+          scanners: 'vuln,secret'
+          skip-dirs: 'node_modules,.next,playwright-report,test-results'
+
+      - name: Upload Trivy SARIF to GitHub Security
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-results.sarif'
+        continue-on-error: true
+
+      - name: Fail PR on critical findings
+        if: github.event_name == 'pull_request'
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          format: 'table'
+          severity: 'CRITICAL'
+          exit-code: '1'
+          ignore-unfixed: true
+          scanners: 'vuln'
+          skip-dirs: 'node_modules,.next'

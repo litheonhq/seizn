@@ -5,6 +5,7 @@ import {
   getAuthorLandingCopy,
 } from "@/components/landing/author-flagship-landing";
 import { loadSaebyeokDemoData } from "@/lib/sample-ip-demo";
+import { StructuredData } from "@/components/seo/StructuredData";
 
 type Props = {
   params: Promise<{ locale: Locale }>;
@@ -34,5 +35,10 @@ export default async function Home({ params }: Props) {
     getAuthorLandingCopy(locale),
   ]);
 
-  return <AuthorFlagshipLanding data={data} locale={locale} copy={copy} />;
+  return (
+    <>
+      <StructuredData />
+      <AuthorFlagshipLanding data={data} locale={locale} copy={copy} />
+    </>
+  );
 }

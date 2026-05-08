@@ -1,35 +1,53 @@
 export const LEGAL_CONTENT_LOCALES = ["en", "ko", "ja", "zh"] as const;
 export type LegalContentLocale = (typeof LEGAL_CONTENT_LOCALES)[number];
 
-export const LEGAL_DOCUMENTS = ["privacy", "terms", "beta-disclosure"] as const;
+export const LEGAL_DOCUMENTS = ["privacy", "terms", "beta-disclosure", "refund", "subprocessors", "ai-disclosure"] as const;
 export type LegalDocumentSlug = (typeof LEGAL_DOCUMENTS)[number];
 
 export const LEGAL_DOCUMENT_FILES: Record<LegalDocumentSlug, string> = {
   privacy: "privacy-policy.md",
   terms: "terms-of-service.md",
   "beta-disclosure": "beta-disclaimer.md",
+  refund: "refund-policy.md",
+  subprocessors: "subprocessors.md",
+  "ai-disclosure": "ai-disclosure.md",
 };
 
 export const LEGAL_DOCUMENT_LABELS: Record<LegalContentLocale, Record<LegalDocumentSlug, string>> = {
+  // W3.7 (2026-05-09): legal docs are English single SSOT. The labels stay
+  // localized only because they appear in nav + breadcrumb chrome on the
+  // [locale]/legal page; the underlying document content is always English.
   en: {
     privacy: "Privacy",
     terms: "Terms",
     "beta-disclosure": "Beta Disclosure",
+    refund: "Refund Policy",
+    subprocessors: "Sub-processors",
+    "ai-disclosure": "AI Transparency",
   },
   ko: {
     privacy: "개인정보",
     terms: "이용약관",
     "beta-disclosure": "베타 고지",
+    refund: "환불 정책",
+    subprocessors: "수탁 처리자",
+    "ai-disclosure": "AI 공시",
   },
   ja: {
     privacy: "プライバシー",
     terms: "利用規約",
     "beta-disclosure": "ベータ開示",
+    refund: "返金ポリシー",
+    subprocessors: "再委託先",
+    "ai-disclosure": "AI 開示",
   },
   zh: {
     privacy: "隐私",
     terms: "条款",
     "beta-disclosure": "Beta 披露",
+    refund: "退款政策",
+    subprocessors: "次处理方",
+    "ai-disclosure": "AI 披露",
   },
 };
 
@@ -64,9 +82,11 @@ export const LEGAL_PAGE_COPY = {
   },
 } satisfies Record<LegalContentLocale, Record<string, string>>;
 
-export function resolveLegalContentLocale(locale: string | undefined | null): LegalContentLocale {
-  if (locale === "ko" || locale === "ja") return locale;
-  if (locale === "zh" || locale === "zh-hans" || locale === "zh-hant") return "zh";
+export function resolveLegalContentLocale(_locale: string | undefined | null): LegalContentLocale {
+  // W3.7 (2026-05-09): legal documents are an English single SSOT. The locale
+  // parameter is ignored for content resolution; only nav chrome (page eyebrow,
+  // back-home label) localizes via LEGAL_PAGE_COPY. This avoids translation
+  // drift between contract clauses across 4 locales.
   return "en";
 }
 

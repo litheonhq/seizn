@@ -311,6 +311,16 @@ export async function POST(request: NextRequest) {
       subscription_data: {
         metadata: checkoutMetadata,
       },
+      // W3.5 Stripe Tax integration — Stripe handles US sales tax + EU VAT OSS
+      // + Korean remote-seller VAT on each invoice. Address collection is
+      // required because tax jurisdiction is determined by billing address.
+      automatic_tax: { enabled: true },
+      tax_id_collection: { enabled: true },
+      billing_address_collection: "required",
+      customer_update: {
+        address: "auto",
+        name: "auto",
+      },
       success_url: resolvedSuccessUrl,
       cancel_url: resolvedCancelUrl,
       client_reference_id: session.user.id,
