@@ -35,8 +35,6 @@ jobs:
             --config p/owasp-top-ten \
             --config p/nextjs \
             --config p/secrets \
-            --severity ERROR \
-            --severity WARNING \
             --sarif-output=semgrep.sarif \
             --exclude='node_modules' \
             --exclude='.next' \

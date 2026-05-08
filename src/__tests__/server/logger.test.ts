@@ -15,6 +15,31 @@ describe('server logger redaction', () => {
     );
   });
 
+  it('redacts provider API key prefixes caught by the R29 audit', () => {
+    const googleKey = `AIza${'A'.repeat(35)}`;
+    const input = [
+      'sk-ant-api03-fake',
+      `sk-proj-${'a'.repeat(16)}`,
+      `sk-svcacct-${'b'.repeat(16)}`,
+      `sk-${'c'.repeat(16)}`,
+      `pa-${'d'.repeat(16)}`,
+      googleKey,
+      'cohere_api_key: cohere-without-prefix',
+    ].join(' ');
+
+    expect(sanitizeForLogs(input)).toBe(
+      [
+        '[REDACTED]',
+        '[REDACTED]',
+        '[REDACTED]',
+        '[REDACTED]',
+        '[REDACTED]',
+        '[REDACTED]',
+        'cohere_api_key: [REDACTED]',
+      ].join(' ')
+    );
+  });
+
   it('redacts sensitive keys in objects', () => {
     expect(
       sanitizeForLogs({
