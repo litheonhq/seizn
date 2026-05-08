@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { NextRequest } from 'next/server';
 import { getSessionUser } from '@/lib/api/request-user';
+import { CSRF_COOKIE_NAME, CSRF_HEADER_NAME } from '@/lib/csrf';
 import { createServerClient } from '@/lib/supabase';
 import { logServerError } from '@/lib/server/logger';
 import { POST } from '@/app/api/auth/device/approve/route';
@@ -31,6 +32,7 @@ vi.mock('@/lib/api-key', async () => {
 
 describe('device approve route', () => {
   let insertedApiKeyPayload: Record<string, unknown> | null = null;
+  const csrfToken = 'csrf-token-for-device-approval';
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -92,7 +94,11 @@ describe('device approve route', () => {
   it('creates device API keys with scopes instead of permissions', async () => {
     const request = new NextRequest('https://example.com/api/auth/device/approve', {
       method: 'POST',
-      headers: { 'content-type': 'application/json' },
+      headers: {
+        'content-type': 'application/json',
+        cookie: `${CSRF_COOKIE_NAME}=${csrfToken}`,
+        [CSRF_HEADER_NAME]: csrfToken,
+      },
       body: JSON.stringify({
         user_code: 'ABCD-1234',
         action: 'approve',
@@ -120,5 +126,23 @@ describe('device approve route', () => {
     });
     expect(insertedApiKeyPayload).not.toHaveProperty('permissions');
     expect(logServerError).not.toHaveBeenCalled();
+  });
+
+  it('rejects cookie-authenticated approval without a CSRF token', async () => {
+    const request = new NextRequest('https://example.com/api/auth/device/approve', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        user_code: 'ABCD-1234',
+        action: 'approve',
+      }),
+    });
+
+    const response = await POST(request);
+    const body = await response.json();
+
+    expect(response.status).toBe(403);
+    expect(body.error).toContain('CSRF validation failed');
+    expect(getSessionUser).not.toHaveBeenCalled();
   });
 });

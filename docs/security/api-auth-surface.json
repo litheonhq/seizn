@@ -306,6 +306,7 @@
         "POST"
       ],
       "authMarkers": [
+        "csrf",
         "sessionUser"
       ],
       "authState": "auth-marker-present"
@@ -323,8 +324,11 @@
       "methods": [
         "POST"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "csrf",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/auth/oidc/[connectionId]",

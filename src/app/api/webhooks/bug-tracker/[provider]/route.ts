@@ -5,6 +5,7 @@ import { createReplayBundle, type ReplayBundleResult } from '@/lib/replay-bundle
 import { resolveReplayOrganizationId } from '@/lib/replay/snapshot';
 import { logServerError, logServerWarn } from '@/lib/server/logger';
 import { createServerClient } from '@/lib/supabase';
+import { requestValidatedWebhookEndpoint } from '@/lib/webhook';
 
 type BugTrackerProvider = 'linear' | 'github' | 'jira';
 
@@ -161,14 +162,44 @@ function appendBlock(existing: string | null | undefined, block: string): string
   return current ? `${current}\n\n${block}` : block;
 }
 
-async function bugTrackerJsonFetch(url: string, init: RequestInit): Promise<unknown> {
-  const response = await fetch(url, init);
-  const payload = await response.json().catch(() => ({}));
-  if (!response.ok) {
+interface BugTrackerFetchInit {
+  method?: string;
+  headers?: Record<string, string>;
+  body?: string;
+}
+
+async function bugTrackerJsonFetch(
+  url: string,
+  init: BugTrackerFetchInit,
+  options: { validateEndpoint?: boolean } = {}
+): Promise<unknown> {
+  let ok: boolean;
+  let status: number;
+  let payload: unknown;
+
+  if (options.validateEndpoint) {
+    const response = await requestValidatedWebhookEndpoint(url, init);
+    ok = response.ok;
+    status = response.status;
+    payload = (() => {
+        try {
+          return JSON.parse(response.body || '{}');
+        } catch {
+          return {};
+        }
+      })();
+  } else {
+    const response = await fetch(url, init);
+    ok = response.ok;
+    status = response.status;
+    payload = await response.json().catch(() => ({}));
+  }
+
+  if (!ok) {
     const message =
       typeof (payload as { error?: { message?: string } })?.error?.message === 'string'
         ? (payload as { error: { message: string } }).error.message
-        : `Bug tracker request failed with ${response.status}`;
+        : `Bug tracker request failed with ${status}`;
     throw new Error(message);
   }
   return payload;
@@ -247,7 +278,7 @@ async function appendToJira(issueKey: string, integration: IntegrationRow, token
   };
   const issue = await bugTrackerJsonFetch(`${base}?fields=description`, {
     headers,
-  }) as { fields?: { description?: unknown } };
+  }, { validateEndpoint: true }) as { fields?: { description?: unknown } };
 
   await bugTrackerJsonFetch(base, {
     method: 'PUT',
@@ -257,7 +288,7 @@ async function appendToJira(issueKey: string, integration: IntegrationRow, token
         description: appendJiraDescription(issue.fields?.description, block),
       },
     }),
-  });
+  }, { validateEndpoint: true });
 }
 
 function isJiraDoc(value: unknown): value is { type: 'doc'; version: number; content: unknown[] } {
@@ -382,7 +413,7 @@ export async function POST(
     if (!integration) {
       return NextResponse.json({ error: 'Bug tracker integration not found' }, { status: 404 });
     }
-    if (!session?.user?.id && !assertWebhookSecret(request, integration)) {
+    if (!assertWebhookSecret(request, integration)) {
       return NextResponse.json({ error: 'Invalid webhook secret' }, { status: 401 });
     }
 
