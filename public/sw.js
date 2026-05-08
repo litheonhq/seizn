@@ -9,17 +9,21 @@
  * @version 1.0.0
  */
 
-const CACHE_VERSION = 'seizn-v1';
+// 2026-05-09: bumped to v2 to evict v1 caches that pinned a broken layout
+// chunk (next/script beforeInteractive in nested layout — fixed in #329).
+// Also dropped '/' from STATIC_ASSETS — caching the root HTML cache-first
+// pinned the broken Plausible Script tag in browser cache for users who
+// had visited before the hotfix landed. Page HTML now flows through the
+// stale-while-revalidate handler which cycles per deploy.
+const CACHE_VERSION = 'seizn-v2';
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const DYNAMIC_CACHE = `${CACHE_VERSION}-dynamic`;
 const API_CACHE = `${CACHE_VERSION}-api`;
 
 // Assets to pre-cache on install
 const STATIC_ASSETS = [
-  '/',
   '/offline',
   '/manifest.json',
-  // Add other critical static assets
 ];
 
 // API endpoints to cache
