@@ -52,6 +52,8 @@ const nextConfig: NextConfig = {
         'https://challenges.cloudflare.com',
         'https://js.stripe.com',
         'https://analytics.seizn.com',
+        // Google Analytics gtag.js loader
+        'https://www.googletagmanager.com',
       ].filter(Boolean).join(' '),
       [
         "connect-src 'self'",
@@ -66,6 +68,11 @@ const nextConfig: NextConfig = {
         'https://api.stripe.com',
         // Cloudflare Turnstile challenge endpoint
         'https://challenges.cloudflare.com',
+        // Google Analytics collect endpoints (gtag.js POSTs to these)
+        'https://www.google-analytics.com https://*.google-analytics.com',
+        'https://www.googletagmanager.com',
+        // PostHog analytics (us.i.posthog.com or self-hosted)
+        'https://*.posthog.com',
       ].filter(Boolean).join(' '),
       "frame-src 'self' https://challenges.cloudflare.com https://js.stripe.com https://checkout.stripe.com",
       "worker-src 'self' blob:",
