@@ -4466,6 +4466,11 @@
           "name": "Studio Managed",
           "price": "$499/mo",
           "note": "Charter Annual · $0.50/call overage"
+        },
+        {
+          "name": "Enterprise",
+          "price": "Contact",
+          "note": "Custom SLA · Dedicated success manager"
         }
       ]
     },

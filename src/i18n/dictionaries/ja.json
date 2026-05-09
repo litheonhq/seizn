@@ -3875,6 +3875,11 @@
           "name": "Studio Managed",
           "price": "月額 $499",
           "note": "Charter Annual · コールあたり $0.50 overage"
+        },
+        {
+          "name": "Enterprise",
+          "price": "お問い合わせ",
+          "note": "カスタム SLA・専任サクセスマネージャー"
         }
       ]
     },
