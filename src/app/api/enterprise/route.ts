@@ -49,7 +49,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const body: EnterpriseInquiryRequest = await request.json();
+    const parsedBody = await request.json().catch(() => null);
+    if (!parsedBody || typeof parsedBody !== 'object') {
+      return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
+    }
+    const body = parsedBody as EnterpriseInquiryRequest;
 
     // Validate required fields
     if (!body.company_name || body.company_name.trim().length < 2) {
