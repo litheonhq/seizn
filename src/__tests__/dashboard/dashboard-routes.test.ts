@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import {
   DASHBOARD_ROUTES,
   authorTabHref,
+  canonicalAuthorDashboardPath,
   isAuthorWorkspaceTab,
   sanitizeDashboardCallbackUrl,
 } from '@/lib/dashboard-routes';
@@ -21,6 +22,27 @@ describe('dashboard route registry', () => {
     expect(authorTabHref('memory-edit')).toBe('/dashboard/author?tab=memory-edit');
     expect(isAuthorWorkspaceTab('settings')).toBe(false);
     expect(isAuthorWorkspaceTab('memories')).toBe(true);
+  });
+
+  it('canonicalizes engine dashboard entrypoints to Author workspace routes', () => {
+    expect(canonicalAuthorDashboardPath('/dashboard')).toBe('/dashboard/author');
+    expect(canonicalAuthorDashboardPath('/dashboard', '?from=engine')).toBe(
+      '/dashboard/author?from=engine',
+    );
+    expect(canonicalAuthorDashboardPath('/dashboard/settings/byok', '?from=engine')).toBe(
+      '/dashboard/author/settings?from=engine&section=byok',
+    );
+    expect(canonicalAuthorDashboardPath('/dashboard/memories')).toBe(
+      '/dashboard/author?tab=memories',
+    );
+    expect(canonicalAuthorDashboardPath('/dashboard/memory-editor')).toBe(
+      '/dashboard/author?tab=memory-edit',
+    );
+    expect(canonicalAuthorDashboardPath('/dashboard/memories/mindmap')).toBe(
+      '/dashboard/author?tab=mindmap',
+    );
+    expect(canonicalAuthorDashboardPath('/dashboard/replay')).toBe('/dashboard/author?tab=replay');
+    expect(canonicalAuthorDashboardPath('/dashboard/account/api-keys')).toBeNull();
   });
 
   it('only accepts local dashboard callback URLs', () => {

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { locales, defaultLocale, getLocaleFromCountry, type Locale } from '@/i18n/config';
 import { verifyReviewToken, isPathAllowed } from '@/lib/review-token';
+import { canonicalAuthorDashboardPath } from '@/lib/dashboard-routes';
 import { AUTHOR_FLAGSHIP_ORIGIN, ENGINE_HOST, normalizeHost } from '@/lib/surface';
 
 const LEGACY_AUTH_COOKIE_NAMES = [
@@ -264,7 +265,12 @@ export async function proxy(request: NextRequest) {
       return NextResponse.rewrite(url);
     }
 
-    // Author-only entry: cross-domain redirect to seizn.com (308 — preserves method)
+    const canonicalAuthorPath = canonicalAuthorDashboardPath(pathname, request.nextUrl.search);
+    if (canonicalAuthorPath) {
+      return NextResponse.redirect(`${AUTHOR_FLAGSHIP_ORIGIN}${canonicalAuthorPath}`, 308);
+    }
+
+    // Author-only entry: cross-domain redirect to seizn.com (308 preserves method)
     if (AUTHOR_ONLY_PREFIXES.some((p) => pathname.startsWith(p))) {
       return NextResponse.redirect(
         `${AUTHOR_FLAGSHIP_ORIGIN}${pathname}${request.nextUrl.search}`,

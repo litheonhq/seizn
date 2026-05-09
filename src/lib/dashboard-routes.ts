@@ -48,6 +48,58 @@ export function authorTabHref(tab: AuthorWorkspaceTab): string {
   return `${DASHBOARD_ROUTES.author}?tab=${tab}`;
 }
 
+function withSearch(path: string, search: string): string {
+  const params = new URLSearchParams(search.startsWith('?') ? search.slice(1) : search);
+  const query = params.toString();
+  return query ? `${path}?${query}` : path;
+}
+
+function authorTabPath(tab: AuthorWorkspaceTab, search: string): string {
+  const params = new URLSearchParams(search.startsWith('?') ? search.slice(1) : search);
+  params.set('tab', tab);
+  return `${DASHBOARD_ROUTES.author}?${params.toString()}`;
+}
+
+function authorSettingsPath(search: string, section?: string): string {
+  const params = new URLSearchParams(search.startsWith('?') ? search.slice(1) : search);
+  if (section) {
+    params.set('section', section);
+  }
+  const query = params.toString();
+  return query ? `${DASHBOARD_ROUTES.authorSettings}?${query}` : DASHBOARD_ROUTES.authorSettings;
+}
+
+export function canonicalAuthorDashboardPath(pathname: string, search = ''): string | null {
+  const normalizedPathname =
+    pathname.length > 1 && pathname.endsWith('/') ? pathname.slice(0, -1) : pathname;
+
+  switch (normalizedPathname) {
+    case DASHBOARD_ROUTES.root:
+      return withSearch(DASHBOARD_ROUTES.author, search);
+    case DASHBOARD_ROUTES.author:
+    case DASHBOARD_ROUTES.authorSettings:
+    case DASHBOARD_ROUTES.authorUsage:
+      return withSearch(normalizedPathname, search);
+    case DASHBOARD_ROUTES.genericSettings:
+    case DASHBOARD_ROUTES.legacyAuthorSettings:
+      return authorSettingsPath(search);
+    case DASHBOARD_ROUTES.legacyByokSettings:
+      return authorSettingsPath(search, 'byok');
+    case DASHBOARD_ROUTES.legacyUsage:
+      return withSearch(DASHBOARD_ROUTES.authorUsage, search);
+    case '/dashboard/memories':
+      return authorTabPath('memories', search);
+    case '/dashboard/memory-editor':
+      return authorTabPath('memory-edit', search);
+    case '/dashboard/memories/mindmap':
+      return authorTabPath('mindmap', search);
+    case '/dashboard/replay':
+      return authorTabPath('replay', search);
+    default:
+      return null;
+  }
+}
+
 export function isAuthorWorkspaceTab(value: string | null | undefined): value is AuthorWorkspaceTab {
   return value != null && (AUTHOR_WORKSPACE_TABS as readonly string[]).includes(value);
 }

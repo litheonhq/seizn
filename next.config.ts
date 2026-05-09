@@ -54,6 +54,8 @@ const nextConfig: NextConfig = {
         'https://analytics.seizn.com',
         // Google Analytics gtag.js loader
         'https://www.googletagmanager.com',
+        // Cloudflare Web Analytics / Browser Insights can be injected at the edge.
+        'https://static.cloudflareinsights.com',
       ].filter(Boolean).join(' '),
       [
         "connect-src 'self'",
@@ -73,6 +75,8 @@ const nextConfig: NextConfig = {
         'https://www.googletagmanager.com',
         // PostHog analytics (us.i.posthog.com or self-hosted)
         'https://*.posthog.com',
+        // Cloudflare Web Analytics / Browser Insights beacon endpoint.
+        'https://cloudflareinsights.com',
       ].filter(Boolean).join(' '),
       "frame-src 'self' https://challenges.cloudflare.com https://js.stripe.com https://checkout.stripe.com",
       "worker-src 'self' blob:",
