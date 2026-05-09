@@ -38,7 +38,7 @@ export default function CommandPalette({ isOpen, onClose, navigationGroups, t }:
   const listRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
-  const workflowGroup = t("dashboard.commandPalette.workflowGroup") || "NPC workflows";
+  const workflowGroup = t("dashboard.commandPalette.workflowGroup") || "Author workflows";
   const workflowItems: CommandPaletteItem[] = [
     {
       label: t("dashboard.commandPalette.commands.createEntity") || "Create entity",

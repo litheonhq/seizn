@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "title": "Seizn — AI NPCメモリレイヤー",
-    "description": "Inworld、Convai、または独自LLMに接続してください。SeiznはNPCにセッションと世代を超えた永続記憶・関係・派閥グラフを提供します — シートではなくエンティティ単位の課金。"
+    "title": "Seizn - 作家のためのAIメモリ",
+    "description": "原稿、設定、矛盾チェック、作家メモリを一つのワークスペースで管理できます。Seizn は読者に届く前に物語の食い違いを見つける手助けをします。"
   },
   "nav": {
     "features": "機能",
@@ -3705,17 +3705,12 @@
         "replay": "巻き戻し",
         "byok": "BYOK ガイド",
         "changelog": "更新履歴",
-        "engine": "Engine →",
         "sdk": "@seizn/sdk-js",
-        "mcp": "@seizn/mcp"
+        "mcp": "@seizn/mcp",
+        "program": "Program"
       },
       "entity": "© 2026 Seizn by Litheon LLC · Wyoming",
       "version": "v1.0 · 早暁デモは合成データ"
-    },
-    "engine": {
-      "badge": "新着",
-      "body": "ゲーム NPC AI を作っていますか？同じカノンエンジンを SDK として。",
-      "cta": "engine.seizn.com"
     },
     "checkout": {
       "prefix": "",
@@ -3725,6 +3720,12 @@
       "suffix": "に同意します。",
       "loading": "Stripe を開いています...",
       "error": "チェックアウトを開始できませんでした。"
+    },
+    "program": {
+      "badge": "開発中",
+      "body": "Scrivenerのように使える執筆アプリ、Seizn Programを準備中です。原稿、正典、レビューを一つの作業空間に置きます。",
+      "cta": "Programの待機リスト",
+      "footerLabel": "Program"
     }
   }
 }

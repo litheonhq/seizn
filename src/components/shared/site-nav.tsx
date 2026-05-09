@@ -11,6 +11,7 @@ type NavLabels = Partial<{
   docs: string;
   api: string;
   pricing: string;
+  program: string;
   compare: string;
   enterprise: string;
   github: string;
@@ -36,15 +37,13 @@ export function LandingNav({
   ctaLabel,
 }: LandingNavProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const ctaText = ctaLabel ?? label(labels, "cta", "Book a demo");
-  const ctaTarget = ctaHref ?? `/${locale}/enterprise`;
+  const ctaText = ctaLabel ?? label(labels, "cta", "Start free");
+  const ctaTarget = ctaHref ?? "/signup";
 
   const navLinks = [
-    { href: `/${locale}/docs`, label: label(labels, "docs", "Docs") },
     { href: `/${locale}/api`, label: label(labels, "api", "API") },
     { href: `/${locale}/pricing`, label: label(labels, "pricing", "Pricing") },
-    { href: `/${locale}/comparison`, label: label(labels, "compare", "Compare") },
-    { href: `/${locale}/enterprise`, label: label(labels, "enterprise", "Enterprise") },
+    { href: `/${locale}/pricing#track-3`, label: label(labels, "program", "Program") },
     { href: `/${locale}/status`, label: label(labels, "status", "Status") },
   ];
 

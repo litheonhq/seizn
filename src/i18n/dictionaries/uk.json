@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "title": "Seizn — пам'ять для NPC",
-    "description": "Підключи Inworld, Convai або власний LLM. Seizn зберігає пам'ять, зв'язки й упізнавання NPC між поколіннями — тариф за графом, а не за місцями."
+    "title": "Seizn - AI memory for fiction writers",
+    "description": "Keep manuscripts, canon, conflict checks, and author memory in one workspace. Seizn helps fiction writers catch contradictions before readers do."
   },
   "nav": {
     "features": "Функції",
@@ -3641,17 +3641,12 @@
         "replay": "Повтор",
         "byok": "Гайд BYOK",
         "changelog": "Зміни",
-        "engine": "Engine →",
         "sdk": "@seizn/sdk-js",
-        "mcp": "@seizn/mcp"
+        "mcp": "@seizn/mcp",
+        "program": "Program"
       },
       "entity": "© 2026 Seizn by Litheon LLC · Wyoming",
       "version": "v1.0 · демо Saebyeok — синтетичні дані"
-    },
-    "engine": {
-      "badge": "нове",
-      "body": "Робите NPC-AI для гри? Той самий рушій канону, відкритий як SDK.",
-      "cta": "engine.seizn.com"
     },
     "checkout": {
       "prefix": "Я приймаю",
@@ -3661,6 +3656,12 @@
       "suffix": ".",
       "loading": "Відкриваємо Stripe...",
       "error": "Не вдалося розпочати оплату."
+    },
+    "program": {
+      "badge": "in development",
+      "body": "Seizn Program is our native writing app for manuscripts, canon, review, and local files in one workspace.",
+      "cta": "Join Program waitlist",
+      "footerLabel": "Program"
     }
   }
 }

@@ -2,12 +2,11 @@ import { existsSync, readFileSync } from "fs";
 import path from "path";
 import { renderToStaticMarkup } from "react-dom/server";
 import { createElement } from "react";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import HomePage from "@/app/[locale]/page";
 import {
   AuthorFlagshipLanding,
   getAuthorLandingCopy,
-  isAuthorEngineSurfaceLive,
 } from "@/components/landing/author-flagship-landing";
 import { DETECTOR_SEED } from "@/components/landing/conflict-detector";
 import { getPricingPageCopy } from "@/app/[locale]/pricing/pricing-copy";
@@ -23,20 +22,15 @@ vi.mock("next/navigation", () => ({
   useRouter: () => ({ push: vi.fn(), refresh: vi.fn() }),
 }));
 
+vi.mock("@/lib/auth", () => ({
+  auth: vi.fn(async () => null),
+}));
+
 const launchLocales = ["en", "ko", "ja", "zh-hans"] as const;
 const tiers = ["indie", "pro", "studio", "enterprise"] as const;
 const cadences = ["monthly", "yearly"] as const;
-const originalEngineSurfaceLive = process.env.NEXT_PUBLIC_ENGINE_SURFACE_LIVE;
 
 describe("Author flagship landing", () => {
-  afterEach(() => {
-    if (originalEngineSurfaceLive === undefined) {
-      delete process.env.NEXT_PUBLIC_ENGINE_SURFACE_LIVE;
-    } else {
-      process.env.NEXT_PUBLIC_ENGINE_SURFACE_LIVE = originalEngineSurfaceLive;
-    }
-  });
-
   it("ships the Round 2.1 English master copy and section inventory", async () => {
     const copy = await getAuthorLandingCopy("en");
 
@@ -74,27 +68,18 @@ describe("Author flagship landing", () => {
     expect(html).toContain("severity-cards");
   });
 
-  it("gates the engine tease behind the live surface env flag", async () => {
+  it("promotes Seizn Program instead of the separate Engine surface", async () => {
     const data = await loadSaebyeokDemoData();
     const copy = await getAuthorLandingCopy("en");
 
-    delete process.env.NEXT_PUBLIC_ENGINE_SURFACE_LIVE;
-    expect(isAuthorEngineSurfaceLive()).toBe(false);
-    expect(isAuthorEngineSurfaceLive("0")).toBe(false);
-    expect(isAuthorEngineSurfaceLive("false")).toBe(false);
-    expect(isAuthorEngineSurfaceLive("true")).toBe(true);
-    expect(isAuthorEngineSurfaceLive(" TRUE ")).toBe(true);
-    // Footer cross-link는 항상 노출 (양방향 dual-surface 정책, 2026-05-05 v118)
-    // Engine tease 배너만 NEXT_PUBLIC_ENGINE_SURFACE_LIVE 게이트
-    expect(renderToStaticMarkup(createElement(AuthorFlagshipLanding, { data, locale: "en", copy }))).not.toContain("engine-tease");
+    const html = renderToStaticMarkup(createElement(AuthorFlagshipLanding, { data, locale: "en", copy }));
 
-    process.env.NEXT_PUBLIC_ENGINE_SURFACE_LIVE = "1";
-    expect(isAuthorEngineSurfaceLive()).toBe(true);
-    const liveHtml = renderToStaticMarkup(createElement(AuthorFlagshipLanding, { data, locale: "en", copy }));
-    expect(liveHtml).toContain("engine-tease");
-    expect(liveHtml).toContain('href="https://engine.seizn.com"');
-    expect(liveHtml).toContain('target="_blank"');
-    expect(liveHtml).toContain('rel="noopener noreferrer"');
+    expect(html).toContain("program-tease");
+    expect(html).toContain("Seizn Program");
+    expect(html).toContain('href="/en/pricing#track-3"');
+    expect(html).not.toContain("engine-tease");
+    expect(html).not.toContain("https://engine.seizn.com");
+    expect(html).not.toContain('href="/en/docs');
   });
 
   it("renders pricing cadence, secondary tiers, footer entity, and responsive hooks", async () => {
@@ -134,7 +119,7 @@ describe("Author flagship landing", () => {
       "src/components/landing/brand-marks.tsx",
       "src/components/landing/canon-graph.tsx",
       "src/components/landing/conflict-detector.tsx",
-      "src/components/landing/engine-tease.tsx",
+      "src/components/landing/program-tease.tsx",
       "src/components/landing/hero-split-detector.tsx",
       "src/components/landing/section-conflicts.tsx",
       "src/components/landing/section-faq.tsx",
@@ -155,10 +140,12 @@ describe("Author flagship landing", () => {
 
   it("renders the localized route with Phase C sample IP data", async () => {
     const element = await HomePage({ params: Promise.resolve({ locale: "en" }) });
+    const children = Array.isArray(element.props.children) ? element.props.children : [element.props.children];
+    const landing = children.find((child) => child?.props?.locale === "en");
 
-    expect(element).toHaveProperty("props.locale", "en");
-    expect(element).toHaveProperty("props.data.summary.characters", 8);
-    expect(element).toHaveProperty("props.data.summary.reviewCases", 50);
+    expect(landing).toHaveProperty("props.locale", "en");
+    expect(landing).toHaveProperty("props.data.summary.characters", 8);
+    expect(landing).toHaveProperty("props.data.summary.reviewCases", 50);
   });
 
   it("keeps the sample IP README free of private dogfood terms", async () => {

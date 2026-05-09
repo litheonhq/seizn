@@ -31,8 +31,8 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Sign In · Seizn",
-  description: "Sign in to your Seizn account to manage NPC memory graphs.",
+  title: "Sign In - Seizn",
+  description: "Sign in to your Seizn account to manage author workspaces, canon, and Program waitlists.",
 };
 
 export default async function AuthLayout({

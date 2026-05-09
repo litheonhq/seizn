@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "title": "Seizn — Minne för AI-NPC:er",
-    "description": "Anslut Inworld, Convai eller din egen LLM. Seizn ger NPC:er minne, relationer och igenkänning över generationer. Pris per entitet, inte per plats."
+    "title": "Seizn - AI memory for fiction writers",
+    "description": "Keep manuscripts, canon, conflict checks, and author memory in one workspace. Seizn helps fiction writers catch contradictions before readers do."
   },
   "nav": {
     "features": "Funktioner",
@@ -3636,17 +3636,12 @@
         "replay": "Replay",
         "byok": "BYOK-guide",
         "changelog": "Ändringar",
-        "engine": "Engine →",
         "sdk": "@seizn/sdk-js",
-        "mcp": "@seizn/mcp"
+        "mcp": "@seizn/mcp",
+        "program": "Program"
       },
       "entity": "© 2026 Seizn by Litheon LLC · Wyoming",
       "version": "v1.0 · Saebyeok-demon är syntetisk data"
-    },
-    "engine": {
-      "badge": "nytt",
-      "body": "Bygger du NPC-AI till spel? Samma kanonmotor, exponerad som SDK.",
-      "cta": "engine.seizn.com"
     },
     "checkout": {
       "prefix": "Jag godkänner",
@@ -3656,6 +3651,12 @@
       "suffix": ".",
       "loading": "Öppnar Stripe...",
       "error": "Det gick inte att starta kassan."
+    },
+    "program": {
+      "badge": "in development",
+      "body": "Seizn Program is our native writing app for manuscripts, canon, review, and local files in one workspace.",
+      "cta": "Join Program waitlist",
+      "footerLabel": "Program"
     }
   }
 }

@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "title": "Seizn — AI NPC 메모리 레이어",
-    "description": "Inworld, Convai, 또는 자체 LLM에 연동하세요. Seizn은 NPC에 세션과 세대를 넘나드는 영속 기억, 관계, 파벌 그래프를 제공합니다 — 시트 단위가 아닌 엔티티 단위 과금."
+    "title": "Seizn - 작가를 위한 AI 메모리",
+    "description": "원고, 캐논, 충돌 검수, 작가 메모리를 한 작업 공간에서 관리하세요. Seizn은 독자가 보기 전에 모순을 잡도록 돕습니다."
   },
   "nav": {
     "features": "기능",
@@ -4354,17 +4354,12 @@
         "replay": "다시 돌리기",
         "byok": "BYOK 안내",
         "changelog": "변경 사항",
-        "engine": "Engine →",
         "sdk": "@seizn/sdk-js",
-        "mcp": "@seizn/mcp"
+        "mcp": "@seizn/mcp",
+        "program": "Program"
       },
       "entity": "© 2026 Seizn by Litheon LLC · Wyoming",
       "version": "v1.0 · 새벽 데모는 합성 데이터"
-    },
-    "engine": {
-      "badge": "신규",
-      "body": "게임 NPC AI를 만들고 있나요? 같은 캐논 엔진, SDK로.",
-      "cta": "engine.seizn.com"
     },
     "checkout": {
       "prefix": "",
@@ -4374,6 +4369,12 @@
       "suffix": "에 동의합니다.",
       "loading": "Stripe를 여는 중...",
       "error": "체크아웃을 시작할 수 없습니다."
+    },
+    "program": {
+      "badge": "개발 중",
+      "body": "한글이나 스크리브너처럼 쓰는 Seizn Program을 준비 중입니다. 원고, 캐논, 검수를 한 작업 공간에 둡니다.",
+      "cta": "Program 대기명단",
+      "footerLabel": "Program"
     }
   }
 }

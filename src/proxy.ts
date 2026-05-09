@@ -3,7 +3,13 @@ import type { NextRequest } from 'next/server';
 import { locales, defaultLocale, getLocaleFromCountry, type Locale } from '@/i18n/config';
 import { verifyReviewToken, isPathAllowed } from '@/lib/review-token';
 import { DASHBOARD_ROUTES, canonicalAuthorDashboardPath } from '@/lib/dashboard-routes';
-import { AUTHOR_FLAGSHIP_ORIGIN, ENGINE_HOST, normalizeHost } from '@/lib/surface';
+import {
+  AUTHOR_FLAGSHIP_ORIGIN,
+  ENGINE_ORIGIN,
+  ENGINE_HOST,
+  isEngineMarketingRoute,
+  normalizeHost,
+} from '@/lib/surface';
 
 const LEGACY_AUTH_COOKIE_NAMES = [
   'next-auth.session-token',
@@ -363,10 +369,15 @@ export async function proxy(request: NextRequest) {
     if (pathname.startsWith('/engine') || isSharedInfraPath(pathname)) {
       return NextResponse.next();
     }
-    // Everything else: rewrite to /engine/*
+    // Everything else belongs to the Engine surface but may not have a
+    // path-level page yet. Serve the Engine landing instead of leaking a 404.
     const url = request.nextUrl.clone();
-    url.pathname = pathname === '/' ? '/engine' : `/engine${pathname}`;
+    url.pathname = '/engine';
     return NextResponse.rewrite(url);
+  }
+
+  if (isEngineMarketingRoute(pathname)) {
+    return NextResponse.redirect(ENGINE_ORIGIN, 308);
   }
 
   if (pathname === '/dashboard/settings/author') {

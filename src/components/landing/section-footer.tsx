@@ -1,7 +1,8 @@
 import Link from "next/link";
 import type { Locale } from "@/i18n/config";
-import { ENGINE_SURFACE_URL, type AuthorLandingCopy } from "./author-landing-copy";
+import type { AuthorLandingCopy } from "./author-landing-copy";
 import { SeiznLockup } from "./brand-marks";
+import { getProgramWaitlistHref } from "./program-tease";
 
 export function SectionFooter({ copy, locale }: { copy: AuthorLandingCopy; locale: Locale }) {
   return (
@@ -22,18 +23,17 @@ export function SectionFooter({ copy, locale }: { copy: AuthorLandingCopy; local
               { label: copy.footer.links.workflow, href: "#workflow" },
               { label: copy.footer.links.demo, href: `/${locale}/demo` },
               { label: copy.footer.links.pricing, href: "#pricing" },
-              { label: copy.footer.links.docs, href: `/${locale}/docs` },
+              { label: copy.footer.links.program, href: getProgramWaitlistHref(locale) },
             ]}
           />
           <FooterColumn
             title={copy.footer.company}
             links={[
-              { label: copy.footer.links.about, href: `/${locale}/docs` },
               { label: copy.footer.links.privacy, href: `/${locale}/legal/privacy` },
               { label: copy.footer.links.terms, href: `/${locale}/legal/terms` },
               { label: copy.footer.links.beta, href: `/${locale}/legal/beta-disclosure` },
               { label: copy.footer.links.status, href: "/status" },
-              { label: copy.footer.links.contact, href: `/${locale}/docs/faq` },
+              { label: copy.footer.links.contact, href: "mailto:support@seizn.com" },
             ]}
           />
           <FooterColumn
@@ -41,16 +41,16 @@ export function SectionFooter({ copy, locale }: { copy: AuthorLandingCopy; local
             links={[
               { label: copy.footer.links.ledger, href: `/${locale}/demo` },
               { label: copy.footer.links.replay, href: `/${locale}/demo` },
-              { label: copy.footer.links.byok, href: `/${locale}/docs/faq` },
-              { label: copy.footer.links.changelog, href: `/${locale}/docs` },
+              { label: copy.footer.links.program, href: getProgramWaitlistHref(locale) },
+              { label: copy.footer.links.byok, href: `/${locale}/pricing#track-2` },
+              { label: copy.footer.links.changelog, href: `/${locale}/changelog` },
             ]}
           />
           <FooterColumn
             title={copy.footer.developers}
             links={[
-              { label: copy.footer.links.engine, href: ENGINE_SURFACE_URL, external: true },
-              { label: copy.footer.links.sdk, href: "https://www.npmjs.com/package/@seizn/sdk-js", external: true },
-              { label: copy.footer.links.mcp, href: "https://www.npmjs.com/package/@seizn/mcp", external: true },
+              { label: copy.footer.links.sdk, href: `/${locale}/api` },
+              { label: copy.footer.links.mcp, href: `/${locale}/api#claude-desktop` },
             ]}
           />
         </div>

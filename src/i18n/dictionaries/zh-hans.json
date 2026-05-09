@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "title": "Seizn — AI NPC 记忆层",
-    "description": "接入 Inworld、Convai，或您自己的 LLM。Seizn 为 NPC 提供跨 session 与跨世代的持久记忆、关系与派系图谱 — 以实体计费，而非按席位收费。"
+    "title": "Seizn - 面向作者的 AI 记忆",
+    "description": "在一个工作空间中管理手稿、设定、冲突检查和作者记忆。Seizn 帮助小说作者在读者发现之前找出矛盾。"
   },
   "nav": {
     "features": "功能",
@@ -3808,17 +3808,12 @@
         "replay": "回放",
         "byok": "BYOK 指南",
         "changelog": "更新记录",
-        "engine": "Engine →",
         "sdk": "@seizn/sdk-js",
-        "mcp": "@seizn/mcp"
+        "mcp": "@seizn/mcp",
+        "program": "Program"
       },
       "entity": "© 2026 Seizn by Litheon LLC · Wyoming",
       "version": "v1.0 · 黎明 demo 为合成数据"
-    },
-    "engine": {
-      "badge": "新",
-      "body": "在做游戏 NPC AI？同一套设定引擎，做成 SDK 暴露出来。",
-      "cta": "engine.seizn.com"
     },
     "checkout": {
       "prefix": "我同意",
@@ -3828,6 +3823,12 @@
       "suffix": "。",
       "loading": "正在打开 Stripe...",
       "error": "无法开始结账。"
+    },
+    "program": {
+      "badge": "开发中",
+      "body": "Seizn Program 是面向长篇写作的本地写作程序，把原稿、正典和校对放在同一个工作区。",
+      "cta": "加入 Program 等候名单",
+      "footerLabel": "Program"
     }
   }
 }

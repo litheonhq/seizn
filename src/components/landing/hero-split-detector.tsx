@@ -115,8 +115,8 @@ function LandingNav({
           <a href="#pricing" className="text-sm font-medium" style={{ color: "oklch(1 0 0 / 0.66)" }}>
             {copy.nav.pricing}
           </a>
-          <Link href={`/${locale}/docs`} className="text-sm font-medium" style={{ color: "oklch(1 0 0 / 0.66)" }}>
-            {copy.nav.docs}
+          <Link href={`/${locale}/pricing#track-3`} className="text-sm font-medium" style={{ color: "oklch(1 0 0 / 0.66)" }}>
+            {copy.program.footerLabel}
           </Link>
           <span className="h-5 w-px" style={{ background: "oklch(1 0 0 / 0.12)" }} />
           <Link
@@ -162,8 +162,8 @@ function LandingNav({
             <a href="#pricing" onClick={closeMobileMenu} className="min-h-11 py-3 text-sm font-medium" style={{ color: "oklch(1 0 0 / 0.78)" }}>
               {copy.nav.pricing}
             </a>
-            <Link href={`/${locale}/docs`} onClick={closeMobileMenu} className="min-h-11 py-3 text-sm font-medium" style={{ color: "oklch(1 0 0 / 0.78)" }}>
-              {copy.nav.docs}
+            <Link href={`/${locale}/pricing#track-3`} onClick={closeMobileMenu} className="min-h-11 py-3 text-sm font-medium" style={{ color: "oklch(1 0 0 / 0.78)" }}>
+              {copy.program.footerLabel}
             </Link>
             <Link
               href={isAuthenticated ? "/dashboard/author" : "/login"}

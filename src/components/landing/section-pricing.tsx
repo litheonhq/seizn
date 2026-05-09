@@ -1,4 +1,3 @@
-import Link from "next/link";
 import type { CSSProperties } from "react";
 import { CheckoutButton } from "@/components/checkout-button";
 import {
@@ -132,13 +131,13 @@ function PricingRowSecondary({ tier, copy, locale }: { tier: AuthorBillingTier; 
           {price}
         </p>
         {tier === "enterprise" ? (
-          <Link
-            href={`/${locale}/docs/faq`}
+          <a
+            href="mailto:support@seizn.com"
             className="author-btn min-h-9 border px-3 text-xs"
             style={{ borderColor: "var(--ink-300)", color: "var(--ink-800)" }}
           >
             {copy.pricing.contact}
-          </Link>
+          </a>
         ) : (
           <CheckoutButton
             tier={tier}

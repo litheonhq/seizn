@@ -95,7 +95,7 @@ export function PricingClient({ locale, copy }: PricingClientProps) {
             <Link href={`/${locale}/pricing`} className="hidden text-sm font-medium md:block" style={{ color: "var(--ink-900)" }}>
               {copy.nav.pricing}
             </Link>
-            <Link href={`/${locale}/docs`} className="hidden text-sm md:block" style={{ color: "var(--ink-600)" }}>
+            <Link href={`/${locale}/api`} className="hidden text-sm md:block" style={{ color: "var(--ink-600)" }}>
               {copy.nav.docs}
             </Link>
             <Link
@@ -172,7 +172,7 @@ export function PricingClient({ locale, copy }: PricingClientProps) {
               API · MCP
             </a>
             <a href="#track-3" className="rounded-full px-4 py-2 text-sm inline-flex items-center gap-2" style={{ color: "var(--text-secondary)" }}>
-              Desktop
+              Program
               <span className="rounded-full px-2 py-0.5 text-[10px] font-medium" style={{ background: "var(--sev-p2-bg)", color: "var(--sev-p2-text)" }}>
                 Soon
               </span>
@@ -250,7 +250,7 @@ export function PricingClient({ locale, copy }: PricingClientProps) {
             <a href={`/${locale}/legal/privacy`} className="hover:underline">{copy.footer.privacy}</a>
             <a href={`/${locale}/legal/terms`} className="hover:underline">{copy.footer.terms}</a>
             <a href={`/${locale}/legal/beta-disclosure`} className="hover:underline">{copy.footer.beta}</a>
-            <a href={`/${locale}/docs/faq`} className="hover:underline">{copy.footer.contact}</a>
+            <a href="mailto:support@seizn.com" className="hover:underline">{copy.footer.contact}</a>
           </nav>
         </div>
       </footer>

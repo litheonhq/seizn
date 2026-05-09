@@ -88,10 +88,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: {
       default: dict.metadata.title,
-      template: "%s · Seizn",
+      template: "%s - Seizn",
     },
     description: dict.metadata.description,
-    keywords: ["AI NPC memory", "game NPC memory", "NPC AI middleware", "Inworld integration", "Convai integration", "NVIDIA ACE memory", "persistent NPC memory", "game AI infrastructure", "cross-generation memory", "entity graph memory"],
+    keywords: [
+      "AI writing memory",
+      "fiction writing software",
+      "canon management",
+      "novel continuity checker",
+      "author workspace",
+      "Seizn Program",
+      "manuscript review",
+      "story conflict detection",
+    ],
     authors: [{ name: "Seizn" }],
     creator: "Seizn",
     publisher: "Seizn",

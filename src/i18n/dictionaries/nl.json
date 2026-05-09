@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "title": "Seizn — Geheugen voor AI-NPC's",
-    "description": "Koppel Inworld, Convai of je eigen LLM. Seizn geeft NPC's geheugen, relaties en herinneringen door generaties heen. Prijs per entiteit, niet per seat."
+    "title": "Seizn - AI memory for fiction writers",
+    "description": "Keep manuscripts, canon, conflict checks, and author memory in one workspace. Seizn helps fiction writers catch contradictions before readers do."
   },
   "nav": {
     "features": "Functies",
@@ -3636,17 +3636,12 @@
         "replay": "Replay",
         "byok": "BYOK-gids",
         "changelog": "Wijzigingen",
-        "engine": "Engine →",
         "sdk": "@seizn/sdk-js",
-        "mcp": "@seizn/mcp"
+        "mcp": "@seizn/mcp",
+        "program": "Program"
       },
       "entity": "© 2026 Seizn by Litheon LLC · Wyoming",
       "version": "v1.0 · de Saebyeok-demo is synthetische data"
-    },
-    "engine": {
-      "badge": "nieuw",
-      "body": "Bouw je NPC-AI voor games? Dezelfde canonmotor, blootgelegd als SDK.",
-      "cta": "engine.seizn.com"
     },
     "checkout": {
       "prefix": "Ik ga akkoord met de",
@@ -3656,6 +3651,12 @@
       "suffix": ".",
       "loading": "Stripe wordt geopend...",
       "error": "Afrekenen kon niet starten."
+    },
+    "program": {
+      "badge": "in development",
+      "body": "Seizn Program is our native writing app for manuscripts, canon, review, and local files in one workspace.",
+      "cta": "Join Program waitlist",
+      "footerLabel": "Program"
     }
   }
 }

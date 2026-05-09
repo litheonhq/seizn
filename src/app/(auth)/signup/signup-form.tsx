@@ -266,7 +266,7 @@ export default function SignupForm() {
               <div className="auth-info-banner mb-5">
                 <span className="auth-info-banner-title">Archivist Vale template selected</span>
                 <p className="auth-muted text-xs">
-                  Your first key will carry NPC template metadata for the free tier workspace.
+                  Your first key will carry sample project metadata for the free author workspace.
                 </p>
               </div>
             )}
