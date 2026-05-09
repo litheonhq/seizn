@@ -4,14 +4,38 @@ import { useEffect, useState, useSyncExternalStore } from 'react';
 import Link from 'next/link';
 import { readConsent, writeConsent, type ConsentState } from '@/lib/consent';
 
+// useSyncExternalStore requires getSnapshot to return a referentially stable
+// value across calls (it compares with Object.is). readConsent() builds a new
+// object every call when localStorage holds a value, so calling it directly
+// from getSnapshot put React into an infinite re-render whenever a user had
+// already made a consent decision (the only branch that returns a non-null
+// object). Returning null worked because null === null. We cache the parsed
+// snapshot at module scope and invalidate on the consent-change event.
+//
+// This caused production "Something went wrong" (React error #185 — Maximum
+// update depth exceeded) for every signed-in / consent-decided user on the
+// landing page. Hidden until prod because the loop only triggers when
+// readConsent returns a non-null object, which requires localStorage state
+// that fresh dev/test sessions don't have.
+let cachedConsentSnapshot: ConsentState | null = null;
+let consentSnapshotValid = false;
+
 function subscribeConsent(listener: () => void): () => void {
   if (typeof window === 'undefined') return () => undefined;
-  window.addEventListener('seizn-consent-change', listener);
-  return () => window.removeEventListener('seizn-consent-change', listener);
+  const handler = () => {
+    consentSnapshotValid = false;
+    listener();
+  };
+  window.addEventListener('seizn-consent-change', handler);
+  return () => window.removeEventListener('seizn-consent-change', handler);
 }
 
 function getConsentSnapshot(): ConsentState | null {
-  return readConsent();
+  if (!consentSnapshotValid) {
+    cachedConsentSnapshot = readConsent();
+    consentSnapshotValid = true;
+  }
+  return cachedConsentSnapshot;
 }
 
 function getServerSnapshot(): ConsentState | null {
