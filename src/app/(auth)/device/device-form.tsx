@@ -50,7 +50,11 @@ export default function DeviceForm() {
     e.preventDefault();
     if (userCode.length < 9) return;
 
-    if (isAuthenticated === false) {
+    // Treat null (session fetch in flight) the same as false. Without this,
+    // a paste-and-Enter race within the first ~50-200ms after page load can
+    // fire the verify POST anonymously and surface a generic server error
+    // instead of the expected sign-in redirect.
+    if (isAuthenticated !== true) {
       router.push(`/login?callbackUrl=${encodeURIComponent("/auth/device?code=" + userCode)}`);
       return;
     }
