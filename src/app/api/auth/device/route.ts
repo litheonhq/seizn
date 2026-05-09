@@ -1,11 +1,36 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
 import crypto from 'crypto';
 import { logServerError } from '@/lib/server/logger';
+import { checkCustomRateLimitAsync, getRateLimitHeaders } from '@/lib/rate-limit';
+
+const INIT_IP_LIMIT = 20;
+const INIT_IP_WINDOW_MS = 60 * 1000;
+
+function getClientIp(request: NextRequest): string {
+  return (
+    request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+    request.headers.get('x-real-ip') ||
+    'unknown'
+  );
+}
 
 // POST /api/auth/device - Start device authorization flow
-export async function POST() {
+export async function POST(request: NextRequest) {
   try {
+    const ip = getClientIp(request);
+    const ipLimit = await checkCustomRateLimitAsync(
+      `device_init_ip:${ip}`,
+      INIT_IP_LIMIT,
+      INIT_IP_WINDOW_MS
+    );
+    if (!ipLimit.allowed) {
+      return NextResponse.json(
+        { error: 'Too many device authorization attempts. Try again later.' },
+        { status: 429, headers: getRateLimitHeaders(ipLimit) }
+      );
+    }
+
     const supabase = createServerClient();
 
     const deviceCode = crypto.randomBytes(16).toString('hex');
@@ -27,7 +52,7 @@ export async function POST() {
     return NextResponse.json({
       device_code: deviceCode,
       user_code: userCode,
-      verification_uri: `${process.env.NEXT_PUBLIC_APP_URL || 'https://www.seizn.com'}/auth/device`,
+      verification_uri: `${process.env.NEXT_PUBLIC_APP_URL || 'https://www.seizn.com'}/device`,
       expires_in: 900, // 15 minutes
       interval: 5,
     });
@@ -52,4 +77,3 @@ function generateUserCode(): string {
   }
   return code;
 }
-

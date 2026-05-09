@@ -2,15 +2,54 @@ import { NextRequest, NextResponse } from 'next/server';
 import { hashApiKey } from '@/lib/api-key';
 import { createServerClient } from '@/lib/supabase';
 import { logServerError } from '@/lib/server/logger';
+import { checkCustomRateLimitAsync, getRateLimitHeaders } from '@/lib/rate-limit';
+
+const POLL_IP_LIMIT = 60;
+const POLL_IP_WINDOW_MS = 60 * 1000;
+const POLL_CODE_LIMIT = 60;
+const POLL_CODE_WINDOW_MS = 60 * 1000;
+
+function getClientIp(request: NextRequest): string {
+  return (
+    request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+    request.headers.get('x-real-ip') ||
+    'unknown'
+  );
+}
 
 // POST /api/auth/device/token - Poll for device authorization result
 export async function POST(request: NextRequest) {
   try {
+    const ip = getClientIp(request);
+    const ipLimit = await checkCustomRateLimitAsync(
+      `device_token_ip:${ip}`,
+      POLL_IP_LIMIT,
+      POLL_IP_WINDOW_MS
+    );
+    if (!ipLimit.allowed) {
+      return NextResponse.json(
+        { error: 'slow_down' },
+        { status: 429, headers: getRateLimitHeaders(ipLimit) }
+      );
+    }
+
     const body = await request.json();
     const { device_code } = body as { device_code?: string };
 
     if (!device_code) {
       return NextResponse.json({ error: 'missing_device_code' }, { status: 400 });
+    }
+
+    const codeLimit = await checkCustomRateLimitAsync(
+      `device_token_code:${device_code}`,
+      POLL_CODE_LIMIT,
+      POLL_CODE_WINDOW_MS
+    );
+    if (!codeLimit.allowed) {
+      return NextResponse.json(
+        { error: 'slow_down' },
+        { status: 429, headers: getRateLimitHeaders(codeLimit) }
+      );
     }
 
     const supabase = createServerClient();
