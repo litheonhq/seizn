@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { createServerClient } from "@/lib/supabase";
 import { auth } from "@/lib/auth";
+import { verifyCsrfToken } from "@/lib/csrf";
 import {
   createRequestContext,
   successResponse,
@@ -65,6 +66,9 @@ export async function POST(request: NextRequest) {
   const context = createRequestContext(request);
 
   try {
+    const csrfErr = verifyCsrfToken(request);
+    if (csrfErr) return csrfErr;
+
     const session = await auth();
     if (!session?.user?.id) {
       return errorResponse(
@@ -172,6 +176,9 @@ export async function DELETE(request: NextRequest) {
   const context = createRequestContext(request);
 
   try {
+    const csrfErr = verifyCsrfToken(request);
+    if (csrfErr) return csrfErr;
+
     const session = await auth();
     if (!session?.user?.id) {
       return errorResponse(
