@@ -64,7 +64,14 @@ function addDashboardSecurityHeaders(response: NextResponse): NextResponse {
   response.headers.set('X-DNS-Prefetch-Control', 'off');
   response.headers.set('X-Frame-Options', 'DENY');
   response.headers.set('Origin-Agent-Cluster', '?1');
+  response.headers.set('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
+  response.headers.set('Cross-Origin-Resource-Policy', 'same-site');
+  response.headers.set('X-Permitted-Cross-Domain-Policies', 'none');
   return response;
+}
+
+function addDashboardSecurityHeadersIfNeeded(response: NextResponse, pathname: string): NextResponse {
+  return isDashboardPath(pathname) ? addDashboardSecurityHeaders(response) : response;
 }
 
 function normalizeCookieDomain(value: string | undefined): string | undefined {
@@ -274,14 +281,20 @@ export async function proxy(request: NextRequest) {
 
     const canonicalAuthorPath = canonicalAuthorDashboardPath(pathname, request.nextUrl.search);
     if (canonicalAuthorPath) {
-      return NextResponse.redirect(`${AUTHOR_FLAGSHIP_ORIGIN}${canonicalAuthorPath}`, 308);
+      return addDashboardSecurityHeadersIfNeeded(
+        NextResponse.redirect(`${AUTHOR_FLAGSHIP_ORIGIN}${canonicalAuthorPath}`, 308),
+        canonicalAuthorPath
+      );
     }
 
     // Author-only entry: cross-domain redirect to seizn.com (308 preserves method)
     if (AUTHOR_ONLY_PREFIXES.some((p) => pathname.startsWith(p))) {
-      return NextResponse.redirect(
-        `${AUTHOR_FLAGSHIP_ORIGIN}${pathname}${request.nextUrl.search}`,
-        308
+      return addDashboardSecurityHeadersIfNeeded(
+        NextResponse.redirect(
+          `${AUTHOR_FLAGSHIP_ORIGIN}${pathname}${request.nextUrl.search}`,
+          308
+        ),
+        pathname
       );
     }
     // /engine/* and shared infra: pass through
@@ -379,6 +392,8 @@ export async function proxy(request: NextRequest) {
   response.cookies.set('NEXT_LOCALE', detectedLocale, {
     maxAge: 60 * 60 * 24 * 365, // 1 year
     path: '/',
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
   });
 
   return response;

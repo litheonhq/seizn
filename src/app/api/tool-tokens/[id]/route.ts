@@ -8,6 +8,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
 import { getRequestUser } from '@/lib/api/request-user';
 import { createToolGatingService } from '@/lib/tool-gating';
+import { verifyCsrfToken } from '@/lib/csrf';
 import { logServerError } from '@/lib/server/logger';
 
 interface RouteParams {
@@ -46,6 +47,9 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
   try {
+    const csrfErr = verifyCsrfToken(request);
+    if (csrfErr) return csrfErr;
+
     const { id } = await params;
     const user = await getRequestUser(request);
     if (!user) {
@@ -67,4 +71,3 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
     );
   }
 }
-

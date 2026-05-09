@@ -14,8 +14,11 @@
       "methods": [
         "POST"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "csrf",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/account/byok",
@@ -24,16 +27,22 @@
         "GET",
         "POST"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "csrf",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/account/continuity-reports",
       "methods": [
         "GET"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "csrf",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/account/llm-provider",
@@ -42,7 +51,8 @@
         "POST"
       ],
       "authMarkers": [
-        "csrf"
+        "csrf",
+        "sessionUser"
       ],
       "authState": "auth-marker-present"
     },
@@ -52,16 +62,22 @@
         "GET",
         "POST"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "csrf",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/account/usage",
       "methods": [
         "GET"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "csrf",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/adapters",
@@ -599,8 +615,10 @@
         "GET",
         "POST"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/byok/kms/[id]",
@@ -609,8 +627,10 @@
         "GET",
         "PATCH"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/byok/kms/[id]/rotate",
@@ -618,8 +638,10 @@
         "GET",
         "POST"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/canary/action",
@@ -793,6 +815,7 @@
         "GET"
       ],
       "authMarkers": [
+        "csrf",
         "sessionUser"
       ],
       "authState": "auth-marker-present"
@@ -814,6 +837,7 @@
         "POST"
       ],
       "authMarkers": [
+        "csrf",
         "sessionUser"
       ],
       "authState": "auth-marker-present"
@@ -834,6 +858,7 @@
         "DELETE"
       ],
       "authMarkers": [
+        "csrf",
         "sessionUser"
       ],
       "authState": "auth-marker-present"
@@ -1176,6 +1201,7 @@
         "POST"
       ],
       "authMarkers": [
+        "csrf",
         "sessionUser"
       ],
       "authState": "auth-marker-present"
@@ -1188,6 +1214,7 @@
         "PATCH"
       ],
       "authMarkers": [
+        "csrf",
         "sessionUser"
       ],
       "authState": "auth-marker-present"
@@ -1198,6 +1225,7 @@
         "POST"
       ],
       "authMarkers": [
+        "csrf",
         "sessionUser"
       ],
       "authState": "auth-marker-present"
@@ -2101,6 +2129,7 @@
         "POST"
       ],
       "authMarkers": [
+        "csrf",
         "sessionUser"
       ],
       "authState": "auth-marker-present"
@@ -2437,6 +2466,7 @@
         "POST"
       ],
       "authMarkers": [
+        "csrf",
         "sessionUser"
       ],
       "authState": "auth-marker-present"
@@ -2485,6 +2515,7 @@
         "PUT"
       ],
       "authMarkers": [
+        "csrf",
         "sessionUser"
       ],
       "authState": "auth-marker-present"
@@ -2495,6 +2526,7 @@
         "POST"
       ],
       "authMarkers": [
+        "csrf",
         "sessionUser"
       ],
       "authState": "auth-marker-present"
@@ -2887,16 +2919,22 @@
         "GET",
         "POST"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "csrf",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/projects/[projectId]/audit",
       "methods": [
         "GET"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "csrf",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/projects/[projectId]/candidates",
@@ -2904,40 +2942,55 @@
         "GET",
         "POST"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "csrf",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/projects/[projectId]/candidates/[candidateId]",
       "methods": [
         "GET"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "csrf",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/projects/[projectId]/candidates/[candidateId]/decide",
       "methods": [
         "POST"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "csrf",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/projects/[projectId]/candidates/batch_decide",
       "methods": [
         "POST"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "csrf",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/projects/[projectId]/characters",
       "methods": [
         "GET"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "csrf",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/projects/[projectId]/characters/[characterId]",
@@ -2945,40 +2998,55 @@
         "GET",
         "PATCH"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "csrf",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/projects/[projectId]/characters/[characterId]/backlog",
       "methods": [
         "POST"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "csrf",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/projects/[projectId]/conflicts",
       "methods": [
         "GET"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "csrf",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/projects/[projectId]/conflicts/[conflictId]/resolve",
       "methods": [
         "POST"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "csrf",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/projects/[projectId]/graph",
       "methods": [
         "GET"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "csrf",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/projects/[projectId]/imports",
@@ -2986,32 +3054,44 @@
         "GET",
         "POST"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "csrf",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/projects/[projectId]/imports/[importId]",
       "methods": [
         "DELETE"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "csrf",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/projects/[projectId]/imports/[importId]/retry",
       "methods": [
         "POST"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "csrf",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/projects/[projectId]/search",
       "methods": [
         "GET"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "csrf",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/projects/[projectId]/settings",
@@ -3019,48 +3099,66 @@
         "GET",
         "PATCH"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "csrf",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/projects/[projectId]/simulate",
       "methods": [
         "POST"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "csrf",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/projects/[projectId]/simulations/[simulationId]",
       "methods": [
         "GET"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "csrf",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/projects/[projectId]/simulations/[simulationId]/replay",
       "methods": [
         "POST"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "csrf",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/projects/[projectId]/sync/status",
       "methods": [
         "GET"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "csrf",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/projects/[projectId]/timeline",
       "methods": [
         "GET"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "csrf",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/query",
@@ -3260,8 +3358,10 @@
         "GET",
         "POST"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/retention/holds",
@@ -3269,8 +3369,10 @@
         "GET",
         "POST"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/retention/holds/[id]",
@@ -3279,8 +3381,10 @@
         "GET",
         "PATCH"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/retention/schedules",
@@ -3288,8 +3392,10 @@
         "GET",
         "POST"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/retention/schedules/[id]",
@@ -3298,8 +3404,10 @@
         "GET",
         "PATCH"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/retrieval/replay/[id]",
@@ -4321,8 +4429,11 @@
         "GET",
         "POST"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "csrf",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/tenant-policy",
@@ -4450,6 +4561,7 @@
         "POST"
       ],
       "authMarkers": [
+        "csrf",
         "sessionUser"
       ],
       "authState": "auth-marker-present"
@@ -4461,6 +4573,7 @@
         "GET"
       ],
       "authMarkers": [
+        "csrf",
         "sessionUser"
       ],
       "authState": "auth-marker-present"
@@ -5532,8 +5645,10 @@
         "GET",
         "POST"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/winter/org/[orgId]",
@@ -5542,16 +5657,20 @@
         "GET",
         "PATCH"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/winter/org/[orgId]/audit",
       "methods": [
         "GET"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/winter/org/[orgId]/evidence-pack",
@@ -5572,8 +5691,10 @@
         "PATCH",
         "POST"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/winter/org/[orgId]/policies",
@@ -5583,8 +5704,10 @@
         "PATCH",
         "POST"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/winter/org/[orgId]/policies/versions",
@@ -5592,8 +5715,10 @@
         "GET",
         "POST"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/winter/org/[orgId]/policies/versions/[versionId]",
@@ -5602,32 +5727,40 @@
         "GET",
         "PATCH"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/winter/org/[orgId]/policies/versions/compare",
       "methods": [
         "GET"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/winter/org/[orgId]/policies/versions/history",
       "methods": [
         "GET"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/winter/org/[orgId]/policies/versions/rollback",
       "methods": [
         "POST"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/winter/org/[orgId]/reports",
@@ -5635,8 +5768,10 @@
         "GET",
         "POST"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/winter/org/[orgId]/roles",
@@ -5646,8 +5781,10 @@
         "PATCH",
         "POST"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/winter/policy/opa",
@@ -5655,8 +5792,10 @@
         "GET",
         "POST"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/winter/policy/opa/[id]",
@@ -5665,16 +5804,20 @@
         "GET",
         "PATCH"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/winter/policy/opa/create",
       "methods": [
         "POST"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/winter/policy/simulate",
@@ -5682,8 +5825,10 @@
         "GET",
         "POST"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "apiKey"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/winter/rtbf",

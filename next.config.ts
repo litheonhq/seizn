@@ -90,6 +90,9 @@ const nextConfig: NextConfig = {
       { key: 'X-DNS-Prefetch-Control', value: 'off' },
       { key: 'X-Frame-Options', value: 'DENY' },
       { key: 'Origin-Agent-Cluster', value: '?1' },
+      { key: 'Cross-Origin-Opener-Policy', value: 'same-origin-allow-popups' },
+      { key: 'Cross-Origin-Resource-Policy', value: 'same-site' },
+      { key: 'X-Permitted-Cross-Domain-Policies', value: 'none' },
       { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
       {
         key: 'Strict-Transport-Security',
@@ -109,6 +112,9 @@ const nextConfig: NextConfig = {
       { key: 'X-DNS-Prefetch-Control', value: 'off' },
       { key: 'X-Frame-Options', value: 'DENY' },
       { key: 'Origin-Agent-Cluster', value: '?1' },
+      { key: 'Cross-Origin-Opener-Policy', value: 'same-origin-allow-popups' },
+      { key: 'Cross-Origin-Resource-Policy', value: 'same-site' },
+      { key: 'X-Permitted-Cross-Domain-Policies', value: 'none' },
     ];
 
     return [

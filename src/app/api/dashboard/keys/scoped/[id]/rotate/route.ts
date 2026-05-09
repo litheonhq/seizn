@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { rotateScopedApiKey } from '@/lib/scoped-api-keys';
+import { verifyCsrfToken } from '@/lib/csrf';
 import { logServerError } from '@/lib/server/logger';
 
 interface RouteParams {
@@ -15,6 +16,9 @@ interface RouteParams {
  */
 export async function POST(request: NextRequest, { params }: RouteParams) {
   try {
+    const csrfErr = verifyCsrfToken(request);
+    if (csrfErr) return csrfErr;
+
     const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.json(

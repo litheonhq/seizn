@@ -22,6 +22,9 @@ const requiredGlobalHeaders = [
   'X-DNS-Prefetch-Control',
   'X-Frame-Options',
   'Origin-Agent-Cluster',
+  'Cross-Origin-Opener-Policy',
+  'Cross-Origin-Resource-Policy',
+  'X-Permitted-Cross-Domain-Policies',
   'Referrer-Policy',
   'Permissions-Policy',
 ];
@@ -41,6 +44,9 @@ const requiredDashboardProxyHeaders = [
   'X-DNS-Prefetch-Control',
   'X-Frame-Options',
   'Origin-Agent-Cluster',
+  'Cross-Origin-Opener-Policy',
+  'Cross-Origin-Resource-Policy',
+  'X-Permitted-Cross-Domain-Policies',
 ];
 
 const nextConfig = read(nextConfigPath);
@@ -75,6 +81,10 @@ for (const header of requiredDashboardProxyHeaders) {
 
 if (!proxy.includes("headers.set('X-DNS-Prefetch-Control', 'off')")) {
   failures.push('src/proxy.ts must disable dashboard DNS prefetch for privacy hardening');
+}
+
+if (!proxy.includes('addDashboardSecurityHeadersIfNeeded')) {
+  failures.push('src/proxy.ts must preserve dashboard security headers on canonical redirects');
 }
 
 if (failures.length > 0) {

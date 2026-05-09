@@ -14,6 +14,17 @@ describe('verifyCsrf', () => {
     expect(verifyCsrf(request)).toBeNull();
   });
 
+  it('allows production seizn origins without relying on deployment env wiring', () => {
+    for (const origin of ['https://www.seizn.com', 'https://seizn.com']) {
+      const request = new NextRequest(`${origin}/api/organizations`, {
+        method: 'POST',
+        headers: { origin },
+      });
+
+      expect(verifyCsrf(request)).toBeNull();
+    }
+  });
+
   it('rejects unknown origins', async () => {
     const request = new NextRequest('https://www.seizn.com/api/organizations', {
       method: 'POST',

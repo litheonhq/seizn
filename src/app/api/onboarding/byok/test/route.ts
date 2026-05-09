@@ -14,6 +14,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
+import { verifyCsrfToken } from '@/lib/csrf';
 import { createServerClient, hasServerSupabaseServiceRoleConfig } from '@/lib/supabase';
 
 export const runtime = 'nodejs';
@@ -62,6 +63,9 @@ async function recordByokTestAttempt(userId: string, provider: string): Promise<
 }
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const csrfErr = verifyCsrfToken(request);
+  if (csrfErr) return csrfErr;
+
   const session = await auth();
   if (!session?.user?.id) {
     return NextResponse.json({ error: 'unauthorized' }, { status: 401 });

@@ -10,6 +10,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { createServerClient } from '@/lib/supabase';
 import { createSCIMToken, getSCIMConfig } from '@/lib/scim/auth';
+import { verifyCsrfToken } from '@/lib/csrf';
 
 interface RouteParams {
   params: Promise<{ orgId: string }>;
@@ -36,6 +37,9 @@ async function checkOrgAdmin(userId: string, orgId: string): Promise<boolean> {
  * Regenerate SCIM token
  */
 export async function POST(request: NextRequest, { params }: RouteParams) {
+  const csrfErr = verifyCsrfToken(request);
+  if (csrfErr) return csrfErr;
+
   const session = await auth();
   if (!session?.user?.id) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
