@@ -2,7 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
+import {
+  AuthCard,
+  AuthHomeLink,
+  AuthPage,
+} from "@/components/auth/auth-shell";
 import { getErrorMessage } from "@/lib/ui-error";
 
 type Step = "input" | "confirming" | "approved" | "denied" | "error" | "expired";
@@ -26,7 +30,6 @@ export default function DeviceForm() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Auto-format: insert dash after 4 chars
   const handleCodeChange = (val: string) => {
     const raw = val.replace(/[^A-Za-z0-9]/g, "").toUpperCase();
     if (raw.length <= 4) {
@@ -36,10 +39,9 @@ export default function DeviceForm() {
     }
   };
 
-  // Look up the user code
   const handleLookup = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (userCode.length < 9) return; // ABCD-1234 = 9 chars
+    if (userCode.length < 9) return;
 
     if (isAuthenticated === false) {
       router.push(`/login?callbackUrl=${encodeURIComponent("/auth/device?code=" + userCode)}`);
@@ -75,7 +77,6 @@ export default function DeviceForm() {
     setIsLoading(false);
   };
 
-  // Approve the device
   const handleApprove = async () => {
     setIsLoading(true);
     try {
@@ -99,7 +100,6 @@ export default function DeviceForm() {
     setIsLoading(false);
   };
 
-  // Deny the device
   const handleDeny = async () => {
     setIsLoading(true);
     try {
@@ -115,7 +115,6 @@ export default function DeviceForm() {
     setIsLoading(false);
   };
 
-  // Check auth status + pre-fill code from URL param
   useEffect(() => {
     fetch("/api/auth/session")
       .then((res) => res.json())
@@ -136,219 +135,187 @@ export default function DeviceForm() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-szn-bg flex items-center justify-center p-4">
-      <div className="w-full max-w-md relative">
-        {/* Logo */}
-        <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center gap-2">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/icons/seizn-mark.svg" alt="Seizn" className="h-8 w-8" />
-            <span className="text-[20px] font-medium tracking-[-0.01em] text-szn-text-1">
-              Seizn
-            </span>
-          </Link>
-          <p className="text-szn-text-2 mt-3 text-sm">Authorize Device</p>
-        </div>
-
-        {/* Card */}
-        <div className="szn-card rounded-3xl p-8 shadow-xl">
-          {/* Step: Input user code */}
-          {step === "input" && (
-            <>
-              <div className="text-center mb-6">
-                <div className="w-16 h-16 bg-szn-accent/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-8 h-8 text-szn-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                </div>
-                <h2 className="text-xl font-semibold text-szn-text-1 mb-2">Enter Device Code</h2>
-                <p className="text-szn-text-2 text-sm">
-                  Enter the code shown in your terminal or editor to authorize access to your Seizn account.
-                </p>
-              </div>
-
-              {errorMsg && (
-                <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm flex items-center gap-2">
-                  <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  {errorMsg}
-                </div>
-              )}
-
-              <form onSubmit={handleLookup}>
-                <div className="mb-6">
-                  <input
-                    type="text"
-                    value={userCode}
-                    onChange={(e) => handleCodeChange(e.target.value)}
-                    placeholder="ABCD-1234"
-                    maxLength={9}
-                    className="h-14 w-full border border-szn-border-subtle bg-szn-surface-1 px-4 text-center text-2xl tracking-[0.3em] font-mono uppercase text-szn-text-1 outline-none transition-colors placeholder:text-szn-text-3 focus:border-szn-signal rounded-xl"
-                    autoFocus
-                    autoComplete="off"
-                    spellCheck={false}
-                  />
-                </div>
-                <button
-                  type="submit"
-                  disabled={isLoading || userCode.length < 9}
-                  className="w-full py-3.5 bg-szn-signal hover:bg-szn-signal/90 text-szn-signal-fg font-semibold rounded-xl transition-colors duration-200 disabled:opacity-50"
-                >
-                  {isLoading ? (
-                    <span className="flex items-center justify-center gap-2">
-                      <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                      </svg>
-                      Verifying...
-                    </span>
-                  ) : isAuthenticated === false ? (
-                    "Sign in & Verify"
-                  ) : (
-                    "Verify Code"
-                  )}
-                </button>
-              </form>
-
-              {isAuthenticated === false && (
-                <p className="mt-4 text-center text-szn-text-3 text-xs">
-                  You&apos;ll be asked to sign in first.
-                </p>
-              )}
-            </>
-          )}
-
-          {/* Step: Confirm approval */}
-          {step === "confirming" && (
-            <div className="text-center">
-              <div className="w-16 h-16 bg-amber-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4.5c-.77-.833-2.694-.833-3.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" />
+    <AuthPage subtitle="Authorize Device">
+      <AuthCard>
+        {step === "input" && (
+          <>
+            <div className="mb-6 text-center">
+              <div className="auth-icon auth-icon-ink">
+                <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
               </div>
-              <h2 className="text-xl font-semibold text-szn-text-1 mb-2">Confirm Device Access</h2>
-              <p className="text-szn-text-2 text-sm mb-2">
-                A device or application is requesting access to your Seizn account.
+              <h2 className="auth-heading">Enter Device Code</h2>
+              <p className="auth-body">
+                Enter the code shown in your terminal or editor to authorize access to your Seizn account.
               </p>
-              <div className="inline-block px-4 py-2 bg-szn-surface rounded-lg font-mono text-lg tracking-widest mb-6">
-                {userCode}
-              </div>
-              <p className="text-szn-text-3 text-xs mb-6">
-                Only approve if you initiated this request from your terminal or editor.
-              </p>
-              <div className="flex gap-3">
-                <button
-                  onClick={handleDeny}
-                  disabled={isLoading}
-                  className="flex-1 py-3 border border-szn-border rounded-xl text-szn-text-2 font-medium hover:bg-szn-surface-1 transition-colors disabled:opacity-50"
-                >
-                  Deny
-                </button>
-                <button
-                  onClick={handleApprove}
-                  disabled={isLoading}
-                  className="flex-1 py-3 bg-szn-signal hover:bg-szn-signal/90 text-szn-signal-fg font-semibold rounded-xl transition-colors disabled:opacity-50"
-                >
-                  {isLoading ? "Approving..." : "Approve"}
-                </button>
-              </div>
             </div>
-          )}
 
-          {/* Step: Approved */}
-          {step === "approved" && (
-            <div className="text-center">
-              <div className="w-16 h-16 bg-szn-accent/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-szn-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-              </div>
-              <h2 className="text-xl font-semibold text-szn-text-1 mb-2">Device Authorized</h2>
-              <p className="text-szn-text-2 text-sm mb-6">
-                Your device has been authorized. You can close this window and return to your terminal or editor.
-              </p>
-              <Link
-                href="/dashboard"
-                className="text-szn-accent hover:text-szn-accent/80 font-medium text-sm transition-colors"
-              >
-                Go to Dashboard
-              </Link>
-            </div>
-          )}
-
-          {/* Step: Denied */}
-          {step === "denied" && (
-            <div className="text-center">
-              <div className="w-16 h-16 bg-red-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </div>
-              <h2 className="text-xl font-semibold text-szn-text-1 mb-2">Access Denied</h2>
-              <p className="text-szn-text-2 text-sm mb-6">
-                The device request has been denied. If you didn&apos;t initiate this, your account is safe.
-              </p>
-              <button
-                onClick={() => { setStep("input"); setUserCode(""); setErrorMsg(null); }}
-                className="text-szn-accent hover:text-szn-accent/80 font-medium text-sm transition-colors"
-              >
-                Try Another Code
-              </button>
-            </div>
-          )}
-
-          {/* Step: Expired */}
-          {step === "expired" && (
-            <div className="text-center">
-              <div className="w-16 h-16 bg-szn-surface rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-szn-text-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <h2 className="text-xl font-semibold text-szn-text-1 mb-2">Code Expired</h2>
-              <p className="text-szn-text-2 text-sm mb-6">
-                This code has expired. Please generate a new code from your terminal or editor.
-              </p>
-              <button
-                onClick={() => { setStep("input"); setUserCode(""); setErrorMsg(null); }}
-                className="text-szn-accent hover:text-szn-accent/80 font-medium text-sm transition-colors"
-              >
-                Enter New Code
-              </button>
-            </div>
-          )}
-
-          {/* Step: Error */}
-          {step === "error" && (
-            <div className="text-center">
-              <div className="w-16 h-16 bg-red-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            {errorMsg && (
+              <div role="alert" aria-live="polite" className="auth-status auth-status-conflict mb-4">
+                <svg className="h-4 w-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
+                {errorMsg}
               </div>
-              <h2 className="text-xl font-semibold text-szn-text-1 mb-2">Something Went Wrong</h2>
-              <p className="text-szn-text-2 text-sm mb-6">{errorMsg || "An unexpected error occurred."}</p>
+            )}
+
+            <form onSubmit={handleLookup} className="auth-form">
+              <div className="auth-form-row">
+                <label htmlFor="device-code" className="auth-label">Device code</label>
+                <input
+                  id="device-code"
+                  type="text"
+                  value={userCode}
+                  onChange={(e) => handleCodeChange(e.target.value)}
+                  placeholder="ABCD-1234"
+                  maxLength={9}
+                  className="auth-input text-center font-mono uppercase tracking-[0.3em]"
+                  autoFocus
+                  autoComplete="off"
+                  spellCheck={false}
+                />
+              </div>
               <button
-                onClick={() => { setStep("input"); setErrorMsg(null); }}
-                className="text-szn-accent hover:text-szn-accent/80 font-medium text-sm transition-colors"
+                type="submit"
+                disabled={isLoading || userCode.length < 9}
+                className="auth-btn-primary inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl px-4 font-semibold"
               >
-                Try Again
+                {isLoading ? (
+                  <>
+                    <svg className="h-5 w-5 animate-spin" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                    </svg>
+                    Verifying...
+                  </>
+                ) : isAuthenticated === false ? (
+                  "Sign in & Verify"
+                ) : (
+                  "Verify Code"
+                )}
+              </button>
+            </form>
+
+            {isAuthenticated === false && (
+              <p className="auth-help-text">You&apos;ll be asked to sign in first.</p>
+            )}
+          </>
+        )}
+
+        {step === "confirming" && (
+          <div className="text-center">
+            <div className="auth-icon auth-icon-pending">
+              <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4.5c-.77-.833-2.694-.833-3.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" />
+              </svg>
+            </div>
+            <h2 className="auth-heading">Confirm Device Access</h2>
+            <p className="auth-body mb-2">
+              A device or application is requesting access to your Seizn account.
+            </p>
+            <div className="auth-code auth-code-inline mb-6">{userCode}</div>
+            <p className="auth-muted mb-6 text-xs">
+              Only approve if you initiated this request from your terminal or editor.
+            </p>
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={handleDeny}
+                disabled={isLoading}
+                className="auth-btn-secondary inline-flex h-12 flex-1 items-center justify-center rounded-xl px-4 font-medium"
+              >
+                Deny
+              </button>
+              <button
+                type="button"
+                onClick={handleApprove}
+                disabled={isLoading}
+                className="auth-btn-primary inline-flex h-12 flex-1 items-center justify-center rounded-xl px-4 font-semibold"
+              >
+                {isLoading ? "Approving..." : "Approve"}
               </button>
             </div>
-          )}
-        </div>
+          </div>
+        )}
 
-        {/* Back to home */}
-        <p className="mt-6 text-center">
-          <Link href="/" className="text-szn-text-3 hover:text-szn-text-1 text-sm flex items-center justify-center gap-1 transition-colors">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-            Back to home
-          </Link>
-        </p>
-      </div>
-    </div>
+        {step === "approved" && (
+          <div role="status" aria-live="polite" className="text-center">
+            <div className="auth-icon auth-icon-canon">
+              <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <h2 className="auth-heading">Device Authorized</h2>
+            <p className="auth-body mb-6">
+              Your device has been authorized. You can close this window and return to your terminal or editor.
+            </p>
+            <a href="/dashboard" className="auth-link text-sm">Go to Dashboard</a>
+          </div>
+        )}
+
+        {step === "denied" && (
+          <div role="status" aria-live="polite" className="text-center">
+            <div className="auth-icon auth-icon-conflict">
+              <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </div>
+            <h2 className="auth-heading">Access Denied</h2>
+            <p className="auth-body mb-6">
+              The device request has been denied. If you didn&apos;t initiate this, your account is safe.
+            </p>
+            <button
+              type="button"
+              onClick={() => { setStep("input"); setUserCode(""); setErrorMsg(null); }}
+              className="auth-link text-sm"
+            >
+              Try Another Code
+            </button>
+          </div>
+        )}
+
+        {step === "expired" && (
+          <div role="status" aria-live="polite" className="text-center">
+            <div className="auth-icon auth-icon-ink">
+              <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h2 className="auth-heading">Code Expired</h2>
+            <p className="auth-body mb-6">
+              This code has expired. Please generate a new code from your terminal or editor.
+            </p>
+            <button
+              type="button"
+              onClick={() => { setStep("input"); setUserCode(""); setErrorMsg(null); }}
+              className="auth-link text-sm"
+            >
+              Enter New Code
+            </button>
+          </div>
+        )}
+
+        {step === "error" && (
+          <div role="alert" aria-live="polite" className="text-center">
+            <div className="auth-icon auth-icon-conflict">
+              <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h2 className="auth-heading">Something Went Wrong</h2>
+            <p className="auth-body mb-6">{errorMsg || "An unexpected error occurred."}</p>
+            <button
+              type="button"
+              onClick={() => { setStep("input"); setErrorMsg(null); }}
+              className="auth-link text-sm"
+            >
+              Try Again
+            </button>
+          </div>
+        )}
+      </AuthCard>
+      <AuthHomeLink />
+    </AuthPage>
   );
 }
