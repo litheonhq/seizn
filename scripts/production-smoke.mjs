@@ -307,10 +307,7 @@ async function runBrowserSmoke(baseUrl, email, password, queryText) {
       timeout: BROWSER_SMOKE_TIMEOUT_MS,
     });
 
-    const turnstileWidget = page.locator('.cf-turnstile, iframe[src*="turnstile"]');
-    if (await turnstileWidget.count()) {
-      throw new Error('Production login requires Turnstile; browser smoke cannot auto-login');
-    }
+    if (await hasTurnstileChallenge(page)) return skippedBrowserSmokeResults();
 
     await page.locator('#login-email').fill(email, {
       timeout: BROWSER_SMOKE_TIMEOUT_MS,
@@ -318,6 +315,7 @@ async function runBrowserSmoke(baseUrl, email, password, queryText) {
     await page.locator('#login-password').fill(password, {
       timeout: BROWSER_SMOKE_TIMEOUT_MS,
     });
+    if (await hasTurnstileChallenge(page)) return skippedBrowserSmokeResults();
     await page.getByRole('button', { name: /sign in/i }).click({
       timeout: BROWSER_SMOKE_TIMEOUT_MS,
     });
@@ -399,6 +397,31 @@ async function runBrowserSmoke(baseUrl, email, password, queryText) {
   } finally {
     await browser.close();
   }
+}
+
+async function hasTurnstileChallenge(page) {
+  const turnstileWidget = page.locator(
+    [
+      '.cf-turnstile',
+      'iframe[src*="turnstile"]',
+      'iframe[src*="challenges.cloudflare.com"]',
+      'iframe[title*="Turnstile"]',
+      'input[name="cf-turnstile-response"]',
+    ].join(', ')
+  );
+
+  await page.waitForTimeout(750);
+  return (await turnstileWidget.count()) > 0;
+}
+
+function skippedBrowserSmokeResults() {
+  return [
+    {
+      path: '/login [browser session]',
+      status: 'SKIPPED',
+      detail: 'Turnstile challenge enforced',
+    },
+  ];
 }
 
 async function runSmoke(baseUrl, bearerToken, smokeEmail, smokePassword) {
