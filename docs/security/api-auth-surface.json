@@ -1144,6 +1144,7 @@
         "POST"
       ],
       "authMarkers": [
+        "csrf",
         "sessionUser"
       ],
       "authState": "auth-marker-present"
@@ -1154,6 +1155,7 @@
         "POST"
       ],
       "authMarkers": [
+        "csrf",
         "sessionUser"
       ],
       "authState": "auth-marker-present"
@@ -2838,6 +2840,7 @@
         "PUT"
       ],
       "authMarkers": [
+        "csrf",
         "sessionUser"
       ],
       "authState": "auth-marker-present"
@@ -2849,6 +2852,7 @@
         "PATCH"
       ],
       "authMarkers": [
+        "csrf",
         "sessionUser"
       ],
       "authState": "auth-marker-present"
@@ -3599,6 +3603,7 @@
         "POST"
       ],
       "authMarkers": [
+        "csrf",
         "sessionUser"
       ],
       "authState": "auth-marker-present"
