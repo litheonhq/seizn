@@ -74,13 +74,20 @@ self.addEventListener('install', (event) => {
 self.addEventListener('activate', (event) => {
   console.log('[SW] Activating service worker...');
 
+  // Caches are named `${CACHE_VERSION}-static` / `-dynamic` / `-api`, so
+  // membership in the current generation means the name starts with
+  // `${CACHE_VERSION}-`. The previous filter (`name !== CACHE_VERSION`)
+  // never matched any real cache and wiped all three current caches on
+  // every activate, defeating the install-time pre-cache of /offline +
+  // /manifest.json until the next network round-trip.
+  const CURRENT_PREFIX = `${CACHE_VERSION}-`;
   event.waitUntil(
     caches
       .keys()
       .then((cacheNames) => {
         return Promise.all(
           cacheNames
-            .filter((name) => name.startsWith('seizn-') && name !== CACHE_VERSION)
+            .filter((name) => name.startsWith('seizn-') && !name.startsWith(CURRENT_PREFIX))
             .map((name) => {
               console.log('[SW] Deleting old cache:', name);
               return caches.delete(name);

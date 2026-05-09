@@ -40,18 +40,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'missing_device_code' }, { status: 400 });
     }
 
-    const codeLimit = await checkCustomRateLimitAsync(
-      `device_token_code:${device_code}`,
-      POLL_CODE_LIMIT,
-      POLL_CODE_WINDOW_MS
-    );
-    if (!codeLimit.allowed) {
-      return NextResponse.json(
-        { error: 'slow_down' },
-        { status: 429, headers: getRateLimitHeaders(codeLimit) }
-      );
-    }
-
     const supabase = createServerClient();
 
     const { data: authCode, error } = await supabase
@@ -62,6 +50,21 @@ export async function POST(request: NextRequest) {
 
     if (error || !authCode) {
       return NextResponse.json({ error: 'invalid_device_code' }, { status: 400 });
+    }
+
+    // Per-code rate limit runs after existence check so attacker-supplied
+    // garbage codes never allocate a rate-limit key (would otherwise let
+    // a single IP under the per-IP cap spray ~3600 unique-hex keys/hour).
+    const codeLimit = await checkCustomRateLimitAsync(
+      `device_token_code:${device_code}`,
+      POLL_CODE_LIMIT,
+      POLL_CODE_WINDOW_MS
+    );
+    if (!codeLimit.allowed) {
+      return NextResponse.json(
+        { error: 'slow_down' },
+        { status: 429, headers: getRateLimitHeaders(codeLimit) }
+      );
     }
 
     // Check expiry
