@@ -100,6 +100,20 @@ describe("Author settings UI", () => {
     expect(getText("Sync")).toBeTruthy();
   });
 
+  it("places billing and usage in the summary column", async () => {
+    installFetchMocks();
+
+    await render(<AuthorSettingsClient />);
+    await findText("Subscription & Billing");
+
+    const layout = container?.querySelector('[data-testid="author-settings-layout"]');
+    const summary = container?.querySelector('[data-testid="author-settings-summary-column"]');
+    expect(layout?.className).toContain("space-y-5");
+    expect(summary?.textContent).toContain("Subscription & Billing");
+    expect(summary?.textContent).toContain("Usage");
+    expect(summary?.textContent).toContain("Sync");
+  });
+
   it("shows the active BYOK key without exposing the raw key", async () => {
     installFetchMocks();
 

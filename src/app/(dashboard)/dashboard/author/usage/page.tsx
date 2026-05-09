@@ -22,10 +22,12 @@ export default async function AuthorUsagePage() {
       userPlanLabel="Studio"
       currentLabel="Usage"
     >
-      <div className="min-h-0 flex-1 overflow-auto bg-[var(--bg-primary)] p-6">
-        <OveragePanel />
-        <UsageClient />
-      </div>
+      <main className="min-h-0 flex-1 overflow-y-auto bg-[var(--bg-app)] px-4 py-5 sm:px-6 lg:px-8">
+        <div className="mx-auto grid w-full max-w-7xl gap-5 pb-16">
+          <OveragePanel />
+          <UsageClient />
+        </div>
+      </main>
     </WorkspaceShell>
   );
 }

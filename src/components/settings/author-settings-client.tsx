@@ -149,18 +149,20 @@ export function AuthorSettingsClient({ navigateToBilling = defaultNavigate }: Au
   const loading = action === "refresh" && !error;
 
   return (
-    <div className="space-y-6">
-      <header className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-        <div>
+    <div className="space-y-5" data-testid="author-settings-layout">
+      <header className="flex flex-col gap-4 border-b border-[var(--ink-200)] pb-5 lg:flex-row lg:items-start lg:justify-between">
+        <div className="min-w-0">
           <p className="text-sm font-medium text-[var(--ink-600)]">{copy.eyebrow}</p>
-          <h1 className="mt-1 text-2xl font-semibold text-[var(--ink-900)]">{copy.title}</h1>
+          <h1 className="mt-1 text-2xl font-semibold leading-tight text-[var(--ink-900)] sm:text-3xl">
+            {copy.title}
+          </h1>
           <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--ink-600)]">{copy.subtitle}</p>
         </div>
         <button
           type="button"
           onClick={refresh}
           disabled={action !== "idle"}
-          className="inline-flex min-h-10 items-center justify-center gap-2 rounded-md border border-[var(--ink-200)] px-4 text-sm font-medium text-[var(--ink-900)] hover:bg-[var(--ink-50)] disabled:cursor-not-allowed disabled:opacity-60"
+          className="inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-md border border-[var(--ink-200)] bg-[var(--ink-0)] px-4 text-sm font-medium text-[var(--ink-900)] hover:bg-[var(--ink-50)] disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
         >
           <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} aria-hidden="true" />
           {copy.refresh}
@@ -175,28 +177,32 @@ export function AuthorSettingsClient({ navigateToBilling = defaultNavigate }: Au
         </div>
       ) : null}
 
-      <div className="grid gap-5">
-        <LlmProviderSection
-          state={llmProvider}
-          busy={action !== "idle"}
-          onSave={saveLlmProvider}
-        />
-        <ByokSection
-          byok={byok}
-          copy={copy.byok}
-          action={action === "saving" || action === "removing" ? action : "idle"}
-          onSave={saveByok}
-          onRemove={removeByok}
-        />
-        <SubscriptionSection
-          subscription={subscription}
-          copy={copy.subscription}
-          locale={locale}
-          action={action === "portal" ? "portal" : "idle"}
-          onManageBilling={manageBilling}
-        />
-        <UsageSection usage={usage} requestCount={requestCount} copy={copy.usage} />
-        <SyncPlaceholder copy={copy.sync} />
+      <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_380px] xl:items-start">
+        <div className="grid min-w-0 gap-5" data-testid="author-settings-main-column">
+          <LlmProviderSection
+            state={llmProvider}
+            busy={action !== "idle"}
+            onSave={saveLlmProvider}
+          />
+          <ByokSection
+            byok={byok}
+            copy={copy.byok}
+            action={action === "saving" || action === "removing" ? action : "idle"}
+            onSave={saveByok}
+            onRemove={removeByok}
+          />
+        </div>
+        <aside className="grid min-w-0 gap-5 xl:sticky xl:top-5" data-testid="author-settings-summary-column">
+          <SubscriptionSection
+            subscription={subscription}
+            copy={copy.subscription}
+            locale={locale}
+            action={action === "portal" ? "portal" : "idle"}
+            onManageBilling={manageBilling}
+          />
+          <UsageSection usage={usage} requestCount={requestCount} copy={copy.usage} />
+          <SyncPlaceholder copy={copy.sync} />
+        </aside>
       </div>
     </div>
   );

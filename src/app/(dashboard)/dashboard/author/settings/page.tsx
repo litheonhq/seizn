@@ -21,7 +21,11 @@ export default async function AuthorSettingsPage() {
       userPlanLabel="Studio"
       currentLabel="Settings"
     >
-      <AuthorSettingsClient />
+      <main className="min-h-0 flex-1 overflow-y-auto bg-[var(--bg-app)] px-4 py-5 sm:px-6 lg:px-8">
+        <div className="mx-auto w-full max-w-7xl pb-16">
+          <AuthorSettingsClient />
+        </div>
+      </main>
     </WorkspaceShell>
   );
 }

@@ -53,7 +53,7 @@ export function SubscriptionSection({
           type="button"
           onClick={onManageBilling}
           disabled={action !== "idle"}
-          className="inline-flex min-h-10 items-center justify-center gap-2 rounded-md bg-[var(--ink-900)] px-4 text-sm font-medium text-white hover:bg-[var(--ink-900)]/90 disabled:cursor-not-allowed disabled:opacity-60"
+          className="inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-md bg-[var(--ink-900)] px-4 text-sm font-medium text-white hover:bg-[var(--ink-900)]/90 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
         >
           <ExternalLink className="h-4 w-4" aria-hidden="true" />
           {action === "portal" ? copy.opening : copy.manage}
@@ -67,10 +67,10 @@ export function SubscriptionSection({
         </div>
       ) : null}
 
-      <dl className="mt-5 grid gap-3 sm:grid-cols-4">
+      <dl className="mt-5 grid gap-3 sm:grid-cols-2">
         <div className="rounded-md border border-[var(--ink-200)] bg-[var(--ink-50)] p-3">
           <dt className="text-xs font-medium uppercase text-[var(--ink-500)]">{copy.currentPlan}</dt>
-          <dd className="mt-1 text-sm font-semibold text-[var(--ink-900)]">
+          <dd className="mt-1 break-words text-sm font-semibold text-[var(--ink-900)]">
             {subscription.tier_label} {priceDisplay.price ? ` - ${priceDisplay.price}` : ""}
           </dd>
           {priceDisplay.note ? (
