@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import { useDashboardTranslation } from '@/contexts/DashboardLocaleContext';
 import { intensityBand } from '@/lib/author/ui/graph-bands';
 import { GRAPH_COLUMNS } from '@/app/(dashboard)/dashboard/author/table-specs';
+import { displayCharacterName, resolveRelationLabel } from './relationship-graph-model';
 
 type JsonRecord = Record<string, unknown>;
 
@@ -32,7 +33,7 @@ export function RelationshipGraphTable({ nodes, edges }: RelationshipGraphTableP
   const nameMap = useMemo(() => {
     const m = new Map<string, string>();
     for (const node of nodes) {
-      if (node.label) m.set(node.id, node.label);
+      m.set(node.id, displayCharacterName(node));
     }
     return m;
   }, [nodes]);
@@ -41,14 +42,13 @@ export function RelationshipGraphTable({ nodes, edges }: RelationshipGraphTableP
     () =>
       edges.map((edge) => {
         const band = intensityBand(edge.intensity ?? 0);
-        const relationKey = edge.type ?? 'unknown';
-        const relationLabel = t(`author.graph.relation.${relationKey}`) ?? relationKey;
+        const relation = resolveRelationLabel(edge.type, t);
         const bandLabel = t(`author.graph.bands.${band.key}`) ?? band.key;
         return {
           id: edge.id,
-          from_name: nameMap.get(edge.from) ?? edge.from,
-          relation: relationLabel,
-          to_name: nameMap.get(edge.to) ?? edge.to,
+          from_name: nameMap.get(edge.from) ?? displayCharacterName({ id: edge.from }),
+          relation: relation.label,
+          to_name: nameMap.get(edge.to) ?? displayCharacterName({ id: edge.to }),
           intensity_band: bandLabel,
           valid_at: edge.valid_at ?? '',
         };

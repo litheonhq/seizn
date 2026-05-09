@@ -9,6 +9,7 @@ import {
   useAuthorSyncStatus,
 } from '@/hooks/useAuthorMemoryV3';
 import { MOCK_AUTHOR_DATA } from './mock-data';
+import { layoutDashboardGraph } from './graph-layout';
 import type {
   AuthorUiHealth,
   AuthorWorkspaceData,
@@ -224,23 +225,6 @@ export function useAuthorGraphData(
       };
     }
 
-    const layout = circularLayout(rawNodes.length, 290, 190, 130);
-    const nodes: GraphNode[] = rawNodes.filter(isRecord).map((raw, index) => {
-      const id = toString(raw.id, `node-${index}`);
-      const label = toString(raw.label, id);
-      const role: GraphNode['role'] =
-        index < 2 ? 'Lead' : index < 5 ? 'Supporting' : 'Minor';
-      const point = layout[index] ?? { x: 290, y: 190 };
-      return {
-        id,
-        label,
-        role,
-        x: point.x,
-        y: point.y,
-        r: role === 'Lead' ? 32 : role === 'Supporting' ? 22 : 16,
-      };
-    });
-
     const edges: GraphEdge[] = rawEdges.filter(isRecord).map((raw) => ({
       a: toString(raw.from),
       b: toString(raw.to),
@@ -249,6 +233,19 @@ export function useAuthorGraphData(
       conflict: false,
     }));
 
+    const nodeInputs = rawNodes.filter(isRecord).map((raw, index) => {
+      const id = toString(raw.id, `node-${index}`);
+      const label = toString(raw.label, id);
+      const role: GraphNode['role'] =
+        index < 2 ? 'Lead' : index < 5 ? 'Supporting' : 'Minor';
+      return {
+        id,
+        label,
+        role,
+      };
+    });
+    const nodes = layoutDashboardGraph(nodeInputs, edges);
+
     return {
       data: { nodes, edges },
       isLoading: graph.isLoading,
@@ -256,17 +253,6 @@ export function useAuthorGraphData(
       isFallback: false,
     };
   }, [projectId, graph.data, graph.isLoading, graph.error]);
-}
-
-function circularLayout(count: number, cx: number, cy: number, radius: number) {
-  if (count === 0) return [];
-  return Array.from({ length: count }, (_, i) => {
-    const angle = (i / count) * Math.PI * 2 - Math.PI / 2;
-    return {
-      x: cx + Math.cos(angle) * radius,
-      y: cy + Math.sin(angle) * radius,
-    };
-  });
 }
 
 export type UseAuthorConflictsResult = DataState<ConflictItem[]>;
