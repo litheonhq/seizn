@@ -10,6 +10,23 @@ const LEGACY_AUTH_COOKIE_NAMES = [
   '__Secure-next-auth.session-token',
 ] as const;
 
+const SESSION_AUTH_COOKIE_NAMES = [
+  'authjs.session-token',
+  '__Secure-authjs.session-token',
+  ...LEGACY_AUTH_COOKIE_NAMES,
+] as const;
+
+const API_CSRF_ALLOWED_ORIGINS = new Set([
+  'https://www.seizn.com',
+  'https://seizn.com',
+  'http://localhost:3000',
+  'http://localhost:3001',
+  'http://localhost:3100',
+  'http://127.0.0.1:3000',
+  'http://127.0.0.1:3001',
+  'http://127.0.0.1:3100',
+]);
+
 // Paths that should not be locale-prefixed (completely skip middleware)
 const publicPaths = [
   '/api',
@@ -54,6 +71,46 @@ function isPublicPath(pathname: string): boolean {
 // Check if path is a dashboard route (P0-4: security headers required)
 function isDashboardPath(pathname: string): boolean {
   return pathname.startsWith('/dashboard');
+}
+
+function isStateChangingMethod(method: string): boolean {
+  return !['GET', 'HEAD', 'OPTIONS'].includes(method.toUpperCase());
+}
+
+function hasSessionAuthCookie(request: NextRequest): boolean {
+  return SESSION_AUTH_COOKIE_NAMES.some((name) => Boolean(request.cookies.get(name)?.value));
+}
+
+function isAllowedApiCsrfOrigin(origin: string, requestOrigin: string): boolean {
+  return origin === requestOrigin || API_CSRF_ALLOWED_ORIGINS.has(origin);
+}
+
+function protectSessionCookieApiMutation(request: NextRequest): NextResponse | null {
+  if (!request.nextUrl.pathname.startsWith('/api/')) return null;
+  if (!isStateChangingMethod(request.method)) return null;
+  if (!hasSessionAuthCookie(request)) return null;
+
+  const requestOrigin = request.nextUrl.origin;
+  const origin = request.headers.get('origin');
+  if (origin) {
+    return isAllowedApiCsrfOrigin(origin, requestOrigin)
+      ? null
+      : NextResponse.json({ error: 'CSRF validation failed: origin not allowed' }, { status: 403 });
+  }
+
+  const referer = request.headers.get('referer');
+  if (referer) {
+    try {
+      const refererOrigin = new URL(referer).origin;
+      return isAllowedApiCsrfOrigin(refererOrigin, requestOrigin)
+        ? null
+        : NextResponse.json({ error: 'CSRF validation failed: referer not allowed' }, { status: 403 });
+    } catch {
+      return NextResponse.json({ error: 'CSRF validation failed: referer not allowed' }, { status: 403 });
+    }
+  }
+
+  return NextResponse.json({ error: 'CSRF validation failed: origin required' }, { status: 403 });
 }
 
 // Add security headers for dashboard routes (P0-4: review_token leak prevention)
@@ -271,6 +328,11 @@ export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const host = normalizeHost(request.headers.get('x-forwarded-host') || request.headers.get('host'));
 
+  const apiCsrfResponse = protectSessionCookieApiMutation(request);
+  if (apiCsrfResponse) {
+    return apiCsrfResponse;
+  }
+
   // Engine surface routing (must run before i18n redirect)
   if (host === ENGINE_HOST) {
     if (pathname === '/login') {
@@ -401,7 +463,8 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    // Match all paths except static files and API routes
-    '/((?!api|_next/static|_next/image|favicon.ico|monitoring|robots.txt|sitemap.xml|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js|woff|woff2)$).*)',
+    // Match all paths except static files. API routes are included for the
+    // edge session-cookie CSRF guard above.
+    '/((?!_next/static|_next/image|favicon.ico|monitoring|robots.txt|sitemap.xml|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js|woff|woff2)$).*)',
   ],
 };

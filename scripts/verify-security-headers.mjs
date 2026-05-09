@@ -87,6 +87,10 @@ if (!proxy.includes('addDashboardSecurityHeadersIfNeeded')) {
   failures.push('src/proxy.ts must preserve dashboard security headers on canonical redirects');
 }
 
+if (!proxy.includes('protectSessionCookieApiMutation')) {
+  failures.push('src/proxy.ts must guard session-cookie API mutations at the edge');
+}
+
 if (failures.length > 0) {
   console.error('Security header verification failed:');
   for (const failure of failures) {
