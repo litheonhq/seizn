@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
@@ -37,6 +37,17 @@ export default function SignupForm() {
   const [copied, setCopied] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const turnstileRequired = Boolean(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY);
+
+  // a11y: when an error appears, move focus to the alert so screen readers
+  // announce it immediately. Plain aria-live="polite" alone leaves the user's
+  // focus where the failed action was, which delays the announcement on some
+  // ATs and fails the auth-v1-token-smoke focus assertion.
+  const errorRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    if (error && errorRef.current) {
+      errorRef.current.focus();
+    }
+  }, [error]);
 
   const buildExampleRequest = useCallback(
     (key: string) => signupTemplate
@@ -235,7 +246,13 @@ export default function SignupForm() {
         )}
 
         {error && (
-          <div role="alert" aria-live="polite" className="auth-status auth-status-conflict mb-6">
+          <div
+            ref={errorRef}
+            role="alert"
+            aria-live="polite"
+            tabIndex={-1}
+            className="auth-status auth-status-conflict mb-6 outline-none"
+          >
             <svg className="h-5 w-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
