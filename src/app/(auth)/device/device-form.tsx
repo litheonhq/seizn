@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import {
   AuthCard,
@@ -29,6 +29,13 @@ export default function DeviceForm() {
   const [step, setStep] = useState<Step>("input");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  const errorRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    if (errorMsg && errorRef.current) {
+      errorRef.current.focus();
+    }
+  }, [errorMsg]);
 
   const handleCodeChange = (val: string) => {
     const raw = val.replace(/[^A-Za-z0-9]/g, "").toUpperCase();
@@ -152,7 +159,13 @@ export default function DeviceForm() {
             </div>
 
             {errorMsg && (
-              <div role="alert" aria-live="polite" className="auth-status auth-status-conflict mb-4">
+              <div
+                ref={errorRef}
+                role="alert"
+                aria-live="polite"
+                tabIndex={-1}
+                className="auth-status auth-status-conflict mb-4 outline-none"
+              >
                 <svg className="h-4 w-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>

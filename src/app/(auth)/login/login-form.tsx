@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
@@ -46,6 +46,13 @@ export default function LoginForm() {
     };
   }, []);
 
+  const errorRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    if (authError && errorRef.current) {
+      errorRef.current.focus();
+    }
+  }, [authError]);
+
   const handleCredentialsLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -81,9 +88,11 @@ export default function LoginForm() {
       <AuthCard>
         {authError && (
           <div
+            ref={errorRef}
             role="alert"
             aria-live="polite"
-            className="auth-status auth-status-conflict mb-6"
+            tabIndex={-1}
+            className="auth-status auth-status-conflict mb-6 outline-none"
           >
             <svg
               className="h-5 w-5 flex-shrink-0"
