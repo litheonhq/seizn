@@ -55,7 +55,7 @@ export default function DeviceForm() {
     // fire the verify POST anonymously and surface a generic server error
     // instead of the expected sign-in redirect.
     if (isAuthenticated !== true) {
-      router.push(`/login?callbackUrl=${encodeURIComponent("/auth/device?code=" + userCode)}`);
+      router.push(`/login?callbackUrl=${encodeURIComponent("/device?code=" + userCode)}`);
       return;
     }
 

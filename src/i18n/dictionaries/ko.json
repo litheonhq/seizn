@@ -2420,7 +2420,7 @@
         {
           "category": "mcpDevTools",
           "question": "API 키 복사 없이 MCP 서버를 인증하려면?",
-          "answer": "Seizn은 브라우저 기반 인증을 위한 OAuth Device Flow(RFC 8628)를 지원합니다. auth_login MCP 도구를 실행하면 'ABCD-1234' 같은 사람이 읽을 수 있는 코드가 생성되고, 브라우저에서 seizn.com/auth/device를 열어 접근을 승인합니다. 토큰은 ~/.seizn/credentials.json에 자동 저장됩니다. 터미널 간 API 키 복사가 필요 없습니다."
+          "answer": "Seizn은 브라우저 기반 인증을 위한 OAuth Device Flow(RFC 8628)를 지원합니다. auth_login MCP 도구를 실행하면 'ABCD-1234' 같은 사람이 읽을 수 있는 코드가 생성되고, 브라우저에서 seizn.com/device를 열어 접근을 승인합니다. 토큰은 ~/.seizn/credentials.json에 자동 저장됩니다. 터미널 간 API 키 복사가 필요 없습니다."
         },
         {
           "category": "mcpDevTools",

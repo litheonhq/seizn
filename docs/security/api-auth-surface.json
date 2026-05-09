@@ -124,8 +124,7 @@
     {
       "route": "/api/admin/audit",
       "methods": [
-        "GET",
-        "POST"
+        "GET"
       ],
       "authMarkers": [
         "sessionUser"
