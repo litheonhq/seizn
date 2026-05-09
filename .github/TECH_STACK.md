@@ -1,7 +1,7 @@
 # Seizn -- Tech Stack Documentation
 > Auto-generated on 2026-03-02
 
-Seizn is an AI Memory Infrastructure platform that extracts, stores, and retrieves context for AI applications. The platform provides persistent memory via APIs, SDKs, and a management dashboard.
+Seizn is split into two public product surfaces: `www.seizn.com` serves Author Memory, the author dashboard, the Author API/MCP surface, and Seizn Program waitlist flows; `engine.seizn.com` serves the game/NPC AI Engine marketing surface. Both share the same Next.js codebase and deployment pipeline.
 
 ---
 
@@ -59,6 +59,7 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 | Memory Decay | Forgetting curves | -- | `decay_policies`, per-memory strength metadata, recall reinforcement, decay-aware reranking, `/api/v1/decay-policies`, and `/dashboard/memories/decay`. |
 | Bot Protection | Cloudflare Turnstile | -- | CAPTCHA on login/signup forms |
 | API Pattern | Next.js Route Handlers | -- | `src/app/api/` with 80+ route directories |
+| Public Surface Routing | Next.js proxy + host helpers | -- | `src/proxy.ts` and `src/lib/surface.ts` keep author marketing on `www.seizn.com` while redirecting Engine-owned public routes such as docs, enterprise, comparison, bench, design partners, and playground to `engine.seizn.com`. |
 | API Auth | Bearer token (`szn_` prefix) | -- | API key hash verification via Supabase, x-api-key deprecated (sunset 2026-05-01) |
 | Rate Limiting | Upstash Redis + in-memory fallback | -- | Sliding window algorithm, per-plan RPM limits |
 | Cache | Upstash Redis | ^1.36.1 | Embedding cache (7-day TTL), rate limit counters |
@@ -79,6 +80,7 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 | Persona Seeding | Nemotron-Personas-Korea + graph entities | -- | `/api/personas/preview` and `/api/personas/seed` let studios preview, auto-seed, or hybrid-approve Korean NPC personas into `graph_entities` with synthetic provenance and visible dataset attribution on `/[locale]/dashboard/personas`. |
 | Unity SDK | Unity 2022.3 LTS + UnityWebRequest | 0.1.0 | `packages/seizn-unity` ships the `com.seizn.unity` UPM package with memory, canon, and replay APIs, editor settings stored at `ProjectSettings/Seizn.asset`, coroutine alternatives, and a Basic NPC sample. |
 | Email | Resend | ^6.7.0 | Transactional emails (`src/lib/email/`) |
+| Program Waitlist | Next.js Route Handler + Resend | -- | `/api/waitlist/program` is the canonical Seizn Program waitlist endpoint. `/api/waitlist/desktop` remains a legacy alias, while confirmation tokens are stored as SHA-256 hashes in the existing `desktop_waitlist` table for migration compatibility. |
 | Payments | Stripe Billing | -- | 5-tier subscriptions, Stage 01 metered overage, and Stage 02 Design Partner coupons. `usage_events` and `usage_aggregates_monthly` feed `/api/internal/usage/flush`; `design_partner_applications` and `design_partner_relationships` gate `SEIZN_DP_2026` checkout discounts for approved Studio customers; `/api/health/env` detects missing metered billing env before silent zero-billing. |
 | Vector Search | Supabase pgvector (default) | -- | BYO vector store support: Pinecone, Weaviate, Qdrant |
 | Scene Context | Supabase + v1 scene API | -- | `scenes` stores bounded NPC/faction/location context; `/api/v1/memories` can apply scene-aware recall boosts via `scene_id` or `entity_ids`. |
@@ -217,7 +219,7 @@ Translation method: JSON dictionary files in `src/i18n/dictionaries/{locale}.jso
 
 ### Routing Pattern
 - **App Router** with route groups: `(auth)`, `(dashboard)`, `[locale]`
-- Public marketing pages under `[locale]/` with 22-locale support
+- Public author marketing pages under `[locale]/` with 22-locale support; Engine-owned legacy public routes are redirected by host/path helpers instead of being linked from the Author surface
 - Dashboard at `(dashboard)/dashboard/` with 25+ sub-routes (analytics, autopilot, budget, devtools, evals, governance, integrations, keys, memories, organizations, playground, policy-marketplace, privacy, reports, reranker, security, settings, traces, usage, webhooks)
 - API routes at `api/` with 80+ endpoint directories organized by domain
 - Legal pages (`/terms`, `/privacy`, `/refund`) at root level without locale prefix

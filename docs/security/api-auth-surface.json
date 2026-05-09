@@ -5565,6 +5565,14 @@
       "authState": "no-auth-marker-detected"
     },
     {
+      "route": "/api/waitlist/program",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [],
+      "authState": "no-auth-marker-detected"
+    },
+    {
       "route": "/api/waitlist/desktop",
       "methods": [
         "POST"
