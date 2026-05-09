@@ -10,10 +10,27 @@ import * as Sentry from '@sentry/nextjs';
  * Env strategy:
  *   - prod : `NEXT_PUBLIC_SENTRY_DSN` (GlitchTip DSN; project=seizn-web)
  *   - preview/dev: DSN unset → Sentry no-ops (no events sent)
+ *
+ * DSN must match Sentry's parser: `https?://<keyA-Za-z0-9_>@<host>/<projectId>`.
+ * UUIDs with dashes (e.g. GlitchTip default exports) FAIL the SDK's `\w+`
+ * public-key regex, which on the client cascades through the SDK's init
+ * routine into a render-loop in any component that subscribes to Sentry
+ * state — surfacing as React error #185 ("Maximum update depth exceeded")
+ * and the global-error fallback. We pre-validate and pass undefined for
+ * unparseable DSNs so init no-ops cleanly.
  */
+const VALID_DSN_RE = /^https?:\/\/\w+(?::\w+)?@[^/]+\/\d+$/;
+const rawDsn = process.env.NEXT_PUBLIC_SENTRY_DSN;
+const dsn = rawDsn && VALID_DSN_RE.test(rawDsn) ? rawDsn : undefined;
+if (rawDsn && !dsn && typeof console !== 'undefined') {
+  console.warn(
+    '[sentry] NEXT_PUBLIC_SENTRY_DSN is set but does not match the Sentry parser regex (likely a UUID public key with dashes). Skipping init.'
+  );
+}
+
 Sentry.init({
-  dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
-  enabled: Boolean(process.env.NEXT_PUBLIC_SENTRY_DSN),
+  dsn,
+  enabled: Boolean(dsn),
   environment: process.env.NEXT_PUBLIC_VERCEL_ENV ?? process.env.NODE_ENV ?? 'development',
   release: process.env.NEXT_PUBLIC_SENTRY_RELEASE ?? process.env.VERCEL_GIT_COMMIT_SHA,
 
