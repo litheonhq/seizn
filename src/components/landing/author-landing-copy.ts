@@ -111,7 +111,27 @@ export interface AuthorLandingCopy {
     body: string;
     cta: string;
   };
+  tracks: {
+    title: string;
+    subtitle: string;
+    writer: AuthorTrackCardCopy;
+    developer: AuthorTrackCardCopy;
+    desktop: AuthorTrackCardCopy;
+    engineLink: {
+      label: string;
+      linkText: string;
+    };
+  };
   checkout: CheckoutLegalCopy;
+}
+
+export interface AuthorTrackCardCopy {
+  badge: string;
+  title: string;
+  body: string;
+  bullets: string[];
+  cta: string;
+  ctaHref: string;
 }
 
 export function isAuthorEngineSurfaceLive(value = process.env.NEXT_PUBLIC_ENGINE_SURFACE_LIVE): boolean {
