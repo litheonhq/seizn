@@ -30,6 +30,7 @@ const nextConfig: NextConfig = {
 
   // Disable devtools indicator in development
   devIndicators: false,
+  poweredByHeader: false,
 
   async headers() {
     const cacheHeader = {
