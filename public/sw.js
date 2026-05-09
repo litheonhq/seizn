@@ -9,13 +9,17 @@
  * @version 1.0.0
  */
 
+// 2026-05-09: bumped to v3. Auth pages (login/signup/device) are now in
+// NO_CACHE_PATTERNS — stale-while-revalidate was serving prior-deploy auth
+// shells on first paint, masking CSP/CSRF/error-state regressions tied to
+// the current session.
 // 2026-05-09: bumped to v2 to evict v1 caches that pinned a broken layout
 // chunk (next/script beforeInteractive in nested layout — fixed in #329).
 // Also dropped '/' from STATIC_ASSETS — caching the root HTML cache-first
 // pinned the broken Plausible Script tag in browser cache for users who
 // had visited before the hotfix landed. Page HTML now flows through the
 // stale-while-revalidate handler which cycles per deploy.
-const CACHE_VERSION = 'seizn-v2';
+const CACHE_VERSION = 'seizn-v3';
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const DYNAMIC_CACHE = `${CACHE_VERSION}-dynamic`;
 const API_CACHE = `${CACHE_VERSION}-api`;
@@ -38,6 +42,11 @@ const NO_CACHE_PATTERNS = [
   /\/api\/auth/,
   /\/api\/connectors.*\/callback/,
   /\/_next\/webpack-hmr/,
+  // Auth surfaces must always render fresh: CSRF cookie rotation, error
+  // states bound to current session, and CSP-tied script tags.
+  /^\/login(\/|$|\?)/,
+  /^\/signup(\/|$|\?)/,
+  /^\/device(\/|$|\?)/,
 ];
 
 // ===========================================================================
@@ -65,13 +74,20 @@ self.addEventListener('install', (event) => {
 self.addEventListener('activate', (event) => {
   console.log('[SW] Activating service worker...');
 
+  // Caches are named `${CACHE_VERSION}-static` / `-dynamic` / `-api`, so
+  // membership in the current generation means the name starts with
+  // `${CACHE_VERSION}-`. The previous filter (`name !== CACHE_VERSION`)
+  // never matched any real cache and wiped all three current caches on
+  // every activate, defeating the install-time pre-cache of /offline +
+  // /manifest.json until the next network round-trip.
+  const CURRENT_PREFIX = `${CACHE_VERSION}-`;
   event.waitUntil(
     caches
       .keys()
       .then((cacheNames) => {
         return Promise.all(
           cacheNames
-            .filter((name) => name.startsWith('seizn-') && name !== CACHE_VERSION)
+            .filter((name) => name.startsWith('seizn-') && !name.startsWith(CURRENT_PREFIX))
             .map((name) => {
               console.log('[SW] Deleting old cache:', name);
               return caches.delete(name);

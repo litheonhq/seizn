@@ -2479,7 +2479,7 @@
         {
           "category": "mcpDevTools",
           "question": "How do I authenticate the MCP server without copying API keys?",
-          "answer": "Seizn supports OAuth Device Flow (RFC 8628) for browser-based authentication. Run the auth_login MCP tool — it generates a human-readable code like 'ABCD-1234', opens your browser to seizn.com/auth/device, and you approve access. The token is saved to ~/.seizn/credentials.json automatically. No more copying API keys between terminals."
+          "answer": "Seizn supports OAuth Device Flow (RFC 8628) for browser-based authentication. Run the auth_login MCP tool — it generates a human-readable code like 'ABCD-1234', opens your browser to seizn.com/device, and you approve access. The token is saved to ~/.seizn/credentials.json automatically. No more copying API keys between terminals."
         },
         {
           "category": "mcpDevTools",
