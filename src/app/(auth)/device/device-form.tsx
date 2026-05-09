@@ -189,8 +189,6 @@ export default function DeviceForm() {
                     </svg>
                     Verifying...
                   </>
-                ) : isAuthenticated === false ? (
-                  "Sign in & Verify"
                 ) : (
                   "Verify Code"
                 )}
