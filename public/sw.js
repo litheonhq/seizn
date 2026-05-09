@@ -9,6 +9,14 @@
  * @version 1.0.0
  */
 
+// 2026-05-09: bumped to v4. Navigation requests (top-level HTML) now bypass
+// the SW entirely — the SWR catch-all was caching landing/dashboard HTML
+// that referenced build-specific chunk hashes, which Vercel garbage-collects
+// from CDN over multiple deploys. Returning users on v2/v3 SW could hit a
+// cached HTML page → fetch a chunk that no longer exists on origin → 404 →
+// hydration crash → React global-error fallback ("Something went wrong").
+// Letting navigation flow through the browser network stack means HTML is
+// always tied to chunks the CDN currently serves.
 // 2026-05-09: bumped to v3. Auth pages (login/signup/device) are now in
 // NO_CACHE_PATTERNS — stale-while-revalidate was serving prior-deploy auth
 // shells on first paint, masking CSP/CSRF/error-state regressions tied to
@@ -17,9 +25,8 @@
 // chunk (next/script beforeInteractive in nested layout — fixed in #329).
 // Also dropped '/' from STATIC_ASSETS — caching the root HTML cache-first
 // pinned the broken Plausible Script tag in browser cache for users who
-// had visited before the hotfix landed. Page HTML now flows through the
-// stale-while-revalidate handler which cycles per deploy.
-const CACHE_VERSION = 'seizn-v3';
+// had visited before the hotfix landed.
+const CACHE_VERSION = 'seizn-v4';
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const DYNAMIC_CACHE = `${CACHE_VERSION}-dynamic`;
 const API_CACHE = `${CACHE_VERSION}-api`;
@@ -111,6 +118,15 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  // Top-level navigation (page HTML): always go through the network stack
+  // unmodified. A cached HTML page references build-specific chunk hashes
+  // that the CDN may have garbage-collected; returning a stale HTML +
+  // 404 chunk pair triggers a React hydration crash and the global-error
+  // fallback. Browser default behavior is correct here.
+  if (request.mode === 'navigate') {
+    return;
+  }
+
   // Skip requests we shouldn't cache
   if (NO_CACHE_PATTERNS.some((pattern) => pattern.test(url.pathname))) {
     return;
@@ -125,14 +141,18 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Static assets: Cache-first
+  // Static assets: Cache-first. Each Next.js build emits new content-hashed
+  // filenames, so a cached chunk URL is always tied to the build that
+  // emitted it; cross-deploy reuse is impossible by name. Safe to cache-first.
   if (isStaticAsset(url.pathname)) {
     event.respondWith(cacheFirst(request, STATIC_CACHE));
     return;
   }
 
-  // Dynamic pages: Stale-while-revalidate
-  event.respondWith(staleWhileRevalidate(request, DYNAMIC_CACHE));
+  // Anything else (sub-resource fetches that are neither API, nor static
+  // assets, nor navigations): pass through. The previous SWR catch-all was
+  // load-bearing only for HTML, which now bypasses; non-HTML sub-resources
+  // we don't know how to safely cache cross-deploy.
 });
 
 // ===========================================================================
