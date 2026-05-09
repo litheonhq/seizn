@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server';
 import { createServerClient } from './supabase';
 import { alertAuthFailure, alertSuspiciousActivity } from './telegram';
-import { logServerError } from '@/lib/server/logger';
+import { logServerError, sanitizeForLogs } from '@/lib/server/logger';
 
 // Re-export all from audit folder for centralized access
 export * from './audit/logger';
@@ -65,19 +65,10 @@ export function getAuditContext(request: NextRequest): AuditContext {
 /** Strip sensitive fields from audit details before persisting */
 function sanitizeAuditData(obj: Record<string, unknown> | undefined): Record<string, unknown> {
   if (!obj) return {};
-  const sensitiveKeys = ['password', 'secret', 'token', 'api_key', 'key_hash', 'authorization', 'credit_card', 'ssn'];
-  const result: Record<string, unknown> = {};
-  for (const [key, value] of Object.entries(obj)) {
-    const lower = key.toLowerCase();
-    if (sensitiveKeys.some(s => lower.includes(s))) {
-      result[key] = '[REDACTED]';
-    } else if (typeof value === 'string' && value.length > 500) {
-      result[key] = value.substring(0, 500) + '...[truncated]';
-    } else {
-      result[key] = value;
-    }
-  }
-  return result;
+  const sanitized = sanitizeForLogs(obj);
+  return sanitized && typeof sanitized === 'object' && !Array.isArray(sanitized)
+    ? sanitized as Record<string, unknown>
+    : {};
 }
 
 /**
@@ -279,4 +270,3 @@ export const AuditActions = {
   FEDERATED_ACCESS_GRANT: 'federated.access.grant',
   FEDERATED_ACCESS_REVOKE: 'federated.access.revoke',
 } as const;
-

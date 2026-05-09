@@ -218,8 +218,13 @@ function isMissingMemoryComplianceColumnError(
   const message = (error.message || '').toLowerCase();
   return error.code === '42703' && (
     message.includes('subject_id') ||
-    message.includes('organization_id')
+    message.includes('organization_id') ||
+    message.includes('age_bracket')
   );
+}
+
+function isMinorAgeBracket(ageBracket: string): boolean {
+  return ageBracket === 'minor_under_13' || ageBracket === 'minor_13_17' || ageBracket === 'minor';
 }
 
 function normalizeOptionalText(value: unknown): string | null {
@@ -514,6 +519,19 @@ async function handlePost(request: NextRequest) {
         return ValidationErrors.invalidField('encrypted_content', 'Encrypted content too long');
       }
     } else {
+      if (subjectId || isMinorAgeBracket(ageBracket)) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: {
+              code: 'encryption_required',
+              message: 'subject_id and minor age_bracket memories must be encrypted',
+            },
+            meta: { ...META, latencyMs: Date.now() - startTime },
+          },
+          { status: 400 }
+        );
+      }
       if (!body.content || body.content.trim().length === 0) {
         if (keyId) {
           await logRequest(
@@ -904,6 +922,7 @@ async function handlePost(request: NextRequest) {
       user_id: userId,
       organization_id: organizationId,
       subject_id: subjectId,
+      age_bracket: ageBracket,
       entity_id: entityId,
       content: isEncrypted ? ENCRYPTED_PLACEHOLDER : sanitizedContent,
       encrypted_content: isEncrypted ? encryptedContent : null,
@@ -1019,6 +1038,10 @@ async function handlePost(request: NextRequest) {
         }
         if ('organization_id' in legacyInsertPayload) {
           delete legacyInsertPayload.organization_id;
+          changedPayload = true;
+        }
+        if ('age_bracket' in legacyInsertPayload) {
+          delete legacyInsertPayload.age_bracket;
           changedPayload = true;
         }
       }

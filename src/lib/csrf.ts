@@ -34,6 +34,7 @@ const ALLOWED_ORIGINS = new Set([
   ...LOCAL_ALLOWED_ORIGINS,
 ].filter(Boolean) as string[]);
 const CSRF_TOKEN_BYTES = 32;
+const CSRF_COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 30;
 
 export const CSRF_COOKIE_NAME = 'seizn_csrf_token';
 export const CSRF_HEADER_NAME = 'x-csrf-token';
@@ -51,6 +52,39 @@ function safeTokenEquals(left: string, right: string): boolean {
   const b = Buffer.from(right, 'utf8');
   if (a.length !== b.length) return false;
   return timingSafeEqual(a, b);
+}
+
+function newCsrfToken(): string {
+  return randomBytes(CSRF_TOKEN_BYTES).toString('hex');
+}
+
+function csrfCookieOptions(): {
+  httpOnly: false;
+  secure: boolean;
+  sameSite: 'lax';
+  path: string;
+  maxAge: number;
+} {
+  return {
+    httpOnly: false,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    path: '/',
+    maxAge: CSRF_COOKIE_MAX_AGE_SECONDS,
+  };
+}
+
+function serializeCsrfCookie(token: string): string {
+  const parts = [
+    `${CSRF_COOKIE_NAME}=${token}`,
+    'Path=/',
+    `Max-Age=${CSRF_COOKIE_MAX_AGE_SECONDS}`,
+    'SameSite=Lax',
+  ];
+  if (process.env.NODE_ENV === 'production') {
+    parts.push('Secure');
+  }
+  return parts.join('; ');
 }
 
 /**
@@ -126,14 +160,22 @@ export function ensureCsrfCookie(request: NextRequest, response: NextResponse): 
     return response;
   }
 
-  response.cookies.set(CSRF_COOKIE_NAME, randomBytes(CSRF_TOKEN_BYTES).toString('hex'), {
-    httpOnly: false, // must be readable by browser JS to send as header
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    path: '/',
-    maxAge: 60 * 60 * 24 * 30,
-  });
+  response.cookies.set(CSRF_COOKIE_NAME, newCsrfToken(), csrfCookieOptions());
   return response;
+}
+
+/**
+ * Rotate the browser-readable double-submit token after auth boundary changes.
+ * NextAuth returns a Web Response, so this helper rewrites headers directly.
+ */
+export function rotateCsrfCookie(response: Response): Response {
+  const headers = new Headers(response.headers);
+  headers.append('Set-Cookie', serializeCsrfCookie(newCsrfToken()));
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
 }
 
 /**

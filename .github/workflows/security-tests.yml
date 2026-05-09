@@ -99,11 +99,9 @@ jobs:
 
       - name: Run npm audit
         run: npm audit --audit-level=high
-        continue-on-error: true
 
       - name: Run Snyk security scan
         uses: snyk/actions/node@master
-        continue-on-error: true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
@@ -141,6 +139,10 @@ jobs:
           fi
           if [ "${{ needs.secret-scan.result }}" != "success" ]; then
             echo "Secret scan failed"
+            exit 1
+          fi
+          if [ "${{ needs.dependency-scan.result }}" != "success" ]; then
+            echo "Dependency vulnerability scan failed"
             exit 1
           fi
           echo "All security checks passed!"

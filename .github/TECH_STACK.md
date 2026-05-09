@@ -138,6 +138,8 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 | Seizn CLI Release | `seizn-cli-release.yml` | Push tags matching `cli-v*`; builds and publishes `@seizn/cli` to npm |
 | Release SLSA | `release-slsa.yml` | -- |
 
+Workflow action pinning policy: official GitHub-maintained actions may use stable major tags and must be covered by Dependabot. Third-party security/deploy actions should be pinned to immutable SHAs, or the workflow must carry a documented exception until the SHA pin lands.
+
 ### Testing
 
 | Tool | Version | Scope |
@@ -253,16 +255,18 @@ Translation method: JSON dictionary files in `src/i18n/dictionaries/{locale}.jso
 
 ### Security Patterns
 - CSRF protection (`src/lib/csrf.ts`)
+- CSRF double-submit token rotates on NextAuth callback/signout boundaries.
 - Rate limiting with sliding window (Redis + in-memory fallback)
 - API key hashing and expiration
 - Scoped API keys (`src/lib/scoped-api-keys/`)
-- E2E encryption for confidential memories (PIN-derived key; ciphertext stored in `memories.encrypted_content`; excluded from search/embedding)
+- E2E encryption for confidential memories (PIN-derived key; ciphertext stored in `memories.encrypted_content`; excluded from search/embedding). Subject-keyed or minor memories are rejected unless encrypted.
 - OPA policy engine (`src/lib/opa/`)
 - Prompt firewall (`src/lib/prompt-firewall/`)
 - PII detection and anonymization (`src/lib/pii/`)
 - BYOK encryption (`src/lib/byok/`)
 - Data residency controls (`src/lib/residency/`)
 - Audit logging (`src/lib/audit/`)
+- Replay bundle signatures use `REPLAY_BUNDLE_SIGNING_SECRET`, separate from auth/session secrets.
 - GitHub webhook idempotency lock/claim flow for Autopilot deliveries (`src/app/api/webhooks/github/route.ts`)
 - Review token system for secure dashboard sharing
 - Security headers: HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy

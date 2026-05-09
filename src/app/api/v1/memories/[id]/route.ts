@@ -85,7 +85,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     const { data: memory, error: fetchError } = await supabase
       .from('memories')
       .select(
-        'id, content, encrypted_content, is_encrypted, memory_type, tags, namespace, companion_meta, scope, source, confidence, importance, created_at, updated_at'
+        'id, content, is_encrypted, memory_type, tags, namespace, companion_meta, scope, source, confidence, importance, created_at, updated_at'
       )
       .eq('id', id)
       .eq('user_id', userId)

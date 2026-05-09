@@ -15,6 +15,8 @@ interface RouteParams {
   params: Promise<{ graphId: string }>;
 }
 
+const MAX_QUERY_LENGTH = 256;
+
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
     const authResult = await requireApiScope(request, 'graph:read');
@@ -23,7 +25,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 
     const { graphId } = await params;
     const { searchParams } = new URL(request.url);
-    const query = searchParams.get('q');
+    const query = searchParams.get('q')?.slice(0, MAX_QUERY_LENGTH) ?? null;
     const type = searchParams.get('type');
     const limit = boundedInt(searchParams.get('limit'), 20, 1, 100);
 

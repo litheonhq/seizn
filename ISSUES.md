@@ -137,3 +137,21 @@
 **Symptom:** Approved device-flow rows kept the raw API token in `device_auth_codes.access_token`, and repeated token polls could receive the same bearer token.
 **Cause:** The device authorization flow used the DB row as temporary token transfer storage but did not retain a hash-only record after first retrieval.
 **Resolution:** Added `device_auth_codes.access_token_hash`, backfilled SHA-256 hashes for existing active flows without dropping `access_token`, wrote hashes during approval, and changed `/api/auth/device/token` to atomically clear the raw token on first successful poll. A later cleanup migration can drop `access_token` after all flows older than 15 minutes have expired.
+
+### R29.C OAuth Subject and Profile ID Coupling
+**Date:** 2026-05-09
+**Symptom:** OAuth sign-in could use a provider subject as the Seizn `profiles.id`, coupling internal profile identity to an external account identifier.
+**Cause:** The custom Auth.js JWT callback had no provider-account mapping table, so it reused `token.sub` / `token.id` as the fallback profile ID.
+**Resolution:** Added the service-role-only `oauth_profile_links` table and changed OAuth sign-in to resolve provider accounts through that mapping. New OAuth-only profiles now use `crypto.randomUUID()` IDs; email-based linking still requires an explicit provider `email_verified` signal.
+
+### R29.C Replay Bundle Signing Secret Decoupling
+**Date:** 2026-05-09
+**Symptom:** Replay bundle signatures could fall back to `AUTH_SECRET` / `NEXTAUTH_SECRET`, reusing session-secret material for replay artifact integrity.
+**Cause:** `src/lib/replay-bundler.ts` treated auth secrets as acceptable signing fallback values.
+**Resolution:** Replay bundle signing now requires `REPLAY_BUNDLE_SIGNING_SECRET` explicitly. Operator follow-up: set this variable in production before relying on replay bundle exports.
+
+### R29.C Subject-Keyed Memory Encryption Guard
+**Date:** 2026-05-09
+**Symptom:** Subject-keyed or minor memory writes could be stored as plaintext unless the caller opted into E2E memory encryption.
+**Cause:** Compliance consent/retention checks tracked `subject_id` and age bracket, but no storage-layer invariant required ciphertext for those rows.
+**Resolution:** Added `memories.age_bracket` and a NOT VALID check constraint that enforces `is_encrypted = true` for new or updated subject-keyed/minor rows. The API now rejects plaintext writes with `subject_id` or minor age brackets before DB insert.

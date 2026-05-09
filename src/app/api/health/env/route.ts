@@ -9,15 +9,11 @@ export async function GET() {
   }
 
   const result = checkProductionEnv();
-  const missingDetails = result.missing.map((name) => {
-    const spec = REQUIRED_PRODUCTION_ENV_VARS.find((variable) => variable.name === name);
-    return { name, description: spec?.description };
-  });
 
   return NextResponse.json(
     {
       ok: result.ok,
-      missing: missingDetails,
+      missingCount: result.missing.length,
       presentCount: result.present.length,
       requiredCount: REQUIRED_PRODUCTION_ENV_VARS.length,
     },

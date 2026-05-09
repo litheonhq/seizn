@@ -1,6 +1,7 @@
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import type { Profile } from 'next-auth';
+import { randomUUID } from 'node:crypto';
 import { authConfig } from '@/auth.config';
 import { normalizeProfileUserId } from './profile/normalize';
 import { normalizeSessionOrganizationId } from './profile/organization';
@@ -87,6 +88,50 @@ function getOAuthEmailVerified(token: { email_verified?: unknown }, profile?: Pr
   return raw === true || raw === 'true';
 }
 
+function normalizeProviderAccountId(value: unknown): string | null {
+  return typeof value === 'string' && value.trim() ? value.trim() : null;
+}
+
+async function findLinkedOAuthProfile(
+  supabase: ReturnType<typeof createServerClient>,
+  provider: string,
+  providerAccountId: string
+): Promise<string | null> {
+  const { data } = await supabase
+    .from('oauth_profile_links')
+    .select('profile_id')
+    .eq('provider', provider)
+    .eq('provider_account_id', providerAccountId)
+    .maybeSingle();
+
+  return typeof data?.profile_id === 'string' ? data.profile_id : null;
+}
+
+async function upsertOAuthProfileLink(
+  supabase: ReturnType<typeof createServerClient>,
+  input: {
+    provider: string;
+    providerAccountId: string;
+    profileId: string;
+    email: string | null;
+    emailVerified: boolean;
+  }
+): Promise<void> {
+  await supabase
+    .from('oauth_profile_links')
+    .upsert(
+      {
+        provider: input.provider,
+        provider_account_id: input.providerAccountId,
+        profile_id: input.profileId,
+        email: input.email,
+        email_verified: input.emailVerified,
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: 'provider,provider_account_id' }
+    );
+}
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
   ...authConfig,
   providers: [
@@ -154,42 +199,39 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       // For OAuth providers, create/link Supabase user
       if (account && account.provider !== 'credentials') {
         const supabase = createServerClient();
-        const profileId =
-          typeof token.sub === 'string' && token.sub.trim()
-            ? token.sub
-            : typeof token.id === 'string' && token.id.trim()
-              ? token.id
-              : null;
+        const provider = account.provider;
+        const providerAccountId = normalizeProviderAccountId(account.providerAccountId ?? token.sub);
         const email = typeof token.email === 'string' ? token.email.trim().toLowerCase() : null;
         const emailVerified = getOAuthEmailVerified(token, profile);
         token.oauthEmailVerified = emailVerified;
 
-        if (!profileId) {
+        if (!providerAccountId) {
           return token;
         }
 
-        // Prefer an exact provider-account profile. Only link an existing
-        // email profile when the provider explicitly attests that email.
-        const { data: idProfile } = await supabase
-          .from('profiles')
-          .select('id')
-          .eq('id', profileId)
-          .single();
-        let linkedProfile = idProfile;
+        // Provider subject IDs are not profile IDs. Resolve through an
+        // explicit server-side mapping, and mint random UUID profile IDs for
+        // new OAuth accounts.
+        let linkedProfileId = await findLinkedOAuthProfile(
+          supabase,
+          provider,
+          providerAccountId
+        );
 
-        if (!linkedProfile && email && emailVerified) {
+        if (!linkedProfileId && email && emailVerified) {
           const { data: emailProfile } = await supabase
             .from('profiles')
             .select('id')
             .eq('email', email)
-            .single();
-          linkedProfile = emailProfile;
+            .maybeSingle();
+          linkedProfileId = typeof emailProfile?.id === 'string' ? emailProfile.id : null;
         }
 
-        if (!linkedProfile) {
+        if (!linkedProfileId) {
+          linkedProfileId = randomUUID();
           // Create profile for OAuth user
           await supabase.from('profiles').insert({
-            id: profileId,
+            id: linkedProfileId,
             email,
             full_name: token.name,
             avatar_url: token.picture,
@@ -197,7 +239,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           });
         }
 
-        token.id = linkedProfile?.id || profileId;
+        await upsertOAuthProfileLink(supabase, {
+          provider,
+          providerAccountId,
+          profileId: linkedProfileId,
+          email,
+          emailVerified,
+        });
+
+        token.id = linkedProfileId;
       }
 
       if (token.email && (!token.id || token.id === token.sub)) {

@@ -33,12 +33,7 @@ interface BundleContext {
 }
 
 function getSigningSecret(): string {
-  return (
-    process.env.REPLAY_BUNDLE_SIGNING_SECRET ||
-    process.env.AUTH_SECRET ||
-    process.env.NEXTAUTH_SECRET ||
-    ''
-  );
+  return process.env.REPLAY_BUNDLE_SIGNING_SECRET || '';
 }
 
 function stableJson(value: unknown): string {
@@ -66,7 +61,7 @@ function sha256(buffer: Buffer | string): string {
 function hmacSha256(value: string): string {
   const secret = getSigningSecret();
   if (!secret) {
-    throw new Error('REPLAY_BUNDLE_SIGNING_SECRET or AUTH_SECRET is required to sign replay bundles');
+    throw new Error('REPLAY_BUNDLE_SIGNING_SECRET is required to sign replay bundles');
   }
   return crypto.createHmac('sha256', secret).update(value).digest('hex');
 }

@@ -1,6 +1,7 @@
 import { createHash, randomUUID } from 'crypto';
 import { createServerClient } from '@/lib/supabase';
 import { queueTraceForExport, isOTelEnabled } from '@/lib/otel';
+import { sanitizeForLogs } from '@/lib/server/logger';
 import type { FlightRecorder } from './recorder';
 import type { TraceHandle, TraceSummary, TraceStartParams, RetrievalEventType, StoredTrace, TraceConfig } from './types';
 
@@ -46,6 +47,7 @@ export class SupabaseFlightRecorder implements FlightRecorder {
     const supabase = createServerClient();
 
     const queryText = handle.base.queryText;
+    const sanitizedQueryText = queryText ? String(sanitizeForLogs(queryText)) : null;
     const queryHash = queryText ? sha256(queryText) : null;
     const now = new Date();
     const endedAt = now.toISOString();
@@ -58,17 +60,17 @@ export class SupabaseFlightRecorder implements FlightRecorder {
       plan: handle.base.plan ?? 'free',
       collection_id: handle.base.collectionId ?? null,
       collection_ids: handle.base.collectionIds ?? null,
-      query_text: queryText ?? null,
+      query_text: sanitizedQueryText,
       query_hash: queryHash,
       autopilot_reason: summary?.autopilotReason ?? null,
-      effective_config: summary?.effectiveConfig ?? {},
-      timings_ms: summary?.timingsMs ?? {},
+      effective_config: sanitizeForLogs(summary?.effectiveConfig ?? {}),
+      timings_ms: sanitizeForLogs(summary?.timingsMs ?? {}),
       results_count: summary?.resultsCount ?? 0,
-      error: summary?.error ?? null,
+      error: sanitizeForLogs(summary?.error ?? null),
       sampled: true,
       experiment_id: summary?.experimentId ?? null,
       arm_id: summary?.armId ?? null,
-      trace: {
+      trace: sanitizeForLogs({
         trace_id: handle.traceId,
         started_at: new Date(handle.startedAtMs).toISOString(),
         ended_at: endedAt,
@@ -80,7 +82,7 @@ export class SupabaseFlightRecorder implements FlightRecorder {
         spans: handle.spans,
         cost: summary?.cost,
         result_stats: summary?.resultStats,
-      },
+      }),
     };
 
     const { error } = await supabase.from('fall_retrieval_traces').insert(tracePayload);

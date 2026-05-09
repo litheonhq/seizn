@@ -11,6 +11,8 @@ import { createPolicyPackService } from '@/lib/policy-packs';
 import type { PolicyCategory } from '@/lib/policy-packs';
 import { logServerError } from '@/lib/server/logger';
 
+const MAX_QUERY_LENGTH = 256;
+
 export async function GET(request: NextRequest) {
   try {
     const user = await getRequestUser(request);
@@ -21,7 +23,7 @@ export async function GET(request: NextRequest) {
     const supabase = createServerClient();
 
     const searchParams = request.nextUrl.searchParams;
-    const query = searchParams.get('query') || undefined;
+    const query = searchParams.get('query')?.slice(0, MAX_QUERY_LENGTH) || undefined;
     const category = searchParams.get('category') as PolicyCategory | null;
     const official = searchParams.get('official');
     const minRating = searchParams.get('minRating');

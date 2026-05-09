@@ -8,7 +8,7 @@
 import { NextRequest } from 'next/server';
 import { createRequestAuthClient, createServerClient } from '@/lib/supabase';
 import { AuditActionType, ResourceType } from '@/lib/rbac/types';
-import { logServerError, logServerWarn } from '@/lib/server/logger';
+import { logServerError, logServerWarn, sanitizeForLogs } from '@/lib/server/logger';
 
 /**
  * Audit event parameters
@@ -79,6 +79,14 @@ function isAuditLogsMissingError(error: unknown): boolean {
     maybe.code === 'PGRST205' &&
     message.includes("could not find the table 'public.audit_logs'")
   );
+}
+
+function sanitizeAuditRecord(value: Record<string, unknown> | undefined | null): Record<string, unknown> | null {
+  if (!value) return null;
+  const sanitized = sanitizeForLogs(value);
+  return sanitized && typeof sanitized === 'object' && !Array.isArray(sanitized)
+    ? sanitized as Record<string, unknown>
+    : {};
 }
 
 /**
@@ -167,9 +175,9 @@ export async function logAuditEvent(
       action: event.action,
       resource_type: event.resourceType,
       resource_id: event.resourceId || null,
-      details: event.details || {},
-      previous_state: event.previousState || null,
-      new_state: event.newState || null,
+      details: sanitizeAuditRecord(event.details) || {},
+      previous_state: sanitizeAuditRecord(event.previousState),
+      new_state: sanitizeAuditRecord(event.newState),
       ip_address: actor.ipAddress || null,
       user_agent: actor.userAgent || null,
       request_id: actor.requestId || null,
@@ -472,4 +480,3 @@ export function createSettingsAuditEvent(
     newState: { [changes.field]: changes.newValue },
   };
 }
-

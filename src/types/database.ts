@@ -68,6 +68,8 @@ export interface Memory {
   user_id: string;
   organization_id?: string | null;
   entity_id?: string | null;
+  subject_id?: string | null;
+  age_bracket?: 'unknown' | 'minor_under_13' | 'minor_13_17' | 'adult' | 'minor' | null;
 
   content: string;
   // For encrypted memories, content is the placeholder "[encrypted]"

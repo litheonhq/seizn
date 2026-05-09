@@ -288,9 +288,14 @@
     },
     {
       "route": "/api/auth/[...nextauth]",
-      "methods": [],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "authMarkers": [
+        "csrf"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/auth/device",

@@ -73,7 +73,7 @@ describe('production env guard', () => {
     expect(response.status).toBe(200);
     expect(body).toEqual({
       ok: true,
-      missing: [],
+      missingCount: 0,
       presentCount: REQUIRED_PRODUCTION_ENV_VARS.length,
       requiredCount: REQUIRED_PRODUCTION_ENV_VARS.length,
     });
@@ -87,11 +87,9 @@ describe('production env guard', () => {
 
     expect(response.status).toBe(503);
     expect(body.ok).toBe(false);
-    expect(body.missing).toContainEqual({
-      name: 'STRIPE_METERED_PRICE_ID_MEMORIES',
-      description: 'Metered price for memories overage; missing value silently disables overage billing',
-    });
+    expect(body.missingCount).toBeGreaterThan(0);
     expect(body.presentCount).toBe(0);
     expect(body.requiredCount).toBe(REQUIRED_PRODUCTION_ENV_VARS.length);
+    expect(body.missing).toBeUndefined();
   });
 });

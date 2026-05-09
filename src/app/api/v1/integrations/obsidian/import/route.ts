@@ -135,6 +135,8 @@ const RESERVED_METADATA_KEYS: readonly string[] = [
   'user_id',
   'org_id',
   'organization_id',
+  'constructor',
+  'prototype',
 ];
 
 export async function POST(request: NextRequest): Promise<NextResponse> {

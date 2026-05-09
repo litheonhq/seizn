@@ -10,6 +10,7 @@ import {
 } from './service';
 
 export const AUTHOR_UI_RUNTIME = 'nodejs' as const;
+const MAX_JSON_BODY_BYTES = 1024 * 1024;
 
 export interface AuthorUiRouteParams<T extends Record<string, string>> {
   params: Promise<T>;
@@ -41,6 +42,9 @@ export async function withAuthorUiService(
     if (error instanceof AuthorUiValidationError) {
       return ensureCsrfCookie(request, NextResponse.json({ error: error.message }, { status: 400 }));
     }
+    if (error instanceof JsonBodyTooLargeError) {
+      return ensureCsrfCookie(request, NextResponse.json({ error: error.message }, { status: 413 }));
+    }
     if (error instanceof AuthorUiNotFoundError) {
       return ensureCsrfCookie(request, NextResponse.json({ error: error.message }, { status: 404 }));
     }
@@ -62,15 +66,60 @@ export async function withAuthorUiService(
   }
 }
 
+export class JsonBodyTooLargeError extends Error {
+  constructor(maxBytes: number) {
+    super(`JSON body is too large. Maximum size is ${maxBytes} bytes.`);
+    this.name = 'JsonBodyTooLargeError';
+  }
+}
+
 export async function readJsonBody(request: NextRequest): Promise<Record<string, unknown>> {
+  const contentLength = request.headers.get('content-length');
+  if (contentLength && Number(contentLength) > MAX_JSON_BODY_BYTES) {
+    throw new JsonBodyTooLargeError(MAX_JSON_BODY_BYTES);
+  }
+
   try {
-    const body = await request.json();
+    const raw = await readLimitedBody(request, MAX_JSON_BODY_BYTES);
+    if (!raw.trim()) return {};
+    const body = JSON.parse(raw);
     return body && typeof body === 'object' && !Array.isArray(body)
       ? body as Record<string, unknown>
       : {};
-  } catch {
+  } catch (error) {
+    if (error instanceof JsonBodyTooLargeError) {
+      throw error;
+    }
     return {};
   }
+}
+
+async function readLimitedBody(request: NextRequest, maxBytes: number): Promise<string> {
+  if (!request.body) return '';
+
+  const reader = request.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let total = 0;
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    if (!value) continue;
+    total += value.byteLength;
+    if (total > maxBytes) {
+      throw new JsonBodyTooLargeError(maxBytes);
+    }
+    chunks.push(value);
+  }
+
+  const body = new Uint8Array(total);
+  let offset = 0;
+  for (const chunk of chunks) {
+    body.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+
+  return new TextDecoder().decode(body);
 }
 
 export function isAuthorUiAccessAllowed(user: Pick<RequestUser, 'id' | 'email'>): boolean {

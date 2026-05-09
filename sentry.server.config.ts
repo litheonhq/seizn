@@ -1,4 +1,17 @@
 import * as Sentry from '@sentry/nextjs';
+import { sanitizeForLogs } from '@/lib/server/logger';
+
+function sanitizeExceptionValues<T extends Sentry.Event>(event: T): T {
+  const values = event.exception?.values;
+  if (!values) return event;
+  for (const exception of values) {
+    if (typeof exception.value === 'string') {
+      const sanitized = sanitizeForLogs(exception.value);
+      exception.value = typeof sanitized === 'string' ? sanitized : String(sanitized);
+    }
+  }
+  return event;
+}
 
 /**
  * Server-side Sentry/GlitchTip config (plan W5.5). Runs in Node serverless
@@ -20,6 +33,6 @@ Sentry.init({
         delete event.request.headers['cookie'];
       }
     }
-    return event;
+    return sanitizeExceptionValues(event);
   },
 });
