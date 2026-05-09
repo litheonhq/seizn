@@ -5,6 +5,8 @@ import { signOut } from "next-auth/react";
 import Link from "next/link";
 
 import { createLatestRequestGuard, isAbortError } from "@/lib/client-request";
+import { readApiJson } from "@/lib/client/api-json";
+import { csrfFetch } from "@/lib/client/csrf-fetch";
 import { getErrorMessage } from "@/lib/ui-error";
 import { formatDate } from "@/lib/format-date";
 import { authorTabHref } from "@/lib/dashboard-routes";
@@ -40,6 +42,20 @@ interface Stats {
   planDisplay: string;
 }
 
+type ApiKeysResponse = {
+  success?: boolean;
+  keys?: ApiKey[];
+  key?: string;
+  keyRecord?: ApiKey;
+  error?: unknown;
+};
+
+type DashboardStatsResponse = {
+  success?: boolean;
+  stats?: Stats;
+  error?: unknown;
+};
+
 export function DashboardClient({ user }: { user: User }) {
   const [apiKeys, setApiKeys] = useState<ApiKey[]>([]);
   const [stats, setStats] = useState<Stats | null>(null);
@@ -56,8 +72,12 @@ export function DashboardClient({ user }: { user: User }) {
     try {
       setLoadError(null);
       const [keysResult, statsResult] = await Promise.allSettled([
-        fetch("/api/dashboard/keys", { signal: request.signal }).then((res) => res.json()),
-        fetch("/api/dashboard/stats", { signal: request.signal }).then((res) => res.json()),
+        fetch("/api/dashboard/keys", { signal: request.signal }).then((res) =>
+          readApiJson<ApiKeysResponse>(res, "Failed to load API keys")
+        ),
+        fetch("/api/dashboard/stats", { signal: request.signal }).then((res) =>
+          readApiJson<DashboardStatsResponse>(res, "Failed to load dashboard stats")
+        ),
       ]);
 
       if (!requestGuardRef.current.isCurrent(request.id)) {
@@ -67,7 +87,7 @@ export function DashboardClient({ user }: { user: User }) {
       let failedCount = 0;
 
       if (keysResult.status === "fulfilled" && keysResult.value.success) {
-        setApiKeys(keysResult.value.keys);
+        setApiKeys(keysResult.value.keys ?? []);
       } else if (
         (keysResult.status === "fulfilled" && !keysResult.value.success) ||
         (keysResult.status === "rejected" && !isAbortError(keysResult.reason))
@@ -76,7 +96,7 @@ export function DashboardClient({ user }: { user: User }) {
       }
 
       if (statsResult.status === "fulfilled" && statsResult.value.success) {
-        setStats(statsResult.value.stats);
+        setStats(statsResult.value.stats ?? null);
       } else if (
         (statsResult.status === "fulfilled" && !statsResult.value.success) ||
         (statsResult.status === "rejected" && !isAbortError(statsResult.reason))
@@ -98,6 +118,13 @@ export function DashboardClient({ user }: { user: User }) {
     }
   }, []);
 
+  const prewarmCsrf = useCallback(() => {
+    void fetch("/api/csrf", {
+      credentials: "include",
+      cache: "no-store",
+    }).catch(() => undefined);
+  }, []);
+
   useEffect(() => {
     const requestGuard = requestGuardRef.current;
     fetchDashboardData();
@@ -110,16 +137,18 @@ export function DashboardClient({ user }: { user: User }) {
     setError(null);
 
     try {
-      const res = await fetch("/api/dashboard/keys", {
+      const res = await csrfFetch("/api/dashboard/keys", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: newKeyName }),
       });
-      const data = await res.json();
+      const data = await readApiJson<ApiKeysResponse>(res, "Failed to create key");
 
-      if (data.success) {
-        setNewKey(data.key);
-        setApiKeys((currentKeys) => [data.keyRecord, ...currentKeys]);
+      if (data.success && data.key && data.keyRecord) {
+        const createdKey = data.key;
+        const keyRecord = data.keyRecord;
+        setNewKey(createdKey);
+        setApiKeys((currentKeys) => [keyRecord, ...currentKeys]);
         setStats((currentStats) =>
           currentStats
             ? {
@@ -130,7 +159,7 @@ export function DashboardClient({ user }: { user: User }) {
         );
         setNewKeyName("");
       } else {
-        setError(getErrorMessage(data.error, "Failed to create key"));
+        throw new Error(getErrorMessage(data.error, "Failed to create key"));
       }
     } catch (err) {
       console.error("Failed to create API key:", err);
@@ -144,10 +173,10 @@ export function DashboardClient({ user }: { user: User }) {
     if (!confirm("Are you sure you want to revoke this API key?")) return;
 
     try {
-      const res = await fetch(`/api/dashboard/keys?id=${keyId}`, {
+      const res = await csrfFetch(`/api/dashboard/keys?id=${keyId}`, {
         method: "DELETE",
       });
-      const data = await res.json();
+      const data = await readApiJson<ApiKeysResponse>(res, "Failed to revoke API key");
 
       if (data.success) {
         setApiKeys((currentKeys) => currentKeys.filter((k) => k.id !== keyId));
@@ -159,6 +188,8 @@ export function DashboardClient({ user }: { user: User }) {
               }
             : currentStats
         );
+      } else {
+        throw new Error(getErrorMessage(data.error, "Failed to revoke API key."));
       }
     } catch (err) {
       setError(getErrorMessage(err, "Failed to revoke API key."));
@@ -313,6 +344,7 @@ export function DashboardClient({ user }: { user: User }) {
               type="text"
               value={newKeyName}
               onChange={(e) => setNewKeyName(e.target.value)}
+              onFocus={prewarmCsrf}
               placeholder="Key name (e.g., Production)"
               className="flex-1 px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-[var(--ink-900)]"
               onKeyDown={(e) => e.key === "Enter" && createApiKey()}

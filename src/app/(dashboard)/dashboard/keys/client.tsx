@@ -5,10 +5,37 @@ import Link from "next/link";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
 import { useToast } from "@/contexts/ToastContext";
 import { ttfsEvents } from "@/lib/analytics";
+import { readApiJson } from "@/lib/client/api-json";
+import { csrfFetch } from "@/lib/client/csrf-fetch";
 import { markOnboardingStepComplete } from "@/lib/onboarding/progress";
 import { getErrorMessage } from "@/lib/ui-error";
 import type { ApiKey } from "@/types/dashboard";
 import { formatDate } from "@/lib/format-date";
+
+type KeysListResponse = {
+  success?: boolean;
+  keys?: ApiKey[];
+  error?: unknown;
+};
+
+type CreateKeyResponse = {
+  success?: boolean;
+  key?: string;
+  keyRecord?: ApiKey;
+  error?: unknown;
+};
+
+type RotateKeyResponse = {
+  success?: boolean;
+  key?: string;
+  keyPrefix?: string;
+  error?: unknown;
+};
+
+type MutationResponse = {
+  success?: boolean;
+  error?: unknown;
+};
 
 export default function ApiKeysClient() {
   const { t } = useDashboardTranslation();
@@ -36,15 +63,23 @@ export default function ApiKeysClient() {
     []
   );
 
+  const openCreateModal = useCallback(() => {
+    setShowCreateModal(true);
+    void fetch("/api/csrf", {
+      credentials: "include",
+      cache: "no-store",
+    }).catch(() => undefined);
+  }, []);
+
   const fetchApiKeys = useCallback(async () => {
     try {
       const res = await fetch("/api/dashboard/keys");
-      const data = await res.json();
-      if (!res.ok || !data.success) {
+      const data = await readApiJson<KeysListResponse>(res, "Failed to fetch API keys");
+      if (!data.success) {
         throw new Error(getErrorMessage(data?.error, "Failed to fetch API keys"));
       }
 
-      setApiKeys(data.keys);
+      setApiKeys(data.keys ?? []);
       setError(null);
     } catch (err) {
       const message = getErrorMessage(err, "Failed to fetch API keys");
@@ -65,18 +100,20 @@ export default function ApiKeysClient() {
     setError(null);
 
     try {
-      const res = await fetch("/api/dashboard/keys", {
+      const res = await csrfFetch("/api/dashboard/keys", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: newKeyName }),
       });
-      const data = await res.json();
+      const data = await readApiJson<CreateKeyResponse>(res, "Failed to create key");
 
-      if (data.success) {
-        setNewKey(data.key);
-        setApiKeys((previousKeys) => [data.keyRecord, ...previousKeys]);
+      if (data.success && data.key && data.keyRecord) {
+        const createdKey = data.key;
+        const keyRecord = data.keyRecord;
+        setNewKey(createdKey);
+        setApiKeys((previousKeys) => [keyRecord, ...previousKeys]);
         markOnboardingStepComplete("api_key");
-        ttfsEvents.apiKeyCreated(data.keyRecord?.name || newKeyName);
+        ttfsEvents.apiKeyCreated(keyRecord.name || newKeyName);
         setNewKeyName("");
         setError(null);
       } else {
@@ -94,18 +131,20 @@ export default function ApiKeysClient() {
     setIsRevoking(true);
 
     try {
-      const res = await fetch(`/api/dashboard/keys?id=${revokeTarget.id}`, {
+      const res = await csrfFetch(`/api/dashboard/keys?id=${revokeTarget.id}`, {
         method: "DELETE",
       });
-      const data = await res.json();
+      const data = await readApiJson<MutationResponse>(res, "Failed to revoke API key");
 
       if (data.success) {
         setApiKeys((previousKeys) =>
           previousKeys.filter((key) => key.id !== revokeTarget.id)
         );
+      } else {
+        throw new Error(getErrorMessage(data.error, "Failed to revoke API key"));
       }
-    } catch {
-      toast("error", "Failed to revoke API key");
+    } catch (err) {
+      toast("error", getErrorMessage(err, "Failed to revoke API key"));
     } finally {
       setIsRevoking(false);
       setRevokeTarget(null);
@@ -117,26 +156,30 @@ export default function ApiKeysClient() {
     setIsRotating(true);
 
     try {
-      const res = await fetch(`/api/dashboard/keys/rotate`, {
+      const res = await csrfFetch(`/api/dashboard/keys/rotate`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ keyId: rotateTarget.id }),
       });
-      const data = await res.json();
+      const data = await readApiJson<RotateKeyResponse>(res, "Failed to rotate API key");
 
-      if (data.success) {
-        setRotatedKey(data.key);
+      if (data.success && data.key && data.keyPrefix) {
+        const rotatedSecret = data.key;
+        const keyPrefix = data.keyPrefix;
+        setRotatedKey(rotatedSecret);
         // Update the key in the list
         setApiKeys((previousKeys) =>
           previousKeys.map((key) =>
             key.id === rotateTarget.id
-              ? { ...key, key_prefix: data.keyPrefix, created_at: new Date().toISOString() }
+              ? { ...key, key_prefix: keyPrefix, created_at: new Date().toISOString() }
               : key
           )
         );
+      } else {
+        throw new Error(getErrorMessage(data.error, "Failed to rotate API key"));
       }
-    } catch {
-      toast("error", "Failed to rotate API key");
+    } catch (err) {
+      toast("error", getErrorMessage(err, "Failed to rotate API key"));
     } finally {
       setIsRotating(false);
     }
@@ -171,7 +214,7 @@ export default function ApiKeysClient() {
           </p>
         </div>
         <button
-          onClick={() => setShowCreateModal(true)}
+          onClick={openCreateModal}
           className="theme-gradient-btn text-white px-5 py-2.5 rounded-xl font-medium shadow-lg hover:shadow-xl transition-all flex items-center gap-2"
         >
           <PlusIcon className="w-5 h-5" />
@@ -212,7 +255,7 @@ export default function ApiKeysClient() {
               {t("dashboard.keysPage.noKeysDesc")}
             </p>
             <button
-              onClick={() => setShowCreateModal(true)}
+              onClick={openCreateModal}
               className="theme-gradient-btn text-white px-6 py-2.5 rounded-xl font-medium"
             >
               {t("dashboard.keysPage.createApiKey")}

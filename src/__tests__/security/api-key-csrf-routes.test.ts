@@ -1,6 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
 import { NextRequest } from 'next/server';
 import { POST as createLegacyKey, DELETE as deleteLegacyKey } from '@/app/api/keys/route';
+import { POST as createDashboardKey, DELETE as deleteDashboardKey } from '@/app/api/dashboard/keys/route';
+import { POST as rotateDashboardKey } from '@/app/api/dashboard/keys/rotate/route';
 import { POST as createScopedKey } from '@/app/api/dashboard/keys/scoped/route';
 import { PATCH as updateScopedKey, DELETE as deleteScopedKey } from '@/app/api/dashboard/keys/scoped/[id]/route';
 import { POST as rotateScopedKey } from '@/app/api/dashboard/keys/scoped/[id]/rotate/route';
@@ -17,6 +19,7 @@ vi.mock('@/lib/auth', () => ({
 
 vi.mock('@/lib/api/request-user', () => ({
   getRequestUser: vi.fn(),
+  getSessionUser: vi.fn(),
 }));
 
 vi.mock('@/lib/rate-limit', () => ({
@@ -68,6 +71,20 @@ describe('sensitive cookie-authenticated key routes', () => {
         method: 'DELETE',
       }), params),
       rotateScopedKey(jsonRequest('https://www.seizn.com/api/dashboard/keys/scoped/scoped-key-1/rotate'), params),
+    ]);
+
+    for (const response of responses) {
+      expect(response.status).toBe(403);
+    }
+  });
+
+  it('rejects dashboard API key mutations without CSRF token before authentication work', async () => {
+    const responses = await Promise.all([
+      createDashboardKey(jsonRequest('https://www.seizn.com/api/dashboard/keys')),
+      deleteDashboardKey(new NextRequest('https://www.seizn.com/api/dashboard/keys?id=dashboard-key-1', {
+        method: 'DELETE',
+      })),
+      rotateDashboardKey(jsonRequest('https://www.seizn.com/api/dashboard/keys/rotate')),
     ]);
 
     for (const response of responses) {

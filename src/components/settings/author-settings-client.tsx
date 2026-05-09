@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { RefreshCw, TriangleAlert } from "lucide-react";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
+import { readApiJson } from "@/lib/client/api-json";
 import { csrfFetch } from "@/lib/client/csrf-fetch";
 import { getAuthorSettingsCopy } from "./author-settings-i18n";
 import { ByokSection } from "./byok-section";
@@ -210,14 +211,7 @@ export function AuthorSettingsClient({ navigateToBilling = defaultNavigate }: Au
 
 async function fetchJson<T>(url: string, init?: RequestInit): Promise<T> {
   const response = await csrfFetch(url, init);
-  const data = await response.json().catch(() => null) as T | { error?: string } | null;
-  if (!response.ok) {
-    const message = data && typeof data === "object" && "error" in data && typeof data.error === "string"
-      ? data.error
-      : `Request failed: ${response.status}`;
-    throw new Error(message);
-  }
-  return data as T;
+  return readApiJson<T>(response, `Request failed: ${response.status}`);
 }
 
 function normalizeByok(value: Partial<ByokState>): ByokState {
