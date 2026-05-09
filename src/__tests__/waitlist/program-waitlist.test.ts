@@ -112,6 +112,22 @@ describe('Program waitlist', () => {
     expect(payload).toEqual({ ok: true, emailSent: false });
   });
 
+  it('does not reveal whether an address is already confirmed', async () => {
+    const supabase = createPostSupabase({
+      existing: { id: 'waitlist-row', confirmed_at: new Date().toISOString() },
+    });
+    vi.mocked(createServerClient).mockReturnValue(supabase.client);
+
+    const response = await POST(waitlistRequest({ email: 'writer@example.com' }));
+    const payload = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(payload).toEqual({ ok: true, emailSent: true });
+    expect(payload).not.toHaveProperty('alreadyConfirmed');
+    expect(supabase.upsert).not.toHaveBeenCalled();
+    expect(sendEmail).not.toHaveBeenCalled();
+  });
+
   it('confirms hashed tokens and still accepts one-use legacy raw tokens', async () => {
     const token = 'legacy-or-email-token';
     const hashedToken = hashProgramWaitlistToken(token);

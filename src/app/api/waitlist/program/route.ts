@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
 
   if (existing?.confirmed_at) {
     return NextResponse.json(
-      { ok: true, alreadyConfirmed: true },
+      { ok: true, emailSent: true },
       { status: 200, headers: getRateLimitHeaders(rl) }
     );
   }

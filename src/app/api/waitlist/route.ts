@@ -2,6 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
 import { checkIpRateLimitAsync, getRateLimitHeaders } from '@/lib/rate-limit';
 
+const SUCCESS_BODY = {
+  message: 'Thanks. If this address is eligible, it has been added to the waitlist.',
+  success: true,
+};
+
 export async function POST(request: NextRequest) {
   try {
     const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
@@ -25,21 +30,6 @@ export async function POST(request: NextRequest) {
 
     const supabase = createServerClient();
 
-    // Check if email already exists
-    const { data: existing } = await supabase
-      .from('waitlist')
-      .select('id')
-      .eq('email', email.toLowerCase())
-      .single();
-
-    if (existing) {
-      return NextResponse.json(
-        { message: 'Already on the waitlist', alreadyExists: true },
-        { status: 200 }
-      );
-    }
-
-    // Add to waitlist
     const { error } = await supabase.from('waitlist').insert({
       email: email.toLowerCase(),
       source: 'website',
@@ -47,6 +37,10 @@ export async function POST(request: NextRequest) {
     });
 
     if (error) {
+      if ((error as { code?: string }).code === '23505') {
+        return NextResponse.json(SUCCESS_BODY, { status: 200 });
+      }
+
       console.error('Waitlist insert error:', error);
       return NextResponse.json(
         { error: 'Failed to join waitlist' },
@@ -54,10 +48,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    return NextResponse.json(
-      { message: 'Successfully joined the waitlist', success: true },
-      { status: 201 }
-    );
+    return NextResponse.json(SUCCESS_BODY, { status: 200 });
   } catch (error) {
     console.error('Waitlist API error:', error);
     return NextResponse.json(
