@@ -137,3 +137,8 @@
 **Symptom:** Approved device-flow rows kept the raw API token in `device_auth_codes.access_token`, and repeated token polls could receive the same bearer token.
 **Cause:** The device authorization flow used the DB row as temporary token transfer storage but did not retain a hash-only record after first retrieval.
 **Resolution:** Added `device_auth_codes.access_token_hash`, backfilled SHA-256 hashes for existing active flows without dropping `access_token`, wrote hashes during approval, and changed `/api/auth/device/token` to atomically clear the raw token on first successful poll. A later cleanup migration can drop `access_token` after all flows older than 15 minutes have expired.
+### Policy Consistency Check False Positives and Hardcoded Legal Durations
+**Date:** 2026-05-10
+**Symptom:** `npm run check:policy` failed on policy pages, trust/docs copy, RTBF UI copy, and operational dashboard durations.
+**Cause:** Legal/security/refund durations were still hardcoded in UI copy, while the policy scanner also treated non-policy usage windows, status history, demo dates, and filters as policy commitments.
+**Resolution:** Added security, trial, design partner, and extended retention constants to `src/lib/policy.ts`; moved legal/trust/docs/RTBF copy to those constants; narrowed the scanner to ignore operational/demo durations while still detecting hardcoded policy numbers.

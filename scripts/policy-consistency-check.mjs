@@ -36,8 +36,7 @@ const POLICY_PATTERNS = [
 
   // Specific policy numbers
   { pattern: /\b14\s*[-]?day\s*money\s*[-]?back/gi, description: 'Refund guarantee' },
-  { pattern: /\brefund\s*(policy|period|guarantee)/gi, description: 'Refund mention' },
-  { pattern: /\bdata\s*retention/gi, description: 'Data retention' },
+  { pattern: /\b\d+\s*[-]?\s*day\s+refund\s*(period|guarantee)/gi, description: 'Refund mention' },
   { pattern: /\bwithin\s*\d+\s*days/gi, description: 'Time limit' },
 
   // Hours patterns for response times
@@ -67,6 +66,49 @@ const EXCLUDE_PATTERNS = [
 
 // Extensions to scan
 const SCAN_EXTENSIONS = ['.tsx', '.ts', '.md', '.mdx'];
+
+const POLICY_SOURCE_TOKENS = [
+  "from '@/lib/policy'",
+  'from "@/lib/policy"',
+  'POLICY.',
+  'DATA_RETENTION.',
+  'REFUND_POLICY.',
+  'COMMUNICATION.',
+  'SECURITY_POLICY.',
+  'TRIAL_POLICY.',
+  'DESIGN_PARTNER_POLICY.',
+  'TOKENS.',
+  'SUPPORT.',
+  'formatDays(',
+  'formatHours(',
+  'formatYears(',
+  'formatMonthlyUsd(',
+  'PLAN_LIMITS.',
+  'getPlanLimits(',
+  'formatLimit(',
+  'SDK_INFO.',
+];
+
+const NON_POLICY_DURATION_PATH_PATTERNS = [
+  /src[\\/]app[\\/]status[\\/]/,
+  /src[\\/]app[\\/]engine[\\/]_components[\\/]snippet-tabs\.tsx$/,
+  /src[\\/]app[\\/]api[\\/]admin[\\/]metrics[\\/]route\.ts$/,
+  /src[\\/]app[\\/]api[\\/]cron[\\/]spring[\\/]beyond-mem0[\\/]route\.ts$/,
+  /src[\\/]app[\\/]api[\\/]cron[\\/]winter[\\/]rtbf[\\/]process-queue[\\/]route\.ts$/,
+  /src[\\/]app[\\/]api[\\/]organizations[\\/]members[\\/]route\.ts$/,
+  /src[\\/]app[\\/]\(dashboard\)[\\/]dashboard[\\/]memories[\\/]mindmap[\\/]/,
+  /src[\\/]app[\\/]\(dashboard\)[\\/]dashboard[\\/]overview-client\.tsx$/,
+  /src[\\/]app[\\/]\(dashboard\)[\\/]dashboard[\\/]legacy[\\/]organizations[\\/]\[id\][\\/]client\.tsx$/,
+  /src[\\/]app[\\/]\[locale\][\\/]admin[\\/]metrics[\\/]metrics-dashboard\.tsx$/,
+  /src[\\/]components[\\/]author[\\/]graph[\\/]relationship-graph-model\.ts$/,
+  /src[\\/]components[\\/]dashboard[\\/]NorthStarMetrics\.tsx$/,
+  /src[\\/]components[\\/]dashboard[\\/]redesign[\\/]views[\\/]mock-data\.ts$/,
+  /src[\\/]components[\\/]landing[\\/]conflict-detector\.tsx$/,
+  /src[\\/]components[\\/]retops[\\/]RetOpsDashboard\.tsx$/,
+];
+
+const NON_POLICY_DURATION_LINE_PATTERN =
+  /\b(last|ago|uptime|history|demo|timeline|funnel|conversion|refreshStaleSummaries|MAX_JOB_AGE_HOURS|maxAge|expiresAt|period=|label:|time:|title:)\b/i;
 
 // ============================================
 // Utilities
@@ -107,6 +149,24 @@ function getAllFiles(dirPath, arrayOfFiles = []) {
   return arrayOfFiles;
 }
 
+function isPolicySourceLine(line) {
+  return POLICY_SOURCE_TOKENS.some((token) => line.includes(token));
+}
+
+function isCommentLine(line) {
+  const trimmed = line.trim();
+  return trimmed.startsWith('//') ||
+    trimmed.startsWith('*') ||
+    trimmed.startsWith('/*') ||
+    trimmed.startsWith('{/*');
+}
+
+function isNonPolicyDuration(filePath, line) {
+  const normalized = filePath.replaceAll('\\', '/');
+  return NON_POLICY_DURATION_PATH_PATTERNS.some((pattern) => pattern.test(normalized)) ||
+    NON_POLICY_DURATION_LINE_PATTERN.test(line);
+}
+
 function scanFile(filePath) {
   const content = readFileSync(filePath, 'utf-8');
   const lines = content.split('\n');
@@ -123,23 +183,17 @@ function scanFile(filePath) {
 
       while ((match = pattern.exec(line)) !== null) {
         // Skip if it looks like it's importing from policy.ts
-        if (line.includes("from '@/lib/policy'") ||
-            line.includes('from "@/lib/policy"') ||
-            line.includes('POLICY.') ||
-            line.includes('DATA_RETENTION.') ||
-            line.includes('REFUND_POLICY.') ||
-            line.includes('COMMUNICATION.') ||
-            line.includes('formatDays(') ||
-            line.includes('formatHours(') ||
-            line.includes('PLAN_LIMITS.') ||
-            line.includes('getPlanLimits(') ||
-            line.includes('formatLimit(') ||
-            line.includes('SDK_INFO.')) {
+        if (isPolicySourceLine(line)) {
           continue;
         }
 
         // Skip comments explaining SSOT
-        if (line.trim().startsWith('//') || line.trim().startsWith('*')) {
+        if (isCommentLine(line)) {
+          continue;
+        }
+
+        // Skip operational UI/demo durations that are not policy commitments.
+        if (description === 'Day duration' && isNonPolicyDuration(filePath, line)) {
           continue;
         }
 

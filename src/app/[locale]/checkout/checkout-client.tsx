@@ -14,6 +14,7 @@ import {
   DEFAULT_CHECKOUT_LEGAL_COPY,
 } from '@/lib/checkout-copy';
 import type { Locale } from '@/i18n/config';
+import { REFUND_POLICY, formatDays } from '@/lib/policy';
 
 interface CheckoutClientProps {
   locale: Locale;
@@ -62,6 +63,8 @@ function formatUsd(amount: number): string {
     maximumFractionDigits: 2,
   });
 }
+
+const refundWindow = formatDays(REFUND_POLICY.GUARANTEE_DAYS);
 
 export function CheckoutClient({ locale, tier, cadence, column, planConfig }: CheckoutClientProps) {
   const agreementId = useId();
@@ -166,7 +169,7 @@ export function CheckoutClient({ locale, tier, cadence, column, planConfig }: Ch
               : 'unlimited (contact sales)'}
           </li>
           <li>{column === 'managed' ? 'Managed inference included' : 'BYOK — bring your own API key'}</li>
-          <li>Cancel anytime · 14-day refund on annual</li>
+          <li>Cancel anytime · {refundWindow} refund on annual</li>
         </ul>
       </section>
 

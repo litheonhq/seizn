@@ -3,6 +3,7 @@
 import { useState, useCallback } from "react";
 import { csrfFetch } from "@/lib/client/csrf-fetch";
 import type { ExpiresIn } from "@/lib/sharing/types";
+import { TOKENS, formatDays } from "@/lib/policy";
 
 // ============================================
 // Types
@@ -14,6 +15,8 @@ interface DebugBundleExportProps {
 }
 
 type ExportFormat = "json" | "markdown";
+
+const reviewTokenExpiryWindow = formatDays(TOKENS.REVIEW_TOKEN_EXPIRY_DAYS);
 
 // ============================================
 // Icons
@@ -303,7 +306,7 @@ export function DebugBundleExport({ traceId, onExported }: DebugBundleExportProp
                   <p className="text-xs text-gray-500 mt-3">
                     {expiresIn === "never"
                       ? "This link never expires."
-                      : `This link expires in ${expiresIn === "1h" ? "1 hour" : expiresIn === "24h" ? "24 hours" : "7 days"}.`}
+                      : `This link expires in ${expiresIn === "1h" ? "1 hour" : expiresIn === "24h" ? "24 hours" : reviewTokenExpiryWindow}.`}
                   </p>
                 </div>
               )}

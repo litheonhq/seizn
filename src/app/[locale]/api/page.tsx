@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { LandingNav } from "@/components/shared/site-nav";
 import type { Locale } from "@/i18n/config";
+import { SECURITY_POLICY, TRIAL_POLICY, formatDays } from "@/lib/policy";
+
+const apiKeyRotationWindow = formatDays(SECURITY_POLICY.API_KEY_ROTATION_DAYS);
+const v7GrandfatherWindow = formatDays(TRIAL_POLICY.V7_TRACK2_GRANDFATHER_DAYS);
 
 export const metadata: Metadata = {
   title: "Seizn API & MCP — Plug canon recall into Claude, Cursor, Cline",
@@ -443,7 +447,7 @@ function Security() {
       <ul className="mt-4 list-disc space-y-2 pl-6 text-sm text-szn-text-2">
         <li>Never commit API keys to git. Add <code>.env*</code> to <code>.gitignore</code> and turn on GitHub secret scanning for the repo.</li>
         <li>Store keys in your platform&apos;s secret manager — Vercel, Netlify, Fly, AWS Secrets Manager. Inject as env vars at runtime.</li>
-        <li>Rotate keys every 90 days, or whenever a teammate leaves. Use the Rotate button in <Link className="underline" href="/dashboard/account/api-keys">/dashboard/account/api-keys</Link>; the old key is revoked at the moment the new one is issued.</li>
+        <li>Rotate keys every {apiKeyRotationWindow}, or whenever a teammate leaves. Use the Rotate button in <Link className="underline" href="/dashboard/account/api-keys">/dashboard/account/api-keys</Link>; the old key is revoked at the moment the new one is issued.</li>
         <li>If a key is exposed publicly: revoke it immediately, then review the audit log to confirm no abuse occurred.</li>
         <li>For BYOK Anthropic keys, create a dedicated key with a cost cap on the Anthropic dashboard — don&apos;t reuse your main account key.</li>
         <li>Track 2 keys are rate-limited per minute and quota-limited per month. Treat HTTP 429 / 402 as expected; back off + retry on 429, surface 402 to the user.</li>
@@ -493,7 +497,7 @@ function Pricing() {
         </table>
       </div>
       <p className="mt-4 text-xs text-szn-text-2">
-        v8 launched 2026-05-06. Existing v7 Track 2 subscribers are grandfathered for 90 days; see <code>docs/billing/v7-deprecation-notice.md</code> for the customer comms.
+        v8 launched 2026-05-06. Existing v7 Track 2 subscribers are grandfathered for {v7GrandfatherWindow}; see <code>docs/billing/v7-deprecation-notice.md</code> for the customer comms.
       </p>
     </section>
   );

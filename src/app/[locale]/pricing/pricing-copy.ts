@@ -4,8 +4,13 @@ import type { AuthorLandingCopy } from "@/components/landing/author-landing-copy
 import {
   AUTHOR_PRICE_LOCK_VERSION,
 } from "@/lib/stripe-config";
+import { TRIAL_POLICY, formatDays } from "@/lib/policy";
 
 type PricingLocale = "en" | "ko" | "ja" | "zh-hans";
+
+const authorTrialWindow = formatDays(TRIAL_POLICY.AUTHOR_TRIAL_DAYS);
+const authorTrialHyphen = `${TRIAL_POLICY.AUTHOR_TRIAL_DAYS}-day`;
+const trialArchiveReadonlyWindow = formatDays(TRIAL_POLICY.TRIAL_ARCHIVE_READONLY_DAYS);
 
 export interface PricingPageCopy {
   nav: {
@@ -73,12 +78,12 @@ const PRICING_COPY: Record<PricingLocale, PricingPageCopy> = {
     launchNotes: [
       { title: "BYOK discount", body: "Active BYOK applies the 50% discount state and removes the managed token ceiling." },
       { title: "Metered overage", body: "Managed token overage is reported only for usage above the configured cap." },
-      { title: "Trial archive", body: "The 30-day trial does not require a card; inactive projects archive read-only for 60 more days." },
+      { title: "Trial archive", body: `The ${authorTrialHyphen} trial does not require a card; inactive projects archive read-only for ${trialArchiveReadonlyWindow} more.` },
     ],
     faq: {
       title: "Pricing FAQ",
       items: [
-        { q: "Do I need a credit card for the trial?", a: "No. The Author launch trial is 30 days without a card requirement." },
+        { q: "Do I need a credit card for the trial?", a: `No. The Author launch trial is ${authorTrialWindow} without a card requirement.` },
         { q: "How does BYOK change pricing?", a: "When your own Anthropic key is active, the BYOK discount applies and tokens are billed directly to you." },
         { q: "What happens above my cap?", a: "Only exceeded managed usage is sent to the metered overage product." },
         { q: "Can an active subscriber start another checkout?", a: "No. Active, trialing, and past due subscribers are sent to the billing portal." },
@@ -92,7 +97,7 @@ const PRICING_COPY: Record<PricingLocale, PricingPageCopy> = {
       contact: "Contact",
     },
     features: {
-      indie: ["1 IP project", "Canon ledger and replay", "Unlimited reviews", "30-day trial, no card"],
+      indie: ["1 IP project", "Canon ledger and replay", "Unlimited reviews", `${authorTrialHyphen} trial, no card`],
       pro: ["5 IP projects", "Branch and diff canon", "Priority conflict review", "Team-of-3 collaboration", "BYOK 50% off"],
       studio: ["20M tokens / mo", "Studio review operations", "Usage review for larger launches"],
       enterprise: ["Unlimited scale", "BYOK required", "Custom security and procurement support"],

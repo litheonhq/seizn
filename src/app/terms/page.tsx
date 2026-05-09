@@ -1,5 +1,11 @@
 import { Metadata } from "next";
 import Link from "next/link";
+import { COMMUNICATION, DATA_RETENTION, REFUND_POLICY, formatDays } from "@/lib/policy";
+
+const refundWindow = formatDays(REFUND_POLICY.GUARANTEE_DAYS);
+const accountDeletionWindow = formatDays(DATA_RETENTION.ACCOUNT_DELETION_DAYS);
+const priceChangeNoticeWindow = formatDays(COMMUNICATION.PRICE_CHANGE_NOTICE_DAYS);
+const termsChangeNoticeWindow = formatDays(COMMUNICATION.TERMS_CHANGE_NOTICE_DAYS);
 
 export const metadata: Metadata = {
   title: "Terms of Service - Seizn",
@@ -478,7 +484,7 @@ export default function TermsOfServicePage() {
               </h3>
               <p>
                 Refunds may be provided at our discretion. If you are not
-                satisfied with the Service, please contact us within 14 days of
+                satisfied with the Service, please contact us within {refundWindow} of
                 your initial purchase to request a refund.
               </p>
 
@@ -487,8 +493,8 @@ export default function TermsOfServicePage() {
               </h3>
               <p>
                 We reserve the right to modify our pricing at any time. Price
-                changes will be communicated to existing subscribers at least 30
-                days before taking effect.
+                changes will be communicated to existing subscribers at least {priceChangeNoticeWindow}
+                before taking effect.
               </p>
 
               <h3 className="text-lg font-semibold text-[var(--ink-900)] mt-6">
@@ -535,7 +541,7 @@ export default function TermsOfServicePage() {
               </h3>
               <p>
                 Your data is retained as long as your account is active. Upon
-                account termination, your data will be deleted within 30 days,
+                account termination, your data will be deleted within {accountDeletionWindow},
                 unless retention is required by law.
               </p>
 
@@ -691,7 +697,7 @@ export default function TermsOfServicePage() {
               <p>
                 We reserve the right to modify these Terms at any time. If we
                 make material changes, we will provide notice through the
-                Service or by email at least 30 days before the changes take
+                Service or by email at least {termsChangeNoticeWindow} before the changes take
                 effect.
               </p>
               <p>

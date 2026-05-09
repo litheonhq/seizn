@@ -3,8 +3,12 @@
 import { useState, useEffect, useCallback } from "react";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
 import { formatDate } from "@/lib/format-date";
+import { DATA_RETENTION, SECURITY_POLICY, formatDays } from "@/lib/policy";
 
 type TabType = "audit" | "keys" | "policies" | "settings";
+
+const apiKeyRotationWindow = formatDays(SECURITY_POLICY.API_KEY_ROTATION_DAYS);
+const accountDeletionWindow = formatDays(DATA_RETENTION.ACCOUNT_DELETION_DAYS);
 
 // Security policy types
 interface SecurityPolicy {
@@ -104,7 +108,7 @@ export function SecurityClient() {
             status: "active",
             type: "data",
             lastUpdated: new Date(Date.now() - 86400000 * 30).toISOString(),
-            conditions: ["AES-256 encryption", "Key rotation every 90 days"],
+            conditions: ["AES-256 encryption", `Key rotation every ${apiKeyRotationWindow}`],
           },
           {
             id: "pol-3",
@@ -113,7 +117,7 @@ export function SecurityClient() {
             status: "active",
             type: "compliance",
             lastUpdated: new Date(Date.now() - 86400000 * 7).toISOString(),
-            conditions: ["Data retention: 30 days", "Right to deletion", "Export on request"],
+            conditions: [`Data retention: ${accountDeletionWindow}`, "Right to deletion", "Export on request"],
           },
           {
             id: "pol-4",
