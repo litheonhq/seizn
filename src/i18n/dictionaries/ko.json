@@ -4545,6 +4545,11 @@
           "name": "Studio Managed",
           "price": "$499/월",
           "note": "Charter Annual · 콜당 $0.50 overage"
+        },
+        {
+          "name": "Enterprise",
+          "price": "문의",
+          "note": "맞춤 SLA · 전담 성공 매니저"
         }
       ]
     },

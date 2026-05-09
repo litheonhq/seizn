@@ -218,7 +218,7 @@ export function DevelopersClient({ locale, dict }: DevelopersClientProps) {
               <ArrowRight size={14} aria-hidden="true" />
             </Link>
           </div>
-          <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+          <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {copy.pricing.tiers.map((tier) => (
               <div
                 key={tier.name}
