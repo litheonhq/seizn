@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { locales, defaultLocale, getLocaleFromCountry, type Locale } from '@/i18n/config';
 import { verifyReviewToken, isPathAllowed } from '@/lib/review-token';
-import { canonicalAuthorDashboardPath } from '@/lib/dashboard-routes';
+import { DASHBOARD_ROUTES, canonicalAuthorDashboardPath } from '@/lib/dashboard-routes';
 import { AUTHOR_FLAGSHIP_ORIGIN, ENGINE_HOST, normalizeHost } from '@/lib/surface';
 
 const LEGACY_AUTH_COOKIE_NAMES = [
@@ -253,6 +253,13 @@ function redirectToCanonicalAuthorSettings(request: NextRequest, byok = false): 
   return addDashboardSecurityHeaders(NextResponse.redirect(url, 308));
 }
 
+function redirectToAuthorUsageTab(request: NextRequest): NextResponse {
+  const url = request.nextUrl.clone();
+  url.pathname = DASHBOARD_ROUTES.author;
+  url.searchParams.set('tab', 'usage');
+  return addDashboardSecurityHeaders(NextResponse.redirect(url, 308));
+}
+
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const host = normalizeHost(request.headers.get('x-forwarded-host') || request.headers.get('host'));
@@ -292,6 +299,9 @@ export async function proxy(request: NextRequest) {
   }
   if (pathname === '/dashboard/settings/byok') {
     return redirectToCanonicalAuthorSettings(request, true);
+  }
+  if (pathname === DASHBOARD_ROUTES.authorUsage || pathname === DASHBOARD_ROUTES.legacyUsage) {
+    return redirectToAuthorUsageTab(request);
   }
 
   const pathnameLocale = getLocaleFromPath(pathname);

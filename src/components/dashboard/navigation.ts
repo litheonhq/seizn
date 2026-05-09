@@ -115,7 +115,7 @@ export function buildNavigationGroups(t: (key: string) => string): NavGroup[] {
       defaultOpen: false,
       items: [
         { label: 'Billing', href: '/dashboard/billing', icon: WalletIcon },
-        { label: t("dashboard.nav.usage"), href: DASHBOARD_ROUTES.legacyUsage, icon: ChartIcon },
+        { label: t("dashboard.nav.usage"), href: authorTabHref('usage'), icon: ChartIcon },
         { label: t("dashboard.nav.integrations"), href: "/dashboard/legacy/integrations", icon: PlugIcon },
         { label: t("dashboard.nav.webhooks"), href: "/dashboard/legacy/webhooks", icon: WebhookIcon },
         { label: t("dashboard.nav.docs"), href: "/docs", icon: BookIcon },
@@ -165,7 +165,7 @@ export function buildAuthorNavigationGroups(t: (key: string) => string): NavGrou
       label: t("dashboard.nav.author.groups.account"),
       defaultOpen: false,
       items: [
-        { label: t("dashboard.nav.author.usage"), href: DASHBOARD_ROUTES.authorUsage, icon: BarChart3Icon },
+        { label: t("dashboard.nav.author.usage"), href: authorTabHref('usage'), icon: BarChart3Icon },
         { label: t("dashboard.nav.author.byok"), href: DASHBOARD_ROUTES.authorSettingsByok, icon: KeyIcon },
         { label: t("dashboard.nav.author.settings"), href: DASHBOARD_ROUTES.authorSettings, icon: SettingsIcon },
       ],

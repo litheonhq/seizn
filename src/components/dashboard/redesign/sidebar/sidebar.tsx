@@ -54,6 +54,8 @@ function isItemActive(
 ): boolean {
   if (!pathname) return false;
 
+  if (item.id === 'usage' && pathname.startsWith(DASHBOARD_ROUTES.authorUsage)) return true;
+
   if (item.href.startsWith('/dashboard/author?tab=')) {
     if (pathname !== DASHBOARD_ROUTES.author) return false;
     const expected = item.href.split('tab=')[1];
@@ -65,8 +67,11 @@ function isItemActive(
   if (item.id === 'memories' && pathname.startsWith('/dashboard/memories')) {
     return !pathname.startsWith('/dashboard/memories/mindmap');
   }
+  if (item.id === 'memory-edit' && pathname.startsWith(DASHBOARD_ROUTES.memoryEditor)) {
+    return true;
+  }
   if (item.id === 'mindmap' && pathname.startsWith('/dashboard/memories/mindmap')) return true;
-  if (item.id === 'usage' && pathname.startsWith(DASHBOARD_ROUTES.authorUsage)) return true;
+  if (item.id === 'replay' && pathname.startsWith(DASHBOARD_ROUTES.replay)) return true;
   if (item.id === 'byok' && pathname.startsWith(DASHBOARD_ROUTES.authorSettings)) {
     return section === 'byok';
   }

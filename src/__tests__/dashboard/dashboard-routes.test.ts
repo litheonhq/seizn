@@ -6,6 +6,7 @@ import {
   canonicalAuthorDashboardPath,
   isAuthorWorkspaceTab,
   sanitizeDashboardCallbackUrl,
+  shouldUseLocalAuthorTabNavigation,
 } from '@/lib/dashboard-routes';
 
 describe('dashboard route registry', () => {
@@ -18,10 +19,10 @@ describe('dashboard route registry', () => {
   it('builds Author tab URLs without legacy dashboard settings paths', () => {
     expect(authorTabHref('inbox')).toBe('/dashboard/author?tab=inbox');
     expect(authorTabHref('conflicts')).toBe('/dashboard/author?tab=conflicts');
-    expect(authorTabHref('memories')).toBe('/dashboard/author?tab=memories');
-    expect(authorTabHref('memory-edit')).toBe('/dashboard/author?tab=memory-edit');
+    expect(authorTabHref('usage')).toBe('/dashboard/author?tab=usage');
     expect(isAuthorWorkspaceTab('settings')).toBe(false);
     expect(isAuthorWorkspaceTab('memories')).toBe(true);
+    expect(isAuthorWorkspaceTab('usage')).toBe(true);
   });
 
   it('canonicalizes engine dashboard entrypoints to Author workspace routes', () => {
@@ -32,16 +33,16 @@ describe('dashboard route registry', () => {
     expect(canonicalAuthorDashboardPath('/dashboard/settings/byok', '?from=engine')).toBe(
       '/dashboard/author/settings?from=engine&section=byok',
     );
-    expect(canonicalAuthorDashboardPath('/dashboard/memories')).toBe(
-      '/dashboard/author?tab=memories',
+    expect(canonicalAuthorDashboardPath('/dashboard/author/usage')).toBe(
+      '/dashboard/author?tab=usage',
     );
-    expect(canonicalAuthorDashboardPath('/dashboard/memory-editor')).toBe(
-      '/dashboard/author?tab=memory-edit',
-    );
+    expect(canonicalAuthorDashboardPath('/dashboard/usage')).toBe('/dashboard/author?tab=usage');
+    expect(canonicalAuthorDashboardPath('/dashboard/memories')).toBe('/dashboard/memories');
+    expect(canonicalAuthorDashboardPath('/dashboard/memory-editor')).toBe('/dashboard/memory-editor');
     expect(canonicalAuthorDashboardPath('/dashboard/memories/mindmap')).toBe(
-      '/dashboard/author?tab=mindmap',
+      '/dashboard/memories/mindmap',
     );
-    expect(canonicalAuthorDashboardPath('/dashboard/replay')).toBe('/dashboard/author?tab=replay');
+    expect(canonicalAuthorDashboardPath('/dashboard/replay')).toBe('/dashboard/replay');
     expect(canonicalAuthorDashboardPath('/dashboard/account/api-keys')).toBeNull();
   });
 
@@ -50,5 +51,12 @@ describe('dashboard route registry', () => {
     expect(sanitizeDashboardCallbackUrl('https://evil.example/dashboard')).toBe(DASHBOARD_ROUTES.author);
     expect(sanitizeDashboardCallbackUrl('/api/auth/session')).toBe(DASHBOARD_ROUTES.author);
     expect(sanitizeDashboardCallbackUrl('/dashboardish')).toBe(DASHBOARD_ROUTES.author);
+  });
+
+  it('only enables native tab switching on the canonical Author workspace page', () => {
+    expect(shouldUseLocalAuthorTabNavigation('/dashboard/author', false)).toBe(true);
+    expect(shouldUseLocalAuthorTabNavigation('/dashboard/author', true)).toBe(false);
+    expect(shouldUseLocalAuthorTabNavigation('/dashboard/author/usage', false)).toBe(false);
+    expect(shouldUseLocalAuthorTabNavigation('/dashboard/memories', false)).toBe(false);
   });
 });

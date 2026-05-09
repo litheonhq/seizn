@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { getAuthOrReview } from "@/lib/auth-or-review";
 import type { Metadata } from "next";
-import DashboardShell from "@/components/dashboard/DashboardShell";
+import { WorkspaceShell } from "@/components/dashboard/redesign/workspace-shell";
 import MindMapCanvas from "./MindMapCanvas";
 
 export const metadata: Metadata = {
@@ -33,13 +33,19 @@ function MindMapSkeleton() {
 }
 
 export default async function MindMapPage() {
-  await getAuthOrReview();
+  const { user } = await getAuthOrReview();
 
   return (
-    <DashboardShell>
-      <Suspense fallback={<MindMapSkeleton />}>
-        <MindMapCanvas />
-      </Suspense>
-    </DashboardShell>
+    <WorkspaceShell
+      userName={user.name ?? user.email ?? "Author"}
+      userPlanLabel="Studio"
+      currentLabel="Mind Map"
+    >
+      <main className="min-h-0 flex-1 overflow-hidden bg-[var(--bg-app)] p-4">
+        <Suspense fallback={<MindMapSkeleton />}>
+          <MindMapCanvas />
+        </Suspense>
+      </main>
+    </WorkspaceShell>
   );
 }

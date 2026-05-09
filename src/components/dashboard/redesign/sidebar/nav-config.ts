@@ -129,25 +129,25 @@ export const NAV_GROUPS: NavGroup[] = [
       {
         id: 'memories',
         labelKey: 'dashboard.nav.memories',
-        href: authorTabHref('memories'),
+        href: DASHBOARD_ROUTES.memories,
         icon: BrainIcon,
       },
       {
         id: 'memory-edit',
         labelKey: 'dashboard.nav.memoryEditor',
-        href: authorTabHref('memory-edit'),
+        href: DASHBOARD_ROUTES.memoryEditor,
         icon: EditIcon,
       },
       {
         id: 'mindmap',
         labelKey: 'dashboard.nav.mindMap',
-        href: authorTabHref('mindmap'),
+        href: DASHBOARD_ROUTES.mindmap,
         icon: MapIcon,
       },
       {
         id: 'replay',
         labelKey: 'dashboard.nav.replay',
-        href: authorTabHref('replay'),
+        href: DASHBOARD_ROUTES.replay,
         icon: ReplayIcon,
       },
     ],
@@ -159,7 +159,7 @@ export const NAV_GROUPS: NavGroup[] = [
       {
         id: 'usage',
         labelKey: 'dashboard.nav.usage',
-        href: DASHBOARD_ROUTES.authorUsage,
+        href: authorTabHref('usage'),
         icon: UsageIcon,
       },
       {

@@ -7,6 +7,7 @@ import Link from "next/link";
 import { createLatestRequestGuard, isAbortError } from "@/lib/client-request";
 import { getErrorMessage } from "@/lib/ui-error";
 import { formatDate } from "@/lib/format-date";
+import { authorTabHref } from "@/lib/dashboard-routes";
 
 interface User {
   id: string;
@@ -184,7 +185,7 @@ export function DashboardClient({ user }: { user: User }) {
                 Dashboard
               </Link>
               <Link
-                href="/dashboard/usage"
+                href={authorTabHref("usage")}
                 className="text-zinc-400 hover:text-white text-sm"
               >
                 Usage

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import DashboardShell from "@/components/dashboard/DashboardShell";
+import { WorkspaceShell } from "@/components/dashboard/redesign/workspace-shell";
 import { MemoryEditorGrid } from "@/components/memory-editor/grid";
 import { getAuthOrReview } from "@/lib/auth-or-review";
 import { resolveMemoryBudgetOrganizationId } from "@/lib/memory/budget";
@@ -36,26 +36,32 @@ export default async function MemoryEditorPage() {
   }
 
   return (
-    <DashboardShell>
-      <main className="mx-auto max-w-7xl px-4 py-8">
-        <header className="mb-7 border-b border-szn-border-subtle pb-7">
-          <div className="szn-section-number mb-5">10 / DESIGNER MEMORY UI</div>
-          <h1 className="szn-serif text-5xl leading-none text-szn-text-1 sm:text-6xl">
-            Memory Editor
-          </h1>
-          <p className="mt-4 max-w-3xl text-[15px] leading-7 text-szn-text-2">
-            Spreadsheet editing for NPC memories with CSV round-trip and Canon Lock checks.
-          </p>
-        </header>
+    <WorkspaceShell
+      userName={authState.user.name ?? authState.user.email ?? "Author"}
+      userPlanLabel="Studio"
+      currentLabel="Memory Editor"
+    >
+      <main className="min-h-0 flex-1 overflow-y-auto bg-[var(--bg-app)]">
+        <div className="mx-auto max-w-7xl px-4 py-8 pb-16">
+          <header className="mb-7 border-b border-szn-border-subtle pb-7">
+            <div className="szn-section-number mb-5">10 / DESIGNER MEMORY UI</div>
+            <h1 className="szn-serif text-5xl leading-none text-szn-text-1 sm:text-6xl">
+              Memory Editor
+            </h1>
+            <p className="mt-4 max-w-3xl text-[15px] leading-7 text-szn-text-2">
+              Spreadsheet editing for NPC memories with CSV round-trip and Canon Lock checks.
+            </p>
+          </header>
 
-        {loadError && (
-          <div className="mb-5 border border-szn-border-subtle bg-szn-surface-1 px-4 py-3 text-sm text-szn-text-2">
-            {loadError}
-          </div>
-        )}
+          {loadError && (
+            <div className="mb-5 border border-szn-border-subtle bg-szn-surface-1 px-4 py-3 text-sm text-szn-text-2">
+              {loadError}
+            </div>
+          )}
 
-        <MemoryEditorGrid initialRows={memories} />
+          <MemoryEditorGrid initialRows={memories} />
+        </div>
       </main>
-    </DashboardShell>
+    </WorkspaceShell>
   );
 }

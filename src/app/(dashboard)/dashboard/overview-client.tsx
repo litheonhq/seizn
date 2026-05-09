@@ -6,6 +6,7 @@ import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
 import { OnboardingWizard } from "@/components/dashboard/OnboardingWizard";
 import { NorthStarMetrics } from "@/components/dashboard/NorthStarMetrics";
 import { createLatestRequestGuard, isAbortError } from "@/lib/client-request";
+import { authorTabHref } from "@/lib/dashboard-routes";
 import { getReliabilityUpdatesCopy } from "@/lib/i18n/reliability-updates";
 import { formatDate } from "@/lib/format-date";
 import { getErrorMessage } from "@/lib/ui-error";
@@ -262,7 +263,7 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
             <div className="szn-eyebrow mb-2">{t("dashboard.overviewPage.last7days")}</div>
             <h2 className="szn-serif text-[28px] text-szn-text-1 leading-[1.1]">{t("dashboard.overviewPage.apiUsageChart")}</h2>
           </div>
-          <Link href="/dashboard/usage" className="font-mono text-[12px] text-szn-signal hover:text-szn-signal-hover uppercase tracking-[0.12em] transition-colors">
+          <Link href={authorTabHref("usage")} className="font-mono text-[12px] text-szn-signal hover:text-szn-signal-hover uppercase tracking-[0.12em] transition-colors">
             {t("dashboard.overviewPage.viewDetails")} →
           </Link>
         </div>
@@ -289,7 +290,7 @@ export default function DashboardOverviewClient({ user }: { user: User }) {
             <div className="szn-eyebrow mb-2">{t("dashboard.overviewPage.last10Requests")}</div>
             <h2 className="szn-serif text-[28px] text-szn-text-1 leading-[1.1]">{t("dashboard.overviewPage.recentActivity")}</h2>
           </div>
-          <Link href="/dashboard/usage" className="font-mono text-[12px] text-szn-signal hover:text-szn-signal-hover uppercase tracking-[0.12em] transition-colors">
+          <Link href={authorTabHref("usage")} className="font-mono text-[12px] text-szn-signal hover:text-szn-signal-hover uppercase tracking-[0.12em] transition-colors">
             {t("dashboard.overviewPage.viewAllActivity")} →
           </Link>
         </div>

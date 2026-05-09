@@ -37,10 +37,10 @@ describe('NAV_GROUPS structure', () => {
     const memory = NAV_GROUPS.find((g) => g.id === 'memory');
     expect(memory).toBeDefined();
     expect(memory?.items.map((item) => [item.id, item.href])).toEqual([
-      ['memories', '/dashboard/author?tab=memories'],
-      ['memory-edit', '/dashboard/author?tab=memory-edit'],
-      ['mindmap', '/dashboard/author?tab=mindmap'],
-      ['replay', '/dashboard/author?tab=replay'],
+      ['memories', DASHBOARD_ROUTES.memories],
+      ['memory-edit', DASHBOARD_ROUTES.memoryEditor],
+      ['mindmap', DASHBOARD_ROUTES.mindmap],
+      ['replay', DASHBOARD_ROUTES.replay],
     ]);
   });
 
@@ -61,7 +61,7 @@ describe('NAV_GROUPS structure', () => {
   it('account links stay inside the Author surface', () => {
     const account = NAV_GROUPS.find((g) => g.id === 'account');
     expect(account?.items.map((item) => [item.id, item.href])).toEqual([
-      ['usage', DASHBOARD_ROUTES.authorUsage],
+      ['usage', '/dashboard/author?tab=usage'],
       ['byok', DASHBOARD_ROUTES.authorSettingsByok],
       ['settings', DASHBOARD_ROUTES.authorSettings],
     ]);

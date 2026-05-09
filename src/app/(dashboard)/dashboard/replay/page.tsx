@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import DashboardShell from "@/components/dashboard/DashboardShell";
+import { WorkspaceShell } from "@/components/dashboard/redesign/workspace-shell";
 import { getAuthOrReview } from "@/lib/auth-or-review";
 import { createServerClient } from "@/lib/supabase";
 import { resolveReplayOrganizationId } from "@/lib/replay/snapshot";
@@ -43,42 +43,48 @@ export default async function ReplayPage({ searchParams }: ReplayPageProps) {
   const snapshots = organizationId ? await loadReplayRows(organizationId, traceIds) : [];
 
   return (
-    <DashboardShell>
-      <main className="space-y-8">
-        <header className="border-b border-szn-border-subtle pb-8">
-          <div className="szn-section-number mb-4">05 / REPLAY LAYER</div>
-          <h1 className="szn-serif text-[clamp(36px,5vw,72px)] leading-none text-szn-text-1">
-            Deterministic Replay
-          </h1>
-          <p className="mt-4 max-w-2xl text-[15px] leading-7 text-szn-text-2">
-            Reproduce memory reads, writes, tool calls, and provider metadata from past NPC turns.
-          </p>
-          {traceIds.length > 0 && (
-            <p className="mt-3 font-mono text-xs text-szn-signal">
-              FILTERED / {traceIds.length} story-health trace{traceIds.length === 1 ? "" : "s"}
+    <WorkspaceShell
+      userName={user.name ?? user.email ?? "Author"}
+      userPlanLabel="Studio"
+      currentLabel="Replay"
+    >
+      <main className="min-h-0 flex-1 overflow-y-auto bg-[var(--bg-app)] px-4 py-8 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl space-y-8 pb-16">
+          <header className="border-b border-szn-border-subtle pb-8">
+            <div className="szn-section-number mb-4">05 / REPLAY LAYER</div>
+            <h1 className="szn-serif text-[clamp(36px,5vw,72px)] leading-none text-szn-text-1">
+              Deterministic Replay
+            </h1>
+            <p className="mt-4 max-w-2xl text-[15px] leading-7 text-szn-text-2">
+              Reproduce memory reads, writes, tool calls, and provider metadata from past NPC turns.
             </p>
-          )}
-        </header>
-
-        <section className="border-y border-szn-border-subtle">
-          <div className="grid grid-cols-[minmax(220px,1.2fr)_1fr_120px_170px] gap-px bg-szn-border-subtle text-[13px]">
-            <div className="bg-szn-bg px-4 py-3 font-mono text-szn-text-3">trace_id</div>
-            <div className="bg-szn-bg px-4 py-3 font-mono text-szn-text-3">endpoint</div>
-            <div className="bg-szn-bg px-4 py-3 font-mono text-szn-text-3">duration</div>
-            <div className="bg-szn-bg px-4 py-3 font-mono text-szn-text-3">created</div>
-            {snapshots.length === 0 ? (
-              <div className="col-span-4 bg-szn-bg px-4 py-10 text-szn-text-2">
-                No replay snapshots captured yet.
-              </div>
-            ) : (
-              snapshots.map((snapshot) => (
-                <ReplayRow key={snapshot.trace_id} snapshot={snapshot} />
-              ))
+            {traceIds.length > 0 && (
+              <p className="mt-3 font-mono text-xs text-szn-signal">
+                FILTERED / {traceIds.length} story-health trace{traceIds.length === 1 ? "" : "s"}
+              </p>
             )}
-          </div>
-        </section>
+          </header>
+
+          <section className="border-y border-szn-border-subtle">
+            <div className="grid grid-cols-[minmax(220px,1.2fr)_1fr_120px_170px] gap-px bg-szn-border-subtle text-[13px]">
+              <div className="bg-szn-bg px-4 py-3 font-mono text-szn-text-3">trace_id</div>
+              <div className="bg-szn-bg px-4 py-3 font-mono text-szn-text-3">endpoint</div>
+              <div className="bg-szn-bg px-4 py-3 font-mono text-szn-text-3">duration</div>
+              <div className="bg-szn-bg px-4 py-3 font-mono text-szn-text-3">created</div>
+              {snapshots.length === 0 ? (
+                <div className="col-span-4 bg-szn-bg px-4 py-10 text-szn-text-2">
+                  No replay snapshots captured yet.
+                </div>
+              ) : (
+                snapshots.map((snapshot) => (
+                  <ReplayRow key={snapshot.trace_id} snapshot={snapshot} />
+                ))
+              )}
+            </div>
+          </section>
+        </div>
       </main>
-    </DashboardShell>
+    </WorkspaceShell>
   );
 }
 

@@ -37,12 +37,14 @@ export function SidebarItem({
     : hover
     ? 'rgba(74, 67, 56, 0.05)'
     : 'transparent';
+  const isAuthorTabLink = item.href.startsWith('/dashboard/author?tab=');
 
   return (
     <Link
       href={item.href}
+      prefetch={isAuthorTabLink ? false : undefined}
       onClick={(event) => {
-        if (!onAuthorTab || !item.href.startsWith('/dashboard/author?tab=')) return;
+        if (!onAuthorTab || !isAuthorTabLink) return;
         if (event.defaultPrevented || event.button !== 0) return;
         if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
         const tab = new URL(item.href, 'https://www.seizn.com').searchParams.get('tab');

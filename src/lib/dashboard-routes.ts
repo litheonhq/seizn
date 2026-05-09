@@ -4,6 +4,10 @@ export const DASHBOARD_ROUTES = {
   authorSettings: '/dashboard/author/settings',
   authorSettingsByok: '/dashboard/author/settings?section=byok',
   authorUsage: '/dashboard/author/usage',
+  memories: '/dashboard/memories',
+  memoryEditor: '/dashboard/memory-editor',
+  mindmap: '/dashboard/memories/mindmap',
+  replay: '/dashboard/replay',
   genericSettings: '/dashboard/settings',
   legacyAuthorSettings: '/dashboard/settings/author',
   legacyByokSettings: '/dashboard/settings/byok',
@@ -25,6 +29,7 @@ export const AUTHOR_WORKSPACE_TABS = [
   'memory-edit',
   'mindmap',
   'replay',
+  'usage',
 ] as const;
 
 export type AuthorWorkspaceTab = (typeof AUTHOR_WORKSPACE_TABS)[number];
@@ -42,6 +47,7 @@ export const AUTHOR_TAB_LABEL_KEYS: Record<AuthorWorkspaceTab, string> = {
   'memory-edit': 'dashboard.nav.memoryEditor',
   mindmap: 'dashboard.nav.mindMap',
   replay: 'dashboard.nav.replay',
+  usage: 'dashboard.nav.usage',
 };
 
 export function authorTabHref(tab: AuthorWorkspaceTab): string {
@@ -78,23 +84,24 @@ export function canonicalAuthorDashboardPath(pathname: string, search = ''): str
       return withSearch(DASHBOARD_ROUTES.author, search);
     case DASHBOARD_ROUTES.author:
     case DASHBOARD_ROUTES.authorSettings:
-    case DASHBOARD_ROUTES.authorUsage:
       return withSearch(normalizedPathname, search);
+    case DASHBOARD_ROUTES.authorUsage:
+      return authorTabPath('usage', search);
     case DASHBOARD_ROUTES.genericSettings:
     case DASHBOARD_ROUTES.legacyAuthorSettings:
       return authorSettingsPath(search);
     case DASHBOARD_ROUTES.legacyByokSettings:
       return authorSettingsPath(search, 'byok');
     case DASHBOARD_ROUTES.legacyUsage:
-      return withSearch(DASHBOARD_ROUTES.authorUsage, search);
-    case '/dashboard/memories':
-      return authorTabPath('memories', search);
-    case '/dashboard/memory-editor':
-      return authorTabPath('memory-edit', search);
-    case '/dashboard/memories/mindmap':
-      return authorTabPath('mindmap', search);
-    case '/dashboard/replay':
-      return authorTabPath('replay', search);
+      return authorTabPath('usage', search);
+    case DASHBOARD_ROUTES.memories:
+      return withSearch(DASHBOARD_ROUTES.memories, search);
+    case DASHBOARD_ROUTES.memoryEditor:
+      return withSearch(DASHBOARD_ROUTES.memoryEditor, search);
+    case DASHBOARD_ROUTES.mindmap:
+      return withSearch(DASHBOARD_ROUTES.mindmap, search);
+    case DASHBOARD_ROUTES.replay:
+      return withSearch(DASHBOARD_ROUTES.replay, search);
     default:
       return null;
   }
@@ -106,6 +113,13 @@ export function isAuthorWorkspaceTab(value: string | null | undefined): value is
 
 export function getAuthorTabLabelKey(value: string | null | undefined): string {
   return isAuthorWorkspaceTab(value) ? AUTHOR_TAB_LABEL_KEYS[value] : 'dashboard.topBar.workspace';
+}
+
+export function shouldUseLocalAuthorTabNavigation(
+  pathname: string | null | undefined,
+  hasRouteChildren: boolean
+): boolean {
+  return pathname === DASHBOARD_ROUTES.author && !hasRouteChildren;
 }
 
 export function sanitizeDashboardCallbackUrl(value: string | null | undefined): string {

@@ -1,13 +1,18 @@
 'use client';
 
 import { Newsreader } from 'next/font/google';
-import { useSearchParams } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
-import { isAuthorWorkspaceTab } from '@/lib/dashboard-routes';
+import {
+  DASHBOARD_ROUTES,
+  isAuthorWorkspaceTab,
+  shouldUseLocalAuthorTabNavigation,
+} from '@/lib/dashboard-routes';
 import { useAuthorConflicts, useAuthorProjects } from '@/hooks/useAuthorMemoryV3';
 import { Sidebar } from './sidebar/sidebar';
 import { TopBar, type TopBarTab } from './top-bar';
 import type { Density } from './types';
+import { AuthorUsageView } from './views/author-usage-view';
 import { CharactersView } from './views/characters-view';
 import { ConflictsView } from './views/conflicts-view';
 import { FallbackView } from './views/fallback-view';
@@ -55,11 +60,13 @@ export function WorkspaceShell({
   currentLabel,
   children,
 }: WorkspaceShellProps) {
+  const pathname = usePathname();
   const searchParams = useSearchParams();
   const tabFromUrl = searchParams?.get('tab') ?? null;
   const [tab, setTabState] = useState<TopBarTab>(
     isValidTab(tabFromUrl) ? tabFromUrl : defaultTab
   );
+  const canUseLocalAuthorTabs = shouldUseLocalAuthorTabNavigation(pathname, children != null);
 
   const [collapsed, setCollapsed] = useState(initialCollapsed);
   const projects = useAuthorProjects();
@@ -81,7 +88,7 @@ export function WorkspaceShell({
       if (typeof window === 'undefined') return;
       const params = new URLSearchParams(window.location.search);
       params.set('tab', next);
-      const nextUrl = `${window.location.pathname}?${params.toString()}`;
+      const nextUrl = `${DASHBOARD_ROUTES.author}?${params.toString()}`;
       window.history.pushState(null, '', nextUrl);
     },
     []
@@ -139,6 +146,8 @@ export function WorkspaceShell({
         return <ConflictsView conflicts={conflicts.data} />;
       case 'simulate':
         return <SimulateEmpty />;
+      case 'usage':
+        return <AuthorUsageView />;
       default:
         return <FallbackView tab={tab} />;
     }
@@ -166,7 +175,7 @@ export function WorkspaceShell({
         badges={badges}
         dots={dots}
         activeAuthorTab={tab}
-        onAuthorTab={setTab}
+        onAuthorTab={canUseLocalAuthorTabs ? setTab : undefined}
       />
       <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
         <TopBar
