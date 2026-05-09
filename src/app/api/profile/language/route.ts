@@ -1,12 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { createServerClient } from '@/lib/supabase';
+import { verifyCsrfToken } from '@/lib/csrf';
 import { locales, type Locale } from '@/i18n/config';
 import { logServerError } from '@/lib/server/logger';
 
 // PATCH /api/profile/language - Update user's language preference
 export async function PATCH(request: NextRequest) {
   try {
+    const csrfErr = verifyCsrfToken(request);
+    if (csrfErr) return csrfErr;
+
     const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.json(

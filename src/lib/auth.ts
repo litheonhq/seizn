@@ -187,14 +187,35 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         }
 
         if (!linkedProfile) {
-          // Create profile for OAuth user
-          await supabase.from('profiles').insert({
-            id: profileId,
-            email,
-            full_name: token.name,
-            avatar_url: token.picture,
-            plan: 'free',
-          });
+          // Create profile for OAuth user. profiles.email is UNIQUE — when
+          // the provider didn't attest email_verified (so we couldn't
+          // link above) but a record with the same email already exists,
+          // the insert raises 23505. Surfacing it lets the OAuth callback
+          // refuse rather than silently leave token.id pointing at a
+          // non-existent profile (returns NULL for joined queries).
+          const { data: insertedProfile, error: insertError } = await supabase
+            .from('profiles')
+            .insert({
+              id: profileId,
+              email,
+              full_name: token.name,
+              avatar_url: token.picture,
+              plan: 'free',
+            })
+            .select('id')
+            .single();
+
+          if (insertError) {
+            const isUniqueViolation =
+              insertError.code === '23505' ||
+              (typeof insertError.message === 'string' &&
+                insertError.message.toLowerCase().includes('duplicate key'));
+            if (isUniqueViolation) {
+              throw new Error('OAuthAccountNotLinked');
+            }
+            throw insertError;
+          }
+          linkedProfile = insertedProfile;
         }
 
         token.id = linkedProfile?.id || profileId;

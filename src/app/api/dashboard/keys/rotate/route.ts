@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSessionUser } from '@/lib/api/request-user';
 import { createServerClient } from '@/lib/supabase';
 import { generateApiKey } from '@/lib/api-key';
+import { verifyCsrfToken } from '@/lib/csrf';
 import { sendEmail } from '@/lib/email';
 import { apiKeyRotatedEmail } from '@/lib/email/templates';
 import { logServerError } from '@/lib/server/logger';
@@ -14,6 +15,9 @@ const DISABLE_KEY_EMAILS =
 // POST /api/dashboard/keys/rotate - Rotate an API key (NextAuth session)
 export async function POST(request: NextRequest) {
   try {
+    const csrfErr = verifyCsrfToken(request);
+    if (csrfErr) return csrfErr;
+
     const user = await getSessionUser();
     if (!user?.id) {
       return NextResponse.json(
