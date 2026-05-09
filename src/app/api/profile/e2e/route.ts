@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { createServerClient } from '@/lib/supabase';
+import { verifyCsrfToken } from '@/lib/csrf';
 import {
   canUseEncryptedMemories,
   getEncryptedMemoryPlanError,
@@ -54,6 +55,9 @@ export async function GET() {
 // PUT /api/profile/e2e - Save E2E setup material (salt + verification block)
 // NOTE: Rotation is allowed but will make previously encrypted memories unrecoverable unless they are re-encrypted.
 export async function PUT(request: NextRequest) {
+  const csrfErr = verifyCsrfToken(request);
+  if (csrfErr) return csrfErr;
+
   const session = await auth();
   const userId = session?.user?.id;
   if (!userId) {
