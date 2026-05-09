@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import { csrfFetch } from "@/lib/client/csrf-fetch";
 import type { ExpiresIn } from "@/lib/sharing/types";
 
 // ============================================
@@ -88,21 +89,16 @@ export function DebugBundleExport({ traceId, onExported }: DebugBundleExportProp
   const [shareUrl, setShareUrl] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
-  const getApiKey = useCallback(() => {
-    return localStorage.getItem("seizn_api_key") || "";
-  }, []);
-
   // Download bundle
-  const handleDownload = async () => {
+  const handleDownload = useCallback(async () => {
     setLoading(true);
     setError(null);
 
     try {
-      const response = await fetch(`/api/traces/${traceId}/export-bundle`, {
+      const response = await csrfFetch(`/api/traces/${traceId}/export-bundle`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-api-key": getApiKey(),
         },
         body: JSON.stringify({
           format,
@@ -139,20 +135,19 @@ export function DebugBundleExport({ traceId, onExported }: DebugBundleExportProp
     } finally {
       setLoading(false);
     }
-  };
+  }, [format, hideRawContent, maskPii, maskSecrets, onExported, traceId]);
 
   // Create share link
-  const handleShare = async () => {
+  const handleShare = useCallback(async () => {
     setLoading(true);
     setError(null);
     setShareUrl(null);
 
     try {
-      const response = await fetch(`/api/traces/${traceId}/share`, {
+      const response = await csrfFetch(`/api/traces/${traceId}/share`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-api-key": getApiKey(),
         },
         body: JSON.stringify({
           expiresIn,
@@ -176,7 +171,7 @@ export function DebugBundleExport({ traceId, onExported }: DebugBundleExportProp
     } finally {
       setLoading(false);
     }
-  };
+  }, [expiresIn, hideRawContent, maskPii, maskSecrets, traceId]);
 
   // Copy share URL
   const handleCopy = async () => {

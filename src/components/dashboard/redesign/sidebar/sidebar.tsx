@@ -1,8 +1,8 @@
 'use client';
 
 import { usePathname, useSearchParams } from 'next/navigation';
-import { useMemo } from 'react';
 import { useDashboardTranslation } from '@/contexts/DashboardLocaleContext';
+import { DASHBOARD_ROUTES, type AuthorWorkspaceTab } from '@/lib/dashboard-routes';
 import { Kbd } from '../atoms';
 import { SearchIcon } from '../icons';
 import type { Density, MemoryHealthState } from '../types';
@@ -31,6 +31,8 @@ export interface SidebarProps {
   badges?: NavBadgeMap;
   dots?: NavDotMap;
   onCommandPalette?: () => void;
+  activeAuthorTab?: AuthorWorkspaceTab;
+  onAuthorTab?: (tab: AuthorWorkspaceTab) => void;
 }
 
 function formatRelative(date: Date, now: Date = new Date()): string {
@@ -44,11 +46,16 @@ function formatRelative(date: Date, now: Date = new Date()): string {
   return `${diffDay}d ago`;
 }
 
-function isItemActive(item: NavItem, pathname: string | null, tab: string | null): boolean {
+function isItemActive(
+  item: NavItem,
+  pathname: string | null,
+  tab: string | null,
+  section: string | null
+): boolean {
   if (!pathname) return false;
 
   if (item.href.startsWith('/dashboard/author?tab=')) {
-    if (!pathname.startsWith('/dashboard/author')) return false;
+    if (pathname !== DASHBOARD_ROUTES.author) return false;
     const expected = item.href.split('tab=')[1];
     return tab === expected || (tab == null && expected === 'inbox' && item.id === 'inbox');
   }
@@ -59,8 +66,12 @@ function isItemActive(item: NavItem, pathname: string | null, tab: string | null
     return !pathname.startsWith('/dashboard/memories/mindmap');
   }
   if (item.id === 'mindmap' && pathname.startsWith('/dashboard/memories/mindmap')) return true;
-  if (item.id === 'settings' && pathname.startsWith('/dashboard/settings')) {
-    return !pathname.startsWith('/dashboard/settings/byok');
+  if (item.id === 'usage' && pathname.startsWith(DASHBOARD_ROUTES.authorUsage)) return true;
+  if (item.id === 'byok' && pathname.startsWith(DASHBOARD_ROUTES.authorSettings)) {
+    return section === 'byok';
+  }
+  if (item.id === 'settings' && pathname.startsWith(DASHBOARD_ROUTES.authorSettings)) {
+    return section !== 'byok';
   }
   return false;
 }
@@ -78,11 +89,14 @@ export function Sidebar({
   badges = {},
   dots = {},
   onCommandPalette,
+  activeAuthorTab,
+  onAuthorTab,
 }: SidebarProps) {
   const { t } = useDashboardTranslation();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const tab = searchParams?.get('tab') ?? null;
+  const tab = activeAuthorTab ?? searchParams?.get('tab') ?? null;
+  const section = searchParams?.get('section') ?? null;
 
   const entriesLabel = t('dashboard.workspace.switcher.entries', { count: workspaceEntries });
   const searchLabel = t('dashboard.topBar.search');
@@ -91,32 +105,29 @@ export function Sidebar({
     count: memoryHealth.factsCount,
   });
 
-  const groupNodes = useMemo(
-    () =>
-      NAV_GROUPS.map((group) => (
-        <SidebarGroup key={group.id} label={t(group.labelKey)} collapsed={collapsed}>
-          {group.items.map((item) => {
-            const active = isItemActive(item, pathname, tab);
-            const badgeRaw = item.badgeKey ? badges[item.badgeKey] : undefined;
-            const badge = typeof badgeRaw === 'number' && badgeRaw <= 0 ? undefined : badgeRaw;
-            const showDot = item.dotKey ? Boolean(dots[item.dotKey]) : false;
-            return (
-              <SidebarItem
-                key={item.id}
-                item={item}
-                label={t(item.labelKey)}
-                active={active}
-                collapsed={collapsed}
-                density={density}
-                badge={badge}
-                showDot={showDot}
-              />
-            );
-          })}
-        </SidebarGroup>
-      )),
-    [t, collapsed, pathname, tab, badges, dots, density]
-  );
+  const groupNodes = NAV_GROUPS.map((group) => (
+    <SidebarGroup key={group.id} label={t(group.labelKey)} collapsed={collapsed}>
+      {group.items.map((item) => {
+        const active = isItemActive(item, pathname, tab, section);
+        const badgeRaw = item.badgeKey ? badges[item.badgeKey] : undefined;
+        const badge = typeof badgeRaw === 'number' && badgeRaw <= 0 ? undefined : badgeRaw;
+        const showDot = item.dotKey ? Boolean(dots[item.dotKey]) : false;
+        return (
+          <SidebarItem
+            key={item.id}
+            item={item}
+            label={t(item.labelKey)}
+            active={active}
+            collapsed={collapsed}
+            density={density}
+            badge={badge}
+            showDot={showDot}
+            onAuthorTab={onAuthorTab}
+          />
+        );
+      })}
+    </SidebarGroup>
+  ));
 
   return (
     <aside

@@ -1,7 +1,7 @@
 {
   "version": 1,
   "generatedBy": "scripts/verify-api-auth-surface.mjs",
-  "routeCount": 558,
+  "routeCount": 559,
   "routes": [
     {
       "route": "/api",
@@ -558,6 +558,7 @@
         "PUT"
       ],
       "authMarkers": [
+        "csrf",
         "sessionUser"
       ],
       "authState": "auth-marker-present"
@@ -1123,6 +1124,14 @@
       "authMarkers": [
         "cronSecret",
         "webhookSignature"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/csrf",
+      "methods": [],
+      "authMarkers": [
+        "csrf"
       ],
       "authState": "auth-marker-present"
     },
@@ -2167,7 +2176,8 @@
         "GET"
       ],
       "authMarkers": [
-        "apiKey"
+        "apiKey",
+        "sessionUser"
       ],
       "authState": "auth-marker-present"
     },
@@ -2622,8 +2632,10 @@
         "GET",
         "PATCH"
       ],
-      "authMarkers": [],
-      "authState": "no-auth-marker-detected"
+      "authMarkers": [
+        "csrf"
+      ],
+      "authState": "auth-marker-present"
     },
     {
       "route": "/api/personas/seed",
@@ -3347,7 +3359,8 @@
         "POST"
       ],
       "authMarkers": [
-        "apiKey"
+        "apiKey",
+        "sessionUser"
       ],
       "authState": "auth-marker-present"
     },
@@ -4502,7 +4515,8 @@
         "POST"
       ],
       "authMarkers": [
-        "apiKey"
+        "apiKey",
+        "sessionUser"
       ],
       "authState": "auth-marker-present"
     },
@@ -4514,7 +4528,8 @@
         "POST"
       ],
       "authMarkers": [
-        "apiKey"
+        "apiKey",
+        "sessionUser"
       ],
       "authState": "auth-marker-present"
     },

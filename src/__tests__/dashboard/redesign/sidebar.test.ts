@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { NAV_GROUPS } from '@/components/dashboard/redesign/sidebar/nav-config';
+import { DASHBOARD_ROUTES } from '@/lib/dashboard-routes';
 
 describe('NAV_GROUPS structure', () => {
   it('has Workspace + Memory + Account groups in that order', () => {
@@ -44,6 +45,15 @@ describe('NAV_GROUPS structure', () => {
     expect(ids).toContain('byok');
     expect(ids).toContain('settings');
     expect(ids).toContain('usage');
+  });
+
+  it('account links stay inside the Author surface', () => {
+    const account = NAV_GROUPS.find((g) => g.id === 'account');
+    expect(account?.items.map((item) => [item.id, item.href])).toEqual([
+      ['usage', DASHBOARD_ROUTES.authorUsage],
+      ['byok', DASHBOARD_ROUTES.authorSettingsByok],
+      ['settings', DASHBOARD_ROUTES.authorSettings],
+    ]);
   });
 
   it('does not reference any legacy /dashboard/_legacy routes', () => {

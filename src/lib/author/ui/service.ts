@@ -261,6 +261,7 @@ interface AuthorUiState {
   settingsByProject: Map<string, ReturnType<typeof buildDefaultSettings>>;
   auditLog: AuthorAuditLogStore;
   auditLogWrites: Set<Promise<void>>;
+  seedCheckedProjects: Set<string>;
   uiStore?: AuthorUiStore;
   byok: {
     enabled: boolean;
@@ -1478,7 +1479,11 @@ export class AuthorUiService {
     if (process.env.AUTHOR_UI_STORE !== 'supabase') {
       return;
     }
+    if (this.state.seedCheckedProjects.has(projectId)) {
+      return;
+    }
     await seedAuthorUiProject(this.store, this.userId, projectId, buildSeedRowsFromState(this.state, projectId));
+    this.state.seedCheckedProjects.add(projectId);
   }
 
   async flushAuditWrites(): Promise<void> {
@@ -1908,6 +1913,7 @@ function createSeedState(userId: string): AuthorUiState {
     settingsByProject: new Map([[DEFAULT_PROJECT_ID, settings]]),
     auditLog: createAuthorAuditLogStoreForUser({ userId }),
     auditLogWrites: new Set(),
+    seedCheckedProjects: new Set(),
     byok: {
       enabled: false,
       provider: null,

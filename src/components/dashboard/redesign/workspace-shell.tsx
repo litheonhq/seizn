@@ -1,8 +1,10 @@
 'use client';
 
 import { Newsreader } from 'next/font/google';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useCallback, useMemo, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { isAuthorWorkspaceTab } from '@/lib/dashboard-routes';
+import { useAuthorConflicts, useAuthorProjects } from '@/hooks/useAuthorMemoryV3';
 import { Sidebar } from './sidebar/sidebar';
 import { TopBar, type TopBarTab } from './top-bar';
 import type { Density } from './types';
@@ -30,19 +32,8 @@ const newsreader = Newsreader({
   display: 'swap',
 });
 
-const VALID_TABS: TopBarTab[] = [
-  'inbox',
-  'review',
-  'characters',
-  'graph',
-  'timeline',
-  'conflicts',
-  'simulate',
-  'audit',
-];
-
 function isValidTab(value: string | null): value is TopBarTab {
-  return value != null && (VALID_TABS as string[]).includes(value);
+  return isAuthorWorkspaceTab(value);
 }
 
 export interface WorkspaceShellProps {
@@ -51,6 +42,8 @@ export interface WorkspaceShellProps {
   density?: Density;
   userName: string;
   userPlanLabel: string;
+  currentLabel?: string;
+  children?: ReactNode;
 }
 
 export function WorkspaceShell({
@@ -59,31 +52,51 @@ export function WorkspaceShell({
   density = 'comfortable',
   userName,
   userPlanLabel,
+  currentLabel,
+  children,
 }: WorkspaceShellProps) {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const tabFromUrl = searchParams?.get('tab') ?? null;
-  const tab: TopBarTab = isValidTab(tabFromUrl) ? tabFromUrl : defaultTab;
+  const [tab, setTabState] = useState<TopBarTab>(
+    isValidTab(tabFromUrl) ? tabFromUrl : defaultTab
+  );
 
   const [collapsed, setCollapsed] = useState(initialCollapsed);
-  const projectId = useAuthorProjectId();
-  const workspace = useAuthorWorkspace();
-  const inbox = useAuthorInbox(projectId);
-  const characters = useAuthorCharactersList(projectId);
-  const graph = useAuthorGraphData(projectId);
-  const conflicts = useAuthorConflictsList(projectId);
+  const projects = useAuthorProjects();
+  const projectId = useAuthorProjectId(projects);
+  const workspace = useAuthorWorkspace(projects);
+  const needsConflicts = tab === 'inbox' || tab === 'review' || tab === 'conflicts';
+  const needsCharacters = tab === 'characters' || tab === 'graph';
+  const needsGraph = tab === 'graph';
+  const rawConflicts = useAuthorConflicts(projectId, { status: 'open' }, { enabled: needsConflicts });
+  const inbox = useAuthorInbox(projectId, rawConflicts);
+  const characters = useAuthorCharactersList(projectId, { enabled: needsCharacters });
+  const graph = useAuthorGraphData(projectId, { enabled: needsGraph });
+  const conflicts = useAuthorConflictsList(projectId, rawConflicts);
   const memoryHealth = useAuthorUiHealth(projectId);
 
   const setTab = useCallback(
     (next: TopBarTab) => {
-      const params = new URLSearchParams(Array.from(searchParams?.entries() ?? []));
+      setTabState(next);
+      if (typeof window === 'undefined') return;
+      const params = new URLSearchParams(window.location.search);
       params.set('tab', next);
-      router.push(`/dashboard/author?${params.toString()}`);
+      const nextUrl = `${window.location.pathname}?${params.toString()}`;
+      window.history.pushState(null, '', nextUrl);
     },
-    [router, searchParams]
+    []
   );
 
   const toggleSidebar = useCallback(() => setCollapsed((c) => !c), []);
+
+  useEffect(() => {
+    const readTabFromLocation = () => {
+      const next = new URLSearchParams(window.location.search).get('tab');
+      setTabState(isValidTab(next) ? next : defaultTab);
+    };
+    window.addEventListener('popstate', readTabFromLocation);
+    return () => window.removeEventListener('popstate', readTabFromLocation);
+  }, [defaultTab]);
 
   const badges = useMemo(() => {
     const inboxUnread = inbox.data.filter((row) => row.unread).length;
@@ -104,7 +117,7 @@ export function WorkspaceShell({
     [conflicts.data]
   );
 
-  const view = (() => {
+  const view = children ?? (() => {
     switch (tab) {
       case 'inbox':
         return <InboxView rows={inbox.data} />;
@@ -148,6 +161,8 @@ export function WorkspaceShell({
         memoryHealth={memoryHealth.data}
         badges={badges}
         dots={dots}
+        activeAuthorTab={tab}
+        onAuthorTab={setTab}
       />
       <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
         <TopBar
@@ -156,6 +171,7 @@ export function WorkspaceShell({
           density={density}
           workspaceLabel={workspace.data.workspaceName}
           onToggleSidebar={toggleSidebar}
+          currentLabel={currentLabel}
         />
         <div style={{ flex: 1, display: 'flex', minHeight: 0, minWidth: 0 }}>{view}</div>
       </div>

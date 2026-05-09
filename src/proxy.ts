@@ -2,6 +2,12 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { locales, defaultLocale, getLocaleFromCountry, type Locale } from '@/i18n/config';
 import { verifyReviewToken, isPathAllowed } from '@/lib/review-token';
+import { AUTHOR_FLAGSHIP_ORIGIN, ENGINE_HOST, normalizeHost } from '@/lib/surface';
+
+const LEGACY_AUTH_COOKIE_NAMES = [
+  'next-auth.session-token',
+  '__Secure-next-auth.session-token',
+] as const;
 
 // Paths that should not be locale-prefixed (completely skip middleware)
 const publicPaths = [
@@ -57,6 +63,35 @@ function addDashboardSecurityHeaders(response: NextResponse): NextResponse {
   response.headers.set('X-DNS-Prefetch-Control', 'off');
   response.headers.set('X-Frame-Options', 'DENY');
   response.headers.set('Origin-Agent-Cluster', '?1');
+  return response;
+}
+
+function normalizeCookieDomain(value: string | undefined): string | undefined {
+  const domain = value?.trim();
+  if (!domain || domain === 'localhost' || domain === '127.0.0.1') return undefined;
+  return domain.startsWith('.') ? domain : `.${domain}`;
+}
+
+function expireLegacyAuthCookies(response: NextResponse, host: string | null): NextResponse {
+  const configuredDomain = normalizeCookieDomain(process.env.AUTH_COOKIE_DOMAIN);
+  const domains = new Set<string | undefined>([undefined, configuredDomain]);
+  if (host === 'www.seizn.com') {
+    domains.add('.www.seizn.com');
+  }
+
+  for (const cookieName of LEGACY_AUTH_COOKIE_NAMES) {
+    for (const domain of domains) {
+      response.cookies.set(cookieName, '', {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 0,
+        ...(domain ? { domain } : {}),
+      });
+    }
+  }
+
   return response;
 }
 
@@ -177,13 +212,9 @@ async function handleReviewToken(
 }
 
 // Engine surface (engine.seizn.com) — rewrite to /engine/* before i18n redirect
-const ENGINE_HOST = 'engine.seizn.com';
-const AUTHOR_FLAGSHIP_ORIGIN = 'https://www.seizn.com';
-
 // Author-only entry points: redirect to seizn.com when accessed from engine surface
 const AUTHOR_ONLY_PREFIXES = [
   '/dashboard',
-  '/login',
   '/signup',
   '/device',
   '/invite',
@@ -205,12 +236,34 @@ function isSharedInfraPath(pathname: string): boolean {
   );
 }
 
+function requestHeadersWithPath(request: NextRequest): Headers {
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set('x-seizn-pathname', request.nextUrl.pathname);
+  requestHeaders.set('x-seizn-search', request.nextUrl.search);
+  return requestHeaders;
+}
+
+function redirectToCanonicalAuthorSettings(request: NextRequest, byok = false): NextResponse {
+  const url = request.nextUrl.clone();
+  url.pathname = '/dashboard/author/settings';
+  if (byok) {
+    url.searchParams.set('section', 'byok');
+  }
+  return addDashboardSecurityHeaders(NextResponse.redirect(url, 308));
+}
+
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const host = (request.headers.get('host') || '').toLowerCase();
+  const host = normalizeHost(request.headers.get('x-forwarded-host') || request.headers.get('host'));
 
   // Engine surface routing (must run before i18n redirect)
   if (host === ENGINE_HOST) {
+    if (pathname === '/login') {
+      const url = request.nextUrl.clone();
+      url.pathname = '/engine/login';
+      return NextResponse.rewrite(url);
+    }
+
     // Author-only entry: cross-domain redirect to seizn.com (308 — preserves method)
     if (AUTHOR_ONLY_PREFIXES.some((p) => pathname.startsWith(p))) {
       return NextResponse.redirect(
@@ -228,6 +281,18 @@ export async function proxy(request: NextRequest) {
     return NextResponse.rewrite(url);
   }
 
+  if (pathname === '/dashboard/settings/author') {
+    return redirectToCanonicalAuthorSettings(request);
+  }
+  if (pathname === '/dashboard/settings/byok') {
+    return redirectToCanonicalAuthorSettings(request, true);
+  }
+
+  const pathnameLocale = getLocaleFromPath(pathname);
+  if (pathnameLocale && pathname === `/${pathnameLocale}/dashboard/author/settings`) {
+    return redirectToCanonicalAuthorSettings(request);
+  }
+
   // Skip public paths (API routes, static files, etc.)
   // But still apply security headers for dashboard routes
   if (isPublicPath(pathname)) {
@@ -239,14 +304,19 @@ export async function proxy(request: NextRequest) {
         return reviewTokenResponse;
       }
 
-      const response = NextResponse.next();
+      const response = NextResponse.next({
+        request: {
+          headers: requestHeadersWithPath(request),
+        },
+      });
       return addDashboardSecurityHeaders(response);
     }
-    return NextResponse.next();
+    const response = NextResponse.next();
+    if (pathname === '/login') {
+      return expireLegacyAuthCookies(response, host);
+    }
+    return response;
   }
-
-  // Check if path already has a locale
-  const pathnameLocale = getLocaleFromPath(pathname);
 
   if (pathnameLocale) {
     // Path has a valid locale, continue

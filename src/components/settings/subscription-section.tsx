@@ -7,8 +7,12 @@ import type { Locale } from "@/i18n/config";
 import {
   getAuthorTierConfig,
   getBillingCadenceFromStripePriceId,
+  getBillingColumnFromStripePriceId,
+  getCharterStatusFromStripePriceId,
   isAuthorBillingTier,
+  type BillingColumn,
   type BillingCadence,
+  type CharterStatus,
 } from "@/lib/stripe-config";
 
 interface SubscriptionSectionProps {
@@ -27,11 +31,7 @@ export function SubscriptionSection({
   onManageBilling,
 }: SubscriptionSectionProps) {
   const planKey = (subscription.tier ?? subscription.plan ?? "free").toLowerCase();
-  const cadence = resolveBillingCadence(subscription);
-  const planPrice = formatPlanPrice(planKey, cadence);
-  const cadenceNote = isAuthorBillingTier(planKey) && cadence === "yearly"
-    ? "Saves about 15% yearly"
-    : null;
+  const priceDisplay = resolvePriceDisplay(planKey, subscription);
   const trialText =
     typeof subscription.trial_days_remaining === "number"
       ? `${subscription.trial_days_remaining}d`
@@ -71,10 +71,10 @@ export function SubscriptionSection({
         <div className="rounded-md border border-[var(--ink-200)] bg-[var(--ink-50)] p-3">
           <dt className="text-xs font-medium uppercase text-[var(--ink-500)]">{copy.currentPlan}</dt>
           <dd className="mt-1 text-sm font-semibold text-[var(--ink-900)]">
-            {subscription.tier_label} {planPrice ? ` - ${planPrice}` : ""}
+            {subscription.tier_label} {priceDisplay.price ? ` - ${priceDisplay.price}` : ""}
           </dd>
-          {cadenceNote ? (
-            <dd className="mt-1 text-xs text-[var(--ink-500)]">{cadenceNote}</dd>
+          {priceDisplay.note ? (
+            <dd className="mt-1 text-xs text-[var(--ink-500)]">{priceDisplay.note}</dd>
           ) : null}
         </div>
         <div className="rounded-md border border-[var(--ink-200)] bg-[var(--ink-50)] p-3">
@@ -96,6 +96,27 @@ export function SubscriptionSection({
   );
 }
 
+interface PriceDisplay {
+  price: string;
+  note: string | null;
+}
+
+function resolvePriceDisplay(planKey: string, subscription: SubscriptionState): PriceDisplay {
+  if (planKey === "free") return { price: "$0", note: null };
+  if (!isAuthorBillingTier(planKey)) return { price: "", note: null };
+
+  const config = getAuthorTierConfig(planKey);
+  const cadence = resolveBillingCadence(subscription);
+  const column = resolveBillingColumn(subscription);
+  const charter = resolveCharterStatus(subscription);
+  const amount = resolveTierAmount(config, column, cadence, charter);
+  if (amount === null) return { price: "", note: null };
+
+  const price = `${formatUsd(amount)}${cadence === "yearly" ? " per year" : "/mo"}`;
+  const note = cadence === "yearly" ? resolveYearlySavingsNote(config, column, amount) : null;
+  return { price, note };
+}
+
 function resolveBillingCadence(subscription: SubscriptionState): BillingCadence {
   if (subscription.billing_cadence === "monthly" || subscription.billing_cadence === "yearly") {
     return subscription.billing_cadence;
@@ -108,18 +129,61 @@ function resolveBillingCadence(subscription: SubscriptionState): BillingCadence 
   return "monthly";
 }
 
-function formatPlanPrice(planKey: string, cadence: BillingCadence): string {
-  if (planKey === "free") return "$0";
-  if (!isAuthorBillingTier(planKey)) return "";
+function resolveBillingColumn(subscription: SubscriptionState): BillingColumn {
+  if (subscription.stripe_price_id) {
+    const column = getBillingColumnFromStripePriceId(subscription.stripe_price_id);
+    if (column) return column;
+  }
+  return subscription.byok_active ? "byok" : "managed";
+}
 
-  const config = getAuthorTierConfig(planKey);
-  const amount = cadence === "yearly" ? config.yearlyUsd : config.monthlyUsd;
-  const formatted = new Intl.NumberFormat("en-US", {
+function resolveCharterStatus(subscription: SubscriptionState): CharterStatus {
+  if (subscription.stripe_price_id) {
+    const charter = getCharterStatusFromStripePriceId(subscription.stripe_price_id);
+    if (charter) return charter;
+  }
+  return "regular";
+}
+
+type TierConfig = ReturnType<typeof getAuthorTierConfig>;
+
+function resolveTierAmount(
+  config: TierConfig,
+  column: BillingColumn,
+  cadence: BillingCadence,
+  charter: CharterStatus,
+): number | null {
+  if (column === "byok") {
+    if (cadence === "yearly") {
+      return charter === "charter" ? config.byokAnnualCharterUsd : config.byokAnnualUsd;
+    }
+    return charter === "charter" ? config.byokMonthlyCharterUsd : config.byokMonthlyUsd;
+  }
+
+  if (cadence === "yearly") {
+    return charter === "charter" ? config.managedAnnualCharterUsd : config.managedAnnualUsd;
+  }
+  return charter === "charter" ? config.managedMonthlyCharterUsd : config.managedMonthlyUsd;
+}
+
+function resolveYearlySavingsNote(
+  config: TierConfig,
+  column: BillingColumn,
+  yearlyAmount: number,
+): string | null {
+  const monthlyRegular = column === "byok" ? config.byokMonthlyUsd : config.managedMonthlyUsd;
+  if (monthlyRegular === null) return null;
+  const annualizedMonthly = monthlyRegular * 12;
+  if (annualizedMonthly <= 0 || yearlyAmount >= annualizedMonthly) return null;
+  const savingsPercent = Math.round(((annualizedMonthly - yearlyAmount) / annualizedMonthly) * 100);
+  return savingsPercent > 0 ? `Saves about ${savingsPercent}% yearly` : null;
+}
+
+function formatUsd(amount: number): string {
+  return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
     minimumFractionDigits: Number.isInteger(amount) ? 0 : 2,
     maximumFractionDigits: 2,
   }).format(amount);
-
-  return cadence === "yearly" ? `${formatted} per year` : `${formatted}/mo`;
 }

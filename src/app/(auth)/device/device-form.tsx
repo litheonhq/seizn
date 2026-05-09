@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   AuthCard,
@@ -265,7 +266,7 @@ export default function DeviceForm() {
             <p className="auth-body mb-6">
               Your device has been authorized. You can close this window and return to your terminal or editor.
             </p>
-            <a href="/dashboard" className="auth-link text-sm">Go to Dashboard</a>
+            <Link href="/dashboard" className="auth-link text-sm">Go to Dashboard</Link>
           </div>
         )}
 

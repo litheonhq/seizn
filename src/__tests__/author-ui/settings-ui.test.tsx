@@ -4,7 +4,6 @@ import type { ReactNode } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { AuthorSettingsClient } from "@/components/settings/author-settings-client";
 import { getAuthorSettingsCopy, authorSettingsI18nLocales } from "@/components/settings/author-settings-i18n";
-import { ByokSection } from "@/components/settings/byok-section";
 import { SubscriptionSection } from "@/components/settings/subscription-section";
 import { UsageSection } from "@/components/settings/usage-section";
 import type { ByokState, SubscriptionState, UsageState } from "@/components/settings/author-settings-types";
@@ -65,10 +64,10 @@ const usage: UsageState = {
 };
 
 const ORIGINAL_PRICE_ENV = {
-  STRIPE_PRICE_ID_INDIE_MONTHLY: process.env.STRIPE_PRICE_ID_INDIE_MONTHLY,
-  STRIPE_PRICE_ID_INDIE_YEARLY: process.env.STRIPE_PRICE_ID_INDIE_YEARLY,
-  STRIPE_PRICE_ID_PRO_MONTHLY: process.env.STRIPE_PRICE_ID_PRO_MONTHLY,
-  STRIPE_PRICE_ID_PRO_YEARLY: process.env.STRIPE_PRICE_ID_PRO_YEARLY,
+  STRIPE_PRICE_ID_V9_INDIE_MANAGED_MONTHLY: process.env.STRIPE_PRICE_ID_V9_INDIE_MANAGED_MONTHLY,
+  STRIPE_PRICE_ID_V9_INDIE_MANAGED_ANNUAL_CHARTER: process.env.STRIPE_PRICE_ID_V9_INDIE_MANAGED_ANNUAL_CHARTER,
+  STRIPE_PRICE_ID_V9_PRO_MANAGED_MONTHLY: process.env.STRIPE_PRICE_ID_V9_PRO_MANAGED_MONTHLY,
+  STRIPE_PRICE_ID_V9_PRO_MANAGED_ANNUAL_CHARTER: process.env.STRIPE_PRICE_ID_V9_PRO_MANAGED_ANNUAL_CHARTER,
 };
 
 let root: Root | null = null;
@@ -101,13 +100,13 @@ describe("Author settings UI", () => {
     expect(getText("Sync")).toBeTruthy();
   });
 
-  it("shows the active BYOK key and applied discount without exposing the raw key", async () => {
+  it("shows the active BYOK key without exposing the raw key", async () => {
     installFetchMocks();
 
     await render(<AuthorSettingsClient />);
 
     expect(await findText("•••• 7890")).toBeTruthy();
-    expect(getText("Applied")).toBeTruthy();
+    expect(getText("Active")).toBeTruthy();
     expect(queryText("sk-ant-test-secret")).toBeNull();
   });
 
@@ -187,7 +186,7 @@ describe("Author settings UI", () => {
       plan: "indie",
       tier: "indie",
       tier_label: "Indie",
-      stripe_price_id: "price_indie_monthly_v7",
+      stripe_price_id: "price_indie_managed_monthly_v9",
     });
 
     expect(renderedText()).toContain("Indie");
@@ -201,12 +200,12 @@ describe("Author settings UI", () => {
       plan: "indie",
       tier: "indie",
       tier_label: "Indie",
-      stripe_price_id: "price_indie_yearly_v7",
+      stripe_price_id: "price_indie_managed_annual_charter_v9",
     });
 
     expect(renderedText()).toContain("Indie");
-    expect(renderedText()).toContain("$397.80 per year");
-    expect(getText("Saves about 15% yearly")).toBeTruthy();
+    expect(renderedText()).toContain("$324 per year");
+    expect(getText("Saves about 31% yearly")).toBeTruthy();
   });
 
   it("shows Pro monthly pricing from the Stripe price id", async () => {
@@ -215,7 +214,7 @@ describe("Author settings UI", () => {
       plan: "pro",
       tier: "pro",
       tier_label: "Pro",
-      stripe_price_id: "price_pro_monthly_v7",
+      stripe_price_id: "price_pro_managed_monthly_v9",
     });
 
     expect(renderedText()).toContain("Pro");
@@ -228,12 +227,12 @@ describe("Author settings UI", () => {
       plan: "pro",
       tier: "pro",
       tier_label: "Pro",
-      stripe_price_id: "price_pro_yearly_v7",
+      stripe_price_id: "price_pro_managed_annual_charter_v9",
     });
 
     expect(renderedText()).toContain("Pro");
-    expect(renderedText()).toContain("$1,519.80 per year");
-    expect(getText("Saves about 15% yearly")).toBeTruthy();
+    expect(renderedText()).toContain("$1,250 per year");
+    expect(getText("Saves about 30% yearly")).toBeTruthy();
   });
 });
 
@@ -348,15 +347,20 @@ function installFetchMocks() {
   global.fetch = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
     const url = String(input);
     const method = init?.method ?? "GET";
+    const headers = init?.headers instanceof Headers
+      ? init.headers
+      : new Headers(init?.headers);
     requests.push({
       url,
       method,
       body: init?.body ?? null,
-      csrf: init?.headers && !Array.isArray(init.headers)
-        ? (init.headers as Record<string, string>)["x-csrf-token"] ?? null
-        : null,
+      csrf: headers.get("x-csrf-token"),
     });
 
+    if (url === "/api/csrf") {
+      document.cookie = "seizn_csrf_token=csrf-123; path=/";
+      return jsonResponse({ ok: true });
+    }
     if (url === "/api/account/byok" && method === "POST") {
       return jsonResponse(activeByok);
     }
@@ -385,10 +389,10 @@ function jsonResponse(body: unknown, status = 200): Response {
 }
 
 function installPriceEnv(): void {
-  process.env.STRIPE_PRICE_ID_INDIE_MONTHLY = "price_indie_monthly_v7";
-  process.env.STRIPE_PRICE_ID_INDIE_YEARLY = "price_indie_yearly_v7";
-  process.env.STRIPE_PRICE_ID_PRO_MONTHLY = "price_pro_monthly_v7";
-  process.env.STRIPE_PRICE_ID_PRO_YEARLY = "price_pro_yearly_v7";
+  process.env.STRIPE_PRICE_ID_V9_INDIE_MANAGED_MONTHLY = "price_indie_managed_monthly_v9";
+  process.env.STRIPE_PRICE_ID_V9_INDIE_MANAGED_ANNUAL_CHARTER = "price_indie_managed_annual_charter_v9";
+  process.env.STRIPE_PRICE_ID_V9_PRO_MANAGED_MONTHLY = "price_pro_managed_monthly_v9";
+  process.env.STRIPE_PRICE_ID_V9_PRO_MANAGED_ANNUAL_CHARTER = "price_pro_managed_annual_charter_v9";
 }
 
 function restorePriceEnv(): void {

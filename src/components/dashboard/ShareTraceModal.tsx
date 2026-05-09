@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect, useRef } from "react";
 import { createLatestRequestGuard, isAbortError } from "@/lib/client-request";
+import { csrfFetch } from "@/lib/client/csrf-fetch";
 import type { ExpiresIn, RedactionProfile } from "@/lib/sharing/types";
 import { formatDate } from "@/lib/format-date";
 import { getErrorMessage } from "@/lib/ui-error";
@@ -47,10 +48,7 @@ export function ShareTraceModal({
     const request = requestGuardRef.current.begin();
 
     try {
-      const response = await fetch(`/api/retrieval/traces/${traceId}/share`, {
-        headers: {
-          "x-api-key": localStorage.getItem("seizn_api_key") || "",
-        },
+      const response = await csrfFetch(`/api/retrieval/traces/${traceId}/share`, {
         signal: request.signal,
       });
       const data = await response.json();
@@ -83,11 +81,10 @@ export function ShareTraceModal({
     setError(null);
 
     try {
-      const response = await fetch(`/api/retrieval/traces/${traceId}/share`, {
+      const response = await csrfFetch(`/api/retrieval/traces/${traceId}/share`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-api-key": localStorage.getItem("seizn_api_key") || "",
         },
         body: JSON.stringify({
           expiresIn,
@@ -135,15 +132,16 @@ export function ShareTraceModal({
 
   const handleDeleteShare = async (shareId: string) => {
     try {
-      await fetch(
-        `/api/retrieval/traces/${traceId}/share?shareId=${shareId}`,
+      const response = await csrfFetch(
+        `/api/retrieval/traces/${traceId}/share?shareId=${encodeURIComponent(shareId)}`,
         {
           method: "DELETE",
-          headers: {
-            "x-api-key": localStorage.getItem("seizn_api_key") || "",
-          },
         }
       );
+      if (!response.ok) {
+        const data = await response.json().catch(() => null);
+        throw new Error(getErrorMessage(data?.error, "Failed to delete share"));
+      }
       void fetchExistingShares();
     } catch (err) {
       setError(getErrorMessage(err, "Failed to delete share"));

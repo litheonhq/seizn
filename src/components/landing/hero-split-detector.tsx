@@ -19,9 +19,11 @@ const HERO_PLANS = ["indie", "pro", "studio"] as const satisfies AuthorBillingTi
 export function HeroSplitDetector({
   copy,
   locale,
+  isAuthenticated = false,
 }: {
   copy: AuthorLandingCopy;
   locale: Locale;
+  isAuthenticated?: boolean;
 }) {
   const [selectedPlan, setSelectedPlan] = useState<AuthorBillingTier>("indie");
   const [cadence, setCadence] = useState<BillingCadence>("monthly");
@@ -30,7 +32,7 @@ export function HeroSplitDetector({
 
   return (
     <section className="relative overflow-hidden" style={{ background: "var(--ink-900)" }}>
-      <LandingNav copy={copy} locale={locale} />
+      <LandingNav copy={copy} locale={locale} isAuthenticated={isAuthenticated} />
       <div className="author-shell grid gap-10 px-4 py-14 sm:px-6 md:py-16 lg:grid-cols-[1.02fr_0.98fr] lg:items-center lg:px-8 lg:py-20 xl:px-0">
         <div className="min-w-0 text-[var(--ink-0)]">
           <Link
@@ -85,7 +87,15 @@ export function HeroSplitDetector({
   );
 }
 
-function LandingNav({ copy, locale }: { copy: AuthorLandingCopy; locale: Locale }) {
+function LandingNav({
+  copy,
+  locale,
+  isAuthenticated,
+}: {
+  copy: AuthorLandingCopy;
+  locale: Locale;
+  isAuthenticated: boolean;
+}) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const closeMobileMenu = () => setMobileMenuOpen(false);
 
@@ -109,15 +119,19 @@ function LandingNav({ copy, locale }: { copy: AuthorLandingCopy; locale: Locale 
             {copy.nav.docs}
           </Link>
           <span className="h-5 w-px" style={{ background: "oklch(1 0 0 / 0.12)" }} />
-          <Link href="/login" className="text-sm font-medium" style={{ color: "oklch(1 0 0 / 0.72)" }}>
-            {copy.nav.signIn}
+          <Link
+            href={isAuthenticated ? "/dashboard/author" : "/login"}
+            className="text-sm font-medium"
+            style={{ color: "oklch(1 0 0 / 0.72)" }}
+          >
+            {isAuthenticated ? "Dashboard" : copy.nav.signIn}
           </Link>
           <Link
-            href="/signup"
+            href={isAuthenticated ? "/dashboard/author" : "/signup"}
             className="author-btn px-4 py-2 text-sm"
             style={{ background: "var(--ink-0)", color: "var(--ink-900)" }}
           >
-            {copy.nav.start}
+            {isAuthenticated ? "Open workspace" : copy.nav.start}
           </Link>
         </div>
         <button
@@ -151,16 +165,21 @@ function LandingNav({ copy, locale }: { copy: AuthorLandingCopy; locale: Locale 
             <Link href={`/${locale}/docs`} onClick={closeMobileMenu} className="min-h-11 py-3 text-sm font-medium" style={{ color: "oklch(1 0 0 / 0.78)" }}>
               {copy.nav.docs}
             </Link>
-            <Link href="/login" onClick={closeMobileMenu} className="min-h-11 py-3 text-sm font-medium" style={{ color: "oklch(1 0 0 / 0.78)" }}>
-              {copy.nav.signIn}
+            <Link
+              href={isAuthenticated ? "/dashboard/author" : "/login"}
+              onClick={closeMobileMenu}
+              className="min-h-11 py-3 text-sm font-medium"
+              style={{ color: "oklch(1 0 0 / 0.78)" }}
+            >
+              {isAuthenticated ? "Dashboard" : copy.nav.signIn}
             </Link>
             <Link
-              href="/signup"
+              href={isAuthenticated ? "/dashboard/author" : "/signup"}
               onClick={closeMobileMenu}
               className="author-btn mt-2 min-h-11 justify-center px-4 py-2 text-sm"
               style={{ background: "var(--ink-0)", color: "var(--ink-900)" }}
             >
-              {copy.nav.start}
+              {isAuthenticated ? "Open workspace" : copy.nav.start}
             </Link>
           </div>
         </div>

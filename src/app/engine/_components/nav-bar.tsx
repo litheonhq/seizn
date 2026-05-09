@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Arrow, Btn, Logo } from "./atoms";
 
 const NAV_LINKS = [
@@ -47,12 +48,12 @@ export function NavBar() {
           </div>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <a
-            href="https://www.seizn.com/login"
+          <Link
+            href="/login"
             style={{ fontSize: 13, color: "var(--engine-text-muted)", textDecoration: "none" }}
           >
-            Sign in
-          </a>
+            Author workspace
+          </Link>
           <Btn variant="secondary" href="#playground" style={{ padding: "8px 14px", fontSize: 13 }}>
             Try playground
           </Btn>

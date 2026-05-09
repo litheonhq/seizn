@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useSyncExternalStore } from "react";
+import { useEffect, useRef, useSyncExternalStore } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { capture, ensurePostHogLoaded } from "@/lib/posthog";
 import { readConsent } from "@/lib/consent";
@@ -22,14 +22,17 @@ function getServerSnapshot(): boolean {
 function PostHogPageView({ enabled }: { enabled: boolean }) {
   const pathname = usePathname();
   const search = useSearchParams().toString();
+  const lastCapturedUrl = useRef<string | null>(null);
 
   useEffect(() => {
     if (!enabled) return;
     if (pathname) {
       let url = window.origin + pathname;
-      if (search) {
+      if (search && pathname !== "/dashboard/author") {
         url = url + `?${search}`;
       }
+      if (lastCapturedUrl.current === url) return;
+      lastCapturedUrl.current = url;
       capture("$pageview", { $current_url: url });
     }
   }, [enabled, pathname, search]);

@@ -24,17 +24,19 @@ export function AuthorFlagshipLanding({
   locale,
   data,
   copy,
+  isAuthenticated = false,
 }: {
   locale: Locale;
   data: SaebyeokDemoData;
   copy: AuthorLandingCopy;
+  isAuthenticated?: boolean;
 }) {
   const engineLive = isAuthorEngineSurfaceLive();
 
   return (
     <div className="author-landing">
       {engineLive ? <EngineTease copy={copy} /> : null}
-      <HeroSplitDetector copy={copy} locale={locale} />
+      <HeroSplitDetector copy={copy} locale={locale} isAuthenticated={isAuthenticated} />
       <main>
         <SectionWorkflow copy={copy} />
         <SectionInputs copy={copy} />

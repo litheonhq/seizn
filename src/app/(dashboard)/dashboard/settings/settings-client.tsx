@@ -6,6 +6,7 @@ import Link from "next/link";
 import { locales, localeNames, type Locale } from "@/i18n/config";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
 import { createLatestRequestGuard, isAbortError } from "@/lib/client-request";
+import { csrfFetch } from "@/lib/client/csrf-fetch";
 import { getErrorMessage } from "@/lib/ui-error";
 import { RTBFModal, DataExportModal, DeleteMemoriesModal } from '@/components/settings';
 
@@ -142,20 +143,21 @@ export function SettingsClient() {
 
     try {
       const [profileResult, budgetResult, quotaResult, regionResult] = await Promise.allSettled([
-        fetch("/api/me", { credentials: "include", signal: request.signal }).then(async (res) => ({
+        csrfFetch("/api/me", { signal: request.signal }).then(async (res) => ({
           status: res.status,
           data: res.status === 401 ? null : await res.json(),
         })),
-        fetch("/api/budget/settings", { credentials: "include", signal: request.signal }).then(async (res) => ({
+        csrfFetch("/api/budget/settings", { signal: request.signal }).then(async (res) => ({
           ok: res.ok,
           data: res.ok ? await res.json() : null,
         })),
-        fetch("/api/quota", { credentials: "include", signal: request.signal }).then(async (res) => ({
+        csrfFetch("/api/quota", { signal: request.signal }).then(async (res) => ({
           ok: res.ok,
           data: res.ok ? await res.json() : null,
         })),
-        fetch("/api/personas/region-preference", { credentials: "include", signal: request.signal }).then(async (res) => ({
+        csrfFetch("/api/personas/region-preference", { signal: request.signal }).then(async (res) => ({
           ok: res.ok,
+          status: res.status,
           data: res.ok ? await res.json() : null,
         })),
       ]);
@@ -217,7 +219,7 @@ export function SettingsClient() {
           regionPinAvailable: Boolean(regionResult.value.data.regionPinAvailable),
         });
       } else if (
-        (regionResult.status === "fulfilled" && !regionResult.value.ok) ||
+        (regionResult.status === "fulfilled" && !regionResult.value.ok && regionResult.value.status !== 403) ||
         (regionResult.status === "rejected" && !isAbortError(regionResult.reason))
       ) {
         failedCount += 1;
@@ -247,11 +249,10 @@ export function SettingsClient() {
   const saveLanguage = async (lang: Locale) => {
     setSaveStatus("saving");
     try {
-      const res = await fetch("/api/profile/language", {
+      const res = await csrfFetch("/api/profile/language", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ language: lang }),
-        credentials: "include",
       });
       if (!res.ok) {
         if (res.status === 401) {
@@ -272,11 +273,10 @@ export function SettingsClient() {
   const saveBudgetSettings = useCallback(async () => {
     setSaveStatus("saving");
     try {
-      const res = await fetch("/api/budget/settings", {
+      const res = await csrfFetch("/api/budget/settings", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(budgetSettings),
-        credentials: "include",
       });
       if (!res.ok) throw new Error("Failed to save");
       setSaveStatus("saved");
@@ -290,11 +290,10 @@ export function SettingsClient() {
   const saveRegionPreference = useCallback(async (preferredRegion: PreferredRegion) => {
     setSaveStatus("saving");
     try {
-      const res = await fetch("/api/personas/region-preference", {
+      const res = await csrfFetch("/api/personas/region-preference", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ preferredRegion }),
-        credentials: "include",
       });
       if (!res.ok) {
         const data = await res.json().catch(() => null);

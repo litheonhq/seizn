@@ -29,6 +29,7 @@ export interface TopBarProps {
   onTab?: (tab: TopBarTab) => void;
   density?: Density;
   workspaceLabel?: string;
+  currentLabel?: string;
   onToggleSidebar?: () => void;
   onCommand?: () => void;
   onNotifications?: () => void;
@@ -72,6 +73,7 @@ export function TopBar({
   onTab,
   density = 'comfortable',
   workspaceLabel,
+  currentLabel,
   onToggleSidebar,
   onCommand,
   onNotifications,
@@ -82,7 +84,7 @@ export function TopBar({
   const height = density === 'compact' ? 48 : density === 'spacious' ? 60 : 54;
 
   const breadcrumbWorkspace = workspaceLabel ?? t('dashboard.topBar.workspace');
-  const breadcrumbTabLabel = t(TAB_LABEL_KEYS[tab] ?? 'dashboard.topBar.workspace');
+  const breadcrumbTabLabel = currentLabel ?? t(TAB_LABEL_KEYS[tab] ?? 'dashboard.topBar.workspace');
 
   return (
     <header

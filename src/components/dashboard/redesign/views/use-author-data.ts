@@ -27,6 +27,8 @@ interface DataState<T> {
   isFallback: boolean;
 }
 
+type AuthorProjectsResult = ReturnType<typeof useAuthorProjects>;
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
@@ -51,8 +53,7 @@ function colorForRole(role: string, fallback = '#7a5c3a'): string {
 
 export type UseAuthorWorkspaceResult = DataState<AuthorWorkspaceData>;
 
-export function useAuthorWorkspace(): UseAuthorWorkspaceResult {
-  const projects = useAuthorProjects();
+export function useAuthorWorkspace(projects: AuthorProjectsResult): UseAuthorWorkspaceResult {
   const project = projects.data?.projects?.[0];
 
   return useMemo(() => {
@@ -89,8 +90,10 @@ export function useAuthorWorkspace(): UseAuthorWorkspaceResult {
 
 export type UseAuthorInboxResult = DataState<InboxRowDetail[]>;
 
-export function useAuthorInbox(projectId: string | undefined): UseAuthorInboxResult {
-  const conflicts = useAuthorConflicts(projectId, { status: 'open' });
+export function useAuthorInbox(
+  projectId: string | undefined,
+  conflicts: ReturnType<typeof useAuthorConflicts>
+): UseAuthorInboxResult {
 
   return useMemo(() => {
     const rawConflicts = (conflicts.data?.conflicts ?? []) as unknown[];
@@ -143,8 +146,11 @@ export type UseAuthorCharactersResult = DataState<CharacterSummary[]> & {
   detail: (id: string) => CharacterDetail | undefined;
 };
 
-export function useAuthorCharactersList(projectId: string | undefined): UseAuthorCharactersResult {
-  const characters = useAuthorCharacters(projectId);
+export function useAuthorCharactersList(
+  projectId: string | undefined,
+  options?: { enabled?: boolean }
+): UseAuthorCharactersResult {
+  const characters = useAuthorCharacters(projectId, options);
 
   return useMemo(() => {
     const items = (characters.data?.characters ?? []) as unknown[];
@@ -196,8 +202,11 @@ function synthesizeDetail(summary?: CharacterSummary): CharacterDetail | undefin
 
 export type UseAuthorGraphResult = DataState<{ nodes: GraphNode[]; edges: GraphEdge[] }>;
 
-export function useAuthorGraphData(projectId: string | undefined): UseAuthorGraphResult {
-  const graph = useAuthorGraph(projectId);
+export function useAuthorGraphData(
+  projectId: string | undefined,
+  options?: { enabled?: boolean }
+): UseAuthorGraphResult {
+  const graph = useAuthorGraph(projectId, undefined, options);
 
   return useMemo(() => {
     const rawNodes = (graph.data?.nodes ?? []) as unknown[];
@@ -262,8 +271,10 @@ function circularLayout(count: number, cx: number, cy: number, radius: number) {
 
 export type UseAuthorConflictsResult = DataState<ConflictItem[]>;
 
-export function useAuthorConflictsList(projectId: string | undefined): UseAuthorConflictsResult {
-  const conflicts = useAuthorConflicts(projectId, { status: 'open' });
+export function useAuthorConflictsList(
+  projectId: string | undefined,
+  conflicts: ReturnType<typeof useAuthorConflicts>
+): UseAuthorConflictsResult {
 
   return useMemo(() => {
     const raw = (conflicts.data?.conflicts ?? []) as unknown[];
@@ -305,7 +316,7 @@ export function useAuthorConflictsList(projectId: string | undefined): UseAuthor
 export type UseAuthorUiHealthResult = DataState<AuthorUiHealth>;
 
 export function useAuthorUiHealth(projectId: string | undefined): UseAuthorUiHealthResult {
-  const sync = useAuthorSyncStatus(projectId);
+  const sync = useAuthorSyncStatus(projectId, { enabled: Boolean(projectId) });
 
   return useMemo(() => {
     const status = sync.data as Record<string, unknown> | undefined;
@@ -335,8 +346,7 @@ export function useAuthorUiHealth(projectId: string | undefined): UseAuthorUiHea
   }, [sync.data, sync.isLoading, sync.error]);
 }
 
-export function useAuthorProjectId(): string | undefined {
-  const projects = useAuthorProjects();
+export function useAuthorProjectId(projects: AuthorProjectsResult): string | undefined {
   const project = projects.data?.projects?.[0] as Record<string, unknown> | undefined;
   return project ? toString(project.id) || undefined : undefined;
 }

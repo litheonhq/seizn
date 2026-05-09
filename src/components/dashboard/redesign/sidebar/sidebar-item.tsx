@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { Kbd } from '../atoms';
 import type { Density } from '../types';
 import type { NavItem } from './nav-config';
+import { isAuthorWorkspaceTab, type AuthorWorkspaceTab } from '@/lib/dashboard-routes';
 
 export interface SidebarItemProps {
   item: NavItem;
@@ -14,6 +15,7 @@ export interface SidebarItemProps {
   density?: Density;
   badge?: number | string;
   showDot?: boolean;
+  onAuthorTab?: (tab: AuthorWorkspaceTab) => void;
 }
 
 export function SidebarItem({
@@ -24,6 +26,7 @@ export function SidebarItem({
   density = 'comfortable',
   badge,
   showDot = false,
+  onAuthorTab,
 }: SidebarItemProps) {
   const [hover, setHover] = useState(false);
   const padY = density === 'compact' ? 4 : density === 'spacious' ? 8 : 6;
@@ -38,6 +41,15 @@ export function SidebarItem({
   return (
     <Link
       href={item.href}
+      onClick={(event) => {
+        if (!onAuthorTab || !item.href.startsWith('/dashboard/author?tab=')) return;
+        if (event.defaultPrevented || event.button !== 0) return;
+        if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+        const tab = new URL(item.href, 'https://www.seizn.com').searchParams.get('tab');
+        if (!isAuthorWorkspaceTab(tab)) return;
+        event.preventDefault();
+        onAuthorTab(tab);
+      }}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       title={collapsed ? label : undefined}

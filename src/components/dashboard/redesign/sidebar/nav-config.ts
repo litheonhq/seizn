@@ -1,4 +1,5 @@
 import type { ComponentType } from 'react';
+import { DASHBOARD_ROUTES, authorTabHref } from '@/lib/dashboard-routes';
 import {
   AuditIcon,
   BrainIcon,
@@ -61,7 +62,7 @@ export const NAV_GROUPS: NavGroup[] = [
       {
         id: 'inbox',
         labelKey: 'dashboard.nav.inbox',
-        href: '/dashboard/author?tab=inbox',
+        href: authorTabHref('inbox'),
         icon: InboxIcon,
         badgeKey: 'inbox.unread',
         kbd: 'I',
@@ -69,7 +70,7 @@ export const NAV_GROUPS: NavGroup[] = [
       {
         id: 'review',
         labelKey: 'dashboard.nav.review',
-        href: '/dashboard/author?tab=review',
+        href: authorTabHref('review'),
         icon: ReviewIcon,
         badgeKey: 'review.pending',
         kbd: 'R',
@@ -77,7 +78,7 @@ export const NAV_GROUPS: NavGroup[] = [
       {
         id: 'characters',
         labelKey: 'dashboard.nav.characters',
-        href: '/dashboard/author?tab=characters',
+        href: authorTabHref('characters'),
         icon: CharactersIcon,
         badgeKey: 'characters.count',
         kbd: 'C',
@@ -85,21 +86,21 @@ export const NAV_GROUPS: NavGroup[] = [
       {
         id: 'graph',
         labelKey: 'dashboard.nav.graph',
-        href: '/dashboard/author?tab=graph',
+        href: authorTabHref('graph'),
         icon: GraphIcon,
         kbd: 'G',
       },
       {
         id: 'timeline',
         labelKey: 'dashboard.nav.timeline',
-        href: '/dashboard/author?tab=timeline',
+        href: authorTabHref('timeline'),
         icon: TimelineIcon,
         kbd: 'T',
       },
       {
         id: 'conflicts',
         labelKey: 'dashboard.nav.conflicts',
-        href: '/dashboard/author?tab=conflicts',
+        href: authorTabHref('conflicts'),
         icon: ConflictIcon,
         badgeKey: 'conflicts.open',
         dotKey: 'conflicts.has_p1',
@@ -108,14 +109,14 @@ export const NAV_GROUPS: NavGroup[] = [
       {
         id: 'simulate',
         labelKey: 'dashboard.nav.simulate',
-        href: '/dashboard/author?tab=simulate',
+        href: authorTabHref('simulate'),
         icon: SimulateIcon,
         kbd: 'S',
       },
       {
         id: 'audit',
         labelKey: 'dashboard.nav.audit',
-        href: '/dashboard/author?tab=audit',
+        href: authorTabHref('audit'),
         icon: AuditIcon,
         kbd: 'A',
       },
@@ -158,19 +159,19 @@ export const NAV_GROUPS: NavGroup[] = [
       {
         id: 'usage',
         labelKey: 'dashboard.nav.usage',
-        href: '/dashboard/usage',
+        href: DASHBOARD_ROUTES.authorUsage,
         icon: UsageIcon,
       },
       {
         id: 'byok',
         labelKey: 'dashboard.nav.byok',
-        href: '/dashboard/settings/byok',
+        href: DASHBOARD_ROUTES.authorSettingsByok,
         icon: ByokIcon,
       },
       {
         id: 'settings',
         labelKey: 'dashboard.nav.settings',
-        href: '/dashboard/settings',
+        href: DASHBOARD_ROUTES.authorSettings,
         icon: SettingsIcon,
       },
     ],

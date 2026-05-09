@@ -10,7 +10,6 @@ import {
   AUTHOR_PRICE_LOCK_VERSION,
   BYOK_COUPON_ID,
   getAuthorActivePriceId,
-  getAuthorStripePriceId,
   getAuthorTierFromStripePriceId,
   getBillingCadenceFromStripePriceId,
   isAuthorBillingTier,

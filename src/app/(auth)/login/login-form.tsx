@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import { signIn } from "next-auth/react";
+import { getSession, signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Turnstile from "@/components/auth/Turnstile";
@@ -24,6 +24,7 @@ export default function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [authError, setAuthError] = useState<string | null>(error);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [turnstileRenderKey, setTurnstileRenderKey] = useState(0);
   const turnstileRequired = Boolean(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY);
 
   const handleTurnstileVerify = useCallback((token: string) => {
@@ -35,16 +36,37 @@ export default function LoginForm() {
   }, []);
 
   useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === "visible") {
-        setIsLoading(false);
+    let cancelled = false;
+    const syncSession = async () => {
+      try {
+        const session = await getSession();
+        if (!cancelled && session?.user) {
+          router.replace(callbackUrl);
+          router.refresh();
+          return;
+        }
+      } finally {
+        if (!cancelled) {
+          setIsLoading(false);
+        }
       }
     };
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-    return () => {
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        void syncSession();
+      }
     };
-  }, []);
+    const handlePageShow = () => {
+      void syncSession();
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("pageshow", handlePageShow);
+    return () => {
+      cancelled = true;
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("pageshow", handlePageShow);
+    };
+  }, [callbackUrl, router]);
 
   const errorRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
@@ -72,9 +94,13 @@ export default function LoginForm() {
       } else {
         setAuthError("Invalid email or password");
       }
+      setTurnstileToken(null);
+      setTurnstileRenderKey((key) => key + 1);
       setIsLoading(false);
     } else {
-      router.push(callbackUrl);
+      const nextUrl = sanitizeClientRedirect(result?.url, callbackUrl);
+      router.replace(nextUrl);
+      router.refresh();
     }
   };
 
@@ -179,6 +205,7 @@ export default function LoginForm() {
           {process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY && (
             <div className="flex justify-center">
               <Turnstile
+                key={turnstileRenderKey}
                 onVerify={handleTurnstileVerify}
                 onExpire={handleTurnstileExpire}
                 theme="light"
@@ -223,4 +250,15 @@ export default function LoginForm() {
       <AuthHomeLink />
     </AuthPage>
   );
+}
+
+function sanitizeClientRedirect(value: string | null | undefined, fallback: string): string {
+  if (!value) return fallback;
+  try {
+    const parsed = new URL(value, window.location.origin);
+    if (parsed.origin !== window.location.origin) return fallback;
+    return `${parsed.pathname}${parsed.search}${parsed.hash}`;
+  } catch {
+    return fallback;
+  }
 }

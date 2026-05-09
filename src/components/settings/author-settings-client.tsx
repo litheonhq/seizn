@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { RefreshCw, TriangleAlert } from "lucide-react";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
+import { csrfFetch } from "@/lib/client/csrf-fetch";
 import { getAuthorSettingsCopy } from "./author-settings-i18n";
 import { ByokSection } from "./byok-section";
 import { LlmProviderSection, type AuthorLlmProvider, type LlmProviderState } from "./llm-provider-section";
@@ -66,7 +67,7 @@ export function AuthorSettingsClient({ navigateToBilling = defaultNavigate }: Au
     try {
       const response = await fetchJson<{ provider: AuthorLlmProvider | null }>("/api/account/llm-provider", {
         method: "POST",
-        headers: csrfHeaders({ "Content-Type": "application/json" }),
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ provider }),
       });
       setLlmProvider((prev) => ({ ...prev, provider: response.provider ?? null }));
@@ -91,7 +92,7 @@ export function AuthorSettingsClient({ navigateToBilling = defaultNavigate }: Au
     try {
       const response = await fetchJson<ByokState>("/api/account/byok", {
         method: "POST",
-        headers: csrfHeaders({ "Content-Type": "application/json" }),
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ provider, api_key: apiKey }),
       });
       setByok(normalizeByok(response));
@@ -112,7 +113,6 @@ export function AuthorSettingsClient({ navigateToBilling = defaultNavigate }: Au
         `/api/account/byok?provider=${encodeURIComponent(provider)}`,
         {
           method: "DELETE",
-          headers: csrfHeaders(),
         },
       );
       setByok(normalizeByok(response));
@@ -131,7 +131,7 @@ export function AuthorSettingsClient({ navigateToBilling = defaultNavigate }: Au
     try {
       const response = await fetchJson<{ url?: string }>("/api/account/billing-portal", {
         method: "POST",
-        headers: csrfHeaders({ "Content-Type": "application/json" }),
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ return_to: "/dashboard/author/settings" }),
       });
       if (!response.url) {
@@ -203,10 +203,7 @@ export function AuthorSettingsClient({ navigateToBilling = defaultNavigate }: Au
 }
 
 async function fetchJson<T>(url: string, init?: RequestInit): Promise<T> {
-  const response = await fetch(url, {
-    credentials: "include",
-    ...init,
-  });
+  const response = await csrfFetch(url, init);
   const data = await response.json().catch(() => null) as T | { error?: string } | null;
   if (!response.ok) {
     const message = data && typeof data === "object" && "error" in data && typeof data.error === "string"
@@ -215,17 +212,6 @@ async function fetchJson<T>(url: string, init?: RequestInit): Promise<T> {
     throw new Error(message);
   }
   return data as T;
-}
-
-function getCsrfToken(): string | null {
-  if (typeof document === "undefined") return null;
-  const match = document.cookie.match(/(?:^|;\s*)seizn_csrf_token=([^;]+)/);
-  return match ? decodeURIComponent(match[1]) : null;
-}
-
-function csrfHeaders(base?: Record<string, string>): Record<string, string> {
-  const token = getCsrfToken();
-  return token ? { ...(base ?? {}), "x-csrf-token": token } : (base ?? {});
 }
 
 function normalizeByok(value: Partial<ByokState>): ByokState {

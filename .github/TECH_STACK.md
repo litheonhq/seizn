@@ -252,7 +252,8 @@ Translation method: JSON dictionary files in `src/i18n/dictionaries/{locale}.jso
 - Sentry integration for server + client instrumentation
 
 ### Security Patterns
-- CSRF protection (`src/lib/csrf.ts`)
+- CSRF protection (`src/lib/csrf.ts`, `/api/csrf`, and browser `csrfFetch` for cookie-auth state changes)
+- Dashboard-internal trace share/export APIs support session-cookie auth with strict CSRF while preserving API-key auth for external callers.
 - Rate limiting with sliding window (Redis + in-memory fallback)
 - API key hashing and expiration
 - Scoped API keys (`src/lib/scoped-api-keys/`)
