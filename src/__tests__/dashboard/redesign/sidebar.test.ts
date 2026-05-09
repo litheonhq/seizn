@@ -33,6 +33,17 @@ describe('NAV_GROUPS structure', () => {
     }
   });
 
+  it('memory group items stay inside the Author surface', () => {
+    const memory = NAV_GROUPS.find((g) => g.id === 'memory');
+    expect(memory).toBeDefined();
+    expect(memory?.items.map((item) => [item.id, item.href])).toEqual([
+      ['memories', '/dashboard/author?tab=memories'],
+      ['memory-edit', '/dashboard/author?tab=memory-edit'],
+      ['mindmap', '/dashboard/author?tab=mindmap'],
+      ['replay', '/dashboard/author?tab=replay'],
+    ]);
+  });
+
   it('Conflicts item carries the dotKey for the P1 indicator', () => {
     const workspace = NAV_GROUPS.find((g) => g.id === 'workspace');
     const conflicts = workspace?.items.find((i) => i.id === 'conflicts');

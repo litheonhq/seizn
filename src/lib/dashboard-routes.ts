@@ -21,9 +21,28 @@ export const AUTHOR_WORKSPACE_TABS = [
   'conflicts',
   'simulate',
   'audit',
+  'memories',
+  'memory-edit',
+  'mindmap',
+  'replay',
 ] as const;
 
 export type AuthorWorkspaceTab = (typeof AUTHOR_WORKSPACE_TABS)[number];
+
+export const AUTHOR_TAB_LABEL_KEYS: Record<AuthorWorkspaceTab, string> = {
+  inbox: 'dashboard.nav.inbox',
+  review: 'dashboard.nav.review',
+  characters: 'dashboard.nav.characters',
+  graph: 'dashboard.nav.graph',
+  timeline: 'dashboard.nav.timeline',
+  conflicts: 'dashboard.nav.conflicts',
+  simulate: 'dashboard.nav.simulate',
+  audit: 'dashboard.nav.audit',
+  memories: 'dashboard.nav.memories',
+  'memory-edit': 'dashboard.nav.memoryEditor',
+  mindmap: 'dashboard.nav.mindMap',
+  replay: 'dashboard.nav.replay',
+};
 
 export function authorTabHref(tab: AuthorWorkspaceTab): string {
   return `${DASHBOARD_ROUTES.author}?tab=${tab}`;
@@ -31,6 +50,10 @@ export function authorTabHref(tab: AuthorWorkspaceTab): string {
 
 export function isAuthorWorkspaceTab(value: string | null | undefined): value is AuthorWorkspaceTab {
   return value != null && (AUTHOR_WORKSPACE_TABS as readonly string[]).includes(value);
+}
+
+export function getAuthorTabLabelKey(value: string | null | undefined): string {
+  return isAuthorWorkspaceTab(value) ? AUTHOR_TAB_LABEL_KEYS[value] : 'dashboard.topBar.workspace';
 }
 
 export function sanitizeDashboardCallbackUrl(value: string | null | undefined): string {

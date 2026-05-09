@@ -95,7 +95,11 @@ export function WorkspaceShell({
       setTabState(isValidTab(next) ? next : defaultTab);
     };
     window.addEventListener('popstate', readTabFromLocation);
-    return () => window.removeEventListener('popstate', readTabFromLocation);
+    window.addEventListener('pageshow', readTabFromLocation);
+    return () => {
+      window.removeEventListener('popstate', readTabFromLocation);
+      window.removeEventListener('pageshow', readTabFromLocation);
+    };
   }, [defaultTab]);
 
   const badges = useMemo(() => {

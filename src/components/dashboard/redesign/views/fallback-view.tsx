@@ -1,6 +1,7 @@
 'use client';
 
 import { useDashboardTranslation } from '@/contexts/DashboardLocaleContext';
+import { getAuthorTabLabelKey } from '@/lib/dashboard-routes';
 
 export interface FallbackViewProps {
   tab: string;
@@ -8,7 +9,7 @@ export interface FallbackViewProps {
 
 export function FallbackView({ tab }: FallbackViewProps) {
   const { t } = useDashboardTranslation();
-  const label = t(`dashboard.nav.${tab}`);
+  const label = t(getAuthorTabLabelKey(tab));
   return (
     <div
       style={{

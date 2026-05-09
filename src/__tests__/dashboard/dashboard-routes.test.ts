@@ -17,7 +17,10 @@ describe('dashboard route registry', () => {
   it('builds Author tab URLs without legacy dashboard settings paths', () => {
     expect(authorTabHref('inbox')).toBe('/dashboard/author?tab=inbox');
     expect(authorTabHref('conflicts')).toBe('/dashboard/author?tab=conflicts');
+    expect(authorTabHref('memories')).toBe('/dashboard/author?tab=memories');
+    expect(authorTabHref('memory-edit')).toBe('/dashboard/author?tab=memory-edit');
     expect(isAuthorWorkspaceTab('settings')).toBe(false);
+    expect(isAuthorWorkspaceTab('memories')).toBe(true);
   });
 
   it('only accepts local dashboard callback URLs', () => {

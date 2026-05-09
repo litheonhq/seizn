@@ -1,6 +1,7 @@
 'use client';
 
 import { useDashboardTranslation } from '@/contexts/DashboardLocaleContext';
+import { getAuthorTabLabelKey, type AuthorWorkspaceTab } from '@/lib/dashboard-routes';
 import { Kbd } from './atoms';
 import {
   BellIcon,
@@ -13,15 +14,7 @@ import type { Density } from './types';
 
 export type TopBarVariant = 'A' | 'B';
 
-export type TopBarTab =
-  | 'inbox'
-  | 'review'
-  | 'characters'
-  | 'graph'
-  | 'timeline'
-  | 'conflicts'
-  | 'simulate'
-  | 'audit';
+export type TopBarTab = AuthorWorkspaceTab;
 
 export interface TopBarProps {
   variant?: TopBarVariant;
@@ -43,17 +36,6 @@ const VARIANT_B_TABS: { id: TopBarTab; labelKey: string }[] = [
   { id: 'conflicts', labelKey: 'dashboard.nav.conflicts' },
   { id: 'timeline', labelKey: 'dashboard.nav.timeline' },
 ];
-
-const TAB_LABEL_KEYS: Record<TopBarTab, string> = {
-  inbox: 'dashboard.nav.inbox',
-  review: 'dashboard.nav.review',
-  characters: 'dashboard.nav.characters',
-  graph: 'dashboard.nav.graph',
-  timeline: 'dashboard.nav.timeline',
-  conflicts: 'dashboard.nav.conflicts',
-  simulate: 'dashboard.nav.simulate',
-  audit: 'dashboard.nav.audit',
-};
 
 const ICON_BTN_STYLE = {
   all: 'unset',
@@ -84,7 +66,7 @@ export function TopBar({
   const height = density === 'compact' ? 48 : density === 'spacious' ? 60 : 54;
 
   const breadcrumbWorkspace = workspaceLabel ?? t('dashboard.topBar.workspace');
-  const breadcrumbTabLabel = currentLabel ?? t(TAB_LABEL_KEYS[tab] ?? 'dashboard.topBar.workspace');
+  const breadcrumbTabLabel = currentLabel ?? t(getAuthorTabLabelKey(tab));
 
   return (
     <header
