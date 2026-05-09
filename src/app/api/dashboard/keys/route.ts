@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSessionUser } from '@/lib/api/request-user';
 import { createServerClient } from '@/lib/supabase';
 import { buildBasicApiKeyInsertPayload, generateApiKey } from '@/lib/api-key';
+import { verifyCsrfToken } from '@/lib/csrf';
 import { sendEmail } from '@/lib/email';
 import { apiKeyCreatedEmail } from '@/lib/email/templates';
 import { logServerError } from '@/lib/server/logger';
@@ -52,6 +53,9 @@ export async function GET() {
 // POST /api/dashboard/keys - Create a new API key (NextAuth session)
 export async function POST(request: NextRequest) {
   try {
+    const csrfErr = verifyCsrfToken(request);
+    if (csrfErr) return csrfErr;
+
     const user = await getSessionUser();
     if (!user?.id) {
       return AuthErrors.unauthorized('API keys');
@@ -146,6 +150,9 @@ export async function POST(request: NextRequest) {
 // DELETE /api/dashboard/keys - Revoke an API key (NextAuth session)
 export async function DELETE(request: NextRequest) {
   try {
+    const csrfErr = verifyCsrfToken(request);
+    if (csrfErr) return csrfErr;
+
     const user = await getSessionUser();
     if (!user?.id) {
       return AuthErrors.unauthorized('API keys');

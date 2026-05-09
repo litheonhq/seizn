@@ -1,7 +1,28 @@
 import type { Metadata, Viewport } from "next";
 import { cookies } from "next/headers";
+import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
 import { isRtl, locales, type Locale } from "@/i18n/config";
 import "../globals.css";
+
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const instrumentSerif = Instrument_Serif({
+  variable: "--font-instrument-serif",
+  weight: "400",
+  style: ["normal", "italic"],
+  subsets: ["latin"],
+  display: "swap",
+});
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -27,7 +48,7 @@ export default async function AuthLayout({
   return (
     <html lang={locale} dir={dir}>
       <body
-        className="auth-root antialiased"
+        className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable} auth-root antialiased`}
       >
         {children}
       </body>
