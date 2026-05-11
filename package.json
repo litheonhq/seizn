@@ -17,6 +17,7 @@
     "predeploy": "bash scripts/pre-deploy.sh",
     "deploy": "vercel --prod",
     "smoke:production": "node scripts/production-smoke.mjs",
+    "verify:stripe-webhook-url": "node scripts/verify-stripe-webhook-url.mjs",
     "check:routes": "node scripts/check-route-conflicts.js",
     "generate:docs": "npx ts-node --project tsconfig.node.json scripts/generate-docs.ts",
     "test": "vitest",

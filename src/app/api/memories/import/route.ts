@@ -164,6 +164,9 @@ export async function POST(request: NextRequest) {
           importance: memory.importance || 5,
           source: memory.source || 'import',
           confidence: 1.0,
+          is_encrypted: false,
+          is_deleted: false,
+          deleted_at: null,
         };
 
         if (hasContentHashColumn) {

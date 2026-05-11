@@ -97,6 +97,9 @@ export async function POST(request: NextRequest) {
             source: 'summarization',
             confidence: mem.confidence,
             importance: mem.importance,
+            is_encrypted: false,
+            is_deleted: false,
+            deleted_at: null,
           };
         })
       );

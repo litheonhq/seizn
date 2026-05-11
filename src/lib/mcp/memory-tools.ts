@@ -270,6 +270,9 @@ async function handleMemorySave(
       importance: (args.importance as number) || 5,
       confidence: 1.0,
       source: 'mcp_tool',
+      is_encrypted: false,
+      is_deleted: false,
+      deleted_at: null,
       metadata: {
         ...(args.metadata as Record<string, unknown> || {}),
         created_via: 'memory.save',
