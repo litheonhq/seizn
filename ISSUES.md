@@ -154,7 +154,7 @@
 
 ### P0 Track 2 Stripe subscriptions did not update profiles.plan
 **Date:** 2026-05-11
-**Status:** ✅ shipped (PR #355, code commit `bf2be8aa`). One-user SQL hotfix was already applied before this code change.
+**Status:** ✅ shipped (PR #355, code commits `bf2be8aa`, `f11267cc`). One-user SQL hotfix was already applied before this code change.
 **Symptom:** A paid Track 2 API/MCP Pro subscription could keep `/api/me` and rate-limit logic on `profile.plan='free'`.
 **Cause:** Track 2 webhook branches updated API key quotas but did not persist the Track 2 tier back to `profiles.plan`.
 **Resolution:** Stripe webhook `customer.subscription.created`, `customer.subscription.updated`, and `customer.subscription.deleted` Track 2 branches now sync `profiles.plan`, subscription status fields, price lock version, and cancellation downgrade state. `studio_managed` maps to the existing `studio` profile plan.
