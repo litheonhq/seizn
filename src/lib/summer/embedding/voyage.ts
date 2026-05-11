@@ -3,6 +3,15 @@ import type { EmbeddingInputType, EmbeddingProvider } from '../types';
 
 const VOYAGE_API_URL = 'https://api.voyageai.com/v1/embeddings';
 
+// Hard cap on a single Voyage call. Bridge/route layers add their own deadlines,
+// so this is the inner watchdog that prevents a hung embedding request from
+// consuming the full Vercel function budget.
+const VOYAGE_FETCH_TIMEOUT_MS = (() => {
+  const raw = Number.parseInt(process.env.VOYAGE_FETCH_TIMEOUT_MS || '', 10);
+  if (Number.isFinite(raw) && raw > 0) return raw;
+  return 10_000;
+})();
+
 export interface VoyageEmbeddingProviderOptions {
   apiKey?: string;
   model?: string;
@@ -10,18 +19,31 @@ export interface VoyageEmbeddingProviderOptions {
 }
 
 async function callVoyage(texts: string[], inputType: EmbeddingInputType, apiKey: string, model: string): Promise<number[][]> {
-  const response = await fetch(VOYAGE_API_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify({
-      model,
-      input: texts,
-      input_type: inputType,
-    }),
-  });
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), VOYAGE_FETCH_TIMEOUT_MS);
+  let response: Response;
+  try {
+    response = await fetch(VOYAGE_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model,
+        input: texts,
+        input_type: inputType,
+      }),
+      signal: controller.signal,
+    });
+  } catch (err) {
+    if ((err as { name?: string })?.name === 'AbortError') {
+      throw new Error(`Voyage API timeout after ${VOYAGE_FETCH_TIMEOUT_MS}ms`);
+    }
+    throw err;
+  } finally {
+    clearTimeout(timer);
+  }
 
   if (!response.ok) {
     const error = await response.text();

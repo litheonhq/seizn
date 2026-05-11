@@ -170,6 +170,13 @@ const SPRING_V4_BRIDGE_SEARCH_TIMEOUT_MS = (() => {
   if (Number.isFinite(raw) && raw > 0) return raw;
   return 5000;
 })();
+// Kill switch for the Spring v4 bridge search path. Defaults to ON because the
+// bridge now has a route-level timebox (SPRING_V4_BRIDGE_SEARCH_TIMEOUT_MS),
+// an inner Voyage fetch timeout, and an empty-pool short circuit, so the
+// failure mode that previously caused gateway 504s is gone. To roll back fast
+// in an incident: set MEMORY_V1_SPRING_BRIDGE_SEARCH=false in Vercel env (no
+// deploy required) — requests then take the legacy executeMemorySearch path,
+// which has SEARCH_TIMEOUT_MS guarding it.
 const MEMORY_V1_SPRING_BRIDGE_SEARCH_ENABLED =
   process.env.MEMORY_V1_SPRING_BRIDGE_SEARCH !== 'false';
 const MEMORY_V1_SPRING_BRIDGE_MIRROR_ENABLED =
