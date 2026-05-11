@@ -165,10 +165,15 @@ const SEARCH_TIMEOUT_MS = (() => {
   if (Number.isFinite(raw) && raw > 0) return raw;
   return 2500;
 })();
+const SPRING_V4_BRIDGE_SEARCH_TIMEOUT_MS = (() => {
+  const raw = Number.parseInt(process.env.MEMORY_V1_SPRING_BRIDGE_SEARCH_TIMEOUT_MS || '', 10);
+  if (Number.isFinite(raw) && raw > 0) return raw;
+  return 5000;
+})();
 const MEMORY_V1_SPRING_BRIDGE_SEARCH_ENABLED =
   process.env.MEMORY_V1_SPRING_BRIDGE_SEARCH !== 'false';
 const MEMORY_V1_SPRING_BRIDGE_MIRROR_ENABLED =
-  process.env.MEMORY_V1_SPRING_BRIDGE_MIRROR !== 'false';
+  process.env.MEMORY_V1_SPRING_BRIDGE_MIRROR === 'true';
 const MEMORY_V1_SPRING_BRIDGE_MIRROR_REQUIRED =
   process.env.MEMORY_V1_SPRING_BRIDGE_MIRROR_REQUIRED === 'true';
 const ALLOWED_SEARCH_MODES: SearchMode[] = ['auto', 'slot', 'keyword', 'hybrid', 'vector'];
@@ -191,6 +196,23 @@ function getRequestMemoryClass(body: AddMemoryRequest): string | null {
   const raw = (body as unknown as Record<string, unknown>).memory_class;
   if (typeof raw === 'string' && raw.trim().length > 0) return raw.trim();
   return body.memory_type || null;
+}
+
+async function withTimeout<T>(
+  operation: Promise<T>,
+  timeoutMs: number,
+  label: string,
+): Promise<T> {
+  let timeout: ReturnType<typeof setTimeout> | undefined;
+  const timeoutPromise = new Promise<never>((_, reject) => {
+    timeout = setTimeout(() => reject(new Error(`${label} timed out after ${timeoutMs}ms`)), timeoutMs);
+  });
+
+  try {
+    return await Promise.race([operation, timeoutPromise]);
+  } finally {
+    if (timeout) clearTimeout(timeout);
+  }
 }
 
 function getModerationMeta(result: ModerationResult | null): {
@@ -930,6 +952,8 @@ async function handlePost(request: NextRequest) {
       last_reinforced_at: new Date().toISOString(),
       content_hash: contentHash,
       tier: 'hot',
+      is_deleted: false,
+      deleted_at: null,
       pinned: rawBody.pinned === true,
       last_recalled_at: null,
       recall_count: 0,
@@ -1889,19 +1913,23 @@ async function handleGet(request: NextRequest) {
 
     if (MEMORY_V1_SPRING_BRIDGE_SEARCH_ENABLED) {
       try {
-        const bridged = await searchViaSpringV4Bridge(supabase, {
-          userId,
-          query: effectiveQuery,
-          limit,
-          mode: actualMode,
-          namespace,
-          memoryType,
-          tags: tagsParam ? tagsParam.split(',').map((t) => t.trim()).filter(Boolean) : [],
-          scope,
-          agentId,
-          after,
-          before,
-        });
+        const bridged = await withTimeout(
+          searchViaSpringV4Bridge(supabase, {
+            userId,
+            query: effectiveQuery,
+            limit,
+            mode: actualMode,
+            namespace,
+            memoryType,
+            tags: tagsParam ? tagsParam.split(',').map((t) => t.trim()).filter(Boolean) : [],
+            scope,
+            agentId,
+            after,
+            before,
+          }),
+          SPRING_V4_BRIDGE_SEARCH_TIMEOUT_MS,
+          'Spring v4 bridge search',
+        );
         if (bridged.length > 0) {
           results = bridged;
           searchBackend = 'spring_v4';

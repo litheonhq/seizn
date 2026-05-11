@@ -222,6 +222,9 @@ export class MemoryBroker {
               source: 'maas',
               namespace: op.namespaceId,
               importance: (op.payload.importance as number) || 5,
+              is_encrypted: false,
+              is_deleted: false,
+              deleted_at: null,
             })
             .select('id')
             .single();
@@ -330,6 +333,9 @@ export class MemoryBroker {
       source: 'maas_share',
       namespace: toNamespace,
       importance: original.importance,
+      is_encrypted: false,
+      is_deleted: false,
+      deleted_at: null,
     });
 
     return !error;

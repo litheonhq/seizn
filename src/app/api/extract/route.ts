@@ -161,6 +161,9 @@ export async function POST(request: NextRequest) {
               namespace,
               source: 'extract_api',
               confidence: memory.confidence,
+              is_encrypted: false,
+              is_deleted: false,
+              deleted_at: null,
             })
             .select('id, content, memory_type, tags, importance, created_at')
             .single();

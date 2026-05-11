@@ -381,7 +381,9 @@ export async function importNpcSaveFile(
     content_hash: contentHash(`${payload.npcId}:${memoryIdMap.get(memory.id) || memory.id}:${memory.content}`),
     created_at: memory.createdAt || now,
     updated_at: memory.updatedAt || now,
+    is_encrypted: false,
     is_deleted: false,
+    deleted_at: null,
   }));
 
   if (memoryRows.length > 0) {

@@ -136,6 +136,9 @@ export const POST = withErrorHandler(async (request: NextRequest) => {
       source: body.source || 'api',
       confidence: 1.0,
       importance: 5,
+      is_encrypted: false,
+      is_deleted: false,
+      deleted_at: null,
     })
     .select('id, content, memory_type, tags, namespace, created_at')
     .single();

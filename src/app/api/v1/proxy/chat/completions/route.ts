@@ -407,6 +407,9 @@ async function extractAndStoreMemories(
         source: 'proxy_extraction',
         importance: 5,
         tags: ['auto-extracted', 'proxy'],
+        is_encrypted: false,
+        is_deleted: false,
+        deleted_at: null,
       }).select('id').single();
 
       if (insertedMemory?.id) {
