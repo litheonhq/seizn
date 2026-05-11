@@ -11,6 +11,7 @@ const createEmbeddingMock = vi.fn();
 const createQueryEmbeddingMock = vi.fn();
 const hasMemoryImagePayloadMock = vi.fn();
 const validateMemoryImagePayloadMock = vi.fn();
+const listMemoryImageAttachmentsMock = vi.fn();
 const analyzeContentIntegrityMock = vi.fn();
 const canUseEncryptedMemoriesMock = vi.fn();
 const findDuplicateMock = vi.fn();
@@ -18,6 +19,7 @@ const createDetectorMock = vi.fn();
 const compareThreatLevelMock = vi.fn();
 const mirrorLegacyMemoryToSpringV4Mock = vi.fn();
 const authMock = vi.fn();
+const logMemoryAccessMock = vi.fn();
 
 vi.mock('@/lib/api-auth', () => ({
   authenticateRequest: authenticateRequestMock,
@@ -42,7 +44,12 @@ vi.mock('@/lib/ai', () => ({
 vi.mock('@/lib/memory/image-attachments', () => ({
   attachImageToMemory: vi.fn(),
   hasMemoryImagePayload: hasMemoryImagePayloadMock,
+  listMemoryImageAttachments: listMemoryImageAttachmentsMock,
   validateMemoryImagePayload: validateMemoryImagePayloadMock,
+}));
+
+vi.mock('@/lib/audit', () => ({
+  logMemoryAccess: logMemoryAccessMock,
 }));
 
 vi.mock('@/lib/memory/content-integrity', () => ({
@@ -222,6 +229,87 @@ function createSupabaseMock() {
   };
 }
 
+function createRoundTripSupabaseMock() {
+  const memories = new Map<string, Record<string, unknown>>();
+  let idCounter = 0;
+
+  const makeMemorySelectChain = () => {
+    const filters: Array<{ column: string; value: unknown }> = [];
+    const chain = {
+      eq: vi.fn((column: string, value: unknown) => {
+        filters.push({ column, value });
+        return chain;
+      }),
+      single: vi.fn(async () => {
+        const match = [...memories.values()].find((row) =>
+          filters.every((filter) => row[filter.column] === filter.value),
+        );
+        if (!match) {
+          return { data: null, error: { code: 'PGRST116', message: 'No rows found' } };
+        }
+        return { data: match, error: null };
+      }),
+      maybeSingle: vi.fn(async () => {
+        const match = [...memories.values()].find((row) =>
+          filters.every((filter) => row[filter.column] === filter.value),
+        );
+        return { data: match ?? null, error: null };
+      }),
+    };
+    return chain;
+  };
+
+  const fromMock = vi.fn((table: string) => {
+    if (table === 'memories') {
+      return {
+        insert: vi.fn((payload: Record<string, unknown>) => ({
+          select: vi.fn(() => ({
+            single: vi.fn(async () => {
+              idCounter += 1;
+              const row = {
+                ...payload,
+                id: `memory-${idCounter}`,
+                created_at: '2026-05-11T00:00:00.000Z',
+                updated_at: '2026-05-11T00:00:00.000Z',
+                companion_meta: null,
+              };
+              memories.set(String(row.id), row);
+              return {
+                data: {
+                  id: row.id,
+                  content: row.content,
+                  encrypted_content: row.encrypted_content ?? null,
+                  is_encrypted: row.is_encrypted,
+                  memory_type: row.memory_type,
+                  tags: row.tags,
+                  namespace: row.namespace,
+                  importance: row.importance,
+                  created_at: row.created_at,
+                },
+                error: null,
+              };
+            }),
+          })),
+        })),
+        select: vi.fn(() => makeMemorySelectChain()),
+        update: vi.fn(() => ({ eq: vi.fn(() => ({ eq: vi.fn(async () => ({ data: null, error: null })) })) })),
+      };
+    }
+    if (table === 'profiles') {
+      return {
+        select: vi.fn(() => ({
+          eq: vi.fn(() => ({
+            maybeSingle: vi.fn(async () => ({ data: { plan: 'pro' }, error: null })),
+          })),
+        })),
+      };
+    }
+    throw new Error(`Unexpected table: ${table}`);
+  });
+
+  return { from: fromMock, rpc: vi.fn() };
+}
+
 describe('v1 memories spring bridge strictness', () => {
   beforeEach(() => {
     vi.resetModules();
@@ -245,10 +333,12 @@ describe('v1 memories spring bridge strictness', () => {
     createEmbeddingMock.mockResolvedValue([0.1, 0.2, 0.3]);
     createQueryEmbeddingMock.mockResolvedValue([0.1, 0.2, 0.3]);
     hasMemoryImagePayloadMock.mockReturnValue(false);
+    listMemoryImageAttachmentsMock.mockResolvedValue([]);
     validateMemoryImagePayloadMock.mockReturnValue(null);
     analyzeContentIntegrityMock.mockReturnValue({ warnings: [] });
     canUseEncryptedMemoriesMock.mockReturnValue(true);
     findDuplicateMock.mockResolvedValue(null);
+    logMemoryAccessMock.mockResolvedValue(undefined);
     createDetectorMock.mockReturnValue({
       scan: () => ({ detected: false, threatLevel: 'low', sanitizedInput: 'bridge test' }),
     });
@@ -256,6 +346,7 @@ describe('v1 memories spring bridge strictness', () => {
   });
 
   it('continues with success when mirror fails in non-strict mode', async () => {
+    process.env.MEMORY_V1_SPRING_BRIDGE_MIRROR = 'true';
     mirrorLegacyMemoryToSpringV4Mock.mockRejectedValue(new Error('mirror fail'));
 
     const { POST } = await import('@/app/api/v1/memories/route');
@@ -278,6 +369,7 @@ describe('v1 memories spring bridge strictness', () => {
   });
 
   it('rolls back and returns 500 when mirror fails in strict mode', async () => {
+    process.env.MEMORY_V1_SPRING_BRIDGE_MIRROR = 'true';
     process.env.MEMORY_V1_SPRING_BRIDGE_MIRROR_REQUIRED = 'true';
     mirrorLegacyMemoryToSpringV4Mock.mockRejectedValue(new Error('mirror fail'));
 
@@ -298,5 +390,40 @@ describe('v1 memories spring bridge strictness', () => {
     expect(spies.memoriesUpdateMock).toHaveBeenCalledTimes(1);
     expect(spies.updateEqIdMock).toHaveBeenCalledWith('id', 'memory-1');
     expect(payload.error?.code || payload.error?.error_code).toBeTruthy();
+  });
+
+  it('keeps a POST-created memory retrievable by GET-by-id', async () => {
+    const supabase = createRoundTripSupabaseMock();
+    createServerClientMock.mockReturnValue(supabase);
+    createDetectorMock.mockReturnValue({
+      scan: () => ({ detected: false, threatLevel: 'low', sanitizedInput: 'round trip memory' }),
+    });
+    listMemoryImageAttachmentsMock.mockResolvedValue([]);
+
+    const { POST } = await import('@/app/api/v1/memories/route');
+    const createResponse = await POST(
+      makeRequest({
+        content: 'round trip memory',
+        memory_type: 'fact',
+        namespace: 'default',
+      })
+    );
+    const createPayload = await createResponse.json();
+    const memoryId = createPayload.data?.memory?.id;
+
+    expect(createResponse.status).toBe(200);
+    expect(memoryId).toBe('memory-1');
+
+    const { GET } = await import('@/app/api/v1/memories/[id]/route');
+    const getResponse = await GET(
+      new NextRequest(new URL(`/api/v1/memories/${memoryId}`, 'https://test.seizn.com')),
+      { params: Promise.resolve({ id: memoryId }) }
+    );
+    const getPayload = await getResponse.json();
+
+    expect(getResponse.status).toBe(200);
+    expect(getPayload.success).toBe(true);
+    expect(getPayload.data.memory.id).toBe(memoryId);
+    expect(getPayload.data.memory.content).toBe('round trip memory');
   });
 });

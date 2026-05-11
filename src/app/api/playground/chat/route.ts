@@ -345,6 +345,8 @@ async function persistDemoMemory(input: {
     confidence: input.memory.confidence,
     importance: input.memory.importance,
     is_encrypted: false,
+    is_deleted: false,
+    deleted_at: null,
     embedding: null,
   };
 

@@ -9,12 +9,14 @@ import {
 import {
   applyV8Track2TierToApiKeys,
   getV8Track2TierFromStripePriceId,
+  V8_PRICE_LOCK_VERSION,
   type V8Track2Tier,
 } from "@/lib/billing/v8-products";
 import {
   applyV9Track2TierToApiKeys,
   getV9Track2CharterStatusFromPriceId,
   getV9Track2TierFromStripePriceId,
+  V9_PRICE_LOCK_VERSION,
   type V9Track2Tier,
 } from "@/lib/billing/v9-products";
 import {
@@ -254,6 +256,69 @@ function buildSubscriptionProfileUpdates(eventData: StripeEventObject): Record<s
   }
 
   return updates;
+}
+
+type Track2ProfilePlan = "free" | "indie" | "pro" | "studio" | "enterprise";
+
+function track2TierToProfilePlan(tier: V8Track2Tier | V9Track2Tier): Track2ProfilePlan {
+  if (tier === "studio_managed") return "studio";
+  return tier;
+}
+
+function failTrack2Webhook(message: string, error?: string): never {
+  throw new Error(error ? `${message}: ${error}` : message);
+}
+
+async function syncTrack2ProfileSubscription(
+  supabase: ReturnType<typeof createServerClient>,
+  params: {
+    userId: string;
+    customerId: string;
+    eventData: StripeEventObject;
+    tier: V8Track2Tier | V9Track2Tier;
+    priceLockVersion: string;
+  },
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  const { error } = await supabase
+    .from("profiles")
+    .update({
+      ...buildSubscriptionProfileUpdates(params.eventData),
+      stripe_customer_id: params.customerId,
+      plan: track2TierToProfilePlan(params.tier),
+      plan_updated_at: new Date().toISOString(),
+      price_lock_version: params.priceLockVersion,
+    })
+    .eq("id", params.userId);
+
+  if (error) return { ok: false, error: error.message };
+  return { ok: true };
+}
+
+async function syncTrack2ProfileCancellation(
+  supabase: ReturnType<typeof createServerClient>,
+  userId: string,
+  eventData: StripeEventObject,
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  const endedAtIso = stripeTimestampToIso(eventData.ended_at) ?? new Date().toISOString();
+  const { error } = await supabase
+    .from("profiles")
+    .update({
+      plan: "free",
+      plan_updated_at: new Date().toISOString(),
+      stripe_subscription_id: null,
+      stripe_subscription_status: "canceled",
+      subscription_status: "cancelled",
+      stripe_price_id: null,
+      stripe_current_period_end: endedAtIso,
+      subscription_cancelled: true,
+      subscription_ends_at: endedAtIso,
+      subscription_ended_at: endedAtIso,
+      subscription_renews_at: null,
+    })
+    .eq("id", userId);
+
+  if (error) return { ok: false, error: error.message };
+  return { ok: true };
 }
 
 /**
@@ -645,8 +710,27 @@ export async function POST(request: NextRequest) {
               tier: v9.tier,
               price_id: priceId,
             }, "failed", v9.error);
+            failTrack2Webhook("Failed to apply v9 Track 2 tier on api_keys", v9.error);
           } else {
             console.log(`v9 Track 2 subscription created for user ${user.id}: ${v9.tier}`);
+            const profileSync = await syncTrack2ProfileSubscription(supabase, {
+              userId: user.id,
+              customerId,
+              eventData,
+              tier: v9.tier,
+              priceLockVersion: V9_PRICE_LOCK_VERSION,
+            });
+            if (!profileSync.ok) {
+              console.error("Failed to sync v9 Track 2 profile plan:", profileSync.error);
+              await logBillingEvent(supabase, user.id, "subscription_created_profile_sync", {
+                subscription_id: subscriptionId,
+                channel: "track2",
+                catalog: "v9",
+                tier: v9.tier,
+                price_id: priceId,
+              }, "failed", profileSync.error);
+              failTrack2Webhook("Failed to sync v9 Track 2 profile plan", profileSync.error);
+            }
             await attachV8Track2ManagedOverage(subscriptionId, v9.tier);
             await logBillingEvent(supabase, user.id, "subscription_created", {
               subscription_id: subscriptionId,
@@ -714,8 +798,27 @@ export async function POST(request: NextRequest) {
               tier: v8.tier,
               price_id: priceId,
             }, "failed", v8.error);
+            failTrack2Webhook("Failed to apply v8 Track 2 tier on api_keys", v8.error);
           } else {
             console.log(`v8 Track 2 subscription created for user ${user.id}: ${v8.tier}`);
+            const profileSync = await syncTrack2ProfileSubscription(supabase, {
+              userId: user.id,
+              customerId,
+              eventData,
+              tier: v8.tier,
+              priceLockVersion: V8_PRICE_LOCK_VERSION,
+            });
+            if (!profileSync.ok) {
+              console.error("Failed to sync v8 Track 2 profile plan:", profileSync.error);
+              await logBillingEvent(supabase, user.id, "subscription_created_profile_sync", {
+                subscription_id: subscriptionId,
+                channel: "track2",
+                catalog: "v8",
+                tier: v8.tier,
+                price_id: priceId,
+              }, "failed", profileSync.error);
+              failTrack2Webhook("Failed to sync v8 Track 2 profile plan", profileSync.error);
+            }
             await attachV8Track2ManagedOverage(subscriptionId, v8.tier);
             await logBillingEvent(supabase, user.id, "subscription_created", {
               subscription_id: subscriptionId,
@@ -861,8 +964,27 @@ export async function POST(request: NextRequest) {
                 tier: v9Update.tier,
                 price_id: priceId,
               }, "failed", v9Update.error);
+              failTrack2Webhook("Failed to apply v9 Track 2 tier on api_keys", v9Update.error);
             } else {
               console.log(`v9 Track 2 subscription updated for user ${user.id}: ${v9Update.tier}`);
+              const profileSync = await syncTrack2ProfileSubscription(supabase, {
+                userId: user.id,
+                customerId,
+                eventData,
+                tier: v9Update.tier,
+                priceLockVersion: V9_PRICE_LOCK_VERSION,
+              });
+              if (!profileSync.ok) {
+                console.error("Failed to sync v9 Track 2 profile plan:", profileSync.error);
+                await logBillingEvent(supabase, user.id, "subscription_updated_profile_sync", {
+                  subscription_id: subscriptionId,
+                  channel: "track2",
+                  catalog: "v9",
+                  tier: v9Update.tier,
+                  price_id: priceId,
+                }, "failed", profileSync.error);
+                failTrack2Webhook("Failed to sync v9 Track 2 profile plan", profileSync.error);
+              }
               await attachV8Track2ManagedOverage(subscriptionId, v9Update.tier);
               await detachV8Track2ManagedOverageIfDowngrade(subscriptionId, v9Update.tier);
               await logBillingEvent(supabase, user.id, "subscription_updated", {
@@ -889,8 +1011,27 @@ export async function POST(request: NextRequest) {
                 tier: v8.tier,
                 price_id: priceId,
               }, "failed", v8.error);
+              failTrack2Webhook("Failed to apply v8 Track 2 tier on api_keys", v8.error);
             } else {
               console.log(`v8 Track 2 subscription updated for user ${user.id}: ${v8.tier}`);
+              const profileSync = await syncTrack2ProfileSubscription(supabase, {
+                userId: user.id,
+                customerId,
+                eventData,
+                tier: v8.tier,
+                priceLockVersion: V8_PRICE_LOCK_VERSION,
+              });
+              if (!profileSync.ok) {
+                console.error("Failed to sync v8 Track 2 profile plan:", profileSync.error);
+                await logBillingEvent(supabase, user.id, "subscription_updated_profile_sync", {
+                  subscription_id: subscriptionId,
+                  channel: "track2",
+                  catalog: "v8",
+                  tier: v8.tier,
+                  price_id: priceId,
+                }, "failed", profileSync.error);
+                failTrack2Webhook("Failed to sync v8 Track 2 profile plan", profileSync.error);
+              }
               // Symmetric upgrade/downgrade handling for the Studio Managed
               // Opus overage line: attach if user is now on Studio Managed,
               // detach if they moved off it. Both calls are idempotent.
@@ -992,6 +1133,10 @@ export async function POST(request: NextRequest) {
               "free",
               supabase as unknown as Parameters<typeof applyV9Track2TierToApiKeys>[2],
             );
+            const profileSync = await syncTrack2ProfileCancellation(supabase, user.id, eventData);
+            if (!profileSync.ok) {
+              console.error("Failed to sync v9 Track 2 profile cancellation:", profileSync.error);
+            }
             await logBillingEvent(supabase, user.id, "subscription_deleted", {
               subscription_id: subscriptionId,
               channel: "track2",
@@ -999,7 +1144,16 @@ export async function POST(request: NextRequest) {
               previous_tier: v9Tier,
               downgraded_to: "free",
               ended_at: eventData.ended_at,
-            }, downgrade.ok ? "success" : "failed", downgrade.ok ? undefined : downgrade.error);
+              profile_synced: profileSync.ok,
+            },
+            downgrade.ok && profileSync.ok ? "success" : "failed",
+            !downgrade.ok ? downgrade.error : profileSync.ok ? undefined : profileSync.error);
+            if (!downgrade.ok) {
+              failTrack2Webhook("Failed to downgrade v9 Track 2 api_keys", downgrade.error);
+            }
+            if (!profileSync.ok) {
+              failTrack2Webhook("Failed to sync v9 Track 2 profile cancellation", profileSync.error);
+            }
             // v9 funnel: Track 2 cancellation. Pre-fix this branch broke
             // out before the Track 1 funnel hook below, silently dropping
             // Track 2 cancel events from cohort/retention analytics.
@@ -1042,6 +1196,10 @@ export async function POST(request: NextRequest) {
               "free",
               supabase as unknown as Parameters<typeof applyV8Track2TierToApiKeys>[2],
             );
+            const profileSync = await syncTrack2ProfileCancellation(supabase, user.id, eventData);
+            if (!profileSync.ok) {
+              console.error("Failed to sync v8 Track 2 profile cancellation:", profileSync.error);
+            }
             await logBillingEvent(supabase, user.id, "subscription_deleted", {
               subscription_id: subscriptionId,
               channel: "track2",
@@ -1049,7 +1207,16 @@ export async function POST(request: NextRequest) {
               previous_tier: v8Tier,
               downgraded_to: "free",
               ended_at: eventData.ended_at,
-            }, downgrade.ok ? "success" : "failed", downgrade.ok ? undefined : downgrade.error);
+              profile_synced: profileSync.ok,
+            },
+            downgrade.ok && profileSync.ok ? "success" : "failed",
+            !downgrade.ok ? downgrade.error : profileSync.ok ? undefined : profileSync.error);
+            if (!downgrade.ok) {
+              failTrack2Webhook("Failed to downgrade v8 Track 2 api_keys", downgrade.error);
+            }
+            if (!profileSync.ok) {
+              failTrack2Webhook("Failed to sync v8 Track 2 profile cancellation", profileSync.error);
+            }
             // Same Track 2 cancel funnel for v8 fallback path.
             void recordFunnelEvent({
               userId: user.id,
