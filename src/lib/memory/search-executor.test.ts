@@ -168,6 +168,43 @@ describe('executeMemorySearch', () => {
     expect(result.fallback).toBeNull();
   });
 
+  it('returns empty success when hybrid errors and keyword fallback is also empty', async () => {
+    // Repro for the empty-pool 504: hybrid embedding times out, keyword
+    // fallback completes cleanly but returns no rows. The route should see
+    // a cleared searchError and a 200 [] response, not the original timeout.
+    const result = await executeMemorySearch<Row>(
+      baseParams({
+        rpcCall: createRpcStub({
+          hybrid_search_memories: [{ data: null, error: { message: 'embedding_timeout' } }],
+          keyword_search_memories: [{ data: [], error: null }],
+        }),
+        initialMode: 'hybrid',
+      })
+    );
+
+    expect(result.error).toBeNull();
+    expect(result.resolvedMode).toBe('keyword');
+    expect(result.fallback?.reason).toBe('search_error');
+    expect(result.results).toEqual([]);
+  });
+
+  it('returns empty success when vector errors and keyword fallback is also empty', async () => {
+    const result = await executeMemorySearch<Row>(
+      baseParams({
+        rpcCall: createRpcStub({
+          search_memories: [{ data: null, error: { message: 'rpc_timeout' } }],
+          keyword_search_memories: [{ data: [], error: null }],
+        }),
+        initialMode: 'vector',
+      })
+    );
+
+    expect(result.error).toBeNull();
+    expect(result.resolvedMode).toBe('keyword');
+    expect(result.fallback?.reason).toBe('search_error');
+    expect(result.results).toEqual([]);
+  });
+
   it('uses bounded RPC names when timeout budget is enabled', async () => {
     const calledFns: string[] = [];
     const result = await executeMemorySearch<Row>(
