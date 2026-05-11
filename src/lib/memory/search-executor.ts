@@ -162,8 +162,13 @@ export async function executeMemorySearch<TRow>(
       'keyword'
     );
 
-    if (!fallbackError && fallbackData && fallbackData.length > 0) {
-      results = fallbackData;
+    if (!fallbackError) {
+      // An empty keyword result is still a successful fallback: the user has no
+      // matching memories, so the right reply is `200 []`, not the original
+      // hybrid/vector error. Previously this branch required `length > 0`,
+      // which left `searchError` set for empty pools and forced the route to
+      // return 504 even though the fallback completed cleanly.
+      results = fallbackData || [];
       fallback = {
         applied: true,
         from: fromMode,
@@ -175,9 +180,7 @@ export async function executeMemorySearch<TRow>(
       return true;
     }
 
-    if (fallbackError) {
-      searchError = fallbackError;
-    }
+    searchError = fallbackError;
     return false;
   };
 
