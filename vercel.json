@@ -1,5 +1,10 @@
 {
   "ignoreCommand": "npm run vercel:ignore-build",
+  "git": {
+    "deploymentEnabled": {
+      "main": true
+    }
+  },
   "regions": [
     "hnd1"
   ],
