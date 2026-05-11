@@ -195,6 +195,27 @@ export class SearchServiceV3 {
     const filters = request.filters || {};
     const recallMode = request.recallMode || 'balanced';
 
+    // Fast existence probe: if the user has no v4 notes at all, skip the
+    // embedding + 3-RPC fallback chain that otherwise runs to completion and
+    // returns an empty array anyway. Saves ~10–30s on cold paths and is the
+    // root cause of the empty-pool 504s seen via the MCP surface.
+    {
+      const probe = await this.supabase
+        .from('spring_memory_notes')
+        .select('id')
+        .eq('user_id', userId)
+        .limit(1);
+      if (!probe.error && Array.isArray(probe.data) && probe.data.length === 0) {
+        return {
+          results: [],
+          total: 0,
+          filters,
+          mode: 'empty_pool',
+          processingMs: Date.now() - startTime,
+        };
+      }
+    }
+
     // Get HNSW configuration
     const hnswConfig = await this.getHNSWConfig(userId, topK, filters, recallMode);
 

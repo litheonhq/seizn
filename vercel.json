@@ -8,6 +8,12 @@
   "regions": [
     "hnd1"
   ],
+  "functions": {
+    "src/app/api/v1/memories/route.ts": { "maxDuration": 90 },
+    "src/app/api/memories/route.ts": { "maxDuration": 90 },
+    "src/app/api/spring/search-v3/route.ts": { "maxDuration": 90 },
+    "src/app/api/memories/search_v4/route.ts": { "maxDuration": 90 }
+  },
   "redirects": [
     {
       "source": "/((?!api/webhooks/).*)",
