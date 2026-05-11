@@ -265,6 +265,10 @@ function track2TierToProfilePlan(tier: V8Track2Tier | V9Track2Tier): Track2Profi
   return tier;
 }
 
+function failTrack2Webhook(message: string, error?: string): never {
+  throw new Error(error ? `${message}: ${error}` : message);
+}
+
 async function syncTrack2ProfileSubscription(
   supabase: ReturnType<typeof createServerClient>,
   params: {
@@ -706,6 +710,7 @@ export async function POST(request: NextRequest) {
               tier: v9.tier,
               price_id: priceId,
             }, "failed", v9.error);
+            failTrack2Webhook("Failed to apply v9 Track 2 tier on api_keys", v9.error);
           } else {
             console.log(`v9 Track 2 subscription created for user ${user.id}: ${v9.tier}`);
             const profileSync = await syncTrack2ProfileSubscription(supabase, {
@@ -724,6 +729,7 @@ export async function POST(request: NextRequest) {
                 tier: v9.tier,
                 price_id: priceId,
               }, "failed", profileSync.error);
+              failTrack2Webhook("Failed to sync v9 Track 2 profile plan", profileSync.error);
             }
             await attachV8Track2ManagedOverage(subscriptionId, v9.tier);
             await logBillingEvent(supabase, user.id, "subscription_created", {
@@ -792,6 +798,7 @@ export async function POST(request: NextRequest) {
               tier: v8.tier,
               price_id: priceId,
             }, "failed", v8.error);
+            failTrack2Webhook("Failed to apply v8 Track 2 tier on api_keys", v8.error);
           } else {
             console.log(`v8 Track 2 subscription created for user ${user.id}: ${v8.tier}`);
             const profileSync = await syncTrack2ProfileSubscription(supabase, {
@@ -810,6 +817,7 @@ export async function POST(request: NextRequest) {
                 tier: v8.tier,
                 price_id: priceId,
               }, "failed", profileSync.error);
+              failTrack2Webhook("Failed to sync v8 Track 2 profile plan", profileSync.error);
             }
             await attachV8Track2ManagedOverage(subscriptionId, v8.tier);
             await logBillingEvent(supabase, user.id, "subscription_created", {
@@ -956,6 +964,7 @@ export async function POST(request: NextRequest) {
                 tier: v9Update.tier,
                 price_id: priceId,
               }, "failed", v9Update.error);
+              failTrack2Webhook("Failed to apply v9 Track 2 tier on api_keys", v9Update.error);
             } else {
               console.log(`v9 Track 2 subscription updated for user ${user.id}: ${v9Update.tier}`);
               const profileSync = await syncTrack2ProfileSubscription(supabase, {
@@ -974,6 +983,7 @@ export async function POST(request: NextRequest) {
                   tier: v9Update.tier,
                   price_id: priceId,
                 }, "failed", profileSync.error);
+                failTrack2Webhook("Failed to sync v9 Track 2 profile plan", profileSync.error);
               }
               await attachV8Track2ManagedOverage(subscriptionId, v9Update.tier);
               await detachV8Track2ManagedOverageIfDowngrade(subscriptionId, v9Update.tier);
@@ -1001,6 +1011,7 @@ export async function POST(request: NextRequest) {
                 tier: v8.tier,
                 price_id: priceId,
               }, "failed", v8.error);
+              failTrack2Webhook("Failed to apply v8 Track 2 tier on api_keys", v8.error);
             } else {
               console.log(`v8 Track 2 subscription updated for user ${user.id}: ${v8.tier}`);
               const profileSync = await syncTrack2ProfileSubscription(supabase, {
@@ -1019,6 +1030,7 @@ export async function POST(request: NextRequest) {
                   tier: v8.tier,
                   price_id: priceId,
                 }, "failed", profileSync.error);
+                failTrack2Webhook("Failed to sync v8 Track 2 profile plan", profileSync.error);
               }
               // Symmetric upgrade/downgrade handling for the Studio Managed
               // Opus overage line: attach if user is now on Studio Managed,
@@ -1136,6 +1148,12 @@ export async function POST(request: NextRequest) {
             },
             downgrade.ok && profileSync.ok ? "success" : "failed",
             !downgrade.ok ? downgrade.error : profileSync.ok ? undefined : profileSync.error);
+            if (!downgrade.ok) {
+              failTrack2Webhook("Failed to downgrade v9 Track 2 api_keys", downgrade.error);
+            }
+            if (!profileSync.ok) {
+              failTrack2Webhook("Failed to sync v9 Track 2 profile cancellation", profileSync.error);
+            }
             // v9 funnel: Track 2 cancellation. Pre-fix this branch broke
             // out before the Track 1 funnel hook below, silently dropping
             // Track 2 cancel events from cohort/retention analytics.
@@ -1193,6 +1211,12 @@ export async function POST(request: NextRequest) {
             },
             downgrade.ok && profileSync.ok ? "success" : "failed",
             !downgrade.ok ? downgrade.error : profileSync.ok ? undefined : profileSync.error);
+            if (!downgrade.ok) {
+              failTrack2Webhook("Failed to downgrade v8 Track 2 api_keys", downgrade.error);
+            }
+            if (!profileSync.ok) {
+              failTrack2Webhook("Failed to sync v8 Track 2 profile cancellation", profileSync.error);
+            }
             // Same Track 2 cancel funnel for v8 fallback path.
             void recordFunnelEvent({
               userId: user.id,
