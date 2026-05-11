@@ -5,14 +5,14 @@
   ],
   "redirects": [
     {
-      "source": "/:path*",
+      "source": "/((?!api/webhooks/).*)",
       "has": [
         {
           "type": "host",
           "value": "seizn.com"
         }
       ],
-      "destination": "https://www.seizn.com/:path*",
+      "destination": "https://www.seizn.com/$1",
       "permanent": true
     }
   ],
