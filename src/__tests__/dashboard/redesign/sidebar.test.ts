@@ -19,8 +19,8 @@ describe('NAV_GROUPS structure', () => {
 
   it('has the expected items per group', () => {
     const totals = NAV_GROUPS.map((g) => g.items.length);
-    expect(totals).toEqual([9, 4, 2, 3, 1]);
-    expect(totals.reduce((a, b) => a + b, 0)).toBe(19);
+    expect(totals).toEqual([10, 4, 2, 3, 1]);
+    expect(totals.reduce((a, b) => a + b, 0)).toBe(20);
   });
 
   it('every item has a labelKey, href, and icon component', () => {
