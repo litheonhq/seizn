@@ -1823,7 +1823,18 @@
         "unknown": "Coach analysis failed. Try again in a moment.",
         "network": "Network unavailable. Check your connection and retry.",
         "empty": "Add some text first — Coach needs a scene to analyze.",
-        "csrf": "Session expired. Reload the page and try again."
+        "csrf": "Session expired. Reload the page and try again.",
+        "tooLong": "Scene is too long. Trimmed to the maximum length."
+      },
+      "critic": {
+        "layer_auditor": "Layer Auditor",
+        "rhetoric_examiner": "Rhetoric Examiner",
+        "freshness_inspector": "Freshness Inspector",
+        "reader_surrogate": "Reader Surrogate",
+        "subtext_analyst": "Subtext Analyst",
+        "continuity_editor": "Continuity Editor",
+        "pacing_surgeon": "Pacing Surgeon",
+        "voice_enforcer": "Voice Enforcer"
       },
       "layers": {
         "pending": "Story layer presence appears after you analyze."

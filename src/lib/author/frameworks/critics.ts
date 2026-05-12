@@ -12,6 +12,17 @@ export type CriticPersonaId =
   | 'pacing_surgeon'
   | 'voice_enforcer';
 
+export const CRITIC_PERSONA_IDS = [
+  'layer_auditor',
+  'rhetoric_examiner',
+  'freshness_inspector',
+  'reader_surrogate',
+  'subtext_analyst',
+  'continuity_editor',
+  'pacing_surgeon',
+  'voice_enforcer',
+] as const satisfies readonly CriticPersonaId[];
+
 export interface CriticPersona {
   id: CriticPersonaId;
   name: string;

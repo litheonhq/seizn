@@ -1805,7 +1805,18 @@
         "unknown": "코치 분석에 실패했습니다. 잠시 후 다시 시도해 주세요.",
         "network": "네트워크가 끊겼습니다. 연결을 확인하고 다시 시도해 주세요.",
         "empty": "먼저 분석할 본문을 붙여 넣어 주세요.",
-        "csrf": "세션이 만료되었습니다. 페이지를 새로고침한 뒤 다시 시도해 주세요."
+        "csrf": "세션이 만료되었습니다. 페이지를 새로고침한 뒤 다시 시도해 주세요.",
+        "tooLong": "장면이 너무 깁니다. 최대 길이로 잘렸습니다."
+      },
+      "critic": {
+        "layer_auditor": "레이어 감사",
+        "rhetoric_examiner": "수사 감별",
+        "freshness_inspector": "신선도 점검",
+        "reader_surrogate": "독자 시선",
+        "subtext_analyst": "서브텍스트",
+        "continuity_editor": "연속성",
+        "pacing_surgeon": "페이싱",
+        "voice_enforcer": "보이스"
       },
       "layers": {
         "pending": "스토리 레이어 점검은 분석을 실행하면 표시됩니다."

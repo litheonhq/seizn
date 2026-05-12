@@ -40,10 +40,11 @@ import {
   type CoachAnalysis,
   type CoachLlmResponse,
 } from './schema';
-
-const COACH_LLM_MAX_TOKENS = 2400;
-const COACH_LLM_TEMPERATURE = 0.2;
-const COACH_LLM_TIMEOUT_MS = 20_000;
+import {
+  COACH_LLM_MAX_TOKENS,
+  COACH_LLM_TEMPERATURE,
+  COACH_LLM_TIMEOUT_MS,
+} from './config';
 
 export class CoachAnalyzeTimeoutError extends Error {
   constructor() {

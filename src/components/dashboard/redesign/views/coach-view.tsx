@@ -10,7 +10,17 @@ import {
   type AntiClicheCategory,
   type AntiClicheFinding,
 } from '@/lib/author/frameworks';
+import {
+  COACH_CLICHE_PANEL_LIMIT,
+  COACH_CLICHE_SCAN_DEBOUNCE_MS,
+  COACH_MAX_INPUT_CHARS,
+} from '@/lib/author/coach/config';
 import { FeatherIcon, SparkIcon, XIcon } from '../icons';
+import { buildHighlightedMarkup, escapeHtml } from './coach/markup';
+
+// Re-exports preserved so the existing unit tests at
+// src/__tests__/dashboard/redesign/coach-view.test.tsx keep their import path.
+export { buildHighlightedMarkup, escapeHtml };
 
 interface CoachAnalysisResponse {
   hash: string;
@@ -46,7 +56,7 @@ const CATEGORY_LABEL: Record<AntiClicheCategory, string> = {
   ai_specific: 'AI patterns',
 };
 
-function useDebouncedAntiCliche(text: string, delayMs = 300): AntiClicheFinding[] {
+function useDebouncedAntiCliche(text: string, delayMs = COACH_CLICHE_SCAN_DEBOUNCE_MS): AntiClicheFinding[] {
   const [findings, setFindings] = useState<AntiClicheFinding[]>([]);
   useEffect(() => {
     const handle = setTimeout(() => {
@@ -59,15 +69,6 @@ function useDebouncedAntiCliche(text: string, delayMs = 300): AntiClicheFinding[
 
 function findingKey(finding: AntiClicheFinding): string {
   return `${finding.index}:${finding.match.toLowerCase()}`;
-}
-
-export function escapeHtml(value: string): string {
-  return value
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
 }
 
 const editorBaseStyle: React.CSSProperties = {
@@ -88,46 +89,6 @@ const editorBaseStyle: React.CSSProperties = {
   pointerEvents: 'none',
   margin: 0,
 };
-
-const HIGHLIGHT_PALETTE: Record<AntiClicheCategory, string> = {
-  opening: 'rgba(122, 92, 58, 0.22)',
-  emotional: 'rgba(201, 100, 66, 0.22)',
-  description: 'rgba(216, 168, 109, 0.28)',
-  action: 'rgba(122, 92, 58, 0.22)',
-  dialogue: 'rgba(112, 130, 152, 0.24)',
-  ai_specific: 'rgba(201, 100, 66, 0.32)',
-};
-
-export function buildHighlightedMarkup(text: string, findings: AntiClicheFinding[]): string {
-  if (findings.length === 0) {
-    return escapeHtml(text) + '​';
-  }
-  // Findings must be non-overlapping; if any overlap we keep the earliest.
-  const ordered = [...findings].sort((a, b) => a.index - b.index);
-  const trimmed: AntiClicheFinding[] = [];
-  let lastEnd = -1;
-  for (const finding of ordered) {
-    if (finding.index < lastEnd) continue;
-    trimmed.push(finding);
-    lastEnd = finding.index + finding.match.length;
-  }
-  let cursor = 0;
-  let html = '';
-  for (const finding of trimmed) {
-    if (finding.index > cursor) {
-      html += escapeHtml(text.slice(cursor, finding.index));
-    }
-    const segment = escapeHtml(text.slice(finding.index, finding.index + finding.match.length));
-    const color = HIGHLIGHT_PALETTE[finding.category];
-    html += `<mark style="background:${color};color:inherit;border-radius:2px;padding:0 1px;">${segment}</mark>`;
-    cursor = finding.index + finding.match.length;
-  }
-  if (cursor < text.length) {
-    html += escapeHtml(text.slice(cursor));
-  }
-  // Trailing zero-width ensures the overlay matches textarea height even on a trailing newline.
-  return html + '​';
-}
 
 export function CoachView({ projectId }: CoachViewProps) {
   const { t } = useDashboardTranslation();
@@ -290,7 +251,16 @@ export function CoachView({ projectId }: CoachViewProps) {
           <textarea
             ref={textAreaRef}
             value={text}
-            onChange={(event) => setText(event.target.value)}
+            onChange={(event) => {
+              const next = event.target.value;
+              if (next.length > COACH_MAX_INPUT_CHARS) {
+                setText(next.slice(0, COACH_MAX_INPUT_CHARS));
+                toast('warning', t('dashboard.coach.error.tooLong'));
+              } else {
+                setText(next);
+              }
+            }}
+            maxLength={COACH_MAX_INPUT_CHARS}
             onScroll={handleOverlayScroll}
             onKeyDown={handleTextareaKeyDown}
             placeholder={t('dashboard.coach.placeholder')}
@@ -488,7 +458,7 @@ function CoachClicheSection({
         <EmptyHint text={t('dashboard.coach.cliche.empty')} />
       ) : (
         <ul ref={listRef} style={listReset}>
-          {findings.slice(0, 12).map((finding, index) => (
+          {findings.slice(0, COACH_CLICHE_PANEL_LIMIT).map((finding, index) => (
             <li key={`${finding.index}-${index}`} style={{ ...listItem, padding: 0, position: 'relative' }}>
               <button
                 type="button"
@@ -527,9 +497,9 @@ function CoachClicheSection({
               </button>
             </li>
           ))}
-          {findings.length > 12 ? (
+          {findings.length > COACH_CLICHE_PANEL_LIMIT ? (
             <li style={{ fontSize: 12, color: 'var(--text-tertiary)', padding: '6px 0' }}>
-              + {findings.length - 12} {t('dashboard.coach.cliche.more')}
+              + {findings.length - COACH_CLICHE_PANEL_LIMIT} {t('dashboard.coach.cliche.more')}
             </li>
           ) : null}
         </ul>
@@ -624,7 +594,7 @@ function CoachCriticSection({ critics, t }: SectionProps & { critics: CoachAnaly
             <li key={`${critic.critic}-${index}`} style={listItem}>
               <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8 }}>
                 <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>
-                  {critic.critic.replace(/_/g, ' ')}
+                  {t(`dashboard.coach.critic.${critic.critic}`)}
                 </span>
                 <span style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>{critic.rating} / 5</span>
               </div>
