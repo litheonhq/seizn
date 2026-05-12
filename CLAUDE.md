@@ -18,13 +18,114 @@
 ## 타겟 시장
 - 한국, 영어권, 일본 (3개국)
 
-## 가격 정책
-| 플랜 | 가격 | AI 엔진 | 메모리 | API 호출 | 망각 곡선 |
-|-----|------|---------|--------|---------|----------|
-| Free | $0 | Haiku | 10,000 | 1,000/월 | 60일 |
-| Plus | $9 | Sonnet | 50,000 | 10,000/월 | 120일 |
-| Pro | $29 | Sonnet | 200,000 | 50,000/월 | ON/OFF 가능 |
-| Enterprise | 문의 | Sonnet+Opus | 무제한 | 무제한 | ON/OFF 가능 |
+## 정보 아키텍처 — 4-Track 구조 (Locked 2026-05-10)
+
+| 도메인/경로 | 트랙 | 제품 라인 | ICP | Locale |
+|---|---|---|---|---|
+| `seizn.com/[locale]` | **Track 1 — Web Writer** | 작가용 웹 SaaS | Fiction writer | 22개 |
+| `seizn.com/[locale]/developers` | **Track 2 — Writer API/MCP** | 작가 도구 빌더용 API/MCP | Writer-tool dev | 22개 |
+| `seizn.com/[locale]/desktop` | **Track 3 — Desktop** | 네이티브 작가 앱 (offline-first) | Fiction writer | 22개 (waitlist) |
+| `engine.seizn.com` | **Track 4 — Engine** | 게임 NPC / 에이전트 메모리 인프라 | Game studio / agent dev | en (+ja optional) |
+
+**라우팅 원칙**:
+- Track 1-3은 같은 작가 제품 라인 (단일 도메인 + path) — 같은 백엔드/auth/dashboard 공유
+- Track 4 (Engine)은 별도 vertical — 다른 ICP, 다른 카피, 다른 가격, 다른 sales motion. 같은 백엔드 사용 가능하지만 마케팅 surface 완전 분리. 22 locale 부담 없음 (en 중심).
+- 홈 (`seizn.com/[locale]`)에 페르소나 splitter: Writer / Developer / Desktop 3-up. Track 4 (Engine)은 footer "Other products: Engine for game studios →" 1줄로만 노출.
+- Engine (`engine.seizn.com`) 자체 footer에 "For writers? → seizn.com" 1줄.
+
+**가격표 분리**:
+- `seizn.com/[locale]/pricing` = Track 1+2+3 작가 카탈로그
+- `engine.seizn.com/pricing` (or 동일 도메인 내 섹션) = Track 4 게임 vertical 카탈로그 — per-entity / per-event B2B
+
+## 가격 정책 (Author Memory v3 — Locked 2026-05-07, v9 catalog)
+
+### Free 티어 (W2 — 2026-05-08 완화)
+- BYOK 강제 (Anthropic 또는 OpenAI 키 등록 필수)
+- 50 calls/day, 사용자 모델 자유 선택 (default Opus 4.7)
+- 기능 제한: Check 15/월, Dialog 15/월, 첫 20 챕터 / 100K words 분석 한도
+- 차단: Backlog generation, Knowledge partitioning, Timeline/Relationship 추출
+- 우리 비용: $0 (인프라 $0.04/인/월만) — Free는 BYOK라 LLM 비용 0
+- W2 근거: 우리 비용 변화 없음 + advanced features 9개가 conversion driver 충분 + signup 마찰 감소
+
+### Track 1 (웹) 가격표 — 2-column (Managed/BYOK) × 2-cadence (Monthly/Annual)
+| Tier | Managed 정착 / Charter Monthly / Charter Annual | BYOK 정착 / Charter Monthly / Charter Annual |
+|---|---|---|
+| Indie | $39 / $29 / $324yr ($27/mo) | $19 / $11 / $114yr ($9.50/mo) |
+| Pro | $149 / $112 / $1,250yr ($104/mo) | $79 / $47 / $474yr ($39.50/mo) |
+| Studio | $499 / $374 / $4,190yr ($349/mo) | $249 / $149 / $1,494yr ($124.50/mo) |
+| Enterprise | $2,500 / $1,875 (BYOK 강제) | — |
+
+### Track 2 (API/MCP)
+| Tier | 정착 / Charter Monthly / Charter Annual |
+|---|---|
+| Free | $0 (50/일 BYOK 강제) |
+| Indie (BYOK) | $19 / $11 / $108yr ($9/mo) |
+| Pro (BYOK) | $39 / $23 / $228yr ($19/mo) |
+| Studio (BYOK) | $199 / $119 / $1,188yr ($99/mo) |
+| Studio Managed | $999 / $599 / $5,988yr ($499/mo) — medium effort, $0.50/콜 overage |
+| Enterprise | Contact |
+
+### Charter 정책 (단순 시간창)
+- **2027-05-01까지** Charter 가격 적용 (lifetime lock 폐기)
+- 2027-05-01 이후 결제건은 정상가
+- Annual 가입자: 결제 시점이 2027-05-01 이전이면 그 1년치 Charter 가격 보장
+- Monthly 가입자: 매월 결제 시점이 기준
+- Charter 할인폭: Managed Monthly -25% / Annual -30%, BYOK Monthly -40% / Annual -50%
+- Stripe Schedule 객체로 swap 자동화
+
+### Trial 정책
+- **별도 Trial 없음** (Free와 통합)
+- Free에서 15/15 Check/Dialog 한계 (W2) 또는 advanced features 차단으로 결제 trigger
+- Smart sample 추천 + cost preview UI로 마찰 완화
+
+### Charter Managed 혜택
+**모든 Managed 공통**: Priority Queue / 48h Priority Support / Beta Features Access / Multi-provider Auto-failover / Founding Member 배지
+**Pro+ 가산**: Premium quality (xhigh) included / Monthly Continuity Report / 2 Collaborator Seats
+**Studio+ 가산**: 5 Seats / Quarterly Strategy Call / Custom Prompt Overrides / White-label Export
+**Enterprise**: 무제한 seats / Custom SLA / Dedicated success manager
+
+### Effort 정책
+- BYOK 모든 티어: 사용자 자유 선택 (default Opus 4.7 medium)
+- Indie Managed: medium 강제 (마진 보호)
+- Pro/Studio/Enterprise Managed: xhigh 포함
+
+### LLM 단가 (lock 2026-05-08, `src/lib/author/llm/pricing-rates.ts` 단일 소스)
+- Claude Opus 4.7: $5/$25 per MTok (input/output), 5min cache write $6.25, cache read $0.50
+- Claude Sonnet 4.6: $3/$15 per MTok
+- GPT-5.5: $5/$30 per MTok, cached input $1.25
+- Gemini 2.5 Pro: $1.25/$10 per MTok ≤200K input, $2.50/$15 per MTok >200K (R25)
+- Gemini 2.5 Flash: $0.30/$2.50 per MTok
+- 가격 변경 시 `pricing-rates.ts` 단일 파일만 수정
+
+## 마케팅 / 광고 정책 (Lock 2026-05-07)
+- **광고비 cap: 월 $500**, dynamic ($200-500 channel 효율 기반)
+- Month 1-3 점진 ($300/$400/$500), 3개월 KPI 검증
+- 채널: Reddit Ads + Newsletter sponsorship + Google Ads + Micro-influencer
+- KPI 임계치: CAC < $20/signup, trial 전환 > 20%, 월 churn < 7%
+- 미달 시 광고 중단 + 채널 재검토
+
+## 핵심 측정 지표 (Admin Dashboard `/admin/metrics`)
+- CAC per signup (channel별) — alert >$25
+- 전환율 30/90일 (signup → paid) — target 12% blended, 18% optimistic
+- MRR (월간 snapshot) — growth target +10%/mo
+- Monthly churn — target <5%, alert >10%
+- Free 사용자 인프라 비용 — $0.04/인/월 baseline
+
+## 12개월 재무 예상 (lock)
+- 광고 $500/월, 12% blended conversion, $13 평균 MRR, 5% churn
+- 12개월차: 53 active paid, ARR $8K, 누적 손익 **-$530**
+- 23개월차: break-even
+- 36개월차: ARR $15K, 누적 +$7K
+- Steady state: 120 paid, ARR $19K
+
+## 성장 가속 plan (organic > paid)
+**원칙**: 광고만 늘리는 건 단기 자살. Organic + conversion 개선이 진짜 lever.
+- M1-3 (학습): 광고 채널 검증
+- M4-6 (검증): SEO 콘텐츠 시작 (월 2-4편 블로그)
+- M7-12 (확장): 작가 커뮤니티 침투, Founding Member 추천 프로그램, case study
+- M12-24: AI 작가 도구 비교 사이트 등재, 작가 인플루언서 연계
+
+**Best case (organic 2x + conversion 18% 달성)**: M12 +$3-5K 흑자, M24 ARR $35K, M36 누적 +$30K
 
 ## 폴더 구조
 ```
@@ -46,6 +147,23 @@ src/
 ## 환경 변수
 - `.env.local` 파일 참조
 - 절대 커밋하지 말 것
+
+### Author LLM Managed keys (Charter Managed perk)
+3-provider failover 활성화하려면 모든 키 등록 필요. 1-2개만 있으면 부분 failover.
+
+| 변수 | 우선순위 chain | 비고 |
+|---|---|---|
+| `AUTHOR_ANTHROPIC_DEV_API_KEY` → `AUTHOR_LLM_ANTHROPIC_API_KEY` → `LITHEON_ANTHROPIC_API_KEY` → `ANTHROPIC_API_KEY` | Anthropic Claude | catch-all 허용 |
+| `AUTHOR_OPENAI_DEV_API_KEY` → `AUTHOR_LLM_OPENAI_API_KEY` → `LITHEON_OPENAI_API_KEY` → `OPENAI_API_KEY` | OpenAI GPT | catch-all 허용 |
+| `AUTHOR_GOOGLE_DEV_API_KEY` → `AUTHOR_LLM_GOOGLE_API_KEY` → `LITHEON_GOOGLE_API_KEY` | Google Gemini | **catch-all 없음** — Author 전용 namespace만 |
+
+R24에서 Google chain은 `GOOGLE_API_KEY` / `GEMINI_API_KEY` catch-all을 의도적으로 제외 (Maps / 다른 Google 서비스와 budget 혼선 방지).
+미설정 provider로 failover 시도 시 `LLM_NOT_CONFIGURED` → 다음 provider로 walk (R25 M1).
+
+### Author LLM provider preference (사용자별)
+- 기본 default: `AUTHOR_LLM_PROVIDER` env (`anthropic` | `google` | `openai`)
+- 사용자 override: `profiles.author_llm_provider` column (migration 20260507001 필요 — prod 미적용 상태)
+- Override 적용 시 BYOK 키 등록 필수 (해당 provider만)
 
 ## 개발 명령어
 ```bash
@@ -117,63 +235,54 @@ Seizn MCP 서버가 로드되지 않았을 때의 대체 방법:
 - 새 라이브러리 추가, API 라우트 생성, 아키텍처 변경 시 해당 섹션 수정
 - `claude-audit.yml` 워크플로우로 전체 재생성 가능
 
-## CI/CD 워크플로우 (GitHub Actions, Self-hosted Runner)
+## CI/CD 워크플로우 (GitHub Actions)
 
-중앙 레포 `iruhana/claude-workflows@v1` 기반. 모든 워크플로우는 **수동 트리거(workflow_dispatch)** 전용.
-프로바이더: `claude` (기본) 또는 `codex` (`-f provider="codex"` 추가).
+`claude-audit.yml`은 repo-local, Litheon-only 워크플로우이며 결정적 npm 감사 게이트를 실행한다. `provider` 입력은 기존 CLI 호환용으로만 남아 있고 외부 AI 워크플로우를 호출하지 않는다.
+다른 `claude-*`, `auto-fix`, `issue-to-code` 워크플로우 파일은 같은 repo-local audit을 호출하는 호환 래퍼다. 자체적으로 코드 변경, 댓글, 이슈, 커밋을 만들지 않는다.
 
-### 코드 개선 (claude-improve.yml)
-seizn 전용 프리셋 우선. 기본값: `mcp-protocol`.
+### 결정적 감사 래퍼
 
-| 프리셋 | 설명 | 모델 |
-|--------|------|------|
-| `mcp-protocol` | MCP SDK 스펙 준수, tool/resource 핸들러, JSON-RPC | **opus** |
-| `memory-graph` | 메모리 CRUD, 지식 그래프 무결성, 검색 관련성 | **opus** |
-| `ai-context` | session_init 프로젝트 감지, 8개 AI 도구 설정 동기화 | sonnet |
-| `security` | XSS, CSRF, 인젝션, 시크릿 노출 감사 | **opus** |
-| `code-quality` | DRY, 네이밍, 타입, 패턴 일관성 | sonnet |
-| `performance` | N+1 쿼리, memo, 동적 임포트, 캐싱 | **opus** |
-| `dead-code` / `tech-debt` / `deps-update` / `accessibility` / `seo` | 범용 | 자동 |
+예전 CLI entrypoint는 보존하되 실행은 `litheonhq/seizn` 내부에 고정한다.
 
 ```bash
-# 기본 (MCP 프로토콜 감사)
+# 기본 결정적 게이트
 gh workflow run claude-improve.yml
 
-# 특정 프리셋 + Codex
-gh workflow run claude-improve.yml -f task_type="memory-graph" -f provider="codex"
+# security 프리셋은 strategic checks 실행
+gh workflow run claude-improve.yml -f task_type="security" -f provider="codex"
 
-# 커스텀 작업 + 범위 제한
+# 커스텀 작업/범위는 operator context로만 기록
 gh workflow run claude-improve.yml -f task_type="custom" -f task="Refactor webhook delivery retry logic" -f scope="src/app/api/webhooks"
 
-# 모델 강제 + 웹 검색
+# provider/model/web-search 입력은 호환용
 gh workflow run claude-improve.yml -f task_type="security" -f model="opus" -f use_web_search="true"
 ```
 
 ### 기타 워크플로우
 
 ```bash
-# PR 코드 리뷰
+# PR review readiness gate
 gh workflow run claude-review.yml -f pr_number="5"
 
-# 빌드 에러 자동 수정 (3라운드 에스컬레이션)
+# auto-fix 호환 게이트; 코드 변경 없음
 gh workflow run auto-fix.yml -f pr_number="5"
 
-# Issue → 구현 → PR
+# issue implementation readiness gate; 코드 변경 없음
 gh workflow run issue-to-code.yml -f issue_number="3"
 
 # 기술 스택 문서 생성
 gh workflow run claude-audit.yml -f depth="strategic"
 
-# 연속 개선 (기본: mcp-protocol,memory-graph,ai-context,security,...)
+# continuous 호환 게이트; 결정적 1회 pass
 gh workflow run claude-continuous.yml
 gh workflow run claude-continuous.yml -f tasks="mcp-protocol,security" -f max_cycles=3
 
-# 연속 실행 중지
+# 실행 중인 호환 게이트 중지
 gh run cancel $(gh run list -w claude-continuous.yml -L 1 --json databaseId -q '.[0].databaseId')
 ```
 
-### 자동 머지
-저위험 프리셋(`dead-code`, `seo`, `accessibility`, `code-quality`, `ai-context`, `deps-update`)은 빌드 통과 시 자동 squash merge.
+### 머지 정책
+호환 래퍼는 자동 머지하지 않는다. green gate 이후 일반 Litheon review/commit 경로로만 반영한다.
 
 ## 참고 문서
 

@@ -1,7 +1,7 @@
 {
   "metadata": {
     "title": "Seizn — Memoria para NPC con IA",
-    "description": "Conéctate a Inworld, Convai o tu propio LLM. Seizn da a tus NPC memoria persistente, relaciones y recuerdo entre generaciones — precio por entidad, no por puesto."
+    "description": "Conéctalo a Inworld, Convai o a tu propio LLM. Seizn da a tus NPC memoria, relaciones y recuerdos entre generaciones. Precio por entidad, no por puesto."
   },
   "nav": {
     "features": "Características",
@@ -12,14 +12,14 @@
     "demo": "Jugar smallgod"
   },
   "hero": {
-    "badge": "Demo en vivo: smallgod",
-    "title": "Tus NPC recuerdan",
-    "titleHighlight": "entre generaciones.",
-    "subtitle": "Seizn es la capa de memoria para NPC con IA. Conéctalo a Inworld, Convai o tu propio LLM — conserva el motor de diálogo que ya tienes y añade persistencia que sobrevive sesiones y generaciones.",
+    "badge": "Demo en directo: smallgod",
+    "title": "Tus NPC recuerdan,",
+    "titleHighlight": "incluso generaciones después.",
+    "subtitle": "Seizn es la capa de memoria para NPC con IA. Conéctalo a Inworld, Convai o a tu propio LLM, conserva el motor de diálogo que usas y añade una persistencia que aguanta entre sesiones y entre generaciones.",
     "emailPlaceholder": "tú@estudio.com",
     "joinWaitlist": "Reservar demo",
     "joining": "Reservando...",
-    "onTheList": "Te contactaremos pronto.",
+    "onTheList": "Te escribimos en breve.",
     "stats": {
       "tokenSavings": "NPC por proyecto",
       "retrievalTime": "Recuperación de memoria",
@@ -27,8 +27,8 @@
     }
   },
   "features": {
-    "title": "Construido para estudios de videojuegos",
-    "subtitle": "Integra Seizn y conserva tu motor de diálogo. Los NPC obtienen memoria, relaciones y persistencia que sobrevive sesiones y generaciones.",
+    "title": "Hecho para estudios de videojuegos",
+    "subtitle": "Conserva tu motor de diálogo, añade Seizn debajo. Tus NPC ganan memoria, relaciones y una persistencia que aguanta entre sesiones y generaciones.",
     "smartExtraction": {
       "title": "Grafo NPC / Facción / Evento",
       "description": "Modela NPC, facciones, misiones e incidentes como grafo. Las relaciones (confianza, rencor, parentesco) y eventos (testigo, afectado, actor) son primitivos de primera clase, no esquemas que tengas que inventar."
@@ -1609,6 +1609,67 @@
     },
     "northStar": {
       "subtitle": "Indicadores clave de fiabilidad de la memoria de NPC"
+    },
+    "account": {
+      "apiKeys": {
+        "title": "Claves API",
+        "description": "Crea y gestiona las claves Seizn API + MCP para Track 2.",
+        "capHint": "Puedes crear hasta {cap} claves API por cuenta.",
+        "newKey": "Nueva clave API",
+        "create": "Crear",
+        "cancel": "Cancelar",
+        "done": "Listo",
+        "name": "Nombre",
+        "scopes": "Permisos",
+        "scopesDefault": "Permisos por defecto: recall, remember, graph, search.",
+        "copyKey": "Copiar clave",
+        "saveItNow": "Guárdala ya; no volverás a verla.",
+        "created": "Clave API creada",
+        "rotated": "Clave API rotada",
+        "rotate": "Rotar",
+        "revoke": "Revocar",
+        "revokeTitle": "¿Revocar la clave API?",
+        "revokeBody": "Al revocar \"{name}\" se detendrán todas las llamadas con esta clave. Las apps existentes necesitarán una nueva.",
+        "rotateTitle": "¿Rotar la clave API?",
+        "rotateBody": "Al rotar \"{name}\" se generará una nueva clave y se revocará la actual. Actualiza tus apps antes de que la clave antigua deje de funcionar.",
+        "usage": "Uso",
+        "rateLimit": "Límite de peticiones",
+        "lastUsed": "Último uso",
+        "createdAt": "Creada",
+        "empty": "Aún no hay claves activas. Haz clic en \"Nueva clave API\" para crear una.",
+        "errors": {
+          "capReached": "Has alcanzado el límite de claves API para esta cuenta.",
+          "invalidName": "Indica un nombre para la clave.",
+          "internal": "No se pudo completar la acción. Inténtalo de nuevo.",
+          "revokeFailed": "No se pudo revocar la clave.",
+          "rotateFailed": "No se pudo rotar la clave.",
+          "copyFailed": "No se pudo copiar la clave."
+        },
+        "toasts": {
+          "copied": "Clave copiada al portapapeles.",
+          "revoked": "Clave revocada."
+        },
+        "audit": {
+          "link": "Registro de auditoría",
+          "title": "Registro de auditoría de claves API",
+          "description": "Todos los eventos de creación, revocación, rotación, límite de peticiones, cuota y permisos de tus claves API.",
+          "filterAction": "Acción",
+          "from": "Desde",
+          "to": "Hasta",
+          "reset": "Restablecer",
+          "exportCsv": "Exportar CSV",
+          "empty": "Sin eventos coincidentes.",
+          "action": {
+            "all": "Todo",
+            "created": "Creada",
+            "revoked": "Revocada",
+            "rotated": "Rotada",
+            "rate_limited": "Límite de peticiones alcanzado",
+            "quota_exceeded": "Cuota superada",
+            "scope_denied": "Permiso denegado"
+          }
+        }
+      }
     }
   },
   "pricingPage": {

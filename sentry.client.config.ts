@@ -1,0 +1,68 @@
+import * as Sentry from '@sentry/nextjs';
+
+/**
+ * Browser-side Sentry/GlitchTip config (plan W5.5).
+ *
+ * DSN points to self-hosted GlitchTip on Hetzner (`errors.seizn.com`). Sentry
+ * SDK works against GlitchTip with no code change because GlitchTip implements
+ * the Sentry envelope ingest API.
+ *
+ * Env strategy:
+ *   - prod : `NEXT_PUBLIC_SENTRY_DSN` (GlitchTip DSN; project=seizn-web)
+ *   - preview/dev: DSN unset → Sentry no-ops (no events sent)
+ *
+ * DSN must match Sentry's parser: `https?://<keyA-Za-z0-9_>@<host>/<projectId>`.
+ * UUIDs with dashes (e.g. GlitchTip default exports) FAIL the SDK's `\w+`
+ * public-key regex, which on the client cascades through the SDK's init
+ * routine into a render-loop in any component that subscribes to Sentry
+ * state — surfacing as React error #185 ("Maximum update depth exceeded")
+ * and the global-error fallback. We pre-validate and pass undefined for
+ * unparseable DSNs so init no-ops cleanly.
+ */
+const VALID_DSN_RE = /^https?:\/\/\w+(?::\w+)?@[^/]+\/\d+$/;
+const rawDsn = process.env.NEXT_PUBLIC_SENTRY_DSN;
+const dsn = rawDsn && VALID_DSN_RE.test(rawDsn) ? rawDsn : undefined;
+if (rawDsn && !dsn && typeof console !== 'undefined') {
+  console.warn(
+    '[sentry] NEXT_PUBLIC_SENTRY_DSN is set but does not match the Sentry parser regex (likely a UUID public key with dashes). Skipping init.'
+  );
+}
+
+Sentry.init({
+  dsn,
+  enabled: Boolean(dsn),
+  environment: process.env.NEXT_PUBLIC_VERCEL_ENV ?? process.env.NODE_ENV ?? 'development',
+  release: process.env.NEXT_PUBLIC_SENTRY_RELEASE ?? process.env.VERCEL_GIT_COMMIT_SHA,
+
+  // GlitchTip CE doesn't ingest replays/profiles — keep them off to save bandwidth.
+  replaysSessionSampleRate: 0,
+  replaysOnErrorSampleRate: 0,
+  // Browser perf trace at 10% to stay within GlitchTip free CAX31 capacity.
+  tracesSampleRate: 0.1,
+
+  // Strip PII before send: prompts can contain user content. Sentry SDK
+  // beforeSend runs on the client.
+  beforeSend(event) {
+    if (event.request) {
+      delete event.request.cookies;
+      // Authorization headers may carry tokens.
+      if (event.request.headers) {
+        delete event.request.headers['authorization'];
+        delete event.request.headers['Authorization'];
+        delete event.request.headers['cookie'];
+      }
+      // Query strings can carry tokens like ?token=xxx for waitlist confirm.
+      if (event.request.query_string && /token=/i.test(String(event.request.query_string))) {
+        event.request.query_string = '<redacted>';
+      }
+    }
+    return event;
+  },
+
+  ignoreErrors: [
+    // Common browser noise — Safari ResizeObserver loops, extension errors
+    'ResizeObserver loop limit exceeded',
+    'ResizeObserver loop completed with undelivered notifications',
+    /^Non-Error promise rejection captured$/,
+  ],
+});

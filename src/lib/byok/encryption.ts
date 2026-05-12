@@ -7,19 +7,75 @@ const SALT_LENGTH = 32;
 const KEY_LENGTH = 32;
 
 /**
- * Get encryption key from environment or derive from secret
+ * Get encryption key from environment or derive from secret.
+ *
+ * R28 C1/H1 hardening — pre-fix this function fell back to NEXTAUTH_SECRET
+ * for both `secret` and `salt` when the dedicated BYOK env vars were
+ * unset. In any deploy where neither was set explicitly, scrypt collapsed
+ * to scryptSync(NEXTAUTH_SECRET, NEXTAUTH_SECRET) — the salt's entropy
+ * was nullified. A leak of the encrypted key column + NEXTAUTH_SECRET
+ * (which the auth stack already exposes through other surfaces) was
+ * effectively decryptable. The fallback also tied BYOK key durability
+ * to NEXTAUTH_SECRET rotation, which is a separate cadence.
+ *
+ * Behavior now:
+ *   - Production: HARD FAIL if BYOK_ENCRYPTION_SECRET is unset, OR if
+ *     BYOK_ENCRYPTION_SALT is unset, OR if the resolved secret equals
+ *     the resolved salt (defense-in-depth against operators copy-pasting
+ *     the same value into both vars).
+ *   - Non-production: fallback to NEXTAUTH_SECRET still allowed for dev
+ *     ergonomics, but logs a warning the first time the fallback fires.
+ *
+ * Operator action items (documented in ISSUES.md):
+ *   1. Set BYOK_ENCRYPTION_SECRET (32+ random bytes, base64) in prod env.
+ *   2. Set BYOK_ENCRYPTION_SALT (different 32+ bytes, base64) in prod env.
+ *   3. Re-encryption migration for existing rows is deferred — see
+ *      ISSUES.md "BYOK re-encryption" entry.
  */
+let warnedDevFallback = false;
+
 function getEncryptionKey(): Buffer {
-  const secret = process.env.BYOK_ENCRYPTION_SECRET || process.env.NEXTAUTH_SECRET;
+  const isProd = process.env.NODE_ENV === 'production';
+
+  const explicitSecret = process.env.BYOK_ENCRYPTION_SECRET;
+  const explicitSalt = process.env.BYOK_ENCRYPTION_SALT;
+  const fallbackSecret = process.env.NEXTAUTH_SECRET;
+
+  if (isProd) {
+    if (!explicitSecret) {
+      throw new Error(
+        "BYOK_ENCRYPTION_SECRET must be set in production (no NEXTAUTH_SECRET fallback allowed)",
+      );
+    }
+    if (!explicitSalt) {
+      throw new Error(
+        "BYOK_ENCRYPTION_SALT must be set in production (no NEXTAUTH_SECRET fallback allowed)",
+      );
+    }
+    if (explicitSecret === explicitSalt) {
+      throw new Error(
+        "BYOK_ENCRYPTION_SECRET and BYOK_ENCRYPTION_SALT must be different values",
+      );
+    }
+    return scryptSync(explicitSecret, explicitSalt, KEY_LENGTH);
+  }
+
+  // Non-production: allow fallback but warn loudly the first time.
+  const secret = explicitSecret || fallbackSecret;
   if (!secret) {
     throw new Error("BYOK_ENCRYPTION_SECRET or NEXTAUTH_SECRET must be set");
   }
-
-  const salt = process.env.BYOK_ENCRYPTION_SALT || process.env.NEXTAUTH_SECRET;
+  const salt = explicitSalt || fallbackSecret;
   if (!salt) {
     throw new Error("BYOK_ENCRYPTION_SALT or NEXTAUTH_SECRET must be set");
   }
-
+  if ((!explicitSecret || !explicitSalt) && !warnedDevFallback) {
+    warnedDevFallback = true;
+    console.warn(
+      "[byok/encryption] Using NEXTAUTH_SECRET fallback for BYOK KDF. " +
+        "Set BYOK_ENCRYPTION_SECRET and BYOK_ENCRYPTION_SALT in production.",
+    );
+  }
   return scryptSync(secret, salt, KEY_LENGTH);
 }
 
@@ -97,10 +153,18 @@ export function validateKeyFormat(provider: string, apiKey: string): boolean {
   const patterns: Record<string, RegExp> = {
     openai: /^sk-[a-zA-Z0-9_-]{32,}$/,
     anthropic: /^sk-ant-[a-zA-Z0-9_-]{32,}$/,
-    cohere: /^[a-zA-Z0-9]{32,}$/,
+    // R28 M1 — Cohere keys are 40-char base32-ish (e.g. "abc123XYZ..."),
+    // not arbitrary 32+ alphanumeric. Tighten so spoofed junk doesn't pass.
+    cohere: /^[A-Za-z0-9]{40}$/,
     voyage: /^[a-zA-Z0-9-]{32,}$/,
-    google: /^[a-zA-Z0-9_-]{32,}$/,
-    azure: /^[a-zA-Z0-9]{32}$/,
+    // R24 H3 — real Google AI Studio keys are exactly `AIza` + 35 chars
+    // (`[0-9A-Za-z_-]`). The pre-fix permissive regex accepted any 32+ char
+    // alphanumeric string; typos / wrong keys passed validation, got stored,
+    // then failed with a 401 on the first generate call. Tighter shape
+    // catches the common copy-paste mistakes upfront.
+    google: /^AIza[0-9A-Za-z_-]{35}$/,
+    // R28 M1 — Azure OpenAI keys are 32-hex (lowercase a-f only).
+    azure: /^[a-f0-9]{32}$/,
   };
 
   const pattern = patterns[provider];

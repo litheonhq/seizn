@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "title": "Seizn — Bộ nhớ cho NPC AI",
-    "description": "Tích hợp với Inworld, Convai hoặc LLM của bạn. Seizn cung cấp bộ nhớ liên tục, mối quan hệ và khả năng nhớ xuyên thế hệ cho NPC của bạn — tính phí theo thực thể, không theo chỗ ngồi."
+    "title": "Seizn – Bộ nhớ cho NPC AI",
+    "description": "Cắm vào Inworld, Convai hay LLM của bạn. Seizn cho NPC bộ nhớ trụ lại, các mối quan hệ và ký ức xuyên thế hệ. Tính phí theo entity, không theo seat."
   },
   "nav": {
     "features": "Tính năng",
@@ -13,13 +13,13 @@
   },
   "hero": {
     "badge": "Demo trực tiếp: smallgod",
-    "title": "NPC của bạn nhớ",
-    "titleHighlight": "xuyên thế hệ.",
-    "subtitle": "Seizn là lớp bộ nhớ cho NPC AI. Tích hợp với Inworld, Convai hoặc LLM của bạn — giữ nguyên dialogue engine bạn yêu thích, thêm persistence tồn tại qua các session và thế hệ.",
+    "title": "NPC của bạn vẫn nhớ,",
+    "titleHighlight": "qua bao thế hệ.",
+    "subtitle": "Seizn là lớp bộ nhớ cho NPC AI. Cắm vào Inworld, Convai hay LLM của bạn, dialogue engine quen thuộc giữ nguyên, chỉ thêm phần persistence trụ lại qua từng session, qua từng thế hệ.",
     "emailPlaceholder": "ban@studio.com",
     "joinWaitlist": "Đặt lịch demo",
-    "joining": "Đang đặt lịch...",
-    "onTheList": "Chúng tôi sẽ liên hệ sớm.",
+    "joining": "Đang đặt lịch…",
+    "onTheList": "Chúng tôi sẽ liên hệ lại sớm.",
     "stats": {
       "tokenSavings": "NPC mỗi dự án",
       "retrievalTime": "Truy xuất bộ nhớ",
@@ -27,8 +27,8 @@
     }
   },
   "features": {
-    "title": "Xây dựng cho game studio",
-    "subtitle": "Cắm Seizn vào, giữ nguyên dialogue engine. NPC có bộ nhớ, mối quan hệ và persistence tồn tại qua các session và thế hệ.",
+    "title": "Làm cho game studio",
+    "subtitle": "Cắm Seizn vào, dialogue engine cứ để nguyên. NPC có thêm bộ nhớ, các mối quan hệ và persistence trụ lại qua từng session, qua từng thế hệ.",
     "smartExtraction": {
       "title": "Đồ thị NPC / Phe phái / Sự kiện",
       "description": "Mô hình hóa NPC, phe phái, nhiệm vụ và sự cố dưới dạng đồ thị. Mối quan hệ (tin tưởng, thù hận, huyết thống) và sự kiện (chứng kiến, bị ảnh hưởng, thực hiện) là các primitive hạng nhất, không phải schema bạn phải tự tạo."
@@ -1609,6 +1609,67 @@
     },
     "northStar": {
       "subtitle": "Chỉ báo chính về độ tin cậy bộ nhớ NPC"
+    },
+    "account": {
+      "apiKeys": {
+        "title": "Khóa API",
+        "description": "Tạo và quản lý các khóa Seizn API + MCP cho Track 2.",
+        "capHint": "Bạn có thể tạo tối đa {cap} khóa API cho mỗi tài khoản.",
+        "newKey": "Khóa API mới",
+        "create": "Tạo",
+        "cancel": "Hủy",
+        "done": "Xong",
+        "name": "Tên",
+        "scopes": "Phạm vi",
+        "scopesDefault": "Phạm vi mặc định: recall, remember, graph, search.",
+        "copyKey": "Sao chép khóa",
+        "saveItNow": "Hãy lưu ngay, vì bạn sẽ không thấy khóa này nữa.",
+        "created": "Đã tạo khóa API",
+        "rotated": "Đã tạo lại khóa API",
+        "rotate": "Tạo lại",
+        "revoke": "Thu hồi",
+        "revokeTitle": "Thu hồi khóa API?",
+        "revokeBody": "Thu hồi \"{name}\" sẽ dừng mọi lệnh gọi dùng khóa này. Các ứng dụng hiện tại sẽ cần khóa mới.",
+        "rotateTitle": "Tạo lại khóa API?",
+        "rotateBody": "Tạo lại \"{name}\" sẽ sinh khóa mới và thu hồi khóa hiện tại. Cập nhật ứng dụng trước khi khóa cũ ngừng hoạt động.",
+        "usage": "Sử dụng",
+        "rateLimit": "Giới hạn tần suất",
+        "lastUsed": "Sử dụng lần cuối",
+        "createdAt": "Đã tạo",
+        "empty": "Chưa có khóa nào. Nhấn \"Khóa API mới\" để tạo.",
+        "errors": {
+          "capReached": "Bạn đã đạt giới hạn khóa API cho tài khoản này.",
+          "invalidName": "Vui lòng nhập tên cho khóa.",
+          "internal": "Không hoàn tất được thao tác. Vui lòng thử lại.",
+          "revokeFailed": "Không thể thu hồi khóa.",
+          "rotateFailed": "Không thể tạo lại khóa.",
+          "copyFailed": "Không thể sao chép khóa."
+        },
+        "toasts": {
+          "copied": "Đã sao chép khóa vào clipboard.",
+          "revoked": "Đã thu hồi khóa."
+        },
+        "audit": {
+          "link": "Nhật ký kiểm toán",
+          "title": "Nhật ký kiểm toán khóa API",
+          "description": "Tất cả các sự kiện tạo, thu hồi, tạo lại, giới hạn tần suất, hạn ngạch và phạm vi của các khóa API của bạn.",
+          "filterAction": "Hành động",
+          "from": "Từ",
+          "to": "Đến",
+          "reset": "Đặt lại",
+          "exportCsv": "Xuất CSV",
+          "empty": "Không có sự kiện kiểm toán phù hợp.",
+          "action": {
+            "all": "Tất cả",
+            "created": "Đã tạo",
+            "revoked": "Đã thu hồi",
+            "rotated": "Đã tạo lại",
+            "rate_limited": "Vượt giới hạn tần suất",
+            "quota_exceeded": "Vượt hạn ngạch",
+            "scope_denied": "Phạm vi bị từ chối"
+          }
+        }
+      }
     }
   },
   "pricingPage": {

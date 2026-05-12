@@ -13,21 +13,26 @@
 
 ## Open decisions (build 시작 전 사용자 승인 필수 — 28개 보강 후 lock)
 
-이 task pack 의 build 가 막히지 않으려면 다음 3가지 결정 lock 이 선행되어야 함. 결정 보류 시 codex/별 세션 dispatch 시점에 stop.
+**LOCKED 2026-05-06 (사용자 confirm).** 권장 그대로 진행.
+
+| # | 결정 | Lock |
+|---|---|---|
+| 1 | BYOK key 저장 위치 | **(a) Per-request header `X-LLM-Key`** — Phase 0~7 적용. server 저장 X. Vault (옵션 b) 는 Phase 8+ 별 cycle |
+| 2 | Multi-tenancy (Studio 5 seats) | **(a) v1 = 1 user 1 key** — Studio = 5 keys per user. 진짜 multi-seat (`org_id` + `org_members`) 는 B2B 출판사 contract 시 별 cycle |
+| 3 | v7 → v8 Stripe cutover | **PR merge 즉시 v7 SKU 제거** (신규 차단). 기존 v7 결제자 = **90일 grandfather**. **91일째 v8 자동 마이그레이션 안내 메일 발송**. v7 결제자 0 명일 시 grandfather skip (Stripe dashboard 사용자 영역 verify) |
+
+원본 옵션 분석 (참고용 — lock 후에도 future cycle 에서 정책 변경 시 reference):
 
 1. **BYOK Anthropic/OpenAI key 저장 위치** (Phase 1·2 영향):
-   - **(a) Per-request header** — 매 호출마다 client 가 `X-LLM-Key` header 로 전달. 우리 server 는 저장 X. 단순·보안 강함·UX 마찰 (매 client config 에 키)
-   - **(b) Server-side encrypted vault** — user account 에 encrypted 저장 (AES-256-GCM + per-org KEK + Supabase Vault 또는 자체). UX 좋음·보안 책임 우리·복잡
-   - **권장 (a) Phase 0~7 = per-request header**, vault 는 Phase 8+ 별 cycle. Reason: launch 빠름·BYOK 페르소나 (Cline / Cursor 사용자) 가 이미 환경변수 패턴 익숙
+   - (a) Per-request header — 매 호출마다 client 가 `X-LLM-Key` header 로 전달. 우리 server 는 저장 X. 단순·보안 강함·UX 마찰
+   - (b) Server-side encrypted vault — user account 에 encrypted 저장 (AES-256-GCM + per-org KEK). UX 좋음·보안 책임 우리·복잡
 2. **Multi-tenancy (Studio tier 5 seats)** (Phase 0 schema 영향):
-   - **(a) v1 = 1 user 1 key** — Studio 5 seats 는 Phase 8+ 별 cycle 로 deferred. user 1 명이 5 key 발급으로 우회
-   - **(b) v1 = `org_id` + `org_members` 테이블 처음부터** — 진짜 5 seats 지원, schema 복잡·DB migration 큼
-   - **권장 (a) — v1 deferred**, Studio tier 는 'effective 1 user, 5 keys per user' 로 launch. 진짜 multi-seat 는 B2B 출판사 contract 시 별 cycle
+   - (a) v1 = 1 user 1 key — Studio 5 seats 는 Phase 8+ 별 cycle 로 deferred
+   - (b) v1 = `org_id` + `org_members` 테이블 처음부터 — schema 복잡·DB migration 큼
 3. **v7 → v8 Stripe cutover 시점**:
-   - 실제 v7 결제자 수 = ? (Stripe dashboard 확인 필요. 0 명이면 grandfather 정책 X)
-   - **권장:** PR merge 즉시 pricing UI 에서 v7 SKU 제거 (신규 차단), 기존 결제자 = 90일 grandfather, 91일째 v8 마이그레이션 안내 메일 발송
+   - 실제 v7 결제자 수 검증 — Stripe dashboard 확인 (사용자 영역). 0 명일 시 grandfather skip.
 
-이 3건 결정 받지 않고 dispatch 시 → 각 phase 의 첫 step 에서 codex 가 stop and ask.
+dispatch 시 codex 는 이 3건 lock 그대로 진행. 추가 stop and ask 불필요.
 
 ---
 
@@ -89,6 +94,22 @@ verify gate 가 안전망. 실패하지 않은 phase 는 묻지 않고 진행.
       공개 텍스트에 큰따옴표 금지 (작은따옴표만).
       v7 Stripe product 직접 deactivate 금지 — Phase 4 spec 만, 실 Stripe API 호출은 Phase 8 인간 작업.
 ```
+
+---
+
+## Lint baseline policy (lock 2026-05-06)
+
+`pnpm lint` (전체 codebase eslint) = main 기준 약 66 problems 의 **pre-existing baseline** (react-hooks/set-state-in-effect 59건 + react-hooks/purity 2건 + react-hooks/exhaustive-deps 2건 + react-hooks/static-components 1건 + react-hooks/incompatible-library 1건 + react-hooks/immutability 1건). 영역 = `src/app/(dashboard)/dashboard/*`, `src/components/traces/*`, `src/components/viz/*`, `src/components/relay/*` — Track 1 (Web) 영역. Track 2 cycle 이 발생시킨 게 아니며, Track 1 owner session / 별 cycle 영역.
+
+따라서 Track 2 verify gate 의 lint 검증 범위 = **Track 2 영역 한정** (`pnpm lint:track2` script):
+
+- `src/lib/api-keys`
+- `src/app/api/v1`
+- (참고: `packages/author-mcp-server` 는 eslint flat config 의 base path 밖 — 별 verify 필요 시 직접 `pnpm exec eslint packages/author-mcp-server` 시도, 또는 그 패키지 자체 lint script)
+
+Track 2 owner session 이 자기 영역 lint clean 보장 + Track 1 baseline 은 별 cycle 처리.
+
+**전체 `pnpm lint` 의 baseline error 수가 줄어들면 추가 fix bonus.** 단 Track 2 verify gate 는 `pnpm lint:track2` 통과만 필수.
 
 ---
 
@@ -270,8 +291,8 @@ feat(track-2): add api_keys + api_key_usage + api_key_audit_log tables (multi-te
 
 - `pnpm test src/lib/api-keys` pass (모든 단위 테스트 + timing-safe property)
 - `pnpm typecheck` pass
-- `pnpm lint` pass
-- production env 부재 시 startup fail 검증 (`UPSTASH_REDIS_REST_URL=` 없이 `NODE_ENV=production pnpm dev` → process 종료)
+- `pnpm lint:track2` pass (Track 2 영역 한정 — src/lib/api-keys, src/app/api/v1, packages/author-mcp-server. 전체 `pnpm lint` 의 react-hooks/* errors 는 Track 1 영역 pre-existing baseline, 별 cycle. 자세한 내용 §"How to use" 참고)
+- production env startup guard 단위 test pass — `pnpm test:run src/lib/api-keys/__tests__/redis-config.test.ts` (7 cases: NODE_ENV=production + UPSTASH vars missing/empty 모두 throw 검증, NODE_ENV!=production 시 no-throw 검증, both vars 존재 시 no-throw 검증). 직접 `pnpm dev` 실행 검증 X — next dev 가 NODE_ENV 강제 development 으로 override 하므로 guard trigger 못 함, unit test 가 정확한 verify path
 
 **Commit:**
 
@@ -363,15 +384,27 @@ src/app/api/v1/usage/route.ts                          GET (current quota usage)
 
 - `pnpm test src/app/api/v1` pass (모든 e2e 시나리오)
 - `pnpm typecheck` pass
-- `pnpm lint` pass
-- 수동 curl 테스트:
+- `pnpm lint:track2` pass (Track 2 영역 한정 — src/lib/api-keys, src/app/api/v1, packages/author-mcp-server. 전체 `pnpm lint` 의 react-hooks/* errors 는 Track 1 영역 pre-existing baseline, 별 cycle. 자세한 내용 §"How to use" 참고)
+- 수동 curl 테스트 (project 생성 → recall 2-step pattern, default state.projects 가 'knot' DEFAULT_PROJECT_ID 만 가지므로 미존재 project 호출 시 404):
 
   ```bash
-  curl -H 'authorization: Bearer sk_seizn_test_...' \
-       -H 'idempotency-key: test-001' \
-       http://localhost:3000/api/v1/projects/test-project/recall?q=Seoyun
-  # → 200 + JSON body + X-Request-Id header
+  # Step 1: POST /api/v1/projects 으로 새 project 생성 + 그 id 캡처
+  PROJECT_ID=$(curl -s -X POST -H 'authorization: Bearer sk_seizn_test_...' \
+       -H 'content-type: application/json' \
+       -H 'idempotency-key: test-create-001' \
+       http://localhost:3000/api/v1/projects \
+       -d '{"name":"Test Project"}' | jq -r '.data.id // .id')
+
+  # Step 2: 그 id 으로 recall 호출 → 200
+  curl -H "authorization: Bearer sk_seizn_test_..." \
+       -H 'idempotency-key: test-recall-001' \
+       "http://localhost:3000/api/v1/projects/$PROJECT_ID/recall?q=Seoyun"
+  # → 200 + JSON body { entities: [...] } + X-Request-Id header
   ```
+
+  미존재 project 호출 (예: `/projects/saebyeok-main/recall`) → 404 not_found
+  (RFC 7807 problem+json) 가 정합. AuthorUiNotFoundError → 404 매핑 (commit 에서
+  middleware 의 toProblem 갱신).
 
 - mcp-server type 정합: `pnpm --filter @seizn/author-mcp-server typecheck` pass (response shape 일치 확인)
 
@@ -468,8 +501,9 @@ feat(track-2): Stripe v8 product spec + v7 deprecation plan (no live Stripe call
 
 - `pnpm test` pass
 - `pnpm typecheck` pass
-- `pnpm lint` pass
-- `pnpm verify:i18n-integrity` pass (5 locale 모두 dashboard.account.apiKeys.* 정합)
+- `pnpm lint:track2` pass (Track 2 영역 한정 — src/lib/api-keys, src/app/api/v1, packages/author-mcp-server. 전체 `pnpm lint` 의 react-hooks/* errors 는 Track 1 영역 pre-existing baseline, 별 cycle. 자세한 내용 §"How to use" 참고)
+- `pnpm test:run src/__tests__/i18n/dashboard-keys.test.ts` pass (기존 i18n key integrity test, 5 locale 의 dashboard.account.apiKeys.* 정합 자동 검증). 이전 spec 의 `pnpm verify:i18n-integrity` script 는 부재 — 기존 vitest test 가 정확한 verify path
+- 신규 dashboard page lint 검증: `pnpm exec eslint "src/app/(dashboard)/dashboard/account/api-keys"` clean. Track 1 baseline 의 `react-hooks/set-state-in-effect` / `react-hooks/exhaustive-deps` / `react-hooks/static-components` rule 위반 회피 — useEffect 안 setState 패턴 X (functional update / useReducer 사용), 의존 배열 정확. lint:track2 script 의 base path 밖 (`src/app/(dashboard)/`) 이라 별 명령으로 검증
 - 수동 smoke: 개발 서버에서 `/dashboard/account/api-keys` 접속 → 페이지 렌더
 
 **Commit:**
@@ -522,8 +556,8 @@ feat(track-2): add API key dashboard + audit log at /dashboard/account/api-keys 
 
 - `pnpm test` pass
 - `pnpm typecheck` pass
-- `pnpm lint` pass
-- `pnpm verify:i18n-integrity` pass (EN master + 4 locale fallback OK)
+- `pnpm lint:track2` pass (Track 2 영역 한정 — src/lib/api-keys, src/app/api/v1, packages/author-mcp-server. 전체 `pnpm lint` 의 react-hooks/* errors 는 Track 1 영역 pre-existing baseline, 별 cycle. 자세한 내용 §"How to use" 참고)
+- `pnpm test:run src/__tests__/i18n/dashboard-keys.test.ts` pass (EN master + 4 locale fallback OK, 기존 i18n key integrity test 사용. `verify:i18n-integrity` script 부재)
 - `pnpm docs:test` pass (curl 예제 모두 동작)
 - 수동 smoke: `/en/api` 접속 → 페이지 렌더 + 8 섹션 모두 표시
 - `public/openapi.yaml` 생성 확인 (10 endpoints + error schema)
@@ -643,13 +677,12 @@ feat(track-2): add e2e tests + npm publish prep for @seizn/author-mcp-server
    - middleware: flag false 시 `/api/v1/*` 모두 503 + 'Track 2 API beta. Contact sales for early access.'
    - dashboard `/dashboard/account/api-keys` 도 flag false 시 'Coming soon' placeholder
    - Phase 8 에서 점진 rollout (10% → 50% → 100%)
-5. `git push -u origin feat/track-2-phase-0`.
-6. PR 생성 (gh CLI):
+5. **STOP (사용자 정책: local only, push X).** 사용자 결정 시점 까지 이 phase 는 step 4 까지 완료 + observability/feature-flag commit 박힘 + 자동 stop. step 5 (git push) + step 6 (gh pr create) 은 **Phase 8 (인간 작업)** 으로 이동:
 
-**Steps:**
+**Steps (Phase 8 인간 작업으로 이동, lock 2026-05-06):**
 
-1. 모든 phase 의 commit 들이 `feat/track-2-phase-0` 브랜치에 누적되어 있음 확인 (Pre-flight checklist 의 브랜치).
-2. `git push -u origin feat/track-2-phase-0`.
+1. 모든 phase 의 commit 들이 `feat/track-2-next` 브랜치에 누적되어 있음 확인 (실제 사용 브랜치, task pack 작성 시 spec 의 `feat/track-2-phase-0` 와 다름).
+2. `git push -u origin feat/track-2-next` (사용자 결정 시점, local only 정책 변경 시).
 3. PR 생성 (gh CLI):
 
 ```bash

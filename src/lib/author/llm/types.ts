@@ -1,4 +1,27 @@
-export type AuthorLlmProvider = 'anthropic';
+import type { AuthorLlmEffort } from './effort-mapping';
+
+export type AuthorLlmProvider = 'anthropic' | 'google' | 'openai';
+
+/**
+ * Alias used by BYOK / settings surfaces. Today identical to AuthorLlmProvider
+ * — kept as a separate name so future divergence (e.g., a Cohere BYOK option
+ * for embeddings that doesn't appear in the Author LLM router) doesn't force
+ * either side to widen prematurely. R25 M4: replaces three duplicate inline
+ * unions across byok-section.tsx / api/account/byok/route.ts / byok-resolver.ts.
+ */
+export type ByokProvider = AuthorLlmProvider;
+
+export const BYOK_PROVIDERS: readonly ByokProvider[] = [
+  'anthropic',
+  'google',
+  'openai',
+] as const;
+
+export function isByokProvider(value: unknown): value is ByokProvider {
+  return (
+    value === 'anthropic' || value === 'google' || value === 'openai'
+  );
+}
 export type AuthorLlmResponseFormat = 'text' | 'json';
 export type AuthorLlmKeySource = 'byok' | 'managed';
 
@@ -15,12 +38,31 @@ export interface AuthorLlmRequest {
   projectId: string;
   prompt: string;
   system?: string;
+  /** Optional — provider-router resolves to env default when omitted. */
+  provider?: AuthorLlmProvider;
   model?: string;
   maxTokens?: number;
   temperature?: number;
   responseFormat?: AuthorLlmResponseFormat;
   jsonSchema?: AuthorJsonSchema;
   requestId?: string;
+  /** Reasoning / extended-thinking effort. Defaults to AUTHOR_LLM_EFFORT env (xhigh). */
+  effort?: AuthorLlmEffort;
+  /**
+   * Prompt-cache policy (R13 C7).
+   *   - 'auto' (default): respect ANTHROPIC_PROMPT_CACHING env flag — cache
+   *     when enabled, plain otherwise. Right choice for warm paths where
+   *     the same system prompt repeats inside a 5-min window (Check loops,
+   *     Dialog turns, Backlog generation).
+   *   - 'cold': force-disable caching even when env enabled. Use for Free
+   *     BYOK one-off paths (rare/ad-hoc requests) where the cache write
+   *     surcharge (~25% over normal input tokens) won't pay back since
+   *     the system prompt won't be re-read inside TTL. Caller is expected
+   *     to know its access pattern; the LLM stack does NOT auto-detect.
+   *   - 'warm': force-enable caching even when env disabled. Reserved for
+   *     local dev / migration testing; not a production setting.
+   */
+  cachePolicy?: 'auto' | 'cold' | 'warm';
 }
 
 export interface AuthorLlmUsage {
@@ -47,6 +89,8 @@ export type AuthorLlmErrorCode =
   | 'LLM_NOT_CONFIGURED'
   | 'RATE_LIMITED'
   | 'ANTHROPIC_REQUEST_FAILED'
+  | 'OPENAI_REQUEST_FAILED'
+  | 'GEMINI_REQUEST_FAILED'
   | 'INVALID_JSON_RESPONSE'
   | 'JSON_SCHEMA_VALIDATION_FAILED'
   | 'MODEL_USAGE_RECORD_FAILED'
@@ -93,7 +137,7 @@ export interface AuthorModelUsageRecord {
 
 export interface AuthorByokStatus {
   enabled: boolean;
-  provider: 'anthropic' | 'google' | 'openai' | null;
+  provider: ByokProvider | null;
   key_last_4?: string;
   verified_at?: string | null;
   status: 'active' | 'invalid' | 'missing';

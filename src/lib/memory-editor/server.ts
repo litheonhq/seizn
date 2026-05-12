@@ -290,6 +290,9 @@ async function applyCreate(ctx: MemoryEditorContext, item: MemoryEditorDiffItem)
     agent_id: item.after.agentId,
     companion_meta: companionMetaForNpc(null, item.after.npcId || deriveNpcId({ agentId: item.after.agentId })),
     content_hash: createHash('sha256').update(item.after.content).digest('hex'),
+    is_encrypted: false,
+    is_deleted: false,
+    deleted_at: null,
   });
 
   if (error) throw new Error(`memory_editor_create_failed: ${error.message}`);

@@ -1334,6 +1334,9 @@ export async function processConversationTurn(
         source: 'lifecycle_extraction',
         importance: memCell.foresight.urgency === 'high' ? 8 : memCell.foresight.urgency === 'medium' ? 6 : 5,
         tags: ['auto-extracted', 'lifecycle', ...(memCell.foresight.relevantFor || [])],
+        is_encrypted: false,
+        is_deleted: false,
+        deleted_at: null,
       });
     }
   }

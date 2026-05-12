@@ -5,6 +5,7 @@ import { sendEmail } from '@/lib/email';
 import { welcomeEmail } from '@/lib/email/templates';
 import { upsertProfileWithFallback } from '@/lib/profile/upsert';
 import { logServerError, logServerWarn } from '@/lib/server/logger';
+import { recordFunnelEvent } from '@/lib/analytics/funnel';
 
 const TURNSTILE_SECRET_KEY = process.env.TURNSTILE_SECRET_KEY;
 const TURNSTILE_VERIFY_URL = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
@@ -93,13 +94,34 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-    const { email, password, name, turnstileToken, signupTemplate, signupSource } = body as {
+    const {
+      email,
+      password,
+      name,
+      turnstileToken,
+      signupTemplate,
+      signupSource,
+      utm_source: utmSource,
+      utm_medium: utmMedium,
+      utm_campaign: utmCampaign,
+      utm_content: utmContent,
+      utm_term: utmTerm,
+      referrer,
+      landing_path: landingPath,
+    } = body as {
       email?: string;
       password?: string;
       name?: string;
       turnstileToken?: string;
       signupTemplate?: string | null;
       signupSource?: string | null;
+      utm_source?: string | null;
+      utm_medium?: string | null;
+      utm_campaign?: string | null;
+      utm_content?: string | null;
+      utm_term?: string | null;
+      referrer?: string | null;
+      landing_path?: string | null;
     };
     const normalizedSignupTemplate = signupTemplate === 'archivist-vale' ? signupTemplate : null;
     const normalizedSignupSource =
@@ -241,14 +263,71 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Send welcome email (non-blocking)
+    // Send welcome email (non-blocking).
+    // Locale priority: landing_path (`/ko/auth/signup` reflects user's deliberate
+    // language choice) → Accept-Language header → 'en'. profiles.locale column
+    // would be more durable; tracked for a follow-up.
     if (!DISABLE_WELCOME_EMAIL) {
+      const pathLocale = landingPath?.match(/^\/(ko|en)(?:\/|$)/)?.[1];
+      const acceptLang = (request.headers.get('accept-language') ?? '').toLowerCase();
+      const emailLocale: 'ko' | 'en' =
+        pathLocale === 'ko' || pathLocale === 'en'
+          ? pathLocale
+          : acceptLang.startsWith('ko')
+            ? 'ko'
+            : 'en';
       sendEmail({
         to: email,
-        subject: 'Welcome to Seizn!',
-        html: welcomeEmail(name || ''),
+        subject: emailLocale === 'ko'
+          ? 'Seizn에 오신 것을 환영합니다.'
+          : 'Welcome to Seizn!',
+        html: welcomeEmail(name || '', emailLocale),
       }).catch((error) => logServerError('Failed to send welcome email', error));
     }
+
+    // v9 funnel: signup event for cohort/conversion analytics. Non-blocking.
+    void recordFunnelEvent({
+      userId: authData.user.id,
+      eventType: 'signup',
+      metadata: { email },
+    });
+
+    // v9 marketing attribution: capture UTM + referrer + landing path so
+    // the admin metrics dashboard can compute CAC per channel. Without
+    // this insert the CAC denominator is 0 and the dashboard divides
+    // ad_spend_log by 0. Insert-once via service-role client; ON
+    // CONFLICT DO NOTHING covers the duplicate-PK case (rerun signup
+    // path) although in practice signup creates exactly one row per user.
+    const sanitizeUtm = (value: unknown): string | null => {
+      if (typeof value !== 'string') return null;
+      const trimmed = value.trim();
+      // Cap at 500 chars to bound row size; UTM params are short.
+      if (!trimmed || trimmed.length > 500) return null;
+      return trimmed;
+    };
+    void supabase
+      .from('marketing_attributions')
+      .upsert(
+        {
+          user_id: authData.user.id,
+          utm_source: sanitizeUtm(utmSource),
+          utm_medium: sanitizeUtm(utmMedium),
+          utm_campaign: sanitizeUtm(utmCampaign),
+          utm_content: sanitizeUtm(utmContent),
+          utm_term: sanitizeUtm(utmTerm),
+          referrer: sanitizeUtm(referrer),
+          landing_path: sanitizeUtm(landingPath),
+        },
+        { onConflict: 'user_id', ignoreDuplicates: true },
+      )
+      .then(({ error }: { error: { message: string } | null }) => {
+        if (error) {
+          logServerWarn('marketing_attributions insert failed', undefined, {
+            userId: authData.user.id,
+            error: error.message,
+          });
+        }
+      });
 
     return NextResponse.json({
       success: true,

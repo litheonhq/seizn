@@ -9,6 +9,7 @@ import type { Locale } from "@/i18n/config";
 
 type NavLabels = Partial<{
   docs: string;
+  api: string;
   pricing: string;
   compare: string;
   enterprise: string;
@@ -40,6 +41,7 @@ export function LandingNav({
 
   const navLinks = [
     { href: `/${locale}/docs`, label: label(labels, "docs", "Docs") },
+    { href: `/${locale}/api`, label: label(labels, "api", "API") },
     { href: `/${locale}/pricing`, label: label(labels, "pricing", "Pricing") },
     { href: `/${locale}/comparison`, label: label(labels, "compare", "Compare") },
     { href: `/${locale}/enterprise`, label: label(labels, "enterprise", "Enterprise") },

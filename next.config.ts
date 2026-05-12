@@ -51,8 +51,29 @@ const nextConfig: NextConfig = {
         isProduction ? '' : "'unsafe-eval'",
         'https://challenges.cloudflare.com',
         'https://js.stripe.com',
+        'https://analytics.seizn.com',
+        // Google Analytics gtag.js loader
+        'https://www.googletagmanager.com',
       ].filter(Boolean).join(' '),
-      "connect-src 'self' https: wss:",
+      [
+        "connect-src 'self'",
+        // Dev HMR + websocket dev tools
+        isProduction ? '' : 'ws: wss:',
+        // Seizn-owned subdomains: api.seizn.com (memory API), errors.seizn.com
+        // (GlitchTip), analytics.seizn.com (Plausible)
+        'https://*.seizn.com',
+        // Supabase auth + storage + realtime
+        'https://*.supabase.co wss://*.supabase.co',
+        // Stripe.js + Checkout
+        'https://api.stripe.com',
+        // Cloudflare Turnstile challenge endpoint
+        'https://challenges.cloudflare.com',
+        // Google Analytics collect endpoints (gtag.js POSTs to these)
+        'https://www.google-analytics.com https://*.google-analytics.com',
+        'https://www.googletagmanager.com',
+        // PostHog analytics (us.i.posthog.com or self-hosted)
+        'https://*.posthog.com',
+      ].filter(Boolean).join(' '),
       "frame-src 'self' https://challenges.cloudflare.com https://js.stripe.com https://checkout.stripe.com",
       "worker-src 'self' blob:",
       "upgrade-insecure-requests",

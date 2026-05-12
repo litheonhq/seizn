@@ -126,6 +126,9 @@ export async function POST(request: NextRequest) {
             source: 'image_extraction',
             confidence: memory.confidence,
             importance: memory.importance,
+            is_encrypted: false,
+            is_deleted: false,
+            deleted_at: null,
           })
           .select('id, content, memory_type, tags')
           .single();

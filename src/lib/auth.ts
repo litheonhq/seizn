@@ -1,7 +1,7 @@
 import NextAuth from 'next-auth';
-import GitHub from 'next-auth/providers/github';
-import Google from 'next-auth/providers/google';
 import Credentials from 'next-auth/providers/credentials';
+import type { Profile } from 'next-auth';
+import { authConfig } from '@/auth.config';
 import { normalizeProfileUserId } from './profile/normalize';
 import { normalizeSessionOrganizationId } from './profile/organization';
 import { createServerClient } from './supabase';
@@ -76,19 +76,22 @@ const sharedCookieOptions = {
   ...(cookieDomain ? { domain: cookieDomain } : {}),
 };
 
+function getOAuthEmailVerified(token: { email_verified?: unknown }, profile?: Profile): boolean {
+  const profileRecord = profile as Record<string, unknown> | undefined;
+  const raw =
+    token.email_verified ??
+    profileRecord?.email_verified ??
+    profileRecord?.emailVerified ??
+    profileRecord?.verified_email;
+
+  return raw === true || raw === 'true';
+}
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  ...authConfig,
   providers: [
-    // GitHub OAuth
-    GitHub({
-      clientId: process.env.GITHUB_CLIENT_ID || process.env.GITHUB_ID || '',
-      clientSecret: process.env.GITHUB_CLIENT_SECRET || process.env.GITHUB_SECRET || '',
-    }),
-    // Google OAuth
-    Google({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    }),
-    // Email/Password via Supabase
+    ...authConfig.providers,
+    // Email/Password via Supabase (node-runtime only — uses @supabase/supabase-js)
     Credentials({
       name: 'credentials',
       credentials: {
@@ -135,7 +138,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
   callbacks: {
-    async jwt({ token, user, account }) {
+    ...authConfig.callbacks,
+    async jwt({ token, user, account, profile }) {
       if (user) {
         token.id = user.id;
         if (user.organizationSelection === 'personal') {
@@ -150,29 +154,75 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       // For OAuth providers, create/link Supabase user
       if (account && account.provider !== 'credentials') {
         const supabase = createServerClient();
+        const profileId =
+          typeof token.sub === 'string' && token.sub.trim()
+            ? token.sub
+            : typeof token.id === 'string' && token.id.trim()
+              ? token.id
+              : null;
+        const email = typeof token.email === 'string' ? token.email.trim().toLowerCase() : null;
+        const emailVerified = getOAuthEmailVerified(token, profile);
+        token.oauthEmailVerified = emailVerified;
 
-        // Check if user exists in profiles
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('id')
-          .eq('email', token.email)
-          .single();
-
-        if (!profile) {
-          // Create profile for OAuth user
-          await supabase.from('profiles').insert({
-            id: token.id || token.sub,
-            email: token.email,
-            full_name: token.name,
-            avatar_url: token.picture,
-            plan: 'free',
-          });
+        if (!profileId) {
+          return token;
         }
 
-        token.id = profile?.id || token.sub;
+        // Prefer an exact provider-account profile. Only link an existing
+        // email profile when the provider explicitly attests that email.
+        const { data: idProfile } = await supabase
+          .from('profiles')
+          .select('id')
+          .eq('id', profileId)
+          .single();
+        let linkedProfile = idProfile;
+
+        if (!linkedProfile && email && emailVerified) {
+          const { data: emailProfile } = await supabase
+            .from('profiles')
+            .select('id')
+            .eq('email', email)
+            .single();
+          linkedProfile = emailProfile;
+        }
+
+        if (!linkedProfile) {
+          // Create profile for OAuth user. profiles.email is UNIQUE — when
+          // the provider didn't attest email_verified (so we couldn't
+          // link above) but a record with the same email already exists,
+          // the insert raises 23505. Surfacing it lets the OAuth callback
+          // refuse rather than silently leave token.id pointing at a
+          // non-existent profile (returns NULL for joined queries).
+          const { data: insertedProfile, error: insertError } = await supabase
+            .from('profiles')
+            .insert({
+              id: profileId,
+              email,
+              full_name: token.name,
+              avatar_url: token.picture,
+              plan: 'free',
+            })
+            .select('id')
+            .single();
+
+          if (insertError) {
+            const isUniqueViolation =
+              insertError.code === '23505' ||
+              (typeof insertError.message === 'string' &&
+                insertError.message.toLowerCase().includes('duplicate key'));
+            if (isUniqueViolation) {
+              throw new Error('OAuthAccountNotLinked');
+            }
+            throw insertError;
+          }
+          linkedProfile = insertedProfile;
+        }
+
+        token.id = linkedProfile?.id || profileId;
       }
 
       if (token.email && (!token.id || token.id === token.sub)) {
+        const canResolveByEmail = token.oauthEmailVerified !== false;
         const resolvedProfileId = await normalizeProfileUserId({
           userId:
             typeof token.id === 'string'
@@ -180,7 +230,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               : typeof token.sub === 'string'
                 ? token.sub
                 : null,
-          email: typeof token.email === 'string' ? token.email : null,
+          email: canResolveByEmail && typeof token.email === 'string' ? token.email : null,
         });
 
         if (resolvedProfileId) {
@@ -196,7 +246,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               : typeof token.sub === 'string'
                 ? token.sub
                 : null,
-          email: typeof token.email === 'string' ? token.email : null,
+          email:
+            token.oauthEmailVerified !== false && typeof token.email === 'string'
+              ? token.email
+              : null,
           organizationSelection: null,
         });
 
@@ -217,7 +270,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               : typeof token.sub === 'string'
                 ? token.sub
                 : null,
-          email: session.user.email ?? (typeof token.email === 'string' ? token.email : null),
+          email:
+            token.oauthEmailVerified !== false
+              ? session.user.email ?? (typeof token.email === 'string' ? token.email : null)
+              : null,
         });
 
         if (resolvedProfileId) {
@@ -235,8 +291,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             (await normalizeSessionOrganizationId({
               userId: session.user.id,
               email:
-                session.user.email ??
-                (typeof token.email === 'string' ? token.email : null),
+                token.oauthEmailVerified !== false
+                  ? session.user.email ??
+                    (typeof token.email === 'string' ? token.email : null)
+                  : null,
               organizationSelection: null,
             })) ||
             (typeof token.organizationId === 'string' && token.organizationId.trim()
@@ -269,11 +327,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
     },
   },
-  pages: {
-    signIn: '/login',
-    error: '/login',
-  },
-  trustHost: true,
+  // pages, trustHost, session, secret inherited from authConfig (W2.6 split).
   cookies: {
     sessionToken: {
       name: `${cookiePrefix}authjs.session-token`,
@@ -300,10 +354,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       options: { ...sharedCookieOptions, maxAge: 60 * 15 },
     },
   },
-  session: {
-    strategy: 'jwt',
-  },
-  secret: process.env.NEXTAUTH_SECRET,
 });
 
 // Type augmentation moved to src/types/next-auth.d.ts

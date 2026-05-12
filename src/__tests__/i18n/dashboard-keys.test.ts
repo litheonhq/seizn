@@ -4,6 +4,23 @@ import ko from '@/i18n/dictionaries/ko.json';
 import ja from '@/i18n/dictionaries/ja.json';
 import zhHans from '@/i18n/dictionaries/zh-hans.json';
 import zhHant from '@/i18n/dictionaries/zh-hant.json';
+import ar from '@/i18n/dictionaries/ar.json';
+import de from '@/i18n/dictionaries/de.json';
+import es from '@/i18n/dictionaries/es.json';
+import fr from '@/i18n/dictionaries/fr.json';
+import he from '@/i18n/dictionaries/he.json';
+import hi from '@/i18n/dictionaries/hi.json';
+import idDict from '@/i18n/dictionaries/id.json';
+import itDict from '@/i18n/dictionaries/it.json';
+import nl from '@/i18n/dictionaries/nl.json';
+import pl from '@/i18n/dictionaries/pl.json';
+import ptBR from '@/i18n/dictionaries/pt-BR.json';
+import ptPT from '@/i18n/dictionaries/pt-PT.json';
+import ru from '@/i18n/dictionaries/ru.json';
+import sv from '@/i18n/dictionaries/sv.json';
+import th from '@/i18n/dictionaries/th.json';
+import uk from '@/i18n/dictionaries/uk.json';
+import vi from '@/i18n/dictionaries/vi.json';
 
 const REDESIGN_PATHS = [
   'dashboard.nav.inbox',
@@ -85,6 +102,55 @@ const REDESIGN_PATHS = [
   'dashboard.simulate.hint.new',
   'dashboard.simulate.hint.help',
   'dashboard.fallback.body',
+  'dashboard.account.apiKeys.title',
+  'dashboard.account.apiKeys.description',
+  'dashboard.account.apiKeys.capHint',
+  'dashboard.account.apiKeys.newKey',
+  'dashboard.account.apiKeys.create',
+  'dashboard.account.apiKeys.cancel',
+  'dashboard.account.apiKeys.done',
+  'dashboard.account.apiKeys.name',
+  'dashboard.account.apiKeys.scopes',
+  'dashboard.account.apiKeys.scopesDefault',
+  'dashboard.account.apiKeys.copyKey',
+  'dashboard.account.apiKeys.saveItNow',
+  'dashboard.account.apiKeys.created',
+  'dashboard.account.apiKeys.rotated',
+  'dashboard.account.apiKeys.rotate',
+  'dashboard.account.apiKeys.revoke',
+  'dashboard.account.apiKeys.revokeTitle',
+  'dashboard.account.apiKeys.revokeBody',
+  'dashboard.account.apiKeys.rotateTitle',
+  'dashboard.account.apiKeys.rotateBody',
+  'dashboard.account.apiKeys.usage',
+  'dashboard.account.apiKeys.rateLimit',
+  'dashboard.account.apiKeys.lastUsed',
+  'dashboard.account.apiKeys.createdAt',
+  'dashboard.account.apiKeys.empty',
+  'dashboard.account.apiKeys.errors.capReached',
+  'dashboard.account.apiKeys.errors.invalidName',
+  'dashboard.account.apiKeys.errors.internal',
+  'dashboard.account.apiKeys.errors.revokeFailed',
+  'dashboard.account.apiKeys.errors.rotateFailed',
+  'dashboard.account.apiKeys.errors.copyFailed',
+  'dashboard.account.apiKeys.toasts.copied',
+  'dashboard.account.apiKeys.toasts.revoked',
+  'dashboard.account.apiKeys.audit.link',
+  'dashboard.account.apiKeys.audit.title',
+  'dashboard.account.apiKeys.audit.description',
+  'dashboard.account.apiKeys.audit.filterAction',
+  'dashboard.account.apiKeys.audit.from',
+  'dashboard.account.apiKeys.audit.to',
+  'dashboard.account.apiKeys.audit.reset',
+  'dashboard.account.apiKeys.audit.exportCsv',
+  'dashboard.account.apiKeys.audit.empty',
+  'dashboard.account.apiKeys.audit.action.all',
+  'dashboard.account.apiKeys.audit.action.created',
+  'dashboard.account.apiKeys.audit.action.revoked',
+  'dashboard.account.apiKeys.audit.action.rotated',
+  'dashboard.account.apiKeys.audit.action.rate_limited',
+  'dashboard.account.apiKeys.audit.action.quota_exceeded',
+  'dashboard.account.apiKeys.audit.action.scope_denied',
 ] as const;
 
 function getNestedValue(obj: unknown, path: string): unknown {
@@ -102,7 +168,46 @@ const LOCALES = {
   ja,
   'zh-hans': zhHans,
   'zh-hant': zhHant,
+  ar,
+  de,
+  es,
+  fr,
+  he,
+  hi,
+  id: idDict,
+  it: itDict,
+  nl,
+  pl,
+  'pt-BR': ptBR,
+  'pt-PT': ptPT,
+  ru,
+  sv,
+  th,
+  uk,
+  vi,
 } as const;
+
+const APIKEYS_PATHS = REDESIGN_PATHS.filter((p) => p.startsWith('dashboard.account.apiKeys.'));
+
+const APIKEYS_LOCALES = [
+  'ar',
+  'de',
+  'es',
+  'fr',
+  'he',
+  'hi',
+  'id',
+  'it',
+  'nl',
+  'pl',
+  'pt-BR',
+  'pt-PT',
+  'ru',
+  'sv',
+  'th',
+  'uk',
+  'vi',
+] as const;
 
 describe('Dashboard redesign i18n integrity', () => {
   it.each(REDESIGN_PATHS)(
@@ -125,6 +230,31 @@ describe('Dashboard redesign i18n integrity', () => {
         }
       }
       expect(missing, `Missing in ${locale}: ${missing.join(', ')}`).toEqual([]);
+    }
+  );
+
+  it.each(APIKEYS_LOCALES)(
+    '%s has all dashboard.account.apiKeys.* keys present',
+    (locale) => {
+      const dict = LOCALES[locale];
+      const missing: string[] = [];
+      for (const path of APIKEYS_PATHS) {
+        const value = getNestedValue(dict, path);
+        if (typeof value !== 'string' || value.length === 0) {
+          missing.push(path);
+        }
+      }
+      expect(missing, `Missing in ${locale}: ${missing.join(', ')}`).toEqual([]);
+    }
+  );
+
+  it.each(APIKEYS_LOCALES)(
+    '%s preserves {cap} / {name} placeholders verbatim',
+    (locale) => {
+      const dict = LOCALES[locale];
+      expect(getNestedValue(dict, 'dashboard.account.apiKeys.capHint')).toMatch(/\{cap\}/);
+      expect(getNestedValue(dict, 'dashboard.account.apiKeys.revokeBody')).toMatch(/\{name\}/);
+      expect(getNestedValue(dict, 'dashboard.account.apiKeys.rotateBody')).toMatch(/\{name\}/);
     }
   );
 });

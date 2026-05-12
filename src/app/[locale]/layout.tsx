@@ -1,8 +1,10 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
 import { locales, type Locale, isRtl } from "@/i18n/config";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
+import { CookieBanner } from "@/components/legal/CookieBanner";
 import "../globals.css";
 
 const geistSans = Geist({
@@ -65,10 +67,18 @@ const localeMap: Record<Locale, string> = {
   'pt-PT': 'pt_PT',
 };
 
-// Auto-generate alternates.languages from locales array
+// hreflang strategy (W4.4): we ship ko + en at 100% translation quality.
+// All other locales fall back to English in the get-dictionary chain. To avoid
+// Google interpreting the 22 non-en/ko locales as translated content (which
+// would hurt rankings due to duplicate content + bad UX), we map every fallback
+// locale's hreflang to `/en` and add x-default. ko keeps its own URL.
+//
+// Reference: plan W4.4 + Google guidance (https://developers.google.com/search/docs/specialized/international/localized-versions).
+const FULLY_TRANSLATED_LOCALES = new Set<string>(['en', 'ko']);
 const alternateLanguages = Object.fromEntries(
-  locales.map((l) => [l, `/${l}`])
+  locales.map((l) => [l, FULLY_TRANSLATED_LOCALES.has(l) ? `/${l}` : `/en`])
 ) as Record<string, string>;
+alternateLanguages['x-default'] = '/en';
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale: localeParam } = await params;
@@ -153,12 +163,27 @@ export default async function LocaleLayout({
       <head>
         {/* DNS prefetch for API endpoints */}
         <link rel="dns-prefetch" href="https://api.seizn.com" />
+        <link rel="dns-prefetch" href="https://analytics.seizn.com" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable} antialiased`}
       >
+        {/*
+         * Plausible — cookieless, IP-anonymized, GDPR/PIPA exempt from consent gate.
+         * Uses afterInteractive (default for body-rendered Script). beforeInteractive
+         * is invalid here because [locale]/layout.tsx is a NESTED layout, not the
+         * root layout — Next.js throws in production. The single-pageview-drop
+         * concern that motivated beforeInteractive is mitigated by Plausible's
+         * History API patch attaching once and persisting across SPA nav.
+         */}
+        <Script
+          src="https://analytics.seizn.com/js/script.js"
+          data-domain="seizn.com"
+          strategy="afterInteractive"
+        />
         <GoogleAnalytics />
         {children}
+        <CookieBanner locale={locale} />
       </body>
     </html>
   );

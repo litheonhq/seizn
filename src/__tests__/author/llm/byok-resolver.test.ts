@@ -163,7 +163,7 @@ describe('Author BYOK resolver', () => {
     }, client);
 
     const inserted = writes.find((write) => write.type === 'insert')?.values as Record<string, unknown>;
-    expect(saved).toEqual({ valid: true, key_last_4: 'aaaa' });
+    expect(saved).toEqual({ valid: true, key_last_4: 'aaaa', provider: 'anthropic' });
     expect(filters).toContainEqual(['user_id', 'profile-user-1']);
     expect(inserted.user_id).toBe('profile-user-1');
     expect(inserted.key_encrypted).not.toBe(rawKey);

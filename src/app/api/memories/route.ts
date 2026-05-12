@@ -468,6 +468,8 @@ export async function POST(request: NextRequest) {
       importance: 5,
       companion_meta: body.companion_meta ?? null,
       content_hash: contentHash,
+      is_deleted: false,
+      deleted_at: null,
     };
 
     let memory: {

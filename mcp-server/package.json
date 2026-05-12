@@ -1,6 +1,6 @@
 {
   "name": "seizn-mcp",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "MCP (Model Context Protocol) server for Seizn AI Memory - Persistent memory for AI applications",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -34,11 +34,11 @@
   "homepage": "https://seizn.com",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/iruhana/seizn.git",
+    "url": "git+https://github.com/litheonhq/seizn.git",
     "directory": "mcp-server"
   },
   "bugs": {
-    "url": "https://github.com/iruhana/seizn/issues"
+    "url": "https://github.com/litheonhq/seizn/issues"
   },
   "engines": {
     "node": ">=18.0.0"

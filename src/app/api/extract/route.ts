@@ -15,6 +15,8 @@ import {
   type SlotData,
 } from '@/lib/memory/slot';
 import { safeJsonParse } from '@/lib/safe-json';
+import { scanForInjection } from '@/lib/llm/injection-defense';
+import { logServerError } from '@/lib/server/logger';
 
 // POST /api/extract - Extract and store memories from conversation
 export async function POST(request: NextRequest) {
@@ -53,6 +55,21 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: 'conversation (string) is required' },
         { status: 400 }
+      );
+    }
+
+    // W5.7 prompt injection defense: scan untrusted user content for known
+    // injection patterns. Logging-only mode — we don't reject the request
+    // because false positives on legitimate fiction (characters quoting
+    // "ignore previous instructions" in dialogue) would break authoring use
+    // cases. The model-side delimiter strategy in extractMemories() is the
+    // hard barrier; this is just observability.
+    const injectionScan = scanForInjection(conversation);
+    if (injectionScan.flagged) {
+      logServerError(
+        '[extract] prompt injection pattern detected in user content',
+        new Error('injection_scan_flagged'),
+        { userId, matches: injectionScan.matches.slice(0, 5) }
       );
     }
 
@@ -144,6 +161,9 @@ export async function POST(request: NextRequest) {
               namespace,
               source: 'extract_api',
               confidence: memory.confidence,
+              is_encrypted: false,
+              is_deleted: false,
+              deleted_at: null,
             })
             .select('id, content, memory_type, tags, importance, created_at')
             .single();

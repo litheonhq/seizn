@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSessionUser } from '@/lib/api/request-user';
 import { createServerClient } from '@/lib/supabase';
 import { buildBasicApiKeyInsertPayload, generateApiKey } from '@/lib/api-key';
+import { verifyCsrfToken } from '@/lib/csrf';
 import { sendEmail } from '@/lib/email';
 import { apiKeyCreatedEmail } from '@/lib/email/templates';
 import { logServerError } from '@/lib/server/logger';
@@ -52,6 +53,9 @@ export async function GET() {
 // POST /api/dashboard/keys - Create a new API key (NextAuth session)
 export async function POST(request: NextRequest) {
   try {
+    const csrfErr = verifyCsrfToken(request);
+    if (csrfErr) return csrfErr;
+
     const user = await getSessionUser();
     if (!user?.id) {
       return AuthErrors.unauthorized('API keys');
@@ -115,12 +119,19 @@ export async function POST(request: NextRequest) {
       return ServerErrors.database('create_key');
     }
 
-    // Send API key created notification email (non-blocking)
+    // Send API key created notification email (non-blocking).
+    // Locale from Accept-Language; profiles.locale migration is the durable fix.
     if (user.email && !DISABLE_KEY_EMAILS) {
+      const acceptLang = (request.headers.get('accept-language') ?? '').toLowerCase();
+      const emailLocale: 'ko' | 'en' = acceptLang.startsWith('ko') ? 'ko' : 'en';
+      // Defense-in-depth: strip CR/LF from keyName before interpolating into the
+      // email subject. Resend strips control chars per RFC 2822 but a stripped
+      // local copy keeps logs and debug output sane too.
+      const safeNameForSubject = name.replace(/[\r\n]+/g, ' ');
       sendEmail({
         to: user.email,
-        subject: `New API Key Created: ${name}`,
-        html: apiKeyCreatedEmail(name, prefix),
+        subject: emailLocale === 'ko' ? `API 키 발급: ${safeNameForSubject}` : `New API Key Created: ${safeNameForSubject}`,
+        html: apiKeyCreatedEmail(name, prefix, emailLocale),
       }).catch((error) => logServerError('Failed to send API key notification', error));
     }
 
@@ -139,6 +150,9 @@ export async function POST(request: NextRequest) {
 // DELETE /api/dashboard/keys - Revoke an API key (NextAuth session)
 export async function DELETE(request: NextRequest) {
   try {
+    const csrfErr = verifyCsrfToken(request);
+    if (csrfErr) return csrfErr;
+
     const user = await getSessionUser();
     if (!user?.id) {
       return AuthErrors.unauthorized('API keys');

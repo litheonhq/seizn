@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "title": "Seizn — AI NPC के लिए मेमोरी",
-    "description": "Inworld, Convai, या अपने LLM से जोड़ें। Seizn आपके NPC को स्थायी मेमोरी, रिश्ते और पीढ़ियों में याददाश्त देता है — entity pricing, per-seat नहीं।"
+    "title": "Seizn — AI NPC के लिए memory",
+    "description": "Inworld, Convai या अपने LLM से जोड़ें। Seizn आपके NPC को टिकी हुई memory, रिश्ते और पीढ़ियों भर की याद देता है। Pricing entity के हिसाब से, per-seat नहीं।"
   },
   "nav": {
     "features": "विशेषताएं",
@@ -13,13 +13,13 @@
   },
   "hero": {
     "badge": "लाइव demo: smallgod",
-    "title": "आपके NPC याद करते हैं",
-    "titleHighlight": "पीढ़ियों तक।",
-    "subtitle": "Seizn, AI NPC के लिए मेमोरी लेयर है। इसे Inworld, Convai, या अपने LLM से जोड़ें — पसंदीदा dialogue engine रखें, sessions और generations में persistence जोड़ें।",
+    "title": "आपके NPC नहीं भूलते,",
+    "titleHighlight": "पीढ़ियों के बाद भी।",
+    "subtitle": "Seizn, AI NPC की memory layer है। Inworld, Convai या अपने LLM से जोड़िए — अपना पसंदीदा dialogue engine वैसा ही रखिए, बस session और पीढ़ियों के पार टिकी रहने वाली persistence ऊपर जोड़ दीजिए।",
     "emailPlaceholder": "you@studio.com",
     "joinWaitlist": "Demo बुक करें",
-    "joining": "बुक हो रहा है...",
-    "onTheList": "हम जल्द संपर्क करेंगे।",
+    "joining": "बुक हो रहा है…",
+    "onTheList": "हम जल्द ही आपसे बात करेंगे।",
     "stats": {
       "tokenSavings": "प्रति project NPC",
       "retrievalTime": "Memory retrieval",
@@ -28,7 +28,7 @@
   },
   "features": {
     "title": "Game studios के लिए बना",
-    "subtitle": "Seizn जोड़ें, dialogue engine रखें। NPC को memory, relationships और sessions व generations में persistence मिलती है।",
+    "subtitle": "Seizn को drop in करिए, dialogue engine अपना ही रहने दीजिए। NPC को memory, रिश्ते और session व पीढ़ियों के पार टिकी रहने वाली persistence — सब अपने आप मिल जाता है।",
     "smartExtraction": {
       "title": "NPC / Faction / Event graph",
       "description": "NPC, factions, quests और incidents को graph में model करें। Relationships (trust, grudge, kinship) और events (witnessed, affected, actor) first-class primitives हैं — खुद schema नहीं बनाना पड़ता।"
@@ -1609,6 +1609,67 @@
     },
     "northStar": {
       "subtitle": "NPC मेमोरी विश्वसनीयता के मुख्य संकेतक"
+    },
+    "account": {
+      "apiKeys": {
+        "title": "API कुंजियाँ",
+        "description": "Track 2 के लिए Seizn API + MCP कुंजियाँ बनाएँ और प्रबंधित करें।",
+        "capHint": "आप प्रति खाता {cap} API कुंजियाँ तक बना सकते हैं।",
+        "newKey": "नई API कुंजी",
+        "create": "बनाएँ",
+        "cancel": "रद्द करें",
+        "done": "हो गया",
+        "name": "नाम",
+        "scopes": "स्कोप",
+        "scopesDefault": "डिफ़ॉल्ट स्कोप: recall, remember, graph, search.",
+        "copyKey": "कुंजी कॉपी करें",
+        "saveItNow": "अभी सहेजें, यह कुंजी फिर नहीं दिखेगी।",
+        "created": "API कुंजी बनाई गई",
+        "rotated": "API कुंजी बदली गई",
+        "rotate": "बदलें",
+        "revoke": "निरस्त करें",
+        "revokeTitle": "API कुंजी निरस्त करें?",
+        "revokeBody": "\"{name}\" को निरस्त करने पर इस कुंजी से सभी कॉल बंद हो जाएँगी। मौजूदा ऐप्स को नई कुंजी चाहिए होगी।",
+        "rotateTitle": "API कुंजी बदलें?",
+        "rotateBody": "\"{name}\" बदलने पर नई कुंजी बनेगी और वर्तमान कुंजी रद्द हो जाएगी। पुरानी कुंजी बंद होने से पहले अपने ऐप्स अपडेट करें।",
+        "usage": "उपयोग",
+        "rateLimit": "दर सीमा",
+        "lastUsed": "अंतिम उपयोग",
+        "createdAt": "बनाया गया",
+        "empty": "अभी कोई सक्रिय कुंजी नहीं। एक जारी करने के लिए \"नई API कुंजी\" पर क्लिक करें।",
+        "errors": {
+          "capReached": "इस खाते के लिए API कुंजी सीमा तक पहुँच गए हैं।",
+          "invalidName": "कृपया कुंजी के लिए नाम दर्ज करें।",
+          "internal": "कार्रवाई पूरी नहीं हो सकी। पुनः प्रयास करें।",
+          "revokeFailed": "कुंजी निरस्त नहीं की जा सकी।",
+          "rotateFailed": "कुंजी बदली नहीं जा सकी।",
+          "copyFailed": "कुंजी कॉपी नहीं की जा सकी।"
+        },
+        "toasts": {
+          "copied": "कुंजी क्लिपबोर्ड में कॉपी हो गई।",
+          "revoked": "कुंजी निरस्त कर दी गई।"
+        },
+        "audit": {
+          "link": "ऑडिट लॉग",
+          "title": "API कुंजी ऑडिट लॉग",
+          "description": "आपकी API कुंजियों के लिए सभी निर्माण, निरस्तीकरण, बदलाव, दर सीमा, कोटा और स्कोप घटनाएँ।",
+          "filterAction": "क्रिया",
+          "from": "से",
+          "to": "तक",
+          "reset": "रीसेट",
+          "exportCsv": "CSV निर्यात",
+          "empty": "कोई मेल खाती ऑडिट घटना नहीं।",
+          "action": {
+            "all": "सभी",
+            "created": "बनाया गया",
+            "revoked": "निरस्त",
+            "rotated": "बदला गया",
+            "rate_limited": "दर सीमा पार",
+            "quota_exceeded": "कोटा समाप्त",
+            "scope_denied": "स्कोप अस्वीकृत"
+          }
+        }
+      }
     }
   },
   "pricingPage": {

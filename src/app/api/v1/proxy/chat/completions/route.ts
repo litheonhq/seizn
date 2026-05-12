@@ -37,7 +37,6 @@ import {
   authErrorResponse,
   logRequest,
 } from '@/lib/api-auth';
-import { auth } from '@/lib/auth';
 import { createServerClient } from '@/lib/supabase';
 import { computeEmbedding } from '@/lib/embeddings';
 import { createDetector } from '@/lib/prompt-firewall/scanner';
@@ -107,13 +106,76 @@ async function resolveAuth(
     return { userId: authResult.userId, keyId: authResult.keyId };
   }
 
-  // Fallback: session auth
-  const session = await auth();
-  if (session?.user?.id) {
-    return { userId: session.user.id, keyId: null };
-  }
-
+  // Audit follow-up: removed the NextAuth session fallback. Pre-fix any
+  // logged-in browser session could drive memory extraction LLM calls
+  // against the server-side ANTHROPIC_API_KEY (no Track 2 quota, no
+  // scope check). Proxy now requires a valid Track 2 API key only.
   return { error: authErrorResponse(authResult.authError) };
+}
+
+/**
+ * Audit follow-up: enforce Track 2 per-key quota on the proxy. Without
+ * this, a Free user (50/day) could spam this LLM-consuming endpoint
+ * unbounded because authenticateRequest only checks Track 1 monthly
+ * quota.
+ */
+async function enforceProxyTrack2Quota(
+  keyId: string,
+  userId: string,
+): Promise<{ ok: true } | { error: NextResponse }> {
+  const supabase = createServerClient();
+  const { data } = await supabase
+    .from('api_keys')
+    .select('monthly_quota, monthly_quota_period, scopes')
+    .eq('id', keyId)
+    .single<{
+      monthly_quota: number | null;
+      monthly_quota_period: 'day' | 'month' | null;
+      scopes: string[] | null;
+    }>();
+  if (!data || data.monthly_quota == null || !data.monthly_quota_period) {
+    return { ok: true };
+  }
+  // Require explicit 'managed_llm' scope. Free keys never have it; only
+  // Studio Managed (Track 2) and Enterprise grant it. BYOK Track 2 paid
+  // tiers also lack it — those users should call providers directly with
+  // their BYOK key, not through our proxy.
+  const scopes = data.scopes ?? [];
+  const hasManagedLlm = scopes.includes('*') || scopes.includes('managed_llm');
+  if (!hasManagedLlm) {
+    return {
+      error: NextResponse.json(
+        {
+          error: {
+            code: 'SCOPE_DENIED',
+            message: 'Proxy requires the managed_llm scope (Studio Managed or Enterprise tier).',
+          },
+        },
+        { status: 403 },
+      ),
+    };
+  }
+  try {
+    const { enforceQuota } = await import('@/lib/api-keys');
+    await enforceQuota(keyId, data.monthly_quota, data.monthly_quota_period, { userId });
+  } catch (err) {
+    const { QuotaExceededError } = await import('@/lib/api-keys/errors');
+    if (err instanceof QuotaExceededError) {
+      return {
+        error: NextResponse.json(
+          {
+            error: {
+              code: 'QUOTA_EXCEEDED',
+              message: `Track 2 ${data.monthly_quota_period} quota exceeded (${data.monthly_quota}).`,
+            },
+          },
+          { status: 429 },
+        ),
+      };
+    }
+    throw err;
+  }
+  return { ok: true };
 }
 
 function resolveProvider(request: NextRequest): ProxyConfig | null {
@@ -345,6 +407,9 @@ async function extractAndStoreMemories(
         source: 'proxy_extraction',
         importance: 5,
         tags: ['auto-extracted', 'proxy'],
+        is_encrypted: false,
+        is_deleted: false,
+        deleted_at: null,
       }).select('id').single();
 
       if (insertedMemory?.id) {
@@ -377,6 +442,14 @@ export async function POST(request: NextRequest) {
   const authResult = await resolveAuth(request);
   if ('error' in authResult) return authResult.error;
   const { userId, keyId } = authResult;
+
+  // 1b. Audit follow-up: enforce Track 2 quota + managed_llm scope. Pre-fix
+  // any authenticated key (incl. Free 50/day) could call this LLM-consuming
+  // endpoint without per-key quota gating.
+  if (keyId) {
+    const quotaResult = await enforceProxyTrack2Quota(keyId, userId);
+    if ('error' in quotaResult) return quotaResult.error;
+  }
 
   // 2. Resolve target provider
   const providerConfig = resolveProvider(request);

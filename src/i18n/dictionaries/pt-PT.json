@@ -1,7 +1,7 @@
 {
   "metadata": {
     "title": "Seizn — Memória para NPC com IA",
-    "description": "Liga ao Inworld, Convai ou ao teu próprio LLM. O Seizn dá aos teus NPC memória persistente, relações e recordação entre gerações — cobrado por entidade, não por lugar."
+    "description": "Liga o Seizn ao Inworld, Convai ou ao teu LLM. Os teus NPC ganham memória, relações e recordações que atravessam gerações. Cobrança por entidade, não por lugar."
   },
   "nav": {
     "features": "Funcionalidades",
@@ -13,13 +13,13 @@
   },
   "hero": {
     "badge": "Demo ao vivo: smallgod",
-    "title": "Os teus NPC lembram-se",
-    "titleHighlight": "entre gerações.",
-    "subtitle": "Seizn é a camada de memória para NPC com IA. Liga ao Inworld, Convai ou ao teu próprio LLM — mantém o motor de diálogo que usas e adiciona persistência que sobrevive a sessões e gerações.",
+    "title": "Os teus NPC lembram-se,",
+    "titleHighlight": "mesmo gerações depois.",
+    "subtitle": "Seizn é a camada de memória para NPC com IA. Liga-o ao Inworld, Convai ou ao teu próprio LLM, mantém o motor de diálogo que já usas e ganhas uma persistência que aguenta entre sessões e entre gerações.",
     "emailPlaceholder": "tu@estudio.com",
     "joinWaitlist": "Marcar demo",
     "joining": "A marcar...",
-    "onTheList": "Entraremos em contacto em breve.",
+    "onTheList": "Damos notícias em breve.",
     "stats": {
       "tokenSavings": "NPC por projeto",
       "retrievalTime": "Recuperação de memória",
@@ -27,8 +27,8 @@
     }
   },
   "features": {
-    "title": "Construído para estúdios de jogos",
-    "subtitle": "Integra o Seizn e mantém o teu motor de diálogo. Os NPC ganham memória, relações e persistência que sobrevive a sessões e gerações.",
+    "title": "Feito para estúdios de jogos",
+    "subtitle": "Mantém o motor de diálogo que tens, encaixa o Seizn por baixo. Os NPC ganham memória, relações e uma persistência que aguenta entre sessões e entre gerações.",
     "smartExtraction": {
       "title": "Grafo NPC / Facção / Evento",
       "description": "Modela NPC, facções, missões e incidentes como grafo. As relações (confiança, rancor, parentesco) e eventos (testemunha, afetado, ator) são primitivos nativos, não esquemas que tens de inventar."
@@ -1609,6 +1609,67 @@
     },
     "northStar": {
       "subtitle": "Indicadores-chave de fiabilidade da memória de NPC"
+    },
+    "account": {
+      "apiKeys": {
+        "title": "Chaves de API",
+        "description": "Crie e faça a gestão das chaves Seizn API e MCP para o Track 2.",
+        "capHint": "Pode criar até {cap} chaves de API por conta.",
+        "newKey": "Nova chave de API",
+        "create": "Criar",
+        "cancel": "Cancelar",
+        "done": "Concluído",
+        "name": "Nome",
+        "scopes": "Âmbitos",
+        "scopesDefault": "Âmbitos predefinidos: recall, remember, graph, search.",
+        "copyKey": "Copiar chave",
+        "saveItNow": "Guarde-a agora; não voltará a vê-la.",
+        "created": "Chave de API criada",
+        "rotated": "Chave de API rodada",
+        "rotate": "Rodar",
+        "revoke": "Revogar",
+        "revokeTitle": "Revogar a chave de API?",
+        "revokeBody": "Revogar \"{name}\" interrompe todas as chamadas com esta chave. As apps existentes precisarão de uma nova chave.",
+        "rotateTitle": "Rodar a chave de API?",
+        "rotateBody": "Rodar \"{name}\" gera uma nova chave e revoga a atual. Atualize as apps antes de a chave antiga deixar de funcionar.",
+        "usage": "Utilização",
+        "rateLimit": "Limite de chamadas",
+        "lastUsed": "Última utilização",
+        "createdAt": "Criada",
+        "empty": "Sem chaves ativas. Clique em \"Nova chave de API\" para criar uma.",
+        "errors": {
+          "capReached": "Atingiu o limite de chaves de API desta conta.",
+          "invalidName": "Indique um nome para a chave.",
+          "internal": "Não foi possível concluir a ação. Tente novamente.",
+          "revokeFailed": "Não foi possível revogar a chave.",
+          "rotateFailed": "Não foi possível rodar a chave.",
+          "copyFailed": "Não foi possível copiar a chave."
+        },
+        "toasts": {
+          "copied": "Chave copiada para a área de transferência.",
+          "revoked": "Chave revogada."
+        },
+        "audit": {
+          "link": "Registo de auditoria",
+          "title": "Registo de auditoria das chaves de API",
+          "description": "Todos os eventos de criação, revogação, rotação, limite de chamadas, quota e âmbito das suas chaves de API.",
+          "filterAction": "Ação",
+          "from": "De",
+          "to": "Até",
+          "reset": "Repor",
+          "exportCsv": "Exportar CSV",
+          "empty": "Sem eventos correspondentes.",
+          "action": {
+            "all": "Todos",
+            "created": "Criada",
+            "revoked": "Revogada",
+            "rotated": "Rodada",
+            "rate_limited": "Limite atingido",
+            "quota_exceeded": "Quota excedida",
+            "scope_denied": "Âmbito recusado"
+          }
+        }
+      }
     }
   },
   "pricingPage": {

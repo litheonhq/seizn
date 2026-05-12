@@ -1,23 +1,13 @@
 import type { Locale } from "@/i18n/config";
 
 export type ByokKeyStatus = "active" | "invalid" | "missing" | "error";
-export type ByokDiscountStatus = "inactive" | "pending" | "applied" | "error";
 
 export interface ByokState {
   enabled: boolean;
-  provider: "anthropic" | string | null;
+  provider: "anthropic" | "openai" | string | null;
   key_last_4?: string | null;
   verified_at?: string | null;
   status: ByokKeyStatus;
-}
-
-export interface ByokDiscountState {
-  applied?: boolean;
-  removed?: boolean;
-  coupon?: string;
-  status?: ByokDiscountStatus;
-  reason?: string;
-  error?: string;
 }
 
 export interface SubscriptionState {
@@ -32,9 +22,6 @@ export interface SubscriptionState {
   cancel_at_period_end: boolean;
   payment_failed: boolean;
   byok_active: boolean;
-  byok_discount_active: boolean;
-  byok_discount_status: ByokDiscountStatus;
-  byok_discount_error?: string | null;
   stripe_price_id?: string | null;
   billing_cadence?: "monthly" | "yearly" | null;
   price_lock_version: string;
@@ -77,8 +64,6 @@ export interface AuthorSettingsCopy {
     remove: string;
     removing: string;
     keyHint: string;
-    discount: string;
-    discountStates: Record<ByokDiscountStatus, string>;
     helper: {
       title: string;
       buttonLabel: string;
@@ -138,10 +123,7 @@ export const DEFAULT_SUBSCRIPTION_STATE: SubscriptionState = {
   cancel_at_period_end: false,
   payment_failed: false,
   byok_active: false,
-  byok_discount_active: false,
-  byok_discount_status: "inactive",
-  byok_discount_error: null,
-  price_lock_version: "v7",
+  price_lock_version: "v9",
   usage: {
     tokens_used_month: 0,
     tokens_cap_month: null,
@@ -158,10 +140,6 @@ export const DEFAULT_USAGE_STATE: UsageState = {
   byok_active: false,
   tier: null,
 };
-
-export function normalizeByokDiscountStatus(value: unknown): ByokDiscountStatus {
-  return value === "pending" || value === "applied" || value === "error" ? value : "inactive";
-}
 
 export function getUsagePercent(used: number, cap: number | null | undefined): number {
   if (!cap || cap <= 0) return 0;

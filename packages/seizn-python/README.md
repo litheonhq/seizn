@@ -81,7 +81,7 @@ SEIZN_API_KEY=szn_xxx
 
 - [Documentation](https://docs.seizn.com)
 - [Dashboard](https://seizn.com/dashboard)
-- [GitHub](https://github.com/iruhana/seizn)
+- [GitHub](https://github.com/litheonhq/seizn)
 
 ## License
 

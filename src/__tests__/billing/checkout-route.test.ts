@@ -349,7 +349,6 @@ describe('Author checkout route', () => {
         }),
       }),
       metadata: expect.objectContaining({
-        byok_discount: 'false',
         legal_terms_version: CHECKOUT_LEGAL_VERSIONS.terms,
         legal_privacy_version: CHECKOUT_LEGAL_VERSIONS.privacy,
         legal_accepted: 'true',
@@ -366,7 +365,6 @@ describe('Author checkout route', () => {
           author_billing_tier: 'pro',
           billing_cadence: 'monthly',
           price_lock_version: 'v7',
-          byok_discount: 'false',
           legal_terms_version: CHECKOUT_LEGAL_VERSIONS.terms,
           legal_privacy_version: CHECKOUT_LEGAL_VERSIONS.privacy,
           legal_accepted: 'true',

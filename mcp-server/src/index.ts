@@ -872,7 +872,7 @@ async function handleAddObservations(observations: { entityName: string; content
   for (const obs of observations) {
     // First search for the entity
     const searchResponse = await apiRequest(
-      `/api/v1/memories?query=${encodeURIComponent(obs.entityName)}&limit=1&mode=hybrid`
+      `/api/v1/memories?query=${encodeURIComponent(obs.entityName)}&limit=1&mode=keyword`
     ) as { success: boolean; data: { results: Memory[] } };
 
     if (searchResponse.data?.results && searchResponse.data.results.length > 0) {
@@ -939,7 +939,7 @@ async function handleOpenNodes(names: string[]): Promise<string> {
 
   for (const name of names) {
     const response = await apiRequest(
-      `/api/v1/memories?query=${encodeURIComponent(name)}&limit=5&mode=hybrid`
+      `/api/v1/memories?query=${encodeURIComponent(name)}&limit=5&mode=keyword`
     ) as { success: boolean; data: { results: Memory[] } };
 
     if (response.data?.results && response.data.results.length > 0) {
@@ -960,7 +960,7 @@ async function handleDeleteEntities(entityNames: string[]): Promise<string> {
   for (const name of entityNames) {
     // Search for memories with this entity name
     const response = await apiRequest(
-      `/api/v1/memories?query=${encodeURIComponent(name)}&limit=50&mode=hybrid`
+      `/api/v1/memories?query=${encodeURIComponent(name)}&limit=50&mode=keyword`
     ) as { success: boolean; data: { results: Memory[] } };
 
     if (response.data?.results && response.data.results.length > 0) {
@@ -982,7 +982,7 @@ async function handleDeleteObservations(deletions: { entityName: string; observa
     for (const observation of del.observations) {
       // Search for memories matching this observation content
       const searchResponse = await apiRequest(
-        `/api/v1/memories?query=${encodeURIComponent(`[${del.entityName}] ${observation}`)}&limit=5&mode=hybrid`
+        `/api/v1/memories?query=${encodeURIComponent(`[${del.entityName}] ${observation}`)}&limit=5&mode=keyword`
       ) as { success: boolean; data: { results: Memory[] } };
 
       const matches = searchResponse.data?.results?.filter(
@@ -1009,7 +1009,7 @@ async function handleDeleteRelations(relations: { from: string; to: string; rela
     // Relations are stored as memories with tags
     const query = `${rel.from} ${rel.relationType} ${rel.to}`;
     const searchResponse = await apiRequest(
-      `/api/v1/memories?query=${encodeURIComponent(query)}&limit=10&mode=hybrid`
+      `/api/v1/memories?query=${encodeURIComponent(query)}&limit=10&mode=keyword`
     ) as { success: boolean; data: { results: Memory[] } };
 
     const matches = searchResponse.data?.results?.filter(

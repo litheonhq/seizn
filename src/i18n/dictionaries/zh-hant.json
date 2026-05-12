@@ -1,7 +1,7 @@
 {
   "metadata": {
     "title": "Seizn — AI NPC 記憶層",
-    "description": "接入 Inworld、Convai，或您自己的 LLM。Seizn 為 NPC 提供跨 session 與跨世代的持久記憶、關係與派系圖譜 — 以實體計費，而非按席位收費。"
+    "description": "接到 Inworld、Convai，或你自己的 LLM。Seizn 給 NPC 跨 session、跨世代的記憶、關係與派系圖譜，按實體計價，不按席次。"
   },
   "nav": {
     "features": "功能",
@@ -13,13 +13,13 @@
   },
   "hero": {
     "badge": "線上示範：smallgod",
-    "title": "NPC 記得住",
-    "titleHighlight": "跨越世代。",
-    "subtitle": "Seizn 是 AI NPC 的記憶層。接入 Inworld、Convai，或您自己的 LLM — 保留您熟悉的對話引擎，加入跨工作階段 與跨世代存活的持久性。",
+    "title": "你的 NPC 還記得",
+    "titleHighlight": "上一個世代。",
+    "subtitle": "Seizn 是 AI NPC 的記憶層。接到 Inworld、Convai 或你自己的 LLM——對話引擎不用換，把跨 session、跨世代留得住的記憶交給我們。",
     "emailPlaceholder": "you@studio.com",
     "joinWaitlist": "預約示範",
-    "joining": "預約中...",
-    "onTheList": "我們將盡快與您聯繫。",
+    "joining": "預約中…",
+    "onTheList": "我們會盡快回覆你。",
     "stats": {
       "tokenSavings": "每專案 NPC 數",
       "retrievalTime": "記憶檢索",
@@ -27,8 +27,8 @@
     }
   },
   "features": {
-    "title": "專為遊戲工作室打造",
-    "subtitle": "嵌入 Seizn，對話引擎維持原樣。NPC 獲得跨 session 與跨世代存活的記憶、關係與持久性。",
+    "title": "為遊戲工作室而生",
+    "subtitle": "把 Seizn 接上去，對話引擎不動。NPC 多了記憶、人際關係，還有跨 session、跨世代留得住的那種念念不忘。",
     "smartExtraction": {
       "title": "NPC / 派系 / 事件圖譜",
       "description": "將 NPC、派系、任務與事件建模為圖譜。關係（信任、怨恨、血緣）與事件（目擊、受影響、行為者）是第一等基元，無需自行設計結構描述。"
@@ -1739,6 +1739,67 @@
     },
     "fallback": {
       "body": "此頁籤使用相同的殼層樣式。"
+    },
+    "account": {
+      "apiKeys": {
+        "title": "API 金鑰",
+        "description": "為 Seizn API 與 MCP（Track 2）建立並管理金鑰。",
+        "capHint": "每個帳號最多可建立 {cap} 個金鑰。",
+        "newKey": "新增 API 金鑰",
+        "create": "建立",
+        "cancel": "取消",
+        "done": "完成",
+        "name": "名稱",
+        "scopes": "權限範圍",
+        "scopesDefault": "預設權限:recall、remember、graph、search。",
+        "copyKey": "複製金鑰",
+        "saveItNow": "請立刻儲存。此金鑰僅顯示一次。",
+        "created": "已建立 API 金鑰",
+        "rotated": "已輪換 API 金鑰",
+        "rotate": "輪換",
+        "revoke": "撤銷",
+        "revokeTitle": "撤銷此金鑰?",
+        "revokeBody": "撤銷「{name}」後,使用此金鑰的呼叫會立即停止,應用程式需要更換新金鑰。",
+        "rotateTitle": "輪換此金鑰?",
+        "rotateBody": "輪換「{name}」會產生新金鑰並撤銷現有金鑰。請先更新您的應用程式再繼續。",
+        "usage": "使用量",
+        "rateLimit": "每分鐘上限",
+        "lastUsed": "最後使用",
+        "createdAt": "建立時間",
+        "empty": "尚無啟用中的金鑰。請點擊「新增 API 金鑰」建立。",
+        "errors": {
+          "capReached": "已達帳號金鑰上限。",
+          "invalidName": "請填寫金鑰名稱。",
+          "internal": "操作未能完成,請稍後再試。",
+          "revokeFailed": "撤銷金鑰失敗。",
+          "rotateFailed": "輪換金鑰失敗。",
+          "copyFailed": "複製失敗。"
+        },
+        "toasts": {
+          "copied": "金鑰已複製到剪貼簿。",
+          "revoked": "金鑰已撤銷。"
+        },
+        "audit": {
+          "link": "稽核紀錄",
+          "title": "API 金鑰稽核紀錄",
+          "description": "記錄 API 金鑰的建立、撤銷、輪換、限速、配額與權限事件。",
+          "filterAction": "事件",
+          "from": "起始日期",
+          "to": "結束日期",
+          "reset": "重設",
+          "exportCsv": "匯出 CSV",
+          "empty": "沒有符合條件的事件。",
+          "action": {
+            "all": "全部",
+            "created": "建立",
+            "revoked": "撤銷",
+            "rotated": "輪換",
+            "rate_limited": "限速",
+            "quota_exceeded": "超過配額",
+            "scope_denied": "權限拒絕"
+          }
+        }
+      }
     }
   },
   "pricingPage": {

@@ -1,12 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSessionUser } from '@/lib/api/request-user';
-import { buildBasicApiKeyInsertPayload, generateApiKey } from '@/lib/api-key';
+import { buildBasicApiKeyInsertPayload, generateApiKey, hashApiKey } from '@/lib/api-key';
+import { verifyCsrfToken } from '@/lib/csrf';
 import { createServerClient } from '@/lib/supabase';
 import { logServerError } from '@/lib/server/logger';
 
 // POST /api/auth/device/approve - Approve or deny a device auth request
 export async function POST(request: NextRequest) {
   try {
+    const csrfError = verifyCsrfToken(request);
+    if (csrfError) return csrfError;
+
     const user = await getSessionUser();
     if (!user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -83,6 +87,7 @@ export async function POST(request: NextRequest) {
         user_id: user.id,
         api_key_id: apiKey.id,
         access_token: key,
+        access_token_hash: hashApiKey(key),
         approved_at: new Date().toISOString(),
       })
       .eq('id', authCode.id);

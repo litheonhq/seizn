@@ -33,6 +33,14 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
 import { createEmbedding, createQueryEmbedding } from '@/lib/ai';
 import {
+  applyTemporalFilters,
+  isMemoryCanonStatus,
+  validateTemporalInputs,
+  validateTemporalQuery,
+  TemporalValidationError,
+  type MemoryCanonStatus,
+} from '@/lib/temporal/v1';
+import {
   authenticateRequest,
   isAuthError,
   authErrorResponse,
@@ -157,10 +165,22 @@ const SEARCH_TIMEOUT_MS = (() => {
   if (Number.isFinite(raw) && raw > 0) return raw;
   return 2500;
 })();
+const SPRING_V4_BRIDGE_SEARCH_TIMEOUT_MS = (() => {
+  const raw = Number.parseInt(process.env.MEMORY_V1_SPRING_BRIDGE_SEARCH_TIMEOUT_MS || '', 10);
+  if (Number.isFinite(raw) && raw > 0) return raw;
+  return 5000;
+})();
+// Kill switch for the Spring v4 bridge search path. Defaults to ON because the
+// bridge now has a route-level timebox (SPRING_V4_BRIDGE_SEARCH_TIMEOUT_MS),
+// an inner Voyage fetch timeout, and an empty-pool short circuit, so the
+// failure mode that previously caused gateway 504s is gone. To roll back fast
+// in an incident: set MEMORY_V1_SPRING_BRIDGE_SEARCH=false in Vercel env (no
+// deploy required) — requests then take the legacy executeMemorySearch path,
+// which has SEARCH_TIMEOUT_MS guarding it.
 const MEMORY_V1_SPRING_BRIDGE_SEARCH_ENABLED =
   process.env.MEMORY_V1_SPRING_BRIDGE_SEARCH !== 'false';
 const MEMORY_V1_SPRING_BRIDGE_MIRROR_ENABLED =
-  process.env.MEMORY_V1_SPRING_BRIDGE_MIRROR !== 'false';
+  process.env.MEMORY_V1_SPRING_BRIDGE_MIRROR === 'true';
 const MEMORY_V1_SPRING_BRIDGE_MIRROR_REQUIRED =
   process.env.MEMORY_V1_SPRING_BRIDGE_MIRROR_REQUIRED === 'true';
 const ALLOWED_SEARCH_MODES: SearchMode[] = ['auto', 'slot', 'keyword', 'hybrid', 'vector'];
@@ -183,6 +203,23 @@ function getRequestMemoryClass(body: AddMemoryRequest): string | null {
   const raw = (body as unknown as Record<string, unknown>).memory_class;
   if (typeof raw === 'string' && raw.trim().length > 0) return raw.trim();
   return body.memory_type || null;
+}
+
+async function withTimeout<T>(
+  operation: Promise<T>,
+  timeoutMs: number,
+  label: string,
+): Promise<T> {
+  let timeout: ReturnType<typeof setTimeout> | undefined;
+  const timeoutPromise = new Promise<never>((_, reject) => {
+    timeout = setTimeout(() => reject(new Error(`${label} timed out after ${timeoutMs}ms`)), timeoutMs);
+  });
+
+  try {
+    return await Promise.race([operation, timeoutPromise]);
+  } finally {
+    if (timeout) clearTimeout(timeout);
+  }
 }
 
 function getModerationMeta(result: ModerationResult | null): {
@@ -808,6 +845,84 @@ async function handlePost(request: NextRequest) {
       importance = await scoreImportance(sanitizedContent);
     }
 
+    // R9: optional bi-temporal fields. Validate up front; reject 400 on
+    // bad input. Defaults: canon_status='canon', valid_at=now() (column
+    // default added in R12 migration 20260508010 — pre-R12 the column
+    // had no DEFAULT, so omitted valid_at became NULL and time-travel
+    // queries silently dropped the row).
+    const temporalIn = {
+      canon_status: typeof rawBody.canon_status === 'string'
+        ? (rawBody.canon_status as MemoryCanonStatus)
+        : null,
+      valid_at: typeof rawBody.valid_at === 'string' ? rawBody.valid_at : null,
+      invalidated_at: typeof rawBody.invalidated_at === 'string' ? rawBody.invalidated_at : null,
+      supersedes_id: typeof rawBody.supersedes_id === 'string' ? rawBody.supersedes_id : null,
+    };
+    try {
+      validateTemporalInputs(temporalIn);
+    } catch (error) {
+      if (error instanceof TemporalValidationError) {
+        return NextResponse.json(
+          { error: { code: 'invalid_temporal_input', message: error.message } },
+          { status: 400 },
+        );
+      }
+      throw error;
+    }
+    // R12 audit fix (L10): reject canon states that don't make sense for
+    // a fresh row. The 7-state FSM accepts past_only / superseded /
+    // invalidated as quote-states, but you reach those via transitions,
+    // not direct insert. Author Memory v3 follows this rule.
+    if (
+      temporalIn.canon_status &&
+      temporalIn.canon_status !== 'canon' &&
+      temporalIn.canon_status !== 'candidate'
+    ) {
+      return NextResponse.json(
+        {
+          error: {
+            code: 'invalid_temporal_input',
+            message: "canon_status on insert must be 'canon' or 'candidate'",
+          },
+        },
+        { status: 400 },
+      );
+    }
+    // R12 audit fix (CRITICAL A1): supersedes_id IDOR. Pre-fix, POST
+    // accepted any UUID and the FK only enforced "row exists" — not
+    // "row belongs to me". Verify ownership before insert. Same check
+    // for invalidated_by_id when it lands in a future patch.
+    let supersededRow: { id: string; valid_at: string | null } | null = null;
+    if (temporalIn.supersedes_id) {
+      const { data: target, error: lookupErr } = await supabase
+        .from('memories')
+        .select('id, valid_at, user_id, is_deleted')
+        .eq('id', temporalIn.supersedes_id)
+        .maybeSingle();
+      if (lookupErr) {
+        logServerError('[v1/memories] supersedes_id lookup failed', lookupErr, {
+          userId,
+          supersedesId: temporalIn.supersedes_id,
+        });
+        return NextResponse.json(
+          { error: { code: 'database_error', message: 'Storage error' } },
+          { status: 500 },
+        );
+      }
+      if (!target || target.user_id !== userId || target.is_deleted) {
+        return NextResponse.json(
+          {
+            error: {
+              code: 'invalid_supersedes_id',
+              message: 'supersedes_id does not refer to a memory you own',
+            },
+          },
+          { status: 400 },
+        );
+      }
+      supersededRow = { id: target.id, valid_at: target.valid_at };
+    }
+
     // Compute content hash for dedup safety net (unique index on user_id + namespace + content_hash)
     const contentHash =
       isEncrypted || hasImageAttachment
@@ -844,10 +959,19 @@ async function handlePost(request: NextRequest) {
       last_reinforced_at: new Date().toISOString(),
       content_hash: contentHash,
       tier: 'hot',
+      is_deleted: false,
+      deleted_at: null,
       pinned: rawBody.pinned === true,
       last_recalled_at: null,
       recall_count: 0,
       size_bytes: sizeBytes,
+      // R9 bi-temporal fields. Omit when caller didn't supply so DB
+      // defaults apply (canon_status='canon', valid_at=created_at via
+      // the migration backfill trigger).
+      ...(temporalIn.canon_status ? { canon_status: temporalIn.canon_status } : {}),
+      ...(temporalIn.valid_at ? { valid_at: temporalIn.valid_at } : {}),
+      ...(temporalIn.invalidated_at ? { invalidated_at: temporalIn.invalidated_at } : {}),
+      ...(temporalIn.supersedes_id ? { supersedes_id: temporalIn.supersedes_id } : {}),
       ...(moderationResult
         ? {
             moderation_status: moderationResult.status,
@@ -881,6 +1005,34 @@ async function handlePost(request: NextRequest) {
         .single();
       memory = result.data;
       insertError = result.error;
+    }
+
+    // R12 audit fix (CRITICAL B2): apply planSupersedence so the
+    // predecessor flips canon_status='superseded' + invalidated_at=now.
+    // Pre-fix, supersedes_id only set the new row's pointer but the old
+    // row stayed canon — default GET returned both rows as truth, and
+    // as_of queries the same. Now the FSM is consistent.
+    if (memory && supersededRow) {
+      const validAt = temporalIn.valid_at ?? memory.created_at ?? new Date().toISOString();
+      const { error: supersedeErr } = await supabase
+        .from('memories')
+        .update({
+          canon_status: 'superseded',
+          invalidated_at: validAt,
+          invalidated_by_id: memory.id,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', supersededRow.id)
+        .eq('user_id', userId);
+      if (supersedeErr) {
+        logServerError('[v1/memories] supersedence flip failed', supersedeErr, {
+          userId,
+          newId: memory.id,
+          supersededId: supersededRow.id,
+        });
+        // Non-fatal: surface in audit logs but the new row is committed.
+        // A reconciliation cron can repair this later if needed.
+      }
     }
 
     // Backward compatibility: if recent additive migrations are not applied yet,
@@ -1207,6 +1359,18 @@ async function handleGet(request: NextRequest) {
     const before = searchParams.get('before');
     const perspectiveEntityId = searchParams.get('perspective_entity_id')?.trim() || null;
     const asOfParam = searchParams.get('as_of');
+    try {
+      validateTemporalQuery({
+        asOf: asOfParam,
+        supersedesId: searchParams.get('supersedes_id'),
+        invalidatedById: searchParams.get('invalidated_by_id'),
+      });
+    } catch (error) {
+      if (error instanceof TemporalValidationError) {
+        return ValidationErrors.invalidField('as_of', error.message);
+      }
+      throw error;
+    }
     const sortRaw = searchParams.get('sort') || 'created_at';
     const sort: BrowseSortColumn = BROWSE_SORT_COLUMNS.includes(sortRaw as BrowseSortColumn)
       ? (sortRaw as BrowseSortColumn)
@@ -1276,6 +1440,23 @@ async function handleGet(request: NextRequest) {
       if (tagsParam) {
         const tags = tagsParam.split(',').map((t) => t.trim()).filter(Boolean);
         if (tags.length > 0) q = q.overlaps('tags', tags);
+      }
+
+      // R9: bi-temporal filter. as_of=ISO returns memories whose
+      // validity window contains that instant (valid_at <= as_of AND
+      // (invalidated_at IS NULL OR invalidated_at > as_of)).
+      // include_history=true bypasses canon_status filtering so callers
+      // can audit the full timeline. Default view = currently-canon rows.
+      const includeHistory = searchParams.get('include_history') === 'true';
+      q = applyTemporalFilters(q as never, {
+        asOf: asOfParam,
+        includeHistory,
+      });
+      // Optional explicit canon_status filter (subset of the active set
+      // when not in history mode, or arbitrary when include_history=true).
+      const canonStatusFilter = searchParams.get('canon_status');
+      if (canonStatusFilter && isMemoryCanonStatus(canonStatusFilter)) {
+        q = q.eq('canon_status', canonStatusFilter);
       }
 
       // Sort & paginate
@@ -1739,19 +1920,23 @@ async function handleGet(request: NextRequest) {
 
     if (MEMORY_V1_SPRING_BRIDGE_SEARCH_ENABLED) {
       try {
-        const bridged = await searchViaSpringV4Bridge(supabase, {
-          userId,
-          query: effectiveQuery,
-          limit,
-          mode: actualMode,
-          namespace,
-          memoryType,
-          tags: tagsParam ? tagsParam.split(',').map((t) => t.trim()).filter(Boolean) : [],
-          scope,
-          agentId,
-          after,
-          before,
-        });
+        const bridged = await withTimeout(
+          searchViaSpringV4Bridge(supabase, {
+            userId,
+            query: effectiveQuery,
+            limit,
+            mode: actualMode,
+            namespace,
+            memoryType,
+            tags: tagsParam ? tagsParam.split(',').map((t) => t.trim()).filter(Boolean) : [],
+            scope,
+            agentId,
+            after,
+            before,
+          }),
+          SPRING_V4_BRIDGE_SEARCH_TIMEOUT_MS,
+          'Spring v4 bridge search',
+        );
         if (bridged.length > 0) {
           results = bridged;
           searchBackend = 'spring_v4';

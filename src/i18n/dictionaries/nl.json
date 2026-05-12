@@ -1,7 +1,7 @@
 {
   "metadata": {
     "title": "Seizn — Geheugen voor AI-NPC's",
-    "description": "Koppel aan Inworld, Convai of je eigen LLM. Seizn geeft je NPC's persistent geheugen, relaties en generatieoverschrijdende herinnering — prijs per entiteit, niet per seat."
+    "description": "Koppel Inworld, Convai of je eigen LLM. Seizn geeft NPC's geheugen, relaties en herinneringen door generaties heen. Prijs per entiteit, niet per seat."
   },
   "nav": {
     "features": "Functies",
@@ -13,12 +13,12 @@
   },
   "hero": {
     "badge": "Live demo: smallgod",
-    "title": "Je NPC's herinneren zich",
-    "titleHighlight": "over generaties heen.",
-    "subtitle": "Seizn is de geheugenlaag voor AI-NPC's. Koppel het aan Inworld, Convai of je eigen LLM — behoud de dialogue-engine die je al gebruikt en voeg persistentie toe die sessies en generaties overleeft.",
+    "title": "Je NPC's onthouden",
+    "titleHighlight": "door generaties heen.",
+    "subtitle": "Seizn is de geheugenlaag voor AI-NPC's. Koppel het aan Inworld, Convai of je eigen LLM, houd de dialogue-engine die je gebruikt, en voeg persistentie toe die sessies en generaties overleeft.",
     "emailPlaceholder": "jij@studio.com",
     "joinWaitlist": "Demo boeken",
-    "joining": "Boeken...",
+    "joining": "Bezig met boeken...",
     "onTheList": "We nemen snel contact op.",
     "stats": {
       "tokenSavings": "NPC's per project",
@@ -27,8 +27,8 @@
     }
   },
   "features": {
-    "title": "Gebouwd voor game studios",
-    "subtitle": "Voeg Seizn in, behoud je dialogue-engine. NPC's krijgen geheugen, relaties en persistentie die sessies en generaties overleeft.",
+    "title": "Gemaakt voor gamestudio's",
+    "subtitle": "Plug Seizn in, houd je dialogue-engine. NPC's krijgen geheugen, relaties en persistentie die sessies en generaties overleeft.",
     "smartExtraction": {
       "title": "NPC / Factie / Event-graaf",
       "description": "Modelleer NPC's, facties, quests en incidenten als graaf. Relaties (vertrouwen, wrok, verwantschap) en events (getuige, getroffen, actor) zijn eersteklas primitieven — geen zelf bedachte schema's."
@@ -1609,6 +1609,67 @@
     },
     "northStar": {
       "subtitle": "Kernindicatoren voor NPC-geheugenbetrouwbaarheid"
+    },
+    "account": {
+      "apiKeys": {
+        "title": "API-sleutels",
+        "description": "Beheer Seizn API- en MCP-sleutels voor Track 2.",
+        "capHint": "Je kunt tot {cap} API-sleutels per account aanmaken.",
+        "newKey": "Nieuwe API-sleutel",
+        "create": "Aanmaken",
+        "cancel": "Annuleren",
+        "done": "Klaar",
+        "name": "Naam",
+        "scopes": "Scopes",
+        "scopesDefault": "Standaardscopes: recall, remember, graph, search.",
+        "copyKey": "Sleutel kopiëren",
+        "saveItNow": "Sla hem nu op, want deze sleutel zie je niet opnieuw.",
+        "created": "API-sleutel aangemaakt",
+        "rotated": "API-sleutel geroteerd",
+        "rotate": "Roteren",
+        "revoke": "Intrekken",
+        "revokeTitle": "API-sleutel intrekken?",
+        "revokeBody": "Door \"{name}\" in te trekken stoppen alle aanroepen met deze sleutel. Bestaande apps hebben dan een nieuwe sleutel nodig.",
+        "rotateTitle": "API-sleutel roteren?",
+        "rotateBody": "Bij rotatie van \"{name}\" wordt een nieuwe sleutel aangemaakt en de huidige ingetrokken. Werk je apps bij voordat de oude sleutel stopt.",
+        "usage": "Gebruik",
+        "rateLimit": "Snelheidslimiet",
+        "lastUsed": "Laatst gebruikt",
+        "createdAt": "Aangemaakt",
+        "empty": "Nog geen actieve sleutels. Klik op \"Nieuwe API-sleutel\" om er een aan te maken.",
+        "errors": {
+          "capReached": "Je hebt de limiet voor API-sleutels bereikt.",
+          "invalidName": "Voer een naam in voor de sleutel.",
+          "internal": "Actie mislukt. Probeer het opnieuw.",
+          "revokeFailed": "Sleutel kon niet worden ingetrokken.",
+          "rotateFailed": "Sleutel kon niet worden geroteerd.",
+          "copyFailed": "Sleutel kon niet worden gekopieerd."
+        },
+        "toasts": {
+          "copied": "Sleutel naar klembord gekopieerd.",
+          "revoked": "Sleutel ingetrokken."
+        },
+        "audit": {
+          "link": "Auditlog",
+          "title": "Auditlog voor API-sleutels",
+          "description": "Alle gebeurtenissen voor aanmaken, intrekken, roteren, snelheidslimiet, quota en scope van je API-sleutels.",
+          "filterAction": "Actie",
+          "from": "Van",
+          "to": "Tot",
+          "reset": "Herstellen",
+          "exportCsv": "CSV exporteren",
+          "empty": "Geen overeenkomende auditgebeurtenissen.",
+          "action": {
+            "all": "Alle",
+            "created": "Aangemaakt",
+            "revoked": "Ingetrokken",
+            "rotated": "Geroteerd",
+            "rate_limited": "Snelheidslimiet bereikt",
+            "quota_exceeded": "Quota overschreden",
+            "scope_denied": "Scope geweigerd"
+          }
+        }
+      }
     }
   },
   "pricingPage": {

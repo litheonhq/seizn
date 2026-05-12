@@ -9,6 +9,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { normalizeSessionOrganizationId } from '@/lib/profile/organization';
+import { createServerClient } from '@/lib/supabase';
 import { hasPermission } from '@/lib/rbac/permissions';
 import { Permissions } from '@/lib/rbac/types';
 import { logServerError } from '@/lib/server/logger';
@@ -46,6 +47,13 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(
         { error: 'Organization ID required' },
         { status: 400 }
+      );
+    }
+
+    if (!(await isOrganizationMember(session.user.id, orgId))) {
+      return NextResponse.json(
+        { error: 'Forbidden: not a member of this organization' },
+        { status: 403 }
       );
     }
 
@@ -156,91 +164,20 @@ export async function GET(request: NextRequest) {
   }
 }
 
-export async function POST(request: NextRequest) {
-  try {
-    const session = await auth();
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+async function isOrganizationMember(userId: string, orgId: string): Promise<boolean> {
+  const supabase = createServerClient();
+  const { data, error } = await supabase
+    .from('organization_members')
+    .select('user_id')
+    .eq('organization_id', orgId)
+    .eq('user_id', userId)
+    .limit(1)
+    .maybeSingle();
 
-    const body = await request.json();
-    const {
-      organizationId,
-      eventCategory,
-      eventType,
-      action,
-      resourceType,
-      resourceId,
-      resourceName,
-      success = true,
-      errorMessage,
-      previousState,
-      newState,
-      metadata,
-    } = body;
-
-    let orgId = organizationId || session.user.organizationId;
-    if (!orgId) {
-      orgId =
-        (await normalizeSessionOrganizationId({
-          userId: session.user.id,
-          email: session.user.email ?? null,
-        })) ??
-        undefined;
-    }
-    if (!orgId) {
-      return NextResponse.json(
-        { error: 'Organization ID required' },
-        { status: 400 }
-      );
-    }
-
-    // Verify user has admin access to this org
-    const permCheck = await hasPermission(session.user.id, orgId, Permissions.AUDIT_LOG_VIEW);
-    if (!permCheck.allowed) {
-      return NextResponse.json(
-        { error: 'Forbidden: insufficient permissions for audit access' },
-        { status: 403 }
-      );
-    }
-
-    if (!eventCategory || !eventType || !action) {
-      return NextResponse.json(
-        { error: 'eventCategory, eventType, and action are required' },
-        { status: 400 }
-      );
-    }
-
-    // Get request context
-    const forwardedFor = request.headers.get('x-forwarded-for');
-    const userAgent = request.headers.get('user-agent');
-
-    const eventId = await logAuditEvent({
-      organizationId: orgId,
-      actorId: session.user.id,
-      actorEmail: session.user.email || undefined,
-      actorIpAddress: forwardedFor?.split(',')[0].trim(),
-      actorUserAgent: userAgent || undefined,
-      eventCategory,
-      eventType,
-      action,
-      resourceType,
-      resourceId,
-      resourceName,
-      success,
-      errorMessage,
-      previousState,
-      newState,
-      source: 'api',
-      metadata,
-    });
-
-    return NextResponse.json({ id: eventId, success: true });
-  } catch (error) {
-    logServerError('Audit log error', error);
-    return NextResponse.json(
-      { error: 'Failed to log audit event' },
-      { status: 500 }
-    );
+  if (error) {
+    logServerError('Audit membership precheck error', error, { userId, orgId });
+    return false;
   }
+
+  return Boolean(data);
 }

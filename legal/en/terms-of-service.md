@@ -144,7 +144,7 @@ We may update these Terms. Material changes will be announced by email and an in
 ## 17. Contact
 
 - Legal questions: legal@seizn.com
-- Postal: Litheon LLC, [Wyoming registered agent address — TBD before launch]
+- Postal: Litheon LLC, 30 N Gould St Ste R, Sheridan, WY 82801, USA
 
 ---
 

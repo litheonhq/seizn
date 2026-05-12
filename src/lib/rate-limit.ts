@@ -144,10 +144,32 @@ async function checkRateLimitRedis(
       limit,
     };
   } catch (error) {
-    console.error('[RateLimit] Redis error, falling back to in-memory:', error);
-    // Fall back to in-memory on Redis error
+    console.error('[RateLimit] Redis error:', error);
+    // Audit follow-up: in production, fall CLOSED on Redis errors. The
+    // in-memory store is per-lambda-instance on Vercel; falling back
+    // there means an attacker can fan-out across instances and bypass
+    // the rate-limit entirely. In dev (no UPSTASH_REDIS_REST_URL set
+    // intentionally), checkRateLimit() never reaches Redis, so this
+    // branch is production-only.
+    if (isProductionRuntime()) {
+      return {
+        allowed: false,
+        remaining: 0,
+        resetAt: Date.now() + windowMs,
+        limit,
+      };
+    }
     return checkRateLimitMemory(key, limit, windowMs);
   }
+}
+
+/**
+ * True iff this process is running in a Vercel production environment.
+ * Used by rate-limit fail-closed logic to distinguish dev-bench fallback
+ * from a real outage.
+ */
+function isProductionRuntime(): boolean {
+  return process.env.VERCEL_ENV === 'production' || process.env.NODE_ENV === 'production';
 }
 
 /**
@@ -173,7 +195,18 @@ async function peekRateLimitRedis(
       limit,
     };
   } catch (error) {
-    console.error('[RateLimit] Redis peek error, falling back to in-memory:', error);
+    console.error('[RateLimit] Redis peek error:', error);
+    // Same fail-closed pattern as checkRateLimitRedis. Auth-failure
+    // brute-force protection lives on this path; falling open in prod
+    // would let an attacker enumerate credentials.
+    if (isProductionRuntime()) {
+      return {
+        allowed: false,
+        remaining: 0,
+        resetAt: Date.now() + windowMs,
+        limit,
+      };
+    }
     return peekRateLimitMemory(key, limit, windowMs);
   }
 }
@@ -286,6 +319,40 @@ export async function checkRateLimitAsync(
   return checkRateLimitMemory(key, limit, windowMs);
 }
 
+
+/**
+ * Generic per-route rate limiter — caller controls limit + window.
+ *
+ * Use this when the per-plan default from `checkRateLimitAsync` is the wrong
+ * shape for the endpoint (e.g., low-frequency settings toggles where 30/min
+ * is plenty regardless of whether the user is on Free or Enterprise).
+ */
+export async function checkCustomRateLimitAsync(
+  identifier: string,
+  limit: number,
+  windowMs: number
+): Promise<RateLimitResult> {
+  const redis = getRedisClient();
+  if (redis) {
+    return checkRateLimitRedis(redis, identifier, limit, windowMs);
+  }
+  return checkRateLimitMemory(identifier, limit, windowMs);
+}
+
+/**
+ * Peek a caller-defined rate limit without incrementing it.
+ */
+export async function peekCustomRateLimitAsync(
+  identifier: string,
+  limit: number,
+  windowMs: number
+): Promise<RateLimitResult> {
+  const redis = getRedisClient();
+  if (redis) {
+    return peekRateLimitRedis(redis, identifier, limit, windowMs);
+  }
+  return peekRateLimitMemory(identifier, limit, windowMs);
+}
 
 /**
  * Get rate limit headers for response

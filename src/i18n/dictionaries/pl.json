@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "title": "Seizn — Pamięć dla NPC z AI",
-    "description": "Połącz z Inworld, Convai lub własnym LLM. Seizn daje NPC trwałą pamięć, relacje i wspomnienia między pokoleniami — rozliczanie per encja, nie per stanowisko."
+    "title": "Seizn — pamięć dla NPC",
+    "description": "Podłącz Inworld, Convai albo własny LLM. Seizn daje NPC pamięć, więzi i ciągłość między pokoleniami — płacisz za graf, nie za stanowisko."
   },
   "nav": {
     "features": "Funkcje",
@@ -14,12 +14,12 @@
   "hero": {
     "badge": "Demo na żywo: smallgod",
     "title": "Twoje NPC pamiętają",
-    "titleHighlight": "przez pokolenia.",
-    "subtitle": "Seizn to warstwa pamięci dla NPC z AI. Podłącz do Inworld, Convai lub własnego LLM — zachowaj silnik dialogowy, który lubisz, i dodaj trwałość przeżywającą sesje i pokolenia.",
+    "titleHighlight": "z pokolenia na pokolenie.",
+    "subtitle": "Seizn to warstwa pamięci dla NPC. Podłącz go do Inworld, Convai albo własnego LLM, zostaw przy swoim dialogue engine i dodaj pamięć, która przetrwa sesję i przechodzi do kolejnych pokoleń postaci.",
     "emailPlaceholder": "ty@studio.com",
     "joinWaitlist": "Zarezerwuj demo",
     "joining": "Rezerwowanie...",
-    "onTheList": "Skontaktujemy się wkrótce.",
+    "onTheList": "Odezwiemy się wkrótce.",
     "stats": {
       "tokenSavings": "NPC na projekt",
       "retrievalTime": "Pobieranie pamięci",
@@ -27,8 +27,8 @@
     }
   },
   "features": {
-    "title": "Zbudowane dla studiów gamingowych",
-    "subtitle": "Wdróż Seizn, zachowaj silnik dialogowy. NPC zyskują pamięć, relacje i trwałość przeżywającą sesje i pokolenia.",
+    "title": "Pod studio gier",
+    "subtitle": "Podłącz Seizn — twój dialogue engine zostaje na miejscu. NPC zyskują pamięć, więzi i historię, która nie znika między sesjami.",
     "smartExtraction": {
       "title": "Graf NPC / Frakcja / Wydarzenie",
       "description": "Modeluj NPC, frakcje, questy i incydenty jako graf. Relacje (zaufanie, uraza, pokrewieństwo) i wydarzenia (świadek, poszkodowany, aktor) to prymitywy pierwszej klasy — żadnych własnych schematów."
@@ -1609,6 +1609,67 @@
     },
     "northStar": {
       "subtitle": "Kluczowe wskaźniki niezawodności pamięci NPC"
+    },
+    "account": {
+      "apiKeys": {
+        "title": "Klucze API",
+        "description": "Twórz klucze Seizn API i MCP dla Track 2 i zarządzaj nimi.",
+        "capHint": "Możesz utworzyć do {cap} kluczy API na konto.",
+        "newKey": "Nowy klucz API",
+        "create": "Utwórz",
+        "cancel": "Anuluj",
+        "done": "Gotowe",
+        "name": "Nazwa",
+        "scopes": "Zakresy",
+        "scopesDefault": "Domyślne zakresy: recall, remember, graph, search.",
+        "copyKey": "Kopiuj klucz",
+        "saveItNow": "Zapisz go teraz — nie pojawi się ponownie.",
+        "created": "Klucz API utworzony",
+        "rotated": "Klucz API zrotowany",
+        "rotate": "Rotuj",
+        "revoke": "Unieważnij",
+        "revokeTitle": "Unieważnić klucz API?",
+        "revokeBody": "Unieważnienie „{name}\" zatrzyma wszystkie wywołania z tym kluczem. Istniejące aplikacje będą potrzebowały nowego klucza.",
+        "rotateTitle": "Zrotować klucz API?",
+        "rotateBody": "Rotacja „{name}\" wygeneruje nowy klucz i unieważni obecny. Zaktualizuj aplikacje, zanim stary klucz przestanie działać.",
+        "usage": "Użycie",
+        "rateLimit": "Limit żądań",
+        "lastUsed": "Ostatnio użyty",
+        "createdAt": "Utworzono",
+        "empty": "Brak aktywnych kluczy. Kliknij „Nowy klucz API\", aby utworzyć.",
+        "errors": {
+          "capReached": "Osiągnięto limit kluczy API dla tego konta.",
+          "invalidName": "Wprowadź nazwę klucza.",
+          "internal": "Nie udało się zakończyć operacji. Spróbuj ponownie.",
+          "revokeFailed": "Nie udało się unieważnić klucza.",
+          "rotateFailed": "Nie udało się zrotować klucza.",
+          "copyFailed": "Nie udało się skopiować klucza."
+        },
+        "toasts": {
+          "copied": "Skopiowano klucz do schowka.",
+          "revoked": "Klucz unieważniony."
+        },
+        "audit": {
+          "link": "Dziennik audytu",
+          "title": "Dziennik audytu kluczy API",
+          "description": "Wszystkie zdarzenia utworzenia, unieważnienia, rotacji, limitu, kwoty i zakresu dla twoich kluczy API.",
+          "filterAction": "Akcja",
+          "from": "Od",
+          "to": "Do",
+          "reset": "Resetuj",
+          "exportCsv": "Eksportuj CSV",
+          "empty": "Brak pasujących zdarzeń.",
+          "action": {
+            "all": "Wszystko",
+            "created": "Utworzono",
+            "revoked": "Unieważniono",
+            "rotated": "Zrotowano",
+            "rate_limited": "Przekroczono limit",
+            "quota_exceeded": "Przekroczono kwotę",
+            "scope_denied": "Odrzucono zakres"
+          }
+        }
+      }
     }
   },
   "pricingPage": {

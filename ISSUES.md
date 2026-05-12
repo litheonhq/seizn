@@ -1,3 +1,18 @@
+### BYOK Encryption KDF Collapse — Re-encryption Pending
+**날짜:** 2026-05-09  
+**증상:** R27 보안 audit에서 `getEncryptionKey()`가 `BYOK_ENCRYPTION_SECRET || NEXTAUTH_SECRET` + `BYOK_ENCRYPTION_SALT || NEXTAUTH_SECRET`로 fallback. 두 환경변수 모두 미설정 시 scrypt(NEXTAUTH_SECRET, NEXTAUTH_SECRET) — salt 효과 무력화.  
+**원인:** R-prior 시점부터 dev ergonomics 위해 fallback 허용했지만 prod 검증 부재.  
+**해결 (R28.1):** `src/lib/byok/encryption.ts`에서 prod 시 `BYOK_ENCRYPTION_SECRET`/`BYOK_ENCRYPTION_SALT` 명시 필수 + 두 값이 같으면 throw. dev는 fallback 허용 + console.warn 1회.  
+**잔여 작업 (operator action):**  
+1. Vercel prod env에 `BYOK_ENCRYPTION_SECRET` (랜덤 32+ bytes base64), `BYOK_ENCRYPTION_SALT` (다른 32+ bytes base64) 설정.  
+2. R28 배포 후 prod 시작 실패 시 위 1번 조치.  
+3. **기존 암호화된 BYOK 키 row 재암호화**: 현재 prod의 `provider_keys.key_encrypted`는 collapsed KDF로 암호화됨. 새 KEK으로 교체하려면:  
+   - 임시로 `BYOK_ENCRYPTION_SECRET=BYOK_ENCRYPTION_SALT=<NEXTAUTH_SECRET 값>` 으로 호환 시작  
+   - 백그라운드 작업 또는 마이그레이션 스크립트로 row별 decrypt → 새 KEK으로 re-encrypt → key_version column 갱신  
+   - operator가 새 SECRET/SALT 값으로 env 교체  
+   - **현재는 사용자 0명, encrypted row 0개 — 재암호화 마이그레이션 우선순위 낮음**. Charter 모집 + 첫 BYOK 등록 시점에 이 잔여 작업 재평가.  
+**참조:** `src/lib/byok/encryption.ts:28-77`, R27 audit (이 세션).
+
 ### Supabase Autopilot Migration Prerequisite Missing
 **날짜:** 2026-02-14  
 **증상:** `20260214_autopilot_prbot_schema.sql` 적용 시 `autopilot_analyses` 등 base autopilot 테이블이 없어 실패.  
@@ -116,3 +131,51 @@
 **Symptom:** Scoped API keys could carry an organization binding that did not match the validated scope owner, and legacy API key validation trusted `api_keys.organization_id` directly.
 **Cause:** Scope configuration validation did not reject user-scoped organization/project bindings, and API key authentication did not re-check organization membership before returning an organization context.
 **Resolution:** Added scoped config validation, membership checks for organization/project scoped API keys, normalized user-scope updates, and route-level `graph:*` / `fall:*` scope enforcement with focused regression tests.
+
+### Device Flow Plaintext Token Persistence
+**Date:** 2026-05-09
+**Symptom:** Approved device-flow rows kept the raw API token in `device_auth_codes.access_token`, and repeated token polls could receive the same bearer token.
+**Cause:** The device authorization flow used the DB row as temporary token transfer storage but did not retain a hash-only record after first retrieval.
+**Resolution:** Added `device_auth_codes.access_token_hash`, backfilled SHA-256 hashes for existing active flows without dropping `access_token`, wrote hashes during approval, and changed `/api/auth/device/token` to atomically clear the raw token on first successful poll. A later cleanup migration can drop `access_token` after all flows older than 15 minutes have expired.
+
+### P0 memories.is_deleted schema drift made stored memories invisible to GET
+**Date:** 2026-05-11
+**Status:** ✅ shipped (PR #355, code commit `bf2be8aa`). Runtime backfill was already applied before this code change.
+**Symptom:** `POST /api/v1/memories` returned success, but `GET /api/v1/memories/{id}` and browse/search paths returned 404/0 rows for freshly inserted rows whose `is_deleted` was NULL.
+**Cause:** Production `memories.is_deleted` drifted to nullable with no default, while read paths filter `is_deleted = false`.
+**Resolution:** Memory insert paths now explicitly write `is_deleted=false`, `deleted_at=null`, and plain-text paths write `is_encrypted=false`. Added `supabase/migrations/20260511002_prod_p0_memory_schema_convergence.sql` to backfill and enforce NOT NULL/defaults for `memories.is_deleted` and sibling boolean drift columns. Added a POST -> GET-by-id route regression test and production smoke GET-by-id check.
+
+### P0 Stripe webhook apex redirect kept billing events pending
+**Date:** 2026-05-11
+**Status:** ✅ shipped (PR #355, code commit `bf2be8aa`). Stripe Dashboard URL hotfix was already applied before this code change.
+**Symptom:** Stripe webhook endpoint registered as `https://seizn.com/api/webhooks/stripe` received 308 redirects to `https://www.seizn.com/api/webhooks/stripe`, leaving webhook deliveries pending because Stripe does not follow redirects.
+**Cause:** Externally registered Stripe URL used the apex domain while production webhook handling is on `www`.
+**Resolution:** Production smoke now POSTs to the apex webhook URL with redirects disabled and fails on any 3xx. Added `npm run verify:stripe-webhook-url` to query Stripe webhook endpoint URLs and fail on drift from `https://www.seizn.com/api/webhooks/stripe`.
+
+### P0 Track 2 Stripe subscriptions did not update profiles.plan
+**Date:** 2026-05-11
+**Status:** ✅ shipped (PR #355, code commits `bf2be8aa`, `f11267cc`). One-user SQL hotfix was already applied before this code change.
+**Symptom:** A paid Track 2 API/MCP Pro subscription could keep `/api/me` and rate-limit logic on `profile.plan='free'`.
+**Cause:** Track 2 webhook branches updated API key quotas but did not persist the Track 2 tier back to `profiles.plan`.
+**Resolution:** Stripe webhook `customer.subscription.created`, `customer.subscription.updated`, and `customer.subscription.deleted` Track 2 branches now sync `profiles.plan`, subscription status fields, price lock version, and cancellation downgrade state. `studio_managed` maps to the existing `studio` profile plan.
+
+### P1 SpringV4 bridge mirror enabled without production schema
+**Date:** 2026-05-11
+**Status:** ✅ shipped (PR #355, code commit `bf2be8aa`).
+**Symptom:** Memory POSTs logged SpringV4 mirror failures because `spring_memory_notes` was absent in production, though legacy memory writes still succeeded.
+**Cause:** `MEMORY_V1_SPRING_BRIDGE_MIRROR` was effectively on by default before the SpringV4 read/write schema was ready.
+**Resolution:** Mirror is now explicit opt-in only (`MEMORY_V1_SPRING_BRIDGE_MIRROR=true`). SpringV4 search fallback is bounded by `MEMORY_V1_SPRING_BRIDGE_SEARCH_TIMEOUT_MS` with a 5s default.
+
+### P2 Hybrid memory search cold-start timeout
+**Date:** 2026-05-11
+**Status:** ✅ shipped partial guard (PR #355, code commit `bf2be8aa`).
+**Symptom:** `/api/v1/memories?mode=hybrid` could hit Vercel timeout during cold-start/empty-pool searches.
+**Cause:** Voyage embedding and SpringV4 bridge search could consume too much function time without explicit local timeouts.
+**Resolution:** Voyage embedding fetches now abort after `VOYAGE_FETCH_TIMEOUT_MS` with a 5s default, and SpringV4 bridge search is separately capped at 5s before falling back to legacy search.
+
+### profile.memory_count drift on soft-delete
+**Date:** 2026-05-11
+**Status:** ✅ shipped (PR #355, code commit `bf2be8aa`).
+**Symptom:** Soft-deleted memories could continue counting against profile memory quota.
+**Cause:** The live `update_memory_count()` trigger behavior drifted from active-row counting semantics.
+**Resolution:** `supabase/migrations/20260511002_prod_p0_memory_schema_convergence.sql` replaces `update_memory_count()` with explicit insert/delete/update soft-delete handling and recomputes `profiles.memory_count` from active memories.

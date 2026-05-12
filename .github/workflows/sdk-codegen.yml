@@ -41,7 +41,7 @@ jobs:
       spec_valid: ${{ steps.validate.outputs.valid }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Node.js
         uses: actions/setup-node@v6
@@ -72,7 +72,7 @@ jobs:
       changes_detected: ${{ steps.check-changes.outputs.changes }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -161,12 +161,12 @@ jobs:
             "license": "MIT",
             "repository": {
               "type": "git",
-              "url": "https://github.com/iruhana/seizn.git",
+              "url": "https://github.com/litheonhq/seizn.git",
               "directory": "packages/sdk-typescript"
             },
             "homepage": "https://docs.seizn.com/sdk/typescript",
             "bugs": {
-              "url": "https://github.com/iruhana/seizn/issues"
+              "url": "https://github.com/litheonhq/seizn/issues"
             },
             "engines": {
               "node": ">=18.0.0"
@@ -363,7 +363,7 @@ jobs:
       (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.event.inputs.create_pr == 'true'))
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -422,7 +422,7 @@ jobs:
       github.event.inputs.create_pr == 'false'
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 

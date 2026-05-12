@@ -26,17 +26,23 @@ interface WebhookConfig {
   is_active?: boolean;
 }
 
-interface ValidatedWebhookEndpoint {
+export interface ValidatedWebhookEndpoint {
   url: URL;
   hostname: string;
   pinnedIp: string;
   family: 4 | 6;
 }
 
-interface WebhookHttpResponse {
+export interface WebhookHttpResponse {
   ok: boolean;
   status: number;
   body: string;
+}
+
+export interface ValidatedWebhookRequestInit {
+  method?: string;
+  headers?: HeadersInit;
+  body?: string | URLSearchParams | Uint8Array | null;
 }
 
 interface Ipv4Cidr {
@@ -259,7 +265,7 @@ export function isValidWebhookUrl(urlString: string): boolean {
   }
 }
 
-async function validateWebhookEndpoint(urlString: string): Promise<ValidatedWebhookEndpoint | null> {
+export async function validateWebhookEndpoint(urlString: string): Promise<ValidatedWebhookEndpoint | null> {
   if (!isValidWebhookUrl(urlString)) return null;
 
   const url = new URL(urlString);
@@ -323,25 +329,57 @@ function readResponseBody(response: IncomingMessage, maxChars = 500): Promise<st
   });
 }
 
-function sendPinnedWebhookRequest(
+function normalizeRequestHeaders(headers: HeadersInit | undefined): Record<string, string> {
+  const normalized: Record<string, string> = {};
+  if (!headers) return normalized;
+
+  if (typeof Headers !== 'undefined' && headers instanceof Headers) {
+    headers.forEach((value, key) => {
+      normalized[key] = value;
+    });
+    return normalized;
+  }
+
+  if (Array.isArray(headers)) {
+    for (const [key, value] of headers) {
+      normalized[key] = value;
+    }
+    return normalized;
+  }
+
+  for (const [key, value] of Object.entries(headers)) {
+    normalized[key] = value;
+  }
+  return normalized;
+}
+
+function requestBodyToBuffer(body: ValidatedWebhookRequestInit['body']): Buffer | null {
+  if (body == null) return null;
+  if (typeof body === 'string') return Buffer.from(body);
+  if (body instanceof URLSearchParams) return Buffer.from(body.toString());
+  return Buffer.from(body);
+}
+
+function sendPinnedHttpRequest(
   endpoint: ValidatedWebhookEndpoint,
-  headers: Record<string, string>,
-  body: string,
+  init: ValidatedWebhookRequestInit,
   timeoutMs: number
 ): Promise<WebhookHttpResponse> {
   return new Promise((resolve, reject) => {
-    const bodyBuffer = Buffer.from(body);
+    const bodyBuffer = requestBodyToBuffer(init.body);
     const requestHeaders: Record<string, string> = {
-      ...headers,
-      'Content-Length': bodyBuffer.byteLength.toString(),
+      ...normalizeRequestHeaders(init.headers),
     };
+    if (bodyBuffer) {
+      requestHeaders['Content-Length'] = bodyBuffer.byteLength.toString();
+    }
 
     const options: RequestOptions = {
       protocol: endpoint.url.protocol,
       hostname: endpoint.hostname,
       port: endpoint.url.port || undefined,
       path: `${endpoint.url.pathname}${endpoint.url.search}`,
-      method: 'POST',
+      method: init.method ?? 'GET',
       headers: requestHeaders,
       lookup: createPinnedLookup(endpoint),
     };
@@ -384,8 +422,21 @@ function sendPinnedWebhookRequest(
     });
 
     request.on('error', (error) => settle(() => reject(error)));
-    request.end(bodyBuffer);
+    request.end(bodyBuffer ?? undefined);
   });
+}
+
+export async function requestValidatedWebhookEndpoint(
+  urlString: string,
+  init: ValidatedWebhookRequestInit = {},
+  timeoutMs = 10000
+): Promise<WebhookHttpResponse> {
+  const endpoint = await validateWebhookEndpoint(urlString);
+  if (!endpoint) {
+    throw new Error('Outbound URL blocked by SSRF policy');
+  }
+
+  return sendPinnedHttpRequest(endpoint, init, timeoutMs);
 }
 
 // Deliver a single webhook
@@ -414,7 +465,11 @@ export async function deliverWebhook(
   }
 
   try {
-    const response = await sendPinnedWebhookRequest(endpoint, headers, payloadString, 10000);
+    const response = await sendPinnedHttpRequest(
+      endpoint,
+      { method: 'POST', headers, body: payloadString },
+      10000
+    );
 
     return {
       success: response.ok,

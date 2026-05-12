@@ -1,18 +1,29 @@
 {
   "ignoreCommand": "npm run vercel:ignore-build",
+  "git": {
+    "deploymentEnabled": {
+      "main": true
+    }
+  },
   "regions": [
     "hnd1"
   ],
+  "functions": {
+    "src/app/api/v1/memories/route.ts": { "maxDuration": 90 },
+    "src/app/api/memories/route.ts": { "maxDuration": 90 },
+    "src/app/api/spring/search-v3/route.ts": { "maxDuration": 90 },
+    "src/app/api/memories/search_v4/route.ts": { "maxDuration": 90 }
+  },
   "redirects": [
     {
-      "source": "/:path*",
+      "source": "/((?!api/webhooks/).*)",
       "has": [
         {
           "type": "host",
           "value": "seizn.com"
         }
       ],
-      "destination": "https://www.seizn.com/:path*",
+      "destination": "https://www.seizn.com/$1",
       "permanent": true
     }
   ],
@@ -76,6 +87,14 @@
     {
       "path": "/api/cron/tier-demotion",
       "schedule": "0 3 * * *"
+    },
+    {
+      "path": "/api/cron/mrr-snapshot",
+      "schedule": "5 0 * * *"
+    },
+    {
+      "path": "/api/cron/continuity-reports",
+      "schedule": "0 2 * * *"
     }
   ]
 }

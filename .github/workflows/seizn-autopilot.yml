@@ -34,27 +34,36 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Get trace ID
         id: get_trace
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          INPUT_TRACE_ID: ${{ github.event.inputs.trace_id }}
+          PAYLOAD_TRACE_ID: ${{ github.event.client_payload.trace_id }}
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "trace_id=${{ github.event.inputs.trace_id }}" >> $GITHUB_OUTPUT
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            printf 'trace_id=%s\n' "$INPUT_TRACE_ID" >> "$GITHUB_OUTPUT"
           else
-            echo "trace_id=${{ github.event.client_payload.trace_id }}" >> $GITHUB_OUTPUT
+            printf 'trace_id=%s\n' "$PAYLOAD_TRACE_ID" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Analyze trace
         id: analyze
+        env:
+          TRACE_ID: ${{ steps.get_trace.outputs.trace_id }}
+          SEIZN_API_KEY: ${{ secrets.SEIZN_API_KEY }}
         run: |
-          RESPONSE=$(curl -s -X POST "${{ env.SEIZN_API_URL }}/api/autopilot/analyze" \
+          BODY=$(jq -n --arg traceId "$TRACE_ID" '{
+            traceId: $traceId,
+            includeRelated: true
+          }')
+
+          RESPONSE=$(curl -s -X POST "$SEIZN_API_URL/api/autopilot/analyze" \
             -H "Content-Type: application/json" \
-            -H "x-api-key: ${{ secrets.SEIZN_API_KEY }}" \
-            -d '{
-              "traceId": "${{ steps.get_trace.outputs.trace_id }}",
-              "includeRelated": true
-            }')
+            -H "x-api-key: $SEIZN_API_KEY" \
+            -d "$BODY")
 
           # Parse response
           SUCCESS=$(echo $RESPONSE | jq -r '.success')
@@ -67,10 +76,10 @@ jobs:
           SEVERITY=$(echo $RESPONSE | jq -r '.analysis.severity')
           CONFIDENCE=$(echo $RESPONSE | jq -r '.analysis.confidence')
 
-          echo "has_failures=$([ $FAILURES -gt 0 ] && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
-          echo "severity=$SEVERITY" >> $GITHUB_OUTPUT
-          echo "confidence=$CONFIDENCE" >> $GITHUB_OUTPUT
-          echo "analysis_id=analysis-${{ steps.get_trace.outputs.trace_id }}" >> $GITHUB_OUTPUT
+          echo "has_failures=$([ $FAILURES -gt 0 ] && echo 'true' || echo 'false')" >> "$GITHUB_OUTPUT"
+          printf 'severity=%s\n' "$SEVERITY" >> "$GITHUB_OUTPUT"
+          printf 'confidence=%s\n' "$CONFIDENCE" >> "$GITHUB_OUTPUT"
+          printf 'analysis_id=analysis-%s\n' "$TRACE_ID" >> "$GITHUB_OUTPUT"
 
           # Store analysis for next job
           echo "$RESPONSE" > analysis.json
@@ -93,49 +102,64 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Get trace ID
         id: get_trace
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          INPUT_TRACE_ID: ${{ github.event.inputs.trace_id }}
+          INPUT_DRY_RUN: ${{ github.event.inputs.dry_run }}
+          PAYLOAD_TRACE_ID: ${{ github.event.client_payload.trace_id }}
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "trace_id=${{ github.event.inputs.trace_id }}" >> $GITHUB_OUTPUT
-            echo "dry_run=${{ github.event.inputs.dry_run }}" >> $GITHUB_OUTPUT
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            printf 'trace_id=%s\n' "$INPUT_TRACE_ID" >> "$GITHUB_OUTPUT"
+            printf 'dry_run=%s\n' "$INPUT_DRY_RUN" >> "$GITHUB_OUTPUT"
           else
-            echo "trace_id=${{ github.event.client_payload.trace_id }}" >> $GITHUB_OUTPUT
-            echo "dry_run=false" >> $GITHUB_OUTPUT
+            printf 'trace_id=%s\n' "$PAYLOAD_TRACE_ID" >> "$GITHUB_OUTPUT"
+            echo "dry_run=false" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Generate fix
         id: fix
+        env:
+          TRACE_ID: ${{ steps.get_trace.outputs.trace_id }}
+          DRY_RUN: ${{ steps.get_trace.outputs.dry_run }}
+          SEIZN_API_KEY: ${{ secrets.SEIZN_API_KEY }}
         run: |
-          PREVIEW=${{ steps.get_trace.outputs.dry_run }}
+          if [ "$DRY_RUN" = "true" ]; then
+            PREVIEW=true
+          else
+            PREVIEW=false
+          fi
 
-          RESPONSE=$(curl -s -X POST "${{ env.SEIZN_API_URL }}/api/autopilot/fix" \
+          BODY=$(jq -n --arg traceId "$TRACE_ID" --argjson preview "$PREVIEW" '{
+            traceId: $traceId,
+            applyAll: false,
+            preview: $preview
+          }')
+
+          RESPONSE=$(curl -s -X POST "$SEIZN_API_URL/api/autopilot/fix" \
             -H "Content-Type: application/json" \
-            -H "x-api-key: ${{ secrets.SEIZN_API_KEY }}" \
-            -d '{
-              "traceId": "${{ steps.get_trace.outputs.trace_id }}",
-              "applyAll": false,
-              "preview": '$PREVIEW'
-            }')
+            -H "x-api-key: $SEIZN_API_KEY" \
+            -d "$BODY")
 
           SUCCESS=$(echo $RESPONSE | jq -r '.success')
           if [ "$SUCCESS" != "true" ]; then
             echo "Fix generation failed: $(echo $RESPONSE | jq -r '.error')"
-            echo "has_fix=false" >> $GITHUB_OUTPUT
+            echo "has_fix=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
           SUGGESTIONS=$(echo $RESPONSE | jq '.appliedSuggestions | length')
           if [ $SUGGESTIONS -eq 0 ]; then
             echo "No applicable suggestions found"
-            echo "has_fix=false" >> $GITHUB_OUTPUT
+            echo "has_fix=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
-          echo "has_fix=true" >> $GITHUB_OUTPUT
-          echo "pr_context_id=fix-${{ steps.get_trace.outputs.trace_id }}" >> $GITHUB_OUTPUT
+          echo "has_fix=true" >> "$GITHUB_OUTPUT"
+          printf 'pr_context_id=fix-%s\n' "$TRACE_ID" >> "$GITHUB_OUTPUT"
 
           # Store fix context for next job
           echo "$RESPONSE" > fix.json
@@ -157,7 +181,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Download fix artifact
         uses: actions/download-artifact@v4
@@ -167,11 +191,15 @@ jobs:
 
       - name: Get trace ID
         id: get_trace
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          INPUT_TRACE_ID: ${{ github.event.inputs.trace_id }}
+          PAYLOAD_TRACE_ID: ${{ github.event.client_payload.trace_id }}
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "trace_id=${{ github.event.inputs.trace_id }}" >> $GITHUB_OUTPUT
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            printf 'trace_id=%s\n' "$INPUT_TRACE_ID" >> "$GITHUB_OUTPUT"
           else
-            echo "trace_id=${{ github.event.client_payload.trace_id }}" >> $GITHUB_OUTPUT
+            printf 'trace_id=%s\n' "$PAYLOAD_TRACE_ID" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Extract PR context
@@ -182,6 +210,10 @@ jobs:
 
       - name: Create PR via Seizn API
         id: create_pr
+        env:
+          TRACE_ID: ${{ steps.get_trace.outputs.trace_id }}
+          SEVERITY: ${{ needs.analyze.outputs.severity }}
+          CONFIDENCE: ${{ needs.analyze.outputs.confidence }}
         run: |
           PR_CONTEXT=$(cat fix.json | jq -c '.prContext')
 
@@ -209,29 +241,39 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "- **PR Number:** #$PR_NUMBER" >> $GITHUB_STEP_SUMMARY
           echo "- **PR URL:** $PR_URL" >> $GITHUB_STEP_SUMMARY
-          echo "- **Trace ID:** ${{ steps.get_trace.outputs.trace_id }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Severity:** ${{ needs.analyze.outputs.severity }}/10" >> $GITHUB_STEP_SUMMARY
-          echo "- **Confidence:** $(echo '${{ needs.analyze.outputs.confidence }}' | awk '{printf "%.1f%%", $1 * 100}')" >> $GITHUB_STEP_SUMMARY
+          printf -- '- **Trace ID:** %s\n' "$TRACE_ID" >> "$GITHUB_STEP_SUMMARY"
+          printf -- '- **Severity:** %s/10\n' "$SEVERITY" >> "$GITHUB_STEP_SUMMARY"
+          printf -- '- **Confidence:** %s\n' "$(echo "$CONFIDENCE" | awk '{printf "%.1f%%", $1 * 100}')" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Post Slack notification
         if: env.SLACK_WEBHOOK_URL != ''
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          PR_NUMBER: ${{ steps.create_pr.outputs.pr_number }}
+          PR_URL: ${{ steps.create_pr.outputs.pr_url }}
+          TRACE_ID: ${{ steps.get_trace.outputs.trace_id }}
+          SEVERITY: ${{ needs.analyze.outputs.severity }}
         run: |
-          curl -X POST "$SLACK_WEBHOOK_URL" \
-            -H "Content-Type: application/json" \
-            -d '{
-              "text": "Seizn Autopilot created PR #${{ steps.create_pr.outputs.pr_number }}",
-              "blocks": [
+          BODY=$(jq -n \
+            --arg prNumber "$PR_NUMBER" \
+            --arg prUrl "$PR_URL" \
+            --arg traceId "$TRACE_ID" \
+            --arg severity "$SEVERITY" \
+            '{
+              text: ("Seizn Autopilot created PR #" + $prNumber),
+              blocks: [
                 {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "*Seizn Autopilot* created a new PR\n\n*PR:* <${{ steps.create_pr.outputs.pr_url }}|#${{ steps.create_pr.outputs.pr_number }}>\n*Trace:* `${{ steps.get_trace.outputs.trace_id }}`\n*Severity:* ${{ needs.analyze.outputs.severity }}/10"
+                  type: "section",
+                  text: {
+                    type: "mrkdwn",
+                    text: ("*Seizn Autopilot* created a new PR\n\n*PR:* <" + $prUrl + "|#" + $prNumber + ">\n*Trace:* `" + $traceId + "`\n*Severity:* " + $severity + "/10")
                   }
                 }
               ]
-            }'
+            }')
+          curl -X POST "$SLACK_WEBHOOK_URL" \
+            -H "Content-Type: application/json" \
+            -d "$BODY"
 
   report:
     name: Generate Report

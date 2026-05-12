@@ -66,6 +66,11 @@ const SKIP_BRANCH_PATTERNS = [
 function main() {
   try {
     const branch = process.env.VERCEL_GIT_COMMIT_REF || '';
+    if (branch && branch !== 'main') {
+      console.log(`[vercel-ignore] Skipping non-main Vercel build for branch: ${branch}`);
+      process.exit(0);
+    }
+
     if (SKIP_BRANCH_PATTERNS.some((pattern) => pattern.test(branch))) {
       console.log(`[vercel-ignore] Skipping build for branch: ${branch}`);
       process.exit(0);
@@ -102,4 +107,3 @@ function main() {
 }
 
 main();
-

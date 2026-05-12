@@ -1,0 +1,183 @@
+/**
+ * Monthly Continuity Report cron — Pro+ Managed entitlement.
+ *
+ * Locked 2026-05-07. Picks up pending rows in continuity_reports, runs a
+ * full-novel canon scan via the existing Check pipeline, stores the result
+ * markdown in R2, and marks the row completed.
+ *
+ * This is a "scheduler + worker" combined endpoint:
+ *   - On invocation, looks for users with continuity_reports.status = 'pending'
+ *     whose scheduled_for date has passed, and runs them in a small batch.
+ *   - Also enqueues the next month's row for any active Pro+ Managed user
+ *     who doesn't already have a future-pending row.
+ *
+ * Trigger: Vercel cron at 02:00 UTC daily (vercel.json).
+ * Auth: Bearer CRON_SECRET (timing-safe compare).
+ */
+
+import { NextRequest, NextResponse } from 'next/server';
+import { timingSafeEqual } from 'node:crypto';
+import { createServerClient, hasServerSupabaseServiceRoleConfig } from '@/lib/supabase';
+import { getManagedEntitlements } from '@/lib/author/billing/managed-entitlements';
+import { generateContinuityReport } from '@/lib/author/continuity-report/generate';
+
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
+const BATCH_LIMIT = 5; // Don't grind the LLM budget in a single cron run.
+
+interface ContinuityReportRow {
+  id: string;
+  user_id: string;
+  scheduled_for: string;
+  status: 'pending' | 'running' | 'completed' | 'failed';
+}
+
+export async function GET(request: NextRequest): Promise<NextResponse> {
+  const auth = request.headers.get('authorization') ?? '';
+  const expected = process.env.CRON_SECRET ?? '';
+  if (!expected || !verifyCronSecret(auth, `Bearer ${expected}`)) {
+    return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
+  }
+  if (!hasServerSupabaseServiceRoleConfig()) {
+    return NextResponse.json({ error: 'service_role_not_configured' }, { status: 500 });
+  }
+
+  const supabase = createServerClient();
+  const today = new Date().toISOString().slice(0, 10);
+
+  // 1) Enqueue next-month row for every Pro+ Managed user who lacks one.
+  await enqueueUpcomingReports(supabase);
+
+  // 2) Drain pending rows that are due.
+  const { data: pending } = await supabase
+    .from('continuity_reports')
+    .select('id, user_id, scheduled_for, status')
+    .eq('status', 'pending')
+    .lte('scheduled_for', today)
+    .order('scheduled_for', { ascending: true })
+    .limit(BATCH_LIMIT);
+
+  const results: Array<{ id: string; user_id: string; status: string; reason?: string }> = [];
+  for (const row of (pending ?? []) as ContinuityReportRow[]) {
+    const result = await runReport(supabase, row);
+    results.push({ id: row.id, user_id: row.user_id, status: result.status, reason: result.reason });
+  }
+
+  return NextResponse.json({
+    today,
+    processed: results.length,
+    results,
+  });
+}
+
+async function enqueueUpcomingReports(
+  supabase: ReturnType<typeof createServerClient>,
+): Promise<void> {
+  // Find Pro+ Managed users (`managed_entitlements.tier IN ('pro','studio',
+  // 'enterprise')` since Indie Managed doesn't get the report) without a
+  // future continuity_reports row.
+  const { data: entitlements } = await supabase
+    .from('managed_entitlements')
+    .select('user_id, tier')
+    .in('tier', ['pro', 'studio', 'enterprise']);
+  if (!entitlements?.length) return;
+
+  const today = new Date();
+  const nextMonth = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth() + 1, 1));
+  const nextMonthIso = nextMonth.toISOString().slice(0, 10);
+
+  for (const ent of entitlements as Array<{ user_id: string }>) {
+    // Pre-fix the check-then-insert pattern raced under concurrent cron
+    // invocations: two passes could both observe count=0 and both insert,
+    // doubling the LLM spend per Pro+ Managed user. The 20260508002
+    // migration adds UNIQUE (user_id, scheduled_for); upsert with
+    // ignoreDuplicates makes the second insert a no-op.
+    await supabase.from('continuity_reports').upsert(
+      {
+        user_id: ent.user_id,
+        scheduled_for: nextMonthIso,
+        status: 'pending',
+      },
+      { onConflict: 'user_id,scheduled_for', ignoreDuplicates: true },
+    );
+  }
+}
+
+async function runReport(
+  supabase: ReturnType<typeof createServerClient>,
+  row: ContinuityReportRow,
+): Promise<{ status: 'completed' | 'failed' | 'skipped'; reason?: string }> {
+  // Confirm the user is still entitled before spending LLM budget.
+  const entitlement = await getManagedEntitlements(row.user_id);
+  if (!entitlement?.continuityReportEnabled) {
+    await supabase
+      .from('continuity_reports')
+      .update({
+        status: 'failed',
+        failure_reason: 'no_entitlement',
+        generated_at: new Date().toISOString(),
+      })
+      .eq('id', row.id);
+    return { status: 'failed', reason: 'no_entitlement' };
+  }
+
+  // Mark running so concurrent cron invocations don't race.
+  // Round 5 audit fix: the previous version omitted .select(), so
+  // Supabase returned data=null with no way to detect "lost the race".
+  // Now we chain .select('id') and treat zero affected rows as the
+  // already-claimed signal.
+  const { data: locked, error: lockError } = await supabase
+    .from('continuity_reports')
+    .update({ status: 'running' })
+    .eq('id', row.id)
+    .eq('status', 'pending')
+    .select('id');
+  if (lockError) {
+    return { status: 'skipped', reason: lockError.message };
+  }
+  if (!locked || locked.length === 0) {
+    return { status: 'skipped', reason: 'already_claimed' };
+  }
+
+  // Real generator (round 2 audit): aggregates the user's last calendar
+  // month of imports, characters, conflicts, and feature usage, renders a
+  // markdown summary, and uploads it to R2. Deterministic, no LLM call,
+  // so llm_cost_cents stays 0 — a future iteration can layer LLM-driven
+  // highlights on top.
+  try {
+    const result = await generateContinuityReport(supabase, row.user_id, row.scheduled_for);
+    await supabase
+      .from('continuity_reports')
+      .update({
+        status: 'completed',
+        report_r2_key: result.r2Key,
+        llm_cost_cents: 0,
+        generated_at: new Date().toISOString(),
+      })
+      .eq('id', row.id);
+    return { status: 'completed' };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.error(`[continuity] generation failed for user ${row.user_id}: ${message}`);
+    await supabase
+      .from('continuity_reports')
+      .update({
+        status: 'failed',
+        failure_reason: message.slice(0, 500),
+        generated_at: new Date().toISOString(),
+      })
+      .eq('id', row.id);
+    return { status: 'failed', reason: message };
+  }
+}
+
+function verifyCronSecret(received: string, expected: string): boolean {
+  const a = Buffer.from(received);
+  const b = Buffer.from(expected);
+  if (a.length !== b.length) {
+    timingSafeEqual(b, b);
+    return false;
+  }
+  return timingSafeEqual(a, b);
+}

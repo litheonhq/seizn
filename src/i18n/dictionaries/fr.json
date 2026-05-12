@@ -1,7 +1,7 @@
 {
   "metadata": {
     "title": "Seizn — Mémoire pour NPC IA",
-    "description": "Connectez-vous à Inworld, Convai ou votre propre LLM. Seizn donne à vos NPC une mémoire persistante, des relations et un rappel transgénérationnel — facturé par entité, pas par siège."
+    "description": "Branchez Seizn sur Inworld, Convai ou votre propre LLM. Vos NPC gardent mémoire, relations et souvenirs au fil des générations. Tarif par entité, pas par siège."
   },
   "nav": {
     "features": "Fonctionnalités",
@@ -13,13 +13,13 @@
   },
   "hero": {
     "badge": "Démo en direct : smallgod",
-    "title": "Vos NPC se souviennent",
-    "titleHighlight": "d'une génération à l'autre.",
-    "subtitle": "Seizn est la couche mémoire pour NPC IA. Branchez-le sur Inworld, Convai ou votre propre LLM — gardez le moteur de dialogue que vous aimez et ajoutez une persistance qui survive aux sessions et aux générations.",
+    "title": "Vos NPC se souviennent,",
+    "titleHighlight": "même des générations plus tard.",
+    "subtitle": "Seizn, c'est la couche mémoire pour NPC IA. Branchez-le sur Inworld, Convai ou votre propre LLM, gardez le moteur de dialogue que vous utilisez et ajoutez une persistance qui tient entre les sessions et entre les générations.",
     "emailPlaceholder": "vous@studio.com",
     "joinWaitlist": "Réserver une démo",
     "joining": "Réservation...",
-    "onTheList": "Nous vous contacterons rapidement.",
+    "onTheList": "On vous recontacte vite.",
     "stats": {
       "tokenSavings": "NPC par projet",
       "retrievalTime": "Récupération mémoire",
@@ -27,8 +27,8 @@
     }
   },
   "features": {
-    "title": "Conçu pour les studios de jeux",
-    "subtitle": "Intégrez Seizn, conservez votre moteur de dialogue. Les NPC obtiennent mémoire, relations et persistance qui survivent aux sessions et aux générations.",
+    "title": "Pensé pour les studios de jeux",
+    "subtitle": "Gardez votre moteur de dialogue, glissez Seizn dessous. Vos NPC gagnent mémoire, relations et une persistance qui tient entre sessions et entre générations.",
     "smartExtraction": {
       "title": "Graphe NPC / Faction / Événement",
       "description": "Modélisez NPC, factions, quêtes et incidents sous forme de graphe. Les relations (confiance, rancune, parenté) et événements (témoin, affecté, acteur) sont des primitives de premier ordre, sans schéma à inventer."
@@ -1609,6 +1609,67 @@
     },
     "northStar": {
       "subtitle": "Indicateurs clés de fiabilité de la mémoire PNJ"
+    },
+    "account": {
+      "apiKeys": {
+        "title": "Clés API",
+        "description": "Créez et gérez vos clés Seizn API et MCP pour Track 2.",
+        "capHint": "Vous pouvez créer jusqu'à {cap} clés API par compte.",
+        "newKey": "Nouvelle clé API",
+        "create": "Créer",
+        "cancel": "Annuler",
+        "done": "Terminé",
+        "name": "Nom",
+        "scopes": "Portées",
+        "scopesDefault": "Portées par défaut : recall, remember, graph, search.",
+        "copyKey": "Copier la clé",
+        "saveItNow": "Notez-la maintenant – elle ne sera plus affichée.",
+        "created": "Clé API créée",
+        "rotated": "Clé API renouvelée",
+        "rotate": "Renouveler",
+        "revoke": "Révoquer",
+        "revokeTitle": "Révoquer la clé API ?",
+        "revokeBody": "Révoquer « {name} » arrête tous les appels utilisant cette clé. Les apps existantes auront besoin d'une nouvelle clé.",
+        "rotateTitle": "Renouveler la clé API ?",
+        "rotateBody": "Renouveler « {name} » génère une nouvelle clé et révoque l'actuelle. Mettez vos apps à jour avant que l'ancienne ne cesse de fonctionner.",
+        "usage": "Utilisation",
+        "rateLimit": "Limite de requêtes",
+        "lastUsed": "Dernière utilisation",
+        "createdAt": "Créée",
+        "empty": "Aucune clé active. Cliquez sur « Nouvelle clé API » pour en créer une.",
+        "errors": {
+          "capReached": "Vous avez atteint la limite de clés API pour ce compte.",
+          "invalidName": "Veuillez saisir un nom pour la clé.",
+          "internal": "Action impossible. Veuillez réessayer.",
+          "revokeFailed": "Impossible de révoquer la clé.",
+          "rotateFailed": "Impossible de renouveler la clé.",
+          "copyFailed": "Impossible de copier la clé."
+        },
+        "toasts": {
+          "copied": "Clé copiée dans le presse-papier.",
+          "revoked": "Clé révoquée."
+        },
+        "audit": {
+          "link": "Journal d'audit",
+          "title": "Journal d'audit des clés API",
+          "description": "Tous les événements de création, révocation, renouvellement, limite de requêtes, quota et portée de vos clés API.",
+          "filterAction": "Action",
+          "from": "Du",
+          "to": "Au",
+          "reset": "Réinitialiser",
+          "exportCsv": "Exporter en CSV",
+          "empty": "Aucun événement correspondant.",
+          "action": {
+            "all": "Tout",
+            "created": "Créée",
+            "revoked": "Révoquée",
+            "rotated": "Renouvelée",
+            "rate_limited": "Limite atteinte",
+            "quota_exceeded": "Quota dépassé",
+            "scope_denied": "Portée refusée"
+          }
+        }
+      }
     }
   },
   "pricingPage": {

@@ -1680,6 +1680,7 @@
         "hierarchy": "계층"
       },
       "legend": {
+        "title": "범례",
         "lead": "주연",
         "supporting": "조연",
         "minor": "단역",
@@ -1688,6 +1689,7 @@
       },
       "detail": {
         "directTies": "직접 관계 · {count}",
+        "selectedTie": "선택한 관계",
         "tieStrength": "관계 강도",
         "avgStrength": "평균 {percent}% · 관계 {count}개 기준"
       },
@@ -1723,6 +1725,67 @@
     },
     "fallback": {
       "body": "이 탭은 같은 셸 패턴을 사용해요."
+    },
+    "account": {
+      "apiKeys": {
+        "title": "API 키",
+        "description": "Seizn API와 MCP에서 사용할 Track 2 키를 발급하고 관리합니다.",
+        "capHint": "계정당 최대 {cap}개까지 만들 수 있습니다.",
+        "newKey": "새 API 키",
+        "create": "발급",
+        "cancel": "취소",
+        "done": "확인",
+        "name": "이름",
+        "scopes": "스코프",
+        "scopesDefault": "기본 스코프: recall, remember, graph, search.",
+        "copyKey": "키 복사",
+        "saveItNow": "지금 저장해 두세요. 이 키는 이 화면 이후 다시 표시되지 않습니다.",
+        "created": "API 키가 생성되었습니다",
+        "rotated": "API 키가 교체되었습니다",
+        "rotate": "교체",
+        "revoke": "폐기",
+        "revokeTitle": "키를 폐기할까요?",
+        "revokeBody": "\"{name}\" 키를 폐기하면 이 키로 들어오던 모든 호출이 즉시 차단됩니다. 사용 중인 앱은 새 키를 발급받아야 합니다.",
+        "rotateTitle": "키를 교체할까요?",
+        "rotateBody": "\"{name}\" 키를 교체하면 새 키가 발급되고 기존 키는 폐기됩니다. 앱을 새 키로 업데이트한 뒤 진행해 주세요.",
+        "usage": "사용량",
+        "rateLimit": "분당 한도",
+        "lastUsed": "마지막 사용",
+        "createdAt": "발급일",
+        "empty": "활성 키가 없습니다. 위의 \"새 API 키\" 버튼으로 발급하세요.",
+        "errors": {
+          "capReached": "계정당 최대 키 개수에 도달했습니다.",
+          "invalidName": "키 이름을 입력해 주세요.",
+          "internal": "처리 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.",
+          "revokeFailed": "키 폐기에 실패했습니다.",
+          "rotateFailed": "키 교체에 실패했습니다.",
+          "copyFailed": "복사하지 못했습니다."
+        },
+        "toasts": {
+          "copied": "키가 클립보드에 복사되었습니다.",
+          "revoked": "키가 폐기되었습니다."
+        },
+        "audit": {
+          "link": "감사 로그",
+          "title": "API 키 감사 로그",
+          "description": "API 키의 발급·폐기·교체·rate limit·쿼터·스코프 이벤트를 모두 확인할 수 있습니다.",
+          "filterAction": "동작",
+          "from": "시작일",
+          "to": "종료일",
+          "reset": "초기화",
+          "exportCsv": "CSV 내보내기",
+          "empty": "조건에 맞는 이벤트가 없습니다.",
+          "action": {
+            "all": "전체",
+            "created": "발급",
+            "revoked": "폐기",
+            "rotated": "교체",
+            "rate_limited": "Rate limited",
+            "quota_exceeded": "쿼터 초과",
+            "scope_denied": "스코프 거부"
+          }
+        }
+      }
     }
   },
   "pricingPage": {
@@ -2359,7 +2422,7 @@
         {
           "category": "mcpDevTools",
           "question": "API 키 복사 없이 MCP 서버를 인증하려면?",
-          "answer": "Seizn은 브라우저 기반 인증을 위한 OAuth Device Flow(RFC 8628)를 지원합니다. auth_login MCP 도구를 실행하면 'ABCD-1234' 같은 사람이 읽을 수 있는 코드가 생성되고, 브라우저에서 seizn.com/auth/device를 열어 접근을 승인합니다. 토큰은 ~/.seizn/credentials.json에 자동 저장됩니다. 터미널 간 API 키 복사가 필요 없습니다."
+          "answer": "Seizn은 브라우저 기반 인증을 위한 OAuth Device Flow(RFC 8628)를 지원합니다. auth_login MCP 도구를 실행하면 'ABCD-1234' 같은 사람이 읽을 수 있는 코드가 생성되고, 브라우저에서 seizn.com/device를 열어 접근을 승인합니다. 토큰은 ~/.seizn/credentials.json에 자동 저장됩니다. 터미널 간 API 키 복사가 필요 없습니다."
         },
         {
           "category": "mcpDevTools",
@@ -3809,11 +3872,30 @@
         "crush": "호감 대상",
         "rival": "라이벌",
         "acquaintance": "지인",
+        "classmate": "반 친구",
+        "club_member": "동아리 멤버",
+        "friend_class_adjacent": "반 친구에 가까움",
+        "mentor": "멘토",
+        "partner": "동료",
+        "sibling": "형제자매",
+        "teammate": "팀 동료",
         "unknown": "정해지지 않음"
       },
       "view": {
         "diagram": "그림으로 보기",
         "table": "표로 보기"
+      },
+      "panel": {
+        "summaryTitle": "관계 요약",
+        "selectedCharacter": "선택한 인물",
+        "selectedRelationship": "선택한 관계",
+        "defaultTitle": "관계 지도",
+        "summary": "인물 {nodes}명 / 관계 {edges}개",
+        "degree": "관계 {count}개",
+        "noScope": "범위 없음",
+        "relatedTitle": "연결된 관계",
+        "topTitle": "강한 관계",
+        "emptyEdges": "아직 연결된 관계가 없어요."
       },
       "unknown_name": "이 인물의 이름이 아직 등록되지 않았어요.",
       "unknown_relation": "등록되지 않은 관계 종류입니다. 추가 등록이 필요할 수 있어요."
@@ -4313,6 +4395,243 @@
       "suffix": "에 동의합니다.",
       "loading": "Stripe를 여는 중...",
       "error": "체크아웃을 시작할 수 없습니다."
+    },
+    "tracks": {
+      "title": "어떻게 쓸지 골라보세요",
+      "subtitle": "Seizn을 쓰는 세 가지 방법 — 작업 방식에 맞는 것을 고르세요.",
+      "writer": {
+        "badge": "Track 1 · Web",
+        "title": "작가용",
+        "body": "브라우저에서 쓰는 메모리 대시보드. 장편 집필에서 캐릭터·세계관·타임라인을 일관되게 유지합니다.",
+        "bullets": [
+          "Indie / Pro / Studio 요금제",
+          "BYOK 또는 Managed 선택",
+          "Claude · GPT · Gemini 모두 지원"
+        ],
+        "cta": "작가용 요금제 보기",
+        "ctaHref": "/pricing"
+      },
+      "developer": {
+        "badge": "Track 2 · API · MCP",
+        "title": "개발자용",
+        "body": "REST API와 MCP 서버. 메모리 인식 작가 도구, 플러그인, 커스텀 에이전트를 Seizn 위에 만드세요.",
+        "bullets": [
+          "REST API + MCP 서버",
+          "BYOK $9/월부터",
+          "웹훅, SSE 스트림, agent_id 스코프"
+        ],
+        "cta": "API 문서 보기",
+        "ctaHref": "/docs/api-reference"
+      },
+      "desktop": {
+        "badge": "Track 3 · Desktop · 2026 Q3",
+        "title": "데스크톱 앱",
+        "body": "오프라인 우선 메모리와 로컬 파일 직접 연동을 갖춘 네이티브 작가 앱. 2026년 3분기 출시 예정.",
+        "bullets": [
+          "오프라인 우선",
+          "마우스 제스처 명령",
+          "Charter 가격 적용 가능"
+        ],
+        "cta": "대기 명단 등록",
+        "ctaHref": "/desktop"
+      },
+      "engineLink": {
+        "label": "게임이나 AI 에이전트를 만드시나요?",
+        "linkText": "Seizn Engine — NPC 메모리 인프라 →"
+      }
+    }
+  },
+  "developersPage": {
+    "metadata": {
+      "title": "Seizn 개발자 — 메모리 API와 MCP",
+      "description": "메모리 인식 작가 도구, 플러그인, 커스텀 에이전트를 위한 REST API와 MCP 서버."
+    },
+    "hero": {
+      "eyebrow": "개발자용",
+      "title": "작가가 사랑하는 도구를 위한 메모리 API와 MCP.",
+      "subtitle": "Seizn이 작가에게 제공하는 같은 엔진 위에 메모리 인식 작가 확장 도구, 플러그인, 커스텀 에이전트를 만드세요.",
+      "primaryCta": "API 레퍼런스 보기",
+      "primaryCtaHref": "/docs/api-reference",
+      "secondaryCta": "MCP 설정 가이드",
+      "secondaryCtaHref": "/docs/mcp"
+    },
+    "quickstart": {
+      "title": "첫 메모리까지 3분",
+      "subtitle": "BYOK $9/월부터. Free 티어는 하루 50 콜.",
+      "steps": [
+        {
+          "number": "01",
+          "title": "API 키 발급",
+          "body": "가입 후 Anthropic·OpenAI·Google 키 등록 (BYOK), 대시보드에서 Seizn API 키를 받습니다."
+        },
+        {
+          "number": "02",
+          "title": "메모리 저장",
+          "body": "REST로 텍스트를 보내면 Seizn이 엔티티 추출·임베딩·인덱싱을 마치고 50ms 안에 검색 가능 상태가 됩니다."
+        },
+        {
+          "number": "03",
+          "title": "검색과 회수",
+          "body": "BM25 + 벡터 + 그래프 하이브리드 검색, 멀티 에이전트 환경을 위한 agent_id 스코핑."
+        }
+      ]
+    },
+    "code": {
+      "title": "두 가지 통합 방식",
+      "subtitle": "어떤 언어든 REST. Claude Desktop·Cursor·Continue·자체 에이전트는 MCP.",
+      "tabs": {
+        "rest": "REST API",
+        "mcp": "MCP 서버"
+      },
+      "rest": "// 메모리 저장\nawait fetch('https://www.seizn.com/api/v1/memories', {\n  method: 'POST',\n  headers: {\n    'Authorization': `Bearer ${process.env.SEIZN_API_KEY}`,\n    'Content-Type': 'application/json',\n  },\n  body: JSON.stringify({\n    content: '주인공은 비 오는 날을 싫어한다.',\n    tags: ['character:mira', 'mood'],\n    agent_id: 'novelist-agent',\n  }),\n});\n\n// 검색\nconst res = await fetch(\n  'https://www.seizn.com/api/v1/memories?query=mira+mood&mode=hybrid',\n  { headers: { 'Authorization': `Bearer ${process.env.SEIZN_API_KEY}` } },\n);\nconst memories = await res.json();",
+      "mcp": "# 로컬 MCP (stdio) — Claude Desktop, Cursor, Continue\nnpm install -g seizn-mcp\nSEIZN_API_KEY=szn_... npx seizn-mcp\n\n# 또는 HTTP 전송 (원격 에이전트용)\nSEIZN_API_KEY=szn_... \\\n  SEIZN_MCP_HTTP_TOKEN=<random-token> \\\n  npx seizn-mcp --http\n# 127.0.0.1:3100에서 동작\ncurl -H 'Authorization: Bearer <token>' http://127.0.0.1:3100/mcp"
+    },
+    "features": {
+      "title": "제공 기능",
+      "items": [
+        {
+          "title": "하이브리드 검색",
+          "body": "BM25 + halfvec HNSW + 그래프 순회. 쿼리별 가중치 조절."
+        },
+        {
+          "title": "멀티 에이전트 스코프",
+          "body": "agent_id와 scope 파라미터로 에이전트·사용자별 메모리 분리."
+        },
+        {
+          "title": "자동 중복 제거 + 자동 점수",
+          "body": "서버단 유사도 dedup (0.95 임계값), Haiku 기반 중요도 자동 점수."
+        },
+        {
+          "title": "Webhook + SSE",
+          "body": "memory.created/updated/deleted 웹훅. /api/v1/memories/stream 실시간 SSE."
+        },
+        {
+          "title": "BYOK",
+          "body": "Claude·GPT·Gemini 모두 지원. 요청별 전환 또는 기본값 지정 가능."
+        },
+        {
+          "title": "버전 히스토리",
+          "body": "메모리 수정 시 이전 버전이 memory_content_history에 자동 보존."
+        }
+      ]
+    },
+    "pricing": {
+      "title": "개발자 요금제",
+      "subtitle": "BYOK로 진입 비용 최소화. 한 장의 청구서를 원하는 팀은 Managed.",
+      "cta": "전체 가격 보기",
+      "ctaHref": "/pricing",
+      "tiers": [
+        {
+          "name": "Free",
+          "price": "$0",
+          "note": "하루 50 콜 · BYOK 필수"
+        },
+        {
+          "name": "Indie",
+          "price": "$9/월",
+          "note": "BYOK · Charter Annual"
+        },
+        {
+          "name": "Pro",
+          "price": "$19/월",
+          "note": "BYOK · Charter Annual"
+        },
+        {
+          "name": "Studio",
+          "price": "$99/월",
+          "note": "BYOK · Charter Annual"
+        },
+        {
+          "name": "Studio Managed",
+          "price": "$499/월",
+          "note": "Charter Annual · 콜당 $0.50 overage"
+        },
+        {
+          "name": "Enterprise",
+          "price": "문의",
+          "note": "맞춤 SLA · 전담 성공 매니저"
+        }
+      ]
+    },
+    "faq": {
+      "title": "자주 묻는 질문",
+      "items": [
+        {
+          "q": "직접 호스팅해야 하나요?",
+          "a": "아니요. REST API는 seizn.com에서 호스팅됩니다. MCP는 로컬 npx로 실행하거나 HTTP 전송으로 원격 사용 가능합니다."
+        },
+        {
+          "q": "어떤 LLM을 지원하나요?",
+          "a": "Anthropic Claude (Opus 4.7, Sonnet 4.6), OpenAI GPT-5.5, Google Gemini 2.5 Pro/Flash. BYOK 또는 Managed 선택."
+        },
+        {
+          "q": "게임 NPC 용도로 쓸 수 있나요?",
+          "a": "게임 NPC와 에이전트 메모리는 Seizn Engine — engine.seizn.com — 게임 스튜디오 전용 별도 제품 라인을 참고하세요."
+        }
+      ]
+    }
+  },
+  "desktopPage": {
+    "metadata": {
+      "title": "Seizn Desktop — 네이티브 작가 앱, 오프라인 우선",
+      "description": "오프라인 우선 메모리, 마우스 제스처 명령, 로컬 파일 직접 연동을 갖춘 네이티브 데스크톱 작가 앱. 2026년 3분기 출시 예정."
+    },
+    "hero": {
+      "badge": "Track 3 · 2026 Q3 출시 예정",
+      "title": "Seizn Desktop",
+      "subtitle": "오프라인 우선 메모리, 마우스 제스처 명령, 로컬 파일 직접 연동을 갖춘 네이티브 작가 앱.",
+      "releaseTarget": "2026년 3분기 목표 — 첫 초대 대상으로 등록하세요."
+    },
+    "benefits": {
+      "title": "대기 명단 등록 혜택",
+      "items": [
+        {
+          "title": "첫 초대",
+          "body": "Seizn Desktop이 열릴 때, 대기 명단 회원이 일반 출시 전에 먼저 초대됩니다."
+        },
+        {
+          "title": "Charter 가격 자격",
+          "body": "2027-05-01까지 Charter 가격 락인 — 웹 구독자와 동일한 기간."
+        },
+        {
+          "title": "오프라인 전용 Free 티어",
+          "body": "오프라인 전용 모드로 무료 티어 유지. 클라우드 동기화 불필요."
+        }
+      ]
+    },
+    "preview": {
+      "title": "네이티브 앱은 무엇이 다른가요?",
+      "items": [
+        {
+          "title": "오프라인 우선 메모리",
+          "body": "캐넌·캐릭터·타임라인이 디스크에 저장됩니다. 연결되면 클라우드 동기화, 끊겨도 작업 가능."
+        },
+        {
+          "title": "마우스 제스처 명령",
+          "body": "한 손 편집 — 단축키 조합 없음, 명령어 팔레트 탐색 없음."
+        },
+        {
+          "title": "로컬 파일 직접 연동",
+          "body": "파일 매니저에서 .docx·.scrivx·.md를 직접 열기. 편집 시 메모리 자동 업데이트."
+        },
+        {
+          "title": "네이티브 성능",
+          "body": "브라우저 오버헤드 없이 50ms 이하 검색. 긴 세션과 다중 윈도우 환경에 최적화."
+        }
+      ]
+    },
+    "waitlist": {
+      "title": "대기 명단 등록",
+      "subtitle": "이메일만 — 카드 정보 없음, 의무 없음.",
+      "emailLabel": "이메일",
+      "emailPlaceholder": "you@example.com",
+      "submitLabel": "대기 명단 등록",
+      "submittingLabel": "등록 중…",
+      "successHeadline": "대기 명단에 등록되었습니다",
+      "successBody": "확인 메일을 보냈습니다. 메일 안의 링크를 눌러 등록을 완료해주세요.",
+      "errorGeneric": "문제가 발생했습니다. 다시 시도해주세요.",
+      "errorRateLimited": "요청이 너무 많습니다. 1분 후 다시 시도해주세요.",
+      "errorInvalidEmail": "유효한 이메일 주소를 입력해주세요."
     }
   }
 }

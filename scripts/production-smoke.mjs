@@ -260,6 +260,47 @@ async function requestJson(baseUrl, path, { method = 'GET', bearerToken, apiKey,
   };
 }
 
+async function requestStatus(url, { method = 'GET', body, headers = {} } = {}) {
+  const response = await fetch(url, {
+    method,
+    headers,
+    body,
+    redirect: 'manual',
+  });
+
+  return {
+    status: response.status,
+    ok: response.ok,
+    location: response.headers.get('location'),
+  };
+}
+
+async function assertStripeWebhookApexDoesNotRedirect(baseUrl) {
+  const apex = new URL(baseUrl);
+  if (apex.hostname.startsWith('www.')) {
+    apex.hostname = apex.hostname.slice(4);
+  }
+
+  const webhookUrl = new URL('/api/webhooks/stripe', apex);
+  const response = await requestStatus(webhookUrl, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: '{}',
+  });
+
+  if (response.status >= 300 && response.status < 400) {
+    throw new Error(
+      `Stripe webhook apex smoke failed: ${webhookUrl.toString()} returned ${response.status} redirect to ${response.location || 'unknown'}`
+    );
+  }
+
+  return {
+    path: `${webhookUrl.origin}/api/webhooks/stripe [POST no-redirect]`,
+    status: response.status,
+    detail: response.location ? `location=${response.location}` : undefined,
+  };
+}
+
 async function ensureSmokeKey(baseUrl, bearerToken) {
   const keysResponse = await requestJson(baseUrl, '/api/keys', { bearerToken });
   if (!keysResponse.ok) {
@@ -408,6 +449,8 @@ async function runSmoke(baseUrl, bearerToken, smokeEmail, smokePassword) {
   let capturedError = null;
 
   try {
+    results.push(await assertStripeWebhookApexDoesNotRedirect(baseUrl));
+
     const keysGet = await requestJson(baseUrl, '/api/keys', { bearerToken });
     results.push({ path: '/api/keys [GET]', status: keysGet.status });
     if (!keysGet.ok) {
@@ -447,6 +490,20 @@ async function runSmoke(baseUrl, bearerToken, smokeEmail, smokePassword) {
     memoryId = createMemory.json?.data?.memory?.id || createMemory.json?.memory?.id;
     if (!memoryId) {
       throw new Error('Smoke memory id missing from create response');
+    }
+
+    const getMemory = await requestJson(
+      baseUrl,
+      `/api/v1/memories/${encodeURIComponent(memoryId)}`,
+      {
+        apiKey: smokeApiKey,
+      }
+    );
+    results.push({ path: '/api/v1/memories/:id [GET]', status: getMemory.status });
+    if (!getMemory.ok) {
+      throw new Error(
+        `Memory get-by-id smoke failed: ${getMemory.status} ${JSON.stringify(getMemory.json)}`
+      );
     }
 
     const searchMemory = await requestJson(

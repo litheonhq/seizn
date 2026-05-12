@@ -21,6 +21,8 @@ declare module 'next-auth' {
 declare module 'next-auth/jwt' {
   interface JWT extends DefaultJWT {
     id?: string;
+    email_verified?: boolean;
+    oauthEmailVerified?: boolean;
     organizationId?: string | null;
     organizationSelection?: 'personal' | 'organization';
   }

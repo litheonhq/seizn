@@ -206,7 +206,7 @@ Or use `auth_login` tool for browser-based authentication.
 ## Development
 
 ```bash
-git clone https://github.com/iruhana/seizn.git
+git clone https://github.com/litheonhq/seizn.git
 cd seizn/mcp-server
 npm install
 npm run dev        # Development mode
@@ -250,8 +250,8 @@ Apache License 2.0 - see [LICENSE](LICENSE).
 
 - **Website**: [https://seizn.com](https://seizn.com)
 - **Documentation**: [https://seizn.com/docs](https://seizn.com/docs)
-- **GitHub**: [https://github.com/iruhana/seizn](https://github.com/iruhana/seizn)
-- **Issues**: [https://github.com/iruhana/seizn/issues](https://github.com/iruhana/seizn/issues)
+- **GitHub**: [https://github.com/litheonhq/seizn](https://github.com/litheonhq/seizn)
+- **Issues**: [https://github.com/litheonhq/seizn/issues](https://github.com/litheonhq/seizn/issues)
 
 ---
 

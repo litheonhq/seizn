@@ -37,6 +37,9 @@ import {
   type AuthorBacklogCategory,
   type ExtractedAuthorCandidate,
 } from '@/lib/author/extraction';
+import { checkFeatureGate, recordFeatureUsage } from '@/lib/author/billing/feature-gate';
+import { isByokProvider, type ByokProvider } from '@/lib/author/llm';
+import { recordFirstFunnelEvent } from '@/lib/analytics/funnel';
 import { InMemoryAuthorUiStore } from './in-memory-store';
 import { conflictStatusForDecision, normalizeConflictResolution } from './conflict-resolution';
 import { seedAuthorUiProject, type AuthorUiSeedRows } from './seed-project';
@@ -261,7 +264,7 @@ interface AuthorUiState {
   uiStore?: AuthorUiStore;
   byok: {
     enabled: boolean;
-    provider: 'anthropic' | 'google' | 'openai' | null;
+    provider: ByokProvider | null;
     key_last_4?: string | null;
     verified_at?: string | null;
     status: 'active' | 'invalid' | 'revoked' | 'missing' | null;
@@ -408,15 +411,70 @@ export class AuthorUiService {
     }
   ): Promise<{ import_id: string }> {
     this.ensureProject(projectId);
-    const declaredFileSize = input.fileSize ?? input.fileBytes?.length ?? 0;
-    if (declaredFileSize <= AUTHOR_IMPORT_MAX_BYTES && (!input.fileBytes || input.fileBytes.length === 0)) {
+    // Reconcile declared vs actual file size BEFORE writing any DB row or
+    // audit-log entry. Pre-audit, the inverted guard let a client send
+    // `fileSize: 999_000_000` with no body — the row got inserted with the
+    // bogus declared size, audit-log got polluted, then the > MAX branch
+    // marked it `failed` and returned 200. Equally, a client could claim
+    // `fileSize: 1024` but ship 50MB to R2 since the actual bytes were
+    // never compared to the declaration.
+    //
+    // Now: if both are present, they must match within 1 byte (defensive
+    // wiggle for transport quirks). If only `fileBytes` is present, trust
+    // its length. If only `fileSize` is present (oversized declared
+    // upload, no body shipped), allow the route's "too-large" path to
+    // record the failed attempt — but reject other zero-body cases.
+    const declaredFileSize = input.fileSize ?? null;
+    const actualByteLength = input.fileBytes?.length ?? null;
+    if (declaredFileSize != null && actualByteLength != null) {
+      if (Math.abs(declaredFileSize - actualByteLength) > 1) {
+        throw new AuthorUiValidationError(
+          `declared fileSize (${declaredFileSize}) does not match actual bytes (${actualByteLength})`,
+        );
+      }
+    }
+    const fileSize = actualByteLength ?? declaredFileSize ?? 0;
+    if (fileSize <= AUTHOR_IMPORT_MAX_BYTES && (!input.fileBytes || input.fileBytes.length === 0)) {
       throw new AuthorUiValidationError('file is required');
+    }
+
+    // v9 W2 (2026-05-08): chapter cap enforced as ~600KB upload size proxy
+    // (≈ 100K English words / 200K Korean characters / ~20 chapters).
+    // Charter tiers have no per-upload cap (up to AUTHOR_IMPORT_MAX_BYTES).
+    // The gate also counts as 'extract' feature for the funnel.
+    const FREE_TIER_UPLOAD_MAX_BYTES = 600 * 1024;
+    const extractGate = await checkFeatureGate({
+      userId: this.userId,
+      feature: 'extract',
+      // Use byte-size as a chapter/word proxy. checkExtractScope reports
+      // by chapter or word — neither is precisely known here, so we set a
+      // synthetic chapter count derived from size to land in the right
+      // failure mode for the alert messaging.
+      chapterCount: fileSize > FREE_TIER_UPLOAD_MAX_BYTES ? 21 : 1,
+      wordCount: fileSize > FREE_TIER_UPLOAD_MAX_BYTES ? 100_001 : 1,
+    });
+    if (!extractGate.allowed) {
+      throw new AuthorUiValidationError(
+        'Free tier upload cap reached (~100K words / 20 chapters). Upgrade to Charter for full novels.',
+      );
     }
 
     const id = newPersistedAuthorUiId('import');
     const fileName = input.fileName ?? 'untitled.md';
     const contentType = input.fileType;
-    const fileSize = declaredFileSize;
+    // Magic-number sniff: refuse uploads where the first bytes don't match
+    // the declared file_type. Pre-audit a client could name a .docx with
+    // .txt extension and the parser would feed zip bytes to iconv —
+    // garbage in, garbage out at best, parser-confusion bug at worst.
+    if (input.fileBytes && input.fileBytes.length >= 4) {
+      const declaredType = normalizeFileType(contentType ?? fileName);
+      const sniffedType = sniffFileType(input.fileBytes);
+      if (sniffedType && sniffedType !== declaredType) {
+        throw new AuthorUiValidationError(
+          `file_type mismatch: declared ${declaredType}, content magic-number suggests ${sniffedType}`,
+        );
+      }
+    }
     const item: AuthorUiImport = {
       id,
       file_name: fileName,
@@ -792,6 +850,18 @@ export class AuthorUiService {
   }
 
   async generateCharacterBacklog(projectId: string, characterId: string, input: JsonRecord = {}) {
+    // v9 feature gate: backlog generation is Charter-only on Free tier.
+    const gate = await checkFeatureGate({
+      userId: this.userId,
+      feature: 'backlog',
+    });
+    if (!gate.allowed) {
+      throw new AuthorUiValidationError(
+        gate.reason === 'feature_charter_only'
+          ? 'Backlog generation is available on Charter plans. Upgrade to unlock.'
+          : 'Feature limit reached for this month.',
+      );
+    }
     const character = await this.findCharacter(projectId, characterId);
     const existingCandidates = (await this.store.listCandidates(this.userId, projectId, {}))
       .map((candidate) => ({
@@ -1000,6 +1070,15 @@ export class AuthorUiService {
 
   async runSimulation(projectId: string, input: JsonRecord) {
     this.ensureProject(projectId);
+    // v9 feature gate: simulation = Dialog generation. Free tier 5/month cap.
+    const gate = await checkFeatureGate({ userId: this.userId, feature: 'dialog' });
+    if (!gate.allowed) {
+      throw new AuthorUiValidationError(
+        gate.reason === 'free_dialog_limit_exceeded'
+          ? `Free tier limit reached (${gate.cap} Dialogs/month). Upgrade to Charter for unlimited.`
+          : 'Dialog generation unavailable on Free tier.',
+      );
+    }
     const simulationId = newAuthorUiId('sim');
     const simulation = this.buildSimulation(projectId, simulationId, input);
     await this.store.upsertSimulation(authorSimulationToRow(simulation, this.userId, projectId));
@@ -1018,6 +1097,9 @@ export class AuthorUiService {
         prompt_hash: hashAuthorAuditPrompt(input),
       },
     });
+    // v9 funnel + usage tracking. Free users hit 5/mo cap; Charter bypasses.
+    await recordFeatureUsage({ userId: this.userId, feature: 'dialog' });
+    void recordFirstFunnelEvent({ userId: this.userId, eventType: 'first_dialog' });
     return {
       simulation_id: simulationId,
       status: 'running' as const,
@@ -1196,6 +1278,15 @@ export class AuthorUiService {
   }
 
   private ensureProject(projectId: string): void {
+    // IDOR defense: state.projects is per-user (keyed by this.userId in
+    // statesByUser). It only contains DEFAULT_PROJECT_ID and projects
+    // the user created via createProject() in the current cached
+    // session. An attacker passing another user's projectId hits
+    // AuthorUiNotFoundError → 404. Verified by audit 2026-05-08.
+    //
+    // Future-proofing: when persistent multi-project loads are added,
+    // every code path that populates state.projects.set(id, …) MUST
+    // first verify the project's ownership by user_id.
     if (this.state.projects.has(projectId)) {
       return;
     }
@@ -2012,7 +2103,7 @@ function buildDefaultSettings() {
     },
     byok: {
       enabled: false,
-      provider: null as 'anthropic' | 'google' | 'openai' | null,
+      provider: null as ByokProvider | null,
       key_last_4: null as string | null,
     },
     usage: {
@@ -2292,6 +2383,46 @@ function normalizeFileType(value: string | undefined): AuthorUiImport['file_type
   return 'md';
 }
 
+/**
+ * Best-effort file-type sniff based on magic bytes. Returns one of the
+ * AuthorUiImport.file_type literals when a confident match is found, or
+ * `null` when ambiguous (caller trusts the declared file_type).
+ *
+ * Defense-in-depth against parser-confusion: pre-audit a client could
+ * upload a .docx with a .txt extension, the parser dispatched to iconv
+ * on zip bytes (garbage at best, parser-confusion bug at worst). Or
+ * label arbitrary bytes as .pdf to point pdf-parse at a hostile
+ * payload. Magic-number agreement isn't a security guarantee but it
+ * shuts down the obvious vectors.
+ */
+function sniffFileType(buffer: Buffer): AuthorUiImport['file_type'] | null {
+  if (buffer.length < 4) return null;
+  // PDF: %PDF
+  if (buffer[0] === 0x25 && buffer[1] === 0x50 && buffer[2] === 0x44 && buffer[3] === 0x46) {
+    return 'pdf';
+  }
+  // ZIP family (DOCX is a ZIP, Notion exports are ZIPs): PK\x03\x04
+  if (buffer[0] === 0x50 && buffer[1] === 0x4b && buffer[2] === 0x03 && buffer[3] === 0x04) {
+    // Can't distinguish DOCX vs Notion-export here without unzipping;
+    // accept as DOCX (the more common case) and let the parser dispatch
+    // handle the actual content. Notion exports declared as docx will
+    // fail later at parse-time with a clear error.
+    return 'docx';
+  }
+  // JSON: starts with { or [ (after optional BOM/whitespace)
+  let i = 0;
+  if (buffer[0] === 0xef && buffer[1] === 0xbb && buffer[2] === 0xbf) i = 3; // UTF-8 BOM
+  while (
+    i < buffer.length
+    && (buffer[i] === 0x20 || buffer[i] === 0x09 || buffer[i] === 0x0a || buffer[i] === 0x0d)
+  ) i++;
+  if (i < buffer.length && (buffer[i] === 0x7b || buffer[i] === 0x5b)) {
+    return 'json';
+  }
+  // Plain text / markdown — too ambiguous to sniff. Return null.
+  return null;
+}
+
 function markImportFailed(item: AuthorUiImport, message: string): void {
   item.parse_status = 'failed';
   item.parse_progress = 100;
@@ -2369,11 +2500,11 @@ function actionToStatus(action: string): FactStatus {
   }
 }
 
-function isProvider(value: unknown): value is 'anthropic' | 'google' | 'openai' {
-  return value === 'anthropic' || value === 'google' || value === 'openai';
+function isProvider(value: unknown): value is ByokProvider {
+  return isByokProvider(value);
 }
 
-function isProviderKey(provider: 'anthropic' | 'google' | 'openai', key: string): boolean {
+function isProviderKey(provider: ByokProvider, key: string): boolean {
   if (provider === 'anthropic') {
     return key.startsWith('sk-ant-') && key.length >= 14;
   }

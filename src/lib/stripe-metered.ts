@@ -6,6 +6,35 @@ import {
   type LegacyPlanName,
   type PlanName,
 } from '@/lib/stripe-config';
+import {
+  getV8Track2OpusOveragePriceId,
+  type V8Track2Tier,
+} from '@/lib/billing/v8-products';
+import { getV9Track2OpusOveragePriceId } from '@/lib/billing/v9-products';
+
+/**
+ * Resolve the Studio Managed Opus overage Stripe price ID, preferring
+ * whichever catalog (v9 or v8) is already attached to this subscription.
+ * Falls back to the v9 env var for new attaches (v9 is the active catalog
+ * post-cutover), then v8 if v9 isn't configured.
+ *
+ * Audit round 3 found a duplicate-billing risk: a v8 sub with v8 overage
+ * already attached would be matched against v9 env var on a fresh attach
+ * call → no match → second v9 line item attached → double billing.
+ */
+function resolveOpusOveragePriceId(
+  attachedPriceIds?: ReadonlySet<string>,
+): string | null {
+  const v9Id = getV9Track2OpusOveragePriceId();
+  const v8Id = getV8Track2OpusOveragePriceId();
+  // If we already know what's on the subscription, prefer the attached one
+  // so detach/re-attach symmetry holds.
+  if (attachedPriceIds) {
+    if (v9Id && attachedPriceIds.has(v9Id)) return v9Id;
+    if (v8Id && attachedPriceIds.has(v8Id)) return v8Id;
+  }
+  return v9Id ?? v8Id;
+}
 import { logServerError, logServerWarn } from '@/lib/server/logger';
 
 export type UsageDimension = 'memories' | 'ops';
@@ -273,6 +302,132 @@ export async function ensureMeteredPriceAttached(
   );
 
   return { attached: missingPriceIds };
+}
+
+export type V8Track2OpusAttachResult =
+  | { attached: true; priceId: string }
+  | { attached: false; reason: 'non_managed_tier' | 'missing_subscription' | 'missing_overage_price_env' | 'already_attached' };
+
+/**
+ * Studio Managed (Track 2 v8) gets a metered Opus overage price attached on top of
+ * its base $299/mo subscription. This runs from the Stripe webhook the moment the
+ * subscription transitions into `studio_managed`, so the user can spend without
+ * needing a manual attach by support.
+ */
+export async function ensureV8Track2OpusOverageAttached(
+  subscriptionId: string | null | undefined,
+  tier: V8Track2Tier,
+): Promise<V8Track2OpusAttachResult> {
+  if (tier !== 'studio_managed') {
+    return { attached: false, reason: 'non_managed_tier' };
+  }
+  if (!subscriptionId) {
+    return { attached: false, reason: 'missing_subscription' };
+  }
+
+  // Fetch subscription FIRST so we can check what's actually attached.
+  // resolveOpusOveragePriceId then prefers the matching catalog version.
+  const subscription = await stripeRequest<StripeSubscription>(
+    'GET',
+    `/subscriptions/${encodeURIComponent(subscriptionId)}`,
+  );
+  const existing = new Set(
+    subscription.items?.data
+      ?.map((item) => item.price?.id)
+      .filter((value): value is string => Boolean(value)) || [],
+  );
+  const overagePriceId = resolveOpusOveragePriceId(existing);
+  if (!overagePriceId) {
+    return { attached: false, reason: 'missing_overage_price_env' };
+  }
+  if (existing.has(overagePriceId)) {
+    return { attached: false, reason: 'already_attached' };
+  }
+  // Belt-and-suspenders: if the OTHER catalog's overage is attached, do
+  // NOT attach the new one — a follow-up cleanup PR can migrate. Skip
+  // silently to avoid duplicate billing.
+  const v8Id = getV8Track2OpusOveragePriceId();
+  const v9Id = getV9Track2OpusOveragePriceId();
+  if ((v8Id && existing.has(v8Id)) || (v9Id && existing.has(v9Id))) {
+    return { attached: false, reason: 'already_attached' };
+  }
+
+  await stripeRequest<StripeSubscription>(
+    'POST',
+    `/subscriptions/${encodeURIComponent(subscriptionId)}`,
+    {
+      proration_behavior: 'none',
+      payment_behavior: 'pending_if_incomplete',
+      'items[0][price]': overagePriceId,
+    },
+  );
+
+  return { attached: true, priceId: overagePriceId };
+}
+
+export type V8Track2OpusDetachResult =
+  | { detached: true; subscriptionItemId: string }
+  | { detached: false; reason: 'still_managed_tier' | 'missing_subscription' | 'missing_overage_price_env' | 'not_attached' };
+
+/**
+ * Symmetric counterpart to ensureV8Track2OpusOverageAttached. Runs when a user
+ * downgrades OUT of Studio Managed (e.g. studio_managed → studio); detaches
+ * the metered Opus overage subscription item so the user is no longer billed
+ * $0.15/Opus call on a non-managed plan.
+ *
+ * Caller passes the user's NEW tier — function detaches when tier is anything
+ * other than `studio_managed`. Idempotent: if the price isn't attached, returns
+ * { detached: false, reason: 'not_attached' } without erroring.
+ */
+export async function ensureV8Track2OpusOverageDetached(
+  subscriptionId: string | null | undefined,
+  newTier: V8Track2Tier,
+): Promise<V8Track2OpusDetachResult> {
+  if (newTier === 'studio_managed') {
+    return { detached: false, reason: 'still_managed_tier' };
+  }
+  if (!subscriptionId) {
+    return { detached: false, reason: 'missing_subscription' };
+  }
+
+  // Fetch subscription first so we can pick whichever catalog (v8 or v9)
+  // is actually attached. Without this, post-cutover detach calls would
+  // look up the v9 price ID and miss legacy v8 line items.
+  const subscription = await stripeRequest<StripeSubscription>(
+    'GET',
+    `/subscriptions/${encodeURIComponent(subscriptionId)}`,
+  );
+  const existing = new Set(
+    subscription.items?.data
+      ?.map((item) => item.price?.id)
+      .filter((value): value is string => Boolean(value)) || [],
+  );
+  const overagePriceId = resolveOpusOveragePriceId(existing);
+  if (!overagePriceId) {
+    return { detached: false, reason: 'missing_overage_price_env' };
+  }
+  const overageItem = subscription.items?.data?.find(
+    (item) => item.price?.id === overagePriceId,
+  );
+  if (!overageItem) {
+    return { detached: false, reason: 'not_attached' };
+  }
+
+  // Use the subscription-update form rather than DELETE on the item:
+  // - Existing stripeRequest only supports GET/POST.
+  // - Stripe accepts items[N][id]=si_xxx + items[N][deleted]=true on the
+  //   subscription update endpoint as the canonical way to drop an item.
+  await stripeRequest<StripeSubscription>(
+    'POST',
+    `/subscriptions/${encodeURIComponent(subscriptionId)}`,
+    {
+      proration_behavior: 'none',
+      'items[0][id]': overageItem.id,
+      'items[0][deleted]': 'true',
+    },
+  );
+
+  return { detached: true, subscriptionItemId: overageItem.id };
 }
 
 export async function resolveUsageBillingContext(

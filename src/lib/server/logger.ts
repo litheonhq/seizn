@@ -12,9 +12,16 @@ const JWT_PATTERN = /\beyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\b/g;
 const SECRET_QUERY_PARAM_PATTERN =
   /([?&](?:token|key|api_key|apikey|secret|signature|sig|password|client_secret)=)[^&\s]+/gi;
 const API_KEY_PATTERN = /\b(?:sk|pk)_[A-Za-z0-9_-]{16,}\b/g;
+const ANTHROPIC_API_KEY_PATTERN = /\bsk-ant-api03-[A-Za-z0-9_-]+\b/g;
+const OPENAI_PROJECT_API_KEY_PATTERN = /\bsk-proj-[A-Za-z0-9_-]+\b/g;
+const OPENAI_SERVICE_ACCOUNT_KEY_PATTERN = /\bsk-svcacct-[A-Za-z0-9_-]+\b/g;
+const PLAIN_SK_API_KEY_PATTERN = /\bsk-[A-Za-z0-9][A-Za-z0-9_-]{8,}\b/g;
+const VOYAGE_API_KEY_PATTERN = /\bpa-[A-Za-z0-9][A-Za-z0-9_-]{8,}\b/g;
 const SUPABASE_KEY_PATTERN = /\bsb_(?:secret|publishable)_[A-Za-z0-9_-]+\b/g;
 const GITHUB_TOKEN_PATTERN = /\b(?:gh(?:o|p|u|s|r)_[A-Za-z0-9_]+|github_pat_[A-Za-z0-9_]+)\b/g;
-const GOOGLE_API_KEY_PATTERN = /\bAIza[0-9A-Za-z\-_]{20,}\b/g;
+const GOOGLE_API_KEY_PATTERN = /\bAIza[A-Za-z0-9_-]{35}\b/g;
+// Cohere keys do not have a stable public prefix; contextual fields such as
+// COHERE_API_KEY are covered by SENSITIVE_ASSIGNMENT_PATTERN / key redaction.
 const SENSITIVE_ASSIGNMENT_PATTERN =
   /((?:authorization|token|secret|password|api[_-]?key|cookie|client[_-]?secret)\s*[:=]\s*["']?)[^"',\s]+/gi;
 
@@ -38,6 +45,11 @@ function redactString(value: string): string {
     (_, prefix: string) => `${prefix}${REDACTED}`
   );
   redacted = redacted.replace(API_KEY_PATTERN, REDACTED);
+  redacted = redacted.replace(ANTHROPIC_API_KEY_PATTERN, REDACTED);
+  redacted = redacted.replace(OPENAI_PROJECT_API_KEY_PATTERN, REDACTED);
+  redacted = redacted.replace(OPENAI_SERVICE_ACCOUNT_KEY_PATTERN, REDACTED);
+  redacted = redacted.replace(PLAIN_SK_API_KEY_PATTERN, REDACTED);
+  redacted = redacted.replace(VOYAGE_API_KEY_PATTERN, REDACTED);
   redacted = redacted.replace(SUPABASE_KEY_PATTERN, REDACTED);
   redacted = redacted.replace(GITHUB_TOKEN_PATTERN, REDACTED);
   redacted = redacted.replace(GOOGLE_API_KEY_PATTERN, REDACTED);

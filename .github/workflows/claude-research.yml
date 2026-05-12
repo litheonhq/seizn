@@ -1,37 +1,38 @@
-# Thin caller — logic lives in iruhana/claude-workflows
-# seizn: AI Memory SaaS — MCP, pgvector, knowledge graphs
-# CLI: gh workflow run claude-research.yml -f focus="all"
 name: AI Research
+
 on:
   workflow_dispatch:
     inputs:
       focus:
-        description: '리서치 포커스'
+        description: Focus area. Security focus enables strategic checks.
         required: false
-        default: 'all'
+        default: all
         type: choice
         options: [all, papers, tech, security-advisories]
       max_issues:
-        description: '최대 Issue 생성 수'
+        description: Compatibility-only issue limit. Repo-local workflow does not create issues.
         required: false
         default: '10'
       provider:
-        description: 'AI 프로바이더'
+        description: Compatibility-only provider label.
         required: false
-        default: 'claude'
+        default: claude
         type: choice
         options: [claude, codex]
+
+permissions:
+  contents: read
+  issues: read
+
 concurrency:
-  group: claude-research
+  group: ai-research-${{ github.ref }}-${{ inputs.focus }}
   cancel-in-progress: false
+
 jobs:
-  research:
-    uses: iruhana/claude-workflows/.github/workflows/claude-research.yml@v1
+  audit:
+    name: Repo-local research readiness gate
+    uses: ./.github/workflows/claude-audit.yml
     with:
-      focus: ${{ github.event.inputs.focus || 'all' }}
-      max_issues: ${{ github.event.inputs.max_issues || '10' }}
-      provider: ${{ github.event.inputs.provider || 'claude' }}
-    secrets: inherit
-    permissions:
-      contents: read
-      issues: write
+      depth: ${{ inputs.focus == 'security-advisories' && 'strategic' || 'full' }}
+      auto_commit: false
+      provider: ${{ inputs.provider }}
