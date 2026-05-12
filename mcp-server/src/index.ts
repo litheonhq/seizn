@@ -973,6 +973,20 @@ async function handleDeleteEntities(entityNames: string[]): Promise<string> {
   return JSON.stringify({ success: true, deleted });
 }
 
+// KNOWN BUG (2026-05-12, reported under E in the post-#368 audit):
+// This handler assumes observations are stored as separate memory rows tagged
+// `observation`, but `handleAddObservations` and `handleCreateEntities` both
+// write observations as additional lines inside the parent entity row's
+// `content` field (the row is tagged `entity`, not `observation`). The
+// filter below (`tags?.includes('observation')`) therefore matches nothing
+// and the handler always returns `deleted: 0`.
+//
+// Fix requires either (a) a server-side PATCH endpoint on /api/v1/memories
+// so the entity row's content can be rewritten with the target observation
+// lines removed, or (b) a write-path change so each observation becomes its
+// own row tagged `observation`. Until one of those lands, callers should
+// delete the parent entity (which removes all observations atomically) or
+// recreate it with the desired observation set.
 async function handleDeleteObservations(deletions: { entityName: string; observations: string[] }[]): Promise<string> {
   const results = [];
 
