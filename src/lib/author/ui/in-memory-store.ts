@@ -315,6 +315,11 @@ function characterRowToUi(row: AuthorCharacterRow): AuthorUiCharacterDetail {
     recent_important_memories: row.recent_important_memories as AuthorUiCharacterDetail['recent_important_memories'],
     voice_samples: row.voice_samples as AuthorUiCharacterDetail['voice_samples'],
     current_arc_phase: row.current_arc_phase,
+    sacred_flaw: row.sacred_flaw,
+    internal_need: row.internal_need,
+    external_want: row.external_want,
+    philosophical_purpose: row.philosophical_purpose,
+    arc_direction: row.arc_direction,
   };
 }
 

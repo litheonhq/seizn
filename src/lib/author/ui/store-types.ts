@@ -107,6 +107,11 @@ export interface AuthorCharacterRow {
   recent_important_memories: JsonValue;
   voice_samples: JsonValue;
   current_arc_phase: string;
+  sacred_flaw: string | null;
+  internal_need: string | null;
+  external_want: string | null;
+  philosophical_purpose: string | null;
+  arc_direction: 'positive' | 'negative' | 'flat' | null;
   created_at: string;
   updated_at: string;
 }
