@@ -18,6 +18,25 @@
 ## 타겟 시장
 - 한국, 영어권, 일본 (3개국)
 
+## 정보 아키텍처 — 4-Track 구조 (Locked 2026-05-10)
+
+| 도메인/경로 | 트랙 | 제품 라인 | ICP | Locale |
+|---|---|---|---|---|
+| `seizn.com/[locale]` | **Track 1 — Web Writer** | 작가용 웹 SaaS | Fiction writer | 22개 |
+| `seizn.com/[locale]/developers` | **Track 2 — Writer API/MCP** | 작가 도구 빌더용 API/MCP | Writer-tool dev | 22개 |
+| `seizn.com/[locale]/desktop` | **Track 3 — Desktop** | 네이티브 작가 앱 (offline-first) | Fiction writer | 22개 (waitlist) |
+| `engine.seizn.com` | **Track 4 — Engine** | 게임 NPC / 에이전트 메모리 인프라 | Game studio / agent dev | en (+ja optional) |
+
+**라우팅 원칙**:
+- Track 1-3은 같은 작가 제품 라인 (단일 도메인 + path) — 같은 백엔드/auth/dashboard 공유
+- Track 4 (Engine)은 별도 vertical — 다른 ICP, 다른 카피, 다른 가격, 다른 sales motion. 같은 백엔드 사용 가능하지만 마케팅 surface 완전 분리. 22 locale 부담 없음 (en 중심).
+- 홈 (`seizn.com/[locale]`)에 페르소나 splitter: Writer / Developer / Desktop 3-up. Track 4 (Engine)은 footer "Other products: Engine for game studios →" 1줄로만 노출.
+- Engine (`engine.seizn.com`) 자체 footer에 "For writers? → seizn.com" 1줄.
+
+**가격표 분리**:
+- `seizn.com/[locale]/pricing` = Track 1+2+3 작가 카탈로그
+- `engine.seizn.com/pricing` (or 동일 도메인 내 섹션) = Track 4 게임 vertical 카탈로그 — per-entity / per-event B2B
+
 ## 가격 정책 (Author Memory v3 — Locked 2026-05-07, v9 catalog)
 
 ### Free 티어 (W2 — 2026-05-08 완화)

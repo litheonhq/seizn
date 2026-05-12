@@ -9,6 +9,7 @@ import { SectionConflicts } from "./section-conflicts";
 import { SectionSimulation } from "./section-simulation";
 import { SectionTrust } from "./section-trust";
 import { SectionPricing } from "./section-pricing";
+import { SectionTracks } from "./section-tracks";
 import { SectionFAQ } from "./section-faq";
 import { SectionFooter } from "./section-footer";
 
@@ -32,6 +33,7 @@ export function AuthorFlagshipLanding({
       <ProgramTease copy={copy} locale={locale} />
       <HeroSplitDetector copy={copy} locale={locale} isAuthenticated={isAuthenticated} />
       <main>
+        <SectionTracks copy={copy} locale={locale} />
         <SectionWorkflow copy={copy} />
         <SectionInputs copy={copy} />
         <SectionConflicts copy={copy} data={data} />

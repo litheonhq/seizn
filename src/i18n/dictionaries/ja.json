@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "title": "Seizn - 作家のためのAIメモリ",
-    "description": "原稿、設定、矛盾チェック、作家メモリを一つのワークスペースで管理できます。Seizn は読者に届く前に物語の食い違いを見つける手助けをします。"
+    "title": "Seizn — AI NPCメモリレイヤー",
+    "description": "Inworld、Convai、または独自LLMに接続してください。SeiznはNPCにセッションと世代を超えた永続記憶・関係・派閥グラフを提供します — シートではなくエンティティ単位の課金。"
   },
   "nav": {
     "features": "機能",
@@ -3705,12 +3705,17 @@
         "replay": "巻き戻し",
         "byok": "BYOK ガイド",
         "changelog": "更新履歴",
+        "engine": "Engine →",
         "sdk": "@seizn/sdk-js",
-        "mcp": "@seizn/mcp",
-        "program": "Program"
+        "mcp": "@seizn/mcp"
       },
       "entity": "© 2026 Seizn by Litheon LLC · Wyoming",
       "version": "v1.0 · 早暁デモは合成データ"
+    },
+    "engine": {
+      "badge": "新着",
+      "body": "ゲーム NPC AI を作っていますか？同じカノンエンジンを SDK として。",
+      "cta": "engine.seizn.com"
     },
     "checkout": {
       "prefix": "",
@@ -3721,11 +3726,242 @@
       "loading": "Stripe を開いています...",
       "error": "チェックアウトを開始できませんでした。"
     },
-    "program": {
-      "badge": "開発中",
-      "body": "Scrivenerのように使える執筆アプリ、Seizn Programを準備中です。原稿、正典、レビューを一つの作業空間に置きます。",
-      "cta": "Programの待機リスト",
-      "footerLabel": "Program"
+    "tracks": {
+      "title": "使い方を選ぶ",
+      "subtitle": "Seiznの3つの使い方 — あなたの作業スタイルに合うものを選んでください。",
+      "writer": {
+        "badge": "Track 1 · Web",
+        "title": "作家向け",
+        "body": "ブラウザで動くメモリダッシュボード。長編執筆でキャラクター・世界観・タイムラインの一貫性を保ちます。",
+        "bullets": [
+          "Indie / Pro / Studio プラン",
+          "BYOK または Managed",
+          "Claude · GPT · Gemini 対応"
+        ],
+        "cta": "作家向けプランを見る",
+        "ctaHref": "/pricing"
+      },
+      "developer": {
+        "badge": "Track 2 · API · MCP",
+        "title": "開発者向け",
+        "body": "REST APIとMCPサーバー。メモリを活用した執筆ツール、プラグイン、カスタムエージェントをSeiznの上に構築。",
+        "bullets": [
+          "REST API + MCPサーバー",
+          "BYOK 月額$9から",
+          "Webhook、SSEストリーム、agent_idスコープ"
+        ],
+        "cta": "APIドキュメントを読む",
+        "ctaHref": "/docs/api-reference"
+      },
+      "desktop": {
+        "badge": "Track 3 · Desktop · 2026 Q3",
+        "title": "デスクトップアプリ",
+        "body": "オフラインファーストのメモリとローカルファイル直接連携を備えたネイティブ執筆アプリ。2026年第3四半期リリース予定。",
+        "bullets": [
+          "オフラインファースト",
+          "マウスジェスチャー操作",
+          "Charter 価格対象"
+        ],
+        "cta": "ウェイトリストに登録",
+        "ctaHref": "/desktop"
+      },
+      "engineLink": {
+        "label": "ゲームやAIエージェントを作っていますか？",
+        "linkText": "Seizn Engine — NPCメモリインフラ →"
+      }
+    }
+  },
+  "developersPage": {
+    "metadata": {
+      "title": "Seizn Developers — メモリ API と MCP",
+      "description": "メモリを活用した執筆ツール、プラグイン、カスタムエージェント向けの REST API と MCP サーバー。"
+    },
+    "hero": {
+      "eyebrow": "開発者向け",
+      "title": "作家に愛されるツールのためのメモリ API と MCP。",
+      "subtitle": "Seizn を作家に提供する同じエンジンの上で、メモリを活用した執筆拡張、プラグイン、カスタムエージェントを構築できます。",
+      "primaryCta": "API リファレンスを読む",
+      "primaryCtaHref": "/docs/api-reference",
+      "secondaryCta": "MCP セットアップガイド",
+      "secondaryCtaHref": "/docs/mcp"
+    },
+    "quickstart": {
+      "title": "最初のメモリまで 3 分",
+      "subtitle": "BYOK は月額 $9 から。Free 階層は 1 日 50 コール。",
+      "steps": [
+        {
+          "number": "01",
+          "title": "API キーを発行",
+          "body": "登録後、Anthropic・OpenAI・Google のキー (BYOK) を登録し、ダッシュボードで Seizn API キーを取得します。"
+        },
+        {
+          "number": "02",
+          "title": "メモリを保存",
+          "body": "REST でテキストを送ると Seizn がエンティティ抽出・埋め込み・インデックスを完了し、50ms 以内で検索可能になります。"
+        },
+        {
+          "number": "03",
+          "title": "検索と取得",
+          "body": "BM25 + ベクトル + グラフのハイブリッド検索、マルチエージェント向け agent_id スコープ。"
+        }
+      ]
+    },
+    "code": {
+      "title": "2 つの統合方法",
+      "subtitle": "どの言語でも REST。Claude Desktop・Cursor・Continue・独自エージェントには MCP。",
+      "tabs": {
+        "rest": "REST API",
+        "mcp": "MCP サーバー"
+      },
+      "rest": "// メモリを保存\nawait fetch('https://www.seizn.com/api/v1/memories', {\n  method: 'POST',\n  headers: {\n    'Authorization': `Bearer ${process.env.SEIZN_API_KEY}`,\n    'Content-Type': 'application/json',\n  },\n  body: JSON.stringify({\n    content: '主人公は雨の日が嫌いだ。',\n    tags: ['character:mira', 'mood'],\n    agent_id: 'novelist-agent',\n  }),\n});\n\n// 検索\nconst res = await fetch(\n  'https://www.seizn.com/api/v1/memories?query=mira+mood&mode=hybrid',\n  { headers: { 'Authorization': `Bearer ${process.env.SEIZN_API_KEY}` } },\n);\nconst memories = await res.json();",
+      "mcp": "# ローカル MCP (stdio) — Claude Desktop, Cursor, Continue\nnpm install -g seizn-mcp\nSEIZN_API_KEY=szn_... npx seizn-mcp\n\n# または HTTP トランスポート (リモートエージェント用)\nSEIZN_API_KEY=szn_... \\\n  SEIZN_MCP_HTTP_TOKEN=<random-token> \\\n  npx seizn-mcp --http\n# 127.0.0.1:3100 で動作\ncurl -H 'Authorization: Bearer <token>' http://127.0.0.1:3100/mcp"
+    },
+    "features": {
+      "title": "提供機能",
+      "items": [
+        {
+          "title": "ハイブリッド検索",
+          "body": "BM25 + halfvec HNSW + グラフ走査。クエリごとに重み調整可能。"
+        },
+        {
+          "title": "マルチエージェントスコープ",
+          "body": "agent_id と scope パラメータでエージェント・ユーザー別にメモリを分離。"
+        },
+        {
+          "title": "自動重複排除 + 自動スコア",
+          "body": "サーバーサイド類似度 dedup (0.95 しきい値)、Haiku ベースの重要度自動スコア。"
+        },
+        {
+          "title": "Webhook + SSE",
+          "body": "memory.created/updated/deleted Webhook。/api/v1/memories/stream リアルタイム SSE。"
+        },
+        {
+          "title": "BYOK",
+          "body": "Claude・GPT・Gemini すべて対応。リクエストごとに切り替えまたはデフォルト指定可能。"
+        },
+        {
+          "title": "バージョン履歴",
+          "body": "メモリ編集時に過去バージョンを memory_content_history に自動保存。"
+        }
+      ]
+    },
+    "pricing": {
+      "title": "開発者向け料金",
+      "subtitle": "BYOK で参入コストを最小化。1 枚の請求書を望むチームには Managed。",
+      "cta": "全料金を見る",
+      "ctaHref": "/pricing",
+      "tiers": [
+        {
+          "name": "Free",
+          "price": "$0",
+          "note": "1 日 50 コール · BYOK 必須"
+        },
+        {
+          "name": "Indie",
+          "price": "月額 $9",
+          "note": "BYOK · Charter Annual"
+        },
+        {
+          "name": "Pro",
+          "price": "月額 $19",
+          "note": "BYOK · Charter Annual"
+        },
+        {
+          "name": "Studio",
+          "price": "月額 $99",
+          "note": "BYOK · Charter Annual"
+        },
+        {
+          "name": "Studio Managed",
+          "price": "月額 $499",
+          "note": "Charter Annual · コールあたり $0.50 overage"
+        },
+        {
+          "name": "Enterprise",
+          "price": "お問い合わせ",
+          "note": "カスタム SLA・専任サクセスマネージャー"
+        }
+      ]
+    },
+    "faq": {
+      "title": "よくある質問",
+      "items": [
+        {
+          "q": "自分でホスティングする必要は？",
+          "a": "いいえ。REST API は seizn.com でホスティングされます。MCP はローカル npx で実行するか、HTTP トランスポートでリモート利用できます。"
+        },
+        {
+          "q": "どの LLM をサポートしていますか？",
+          "a": "Anthropic Claude (Opus 4.7, Sonnet 4.6)、OpenAI GPT-5.5、Google Gemini 2.5 Pro/Flash。BYOK または Managed を選択できます。"
+        },
+        {
+          "q": "ゲーム NPC に使えますか？",
+          "a": "ゲーム NPC やエージェントメモリは Seizn Engine — engine.seizn.com — ゲームスタジオ向けの別製品ラインを参照してください。"
+        }
+      ]
+    }
+  },
+  "desktopPage": {
+    "metadata": {
+      "title": "Seizn Desktop — ネイティブ執筆アプリ、オフラインファースト",
+      "description": "オフラインファーストのメモリ、マウスジェスチャー操作、ローカルファイル直接連携を備えたネイティブデスクトップ執筆アプリ。2026年第3四半期リリース予定。"
+    },
+    "hero": {
+      "badge": "Track 3 · 2026 Q3 リリース予定",
+      "title": "Seizn Desktop",
+      "subtitle": "オフラインファーストのメモリ、マウスジェスチャー操作、ローカルファイル直接連携を備えたネイティブ執筆アプリ。",
+      "releaseTarget": "2026年第3四半期目標 — 最初の招待対象として登録してください。"
+    },
+    "benefits": {
+      "title": "ウェイトリスト登録のメリット",
+      "items": [
+        {
+          "title": "最初の招待",
+          "body": "Seizn Desktop が公開された際、ウェイトリスト会員が一般リリース前に招待されます。"
+        },
+        {
+          "title": "Charter 価格対象",
+          "body": "2027-05-01 まで Charter 価格をロック — Web 加入者と同じ期間。"
+        },
+        {
+          "title": "オフライン専用 Free 階層",
+          "body": "オフライン専用モードで Free 階層を維持。クラウド同期不要。"
+        }
+      ]
+    },
+    "preview": {
+      "title": "ネイティブアプリは何が違うのか？",
+      "items": [
+        {
+          "title": "オフラインファーストのメモリ",
+          "body": "正典・キャラクター・タイムラインがディスクに保存されます。接続時にクラウド同期、切断時もそのまま作業可能。"
+        },
+        {
+          "title": "マウスジェスチャー操作",
+          "body": "片手編集 — ショートカット組み合わせなし、コマンドパレット探索なし。"
+        },
+        {
+          "title": "ローカルファイル直接連携",
+          "body": "ファイルマネージャーから .docx・.scrivx・.md を直接開く。編集時にメモリが自動更新。"
+        },
+        {
+          "title": "ネイティブ性能",
+          "body": "ブラウザのオーバーヘッドなしで 50ms 以下の検索。長時間セッションやマルチウィンドウ環境に最適化。"
+        }
+      ]
+    },
+    "waitlist": {
+      "title": "ウェイトリストに登録",
+      "subtitle": "メールアドレスのみ — カード情報なし、義務なし。",
+      "emailLabel": "メールアドレス",
+      "emailPlaceholder": "you@example.com",
+      "submitLabel": "ウェイトリストに登録",
+      "submittingLabel": "送信中…",
+      "successHeadline": "リストに登録されました",
+      "successBody": "確認メールを送信しました。メール内のリンクをクリックして登録を完了してください。",
+      "errorGeneric": "問題が発生しました。再度お試しください。",
+      "errorRateLimited": "リクエストが多すぎます。1分後に再度お試しください。",
+      "errorInvalidEmail": "有効なメールアドレスを入力してください。"
     }
   }
 }

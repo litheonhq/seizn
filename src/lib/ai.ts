@@ -15,6 +15,17 @@ import {
 // Voyage AI Embedding
 const VOYAGE_API_URL = 'https://api.voyageai.com/v1/embeddings';
 const VOYAGE_MODEL = 'voyage-3'; // 1024 dimensions
+// Inner ceiling on a single Voyage call. Mirrors the default in
+// `src/lib/summer/embedding/voyage.ts` so both Voyage entry points share the
+// same ceiling and the same env override (`VOYAGE_FETCH_TIMEOUT_MS`).
+// Outer layers (route `withTimeout`, search-executor `withTimeout`) usually
+// cut sooner; this is the safety net for callers without an outer deadline
+// (background jobs, ingestion).
+const VOYAGE_FETCH_TIMEOUT_MS = (() => {
+  const raw = Number.parseInt(process.env.VOYAGE_FETCH_TIMEOUT_MS || '', 10);
+  if (Number.isFinite(raw) && raw > 0) return raw;
+  return 10_000;
+})();
 
 // Internal function to call Voyage API
 async function callVoyageAPI(text: string, inputType: 'document' | 'query'): Promise<number[]> {
@@ -33,14 +44,27 @@ async function callVoyageAPI(text: string, inputType: 'document' | 'query'): Pro
   if (!apiKey) throw new Error('VOYAGE_API_KEY not set');
 
   const startedAt = Date.now();
-  const response = await fetch(VOYAGE_API_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify(toolInput),
-  });
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), VOYAGE_FETCH_TIMEOUT_MS);
+  let response: Response;
+  try {
+    response = await fetch(VOYAGE_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify(toolInput),
+      signal: controller.signal,
+    });
+  } catch (error) {
+    if (controller.signal.aborted) {
+      throw new Error(`Voyage API timeout after ${VOYAGE_FETCH_TIMEOUT_MS}ms`);
+    }
+    throw error;
+  } finally {
+    clearTimeout(timeout);
+  }
 
   if (!response.ok) {
     const error = await response.text();

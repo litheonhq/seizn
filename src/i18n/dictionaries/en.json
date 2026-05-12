@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "title": "Seizn - AI memory for fiction writers",
-    "description": "Keep manuscripts, canon, conflict checks, and author memory in one workspace. Seizn helps fiction writers catch contradictions before readers do."
+    "title": "Seizn — Memory for AI NPCs",
+    "description": "Plug into Inworld, Convai, or your own LLM. Seizn gives your NPCs persistent memory, relationships, and cross-generation recall — graph-priced, not per-seat."
   },
   "nav": {
     "features": "Features",
@@ -1739,6 +1739,7 @@
         "hierarchy": "Hierarchy"
       },
       "legend": {
+        "title": "Legend",
         "lead": "Lead",
         "supporting": "Supp.",
         "minor": "Minor",
@@ -1747,6 +1748,7 @@
       },
       "detail": {
         "directTies": "Direct ties · {count}",
+        "selectedTie": "Selected tie",
         "tieStrength": "Tie strength",
         "avgStrength": "Avg. {percent}% across {count} ties"
       },
@@ -3791,11 +3793,30 @@
         "crush": "Crush",
         "rival": "Rival",
         "acquaintance": "Acquaintance",
+        "classmate": "Classmate",
+        "club_member": "Club member",
+        "friend_class_adjacent": "Class-adjacent friend",
+        "mentor": "Mentor",
+        "partner": "Partner",
+        "sibling": "Sibling",
+        "teammate": "Teammate",
         "unknown": "Unknown"
       },
       "view": {
         "diagram": "Diagram view",
         "table": "Table view"
+      },
+      "panel": {
+        "summaryTitle": "Graph summary",
+        "selectedCharacter": "Selected character",
+        "selectedRelationship": "Selected relationship",
+        "defaultTitle": "Relationship map",
+        "summary": "{nodes} characters / {edges} relationships",
+        "degree": "{count} links",
+        "noScope": "No scope",
+        "relatedTitle": "Connected relationships",
+        "topTitle": "Strongest relationships",
+        "emptyEdges": "No relationships linked yet."
       },
       "unknown_name": "This character name has not been registered yet.",
       "unknown_relation": "This relationship type has not been registered yet."
@@ -4275,12 +4296,17 @@
         "replay": "Replay",
         "byok": "BYOK guide",
         "changelog": "Changelog",
+        "engine": "Engine →",
         "sdk": "@seizn/sdk-js",
-        "mcp": "@seizn/mcp",
-        "program": "Program"
+        "mcp": "@seizn/mcp"
       },
       "entity": "© 2026 Seizn by Litheon LLC · Wyoming",
       "version": "v1.0 · saebyeok demo is synthetic data"
+    },
+    "engine": {
+      "badge": "new",
+      "body": "Building game NPC AI? The same canon engine, exposed as an SDK.",
+      "cta": "engine.seizn.com"
     },
     "checkout": {
       "prefix": "I agree to the",
@@ -4291,11 +4317,242 @@
       "loading": "Opening Stripe...",
       "error": "Checkout could not start."
     },
-    "program": {
-      "badge": "in development",
-      "body": "Seizn Program is our native writing app for manuscripts, canon, review, and local files in one workspace.",
-      "cta": "Join Program waitlist",
-      "footerLabel": "Program"
+    "tracks": {
+      "title": "Pick your path",
+      "subtitle": "Three ways to use Seizn — pick the one that fits how you work.",
+      "writer": {
+        "badge": "Track 1 · Web",
+        "title": "For writers",
+        "body": "Browser-based memory dashboard. Keep characters, world, and timeline straight across long fiction.",
+        "bullets": [
+          "Indie / Pro / Studio plans",
+          "BYOK or Managed",
+          "Works with Claude, GPT, Gemini"
+        ],
+        "cta": "See writer plans",
+        "ctaHref": "/pricing"
+      },
+      "developer": {
+        "badge": "Track 2 · API · MCP",
+        "title": "For developers",
+        "body": "REST API and MCP server. Build memory-aware writing tools, plugins, or custom agents on Seizn.",
+        "bullets": [
+          "REST API + MCP server",
+          "BYOK from $9/mo",
+          "Webhooks, SSE stream, agent_id scoping"
+        ],
+        "cta": "Read API docs",
+        "ctaHref": "/docs/api-reference"
+      },
+      "desktop": {
+        "badge": "Track 3 · Desktop · Q3 2026",
+        "title": "Desktop app",
+        "body": "Native authoring app with offline-first memory and direct local file integration. Coming Q3 2026.",
+        "bullets": [
+          "Offline-first",
+          "Mouse-gesture commands",
+          "Charter pricing eligible"
+        ],
+        "cta": "Join the waitlist",
+        "ctaHref": "/desktop"
+      },
+      "engineLink": {
+        "label": "Building games or AI agents?",
+        "linkText": "Seizn Engine — NPC memory infrastructure →"
+      }
+    }
+  },
+  "developersPage": {
+    "metadata": {
+      "title": "Seizn Developers — Memory API & MCP",
+      "description": "REST API and MCP server for memory-aware writing tools, plugins, and custom agents."
+    },
+    "hero": {
+      "eyebrow": "For developers",
+      "title": "Memory API and MCP for tools writers love.",
+      "subtitle": "Build memory-aware writing extensions, plugins, and custom agents on the same engine that powers Seizn for authors.",
+      "primaryCta": "Read the API reference",
+      "primaryCtaHref": "/docs/api-reference",
+      "secondaryCta": "MCP setup guide",
+      "secondaryCtaHref": "/docs/mcp"
+    },
+    "quickstart": {
+      "title": "Three minutes to first memory",
+      "subtitle": "BYOK from $9/mo. Free tier ships 50 calls/day.",
+      "steps": [
+        {
+          "number": "01",
+          "title": "Get an API key",
+          "body": "Sign up, register your Anthropic, OpenAI, or Google key (BYOK), and grab a Seizn API key from the dashboard."
+        },
+        {
+          "number": "02",
+          "title": "Save a memory",
+          "body": "Send any text via REST. Seizn extracts entities, embeds, and indexes — ready for retrieval in under 50ms."
+        },
+        {
+          "number": "03",
+          "title": "Search and retrieve",
+          "body": "Hybrid search (BM25 + vector + graph) with agent_id scoping for multi-agent setups."
+        }
+      ]
+    },
+    "code": {
+      "title": "Two ways to integrate",
+      "subtitle": "Pick REST for any language. MCP for Claude Desktop, Cursor, Continue, or your own agent.",
+      "tabs": {
+        "rest": "REST API",
+        "mcp": "MCP server"
+      },
+      "rest": "// Save a memory\nawait fetch('https://www.seizn.com/api/v1/memories', {\n  method: 'POST',\n  headers: {\n    'Authorization': `Bearer ${process.env.SEIZN_API_KEY}`,\n    'Content-Type': 'application/json',\n  },\n  body: JSON.stringify({\n    content: 'The protagonist hates rainy days.',\n    tags: ['character:mira', 'mood'],\n    agent_id: 'novelist-agent',\n  }),\n});\n\n// Search\nconst res = await fetch(\n  'https://www.seizn.com/api/v1/memories?query=mira+mood&mode=hybrid',\n  { headers: { 'Authorization': `Bearer ${process.env.SEIZN_API_KEY}` } },\n);\nconst memories = await res.json();",
+      "mcp": "# Local MCP over stdio (Claude Desktop, Cursor, Continue)\nnpm install -g seizn-mcp\nSEIZN_API_KEY=szn_... npx seizn-mcp\n\n# Or HTTP transport for remote agents\nSEIZN_API_KEY=szn_... \\\n  SEIZN_MCP_HTTP_TOKEN=<random-token> \\\n  npx seizn-mcp --http\n# Server listens on 127.0.0.1:3100\ncurl -H 'Authorization: Bearer <token>' http://127.0.0.1:3100/mcp"
+    },
+    "features": {
+      "title": "What you get",
+      "items": [
+        {
+          "title": "Hybrid retrieval",
+          "body": "BM25 + halfvec HNSW + graph traversal. Tunable weights per query."
+        },
+        {
+          "title": "Multi-agent scoping",
+          "body": "agent_id and scope params keep memories separated across agents and users."
+        },
+        {
+          "title": "Auto-dedup + auto-score",
+          "body": "Server-side similarity dedup (0.95 threshold) and Haiku-driven importance scoring."
+        },
+        {
+          "title": "Webhooks + SSE",
+          "body": "memory.created/updated/deleted webhooks. Real-time SSE stream at /api/v1/memories/stream."
+        },
+        {
+          "title": "Bring your own LLM",
+          "body": "Claude, GPT, Gemini all supported. Switch per request or set a default."
+        },
+        {
+          "title": "Version history",
+          "body": "Every memory edit preserves prior versions in memory_content_history."
+        }
+      ]
+    },
+    "pricing": {
+      "title": "Developer pricing",
+      "subtitle": "BYOK keeps the floor low. Managed for teams that want one bill.",
+      "cta": "See full pricing",
+      "ctaHref": "/pricing",
+      "tiers": [
+        {
+          "name": "Free",
+          "price": "$0",
+          "note": "50 calls/day · BYOK required"
+        },
+        {
+          "name": "Indie",
+          "price": "$9/mo",
+          "note": "BYOK · Charter Annual"
+        },
+        {
+          "name": "Pro",
+          "price": "$19/mo",
+          "note": "BYOK · Charter Annual"
+        },
+        {
+          "name": "Studio",
+          "price": "$99/mo",
+          "note": "BYOK · Charter Annual"
+        },
+        {
+          "name": "Studio Managed",
+          "price": "$499/mo",
+          "note": "Charter Annual · $0.50/call overage"
+        },
+        {
+          "name": "Enterprise",
+          "price": "Contact",
+          "note": "Custom SLA · Dedicated success manager"
+        }
+      ]
+    },
+    "faq": {
+      "title": "Common questions",
+      "items": [
+        {
+          "q": "Do I need to host anything?",
+          "a": "No. The REST API is hosted at seizn.com. MCP runs on your machine via npx, or remotely via HTTP transport."
+        },
+        {
+          "q": "Which LLMs are supported?",
+          "a": "Anthropic Claude (Opus 4.7, Sonnet 4.6), OpenAI GPT-5.5, Google Gemini 2.5 Pro/Flash. Bring your own key or use Managed."
+        },
+        {
+          "q": "Can I run this for game NPCs?",
+          "a": "For game NPC and agent memory, see Seizn Engine — engine.seizn.com — a separate product line for game studios."
+        }
+      ]
+    }
+  },
+  "desktopPage": {
+    "metadata": {
+      "title": "Seizn Desktop — native authoring, offline-first",
+      "description": "Native desktop authoring app with offline-first memory, mouse-gesture commands, and direct local file integration. Coming Q3 2026."
+    },
+    "hero": {
+      "badge": "Track 3 · Coming Q3 2026",
+      "title": "Seizn Desktop",
+      "subtitle": "Native authoring app with offline-first memory, mouse-gesture commands, and direct local file integration.",
+      "releaseTarget": "Targeting Q3 2026 — sign up to be among the first invited."
+    },
+    "benefits": {
+      "title": "What waitlist members get",
+      "items": [
+        {
+          "title": "First invites",
+          "body": "When Seizn Desktop opens, waitlist members are invited before public launch."
+        },
+        {
+          "title": "Charter pricing eligibility",
+          "body": "Lock in Charter pricing through 2027-05-01 — same window as web subscribers."
+        },
+        {
+          "title": "Offline-only Free tier",
+          "body": "Free tier preserved with offline-only mode. No cloud sync required."
+        }
+      ]
+    },
+    "preview": {
+      "title": "What's different about a native app?",
+      "items": [
+        {
+          "title": "Offline-first memory",
+          "body": "Your canon, characters, and timeline live on disk. Sync to cloud when connected, work offline when not."
+        },
+        {
+          "title": "Mouse-gesture commands",
+          "body": "Single-handed editing — no chord key combos, no command palette diving."
+        },
+        {
+          "title": "Direct local file integration",
+          "body": "Open .docx, .scrivx, .md from your file manager. Memory updates as you edit."
+        },
+        {
+          "title": "Native performance",
+          "body": "Sub-50ms retrieval without browser overhead. Designed for long sessions and multi-window setups."
+        }
+      ]
+    },
+    "waitlist": {
+      "title": "Join the waitlist",
+      "subtitle": "Email signup only — no card, no obligation.",
+      "emailLabel": "Email",
+      "emailPlaceholder": "you@example.com",
+      "submitLabel": "Join the waitlist",
+      "submittingLabel": "Submitting…",
+      "successHeadline": "You're on the list",
+      "successBody": "We've sent a confirmation email. Click the link inside to lock in your spot.",
+      "errorGeneric": "Something went wrong. Please try again.",
+      "errorRateLimited": "Too many requests. Please try again in a minute.",
+      "errorInvalidEmail": "Please enter a valid email address."
     }
   }
 }

@@ -143,6 +143,9 @@ function memoryInsertRow(ctx: ImportContext, source: CompetitorImportSource, mem
     importance: 6,
     confidence: 0.92,
     content_hash: hashImportContent(source, memory.externalId, memory.content),
+    is_encrypted: false,
+    is_deleted: false,
+    deleted_at: null,
   };
 }
 

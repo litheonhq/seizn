@@ -1,9 +1,10 @@
 # Seizn Author Studio — Track 3: Program (Tauri 데스크톱)
 
-**Cycle date:** 2026-05-05
+**Cycle date:** 2026-05-05 (작성), 2026-05-06 (global-first lock)
 **Status:** Active design doc. 이 cycle 의 Track 3 SSOT.
-**Owner session:** 이 Claude session
-**Repo:** `C:\Users\admin\Projects\seizn-desktop\` (신설 예정, Step 3 에서 scaffold)
+**Owner session:** Track 3 owner — Windows VSCode Claude (swap 2026-05-06, Tauri Windows native build 환경 적합)
+**Locale strategy (lock 2026-05-06):** **EN-first, ko/ja/zh-Hans/zh-Hant/es secondary.** 이전 KR-only 페르소나는 ko locale segment 으로 demote. 이유: Litheon LLC USD revenue 정합 + 글로벌 long-form fiction writer 풀 (Scrivener 6M+ 사용자, Reedsy 1M+, Atticus·Vellum 50k+) 이 KR mainstream (~수만) 보다 큼 + Track 2 와 같은 USD 단위로 cross-track upsell 단순화
+**Repo:** `C:\Users\admin\Projects\seizn-desktop\` (root commit `32ebc28`, Phase 0.1~0.6 완료)
 **Master:** `seizn-author-master-2026-05-05.md`
 **Companion tracks:**
 - Track 1 (Web): `seizn-author-track-1-web-2026-05-05.md`
@@ -13,9 +14,11 @@
 
 ## 0. 결론 한 줄
 
-> **Vault-first 로 launch 하되, 자체 에디터는 Phase 2 commitment (조건부 X). 사용자가 결국 만들고 싶은 건 작가의 도구 자체가 되는 것.**
+> **Vault-first launch, built-in editor is a Phase 2 commitment (not conditional). The product writers eventually live in.**
 
-Vault 는 작가가 기존 도구 (한글·메모장·뮤블·Scrivener·구글독스) 를 떠나지 않게 하는 *진입 ramp*. Editor 는 그 ramp 를 거쳐 도착할 *목표 도구*. 두 단계는 같은 Tauri shell, 같은 Memory v3 backend, 같은 사용자 ID 위에 있다. Vault 가 진입장벽을 낮추고, Editor 가 retention 을 만든다.
+Vault keeps writers in the tools they already use (Scrivener · Ulysses · Bear · Word · Google Docs · Obsidian · Vellum · Atticus · Hangul · Mubble · Notepad). Editor is the *destination*. Same Tauri shell, same backend, same identity. Vault lowers the entry friction, Editor earns retention.
+
+**Locale: EN-first, ko/ja/zh-Hans/zh-Hant/es secondary** (lock 2026-05-06 global-first).
 
 ---
 
@@ -178,57 +181,78 @@ Track 3 vs:
 
 ---
 
-## 4. 사용자 세그먼트 (Track 3 우선순위)
+## 4. User segments (Track 3 priority, global-first lock 2026-05-06)
 
-### 4.1 1순위: 한 파일에 장문 원고를 쓰는 KR 웹소설 작가
-
-Pain:
-- 원고가 길어질수록 한글/워드/독스 버벅임
-- 예전 회차의 떡밥·설정·약속·아이템 검색 어려움
-- 자동 저장 오류·튕김 트라우마
-
-Track 3 promise:
-- 원고 파일 watch + 자동 snapshot
-- `@이름`, `@장소`, `@떡밥` 으로 즉시 recall
-- 데이터 유실 시 10초 안에 이전 버전 복구
-
-### 4.2 2순위: 메모장 / Notepad++ / VS Code 에서 쓰는 작가
+### 4.1 P1: long-form fiction writers in Scrivener · Ulysses · Bear · Word · Google Docs · Obsidian
 
 Pain:
-- 가벼워서 쓰지만 설정 관리·백업 약함
-- 모바일/PC 흐름 분산
+
+- Manuscript balloons past 100k words; existing tools slow, search bad
+- Lose minutes/hours hunting prior canon (character height, magic system rule, foreshadowed promise)
+- Lost-data trauma (Word crash, Docs sync glitch, hard drive die)
 
 Track 3 promise:
-- 지금 도구 안 바꿈
-- watch 만 붙임 → 자동 snapshot + recall
 
-### 4.3 3순위: Scrivener / 뮤블 정착 작가
+- Watches the file you already write in; never asks you to switch
+- Auto-snapshots every change, restorable in 10 seconds
+- `@name` / `@place` / `@promise` recall across the full manuscript
+
+Recruit channels: r/writing, r/Fantasy_Writers, r/selfpublish, NaNoWriMo forums, Twitter writing community, Indie Author Telegram groups.
+
+### 4.2 P2: indie self-publishers using Vellum · Atticus · Plottr · World Anvil
 
 Pain:
-- Scrivener: 복잡, HWP 흐름 약함
-- 뮤블: 좋지만 외부 recall layer 가 더 있으면 좋음
+
+- Worldbuilding lives in one tool, draft in another, formatting in a third — context lost between
+- Series canon (book 1 → book 5) drifts without a memory layer
 
 Track 3 promise:
-- 대체 X, 보조 O
-- export 파일 watch + canon recall
 
-### 4.4 4순위: 출판사 / 매니지먼트 / 스튜디오 (B2B)
+- Watches the manuscript export from Vellum / Atticus; recalls World Anvil entries beside the draft
+- Cross-book canon (P1.5+) for series authors
+
+### 4.3 P3: KR mainstream long-form web-novel writers (한국 웹소설 작가, ko locale segment)
 
 Pain:
-- 교정고·HWP·Word·설정집 분산
-- 장기 시리즈 canon 관리 어려움
+
+- 한글/뮤블/메모장/구글독스 정착, 원고가 길수록 검색·백업 약함
+- 회차 간 설정 충돌·자동 저장 사고
 
 Track 3 promise:
-- shared canon bible (Studio Publisher tier)
-- export/audit history
-- reviewer seat (Track 1 web 협업과 cross-track 묶음)
 
-### 4.5 명시적 비-타깃
+- 지금 도구 안 바꿈. 옆에서 백업하고 설정을 기억함
+- `@이름`, `@장소`, `@떡밥` recall
 
-- AI 회의주의 작가 (시즌 전체 비-타깃)
-- AI 가 글을 대신 쓰기를 원하는 작가 (Sudowrite 영역)
-- 단편/짧은 글 작가 (recall 가치 낮음)
-- 옵시디언 + AI plugin 정착 작가 → Track 2 영역 (Track 3 는 secondary)
+Recruit channels: 나비계곡, 작가 디스코드, 트위터 KR, Reddit r/koreanwebnovel.
+
+### 4.4 P4: Notepad / VS Code / TextEdit minimalists
+
+Pain:
+
+- Lightweight by choice, but settings management + backup almost zero
+- Cross-device fragmentation
+
+Track 3 promise:
+
+- Don't change tool. Just attach watch + recall layer.
+
+### 4.5 P5: publishers / agencies / studios (B2B, all locales)
+
+Pain:
+
+- Galleys / DOCX / spreadsheets / wiki spread thin
+- Long-running series canon hard to share with editors / PMs
+
+Track 3 promise:
+
+- Studio Publisher tier: shared canon bible, export/audit history, reviewer seat (cross-track with Track 1 web collaboration)
+
+### 4.6 Explicit non-targets
+
+- AI-skeptic writers (entire Seizn product non-target)
+- Writers who want AI to draft prose for them (Sudowrite territory)
+- Short-form writers (recall value low under ~30k words)
+- Obsidian + AI plugin writers → Track 2 territory (Track 3 secondary)
 
 ---
 
@@ -245,71 +269,112 @@ Track 3 promise:
 
 **Tauri 2.x lock 사유:** mobile 통합 (Phase 3) 까지 single shell 로 가능, Rust 의 file watcher (notify crate) + IPC 안정성, npm 생태계 (TipTap/Yjs) 그대로 사용 가능.
 
-### 5.2 Editor — TipTap (Phase 2)
+### 5.2 Editor — TipTap 3 (Phase 2, lock 2026-05-06)
 
 | 후보 | 결정 | 이유 |
 |---|---|---|
-| **TipTap (ProseMirror)** | ✓ pick | Korean IME composition handling 십년 성숙, 25+ extension, editorkit-pro 자산 재사용 가능, Yjs 통합 native |
+| **TipTap 3 + `@tiptap/y-tiptap`** | ✓ pick (lock 2026-05-06) | TipTap 3 stable (decorations API · Floating UI · TableKit · `@tiptap/y-tiptap` 공식 Yjs 바인딩). editorkit-pro fork base 가 v3 정합 시 그대로, v2 면 fork-and-pin v2. Yjs 통합 native |
+| TipTap 2 | conditional | editorkit-pro 가 v2 잠긴 경우만. 새 코드는 v3 권장 |
 | Lexical (Meta) | ✗ | IME 미성숙 (KO/JA/ZH composition 버그 잔존), Yjs 통합 plugin 부재 |
 | Slate | ✗ | maintenance 약화, IME 직접 구현 부담 |
 | TinyMCE / Quill | ✗ | long-form / chapter marker / chunk-based 색인에 약함 |
 
-### 5.3 CRDT — Yjs
+**Korean IME 위험 (lock 2026-05-06):** TipTap 자체는 안정적이나 ProseMirror 레이어에 한국어 IME 버그 잔존 (y-prosemirror issues #186/#188 2025-05+, ProseMirror issue #1484 — Korean Enter-key character loss). 근본 원인 = ProseMirror 의 aggressive DOM management during composition + Chrome IME brittleness. **Phase 2 dispatch 전 KO dogfood 필수 + `handleDOMEvents.beforeinput` workaround 예산 (~3 일)**. ko-locale 작가 alpha 회귀 셋 (자모 조합 깨짐, 일본어 변환 중 Enter, 拼音 후 backspace) ≥30 cases 필요.
+
+### 5.3 CRDT — Yjs (lock 2026-05-06: yjs ^13 · y-prosemirror ^1.2)
 
 | 후보 | 결정 | 이유 |
 |---|---|---|
-| **Yjs** | ✓ pick | 900k weekly download, sequential text insert 빠름, y-prosemirror / y-leveldb / y-indexeddb / y-websocket 생태계 성숙 |
+| **Yjs ^13 + y-prosemirror ^1.2 + @tiptap/y-tiptap** | ✓ pick | sequential text insert 빠름, y-prosemirror / y-leveldb / y-indexeddb / y-websocket 생태계 성숙 |
 | Automerge | ✗ | sequential text insert 느림, fiction 장문 워크로드에 약함 |
 
-### 5.4 Local persistence
+### 5.4 Local persistence (lock 2026-05-06: SQLite-backed Yjs adapter, y-leveldb fallback)
 
-- **y-leveldb** (Tauri side) — Yjs document 전체 binary 저장, append-only history
-- **append-only snapshot log** — 별 SQLite (또는 leveldb) 에 timestamped snapshot. y-leveldb 의 internal history 와 별개로 사용자-인지 가능한 `오늘/어제/지난주 버전` 표시
+- **Primary: SQLite-backed Yjs persistence** — Phase 0.5 의 snapshot SQLite 인프라 재사용. 새 `yjs_documents` table (project_id, doc_state BLOB, updated_at). `Y.encodeStateAsUpdate` / `Y.applyUpdate` 으로 binary 저장. **이유:** y-leveldb 의 native bindings 가 Windows + Tauri 에서 fragile, 단일 SQLite root = backup 단순화 + uninstall 시 orphan data X
+- **Fallback: y-leveldb** — Phase 2 spike 후 SQLite adapter 가 perf 미달 (10k char doc apply >100ms 등) 시 도입 검토. Phase 2 시작 전 1-day spike: `leveldb-rs` on Win11 + Tauri 빌드/load test
+- **append-only snapshot log** — 별 SQLite table 에 timestamped snapshot. Yjs 의 internal history 와 별개로 사용자-인지 가능한 `오늘/어제/지난주 버전` 표시
 - **file watcher** — Rust `notify` crate, 변경 감지 → debounce 500ms → snapshot append + Memory v3 index refresh
 - **zip export** — 프로젝트 단위, 무결성 verify (SHA-256)
+- **Storage root (lock 2026-05-06):** `<app_data_dir>/projects/<project_id>/snapshots.db` (Phase 0.5 시작점). entities + entities_vec + conflicts + yjs_documents + settings 모두 같은 DB. keyring 은 OS 별 (Windows Credential Manager / macOS Keychain / Linux Secret Service) — 단일 store 로 묶을 수 없으니 unique 패턴 OK. **uninstall 가이드** = `app_data_dir` 통째 삭제 + OS keyring 의 `seizn-desktop` 서비스 항목 삭제 (사용자 안내 필요)
 
-### 5.5 HWP 라이브러리
+### 5.5 HWP 라이브러리 (lock 2026-05-06, audit 결과 반영)
 
-| 후보 | 라이선스 | 용도 | 결정 |
-|---|---|---|---|
-| `rhwp` (Rust + WASM) | MIT | read | Phase 0 read-only import 후보 |
-| `@ohah/hwpjs` | MIT | read | Phase 0 read-only import 후보 |
-| `hwp.js` | MIT | read | 보조 |
-| `node-hwp` | MIT | read/write | Phase 3 export 후보 |
+| 후보 | 라이선스 | 활성 (2026-05) | 용도 | 결정 |
+|---|---|---|---|---|
+| **`rhwp`** (Rust + WASM, edwardkim) | MIT | ✓ active (2026-05 commits) | read+editor | **Phase 0.11 1순위** (Rust native, Tauri 통합 단순) |
+| **`openhwp`** (Rust crates `hwp` + `hwpx`, IR) | MIT | ✓ active (2025-12+) | read + HWPX write | Phase 0.11 fallback + Phase 1.5+ HWPX write 후보 |
+| **`@ohah/hwpjs`** (Rust core + JS/WASM/RN) | MIT | ✓ active (npm 2025-12) | read | JS 통합 필요 시 보조 (현 Tauri Rust side 우선이라 후순위) |
+| ~~`hwp.js`~~ (hahnlee) | MIT | ✗ stale (2022 last commit) | read | **drop** |
+| ~~`hwp-rs`~~ (hahnlee) | MIT | ✗ stale (2022) | read | **drop** |
+| `node-hwp` | MIT | unverified | read/write | Phase 3 검토 (단 Phase 3 시점 status 재확인 필요) |
 
-Phase 0 = read-only import 만. Phase 1.5 또는 Phase 3 = stable export.
+**Phase 0.11 entry decision (lock):** `rhwp` 1순위. 1-day spike 에서 sample HWP read 통과 시 lock; 실패 시 `openhwp` 으로 fallback. Phase 1.5+ HWPX write = `openhwp` 의 hwpx crate (write coverage 있음).
 
-### 5.6 자체 backend (lock 2026-05-06)
+**Phase 3 HWP write stable:** **production-ready Rust crate 없음** (audit 2026-05 결과). 옵션:
+1. `openhwp` 의 hwpx write 능력 확장 (PR contribution + 우리 spike 2주)
+2. Hancom 직접 partnership (commercial library license)
+3. HWP write 포기, HWPX 만 (Hancom Office 2018+ 호환)
+
+**권장 = (3)**. HWP (binary, 구식) write 보다 HWPX (XML, 표준) write 가 작가에게 충분 + 우리 부담 ↓. 사용자 인터뷰에서 `HWP 만 받는 출판사` 비율 ≥30% 면 (1) 또는 (2) 진입.
+
+Phase 0 = read-only import 만. Phase 1.5 또는 Phase 3 = stable HWPX export.
+
+### 5.6 자체 backend — local embedding + LLM BYOK (lock 2026-05-06, revised)
 
 **Track 2 endpoint 의존 무효** (master § 4.1 / § 5.3 / § 5.4 / § 8.1). Track 3 desktop 은 자체 backend 갖는다. fire-and-forget 모드 (master § 4.5) 정합.
 
+**Hybrid AI 전략 (revised 2026-05-06):**
+
+- **Embedding (recall vector search) = local default** (`fastembed-rs` + BGE-m3 multilingual, ~500MB model, CPU 가능, 한국어 OK). **사용자 BYOK 0, Free tier 도 recall 작동.** Cloud embedding (Voyage AI / OpenAI) = optional alternative for users who want higher quality.
+- **LLM (entity 추출 / canon conflict 감지) = BYOK** Anthropic SDK 호출 (Haiku default / Sonnet opt-in). **AI 제안 entity 는 작가 승인 후 canonical** (hallucination 차단 gate).
+- **Phase 1.X (signal 기반):** Free tier 사용자 다수가 LLM BYOK 진입장벽 호소 시 Ollama integration 추가 (`http://localhost:11434` 자동 감지, `cloud BYOK / local Ollama / skip` 3 선택 wizard).
+- **Phase 2+ (검토):** in-process llama.cpp (`llama-cpp-rs`) — Ollama install 부담 X, 단 build/binary size complexity ↑. Phase 1 Ollama 신호 강할 때만 진입.
+
 **Stack:**
 
-```
+```text
 seizn-desktop/src-tauri/
 ├── memory/
-│   ├── extract.rs      ← LLM entity 추출 (Anthropic SDK + BYOK)
-│   ├── store.rs        ← rusqlite + sqlite-vec (embedding 검색)
-│   ├── recall.rs       ← @ 검색 → entity card 생성
-│   ├── conflict.rs     ← canon 충돌 감지
-│   └── approve.rs      ← entity 승인 / 수정 / 삭제
+│   ├── extract.rs      ← LLM entity 추출 (BYOK Anthropic Haiku/Sonnet)
+│   ├── store.rs        ← rusqlite + sqlite-vec (vector search)
+│   ├── recall.rs       ← @ 검색 → entity card 생성 (embedding-first; LLM 보강 = BYOK 시만)
+│   ├── conflict.rs     ← canon 충돌 감지 (rule + LLM compare, BYOK 시만)
+│   └── approve.rs      ← entity 승인 / 수정 / 삭제 (no LLM, 로컬만)
 └── llm/
     ├── anthropic.rs    ← BYOK Haiku/Sonnet 호출 (reqwest)
-    ├── embedding.rs    ← Voyage AI 또는 OpenAI embedding (BYOK)
-    └── keyring.rs      ← Tauri keyring 으로 사용자 API key 보관
+    ├── embedding.rs    ← fastembed-rs default (local BGE-m3) + cloud alt (Voyage / OpenAI BYOK)
+    └── keyring.rs      ← Tauri keyring 으로 사용자 API key 보관 (Anthropic 필수 시만, embedding cloud 선택 시 추가)
 ```
 
 **의존 변환:**
 
-| 항목 | 그 전 (Track 2) | 자체 backend |
+| 항목 | 그 전 (Track 2) | 자체 backend (revised) |
 |---|---|---|
-| Entity 추출 | `/manuscript/index` POST | Tauri command + BYOK Haiku |
-| Recall 검색 | `/recall?q=` GET | 로컬 SQLite vector search |
+| Embedding (recall) | Voyage/OpenAI cloud | **fastembed-rs local default**, cloud BYOK alt |
+| Entity 추출 | `/manuscript/index` POST | Tauri command + BYOK Anthropic Haiku |
+| Recall 검색 | `/recall?q=` GET | 로컬 SQLite vector search (embedding 무료) |
 | Entity 승인 | `/canon/.../approve` POST | local SQLite write |
-| Conflict 감지 | `/conflicts` GET | 로컬 rule + LLM compare |
-| LLM 비용 | Track 2 managed | 사용자 BYOK |
-| Offline | 부분 (cache) | 완전 (LLM call 시만 인터넷) |
-| Privacy | 작가 원고가 우리 server 통과 | 100% local (LLM provider 제외) |
+| Conflict 감지 | `/conflicts` GET | 로컬 rule + LLM compare (BYOK 시만) |
+| LLM 비용 | Track 2 managed | 사용자 BYOK (Studio Managed Phase 3+ 옵션) |
+| Embedding 비용 | Track 2 managed | 0 (local) |
+| Offline | 부분 (cache) | embedding/recall 완전 offline · LLM call 시만 인터넷 |
+| Privacy | 작가 원고가 우리 server 통과 | embedding/recall 100% local · LLM (BYOK) 만 cloud (Anthropic) 통과 |
+| BYOK friction (Free tier) | N/A | recall = 0 (local embedding), entity 추출 = Anthropic key 필요 시만 |
+
+**Free tier UX (lock):** import + watcher + snapshot + **recall (semantic search)** 모두 BYOK 0 작동. Anthropic key 입력 = entity 추출 / conflict 감지 활성화 (옵션). 마케팅 카피: `Recall works out of the box. Bring your own key only when you want AI-extracted entities.`
+
+**Cloud embedding alternative — OpenAI dropped (lock 2026-05-06):**
+
+OpenAI text-embedding-3-small = **drop**. 사유: OpenAI 의 free/Tier 1 API 는 학습 opt-out 이 default 가 아니라 **opt-in 필요** (사용자가 모르고 사용 시 자기 manuscript 가 OpenAI training set 에 들어갈 risk). Track 3 의 `no AI training on user content` 약속 (§ 8.1) 과 모순. **권장 cloud embedding alt = Voyage AI 만** (paid, no-train default per Voyage commercial terms — Phase 0.7.5 wizard 에서 Voyage 선택 시 paid org key 안내). OpenAI 옵션 부활 = 사용자가 명시적으로 `opt-out 등록 완료` toggle 체크 시만 (Phase 1.X).
+
+**Anthropic API privacy (verified 2026-05-06 from `privacy.claude.com`):**
+
+- API inputs/outputs default retention = **30 days** (auto-delete on backend). [policy date 2026-03-16]
+- Zero Data Retention = enterprise contract negotiation 가능 (User Safety classifier 결과만 보존)
+- Usage Policy violation 시 inputs/outputs 최대 2년, classification 최대 7년
+- 학습 정책 = 별 `Commercial Terms` 문서. **마케팅 copy 발행 전 docs.anthropic.com 에서 commercial training opt-out default 재확인 필수** (글로벌 CLAUDE.md §12 fact verification, anthropic 정책 자주 revise)
+
+→ 사용자에게 `BYOK Anthropic key 사용 시 30일 retention, 학습 X (commercial terms 정합)` 안내. Marketing copy 의 정확한 wording 은 Phase 0.15 alpha invite 시 lock 전 재확인 cycle.
 
 **Phase 3 cross-device sync 시:**
 
@@ -334,10 +399,15 @@ sqlite-vec = "0.1"  # 또는 sqlite-vss. Phase 0.6.5 에서 lock
 zstd = "0.13"
 sha2 = "0.10"
 
-# LLM client (BYOK)
+# Local embedding (default, Free tier OK without BYOK)
+fastembed = "5"  # BGE-m3 multilingual, ~500MB model auto-download on first run
+ort = { version = "2", optional = true }  # ONNX runtime backend for fastembed
+
+# LLM client (BYOK Anthropic) + optional cloud embedding alt (Voyage / OpenAI)
 reqwest = { version = "0.12", features = ["json", "rustls-tls", "stream"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+keyring = "3"  # OS keyring for BYOK API keys
 
 # Encoding
 encoding_rs = "0.8"  # EUC-KR fallback
@@ -371,11 +441,11 @@ v1 = 외부 검사기 export flow 만 (라이선스 미해결). 사용자가 직
    - Google Docs = export/import flow
 
 2. **파일 감시 모드**
-   - 사용자가 Word·메모장·VS Code·Scrivener·뮤블 export 파일에서 계속 쓰면 desktop 이 지정 파일 watch
-   - 변경 감지 → debounce 500ms → snapshot 생성 + Memory v3 index refresh (Track 2 API 호출)
+   - 사용자가 Word·메모장·VS Code·Scrivener·Vellum·Atticus export 파일에서 계속 쓰면 desktop 이 지정 파일 watch
+   - 변경 감지 → debounce 500ms → snapshot 생성 + 자체 backend (sqlite-vec) index refresh (lock 2026-05-06: Track 2 API 호출 X, master § 5.6)
 
 3. **로컬 우선 snapshot vault**
-   - append-only snapshot log (y-leveldb 또는 SQLite)
+   - append-only snapshot log (SQLite primary, y-leveldb fallback Phase 2 spike 후)
    - `오늘 / 어제 / 지난주 / 지난달` 버전 보기
    - diff 후 복원
    - 삭제 시 tombstone 유지
@@ -679,25 +749,30 @@ Gate (Track 1 doc 에서 lock):
 
 ---
 
-## 14. 가격 (KRW, Track 3 자체)
+## 14. Pricing (USD, Track 3, global-first lock 2026-05-06)
 
-> **트랙별 가격 분리 원칙** (master § 5.0). Track 3 plan 이 Track 1 (Web) 또는 Track 2 (API/MCP) surface 를 cover 하지 않는다. 다른 트랙 surface 를 쓰려면 그 트랙 plan 별 결제.
+> **Per-track pricing separation** (master § 5.0). A Track 3 plan does NOT cover Track 1 (Web) or Track 2 (API/MCP) surfaces. To use those surfaces a writer pays for those tracks separately.
 
-| Plan | 월 | 연 (17% off) | 포함 |
+| Plan | / month | / year (17% off) | Includes |
 |---|---|---|---|
-| **Free** | ₩0 | — | 1 active project, local snapshot, txt/md/docx export, manual recall (limited quota), full data export 항상 가능 |
-| **Pro** | ₩12,900 | ₩99,000 | unlimited projects, cloud backup/sync, recall fair-use 무제한, version history 1년, conflict candidate review, priority indexing |
-| **Pro Plus** | ₩24,900 | — | very long manuscripts (>500k자), HWP/HWPX export when stable, cross-series canon recall, advanced audit/timeline |
-| **Studio Publisher** | ₩99,000+ | custom | editor/reviewer seats (desktop 한정), private workspace, shared canon bible, export/audit history, onboarding support |
+| **Free** | $0 | — | 1 active project, local snapshot, txt/md/docx export, **local semantic recall (no BYOK needed — embedding runs on-device)**, full data export always. AI-extracted entities = BYOK Anthropic key required (optional). |
+| **Pro** | $9.90 | $99 | unlimited projects, cloud backup/sync, recall fair-use unlimited, 1 year version history, conflict candidate review, priority indexing |
+| **Pro Plus** | $19.90 | $199 | very long manuscripts (>500k chars), HWP/HWPX export when stable, cross-series canon recall, advanced audit/timeline |
+| **Studio Publisher** | $79+ | custom | editor/reviewer seats (desktop only), private workspace, shared canon bible, export/audit history, onboarding support |
 
-> **Studio Publisher 의 web 협업 표면**은 Track 1 Studio plan 별도 결제. Track 2 API integration 도 Track 2 plan 별도 결제. Track 3 Studio Publisher 는 desktop 채널 가격만.
+KRW shown via Stripe automatic FX. No PPP tier (review at Phase 1 if cohort data shows demand).
 
-가격 원칙:
-- export paywall 금지
-- cancel 후 read-only lock-in 금지
-- AI 생성량 기반 과금 X (recall · backup · project 가치 기반)
-- `AI prose generation` paid feature 전면 배치 X
-- Stripe customer 1개 / Track 3 subscription 1개. 다른 트랙 plan 은 별 subscription 으로 같은 customer 에 attach. 인보이스 분리
+> **Studio Publisher web-collaboration surface** = Track 1 Studio plan, billed separately. Track 2 API integration = Track 2 plan, billed separately. Track 3 Studio Publisher covers desktop channel only.
+
+Pricing principles:
+
+- No export paywall
+- No read-only lock-in after cancel
+- No usage-based billing on AI generation (recall · backup · project value-based)
+- No `AI prose generation` paid feature placement
+- 1 Stripe customer / 1 Track 3 subscription. Other track plans = separate subscriptions on the same customer. Invoices separated.
+
+**v0 → v1 (KRW deprecated 2026-05-06):** previous KRW lock (Pro ₩12,900 / Pro Plus ₩24,900 / Studio Publisher ₩99,000+) deprecated for global-first conversion. KR locale users see KRW via Stripe FX, not a separate price tier.
 
 ---
 
@@ -759,9 +834,14 @@ Track 3 fire-and-forget 모드 (master § 4.5) + 자체 backend (§ 5.6) 채택.
 - 모바일 only 출시 X (desktop first, mobile Phase 3)
 - AI prose generation 기능 X (시즌 전체 정책)
 - 부산대 맞춤법 검사기 상업 사용 X (라이선스 미해결)
-- `한 단어도 잃지 않습니다` 등 절대 표현 X
-- 큰따옴표 (`""`) 사용 X (한국어 public copy)
+- 'Not one word will be lost' / `한 단어도 잃지 않습니다` 등 absolute guarantee 표현 X (legal/평판 리스크, 모든 locale)
+- 큰따옴표 (`""`) 사용 X (**ko locale only** — EN/JA/ZH/ES locale 은 standard typography 적용)
 - KNOT/청학여/char.sori/knot.short1 sample X (Saebyeok IP 만)
+- Marketing or UI copy that hard-codes a single locale's tools (e.g., '한컴 전용', 'Mubble export 우선') outside its locale segment — keep tool callouts locale-scoped
+- **함초롬바탕 폰트 binary embed 금지** (Hancom 독점 폰트 — license 위반). DOCX export 시 style name 만 declare, Hancom Office 가 호스트 머신에서 substitute. Fallback chain: 함초롬바탕 → 바탕 → 맑은 고딕
+- **OpenAI cloud embedding 기본 활성화 X** (free/Tier 1 의 학습 opt-in default 정책 → §5.6 정합, Voyage 만 cloud alt). 사용자가 OpenAI opt-out toggle 명시 체크 시만 (Phase 1.X)
+- **Stronghold plugin 도입 X** (Tauri 측 v3 에서 removal 예정 lock 2026-05-06; `keyring 3` crate 사용 — 이미 §5.7 lock)
+- **Anthropic 외 LLM provider production 추가 X (Phase 0)** — Phase 0 LLM = Anthropic Haiku BYOK 단일. Phase 1.X 의 Ollama integration + GPT-5-mini / Gemini Flash 옵션 추가 = signal 기반 (§5.6 hybrid AI 전략 정합)
 
 ---
 
@@ -855,16 +935,18 @@ gates, commit conventions per phase, sequential execution only.
 
 ---
 
-## 20. 다음 액션 (이 세션)
+## 20. Next actions (Track 3 owner session, post global-first lock 2026-05-06)
 
-1. Track 1 web skeleton 작성 (다른 세션이 본문 채울 frame).
-2. `C:\Users\admin\Projects\seizn-desktop\` repo scaffold:
-   - 폴더 생성
-   - Git init + `litheonhq` 계정 확인
-   - Tauri 2.x init (의존성 설치 필요 시 사용자 hand-off)
-   - 첫 commit
-3. Track 3 Phase 0 task pack 작성 (`seizn-author-track-3-phase-0-task-pack-2026-05-05.md`).
-4. master + 본 doc + skeleton commit (`docs/seizn-author-studio-design-doc` branch).
+Phase 0 implementation already in progress in `C:\Users\admin\Projects\seizn-desktop\` (commits `086ceb4` Tauri scaffold → `085ceca` skeleton+tray → `3606b88` watcher → `36b7034` import → `9c651de` snapshot store → `91612db` snapshot UI). Mouse gesture spec locked at `9cae27b` (Phase 1 implementation, not Phase 0).
+
+Global-first conversion follow-through (this cycle):
+
+1. Phase 0.7 (self-hosted backend, sqlite-vec + Anthropic BYOK) implementation — locale-agnostic (BYOK key entry / wizard wording = EN default + ko fallback).
+2. seizn-desktop code: i18n dict.ts add `en` + default = en, system locale fallback. Microcopy strings hoisted out of App.tsx into dict. tauri.conf window title kept as 'Seizn Desktop'. Tray menu labels EN default. README/CLAUDE.md EN-first. Codex task pack covers this.
+3. Mouse gesture spec (`seizn-desktop/docs/mouse-gesture-spec-2026-05-06.md`): add EN action labels alongside KR labels.
+4. Stripe v0 (USD) product creation — Phase 1 entry, after Phase 0 release gate passes.
+5. Marketing brief (en) for Phase 0.15 alpha invite — global recruit channels (r/writing, r/Fantasy_Writers, Twitter writing community, Indie Author Telegram).
+6. ko locale brief preserved as Phase 1.5 secondary launch (KR-mainstream channels: 나비계곡, 작가 디스코드, r/koreanwebnovel).
 
 ---
 

@@ -282,6 +282,9 @@ async function handleCreate(
     user_id: userId,
     content: fileText,
     namespace: parsed.namespace,
+    is_encrypted: false,
+    is_deleted: false,
+    deleted_at: null,
     metadata: { anthropic_tool_name: parsed.name, anthropic_tool_path: parsed.raw },
   });
   if (error) {

@@ -3,12 +3,7 @@ import { getDictionary } from "@/i18n/get-dictionary";
 import type { CheckoutLegalCopy } from "@/lib/checkout-copy";
 import type { AuthorBillingTier } from "@/lib/stripe-config";
 
-export interface AuthorProgramCopy {
-  badge: string;
-  body: string;
-  cta: string;
-  footerLabel: string;
-}
+export const ENGINE_SURFACE_URL = "https://engine.seizn.com";
 
 export interface AuthorLandingCopy {
   nav: {
@@ -104,83 +99,47 @@ export interface AuthorLandingCopy {
       replay: string;
       byok: string;
       changelog: string;
-      program: string;
+      engine: string;
       sdk: string;
       mcp: string;
     };
     entity: string;
     version: string;
   };
-  program: AuthorProgramCopy;
+  engine: {
+    badge: string;
+    body: string;
+    cta: string;
+  };
+  tracks: {
+    title: string;
+    subtitle: string;
+    writer: AuthorTrackCardCopy;
+    developer: AuthorTrackCardCopy;
+    desktop: AuthorTrackCardCopy;
+    engineLink: {
+      label: string;
+      linkText: string;
+    };
+  };
   checkout: CheckoutLegalCopy;
 }
 
-type RawAuthorLandingCopy = Omit<AuthorLandingCopy, "program" | "footer"> & {
-  program?: AuthorProgramCopy;
-  footer: Omit<AuthorLandingCopy["footer"], "links"> & {
-    links: Omit<AuthorLandingCopy["footer"]["links"], "program"> & {
-      program?: string;
-    };
-  };
-};
+export interface AuthorTrackCardCopy {
+  badge: string;
+  title: string;
+  body: string;
+  bullets: string[];
+  cta: string;
+  ctaHref: string;
+}
 
-const DEFAULT_PROGRAM_COPY: AuthorProgramCopy = {
-  badge: "in development",
-  body: "Seizn Program is our native writing app for manuscripts, canon, review, and local files in one workspace.",
-  cta: "Join Program waitlist",
-  footerLabel: "Program",
-};
-
-const PROGRAM_COPY_BY_LOCALE: Partial<Record<Locale, AuthorProgramCopy>> = {
-  ko: {
-    badge: "개발 중",
-    body: "한글이나 스크리브너처럼 쓰는 Seizn Program을 준비 중입니다. 원고, 캐논, 검수를 한 작업 공간에 둡니다.",
-    cta: "Program 대기명단",
-    footerLabel: "Program",
-  },
-  ja: {
-    badge: "開発中",
-    body: "Scrivenerのように使える執筆アプリ、Seizn Programを準備中です。原稿、正典、レビューを一つの作業空間に置きます。",
-    cta: "Programの待機リスト",
-    footerLabel: "Program",
-  },
-  "zh-hans": {
-    badge: "开发中",
-    body: "Seizn Program 是面向长篇写作的本地写作程序，把原稿、正典和校对放在同一个工作区。",
-    cta: "加入 Program 等候名单",
-    footerLabel: "Program",
-  },
-  "zh-hant": {
-    badge: "開發中",
-    body: "Seizn Program 是面向長篇寫作的本地寫作程式，把原稿、正典和校對放在同一個工作區。",
-    cta: "加入 Program 等候名單",
-    footerLabel: "Program",
-  },
-};
-
-export function getAuthorProgramCopy(locale: Locale): AuthorProgramCopy {
-  return PROGRAM_COPY_BY_LOCALE[locale] ?? DEFAULT_PROGRAM_COPY;
+export function isAuthorEngineSurfaceLive(value = process.env.NEXT_PUBLIC_ENGINE_SURFACE_LIVE): boolean {
+  const normalized = value?.trim().toLowerCase();
+  return normalized === "1" || normalized === "true";
 }
 
 export async function getAuthorLandingCopy(locale: Locale): Promise<AuthorLandingCopy> {
   const dict = await getDictionary(locale);
-  const raw = (dict as unknown as { authorLanding: RawAuthorLandingCopy }).authorLanding;
-  const program = raw.program ?? getAuthorProgramCopy(locale);
-  const landingCopy = raw;
-  const {
-    program: programFooterLabel,
-    ...footerLinks
-  } = raw.footer.links;
-
-  return {
-    ...landingCopy,
-    program,
-    footer: {
-      ...raw.footer,
-      links: {
-        ...footerLinks,
-        program: programFooterLabel ?? program.footerLabel,
-      },
-    },
-  };
+  return (dict as unknown as { authorLanding: AuthorLandingCopy }).authorLanding;
 }

@@ -872,7 +872,7 @@ async function handleAddObservations(observations: { entityName: string; content
   for (const obs of observations) {
     // First search for the entity
     const searchResponse = await apiRequest(
-      `/api/v1/memories?query=${encodeURIComponent(obs.entityName)}&limit=1&mode=hybrid`
+      `/api/v1/memories?query=${encodeURIComponent(obs.entityName)}&limit=1&mode=keyword`
     ) as { success: boolean; data: { results: Memory[] } };
 
     if (searchResponse.data?.results && searchResponse.data.results.length > 0) {
@@ -939,7 +939,7 @@ async function handleOpenNodes(names: string[]): Promise<string> {
 
   for (const name of names) {
     const response = await apiRequest(
-      `/api/v1/memories?query=${encodeURIComponent(name)}&limit=5&mode=hybrid`
+      `/api/v1/memories?query=${encodeURIComponent(name)}&limit=5&mode=keyword`
     ) as { success: boolean; data: { results: Memory[] } };
 
     if (response.data?.results && response.data.results.length > 0) {
@@ -960,7 +960,7 @@ async function handleDeleteEntities(entityNames: string[]): Promise<string> {
   for (const name of entityNames) {
     // Search for memories with this entity name
     const response = await apiRequest(
-      `/api/v1/memories?query=${encodeURIComponent(name)}&limit=50&mode=hybrid`
+      `/api/v1/memories?query=${encodeURIComponent(name)}&limit=50&mode=keyword`
     ) as { success: boolean; data: { results: Memory[] } };
 
     if (response.data?.results && response.data.results.length > 0) {
@@ -973,30 +973,62 @@ async function handleDeleteEntities(entityNames: string[]): Promise<string> {
   return JSON.stringify({ success: true, deleted });
 }
 
+// Observations live as lines inside the parent entity row's `content` field
+// (the row is tagged `entity`, not `observation` — see handleCreateEntities
+// and handleAddObservations). Deleting an observation means rewriting the
+// entity row's content with the matching line(s) removed. Requires the v1
+// memories PATCH endpoint to accept a `content` field.
 async function handleDeleteObservations(deletions: { entityName: string; observations: string[] }[]): Promise<string> {
   const results = [];
 
   for (const del of deletions) {
-    let deletedCount = 0;
+    // Locate the entity row by name. The entity row carries tags
+    // ['entity', entityType, entityName] so we match on that.
+    const searchResponse = await apiRequest(
+      `/api/v1/memories?query=${encodeURIComponent(del.entityName)}&limit=10&mode=keyword`
+    ) as { success: boolean; data: { results: Memory[] } };
 
-    for (const observation of del.observations) {
-      // Search for memories matching this observation content
-      const searchResponse = await apiRequest(
-        `/api/v1/memories?query=${encodeURIComponent(`[${del.entityName}] ${observation}`)}&limit=5&mode=hybrid`
-      ) as { success: boolean; data: { results: Memory[] } };
+    const entityRow = searchResponse.data?.results?.find(
+      (m: Memory) =>
+        Array.isArray(m.tags) &&
+        m.tags.includes('entity') &&
+        m.tags.includes(del.entityName)
+    );
 
-      const matches = searchResponse.data?.results?.filter(
-        (m: Memory) => m.content.includes(observation) && m.tags?.includes('observation')
-      ) || [];
+    if (!entityRow) {
+      results.push({ entityName: del.entityName, deleted: 0 });
+      continue;
+    }
 
-      if (matches.length > 0) {
-        const ids = matches.map((m: Memory) => m.id).join(",");
-        await apiRequest(`/api/v1/memories?ids=${ids}`, "DELETE");
-        deletedCount += matches.length;
+    // Parse content. Format is `[Type] Name\n\nobs1\nobs2\n...`.
+    // Header is the first non-blank line; the blank separator may or may not
+    // be present. Filter out lines that exactly match (trim-compared) any of
+    // the observations the caller asked us to remove.
+    const lines = entityRow.content.split('\n');
+    const toRemove = new Set(del.observations.map((o) => o.trim()));
+    const kept: string[] = [];
+    let removed = 0;
+    for (const line of lines) {
+      if (toRemove.has(line.trim()) && line.trim().length > 0) {
+        removed += 1;
+      } else {
+        kept.push(line);
       }
     }
 
-    results.push({ entityName: del.entityName, deleted: deletedCount });
+    if (removed === 0) {
+      results.push({ entityName: del.entityName, deleted: 0 });
+      continue;
+    }
+
+    const newContent = kept.join('\n').replace(/\n{3,}/g, '\n\n');
+    await apiRequest(
+      `/api/v1/memories/${entityRow.id}`,
+      "PATCH",
+      { content: newContent }
+    );
+
+    results.push({ entityName: del.entityName, deleted: removed });
   }
 
   return JSON.stringify({ success: true, results });
@@ -1009,7 +1041,7 @@ async function handleDeleteRelations(relations: { from: string; to: string; rela
     // Relations are stored as memories with tags
     const query = `${rel.from} ${rel.relationType} ${rel.to}`;
     const searchResponse = await apiRequest(
-      `/api/v1/memories?query=${encodeURIComponent(query)}&limit=10&mode=hybrid`
+      `/api/v1/memories?query=${encodeURIComponent(query)}&limit=10&mode=keyword`
     ) as { success: boolean; data: { results: Memory[] } };
 
     const matches = searchResponse.data?.results?.filter(

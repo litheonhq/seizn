@@ -282,6 +282,9 @@ export async function createScopedMemory(
       source: params.source || 'api',
       confidence: params.confidence ?? 1.0,
       importance: params.importance ?? 5,
+      is_encrypted: false,
+      is_deleted: false,
+      deleted_at: null,
     })
     .select('id, scope')
     .single();

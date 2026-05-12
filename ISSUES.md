@@ -142,3 +142,45 @@
 **Symptom:** `npm run check:policy` failed on policy pages, trust/docs copy, RTBF UI copy, and operational dashboard durations.
 **Cause:** Legal/security/refund durations were still hardcoded in UI copy, while the policy scanner also treated non-policy usage windows, status history, demo dates, and filters as policy commitments.
 **Resolution:** Added security, trial, design partner, and extended retention constants to `src/lib/policy.ts`; moved legal/trust/docs/RTBF copy to those constants; narrowed the scanner to ignore operational/demo durations while still detecting hardcoded policy numbers.
+
+### P0 memories.is_deleted schema drift made stored memories invisible to GET
+**Date:** 2026-05-11
+**Status:** ✅ shipped (PR #355, code commit `bf2be8aa`). Runtime backfill was already applied before this code change.
+**Symptom:** `POST /api/v1/memories` returned success, but `GET /api/v1/memories/{id}` and browse/search paths returned 404/0 rows for freshly inserted rows whose `is_deleted` was NULL.
+**Cause:** Production `memories.is_deleted` drifted to nullable with no default, while read paths filter `is_deleted = false`.
+**Resolution:** Memory insert paths now explicitly write `is_deleted=false`, `deleted_at=null`, and plain-text paths write `is_encrypted=false`. Added `supabase/migrations/20260511002_prod_p0_memory_schema_convergence.sql` to backfill and enforce NOT NULL/defaults for `memories.is_deleted` and sibling boolean drift columns. Added a POST -> GET-by-id route regression test and production smoke GET-by-id check.
+
+### P0 Stripe webhook apex redirect kept billing events pending
+**Date:** 2026-05-11
+**Status:** ✅ shipped (PR #355, code commit `bf2be8aa`). Stripe Dashboard URL hotfix was already applied before this code change.
+**Symptom:** Stripe webhook endpoint registered as `https://seizn.com/api/webhooks/stripe` received 308 redirects to `https://www.seizn.com/api/webhooks/stripe`, leaving webhook deliveries pending because Stripe does not follow redirects.
+**Cause:** Externally registered Stripe URL used the apex domain while production webhook handling is on `www`.
+**Resolution:** Production smoke now POSTs to the apex webhook URL with redirects disabled and fails on any 3xx. Added `npm run verify:stripe-webhook-url` to query Stripe webhook endpoint URLs and fail on drift from `https://www.seizn.com/api/webhooks/stripe`.
+
+### P0 Track 2 Stripe subscriptions did not update profiles.plan
+**Date:** 2026-05-11
+**Status:** ✅ shipped (PR #355, code commits `bf2be8aa`, `f11267cc`). One-user SQL hotfix was already applied before this code change.
+**Symptom:** A paid Track 2 API/MCP Pro subscription could keep `/api/me` and rate-limit logic on `profile.plan='free'`.
+**Cause:** Track 2 webhook branches updated API key quotas but did not persist the Track 2 tier back to `profiles.plan`.
+**Resolution:** Stripe webhook `customer.subscription.created`, `customer.subscription.updated`, and `customer.subscription.deleted` Track 2 branches now sync `profiles.plan`, subscription status fields, price lock version, and cancellation downgrade state. `studio_managed` maps to the existing `studio` profile plan.
+
+### P1 SpringV4 bridge mirror enabled without production schema
+**Date:** 2026-05-11
+**Status:** ✅ shipped (PR #355, code commit `bf2be8aa`).
+**Symptom:** Memory POSTs logged SpringV4 mirror failures because `spring_memory_notes` was absent in production, though legacy memory writes still succeeded.
+**Cause:** `MEMORY_V1_SPRING_BRIDGE_MIRROR` was effectively on by default before the SpringV4 read/write schema was ready.
+**Resolution:** Mirror is now explicit opt-in only (`MEMORY_V1_SPRING_BRIDGE_MIRROR=true`). SpringV4 search fallback is bounded by `MEMORY_V1_SPRING_BRIDGE_SEARCH_TIMEOUT_MS` with a 5s default.
+
+### P2 Hybrid memory search cold-start timeout
+**Date:** 2026-05-11
+**Status:** ✅ shipped partial guard (PR #355, code commit `bf2be8aa`).
+**Symptom:** `/api/v1/memories?mode=hybrid` could hit Vercel timeout during cold-start/empty-pool searches.
+**Cause:** Voyage embedding and SpringV4 bridge search could consume too much function time without explicit local timeouts.
+**Resolution:** Voyage embedding fetches now abort after `VOYAGE_FETCH_TIMEOUT_MS` with a 5s default, and SpringV4 bridge search is separately capped at 5s before falling back to legacy search.
+
+### profile.memory_count drift on soft-delete
+**Date:** 2026-05-11
+**Status:** ✅ shipped (PR #355, code commit `bf2be8aa`).
+**Symptom:** Soft-deleted memories could continue counting against profile memory quota.
+**Cause:** The live `update_memory_count()` trigger behavior drifted from active-row counting semantics.
+**Resolution:** `supabase/migrations/20260511002_prod_p0_memory_schema_convergence.sql` replaces `update_memory_count()` with explicit insert/delete/update soft-delete handling and recomputes `profiles.memory_count` from active memories.
