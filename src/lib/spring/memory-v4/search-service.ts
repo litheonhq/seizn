@@ -205,7 +205,20 @@ export class SearchServiceV3 {
         .select('id')
         .eq('user_id', userId)
         .limit(1);
-      if (!probe.error && Array.isArray(probe.data) && probe.data.length === 0) {
+      if (probe.error) {
+        // Probe failure (RLS denial, network blip, schema drift) shouldn't break
+        // search — we just skip the short-circuit and fall through to the full
+        // chain. Log so the failure is visible if it becomes systemic.
+        console.warn('[search-service] empty-pool probe failed, continuing with full chain:', {
+          userId,
+          error: probe.error.message || String(probe.error),
+        });
+      } else if (Array.isArray(probe.data) && probe.data.length === 0) {
+        console.log('[search-service] empty-pool short-circuit', {
+          userId,
+          mode,
+          processingMs: Date.now() - startTime,
+        });
         return {
           results: [],
           total: 0,
