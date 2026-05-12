@@ -21,10 +21,10 @@ export async function recordAudit(input: RecordAuditInput): Promise<void> {
   });
 
   if (error) {
-    console.error('Failed to record Track 2 API key audit event', {
+    console.error('[track2-api-keys] audit insert failed', {
       action: input.action,
-      apiKeyId: input.apiKeyId,
-      error,
+      apiKeyId: input.apiKeyId ?? null,
+      message: error.message,
     });
   }
 }

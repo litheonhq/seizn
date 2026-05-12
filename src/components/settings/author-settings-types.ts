@@ -25,11 +25,39 @@ export interface SubscriptionState {
   stripe_price_id?: string | null;
   billing_cadence?: "monthly" | "yearly" | null;
   price_lock_version: string;
+  track2?: Track2SubscriptionState | null;
   usage?: {
     tokens_used_month?: number;
     tokens_cap_month?: number | null;
     request_count?: number;
     byok_active?: boolean;
+  };
+}
+
+export interface Track2SubscriptionState {
+  channel: "track2";
+  catalog: "v9" | "v8";
+  tier: string;
+  tier_label: string;
+  status: string;
+  stripe_status: string | null;
+  stripe_subscription_id_present: boolean;
+  subscription_id: string | null;
+  stripe_price_id: string | null;
+  billing_cadence: "monthly" | "yearly" | null;
+  current_period_start: string | null;
+  current_period_end: string | null;
+  renews_at: string | null;
+  cancel_at_period_end: boolean;
+  payment_failed: boolean;
+  payment_failed_at: string | null;
+  price_lock_version: string;
+  price_label: string;
+  quota: {
+    calls: number;
+    period: "day" | "month";
+    rate_limit_per_minute: number;
+    scopes: string[];
   };
 }
 
@@ -124,6 +152,7 @@ export const DEFAULT_SUBSCRIPTION_STATE: SubscriptionState = {
   payment_failed: false,
   byok_active: false,
   price_lock_version: "v9",
+  track2: null,
   usage: {
     tokens_used_month: 0,
     tokens_cap_month: null,

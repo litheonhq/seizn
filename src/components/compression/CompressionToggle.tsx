@@ -105,7 +105,7 @@ export function CompressionToggle({
               {Math.round(localRatio * 100)}%
             </span>
           </div>
-          <input
+          <input aria-label="Local Ratio slider"
             type="range"
             min="0.1"
             max="1.0"

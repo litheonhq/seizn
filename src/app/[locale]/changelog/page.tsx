@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { LandingNav } from "@/components/shared/site-nav";
 import type { Locale } from "@/i18n/config";
+import {
+  formatTrack2Price,
+  formatTrack2Quota,
+} from "@/lib/billing/track2-display";
 
 export const metadata: Metadata = {
   title: "Changelog — Seizn",
@@ -29,7 +33,14 @@ const ENTRIES: ChangelogEntry[] = [
     slug: "track-2-api-mcp-launch",
     tag: "launch",
     title: "Seizn API + MCP server are live",
-    body: () => (
+    body: () => {
+      const freeQuota = formatTrack2Quota("free");
+      const indiePrice = formatTrack2Price("indie");
+      const proPrice = formatTrack2Price("pro");
+      const studioPrice = formatTrack2Price("studio");
+      const studioManagedPrice = formatTrack2Price("studio_managed");
+
+      return (
       <div className="space-y-4 text-szn-text-2">
         <p>
           Two surfaces went live in production today: a public REST API at <code>https://seizn.com/api/v1/*</code> and an MCP server published as <a className="underline" href="https://www.npmjs.com/package/@seizn/author-mcp-server" target="_blank" rel="noopener noreferrer"><code>@seizn/author-mcp-server</code></a>. Both let any AI agent — Claude Desktop, Claude Code, Cursor, Cline, Continue, and (when its MCP support lands) ChatGPT — read and write Seizn canon for fiction writers.
@@ -42,13 +53,13 @@ const ENTRIES: ChangelogEntry[] = [
             <span className="text-szn-text-1">6 MCP tools</span> — <code>seizn_author_recall</code>, <code>_remember</code>, <code>_search</code>, <code>_graph</code>, <code>_check</code>, <code>_timeline</code>. Drop-in for any MCP-compliant client over stdio.
           </li>
           <li>
-            <span className="text-szn-text-1">Free tier (100 calls/day)</span> covers <code>recall</code> / <code>remember</code> / <code>graph</code> / <code>search</code> with no extra LLM key. If you already pay for Claude Pro / Max or Cursor Pro, the host AI handles chat — Seizn just supplies the canon. <code>check</code> + <code>timeline</code> use BYOK (Anthropic / OpenAI key) or the Studio Managed plan.
+            <span className="text-szn-text-1">Free tier ({freeQuota})</span> covers <code>recall</code> / <code>remember</code> / <code>graph</code> / <code>search</code> with no extra LLM key. If you already pay for Claude Pro / Max or Cursor Pro, the host AI handles chat — Seizn just supplies the canon. <code>check</code> + <code>timeline</code> use BYOK (Anthropic / OpenAI key) or the Studio Managed plan.
           </li>
           <li>
             <span className="text-szn-text-1">Dashboard</span> — issue / rotate / revoke API keys at <Link className="underline" href="/dashboard/account/api-keys">/dashboard/account/api-keys</Link>, with a filterable + CSV-exportable audit log.
           </li>
           <li>
-            <span className="text-szn-text-1">Stripe v8 catalog</span> — Indie $9 · Pro $19 · Studio $99 · Studio Managed $299 (with $0.15 per Opus call metered overage) · Enterprise (contact). v8 launched directly — there are no v7 Track 2 subscribers to grandfather.
+            <span className="text-szn-text-1">Stripe v9 catalog</span> — Indie {indiePrice} · Pro {proPrice} · Studio {studioPrice} · Studio Managed {studioManagedPrice} (with $0.50 per Opus call metered overage) · Enterprise (contact).
           </li>
           <li>
             <span className="text-szn-text-1">22 locale dashboard</span> — en / ko / ja / zh-hans / zh-hant base + 17 secondary locales (ar / de / es / fr / he / hi / id / it / nl / pl / pt-BR / pt-PT / ru / sv / th / uk / vi). RTL flows (ar, he) work natively; per-language guide refinement caught real UI bugs (cancel/revoke collisions, calques).
@@ -58,7 +69,8 @@ const ENTRIES: ChangelogEntry[] = [
           <span className="text-szn-text-1">Try it now:</span> <Link className="underline" href="/dashboard/account/api-keys">issue a Free API key</Link>, then read the <Link className="underline" href="/api">API quick-start</Link> or the <a className="underline" href="/openapi.yaml">OpenAPI spec</a>.
         </p>
       </div>
-    ),
+      );
+    },
   },
 ];
 

@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "title": "Seizn – Bộ nhớ cho NPC AI",
-    "description": "Cắm vào Inworld, Convai hay LLM của bạn. Seizn cho NPC bộ nhớ trụ lại, các mối quan hệ và ký ức xuyên thế hệ. Tính phí theo entity, không theo seat."
+    "title": "Seizn - AI memory for fiction writers",
+    "description": "Keep manuscripts, canon, conflict checks, and author memory in one workspace. Seizn helps fiction writers catch contradictions before readers do."
   },
   "nav": {
     "features": "Tính năng",
@@ -3638,17 +3638,12 @@
         "replay": "Phát lại",
         "byok": "Hướng dẫn BYOK",
         "changelog": "Thay đổi",
-        "engine": "Engine →",
         "sdk": "@seizn/sdk-js",
-        "mcp": "@seizn/mcp"
+        "mcp": "@seizn/mcp",
+        "program": "Program"
       },
       "entity": "© 2026 Seizn by Litheon LLC · Wyoming",
       "version": "v1.0 · demo Saebyeok là dữ liệu tổng hợp"
-    },
-    "engine": {
-      "badge": "mới",
-      "body": "Đang xây AI cho NPC trong game? Cùng một động cơ canon, mở dưới dạng SDK.",
-      "cta": "engine.seizn.com"
     },
     "checkout": {
       "prefix": "Tôi đồng ý với",
@@ -3658,6 +3653,12 @@
       "suffix": ".",
       "loading": "Đang mở Stripe...",
       "error": "Không thể bắt đầu thanh toán."
+    },
+    "program": {
+      "badge": "in development",
+      "body": "Seizn Program is our native writing app for manuscripts, canon, review, and local files in one workspace.",
+      "cta": "Join Program waitlist",
+      "footerLabel": "Program"
     }
   }
 }

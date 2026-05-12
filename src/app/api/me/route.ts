@@ -1,16 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest, isAuthError, authErrorResponse } from '@/lib/api-auth';
+import { authenticateRequest, isAuthError, authErrorResponse, extractApiKey } from '@/lib/api-auth';
+import { getSessionUser } from '@/lib/api/request-user';
 import { createServerClient } from '@/lib/supabase';
 import { getPlan } from '@/lib/plan-limits';
 import { RATE_LIMITS } from '@/lib/rate-limit';
 
 // GET /api/me - Get current user's account info, plan, and usage
 export async function GET(request: NextRequest) {
-  // Authenticate request (skip usage check for this endpoint)
-  const auth = await authenticateRequest(request, { skipUsageCheck: true });
+  const extracted = extractApiKey(request);
+  const auth = extracted.apiKey
+    ? await authenticateRequest(request, { skipUsageCheck: true })
+    : null;
 
-  if (isAuthError(auth)) {
+  if (auth && isAuthError(auth)) {
     return authErrorResponse(auth.authError);
+  }
+
+  const sessionUser = auth ? null : await getSessionUser();
+  const userId = auth && !isAuthError(auth) ? auth.userId : sessionUser?.id;
+
+  if (!userId) {
+    return NextResponse.json(
+      { error: 'Authentication required' },
+      { status: 401 }
+    );
   }
 
   const supabase = createServerClient();
@@ -19,7 +32,7 @@ export async function GET(request: NextRequest) {
   const { data: profile, error: profileError } = await supabase
     .from('profiles')
     .select('*')
-    .eq('id', auth.userId)
+    .eq('id', userId)
     .single();
 
   if (profileError || !profile) {
@@ -37,14 +50,14 @@ export async function GET(request: NextRequest) {
   const { count: apiCallsThisMonth } = await supabase
     .from('usage_logs')
     .select('*', { count: 'exact', head: true })
-    .eq('user_id', auth.userId)
+    .eq('user_id', userId)
     .gte('created_at', startOfMonth.toISOString());
 
   // Get active API keys count
   const { count: apiKeysCount } = await supabase
     .from('api_keys')
     .select('*', { count: 'exact', head: true })
-    .eq('user_id', auth.userId)
+    .eq('user_id', userId)
     .eq('is_active', true);
 
   const plan = profile.plan || 'free';
@@ -82,7 +95,7 @@ export async function GET(request: NextRequest) {
   });
 
   // Add rate limit headers
-  if (auth.rateLimitHeaders) {
+  if (auth && !isAuthError(auth) && auth.rateLimitHeaders) {
     Object.entries(auth.rateLimitHeaders).forEach(([key, value]) => {
       response.headers.set(key, value);
     });

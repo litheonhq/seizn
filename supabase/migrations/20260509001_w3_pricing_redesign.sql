@@ -3,7 +3,7 @@
 -- Locked 2026-05-09. Plan reference: ~/.claude/plans/https-www-seizn-com-ko-distributed-sutherland.md §W3.0.
 --
 -- Adds:
---   1. desktop_waitlist             — Track 3 Coming Soon email collection (replaces
+--   1. desktop_waitlist             — Track 3 Coming Soon email collection (legacy
 --                                      pricing card with waitlist form per W3.1).
 --   2. profiles.track / billing     — Stripe Litheon SKU support + Charter lock + legal
 --                                      version stamp at checkout.
@@ -44,7 +44,8 @@ CREATE INDEX IF NOT EXISTS desktop_waitlist_pending_idx
 ALTER TABLE public.desktop_waitlist ENABLE ROW LEVEL SECURITY;
 
 -- service_role only — users cannot enumerate or read the waitlist directly.
--- Form submission goes through /api/waitlist/desktop which uses service role.
+-- Form submission goes through /api/waitlist/program which uses service role.
+-- /api/waitlist/desktop is kept as a legacy alias.
 DROP POLICY IF EXISTS desktop_waitlist_service_only ON public.desktop_waitlist;
 CREATE POLICY desktop_waitlist_service_only
   ON public.desktop_waitlist
@@ -54,7 +55,7 @@ CREATE POLICY desktop_waitlist_service_only
   WITH CHECK (true);
 
 COMMENT ON TABLE public.desktop_waitlist IS
-  'Track 3 (Desktop) Coming Soon email waitlist. Confirmation flow via Resend transactional email.';
+  'Track 3 (Program) Coming Soon email waitlist. Confirmation flow via Resend transactional email. Table name is legacy.';
 
 -- 2. profiles — Stripe Litheon SKU + Charter + legal stamp ----------------
 ALTER TABLE public.profiles

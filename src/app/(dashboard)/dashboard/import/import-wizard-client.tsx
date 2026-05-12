@@ -163,7 +163,7 @@ export function ImportWizardClient({ live }: { live: boolean }) {
 
           <label className="grid gap-2">
             <span className="szn-eyebrow">JSON file</span>
-            <input
+            <input aria-label="File upload"
               type="file"
               accept="application/json,.json"
               onChange={(event) => {

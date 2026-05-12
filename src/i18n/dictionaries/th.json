@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "title": "Seizn — หน่วยความจำของ AI NPC",
-    "description": "ต่อเข้า Inworld, Convai หรือ LLM ของคุณเอง Seizn ทำให้ NPC จำได้ มีความสัมพันธ์ และความทรงจำที่ส่งต่อข้ามรุ่น คิดราคาตาม entity ไม่ใช่ตาม seat"
+    "title": "Seizn - AI memory for fiction writers",
+    "description": "Keep manuscripts, canon, conflict checks, and author memory in one workspace. Seizn helps fiction writers catch contradictions before readers do."
   },
   "nav": {
     "features": "ฟีเจอร์",
@@ -3638,17 +3638,12 @@
         "replay": "เล่นซ้ำ",
         "byok": "คู่มือ BYOK",
         "changelog": "การเปลี่ยนแปลง",
-        "engine": "Engine →",
         "sdk": "@seizn/sdk-js",
-        "mcp": "@seizn/mcp"
+        "mcp": "@seizn/mcp",
+        "program": "Program"
       },
       "entity": "© 2026 Seizn by Litheon LLC · Wyoming",
       "version": "v1.0 · เดโม Saebyeok เป็นข้อมูลสังเคราะห์"
-    },
-    "engine": {
-      "badge": "ใหม่",
-      "body": "กำลังทำ AI ของ NPC ในเกมอยู่หรือเปล่า? เครื่องคัมภีร์ตัวเดียวกัน เปิดให้ใช้เป็น SDK",
-      "cta": "engine.seizn.com"
     },
     "checkout": {
       "prefix": "ฉันยอมรับ",
@@ -3658,6 +3653,12 @@
       "suffix": "",
       "loading": "กำลังเปิด Stripe...",
       "error": "เริ่มชำระเงินไม่ได้"
+    },
+    "program": {
+      "badge": "in development",
+      "body": "Seizn Program is our native writing app for manuscripts, canon, review, and local files in one workspace.",
+      "cta": "Join Program waitlist",
+      "footerLabel": "Program"
     }
   }
 }

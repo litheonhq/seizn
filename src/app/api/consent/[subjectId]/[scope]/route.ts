@@ -1,8 +1,9 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { revokeConsentScope } from '@/lib/compliance/consent';
 import { enqueueDsrJob } from '@/lib/compliance/dsr-worker';
 import { resolveComplianceOrganizationId } from '@/lib/compliance/organization';
+import { verifyCsrfToken } from '@/lib/csrf';
 import { logServerError } from '@/lib/server/logger';
 import { createServerClient } from '@/lib/supabase';
 
@@ -35,10 +36,13 @@ async function requireSessionOrg(): Promise<
 }
 
 export async function DELETE(
-  _request: Request,
+  request: NextRequest,
   { params }: { params: Promise<{ subjectId: string; scope: string }> }
 ) {
   try {
+    const csrfErr = verifyCsrfToken(request);
+    if (csrfErr) return csrfErr;
+
     const context = await requireSessionOrg();
     if ('error' in context) return context.error;
 

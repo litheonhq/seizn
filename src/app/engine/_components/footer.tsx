@@ -42,6 +42,7 @@ export function Footer() {
       }}
     >
       <div
+        className="engine-footer-grid"
         style={{
           maxWidth: 1280,
           margin: "0 auto",
@@ -125,7 +126,7 @@ export function Footer() {
         ))}
       </div>
       <div
-        className="engine-mono"
+        className="engine-mono engine-footer-bottom"
         style={{
           maxWidth: 1280,
           margin: "40px auto 0",

@@ -275,7 +275,7 @@ export function WhatIfLab({
                 <span className="ml-2 text-xs text-blue-400">modified</span>
               )}
             </label>
-            <input
+            <input aria-label="Top K"
               type="number"
               value={config.top_k}
               onChange={(e) => setConfig((c) => ({ ...c, top_k: parseInt(e.target.value) }))}
@@ -319,7 +319,7 @@ export function WhatIfLab({
                 )}
               </label>
               <div className="flex items-center gap-3">
-                <input
+                <input aria-label="Hybrid Alpha slider"
                   type="range"
                   value={config.hybrid_alpha}
                   onChange={(e) =>
@@ -375,7 +375,7 @@ export function WhatIfLab({
                   <span className="ml-2 text-xs text-blue-400">modified</span>
                 )}
               </label>
-              <input
+              <input aria-label="Rerank Top N"
                 type="number"
                 value={config.rerank_top_n}
                 onChange={(e) =>

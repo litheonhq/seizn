@@ -201,7 +201,7 @@ export function PlanEditor({
           <label className="block text-sm font-medium text-[var(--ink-600)] mb-1">
             Plan Name *
           </label>
-          <input
+          <input aria-label="Name"
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -215,7 +215,7 @@ export function PlanEditor({
             <label className="block text-sm font-medium text-[var(--ink-600)] mb-1">
               Priority
             </label>
-            <input
+            <input aria-label="Priority"
               type="number"
               value={priority}
               onChange={(e) => setPriority(parseInt(e.target.value, 10) || 0)}
@@ -229,7 +229,7 @@ export function PlanEditor({
           {isEditMode && (
             <div className="flex items-center">
               <label className="flex items-center gap-2 cursor-pointer">
-                <input
+                <input aria-label="Is Active"
                   type="checkbox"
                   checked={isActive}
                   onChange={(e) => setIsActive(e.target.checked)}
@@ -293,7 +293,7 @@ export function PlanEditor({
             <label className="block text-sm text-[var(--ink-600)] mb-1">
               Min Query Length
             </label>
-            <input
+            <input aria-label="Min Length"
               type="number"
               value={minLength ?? ""}
               onChange={(e) => setMinLength(e.target.value ? parseInt(e.target.value, 10) : undefined)}
@@ -306,7 +306,7 @@ export function PlanEditor({
             <label className="block text-sm text-[var(--ink-600)] mb-1">
               Max Query Length
             </label>
-            <input
+            <input aria-label="Max Length"
               type="number"
               value={maxLength ?? ""}
               onChange={(e) => setMaxLength(e.target.value ? parseInt(e.target.value, 10) : undefined)}
@@ -355,7 +355,7 @@ export function PlanEditor({
             <label className="block text-sm text-[var(--ink-600)] mb-1">
               Top K Results
             </label>
-            <input
+            <input aria-label="Top K"
               type="number"
               value={config.topK}
               onChange={(e) => updateConfig("topK", parseInt(e.target.value, 10) || 10)}
@@ -368,7 +368,7 @@ export function PlanEditor({
             <label className="block text-sm text-[var(--ink-600)] mb-1">
               Similarity Threshold
             </label>
-            <input
+            <input aria-label="Threshold"
               type="number"
               value={config.threshold}
               onChange={(e) => updateConfig("threshold", parseFloat(e.target.value) || 0.5)}
@@ -387,7 +387,7 @@ export function PlanEditor({
               Hybrid Alpha (0 = keyword, 1 = vector)
             </label>
             <div className="flex items-center gap-4">
-              <input
+              <input aria-label="Hybrid Alpha slider"
                 type="range"
                 value={config.hybridAlpha}
                 onChange={(e) => updateConfig("hybridAlpha", parseFloat(e.target.value))}
@@ -406,7 +406,7 @@ export function PlanEditor({
         {/* Reranking */}
         <div className="space-y-3">
           <label className="flex items-center gap-2 cursor-pointer">
-            <input
+            <input aria-label="Rerank Enabled"
               type="checkbox"
               checked={config.rerankEnabled}
               onChange={(e) => updateConfig("rerankEnabled", e.target.checked)}
@@ -422,7 +422,7 @@ export function PlanEditor({
               <label className="block text-sm text-[var(--ink-600)] mb-1">
                 Rerank Top N
               </label>
-              <input
+              <input aria-label="Rerank Top N"
                 type="number"
                 value={config.rerankTopN}
                 onChange={(e) => updateConfig("rerankTopN", parseInt(e.target.value, 10) || 5)}

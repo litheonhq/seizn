@@ -33,7 +33,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const body = await request.json();
+    const body = await request.json().catch(() => null);
+    if (!body || typeof body !== 'object') {
+      return NextResponse.json({ error: 'invalid_request' }, { status: 400 });
+    }
     const { device_code } = body as { device_code?: string };
 
     if (!device_code) {

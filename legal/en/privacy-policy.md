@@ -1,8 +1,8 @@
 ---
 doc_type: privacy-policy
 language: en
-version: v1
-generated_at: 2026-05-02
+version: v2
+generated_at: 2026-05-09
 status: draft (lawyer review pending)
 master: true
 applies_to: seizn.com (Author flagship), engine.seizn.com (NPC SDK surface)
@@ -11,7 +11,7 @@ data_controller: Litheon LLC, Wyoming, USA
 
 # Privacy Policy
 
-Last updated: 2026-05-02
+Last updated: 2026-05-09
 
 ## 1. Who we are
 

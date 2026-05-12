@@ -2,6 +2,11 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { createServerClient } from '@/lib/supabase';
 import { resetAuthorUiServiceForTests } from '@/lib/author/ui/service';
 
+vi.mock('@/lib/author/billing/feature-gate', () => ({
+  checkFeatureGate: vi.fn(async () => ({ allowed: true, remaining: null, cap: null })),
+  recordFeatureUsage: vi.fn(),
+}));
+
 describe('Author UI service', () => {
   afterEach(() => {
     delete process.env.AUTHOR_IMPORT_DISABLE_R2;
@@ -15,7 +20,7 @@ describe('Author UI service', () => {
 
     expect(projectId).toBe('knot');
     expect(projects.projects[0]).toMatchObject({
-      name: 'KNOT Author Memory',
+      name: 'Seizn Author Memory',
       phase: 'Phase 1',
     });
 

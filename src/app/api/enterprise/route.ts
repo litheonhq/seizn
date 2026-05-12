@@ -4,6 +4,11 @@ import { sendEmail } from '@/lib/email';
 import { enterpriseInquiryConfirmationEmail } from '@/lib/email/templates';
 import { logServerError } from '@/lib/server/logger';
 
+const ENTERPRISE_INQUIRY_SUCCESS = {
+  success: true,
+  message: 'Thank you for your inquiry! Our team will contact you within 1-2 business days.',
+};
+
 interface EnterpriseInquiryRequest {
   company_name: string;
   contact_name: string;
@@ -49,7 +54,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const body: EnterpriseInquiryRequest = await request.json();
+    const parsedBody = await request.json().catch(() => null);
+    if (!parsedBody || typeof parsedBody !== 'object') {
+      return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
+    }
+    const body = parsedBody as EnterpriseInquiryRequest;
 
     // Validate required fields
     if (!body.company_name || body.company_name.trim().length < 2) {
@@ -84,9 +93,7 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (existing) {
-      return NextResponse.json({
-        error: 'You have already submitted an inquiry recently. We will get back to you soon!',
-      }, { status: 400 });
+      return NextResponse.json(ENTERPRISE_INQUIRY_SUCCESS);
     }
 
     // Get referrer from headers
@@ -156,11 +163,7 @@ export async function POST(request: NextRequest) {
       `,
     }).catch((err) => logServerError('Enterprise sales notification failed', err));
 
-    return NextResponse.json({
-      success: true,
-      message: 'Thank you for your inquiry! Our team will contact you within 1-2 business days.',
-      inquiry_id: inquiry.id,
-    });
+    return NextResponse.json(ENTERPRISE_INQUIRY_SUCCESS);
   } catch (error) {
     logServerError('Enterprise inquiry request failed', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });

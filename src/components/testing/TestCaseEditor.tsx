@@ -158,7 +158,7 @@ export function TestCaseEditor({
         <label className="block text-sm font-medium text-gray-700 mb-1">
           Name (optional)
         </label>
-        <input
+        <input aria-label="Name"
           type="text"
           value={formData.name || ''}
           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -190,7 +190,7 @@ export function TestCaseEditor({
         <div className="flex gap-4">
           {(['positive', 'negative', 'edge_case'] as const).map((type) => (
             <label key={type} className="flex items-center gap-2">
-              <input
+              <input aria-label="Test Type"
                 type="radio"
                 name="test_type"
                 value={type}
@@ -215,7 +215,7 @@ export function TestCaseEditor({
           Expected Keywords
         </label>
         <div className="flex gap-2 mb-2">
-          <input
+          <input aria-label="Keyword Input"
             type="text"
             value={keywordInput}
             onChange={(e) => setKeywordInput(e.target.value)}
@@ -257,7 +257,7 @@ export function TestCaseEditor({
             Forbidden Keywords (should NOT appear)
           </label>
           <div className="flex gap-2 mb-2">
-            <input
+            <input aria-label="Not Keyword Input"
               type="text"
               value={notKeywordInput}
               onChange={(e) => setNotKeywordInput(e.target.value)}
@@ -299,7 +299,7 @@ export function TestCaseEditor({
           Expected Document IDs
         </label>
         <div className="flex gap-2 mb-2">
-          <input
+          <input aria-label="Doc Id Input"
             type="text"
             value={docIdInput}
             onChange={(e) => setDocIdInput(e.target.value)}
@@ -340,7 +340,7 @@ export function TestCaseEditor({
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Min Score
           </label>
-          <input
+          <input aria-label="Min Score"
             type="number"
             min="0"
             max="1"
@@ -354,7 +354,7 @@ export function TestCaseEditor({
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Max Latency (ms)
           </label>
-          <input
+          <input aria-label="Max Latency Ms"
             type="number"
             min="100"
             max="30000"

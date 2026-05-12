@@ -29,6 +29,12 @@ vi.mock('@/lib/supabase', () => ({
 }));
 
 vi.mock('@/lib/stripe', () => ({
+  hasStripeSecretKey: () =>
+    Boolean(
+      process.env.STRIPE_RESTRICTED_KEY ||
+        process.env.STRIPE_SECRET_KEY ||
+        process.env.STRIPE_SECRET_KEY_SEIZN,
+    ),
   getStripeClient: () => ({
     billing: {
       meterEvents: {
@@ -39,6 +45,7 @@ vi.mock('@/lib/stripe', () => ({
 }));
 
 const ORIGINAL_ENV = {
+  STRIPE_RESTRICTED_KEY: process.env.STRIPE_RESTRICTED_KEY,
   STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
   STRIPE_METER_ID_MEMORIES: process.env.STRIPE_METER_ID_MEMORIES,
   STRIPE_METER_ID_OPS: process.env.STRIPE_METER_ID_OPS,
@@ -48,6 +55,7 @@ describe('Author token budget enforcement', () => {
   afterEach(() => {
     mocks.profile = { plan: 'indie', stripe_customer_id: 'cus_author_123' };
     mocks.meterEventsCreate.mockReset();
+    restoreEnv('STRIPE_RESTRICTED_KEY', ORIGINAL_ENV.STRIPE_RESTRICTED_KEY);
     restoreEnv('STRIPE_SECRET_KEY', ORIGINAL_ENV.STRIPE_SECRET_KEY);
     restoreEnv('STRIPE_METER_ID_MEMORIES', ORIGINAL_ENV.STRIPE_METER_ID_MEMORIES);
     restoreEnv('STRIPE_METER_ID_OPS', ORIGINAL_ENV.STRIPE_METER_ID_OPS);
@@ -125,7 +133,7 @@ describe('Author token budget enforcement', () => {
     });
 
     expect(mocks.meterEventsCreate).toHaveBeenCalledWith(expect.objectContaining({
-      event_name: 'meter_author_tokens',
+      event_name: 'seizn_memories_overage',
       payload: expect.objectContaining({
         stripe_customer_id: 'cus_author_123',
         value: '10000',
@@ -158,7 +166,7 @@ describe('Author token budget enforcement', () => {
     });
 
     expect(mocks.meterEventsCreate).toHaveBeenCalledWith(expect.objectContaining({
-      event_name: 'meter_author_tokens',
+      event_name: 'seizn_memories_overage',
       payload: expect.objectContaining({
         stripe_customer_id: 'cus_author_123',
         value: '5000',

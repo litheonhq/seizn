@@ -3,25 +3,13 @@
 import { useMemo } from 'react';
 import useSWR, { mutate as globalMutate } from 'swr';
 import useSWRMutation from 'swr/mutation';
+import { csrfFetch } from '@/lib/client/csrf-fetch';
 
 type JsonRecord = Record<string, unknown>;
-
-function getCsrfToken(): string | null {
-  if (typeof document === 'undefined') return null;
-  const match = document.cookie.match(/(?:^|;\s*)seizn_csrf_token=([^;]+)/);
-  return match ? decodeURIComponent(match[1]) : null;
-}
-
-function csrfHeaders(base?: Record<string, string>): Record<string, string> | undefined {
-  const token = getCsrfToken();
-  if (!token) return base;
-  return { ...(base ?? {}), 'x-csrf-token': token };
-}
+type LoadOptions = { enabled?: boolean };
 
 async function fetchJson<T>(url: string): Promise<T> {
-  const response = await fetch(url, {
-    credentials: 'include',
-  });
+  const response = await csrfFetch(url);
   if (!response.ok) {
     throw new Error(await response.text());
   }
@@ -29,10 +17,9 @@ async function fetchJson<T>(url: string): Promise<T> {
 }
 
 async function postJson<T>(url: string, { arg }: { arg?: JsonRecord }): Promise<T> {
-  const response = await fetch(url, {
+  const response = await csrfFetch(url, {
     method: 'POST',
-    credentials: 'include',
-    headers: csrfHeaders({ 'Content-Type': 'application/json' }),
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(arg ?? {}),
   });
   if (!response.ok) {
@@ -42,10 +29,9 @@ async function postJson<T>(url: string, { arg }: { arg?: JsonRecord }): Promise<
 }
 
 async function patchJson<T>(url: string, { arg }: { arg?: JsonRecord }): Promise<T> {
-  const response = await fetch(url, {
+  const response = await csrfFetch(url, {
     method: 'PATCH',
-    credentials: 'include',
-    headers: csrfHeaders({ 'Content-Type': 'application/json' }),
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(arg ?? {}),
   });
   if (!response.ok) {
@@ -55,10 +41,8 @@ async function patchJson<T>(url: string, { arg }: { arg?: JsonRecord }): Promise
 }
 
 async function deleteJson<T>(url: string): Promise<T> {
-  const response = await fetch(url, {
+  const response = await csrfFetch(url, {
     method: 'DELETE',
-    credentials: 'include',
-    headers: csrfHeaders(),
   });
   if (!response.ok) {
     throw new Error(await response.text());
@@ -84,7 +68,7 @@ function queryString(filters?: JsonRecord): string {
 
 export function useAuthorProjects() {
   return useSWR<{ projects: JsonRecord[] }>('/api/projects', fetchJson, {
-    revalidateOnFocus: true,
+    revalidateOnFocus: false,
     refreshInterval: 30000,
   });
 }
@@ -116,10 +100,8 @@ export function useUploadAuthorImport(projectId?: string) {
   return useSWRMutation<{ import_id: string }, Error, string | null, FormData>(
     projectId ? `/api/projects/${projectId}/imports` : null,
     async (url, { arg }) => {
-      const response = await fetch(url, {
+      const response = await csrfFetch(url, {
         method: 'POST',
-        credentials: 'include',
-        headers: csrfHeaders(),
         body: arg,
       });
       if (!response.ok) {
@@ -203,9 +185,9 @@ export function useCreateAuthorCandidate(projectId?: string) {
   );
 }
 
-export function useAuthorCharacters(projectId?: string) {
+export function useAuthorCharacters(projectId?: string, options?: LoadOptions) {
   return useSWR<{ characters: JsonRecord[] }>(
-    projectId ? `/api/projects/${projectId}/characters` : null,
+    projectId && options?.enabled !== false ? `/api/projects/${projectId}/characters` : null,
     fetchJson,
     { refreshInterval: 60000 }
   );
@@ -254,10 +236,10 @@ export function useGenerateAuthorBacklog(projectId?: string, characterId?: strin
   );
 }
 
-export function useAuthorGraph(projectId?: string, filters?: JsonRecord) {
+export function useAuthorGraph(projectId?: string, filters?: JsonRecord, options?: LoadOptions) {
   const key = useMemo(
-    () => projectId ? `/api/projects/${projectId}/graph${queryString(filters)}` : null,
-    [projectId, filters]
+    () => projectId && options?.enabled !== false ? `/api/projects/${projectId}/graph${queryString(filters)}` : null,
+    [projectId, filters, options?.enabled]
   );
   return useSWR<{ nodes: JsonRecord[]; edges: JsonRecord[] }>(key, fetchJson, {
     refreshInterval: 60000,
@@ -274,13 +256,13 @@ export function useAuthorTimeline(projectId?: string, filters?: JsonRecord) {
   });
 }
 
-export function useAuthorConflicts(projectId?: string, filters?: JsonRecord) {
+export function useAuthorConflicts(projectId?: string, filters?: JsonRecord, options?: LoadOptions) {
   const key = useMemo(
-    () => projectId ? `/api/projects/${projectId}/conflicts${queryString(filters)}` : null,
-    [projectId, filters]
+    () => projectId && options?.enabled !== false ? `/api/projects/${projectId}/conflicts${queryString(filters)}` : null,
+    [projectId, filters, options?.enabled]
   );
   return useSWR<{ conflicts: JsonRecord[] }>(key, fetchJson, {
-    revalidateOnFocus: true,
+    revalidateOnFocus: false,
     refreshInterval: 60000,
   });
 }
@@ -338,13 +320,13 @@ export function useReplayAuthorSimulation(projectId?: string, simulationId?: str
   );
 }
 
-export function useAuthorAuditLogs(projectId?: string, filters?: JsonRecord) {
+export function useAuthorAuditLogs(projectId?: string, filters?: JsonRecord, options?: LoadOptions) {
   const key = useMemo(
-    () => projectId ? `/api/projects/${projectId}/audit${queryString(filters)}` : null,
-    [projectId, filters]
+    () => projectId && options?.enabled !== false ? `/api/projects/${projectId}/audit${queryString(filters)}` : null,
+    [projectId, filters, options?.enabled]
   );
   return useSWR<{ audit_logs: JsonRecord[]; total: number; replay_available: boolean }>(key, fetchJson, {
-    revalidateOnFocus: true,
+    revalidateOnFocus: false,
     refreshInterval: 30000,
   });
 }
@@ -400,9 +382,9 @@ export function useAuthorUsage() {
   });
 }
 
-export function useAuthorSyncStatus(projectId?: string) {
+export function useAuthorSyncStatus(projectId?: string, options?: LoadOptions) {
   return useSWR<JsonRecord>(
-    projectId ? `/api/projects/${projectId}/sync/status` : null,
+    projectId && options?.enabled !== false ? `/api/projects/${projectId}/sync/status` : null,
     fetchJson,
     { refreshInterval: 30000 }
   );

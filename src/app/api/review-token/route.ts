@@ -1,6 +1,14 @@
 ﻿import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { constantTimeEqual } from '@/lib/security/constant-time';
+import { checkCustomRateLimitAsync, getRateLimitHeaders } from '@/lib/rate-limit';
+
+const REVIEW_TOKEN_ADMIN_LIMIT = 8;
+const REVIEW_TOKEN_ADMIN_WINDOW_MS = 15 * 60 * 1000;
+const MAX_EXPIRES_IN_HOURS = 168;
+const MAX_ALLOWED_PATHS = 20;
+const MAX_PATH_LENGTH = 128;
+const MAX_NOTE_LENGTH = 200;
 
 function getConfiguredSecrets(): { adminSecret: string; tokenSecret: string } | null {
   const adminSecret = process.env.REVIEW_ADMIN_SECRET;
@@ -21,6 +29,66 @@ function missingSecretResponse() {
     },
     { status: 500 }
   );
+}
+
+function getClientIp(request: NextRequest): string {
+  return (
+    request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+    request.headers.get('x-real-ip') ||
+    'unknown'
+  );
+}
+
+async function enforceAdminRateLimit(request: NextRequest): Promise<NextResponse | null> {
+  const result = await checkCustomRateLimitAsync(
+    `review_token_admin:${getClientIp(request)}`,
+    REVIEW_TOKEN_ADMIN_LIMIT,
+    REVIEW_TOKEN_ADMIN_WINDOW_MS
+  );
+  if (result.allowed) return null;
+
+  return NextResponse.json(
+    { error: 'Too many review token attempts. Please try again later.' },
+    { status: 429, headers: getRateLimitHeaders(result) }
+  );
+}
+
+function normalizeExpiresInHours(value: unknown): number {
+  if (value === undefined || value === null) return 24;
+  const numeric = typeof value === 'number' ? value : Number(value);
+  if (!Number.isFinite(numeric) || numeric <= 0) return 24;
+  return Math.min(Math.floor(numeric), MAX_EXPIRES_IN_HOURS);
+}
+
+function normalizeAllowedPaths(value: unknown): string[] | null {
+  if (value === undefined || value === null) return ['/dashboard'];
+  if (!Array.isArray(value) || value.length === 0 || value.length > MAX_ALLOWED_PATHS) {
+    return null;
+  }
+
+  const normalized = value.map((entry) => {
+    if (typeof entry !== 'string') return null;
+    const path = entry.trim();
+    if (
+      !path.startsWith('/') ||
+      path.startsWith('//') ||
+      path.includes('\\') ||
+      /[\u0000-\u001f\u007f]/.test(path) ||
+      path.length > MAX_PATH_LENGTH
+    ) {
+      return null;
+    }
+    return path;
+  });
+
+  if (normalized.some((entry) => !entry)) return null;
+  return [...new Set(normalized as string[])];
+}
+
+function normalizeNote(value: unknown): string | undefined {
+  if (typeof value !== 'string') return undefined;
+  const note = value.replace(/[\r\n\t]+/g, ' ').trim().slice(0, MAX_NOTE_LENGTH);
+  return note || undefined;
 }
 
 function createSignedToken(
@@ -73,40 +141,46 @@ function verifyToken(
 
 export async function POST(request: NextRequest) {
   try {
+    const rateLimited = await enforceAdminRateLimit(request);
+    if (rateLimited) return rateLimited;
+
     const secrets = getConfiguredSecrets();
     if (!secrets) {
       return missingSecretResponse();
     }
 
-    const body = await request.json();
+    const body = await request.json().catch(() => null);
+    if (!body || typeof body !== 'object') {
+      return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
+    }
     const {
       adminSecret,
-      expiresInHours = 24,
-      allowedPaths = ['/dashboard'],
+      expiresInHours,
+      allowedPaths,
       note,
-    } = body;
+    } = body as Record<string, unknown>;
 
-    if (!constantTimeEqual(adminSecret, secrets.adminSecret)) {
+    if (typeof adminSecret !== 'string' || !constantTimeEqual(adminSecret, secrets.adminSecret)) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    if (
-      !Array.isArray(allowedPaths) ||
-      !allowedPaths.every((path) => typeof path === 'string')
-    ) {
+    const safeAllowedPaths = normalizeAllowedPaths(allowedPaths);
+    if (!safeAllowedPaths) {
       return NextResponse.json(
-        { error: 'allowedPaths must be a string array' },
+        { error: 'allowedPaths must be an array of relative paths' },
         { status: 400 }
       );
     }
 
-    const expiresAt = Date.now() + expiresInHours * 60 * 60 * 1000;
+    const safeExpiresInHours = normalizeExpiresInHours(expiresInHours);
+    const safeNote = normalizeNote(note);
+    const expiresAt = Date.now() + safeExpiresInHours * 60 * 60 * 1000;
 
     const token = createSignedToken(
       {
         exp: expiresAt,
-        paths: allowedPaths,
-        note,
+        paths: safeAllowedPaths,
+        ...(safeNote ? { note: safeNote } : {}),
       },
       secrets.tokenSecret
     );
@@ -119,9 +193,9 @@ export async function POST(request: NextRequest) {
       token,
       reviewUrl,
       expiresAt: new Date(expiresAt).toISOString(),
-      expiresInHours,
-      allowedPaths,
-      note,
+      expiresInHours: safeExpiresInHours,
+      allowedPaths: safeAllowedPaths,
+      note: safeNote,
     });
   } catch (error) {
     console.error('Error creating review token:', error);
@@ -155,14 +229,21 @@ export async function GET(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
+  const rateLimited = await enforceAdminRateLimit(request);
+  if (rateLimited) return rateLimited;
+
   const secrets = getConfiguredSecrets();
   if (!secrets) {
     return missingSecretResponse();
   }
 
-  const { adminSecret } = await request.json();
+  const body = await request.json().catch(() => null);
+  if (!body || typeof body !== 'object') {
+    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
+  }
+  const { adminSecret } = body as { adminSecret?: unknown };
 
-  if (!constantTimeEqual(adminSecret, secrets.adminSecret)) {
+  if (typeof adminSecret !== 'string' || !constantTimeEqual(adminSecret, secrets.adminSecret)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 

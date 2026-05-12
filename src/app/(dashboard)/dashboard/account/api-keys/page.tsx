@@ -9,7 +9,13 @@ import {
   type UserUsageSummary,
 } from "@/lib/api-keys";
 import { isTrack2ApiEnabled } from "@/lib/feature-flags/track-2";
-import DashboardShell from "@/components/dashboard/DashboardShell";
+import {
+  buildTrack2StateFromProfile,
+  recoverLiveTrack2ProfileAndKeys,
+  type Track2ProfileRow,
+} from "@/lib/billing/track2-subscription-state";
+import { getDashboardCapabilities } from "@/lib/dashboard-capabilities";
+import { WorkspaceShell } from "@/components/dashboard/redesign/workspace-shell";
 import ApiKeysClient from "./api-keys-client";
 import { TRACK_2_KEY_CAP_PER_USER } from "./constants";
 
@@ -82,29 +88,86 @@ async function loadKeys(userId: string): Promise<ApiKeySummary[]> {
   }));
 }
 
+async function recoverTrack2Entitlements(userId: string): Promise<void> {
+  const supabase = createServerClient();
+  const { data } = await supabase
+    .from("profiles")
+    .select([
+      "stripe_customer_id",
+      "track2_tier",
+      "track2_subscription_id",
+      "track2_subscription_status",
+      "track2_price_id",
+      "track2_billing_cadence",
+      "track2_price_lock_version",
+      "track2_current_period_start",
+      "track2_current_period_end",
+      "track2_subscription_renews_at",
+      "track2_subscription_cancelled",
+      "track2_subscription_payment_failed",
+      "track2_subscription_payment_failed_at",
+    ].join(","))
+    .eq("id", userId)
+    .single<Track2ProfileRow & { stripe_customer_id?: string | null }>();
+
+  const stored = data ? buildTrack2StateFromProfile(data) : null;
+  if (stored && stored.status !== "cancelled" && stored.status !== "incomplete") {
+    return;
+  }
+
+  try {
+    await recoverLiveTrack2ProfileAndKeys(
+      supabase as unknown as Parameters<typeof recoverLiveTrack2ProfileAndKeys>[0],
+      userId,
+      data?.stripe_customer_id ?? null,
+    );
+  } catch (error) {
+    console.error("[track2] API key page entitlement recovery failed", { userId, error });
+  }
+}
+
 export default async function ApiKeysPage() {
   const { user } = await getAuthOrReview();
+  const userName = user.name ?? user.email ?? "Author";
+  const capabilities = getDashboardCapabilities(user);
   if (!isTrack2ApiEnabled()) {
     return (
-      <DashboardShell>
-        <section className="mx-auto w-full max-w-2xl px-6 py-16 text-ink">
+      <WorkspaceShell
+        userName={userName}
+        userPlanLabel="Studio"
+        currentLabel="API keys"
+        capabilities={capabilities}
+      >
+        <main className="min-h-0 flex-1 overflow-y-auto bg-[var(--bg-app)]">
+          <section className="mx-auto w-full max-w-2xl px-6 py-16 text-szn-text-1">
           <h1 className="font-serif text-3xl">API keys — coming soon</h1>
-          <p className="mt-3 text-sm text-ink/70">
+          <p className="mt-3 text-sm text-szn-text-2">
             Track 2 (REST API + MCP server) is rolling out in waves. We&apos;ll email you the moment your account is unlocked.
           </p>
-          <p className="mt-2 text-sm text-ink/60">
+          <p className="mt-2 text-sm text-szn-text-2">
             Need early access for a Studio or Enterprise team? <a className="underline" href="mailto:sales@seizn.com">sales@seizn.com</a>.
           </p>
-        </section>
-      </DashboardShell>
+          </section>
+        </main>
+      </WorkspaceShell>
     );
+  }
+  if (user.id !== "review") {
+    await recoverTrack2Entitlements(user.id);
   }
   const keys = user.id === "review" ? [] : await loadKeys(user.id);
   const usage = user.id === "review" ? null : await loadUsageSummary(keys);
   return (
-    <DashboardShell>
-      <ApiKeysClient initialKeys={keys} cap={TRACK_2_KEY_CAP_PER_USER} initialUsage={usage} />
-    </DashboardShell>
+    <WorkspaceShell
+      userName={userName}
+      userPlanLabel="Studio"
+      currentLabel="API keys"
+      capabilities={capabilities}
+    >
+      <main className="min-h-0 flex-1 overflow-y-auto bg-[var(--bg-app)]">
+        <ApiKeysClient initialKeys={keys} cap={TRACK_2_KEY_CAP_PER_USER} initialUsage={usage} />
+      </main>
+    </WorkspaceShell>
   );
 }
 

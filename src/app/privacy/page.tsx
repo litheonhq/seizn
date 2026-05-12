@@ -1,5 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { COMMUNICATION, DATA_RETENTION, formatDays, formatYears } from "@/lib/policy";
+
+const accountDeletionWindow = formatDays(DATA_RETENTION.ACCOUNT_DELETION_DAYS);
+const apiLogsWindow = formatDays(DATA_RETENTION.API_LOGS_DAYS);
+const rawLogsWindow = formatDays(DATA_RETENTION.RAW_LOGS_DAYS);
+const taxRecordWindow = formatYears(DATA_RETENTION.TAX_RECORD_YEARS);
+const policyChangeNoticeWindow = formatDays(COMMUNICATION.POLICY_CHANGE_NOTICE_DAYS);
+const privacyResponseWindow = formatDays(COMMUNICATION.PRIVACY_RESPONSE_DAYS);
+const dataRequestResponseWindow = formatDays(COMMUNICATION.DATA_REQUEST_RESPONSE_DAYS);
 
 export const metadata: Metadata = {
   title: "Privacy Policy · Seizn",
@@ -318,28 +327,28 @@ export default function PrivacyPolicyPage() {
             <ul className="list-disc pl-6 mt-3 space-y-2 text-[var(--ink-600)]">
               <li>
                 <strong>Account data:</strong> Retained while your account is
-                active and for 30 days after deletion request
+                active and for {accountDeletionWindow} after deletion request
               </li>
               <li>
                 <strong>Memory data:</strong> Retained until you delete it or
                 close your account
               </li>
               <li>
-                <strong>API logs:</strong> Retained for 90 days for debugging
+                <strong>API logs:</strong> Retained for {apiLogsWindow} for debugging
                 and security purposes
               </li>
               <li>
-                <strong>Payment records:</strong> Retained for 7 years as
+                <strong>Payment records:</strong> Retained for {taxRecordWindow} as
                 required for tax and legal compliance
               </li>
               <li>
                 <strong>Analytics data:</strong> Aggregated data may be retained
-                indefinitely; raw logs are deleted after 30 days
+                indefinitely; raw logs are deleted after {rawLogsWindow}
               </li>
             </ul>
             <p className="text-[var(--ink-600)] leading-relaxed mt-4">
               Upon account deletion, we will remove or anonymize your personal
-              data within 30 days, except where retention is required by law or
+              data within {accountDeletionWindow}, except where retention is required by law or
               for legitimate business purposes.
             </p>
           </section>
@@ -359,7 +368,7 @@ export default function PrivacyPolicyPage() {
             </h3>
             <p className="text-[var(--ink-600)] leading-relaxed">
               You can request a copy of the personal data we hold about you. We
-              will provide this information within 30 days of your request.
+              will provide this information within {dataRequestResponseWindow} of your request.
             </p>
 
             <h3 className="text-xl font-semibold text-[var(--ink-900)] mt-6 mb-3">
@@ -531,7 +540,7 @@ export default function PrivacyPolicyPage() {
             </p>
             <ul className="list-disc pl-6 mt-3 space-y-2 text-[var(--ink-600)]">
               <li>We will update the &quot;Last updated&quot; date at the top of this page</li>
-              <li>We will notify you via email (if you have an account) at least 7 days before the changes take effect</li>
+              <li>We will notify you via email (if you have an account) at least {policyChangeNoticeWindow} before the changes take effect</li>
               <li>We may display a prominent notice on our website</li>
             </ul>
             <p className="text-[var(--ink-600)] leading-relaxed mt-4">
@@ -571,7 +580,7 @@ export default function PrivacyPolicyPage() {
               </p>
             </div>
             <p className="text-[var(--ink-600)] leading-relaxed mt-4">
-              We will respond to all privacy-related inquiries within 30 days.
+              We will respond to all privacy-related inquiries within {privacyResponseWindow}.
               For urgent security concerns, please include &quot;URGENT&quot; in
               your email subject line.
             </p>

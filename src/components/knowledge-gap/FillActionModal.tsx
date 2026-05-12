@@ -177,7 +177,7 @@ export function FillActionModal({
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   URL to Ingest
                 </label>
-                <input
+                <input aria-label="Url"
                   type="url"
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
@@ -195,7 +195,7 @@ export function FillActionModal({
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   File Name
                 </label>
-                <input
+                <input aria-label="File Name"
                   type="text"
                   value={fileName}
                   onChange={(e) => setFileName(e.target.value)}
@@ -214,7 +214,7 @@ export function FillActionModal({
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Source Name
                   </label>
-                  <input
+                  <input aria-label="Source Name"
                     type="text"
                     value={sourceName}
                     onChange={(e) => setSourceName(e.target.value)}
@@ -245,7 +245,7 @@ export function FillActionModal({
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Document IDs (comma-separated)
                   </label>
-                  <input
+                  <input aria-label="Document Ids"
                     type="text"
                     value={documentIds}
                     onChange={(e) => setDocumentIds(e.target.value)}
@@ -286,7 +286,7 @@ export function FillActionModal({
             {/* Execute Immediately */}
             {actionType !== "ignore" && (
               <label className="flex items-center gap-2">
-                <input
+                <input aria-label="Execute Immediately"
                   type="checkbox"
                   checked={executeImmediately}
                   onChange={(e) => setExecuteImmediately(e.target.checked)}

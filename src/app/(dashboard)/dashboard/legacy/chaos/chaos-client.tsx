@@ -192,7 +192,7 @@ export function ChaosClient({ initialRuns, loadError = null, live }: ChaosClient
 
             <label className="mt-5 block text-sm text-szn-text-2">
               NPC id
-              <input
+              <input aria-label="NPC ID"
                 value={npcId}
                 onChange={(event) => setNpcId(event.target.value)}
                 placeholder="kaelan"
@@ -203,7 +203,7 @@ export function ChaosClient({ initialRuns, loadError = null, live }: ChaosClient
             <div className="mt-4 grid grid-cols-2 gap-3">
               <label className="block text-sm text-szn-text-2">
                 Prompts
-                <input
+                <input aria-label="Prompt Count"
                   type="number"
                   min={1}
                   max={5000}
@@ -230,7 +230,7 @@ export function ChaosClient({ initialRuns, loadError = null, live }: ChaosClient
 
             <label className="mt-4 block text-sm text-szn-text-2">
               Target endpoint
-              <input
+              <input aria-label="Target Endpoint"
                 value={targetEndpoint}
                 onChange={(event) => setTargetEndpoint(event.target.value)}
                 placeholder="optional https://..."

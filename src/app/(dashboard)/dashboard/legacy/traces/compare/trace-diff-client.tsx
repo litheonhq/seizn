@@ -92,7 +92,7 @@ export function TraceDiffClient() {
             <p className="text-xs text-gray-500 mt-1">
               {t("dashboard.traceComparePage.pasteTraceId") || "Or paste a trace ID:"}
             </p>
-            <input
+            <input aria-label="Trace A"
               type="text"
               value={traceA}
               onChange={(e) => {
@@ -126,7 +126,7 @@ export function TraceDiffClient() {
             <p className="text-xs text-gray-500 mt-1">
               {t("dashboard.traceComparePage.pasteTraceId") || "Or paste a trace ID:"}
             </p>
-            <input
+            <input aria-label="Trace B"
               type="text"
               value={traceB}
               onChange={(e) => {

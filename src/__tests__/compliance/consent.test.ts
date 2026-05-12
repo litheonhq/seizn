@@ -6,6 +6,7 @@ import {
   recordConsent,
   revokeConsentScope,
 } from '@/lib/compliance/consent';
+import { CSRF_COOKIE_NAME, CSRF_HEADER_NAME } from '@/lib/csrf';
 
 const { authMock } = vi.hoisted(() => ({
   authMock: vi.fn(),
@@ -242,6 +243,7 @@ describe('consent scopes', () => {
 
     const postResponse = await createRoute.POST(new NextRequest('https://seizn.test/api/consent', {
       method: 'POST',
+      headers: csrfHeaders(),
       body: JSON.stringify({
         subjectId: 'player-1',
         ageBracket: 'minor_under_13',
@@ -263,3 +265,12 @@ describe('consent scopes', () => {
     expect(getJson.data.consent.scopes).toEqual(['memory_storage']);
   });
 });
+
+function csrfHeaders(): Record<string, string> {
+  const token = 'consent-csrf-token';
+  return {
+    origin: 'http://localhost:3000',
+    cookie: `${CSRF_COOKIE_NAME}=${token}`,
+    [CSRF_HEADER_NAME]: token,
+  };
+}

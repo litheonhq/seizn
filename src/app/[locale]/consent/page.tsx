@@ -57,7 +57,7 @@ export default async function ConsentPage({ params }: PageProps) {
           <div className="grid gap-3 sm:grid-cols-2">
             {copy.ageOptions.map((option) => (
               <label key={option.value} className="flex items-center gap-3 border border-szn-border-subtle px-4 py-3">
-                <input type="radio" name="ageBracket" value={option.value} className="h-4 w-4 accent-szn-signal" />
+                <input aria-label="Age Bracket" type="radio" name="ageBracket" value={option.value} className="h-4 w-4 accent-szn-signal" />
                 <span className="text-sm text-szn-text-2">{option.label}</span>
               </label>
             ))}
@@ -67,7 +67,7 @@ export default async function ConsentPage({ params }: PageProps) {
           <div className="space-y-3">
             {copy.scopes.map((scope) => (
               <label key={scope.value} className="flex items-start gap-3 border border-szn-border-subtle px-4 py-3">
-                <input type="checkbox" name="scopes" value={scope.value} className="mt-1 h-4 w-4 accent-szn-signal" />
+                <input aria-label="Scopes" type="checkbox" name="scopes" value={scope.value} className="mt-1 h-4 w-4 accent-szn-signal" />
                 <span>
                   <span className="block text-sm font-medium text-szn-text-1">{scope.label}</span>
                   <span className="mt-1 block text-sm leading-6 text-szn-text-2">{scope.description}</span>

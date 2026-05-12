@@ -4,7 +4,7 @@ import { Playground } from "./playground";
 export function PlaygroundSection() {
   return (
     <Section id="playground" eyebrow="Live playground · Archivist Vale">
-      <div style={{ display: "flex", alignItems: "end", justifyContent: "space-between", marginBottom: 28, gap: 24 }}>
+      <div className="engine-section-heading-row" style={{ display: "flex", alignItems: "end", justifyContent: "space-between", marginBottom: 28, gap: 24 }}>
         <div>
           <h2
             style={{

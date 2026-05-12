@@ -17,6 +17,7 @@ import {
 import { createTrack2RedisFromEnv } from '@/lib/api-keys/redis-config';
 import { AuthorUiNotFoundError, AuthorUiValidationError } from '@/lib/author/ui/service';
 import { TRACK_2_DISABLED_PROBLEM, isTrack2ApiEnabled } from '@/lib/feature-flags/track-2';
+import { logServerError } from '@/lib/server/logger';
 
 export type ApiV1Context = {
   requestId: string;
@@ -199,13 +200,10 @@ export async function handleApiV1(
       !(error instanceof AuthorUiValidationError) &&
       !(error instanceof ApiV1ProblemError)
     ) {
-      console.error('[api-v1 unhandled]', {
+      logServerError('[api-v1 unhandled]', error, {
         requestId,
         url: request.url,
         method: request.method,
-        errorName: error instanceof Error ? error.name : typeof error,
-        errorMessage: error instanceof Error ? error.message : String(error),
-        stack: error instanceof Error ? error.stack : undefined,
       });
     }
     const response = problemResponse(error, request, requestId);
@@ -413,13 +411,12 @@ function toProblem(error: unknown, request: NextRequest) {
     };
   }
 
-  const detail = error instanceof Error ? error.message : 'Internal server error';
   return {
     type: 'https://seizn.com/errors/internal-server-error',
     title: 'Internal server error',
     status: 500,
     code: 'internal_server_error',
-    detail,
+    detail: 'Internal server error',
     instance: new URL(request.url).pathname,
   };
 }

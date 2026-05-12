@@ -27,9 +27,9 @@ export function ThemeToggle({ className = "", variant = "dropdown" }: ThemeToggl
   }, []);
 
   const themes: { value: Theme; label: string; icon: React.ReactNode }[] = [
-    { value: "light", label: t("theme.light"), icon: <SunIcon className="w-4 h-4" /> },
-    { value: "dark", label: t("theme.dark"), icon: <MoonIcon className="w-4 h-4" /> },
-    { value: "system", label: t("theme.system"), icon: <SystemIcon className="w-4 h-4" /> },
+    { value: "light", label: t("dashboard.theme.light"), icon: <SunIcon className="w-4 h-4" /> },
+    { value: "dark", label: t("dashboard.theme.dark"), icon: <MoonIcon className="w-4 h-4" /> },
+    { value: "system", label: t("dashboard.theme.system"), icon: <SystemIcon className="w-4 h-4" /> },
   ];
 
   const currentTheme = themes.find((t) => t.value === theme) || themes[2];
@@ -46,8 +46,8 @@ export function ThemeToggle({ className = "", variant = "dropdown" }: ThemeToggl
       <button
         onClick={cycleTheme}
         className={`p-2 rounded-xl hover:bg-[var(--ink-100)] transition-colors ${className}`}
-        aria-label={t("theme.toggle")}
-        title={`${t("theme.toggle")}: ${currentTheme.label}`}
+        aria-label={t("dashboard.theme.toggle")}
+        title={`${t("dashboard.theme.toggle")}: ${currentTheme.label}`}
       >
         {resolvedTheme === "dark" ? (
           <MoonIcon className="w-5 h-5 text-[var(--ink-600)]" />
@@ -68,7 +68,7 @@ export function ThemeToggle({ className = "", variant = "dropdown" }: ThemeToggl
       <button
         onClick={toggleTheme}
         className={`flex items-center gap-2 px-3 py-2 rounded-xl bg-[var(--ink-50)] hover:bg-[var(--ink-100)] border border-[var(--ink-200)] transition-colors ${className}`}
-        aria-label={t("theme.toggle")}
+        aria-label={t("dashboard.theme.toggle")}
       >
         {resolvedTheme === "dark" ? (
           <MoonIcon className="w-4 h-4 text-[var(--ink-600)]" />
@@ -86,7 +86,7 @@ export function ThemeToggle({ className = "", variant = "dropdown" }: ThemeToggl
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[var(--ink-50)] hover:bg-[var(--ink-100)] border border-[var(--ink-200)] transition-colors"
-        aria-label={t("theme.toggle")}
+        aria-label={t("dashboard.theme.toggle")}
         aria-expanded={isOpen}
       >
         {resolvedTheme === "dark" ? (
@@ -140,18 +140,18 @@ export function ThemeToggleSidebar({ expanded = false }: { expanded?: boolean })
   const getThemeLabel = () => {
     switch (theme) {
       case "light":
-        return t("theme.light");
+        return t("dashboard.theme.light");
       case "dark":
-        return t("theme.dark");
+        return t("dashboard.theme.dark");
       case "system":
-        return t("theme.system");
+        return t("dashboard.theme.system");
     }
   };
 
   return (
     <button
       onClick={cycleTheme}
-      title={`${t("theme.toggle")}: ${getThemeLabel()}`}
+      title={`${t("dashboard.theme.toggle")}: ${getThemeLabel()}`}
       className={`group flex items-center rounded-xl text-sm font-medium transition-all duration-300 ease-out overflow-hidden ${
         expanded ? "gap-3 px-4 py-3" : "justify-center w-full h-10"
       } text-[var(--ink-600)] hover:bg-[var(--ink-100)] hover:text-[var(--ink-900)]`}

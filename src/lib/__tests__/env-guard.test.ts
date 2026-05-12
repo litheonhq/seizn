@@ -5,6 +5,7 @@ import { checkProductionEnv, REQUIRED_PRODUCTION_ENV_VARS } from '@/lib/env-guar
 const ORIGINAL_ENV = { ...process.env };
 const REQUIRED_ENV_NAMES = [
   ...REQUIRED_PRODUCTION_ENV_VARS.map((variable) => variable.name),
+  'STRIPE_RESTRICTED_KEY',
   'STRIPE_SECRET_KEY_SEIZN',
 ];
 
@@ -51,6 +52,18 @@ describe('production env guard', () => {
 
     expect(result.ok).toBe(false);
     expect(result.missing).toContain('STRIPE_METERED_PRICE_ID_MEMORIES');
+  });
+
+  it('accepts a Stripe restricted key as the billing runtime key', () => {
+    setRequiredProductionEnv();
+    delete process.env.STRIPE_SECRET_KEY;
+    delete process.env.STRIPE_SECRET_KEY_SEIZN;
+    process.env.STRIPE_RESTRICTED_KEY = 'rk_live_test';
+
+    const result = checkProductionEnv();
+
+    expect(result.ok).toBe(true);
+    expect(result.missing).not.toContain('STRIPE_SECRET_KEY');
   });
 
   it('skips health route checks outside production', async () => {

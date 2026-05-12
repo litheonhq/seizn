@@ -5,6 +5,7 @@ import { buildBasicApiKeyInsertPayload, generateApiKey } from '@/lib/api-key';
 import { verifyCsrfToken } from '@/lib/csrf';
 import { sendEmail } from '@/lib/email';
 import { apiKeyCreatedEmail } from '@/lib/email/templates';
+import { safeJsonParse } from '@/lib/safe-json';
 import { logServerError } from '@/lib/server/logger';
 import {
   AuthErrors,
@@ -61,26 +62,37 @@ export async function POST(request: NextRequest) {
       return AuthErrors.unauthorized('API keys');
     }
 
-    const body = await request.json();
-    const name = body.name || 'Default Key';
+    let body: Record<string, unknown>;
+    try {
+      body = await safeJsonParse<Record<string, unknown>>(request);
+    } catch {
+      return ValidationErrors.invalidBody('Body must be valid JSON.');
+    }
+
+    const rawName = typeof body.name === 'string' ? body.name.trim() : '';
+    const name = rawName ? rawName.slice(0, 80) : 'Default Key';
 
     const supabase = createServerClient();
 
-    // Check user's plan limits
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('plan')
-      .eq('id', user.id)
-      .single();
+    const [profileResult, countResult] = await Promise.all([
+      supabase
+        .from('profiles')
+        .select('plan')
+        .eq('id', user.id)
+        .single(),
+      supabase
+        .from('api_keys')
+        .select('id', { count: 'exact', head: true })
+        .eq('user_id', user.id)
+        .eq('is_active', true),
+    ]);
 
-    // Count existing keys
-    const { count } = await supabase
-      .from('api_keys')
-      .select('*', { count: 'exact', head: true })
-      .eq('user_id', user.id)
-      .eq('is_active', true);
+    if (countResult.error) {
+      logServerError('Create key count error', countResult.error);
+      return ServerErrors.database('create_key_count');
+    }
 
-    const plan = profile?.plan || 'free';
+    const plan = profileResult.data?.plan || 'free';
     const keyLimits: Record<string, number> = {
       free: 2,
       plus: 5,
@@ -89,7 +101,7 @@ export async function POST(request: NextRequest) {
     };
     const keyLimit = keyLimits[plan] || 2;
 
-    if ((count || 0) >= keyLimit) {
+    if ((countResult.count || 0) >= keyLimit) {
       return RateLimitErrors.quotaExceeded('monthly', plan);
     }
 
@@ -111,7 +123,7 @@ export async function POST(request: NextRequest) {
           },
         })
       )
-      .select('id, name, key_prefix, scopes, created_at')
+      .select('id, name, key_prefix, scopes, created_at, last_used_at')
       .single();
 
     if (insertError) {

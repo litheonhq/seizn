@@ -726,7 +726,7 @@ export default function OrganizationDetailClient({
                 <label className="block text-sm font-medium text-[var(--ink-600)] mb-1.5">
                   Email Address
                 </label>
-                <input
+                <input aria-label="Invite Email"
                   type="email"
                   value={inviteEmail}
                   onChange={(e) => setInviteEmail(e.target.value)}
@@ -879,7 +879,7 @@ function OrgSettingsTab({
             <label className="block text-sm font-medium text-[var(--ink-600)] mb-1.5">
               Organization Name
             </label>
-            <input
+            <input aria-label="Name"
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -894,7 +894,7 @@ function OrgSettingsTab({
             </label>
             <div className="flex items-center gap-2">
               <span className="text-[var(--ink-500)] text-sm">seizn.com/org/</span>
-              <input
+              <input aria-label="Slug"
                 type="text"
                 value={slug}
                 onChange={(e) => setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "-"))}
@@ -949,7 +949,7 @@ function OrgSettingsTab({
               <p className="text-sm text-[var(--ink-600)]">
                 Type <strong>{organization.name}</strong> to confirm:
               </p>
-              <input
+              <input aria-label="Delete Confirm Text"
                 type="text"
                 value={deleteConfirmText}
                 onChange={(e) => setDeleteConfirmText(e.target.value)}

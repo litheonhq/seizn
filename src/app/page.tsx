@@ -1,14 +1,15 @@
 import { redirect } from 'next/navigation';
 import { headers } from 'next/headers';
 import { locales, defaultLocale, getLocaleFromCountry, type Locale } from '@/i18n/config';
+import { ENGINE_HOST, normalizeHost } from '@/lib/surface';
 
 export default async function RootPage() {
   const headersList = await headers();
 
   // Engine surface fallback — proxy.ts rewrites engine.seizn.com to /engine,
   // but if the request reaches root with engine host, send it to /engine.
-  const host = (headersList.get('host') || '').toLowerCase();
-  if (host === 'engine.seizn.com') {
+  const host = normalizeHost(headersList.get('x-forwarded-host') || headersList.get('host'));
+  if (host === ENGINE_HOST) {
     redirect('/engine');
   }
 

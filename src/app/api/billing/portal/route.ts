@@ -4,6 +4,14 @@ import { auth } from "@/lib/auth";
 import { verifyCsrf } from "@/lib/csrf";
 import { createServerClient } from "@/lib/supabase";
 
+function billingStartResponse() {
+  return NextResponse.json({
+    url: "/pricing",
+    destination: "pricing",
+    reason: "no_billing_account",
+  });
+}
+
 export async function POST(request: NextRequest) {
   try {
     const session = await auth();
@@ -24,16 +32,13 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (!profile?.stripe_customer_id) {
-      return NextResponse.json(
-        { error: "No billing account found" },
-        { status: 404 }
-      );
+      return billingStartResponse();
     }
 
     const stripe = getStripeClient();
     const portalSession = await stripe.billingPortal.sessions.create({
       customer: profile.stripe_customer_id,
-      return_url: `${request.nextUrl.origin}/dashboard/billing`,
+      return_url: `${request.nextUrl.origin}/dashboard/author/settings?section=billing`,
     });
 
     return NextResponse.json({ url: portalSession.url });

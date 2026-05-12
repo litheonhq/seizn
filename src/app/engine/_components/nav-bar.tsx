@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Arrow, Btn, Logo } from "./atoms";
 
 const NAV_LINKS = [
@@ -21,6 +22,7 @@ export function NavBar() {
       }}
     >
       <div
+        className="engine-nav-shell"
         style={{
           maxWidth: 1280,
           margin: "0 auto",
@@ -32,7 +34,7 @@ export function NavBar() {
       >
         <div style={{ display: "flex", alignItems: "center", gap: 36 }}>
           <Logo />
-          <div style={{ display: "flex", gap: 24 }}>
+          <div className="engine-nav-links" style={{ display: "flex", gap: 24 }}>
             {NAV_LINKS.map((l) => (
               <a
                 key={l.label}
@@ -46,13 +48,13 @@ export function NavBar() {
             ))}
           </div>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <a
-            href="https://www.seizn.com/login"
+        <div className="engine-nav-actions" style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <Link
+            href="/login"
             style={{ fontSize: 13, color: "var(--engine-text-muted)", textDecoration: "none" }}
           >
-            Sign in
-          </a>
+            Author workspace
+          </Link>
           <Btn variant="secondary" href="#playground" style={{ padding: "8px 14px", fontSize: 13 }}>
             Try playground
           </Btn>

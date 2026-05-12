@@ -48,7 +48,7 @@ const RULES = [
   },
   {
     name: 'input-without-id-or-aria',
-    description: '<input> without id (label assoc) and without aria-label',
+    description: '<input> without id, aria label, or wrapping <label>',
     pattern: /<input\b(?![^>]*\b(id=|aria-label=|aria-labelledby=|type=["'](hidden|submit|reset|button)))[^>]*\/?>/gi,
   },
 ];
@@ -78,6 +78,13 @@ function walk(dir, out = []) {
   return out;
 }
 
+function isWrappedByLabel(text, index) {
+  const lookbehind = text.slice(Math.max(0, index - 800), index);
+  const lookahead = text.slice(index, Math.min(text.length, index + 800));
+  return lookbehind.lastIndexOf('<label') > lookbehind.lastIndexOf('</label>')
+    && lookahead.indexOf('</label>') !== -1;
+}
+
 let totalHits = 0;
 const hitsByRule = Object.fromEntries(RULES.map((r) => [r.name, 0]));
 
@@ -99,6 +106,9 @@ for (const target of SCAN_PATHS) {
       rule.pattern.lastIndex = 0;
       let m;
       while ((m = rule.pattern.exec(text)) !== null) {
+        if (rule.name === 'input-without-id-or-aria' && isWrappedByLabel(text, m.index)) {
+          continue;
+        }
         const lineNo = text.slice(0, m.index).split(/\r?\n/).length;
         const snippet = m[0].slice(0, 100).replace(/\n/g, ' ');
         console.log(`  [${rule.name}] ${rel}:${lineNo} → ${snippet}`);

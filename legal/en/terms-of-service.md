@@ -1,8 +1,8 @@
 ---
 doc_type: terms-of-service
 language: en
-version: v1
-generated_at: 2026-05-02
+version: v2
+generated_at: 2026-05-09
 status: draft (lawyer review pending)
 master: true
 applies_to: seizn.com (Author flagship), engine.seizn.com (NPC SDK surface)
@@ -12,7 +12,7 @@ governing_law: Wyoming, USA
 
 # Terms of Service
 
-Last updated: 2026-05-02
+Last updated: 2026-05-09
 
 These Terms of Service (the 'Terms') govern your access to and use of Seizn services, operated by Litheon LLC, a Wyoming limited liability company ('Seizn', 'we', 'us'). By creating an account or using the services, you agree to these Terms.
 

@@ -14,24 +14,14 @@ import {
 import { logAuditEvent } from '@/lib/enterprise-auth/audit';
 import { sanitizeSameOriginRedirect } from '@/lib/security/redirect';
 import { buildOIDCConfigFromConnection, type OidcConnectionRecord } from '@/lib/sso/oidc-config';
-import { createAuthJsSessionToken } from '@/lib/auth/session-token';
+import {
+  createAuthJsSessionToken,
+  getAuthJsSessionCookieName,
+  getAuthJsSessionCookieOptions,
+} from '@/lib/auth/session-token';
 import { logServerError } from '@/lib/server/logger';
 
 const REDIRECT_COOKIE_NAME = 'oidc_redirect';
-
-function getCookieDomain(baseUrl: string): string | undefined {
-  if (process.env.AUTH_COOKIE_DOMAIN) {
-    return process.env.AUTH_COOKIE_DOMAIN;
-  }
-
-  try {
-    const hostname = new URL(baseUrl).hostname;
-    if (hostname === 'localhost' || hostname === '127.0.0.1') return undefined;
-    return hostname.startsWith('.') ? hostname : `.${hostname}`;
-  } catch {
-    return undefined;
-  }
-}
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -237,19 +227,11 @@ export async function GET(request: NextRequest) {
     // Set session cookie and redirect
     const response = NextResponse.redirect(new URL(redirectPath, baseUrl));
 
-    // Set the session token cookie
-    const useSecureCookies = process.env.NODE_ENV === 'production';
-    const cookiePrefix = useSecureCookies ? '__Secure-' : '';
-    const cookieDomain = getCookieDomain(baseUrl);
-
-    response.cookies.set(`${cookiePrefix}authjs.session-token`, sessionToken, {
-      httpOnly: true,
-      secure: useSecureCookies,
-      sameSite: 'lax',
-      path: '/',
-      maxAge: 24 * 60 * 60, // 24 hours
-      ...(cookieDomain ? { domain: cookieDomain } : {}),
-    });
+    response.cookies.set(
+      getAuthJsSessionCookieName(),
+      sessionToken,
+      getAuthJsSessionCookieOptions(24 * 60 * 60)
+    );
 
     return response;
   } catch (err) {
@@ -281,4 +263,3 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(errorUrl);
   }
 }
-

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { JetBrains_Mono } from "next/font/google";
 
 import "./_styles/tokens.css";
@@ -14,6 +14,9 @@ export const metadata: Metadata = {
   title: "Seizn Engine — NPCs that remember across generations",
   description:
     "Memory infrastructure for game NPCs. A drop-in SDK on top of Inworld, Convai, NVIDIA ACE, or your own runtime — replay every memory, audit every decision, cap every budget.",
+  alternates: {
+    canonical: "https://engine.seizn.com",
+  },
   openGraph: {
     title: "Seizn Engine — NPCs that remember across generations",
     description:
@@ -37,10 +40,18 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#08080f",
+};
+
 export default function EngineLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div data-engine-surface className={jetbrainsMono.variable}>
-      {children}
-    </div>
+    <html lang="en" data-scroll-behavior="smooth">
+      <body data-engine-surface className={jetbrainsMono.variable}>
+        {children}
+      </body>
+    </html>
   );
 }

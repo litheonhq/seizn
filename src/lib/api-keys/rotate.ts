@@ -39,7 +39,7 @@ export async function rotateApiKey(input: RotateInput) {
 
   const { error: revokeError } = await supabase
     .from('api_keys')
-    .update({ revoked_at: now, is_active: false, updated_at: now })
+    .update({ revoked_at: now, is_active: false })
     .eq('id', input.oldKeyId)
     .eq('user_id', input.userId);
 

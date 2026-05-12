@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import { DATA_RETENTION, REFUND_POLICY, formatDays } from '@/lib/policy';
 
 interface ReconsentClientProps {
   currentVersion: string;
@@ -9,6 +10,9 @@ interface ReconsentClientProps {
   acceptedAt: string | null;
   upToDate: boolean;
 }
+
+const refundWindowHyphen = `${REFUND_POLICY.GUARANTEE_DAYS}-day`;
+const readOnlyWindow = formatDays(DATA_RETENTION.ACCOUNT_DELETION_DAYS);
 
 const CHANGE_LIST = [
   {
@@ -25,7 +29,7 @@ const CHANGE_LIST = [
   },
   {
     title: 'Refund policy — added',
-    body: 'Standalone /legal/refund page with 14-day annual refund + monthly cancel-anytime + Charter mechanics.',
+    body: `Standalone /legal/refund page with ${refundWindowHyphen} annual refund + monthly cancel-anytime + Charter mechanics.`,
   },
   {
     title: 'Cookie consent — added',
@@ -187,7 +191,7 @@ export function ReconsentClient({ currentVersion, acceptedVersion, acceptedAt, u
       ) : null}
 
       <p className="mt-8 text-xs" style={{ color: 'var(--text-tertiary)' }}>
-        If you decline, your account stays active in read-only mode for 30 days, then continues to
+        If you decline, your account stays active in read-only mode for {readOnlyWindow}, then continues to
         be readable until you delete the account. No data is removed without your explicit action.
       </p>
     </article>

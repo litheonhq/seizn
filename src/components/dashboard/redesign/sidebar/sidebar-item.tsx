@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { Kbd } from '../atoms';
 import type { Density } from '../types';
 import type { NavItem } from './nav-config';
+import { isAuthorWorkspaceTab, type AuthorWorkspaceTab } from '@/lib/dashboard-routes';
 
 export interface SidebarItemProps {
   item: NavItem;
@@ -14,6 +15,7 @@ export interface SidebarItemProps {
   density?: Density;
   badge?: number | string;
   showDot?: boolean;
+  onAuthorTab?: (tab: AuthorWorkspaceTab) => void;
 }
 
 export function SidebarItem({
@@ -24,6 +26,7 @@ export function SidebarItem({
   density = 'comfortable',
   badge,
   showDot = false,
+  onAuthorTab,
 }: SidebarItemProps) {
   const [hover, setHover] = useState(false);
   const padY = density === 'compact' ? 4 : density === 'spacious' ? 8 : 6;
@@ -34,10 +37,21 @@ export function SidebarItem({
     : hover
     ? 'rgba(74, 67, 56, 0.05)'
     : 'transparent';
+  const isAuthorTabLink = item.href.startsWith('/dashboard/author?tab=');
 
   return (
     <Link
       href={item.href}
+      prefetch={isAuthorTabLink ? false : undefined}
+      onClick={(event) => {
+        if (!onAuthorTab || !isAuthorTabLink) return;
+        if (event.defaultPrevented || event.button !== 0) return;
+        if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+        const tab = new URL(item.href, 'https://www.seizn.com').searchParams.get('tab');
+        if (!isAuthorWorkspaceTab(tab)) return;
+        event.preventDefault();
+        onAuthorTab(tab);
+      }}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       title={collapsed ? label : undefined}
@@ -55,8 +69,9 @@ export function SidebarItem({
         cursor: 'pointer',
         background,
         color: active ? 'var(--terracotta-700)' : 'var(--text-secondary)',
-        fontSize: 13,
+        fontSize: item.secondary ? 12.5 : 13,
         fontWeight: active ? 600 : 500,
+        opacity: item.secondary && !active ? 0.86 : 1,
         position: 'relative',
         transition: 'background .12s, color .12s',
       }}

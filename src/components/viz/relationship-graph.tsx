@@ -12,7 +12,9 @@ import type {
   NpcGraphNode,
   NpcRelationshipGraphData,
 } from "@/lib/npc-graph/types";
+import { readApiJson } from "@/lib/client/api-json";
 import { renderRelationshipGraphSvg } from "@/lib/npc-graph/svg";
+import { getErrorMessage } from "@/lib/ui-error";
 
 interface RelationshipGraphProps {
   data: NpcRelationshipGraphData;
@@ -24,6 +26,12 @@ type ForceGraphComponent = ComponentType<
     ref?: MutableRefObject<ForceGraphMethods<NpcGraphNode, NpcGraphEdge> | undefined>;
   }
 >;
+
+type RelationshipGraphApiResponse = {
+  data?: {
+    graph?: NpcRelationshipGraphData;
+  };
+};
 
 const ForceGraph2D = dynamic<ForceGraphProps<NpcGraphNode, NpcGraphEdge>>(
   () => import("react-force-graph-2d"),
@@ -73,6 +81,7 @@ export function RelationshipGraph({ data, apiUrl }: RelationshipGraphProps) {
   const [current, setCurrent] = useState(data);
   const [selectedNode, setSelectedNode] = useState<NpcGraphNode | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [refreshError, setRefreshError] = useState<string | null>(null);
 
   useEffect(() => {
     setCurrent(data);
@@ -106,14 +115,22 @@ export function RelationshipGraph({ data, apiUrl }: RelationshipGraphProps) {
   async function refresh() {
     if (!apiUrl) return;
     setIsRefreshing(true);
+    setRefreshError(null);
     try {
       const response = await fetch(apiUrl);
-      const payload = await response.json();
+      const payload = await readApiJson<RelationshipGraphApiResponse>(
+        response,
+        "Relationship graph could not be refreshed",
+      );
       const next = payload?.data?.graph as NpcRelationshipGraphData | undefined;
       if (next) {
         setCurrent(next);
         setGraphData(toForceData(next));
+      } else {
+        setRefreshError("Relationship graph response did not include graph data.");
       }
+    } catch (error) {
+      setRefreshError(getErrorMessage(error, "Relationship graph could not be refreshed."));
     } finally {
       setIsRefreshing(false);
     }
@@ -150,6 +167,12 @@ export function RelationshipGraph({ data, apiUrl }: RelationshipGraphProps) {
           </button>
         </div>
       </div>
+
+      {refreshError ? (
+        <p className="border border-szn-danger bg-szn-surface px-3 py-2 text-sm text-szn-danger">
+          {refreshError}
+        </p>
+      ) : null}
 
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_280px]">
         <div className="h-[72vh] min-h-[560px] overflow-hidden border border-szn-border-subtle bg-szn-surface-1">

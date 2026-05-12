@@ -16,6 +16,7 @@ interface Track3Copy {
   emailPlaceholder: string;
   submitLabel: string;
   submittingLabel: string;
+  successButtonLabel: string;
   successHeadline: string;
   successBody: string;
   errorGeneric: string;
@@ -29,42 +30,46 @@ interface Track3Copy {
 
 const COPY: Record<'en' | 'ko', Track3Copy> = {
   en: {
-    badge: 'Coming Soon',
-    headline: 'Seizn Desktop',
-    subheadline: 'Native desktop authoring app with offline-first memory, mouse-gesture commands, and direct local file integration.',
-    releaseTarget: 'Targeting Q3 2026 — sign up to be among the first invited.',
+    badge: 'In development',
+    headline: 'Seizn Program',
+    subheadline:
+      'A native writing program for long-form fiction: manuscript, canon ledger, conflict review, and local files in one workspace.',
+    releaseTarget: 'Targeting Q3 2026. Join the waitlist for early invites.',
     emailLabel: 'Email',
     emailPlaceholder: 'you@example.com',
     submitLabel: 'Join the waitlist',
-    submittingLabel: 'Submitting…',
+    submittingLabel: 'Submitting...',
+    successButtonLabel: 'Joined',
     successHeadline: "You're on the list",
     successBody: "We've sent a confirmation email. Click the link inside to lock in your spot.",
     errorGeneric: 'Something went wrong. Please try again.',
     errorRateLimited: 'Too many requests. Please try again in a minute.',
     errorInvalidEmail: 'Please enter a valid email address.',
     benefitsTitle: 'What waitlist members get',
-    benefit1: 'First invites when Desktop opens',
-    benefit2: 'Charter pricing eligibility (locked until 2027-05-01)',
-    benefit3: 'Free tier preserved with offline-only mode',
+    benefit1: 'First invites when Program opens',
+    benefit2: 'Charter pricing eligibility through 2027-05-01',
+    benefit3: 'Local-first drafts with the web canon workspace preserved',
   },
   ko: {
-    badge: '준비 중',
-    headline: 'Seizn Desktop',
-    subheadline: '오프라인 우선 메모리, 마우스 제스처 명령어, 로컬 파일 직접 연동을 갖춘 네이티브 데스크톱 작가 앱.',
-    releaseTarget: '2026년 3분기 목표 — 첫 초대 대상으로 등록하세요.',
+    badge: '개발 중',
+    headline: 'Seizn Program',
+    subheadline:
+      '한글이나 스크리브너처럼 쓰는 장편 집필 프로그램입니다. 원고, 캐논 원장, 충돌 검수, 로컬 파일을 한 작업 공간에 둡니다.',
+    releaseTarget: '2026년 3분기 목표. 먼저 초대받을 대기 명단을 받고 있습니다.',
     emailLabel: '이메일',
     emailPlaceholder: 'you@example.com',
-    submitLabel: '대기 명단 등록',
-    submittingLabel: '등록 중…',
-    successHeadline: '대기 명단에 등록되었습니다',
+    submitLabel: '대기명단 등록',
+    submittingLabel: '등록 중...',
+    successButtonLabel: '등록됨',
+    successHeadline: '대기명단에 등록되었습니다',
     successBody: '확인 메일을 보냈습니다. 메일 안의 링크를 눌러 등록을 완료해주세요.',
     errorGeneric: '문제가 발생했습니다. 다시 시도해주세요.',
-    errorRateLimited: '요청이 너무 많습니다. 1분 후 다시 시도해주세요.',
-    errorInvalidEmail: '유효한 이메일 주소를 입력해주세요.',
-    benefitsTitle: '대기 명단 등록 시 혜택',
-    benefit1: 'Desktop 출시 시 첫 초대 대상',
-    benefit2: '차터 가격 적용 자격 (2027-05-01까지 락인)',
-    benefit3: '오프라인 전용 모드로 무료 티어 유지',
+    errorRateLimited: '요청이 너무 많습니다. 1분 뒤 다시 시도해주세요.',
+    errorInvalidEmail: '올바른 이메일 주소를 입력해주세요.',
+    benefitsTitle: '대기명단 등록 혜택',
+    benefit1: 'Program 공개 시 첫 초대 대상',
+    benefit2: '2027-05-01까지 Charter 가격 적용 자격',
+    benefit3: '웹 캐논 작업 공간과 이어지는 로컬 우선 원고 관리',
   },
 };
 
@@ -91,15 +96,16 @@ export function PricingTrack3Section({ locale }: PricingTrack3SectionProps) {
     setErrorMessage('');
 
     try {
-      const response = await fetch('/api/waitlist/desktop', {
+      const response = await fetch('/api/waitlist/program', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email: trimmed,
           locale: locale === 'ko' ? 'ko' : 'en',
-          source_utm: typeof window !== 'undefined'
-            ? Object.fromEntries(new URL(window.location.href).searchParams.entries())
-            : null,
+          source_utm:
+            typeof window !== 'undefined'
+              ? Object.fromEntries(new URL(window.location.href).searchParams.entries())
+              : null,
         }),
       });
 
@@ -118,7 +124,6 @@ export function PricingTrack3Section({ locale }: PricingTrack3SectionProps) {
 
       setStatus('success');
       setEmail('');
-      // Track funnel event would go here (W5.1 extension).
       void data;
     } catch {
       setStatus('error');
@@ -127,10 +132,17 @@ export function PricingTrack3Section({ locale }: PricingTrack3SectionProps) {
   };
 
   return (
-    <div className="rounded-[var(--radius-lg)] border p-8 md:p-12" style={{ borderColor: 'var(--ink-200)', background: 'var(--bg-elevated)' }}>
+    <div
+      className="rounded-[var(--radius-lg)] border p-8 md:p-12"
+      style={{ borderColor: 'var(--ink-200)', background: 'var(--bg-elevated)' }}
+    >
       <span
         className="author-badge"
-        style={{ background: 'var(--sev-p2-bg)', color: 'var(--sev-p2-text)', border: '1px solid var(--sev-p2-border)' }}
+        style={{
+          background: 'var(--sev-p2-bg)',
+          color: 'var(--sev-p2-text)',
+          border: '1px solid var(--sev-p2-border)',
+        }}
       >
         <span className="author-badge-dot" />
         {copy.badge}
@@ -138,7 +150,7 @@ export function PricingTrack3Section({ locale }: PricingTrack3SectionProps) {
       <h2 className="author-serif mt-6 text-4xl" style={{ color: 'var(--text-primary)' }}>
         {copy.headline}
       </h2>
-      <p className="mt-3 text-base leading-relaxed" style={{ color: 'var(--text-secondary)', maxWidth: '52ch' }}>
+      <p className="mt-3 text-base leading-relaxed" style={{ color: 'var(--text-secondary)', maxWidth: '56ch' }}>
         {copy.subheadline}
       </p>
       <p className="mt-2 text-sm" style={{ color: 'var(--text-tertiary)' }}>
@@ -146,7 +158,6 @@ export function PricingTrack3Section({ locale }: PricingTrack3SectionProps) {
       </p>
 
       <div className="mt-8 grid gap-8 md:grid-cols-2">
-        {/* Email form */}
         <form onSubmit={handleSubmit} className="flex flex-col gap-3" noValidate>
           <label htmlFor="track3-email" className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
             {copy.emailLabel}
@@ -176,11 +187,18 @@ export function PricingTrack3Section({ locale }: PricingTrack3SectionProps) {
               cursor: status === 'submitting' || status === 'success' ? 'not-allowed' : 'pointer',
             }}
           >
-            {status === 'submitting' ? copy.submittingLabel : status === 'success' ? '✓' : copy.submitLabel}
+            {status === 'submitting'
+              ? copy.submittingLabel
+              : status === 'success'
+                ? copy.successButtonLabel
+                : copy.submitLabel}
           </button>
 
           {status === 'success' ? (
-            <div className="mt-2 rounded-md p-3 text-sm" style={{ background: 'var(--signal-canon-soft)', color: 'var(--signal-canon-ink)' }}>
+            <div
+              className="mt-2 rounded-md p-3 text-sm"
+              style={{ background: 'var(--signal-canon-soft)', color: 'var(--signal-canon-ink)' }}
+            >
               <p className="font-medium">{copy.successHeadline}</p>
               <p className="mt-1">{copy.successBody}</p>
             </div>
@@ -193,24 +211,19 @@ export function PricingTrack3Section({ locale }: PricingTrack3SectionProps) {
           ) : null}
         </form>
 
-        {/* Benefits */}
         <div>
           <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
             {copy.benefitsTitle}
           </p>
           <ul className="mt-3 space-y-2 text-sm" style={{ color: 'var(--text-secondary)' }}>
-            <li className="flex gap-2">
-              <span style={{ color: 'var(--signal-canon)' }}>•</span>
-              <span>{copy.benefit1}</span>
-            </li>
-            <li className="flex gap-2">
-              <span style={{ color: 'var(--signal-canon)' }}>•</span>
-              <span>{copy.benefit2}</span>
-            </li>
-            <li className="flex gap-2">
-              <span style={{ color: 'var(--signal-canon)' }}>•</span>
-              <span>{copy.benefit3}</span>
-            </li>
+            {[copy.benefit1, copy.benefit2, copy.benefit3].map((benefit) => (
+              <li key={benefit} className="flex gap-2">
+                <span aria-hidden="true" style={{ color: 'var(--signal-canon)' }}>
+                  •
+                </span>
+                <span>{benefit}</span>
+              </li>
+            ))}
           </ul>
         </div>
       </div>

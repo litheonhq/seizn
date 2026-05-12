@@ -2,20 +2,42 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { LandingNav } from "@/components/shared/site-nav";
 import type { Locale } from "@/i18n/config";
+import { SECURITY_POLICY, formatDays } from "@/lib/policy";
+import {
+  formatTrack2Price,
+  formatTrack2Quota,
+  formatTrack2Rate,
+  formatTrack2Scopes,
+} from "@/lib/billing/track2-display";
+import { V9_TRACK2_PRODUCTS, type V9Track2Tier } from "@/lib/billing/v9-products";
 
-export const metadata: Metadata = {
-  title: "Seizn API & MCP — Plug canon recall into Claude, Cursor, Cline",
-  description:
-    "Plug Seizn canon into your AI tool. REST API + MCP server for fiction writers — recall, conflict checks, timeline, and graph powered by your existing keys.",
-  openGraph: {
-    title: "Seizn API & MCP — Plug canon recall into Claude, Cursor, Cline",
-    description:
-      "REST API + MCP server for fiction writers. Plug your canon into Claude Desktop, Claude Code, Cursor, Cline, Continue.",
-    type: "website",
-  },
-};
+const apiKeyRotationWindow = formatDays(SECURITY_POLICY.API_KEY_ROTATION_DAYS);
+const TRACK2_DOC_TIERS = ["free", "indie", "pro", "studio", "studio_managed", "enterprise"] as const satisfies readonly V9Track2Tier[];
 
 type PageParams = { params: Promise<{ locale: Locale }> };
+
+const apiTitle = "Seizn API & MCP - Plug canon recall into Claude, Cursor, Cline";
+const apiDescription =
+  "Plug Seizn canon into your AI tool. REST API + MCP server for fiction writers - recall, conflict checks, timeline, and graph powered by your existing keys.";
+
+export async function generateMetadata({ params }: PageParams): Promise<Metadata> {
+  const { locale } = await params;
+
+  return {
+    title: apiTitle,
+    description: apiDescription,
+    alternates: {
+      canonical: `/${locale}/api`,
+    },
+    openGraph: {
+      title: apiTitle,
+      description:
+        "REST API + MCP server for fiction writers. Plug your canon into Claude Desktop, Claude Code, Cursor, Cline, Continue.",
+      type: "website",
+      url: `https://www.seizn.com/${locale}/api`,
+    },
+  };
+}
 
 export default async function PublicApiDocsPage({ params }: PageParams) {
   const { locale } = await params;
@@ -33,7 +55,7 @@ export default async function PublicApiDocsPage({ params }: PageParams) {
         <RestReference />
         <SdkExamples />
         <Security />
-        <Pricing />
+        <Pricing locale={locale} />
       </div>
     </main>
   );
@@ -49,13 +71,18 @@ function SectionHeading({ id, title }: { id: string; title: string }) {
 
 function Code({ children }: { children: string }) {
   return (
-    <pre className="mt-3 overflow-x-auto rounded-md border border-szn-border-subtle bg-szn-surface p-4 text-[12.5px] leading-relaxed text-szn-text-1">
+    <pre
+      tabIndex={0}
+      className="mt-3 overflow-x-auto rounded-md border border-szn-border-subtle bg-szn-surface p-4 text-[12.5px] leading-relaxed text-szn-text-1"
+    >
       <code>{children}</code>
     </pre>
   );
 }
 
 function Hero() {
+  const freeQuota = formatTrack2Quota("free");
+
   return (
     <header>
       <p className="text-xs uppercase tracking-[0.18em] text-szn-text-2">Seizn API + MCP</p>
@@ -72,7 +99,7 @@ function Hero() {
         Base URL: <code className="rounded bg-szn-surface px-1 py-0.5">https://seizn.com/api/v1</code> · Versioned via <code className="rounded bg-szn-surface px-1 py-0.5">Seizn-Api-Version: 1.0</code>
       </p>
       <p className="mt-3 max-w-2xl rounded-md border border-szn-border-subtle bg-szn-surface px-3 py-2 text-[13px] leading-relaxed text-szn-text-2">
-        <span className="text-szn-text-1">Already on Claude Pro / Max, Cursor Pro, or ChatGPT Plus?</span> The <code>recall</code>, <code>remember</code>, <code>graph</code>, and <code>search</code> tools work on the Free tier (100 calls/day) with no extra LLM key — your host AI handles chat, Seizn handles canon. Only <code>check</code> and <code>timeline</code> need a separate LLM key (BYOK) or Studio Managed.
+        <span className="text-szn-text-1">Already on Claude Pro / Max, Cursor Pro, or ChatGPT Plus?</span> The <code>recall</code>, <code>remember</code>, <code>graph</code>, and <code>search</code> tools work on the Free tier ({freeQuota}) with no extra LLM key — your host AI handles chat, Seizn handles canon. Only <code>check</code> and <code>timeline</code> need a separate LLM key (BYOK) or Studio Managed.
       </p>
       <div className="mt-6 flex flex-wrap gap-3 text-sm">
         <Link href="/dashboard/account/api-keys" className="szn-btn-glass px-4 py-2">
@@ -254,6 +281,11 @@ function QuickStartCursorClineContinue() {
 }
 
 function Troubleshooting() {
+  const freeQuota = formatTrack2Quota("free");
+  const indieQuota = formatTrack2Quota("indie");
+  const proQuota = formatTrack2Quota("pro");
+  const studioQuota = formatTrack2Quota("studio");
+
   return (
     <section>
       <SectionHeading id="troubleshooting" title="Troubleshooting" />
@@ -279,7 +311,7 @@ function Troubleshooting() {
         <div>
           <dt className="text-szn-text-1">402 quota_exceeded — monthly quota hit.</dt>
           <dd className="mt-1 text-szn-text-2">
-            Free is 100 calls/day, Indie is 1,000/month, Pro is 10,000/month, Studio+ is 100,000/month. Upgrade in <Link className="underline" href="/dashboard/account/api-keys">/dashboard/account/api-keys</Link> or wait for the period reset (UTC midnight for daily, UTC first-of-month for monthly).
+            Free is {freeQuota}, Indie is {indieQuota}, Pro is {proQuota}, Studio+ is {studioQuota}. Upgrade in <Link className="underline" href="/dashboard/account/api-keys">/dashboard/account/api-keys</Link> or wait for the period reset (UTC midnight for daily, UTC first-of-month for monthly).
           </dd>
         </div>
         <div>
@@ -443,7 +475,7 @@ function Security() {
       <ul className="mt-4 list-disc space-y-2 pl-6 text-sm text-szn-text-2">
         <li>Never commit API keys to git. Add <code>.env*</code> to <code>.gitignore</code> and turn on GitHub secret scanning for the repo.</li>
         <li>Store keys in your platform&apos;s secret manager — Vercel, Netlify, Fly, AWS Secrets Manager. Inject as env vars at runtime.</li>
-        <li>Rotate keys every 90 days, or whenever a teammate leaves. Use the Rotate button in <Link className="underline" href="/dashboard/account/api-keys">/dashboard/account/api-keys</Link>; the old key is revoked at the moment the new one is issued.</li>
+        <li>Rotate keys every {apiKeyRotationWindow}, or whenever a teammate leaves. Use the Rotate button in <Link className="underline" href="/dashboard/account/api-keys">/dashboard/account/api-keys</Link>; the old key is revoked at the moment the new one is issued.</li>
         <li>If a key is exposed publicly: revoke it immediately, then review the audit log to confirm no abuse occurred.</li>
         <li>For BYOK Anthropic keys, create a dedicated key with a cost cap on the Anthropic dashboard — don&apos;t reuse your main account key.</li>
         <li>Track 2 keys are rate-limited per minute and quota-limited per month. Treat HTTP 429 / 402 as expected; back off + retry on 429, surface 402 to the user.</li>
@@ -452,49 +484,45 @@ function Security() {
   );
 }
 
-function Pricing() {
-  const tiers: Array<{ name: string; monthly: string; quota: string; rate: string; scopes: string }> = [
-    { name: "Free", monthly: "$0", quota: "100 calls / day", rate: "30 / min", scopes: "recall, remember, graph, search" },
-    { name: "Indie", monthly: "$9", quota: "1,000 / month", rate: "60 / min", scopes: "+ check, timeline (BYOK)" },
-    { name: "Pro", monthly: "$19", quota: "10,000 / month", rate: "60 / min", scopes: "+ projects:write" },
-    { name: "Studio", monthly: "$99", quota: "100,000 / month", rate: "600 / min", scopes: "+ audit:read, 5 keys / user" },
-    { name: "Studio Managed", monthly: "$299", quota: "100,000 + 500 Opus calls / month", rate: "600 / min", scopes: "+ managed_llm, $0.15 / Opus call overage" },
-    { name: "Enterprise", monthly: "Contact us", quota: "Custom", rate: "Custom", scopes: "All + custom scopes" },
-  ];
-
+function Pricing({ locale }: { locale: Locale }) {
   return (
     <section>
-      <SectionHeading id="pricing" title="Pricing (Track 2 — API + MCP only)" />
+      <SectionHeading id="pricing" title="Pricing (Track 2 - API + MCP only)" />
       <p className="mt-3 text-sm text-szn-text-2">
-        Track 2 (this page) covers the public REST + MCP channel and is billed in USD. The web app (Track 1, KRW) and the desktop app (Track 3, KRW) have their own separate plans — billing is split across subscriptions on a single Stripe customer. BYOK is the default; Studio Managed is the only tier that runs LLMs on our infrastructure (with a metered overage on Opus calls).
+        Track 2 covers the public REST + MCP channel and is billed in USD. Web app plans (Track 1) and Program plans (Track 3) stay separate, so checkout and legal consent for API + MCP plans happen on the API + MCP tab of the pricing page. BYOK is the default; Studio Managed is the tier that runs LLMs on Seizn infrastructure, with a metered overage on Opus calls.
       </p>
       <div className="mt-4 overflow-x-auto rounded-md border border-szn-border-subtle">
         <table className="w-full text-left text-sm">
           <thead className="bg-szn-surface text-xs text-szn-text-2">
             <tr>
               <th className="px-3 py-2">Tier</th>
-              <th className="px-3 py-2">Price (USD)</th>
+              <th className="px-3 py-2">Charter price</th>
               <th className="px-3 py-2">Quota</th>
               <th className="px-3 py-2">Rate</th>
               <th className="px-3 py-2">Scopes</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-szn-border-subtle">
-            {tiers.map((tier) => (
-              <tr key={tier.name} className="text-szn-text-1">
-                <td className="px-3 py-2 font-medium">{tier.name}</td>
-                <td className="px-3 py-2 text-xs">{tier.monthly}</td>
-                <td className="px-3 py-2 text-xs">{tier.quota}</td>
-                <td className="px-3 py-2 text-xs">{tier.rate}</td>
-                <td className="px-3 py-2 text-xs">{tier.scopes}</td>
+            {TRACK2_DOC_TIERS.map((tier) => (
+              <tr key={tier} className="text-szn-text-1">
+                <td className="px-3 py-2 font-medium">{V9_TRACK2_PRODUCTS[tier].label}</td>
+                <td className="px-3 py-2 text-xs">{formatTrack2Price(tier)}</td>
+                <td className="px-3 py-2 text-xs">{formatTrack2Quota(tier)}</td>
+                <td className="px-3 py-2 text-xs">{formatTrack2Rate(tier)}</td>
+                <td className="px-3 py-2 font-mono text-[11px]">{formatTrack2Scopes(tier)}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      <p className="mt-4 text-xs text-szn-text-2">
-        v8 launched 2026-05-06. Existing v7 Track 2 subscribers are grandfathered for 90 days; see <code>docs/billing/v7-deprecation-notice.md</code> for the customer comms.
-      </p>
+      <div className="mt-5 flex flex-wrap gap-3 text-sm">
+        <Link href={`/${locale}/pricing#track-2`} className="szn-btn-glass px-4 py-2">
+          Choose an API · MCP plan
+        </Link>
+        <Link href="/dashboard/account/api-keys" className="szn-btn-glass px-4 py-2">
+          Get a Free API key
+        </Link>
+      </div>
     </section>
   );
 }

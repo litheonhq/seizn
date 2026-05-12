@@ -2,7 +2,10 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { NextRequest } from 'next/server';
 import { POST } from '@/app/api/billing/checkout/route';
 import { CHECKOUT_LEGAL_VERSIONS } from '@/lib/checkout-copy';
-import { AUTHOR_TRIAL_DAYS } from '@/lib/stripe-config';
+
+const PRO_MANAGED_MONTHLY_CHARTER_PRICE_ID = 'price_pro_managed_monthly_charter_v9';
+const PRO_BYOK_MONTHLY_CHARTER_PRICE_ID = 'price_pro_byok_monthly_charter_v9';
+const TRACK2_PRO_MONTHLY_CHARTER_PRICE_ID = 'price_track2_pro_monthly_charter_v9';
 
 const mocks = vi.hoisted(() => ({
   session: { user: { id: 'user-1', email: 'author@example.com' } } as { user?: { id?: string; email?: string | null } } | null,
@@ -68,12 +71,22 @@ vi.mock('@/lib/stripe', () => ({
 }));
 
 const ORIGINAL_ENV = {
-  STRIPE_PRICE_ID_PRO_MONTHLY: process.env.STRIPE_PRICE_ID_PRO_MONTHLY,
+  STRIPE_PRICE_ID_V9_PRO_MANAGED_MONTHLY_CHARTER:
+    process.env.STRIPE_PRICE_ID_V9_PRO_MANAGED_MONTHLY_CHARTER,
+  STRIPE_PRICE_ID_V9_PRO_BYOK_MONTHLY_CHARTER:
+    process.env.STRIPE_PRICE_ID_V9_PRO_BYOK_MONTHLY_CHARTER,
+  STRIPE_PRICE_ID_V9_TRACK2_PRO_MONTHLY_CHARTER:
+    process.env.STRIPE_PRICE_ID_V9_TRACK2_PRO_MONTHLY_CHARTER,
 };
 
 describe('Author checkout route', () => {
   beforeEach(() => {
-    process.env.STRIPE_PRICE_ID_PRO_MONTHLY = 'price_pro_monthly_v7';
+    process.env.STRIPE_PRICE_ID_V9_PRO_MANAGED_MONTHLY_CHARTER =
+      PRO_MANAGED_MONTHLY_CHARTER_PRICE_ID;
+    process.env.STRIPE_PRICE_ID_V9_PRO_BYOK_MONTHLY_CHARTER =
+      PRO_BYOK_MONTHLY_CHARTER_PRICE_ID;
+    process.env.STRIPE_PRICE_ID_V9_TRACK2_PRO_MONTHLY_CHARTER =
+      TRACK2_PRO_MONTHLY_CHARTER_PRICE_ID;
     mocks.session = { user: { id: 'user-1', email: 'author@example.com' } };
     mocks.profile = {
       plan: 'free',
@@ -93,7 +106,18 @@ describe('Author checkout route', () => {
   });
 
   afterEach(() => {
-    restoreEnv('STRIPE_PRICE_ID_PRO_MONTHLY', ORIGINAL_ENV.STRIPE_PRICE_ID_PRO_MONTHLY);
+    restoreEnv(
+      'STRIPE_PRICE_ID_V9_PRO_MANAGED_MONTHLY_CHARTER',
+      ORIGINAL_ENV.STRIPE_PRICE_ID_V9_PRO_MANAGED_MONTHLY_CHARTER,
+    );
+    restoreEnv(
+      'STRIPE_PRICE_ID_V9_PRO_BYOK_MONTHLY_CHARTER',
+      ORIGINAL_ENV.STRIPE_PRICE_ID_V9_PRO_BYOK_MONTHLY_CHARTER,
+    );
+    restoreEnv(
+      'STRIPE_PRICE_ID_V9_TRACK2_PRO_MONTHLY_CHARTER',
+      ORIGINAL_ENV.STRIPE_PRICE_ID_V9_TRACK2_PRO_MONTHLY_CHARTER,
+    );
     vi.clearAllMocks();
   });
 
@@ -107,7 +131,7 @@ describe('Author checkout route', () => {
         subscription_status: status,
       };
       mocks.subscriptionsList.mockResolvedValue({
-        data: [stripeSubscription('sub_author_123', status, 'price_pro_monthly_v7')],
+        data: [stripeSubscription('sub_author_123', status, PRO_MANAGED_MONTHLY_CHARTER_PRICE_ID)],
       });
 
       const response = await POST(makeCheckoutRequest());
@@ -121,12 +145,12 @@ describe('Author checkout route', () => {
       });
       expect(mocks.portalCreate).toHaveBeenCalledWith({
         customer: 'cus_author_123',
-        return_url: 'https://app.seizn.test/dashboard/billing',
+        return_url: 'https://app.seizn.test/dashboard/author/settings?section=billing',
       });
       expect(mocks.profileUpdates).toContainEqual(expect.objectContaining({
         stripe_subscription_id: 'sub_author_123',
         stripe_subscription_status: status,
-        stripe_price_id: 'price_pro_monthly_v7',
+        stripe_price_id: PRO_MANAGED_MONTHLY_CHARTER_PRICE_ID,
       }));
       expect(mocks.checkoutCreate).not.toHaveBeenCalled();
     }
@@ -140,7 +164,7 @@ describe('Author checkout route', () => {
       subscription_status: null,
     };
     mocks.subscriptionsList.mockResolvedValue({
-      data: [stripeSubscription('sub_live_123', 'active', 'price_pro_monthly_v7')],
+      data: [stripeSubscription('sub_live_123', 'active', PRO_MANAGED_MONTHLY_CHARTER_PRICE_ID)],
     });
 
     const response = await POST(makeCheckoutRequest());
@@ -166,7 +190,7 @@ describe('Author checkout route', () => {
         subscription_status: status,
       };
       mocks.subscriptionsList.mockResolvedValue({
-        data: [stripeSubscription('sub_author_123', status, 'price_pro_monthly_v7')],
+        data: [stripeSubscription('sub_author_123', status, PRO_MANAGED_MONTHLY_CHARTER_PRICE_ID)],
       });
 
       const response = await POST(makeCheckoutRequest());
@@ -176,7 +200,7 @@ describe('Author checkout route', () => {
       expect(body.url).toBe('https://checkout.stripe.com/session_123');
       expectCheckoutCreateWith({
         customer: 'cus_author_123',
-        line_items: [{ price: 'price_pro_monthly_v7', quantity: 1 }],
+        line_items: [{ price: PRO_MANAGED_MONTHLY_CHARTER_PRICE_ID, quantity: 1 }],
       });
       expect(mocks.portalCreate).not.toHaveBeenCalled();
     }
@@ -189,10 +213,10 @@ describe('Author checkout route', () => {
       stripe_subscription_id: 'sub_stale_123',
       stripe_subscription_status: 'active',
       subscription_status: 'active',
-      stripe_price_id: 'price_pro_monthly_v7',
+      stripe_price_id: PRO_MANAGED_MONTHLY_CHARTER_PRICE_ID,
     };
     mocks.subscriptionsList.mockResolvedValue({
-      data: [stripeSubscription('sub_canceled_123', 'canceled', 'price_pro_monthly_v7')],
+      data: [stripeSubscription('sub_canceled_123', 'canceled', PRO_MANAGED_MONTHLY_CHARTER_PRICE_ID)],
     });
 
     const response = await POST(makeCheckoutRequest());
@@ -223,12 +247,12 @@ describe('Author checkout route', () => {
       stripe_price_id: null,
     };
     const canceledSubscriptions = Array.from({ length: 10 }, (_, index) =>
-      stripeSubscription(`sub_canceled_${index}`, 'canceled', 'price_pro_monthly_v7')
+      stripeSubscription(`sub_canceled_${index}`, 'canceled', PRO_MANAGED_MONTHLY_CHARTER_PRICE_ID)
     );
     mocks.subscriptionsList
       .mockResolvedValueOnce({ data: canceledSubscriptions, has_more: true })
       .mockResolvedValueOnce({
-        data: [stripeSubscription('sub_trial_late', 'trialing', 'price_pro_monthly_v7')],
+        data: [stripeSubscription('sub_trial_late', 'trialing', PRO_MANAGED_MONTHLY_CHARTER_PRICE_ID)],
         has_more: false,
       });
 
@@ -255,8 +279,8 @@ describe('Author checkout route', () => {
     };
     mocks.subscriptionsList.mockResolvedValue({
       data: [
-        stripeSubscription('sub_canceled_123', 'canceled', 'price_pro_monthly_v7'),
-        stripeSubscription('sub_trial_123', 'trialing', 'price_pro_monthly_v7'),
+        stripeSubscription('sub_canceled_123', 'canceled', PRO_MANAGED_MONTHLY_CHARTER_PRICE_ID),
+        stripeSubscription('sub_trial_123', 'trialing', PRO_MANAGED_MONTHLY_CHARTER_PRICE_ID),
       ],
     });
 
@@ -284,7 +308,7 @@ describe('Author checkout route', () => {
       subscription_status: null,
     };
     mocks.subscriptionsList.mockResolvedValue({
-      data: [stripeSubscription('sub_paused_123', 'paused', 'price_pro_monthly_v7')],
+      data: [stripeSubscription('sub_paused_123', 'paused', PRO_MANAGED_MONTHLY_CHARTER_PRICE_ID)],
     });
 
     const response = await POST(makeCheckoutRequest());
@@ -317,7 +341,7 @@ describe('Author checkout route', () => {
       email: 'author@example.com',
       metadata: expect.objectContaining({ user_id: 'user-1' }),
     }), expect.objectContaining({
-      idempotencyKey: expect.stringMatching(/^author-customer-v7-[a-z0-9]+$/),
+      idempotencyKey: expect.stringMatching(/^author-customer-v9-[a-z0-9]+$/),
     }));
     expect(mocks.profileUpdates).toContainEqual({ stripe_customer_id: 'cus_created_123' });
     expectCheckoutCreateWith({
@@ -325,7 +349,7 @@ describe('Author checkout route', () => {
     });
   });
 
-  it('creates checkout as a no-card 30-day trial session', async () => {
+  it('creates checkout as a v9 subscription session without a Stripe trial', async () => {
     const response = await POST(makeCheckoutRequest());
     const body = await response.json();
 
@@ -336,12 +360,6 @@ describe('Author checkout route', () => {
       payment_method_types: ['card'],
       payment_method_collection: 'if_required',
       subscription_data: expect.objectContaining({
-        trial_period_days: AUTHOR_TRIAL_DAYS,
-        trial_settings: {
-          end_behavior: {
-            missing_payment_method: 'cancel',
-          },
-        },
         metadata: expect.objectContaining({
           legal_terms_version: CHECKOUT_LEGAL_VERSIONS.terms,
           legal_privacy_version: CHECKOUT_LEGAL_VERSIONS.privacy,
@@ -364,7 +382,8 @@ describe('Author checkout route', () => {
           user_id: 'user-1',
           author_billing_tier: 'pro',
           billing_cadence: 'monthly',
-          price_lock_version: 'v7',
+          billing_column: 'managed',
+          price_lock_version: 'v9',
           legal_terms_version: CHECKOUT_LEGAL_VERSIONS.terms,
           legal_privacy_version: CHECKOUT_LEGAL_VERSIONS.privacy,
           legal_accepted: 'true',
@@ -373,7 +392,7 @@ describe('Author checkout route', () => {
     });
 
     const reuseResponse = await POST(makeCheckoutRequest({
-      successUrl: 'https://app.seizn.test/dashboard/billing?from=hero',
+      successUrl: 'https://app.seizn.test/dashboard/author/settings?section=billing&from=hero',
       cancelUrl: 'https://app.seizn.test/pricing?from=hero',
     }));
     const reuseBody = await reuseResponse.json();
@@ -388,6 +407,138 @@ describe('Author checkout route', () => {
       customer: 'cus_author_123',
       status: 'open',
       limit: 10,
+    });
+    expect(mocks.checkoutCreate).not.toHaveBeenCalled();
+  });
+
+  it('uses the explicitly selected BYOK price column for checkout', async () => {
+    mocks.byokStatus = { enabled: false };
+
+    const response = await POST(makeCheckoutRequest({ column: 'byok' }));
+    const body = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(body.url).toBe('https://checkout.stripe.com/session_123');
+    expectCheckoutCreateWith({
+      line_items: [{ price: PRO_BYOK_MONTHLY_CHARTER_PRICE_ID, quantity: 1 }],
+      subscription_data: expect.objectContaining({
+        metadata: expect.objectContaining({
+          billing_column: 'byok',
+        }),
+      }),
+      metadata: expect.objectContaining({
+        billing_column: 'byok',
+      }),
+    });
+  });
+
+  it('keeps the explicitly selected Managed column even when BYOK is active', async () => {
+    mocks.byokStatus = { enabled: true };
+
+    const response = await POST(makeCheckoutRequest({ column: 'managed' }));
+    const body = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(body.url).toBe('https://checkout.stripe.com/session_123');
+    expectCheckoutCreateWith({
+      line_items: [{ price: PRO_MANAGED_MONTHLY_CHARTER_PRICE_ID, quantity: 1 }],
+      metadata: expect.objectContaining({
+        billing_column: 'managed',
+      }),
+    });
+  });
+
+  it('rejects an invalid explicit billing column instead of falling back to another price', async () => {
+    const response = await POST(makeCheckoutRequest({ column: 'discounted-byok' }));
+    const body = await response.json();
+
+    expect(response.status).toBe(400);
+    expect(body).toEqual({ error: 'Invalid author billing tier' });
+    expect(mocks.checkoutCreate).not.toHaveBeenCalled();
+  });
+
+  it('creates a Track 2 checkout session with v9 metadata', async () => {
+    const response = await POST(makeCheckoutRequest({
+      channel: 'track2',
+      tier: 'pro',
+      cadence: 'monthly',
+      successUrl: 'https://app.seizn.test/dashboard/account/api-keys?checkout=success',
+      cancelUrl: 'https://app.seizn.test/pricing#track-2',
+    }));
+    const body = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(body.url).toBe('https://checkout.stripe.com/session_123');
+    expect(mocks.checkoutCreate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        mode: 'subscription',
+        customer: 'cus_author_123',
+        line_items: [{ price: TRACK2_PRO_MONTHLY_CHARTER_PRICE_ID, quantity: 1 }],
+        allow_promotion_codes: true,
+        success_url: 'https://app.seizn.test/dashboard/account/api-keys?checkout=success',
+        cancel_url: 'https://app.seizn.test/pricing#track-2',
+        subscription_data: expect.objectContaining({
+          metadata: expect.objectContaining({
+            user_id: 'user-1',
+            billing_channel: 'track2',
+            track2_tier: 'pro',
+            billing_cadence: 'monthly',
+            price_lock_version: 'v9',
+            legal_accepted: 'true',
+          }),
+        }),
+        metadata: expect.objectContaining({
+          billing_channel: 'track2',
+          track2_tier: 'pro',
+        }),
+      }),
+      expect.objectContaining({
+        idempotencyKey: expect.stringMatching(/^track2-checkout-v9-[a-z0-9]+$/),
+      })
+    );
+  });
+
+  it('does not treat an active Track 1 subscription as a duplicate Track 2 checkout', async () => {
+    mocks.subscriptionsList.mockResolvedValue({
+      data: [stripeSubscription('sub_author_123', 'active', PRO_MANAGED_MONTHLY_CHARTER_PRICE_ID)],
+      has_more: false,
+    });
+
+    const response = await POST(makeCheckoutRequest({
+      channel: 'track2',
+      tier: 'pro',
+      cadence: 'monthly',
+    }));
+    const body = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(body.url).toBe('https://checkout.stripe.com/session_123');
+    expect(mocks.portalCreate).not.toHaveBeenCalled();
+    expect(mocks.checkoutCreate).toHaveBeenCalled();
+  });
+
+  it('redirects an active Track 2 subscriber to the billing portal', async () => {
+    mocks.subscriptionsList.mockResolvedValue({
+      data: [stripeSubscription('sub_track2_123', 'active', TRACK2_PRO_MONTHLY_CHARTER_PRICE_ID)],
+      has_more: false,
+    });
+
+    const response = await POST(makeCheckoutRequest({
+      channel: 'track2',
+      tier: 'pro',
+      cadence: 'monthly',
+    }));
+    const body = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(body).toMatchObject({
+      url: 'https://billing.stripe.com/session_123',
+      destination: 'billing_portal',
+      reason: 'active_subscription',
+    });
+    expect(mocks.portalCreate).toHaveBeenCalledWith({
+      customer: 'cus_author_123',
+      return_url: 'https://app.seizn.test/dashboard/account/api-keys',
     });
     expect(mocks.checkoutCreate).not.toHaveBeenCalled();
   });
@@ -438,7 +589,7 @@ function expectCheckoutCreateWith(params: Record<string, unknown>): void {
   expect(mocks.checkoutCreate).toHaveBeenCalledWith(
     expect.objectContaining(params),
     expect.objectContaining({
-      idempotencyKey: expect.stringMatching(/^author-checkout-v7-[a-z0-9]+$/),
+      idempotencyKey: expect.stringMatching(/^author-checkout-v9-[a-z0-9]+$/),
     })
   );
 }

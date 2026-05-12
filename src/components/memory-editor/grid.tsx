@@ -222,7 +222,7 @@ export function MemoryEditorGrid({ initialRows, focusedNpcId = null }: MemoryEdi
       header: "NPC",
       size: 140,
       cell: ({ row }) => (
-        <input
+        <input aria-label="NPC ID"
           value={row.original.npcId || ""}
           onChange={(event) => updateRow(row.original.localId, { npcId: event.target.value || null, agentId: event.target.value || row.original.agentId })}
           className={inputClass}
@@ -262,7 +262,7 @@ export function MemoryEditorGrid({ initialRows, focusedNpcId = null }: MemoryEdi
       header: "Tags",
       size: 180,
       cell: ({ row }) => (
-        <input
+        <input aria-label="Tags"
           value={tagsText(row.original.tags)}
           onChange={(event) => updateRow(row.original.localId, { tags: parseTags(event.target.value) })}
           className={inputClass}
@@ -275,7 +275,7 @@ export function MemoryEditorGrid({ initialRows, focusedNpcId = null }: MemoryEdi
       header: "Namespace",
       size: 130,
       cell: ({ row }) => (
-        <input
+        <input aria-label="Namespace"
           value={row.original.namespace}
           onChange={(event) => updateRow(row.original.localId, { namespace: event.target.value })}
           className={inputClass}
@@ -287,7 +287,7 @@ export function MemoryEditorGrid({ initialRows, focusedNpcId = null }: MemoryEdi
       header: "Priority",
       size: 96,
       cell: ({ row }) => (
-        <input
+        <input aria-label="Importance"
           type="number"
           min={1}
           max={10}
@@ -326,7 +326,7 @@ export function MemoryEditorGrid({ initialRows, focusedNpcId = null }: MemoryEdi
       <div className="flex flex-wrap items-center gap-3">
         <div className="flex min-w-[260px] flex-1 items-center gap-2 border border-szn-border-subtle bg-szn-surface-1 px-3 py-2">
           <Filter className="h-4 w-4 text-szn-text-3" aria-hidden="true" />
-          <input
+          <input aria-label="Global Filter"
             value={globalFilter}
             onChange={(event) => setGlobalFilter(event.target.value)}
             className="w-full bg-transparent text-sm text-szn-text-1 outline-none"
@@ -348,7 +348,7 @@ export function MemoryEditorGrid({ initialRows, focusedNpcId = null }: MemoryEdi
         <label className="szn-btn-ghost inline-flex cursor-pointer items-center gap-2 px-3 py-2 text-sm">
           <Upload className="h-4 w-4" aria-hidden="true" />
           Import
-          <input
+          <input aria-label="File upload"
             ref={fileInputRef}
             type="file"
             accept=".csv,.json,text/csv,application/json"

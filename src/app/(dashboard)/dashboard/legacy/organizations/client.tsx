@@ -274,7 +274,7 @@ export default function OrganizationsClient() {
                 <label className="block text-sm font-medium text-[var(--ink-900)] mb-1.5">
                   {t("dashboard.organizationsPage.orgName")}
                 </label>
-                <input
+                <input aria-label="New Org Name"
                   type="text"
                   value={newOrgName}
                   onChange={(e) => {
@@ -298,7 +298,7 @@ export default function OrganizationsClient() {
                 </label>
                 <div className="flex items-center">
                   <span className="text-[var(--ink-500)] text-sm mr-1">seizn.com/</span>
-                  <input
+                  <input aria-label="New Org Slug"
                     type="text"
                     value={newOrgSlug}
                     onChange={(e) =>

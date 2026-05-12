@@ -9,6 +9,7 @@ import {
   RateLimitErrors,
 } from '@/lib/api-error';
 import { logAuditEvent, getAuditContext, AuditActions } from '@/lib/audit';
+import { verifyCsrfToken } from '@/lib/csrf';
 import { checkIpRateLimitAsync } from '@/lib/rate-limit';
 import { logServerError } from '@/lib/server/logger';
 
@@ -56,6 +57,9 @@ export async function GET(request: NextRequest) {
 // POST /api/keys - Create a new API key
 export async function POST(request: NextRequest) {
   try {
+    const csrfErr = verifyCsrfToken(request);
+    if (csrfErr) return csrfErr;
+
     // IP rate limit for key creation (stricter: 5/min)
     const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
     const ipLimit = await checkIpRateLimitAsync(ip);
@@ -167,6 +171,9 @@ export async function POST(request: NextRequest) {
 // DELETE /api/keys - Revoke an API key
 export async function DELETE(request: NextRequest) {
   try {
+    const csrfErr = verifyCsrfToken(request);
+    if (csrfErr) return csrfErr;
+
     const user = await getRequestUser(request);
     if (!user) {
       return AuthErrors.unauthorized('API keys');

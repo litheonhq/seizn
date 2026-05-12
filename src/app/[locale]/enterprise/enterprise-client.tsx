@@ -485,7 +485,7 @@ export function EnterpriseClient({ dict, locale }: EnterpriseClientProps) {
                 <div className="grid gap-4 md:grid-cols-2">
                   <label className={labelClass}>
                     <span className="mb-2 block font-medium">{copy.labels.companyName} *</span>
-                    <input
+                    <input aria-label="Company Name"
                       type="text"
                       name="company_name"
                       value={formData.company_name}
@@ -496,7 +496,7 @@ export function EnterpriseClient({ dict, locale }: EnterpriseClientProps) {
                   </label>
                   <label className={labelClass}>
                     <span className="mb-2 block font-medium">{copy.labels.yourName} *</span>
-                    <input
+                    <input aria-label="Contact Name"
                       type="text"
                       name="contact_name"
                       value={formData.contact_name}
@@ -510,7 +510,7 @@ export function EnterpriseClient({ dict, locale }: EnterpriseClientProps) {
                 <div className="grid gap-4 md:grid-cols-2">
                   <label className={labelClass}>
                     <span className="mb-2 block font-medium">{copy.labels.workEmail} *</span>
-                    <input
+                    <input aria-label="Email"
                       type="email"
                       name="email"
                       value={formData.email}
@@ -521,7 +521,7 @@ export function EnterpriseClient({ dict, locale }: EnterpriseClientProps) {
                   </label>
                   <label className={labelClass}>
                     <span className="mb-2 block font-medium">{copy.labels.phone}</span>
-                    <input
+                    <input aria-label="Phone"
                       type="tel"
                       name="phone"
                       value={formData.phone}
@@ -534,7 +534,7 @@ export function EnterpriseClient({ dict, locale }: EnterpriseClientProps) {
                 <div className="grid gap-4 md:grid-cols-2">
                   <label className={labelClass}>
                     <span className="mb-2 block font-medium">{copy.labels.jobTitle}</span>
-                    <input
+                    <input aria-label="Job Title"
                       type="text"
                       name="job_title"
                       value={formData.job_title}

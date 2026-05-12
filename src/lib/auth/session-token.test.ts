@@ -28,12 +28,15 @@ vi.mock('next/headers', () => ({
 import {
   createAuthJsSessionToken,
   getAuthJsSessionCookieName,
+  getAuthJsSessionCookieOptions,
   readAuthJsSessionTokenClaims,
 } from './session-token';
 
 const ORIGINAL_ENV = {
   NODE_ENV: process.env.NODE_ENV,
   NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
+  NEXTAUTH_URL: process.env.NEXTAUTH_URL,
+  AUTH_COOKIE_DOMAIN: process.env.AUTH_COOKIE_DOMAIN,
 };
 
 beforeEach(() => {
@@ -45,6 +48,8 @@ beforeEach(() => {
 afterEach(() => {
   process.env.NODE_ENV = ORIGINAL_ENV.NODE_ENV;
   process.env.NEXTAUTH_SECRET = ORIGINAL_ENV.NEXTAUTH_SECRET;
+  process.env.NEXTAUTH_URL = ORIGINAL_ENV.NEXTAUTH_URL;
+  process.env.AUTH_COOKIE_DOMAIN = ORIGINAL_ENV.AUTH_COOKIE_DOMAIN;
 });
 
 describe('createAuthJsSessionToken', () => {
@@ -120,5 +125,26 @@ describe('readAuthJsSessionTokenClaims', () => {
         cookieName: '__Secure-authjs.session-token',
       })
     );
+  });
+});
+
+describe('getAuthJsSessionCookieOptions', () => {
+  it('does not derive a cookie domain from NEXTAUTH_URL', () => {
+    process.env.NODE_ENV = 'production';
+    process.env.NEXTAUTH_URL = 'https://www.seizn.com';
+    delete process.env.AUTH_COOKIE_DOMAIN;
+
+    expect(getAuthJsSessionCookieOptions()).not.toHaveProperty('domain');
+  });
+
+  it('uses explicit AUTH_COOKIE_DOMAIN only', () => {
+    process.env.NODE_ENV = 'production';
+    process.env.AUTH_COOKIE_DOMAIN = '.seizn.com';
+
+    expect(getAuthJsSessionCookieOptions()).toMatchObject({
+      domain: '.seizn.com',
+      secure: true,
+      sameSite: 'lax',
+    });
   });
 });

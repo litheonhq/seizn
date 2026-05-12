@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "title": "Seizn — זיכרון לדמויות NPC",
-    "description": "חברו את Seizn ל-Inworld, ל-Convai או ל-LLM שלכם. זיכרון, קשרים והיכרות שנשארים עם דמויות ה-NPC לאורך הדורות — תמחור לפי גרף, לא לפי מושב."
+    "title": "Seizn - AI memory for fiction writers",
+    "description": "Keep manuscripts, canon, conflict checks, and author memory in one workspace. Seizn helps fiction writers catch contradictions before readers do."
   },
   "nav": {
     "features": "תכונות",
@@ -3641,17 +3641,12 @@
         "replay": "הרצה חוזרת",
         "byok": "מדריך BYOK",
         "changelog": "שינויים",
-        "engine": "Engine →",
         "sdk": "@seizn/sdk-js",
-        "mcp": "@seizn/mcp"
+        "mcp": "@seizn/mcp",
+        "program": "Program"
       },
       "entity": "© 2026 Seizn by Litheon LLC · Wyoming",
       "version": "v1.0 · הדמו של Saebyeok נתונים סינתטיים"
-    },
-    "engine": {
-      "badge": "חדש",
-      "body": "בונים AI לדמויות משנה במשחק? אותו מנוע קאנון, חשוף כ־SDK.",
-      "cta": "engine.seizn.com"
     },
     "checkout": {
       "prefix": "אני מסכים ל",
@@ -3661,6 +3656,12 @@
       "suffix": ".",
       "loading": "פותח את Stripe...",
       "error": "לא ניתן להתחיל בקופה."
+    },
+    "program": {
+      "badge": "in development",
+      "body": "Seizn Program is our native writing app for manuscripts, canon, review, and local files in one workspace.",
+      "cta": "Join Program waitlist",
+      "footerLabel": "Program"
     }
   }
 }

@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import type { Locale } from "@/i18n/config";
 import { DESIGN_PARTNER_MAX_SLOTS, getDesignPartnerSlotStats } from "@/lib/design-partners";
+import { DESIGN_PARTNER_POLICY, formatMonthlyUsd } from "@/lib/policy";
 import { createServerClient } from "@/lib/supabase";
 import { DesignPartnersForm, type DesignPartnerFormCopy } from "./design-partners-form";
 
@@ -46,17 +47,21 @@ type PageCopy = {
   form: DesignPartnerFormCopy;
 };
 
+const designPartnerMonthlyPrice = formatMonthlyUsd(DESIGN_PARTNER_POLICY.STUDIO_PRICE_MONTHLY_USD);
+const designPartnerTermMonths = DESIGN_PARTNER_POLICY.TERM_MONTHS;
+const designPartnerSlotCount = DESIGN_PARTNER_POLICY.QUALIFIED_STUDIOS;
+
 const COPY_EN: PageCopy = {
   metadataTitle: "Seizn Design Partner Program",
   metadataDescription:
-    "Apply for Seizn Design Partner pricing: $99/month Studio for 12 months for the first 10 qualified game teams.",
+    `Apply for Seizn Design Partner pricing: ${designPartnerMonthlyPrice} Studio for ${designPartnerTermMonths} months for the first ${designPartnerSlotCount} qualified game teams.`,
   navPricing: "Pricing",
   navDocs: "Docs",
   navEnterprise: "For Studios",
   navCta: "Apply",
   eyebrow: "02 / DESIGN PARTNERS",
   title: "Twelve months of Studio for",
-  titleAccent: "$99/month",
+  titleAccent: designPartnerMonthlyPrice,
   subtitle:
     "The first ten qualified game teams get 66% off Seizn Studio while we build the public proof around persistent NPC memory, deterministic replay, and story operations.",
   primaryCta: "Apply for a slot",
@@ -67,17 +72,17 @@ const COPY_EN: PageCopy = {
   manifestoTitle: "We want studios close enough to make the product sharper.",
   manifestoBody: [
     "Seizn is not another dialogue wrapper. It is the memory and operations layer behind living NPCs: what they remember, what they must never forget, and how a narrative team proves a shipped world stayed coherent.",
-    "Design Partners get launch-scale Studio access at $99/month for one year. In return, we ask for quarterly feedback and permission to publish a case study once the integration is real.",
+    `Design Partners get launch-scale Studio access at ${designPartnerMonthlyPrice} for one year. In return, we ask for quarterly feedback and permission to publish a case study once the integration is real.`,
   ],
   benefitsEyebrow: "02 / TERMS",
   benefitsTitle: "A small program with concrete obligations.",
   benefitsBody:
-    "The discount is intentionally narrow: ten teams, Studio monthly only, one year. We are optimizing for teams who can show real gameplay memory, not passive waitlist demand.",
+    `The discount is intentionally narrow: ${designPartnerSlotCount} teams, Studio monthly only, one year. We are optimizing for teams who can show real gameplay memory, not passive waitlist demand.`,
   benefits: [
     {
       label: "66% off",
-      title: "$99/month Studio",
-      body: "The SEIZN_DP_2026 coupon applies 66% off the Studio monthly plan for 12 billing cycles.",
+      title: `${designPartnerMonthlyPrice} Studio`,
+      body: `The SEIZN_DP_2026 coupon applies 66% off the Studio monthly plan for ${designPartnerTermMonths} billing cycles.`,
     },
     {
       label: "12 months",

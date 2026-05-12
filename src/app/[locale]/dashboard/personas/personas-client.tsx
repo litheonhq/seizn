@@ -240,7 +240,7 @@ export function PersonaSeedingClient({ copy }: { copy: PersonaDashboardCopy }) {
                 <span className="mb-1 block text-szn-text-2">{copy.filters.occupation}</span>
                 <div className="flex items-center border border-szn-border-subtle bg-szn-bg px-3 py-2 focus-within:border-szn-signal">
                   <Search className="mr-2 h-4 w-4 text-szn-text-3" />
-                  <input
+                  <input aria-label="Occupation"
                     value={occupation}
                     onChange={(event) => setOccupation(event.target.value)}
                     placeholder={copy.filters.occupationPlaceholder}
@@ -261,7 +261,7 @@ export function PersonaSeedingClient({ copy }: { copy: PersonaDashboardCopy }) {
                           : 'border-szn-border-subtle bg-szn-bg text-szn-text-2'
                       }`}
                     >
-                      <input
+                      <input aria-label="Life Stage"
                         type="radio"
                         name="lifeStage"
                         value={key}
@@ -282,7 +282,7 @@ export function PersonaSeedingClient({ copy }: { copy: PersonaDashboardCopy }) {
                     {Math.min(ageMin, ageMax)}-{Math.max(ageMin, ageMax)}
                   </span>
                 </div>
-                <input
+                <input aria-label="Age Min slider"
                   type="range"
                   min={19}
                   max={94}
@@ -290,7 +290,7 @@ export function PersonaSeedingClient({ copy }: { copy: PersonaDashboardCopy }) {
                   onChange={(event) => setAgeMin(Number(event.target.value))}
                   className="w-full accent-szn-signal"
                 />
-                <input
+                <input aria-label="Age Max slider"
                   type="range"
                   min={19}
                   max={94}
@@ -302,7 +302,7 @@ export function PersonaSeedingClient({ copy }: { copy: PersonaDashboardCopy }) {
 
               <label className="block text-sm">
                 <span className="mb-1 block text-szn-text-2">{copy.filters.count}</span>
-                <input
+                <input aria-label="Count"
                   type="number"
                   min={1}
                   max={limit && limit > 0 ? limit : 5000}

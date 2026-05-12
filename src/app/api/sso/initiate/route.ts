@@ -17,6 +17,36 @@ import { ValidationErrors, NotFoundErrors, ServerErrors, createApiError, ErrorCo
 import { sanitizeRelativeRedirect } from '@/lib/security/redirect';
 import { logServerError } from '@/lib/server/logger';
 
+function getClientIp(request: NextRequest): string {
+  return (
+    request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+    request.headers.get('x-real-ip') ||
+    'unknown'
+  );
+}
+
+async function enforceInitiateRateLimit(
+  request: NextRequest,
+  responseMode: 'json' | 'redirect'
+): Promise<NextResponse | null> {
+  const { checkIpRateLimitAsync, getRateLimitHeaders } = await import('@/lib/rate-limit');
+  const result = await checkIpRateLimitAsync(getClientIp(request));
+  if (result.allowed) return null;
+
+  if (responseMode === 'json') {
+    return NextResponse.json(
+      { error: 'Too many SSO attempts. Please try again later.' },
+      { status: 429, headers: getRateLimitHeaders(result) }
+    );
+  }
+
+  const response = NextResponse.redirect(new URL('/login?error=rate_limited', request.url));
+  for (const [key, value] of Object.entries(getRateLimitHeaders(result))) {
+    response.headers.set(key, value);
+  }
+  return response;
+}
+
 /**
  * POST /api/sso/initiate
  *
@@ -27,7 +57,13 @@ import { logServerError } from '@/lib/server/logger';
  */
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
+    const rateLimited = await enforceInitiateRateLimit(request, 'json');
+    if (rateLimited) return rateLimited;
+
+    const body = await request.json().catch(() => null);
+    if (!body || typeof body !== 'object') {
+      return ValidationErrors.invalidBody('Request body must be valid JSON');
+    }
     const { email, connectionId, relayState } = body;
     const safeRelayState = sanitizeRelativeRedirect(
       typeof relayState === 'string' ? relayState : null
@@ -159,6 +195,9 @@ export async function POST(request: NextRequest) {
  * This redirects directly to the IdP instead of returning JSON.
  */
 export async function GET(request: NextRequest) {
+  const rateLimited = await enforceInitiateRateLimit(request, 'redirect');
+  if (rateLimited) return rateLimited;
+
   const { searchParams } = new URL(request.url);
   const email = searchParams.get('email');
   const redirect = sanitizeRelativeRedirect(searchParams.get('redirect'));

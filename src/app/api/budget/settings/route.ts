@@ -8,6 +8,7 @@ import {
 } from "@/lib/errors";
 import { DEFAULT_BUDGET_SETTINGS } from "@/lib/budget-planner/types";
 import { logServerError } from "@/lib/server/logger";
+import { verifyCsrfToken } from "@/lib/csrf";
 
 /**
  * GET /api/budget/settings
@@ -62,6 +63,9 @@ export async function PUT(request: NextRequest) {
   const context = createRequestContext(request);
 
   try {
+    const csrfError = verifyCsrfToken(request);
+    if (csrfError) return csrfError;
+
     const session = await auth();
     if (!session?.user?.id) {
       return errorResponse({ code: "SEIZN_104", message: "Authentication required", status: 401 }, context);

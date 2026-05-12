@@ -9,6 +9,7 @@
  */
 
 import { useState, useEffect, useCallback } from "react";
+import { DATA_RETENTION, formatDays } from "@/lib/policy";
 
 // =============================================================================
 // Types
@@ -16,6 +17,8 @@ import { useState, useEffect, useCallback } from "react";
 
 type RTBFStep = "analysis" | "confirm" | "executing" | "complete" | "error";
 type ErasureScope = "user" | "memory" | "namespace" | "date_range";
+
+const deletionRequestWindow = formatDays(DATA_RETENTION.ACCOUNT_DELETION_DAYS);
 
 interface ImpactAnalysis {
   request_id: string;
@@ -438,7 +441,7 @@ export function RTBFModal({
 
               {/* Confirmation Checkbox */}
               <label className="flex items-start gap-3 cursor-pointer p-4 rounded-xl border-2 border-[var(--signal-conflict)] dark:border-[var(--signal-conflict)] bg-[var(--signal-conflict-soft)] dark:bg-[var(--signal-conflict-ink)]/20">
-                <input
+                <input aria-label="Confirmed"
                   type="checkbox"
                   checked={confirmed}
                   onChange={(e) => setConfirmed(e.target.checked)}
@@ -604,7 +607,7 @@ export function RTBFModal({
         <div className="px-6 py-4 border-t border-[var(--ink-200)] bg-[var(--ink-50)]/50 rounded-b-2xl">
           <p className="text-xs text-[var(--ink-600)] text-center">
             Under GDPR Article 17, you have the right to request erasure of your personal data.
-            We process deletion requests within 30 days.
+            We process deletion requests within {deletionRequestWindow}.
           </p>
         </div>
       </div>

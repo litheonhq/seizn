@@ -7,7 +7,7 @@ import { checkProductionEnv } from './src/lib/env-guard';
 // See: https://github.com/vercel/next.js/issues - colons in filenames not supported on Windows
 const isWindows = process.platform === 'win32';
 
-if (process.env.VERCEL_ENV === 'production' || process.env.NODE_ENV === 'production') {
+if (process.env.VERCEL_ENV === 'production' || process.env.SEIZN_STRICT_ENV_CHECK === '1') {
   const result = checkProductionEnv();
   if (!result.ok) {
     console.warn('[env-guard] Missing production env vars:', result.missing.join(', '));
@@ -30,6 +30,7 @@ const nextConfig: NextConfig = {
 
   // Disable devtools indicator in development
   devIndicators: false,
+  poweredByHeader: false,
 
   async headers() {
     const cacheHeader = {
@@ -37,6 +38,10 @@ const nextConfig: NextConfig = {
       value: 'public, max-age=31536000, immutable',
     };
     const isProduction = process.env.NODE_ENV === 'production';
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? '';
+    const shouldUpgradeInsecureRequests =
+      process.env.VERCEL_ENV === 'production' ||
+      (appUrl.startsWith('https://') && !appUrl.includes('localhost') && !appUrl.includes('127.0.0.1'));
     const contentSecurityPolicy = [
       "default-src 'self'",
       "base-uri 'self'",
@@ -54,6 +59,8 @@ const nextConfig: NextConfig = {
         'https://analytics.seizn.com',
         // Google Analytics gtag.js loader
         'https://www.googletagmanager.com',
+        // Cloudflare Web Analytics / Browser Insights can be injected at the edge.
+        'https://static.cloudflareinsights.com',
       ].filter(Boolean).join(' '),
       [
         "connect-src 'self'",
@@ -73,11 +80,13 @@ const nextConfig: NextConfig = {
         'https://www.googletagmanager.com',
         // PostHog analytics (us.i.posthog.com or self-hosted)
         'https://*.posthog.com',
+        // Cloudflare Web Analytics / Browser Insights beacon endpoint.
+        'https://cloudflareinsights.com',
       ].filter(Boolean).join(' '),
       "frame-src 'self' https://challenges.cloudflare.com https://js.stripe.com https://checkout.stripe.com",
       "worker-src 'self' blob:",
-      "upgrade-insecure-requests",
-    ].join('; ');
+      shouldUpgradeInsecureRequests ? 'upgrade-insecure-requests' : '',
+    ].filter(Boolean).join('; ');
 
     // Security headers for all routes
     const securityHeaders = [
@@ -86,6 +95,9 @@ const nextConfig: NextConfig = {
       { key: 'X-DNS-Prefetch-Control', value: 'off' },
       { key: 'X-Frame-Options', value: 'DENY' },
       { key: 'Origin-Agent-Cluster', value: '?1' },
+      { key: 'Cross-Origin-Opener-Policy', value: 'same-origin-allow-popups' },
+      { key: 'Cross-Origin-Resource-Policy', value: 'same-site' },
+      { key: 'X-Permitted-Cross-Domain-Policies', value: 'none' },
       { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
       {
         key: 'Strict-Transport-Security',
@@ -105,6 +117,9 @@ const nextConfig: NextConfig = {
       { key: 'X-DNS-Prefetch-Control', value: 'off' },
       { key: 'X-Frame-Options', value: 'DENY' },
       { key: 'Origin-Agent-Cluster', value: '?1' },
+      { key: 'Cross-Origin-Opener-Policy', value: 'same-origin-allow-popups' },
+      { key: 'Cross-Origin-Resource-Policy', value: 'same-site' },
+      { key: 'X-Permitted-Cross-Domain-Policies', value: 'none' },
     ];
 
     return [
@@ -118,11 +133,8 @@ const nextConfig: NextConfig = {
         source: '/:path*',
         headers: securityHeaders,
       },
-      // Cache headers for static assets
-      {
-        source: '/_next/static/:path*',
-        headers: [cacheHeader],
-      },
+      // Next.js owns /_next/static cache headers. Keep custom immutable
+      // caching to public assets only to avoid framework cache warnings.
       // Split static asset caching into individual patterns (Next.js doesn't support regex groups)
       { source: '/:path*.png', headers: [cacheHeader] },
       { source: '/:path*.jpg', headers: [cacheHeader] },

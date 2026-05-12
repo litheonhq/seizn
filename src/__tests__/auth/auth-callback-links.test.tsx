@@ -7,22 +7,28 @@ import SignupForm from "@/app/(auth)/signup/signup-form";
 
 const navigationMocks = vi.hoisted(() => ({
   routerPush: vi.fn(),
+  routerReplace: vi.fn(),
+  routerRefresh: vi.fn(),
   searchParams: new URLSearchParams(),
 }));
 
 const authMocks = vi.hoisted(() => ({
   signIn: vi.fn(),
+  getSession: vi.fn(async () => null),
 }));
 
 vi.mock("next/navigation", () => ({
   useRouter: () => ({
     push: navigationMocks.routerPush,
+    replace: navigationMocks.routerReplace,
+    refresh: navigationMocks.routerRefresh,
   }),
   useSearchParams: () => navigationMocks.searchParams,
 }));
 
 vi.mock("next-auth/react", () => ({
   signIn: authMocks.signIn,
+  getSession: authMocks.getSession,
 }));
 
 vi.mock("@/components/auth/Turnstile", () => ({
@@ -49,7 +55,10 @@ describe("auth callback handoff links", () => {
   beforeEach(() => {
     navigationMocks.searchParams = new URLSearchParams();
     navigationMocks.routerPush.mockReset();
+    navigationMocks.routerReplace.mockReset();
+    navigationMocks.routerRefresh.mockReset();
     authMocks.signIn.mockReset();
+    authMocks.getSession.mockResolvedValue(null);
     global.fetch = vi.fn();
   });
 

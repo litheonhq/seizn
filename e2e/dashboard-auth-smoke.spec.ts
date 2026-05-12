@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
 
 /**
  * Dashboard Smoke Tests (Authenticated)
@@ -8,10 +8,12 @@ import { test, expect } from '@playwright/test';
  *
  * Note: if Turnstile is enabled in your local `.env.local`, you likely want:
  * `PLAYWRIGHT_DISABLE_TURNSTILE=1 PLAYWRIGHT_BASE_URL=http://localhost:3001 npx playwright test e2e/dashboard-auth-smoke.spec.ts --project=chromium`
- * Intended to validate the primary click-through pages for Enterprise/Organizations/Autopilot/Webhooks/Settings.
+ * Intended to validate the primary click-through pages for Settings/Billing/Usage/API Keys.
  */
 
 test.describe('Dashboard Smoke (Authenticated)', () => {
+  test.setTimeout(60_000);
+
   const hasCreds = Boolean(process.env.TEST_USER_EMAIL && process.env.TEST_USER_PASSWORD);
   const allowAutoProvision =
     process.env.PLAYWRIGHT_DISABLE_TURNSTILE === '1' || process.env.E2E_ALLOW_AUTO_PROVISION === '1';
@@ -23,6 +25,13 @@ test.describe('Dashboard Smoke (Authenticated)', () => {
   const runId = `${Date.now()}-${Math.random().toString(16).slice(2)}`;
   const email = process.env.TEST_USER_EMAIL || `e2e+${runId}@example.com`;
   const password = process.env.TEST_USER_PASSWORD || `E2E!${runId}Aa`;
+
+  async function expectDashboardPageLoaded(page: Page) {
+    await expect(page.locator('body')).toBeVisible();
+    await expect(page.getByText(/Runtime Error/i)).toHaveCount(0);
+    await expect(page.getByText(/Page not found/i)).toHaveCount(0);
+    expect(new URL(page.url()).pathname).not.toMatch(/^\/(?:login|signup)\b/);
+  }
 
   test.beforeAll(async ({ request }) => {
     if (hasCreds || !allowAutoProvision) return;
@@ -52,43 +61,28 @@ test.describe('Dashboard Smoke (Authenticated)', () => {
 
     // Wait for redirect into dashboard.
     await page.waitForURL(/dashboard/);
-    await expect(page.locator('main')).toBeVisible();
+    await expectDashboardPageLoaded(page);
 
     const paths = [
-      '/dashboard/budget',
-      '/dashboard/enterprise',
-      '/dashboard/federated',
-      '/dashboard/memories',
-      '/dashboard/organizations',
-      '/dashboard/autopilot',
-      '/dashboard/webhooks',
+      '/dashboard',
       '/dashboard/settings',
+      '/dashboard/billing',
+      '/dashboard/author/settings',
+      '/dashboard/usage',
+      '/dashboard/account/api-keys',
+      '/dashboard/account/api-keys/audit',
+      '/dashboard/memories',
+      '/dashboard/keys',
     ] as const;
 
     for (const path of paths) {
-      await page.goto(path);
+      await page.goto(path, { waitUntil: 'domcontentloaded' });
       await page.waitForLoadState('domcontentloaded');
+      await expectDashboardPageLoaded(page);
 
-      if (path === '/dashboard/enterprise') {
-        // Enterprise page isn't wrapped in DashboardShell in all cases.
-        await expect(page.getByRole('heading', { name: /Enterprise/i }).first()).toBeVisible();
-      } else {
-        await expect(page.locator('main')).toBeVisible();
-      }
-    }
-
-    // Best-effort: if an org detail link exists, ensure its "Invites" tab is reachable.
-    await page.goto('/dashboard/organizations');
-    const orgLink = page.locator('a[href^="/dashboard/organizations/"]').first();
-    if (await orgLink.count()) {
-      await orgLink.click();
-      await page.waitForLoadState('domcontentloaded');
-
-      // Some org pages render tabs; if "Invites" exists, it should be clickable.
-      const invitesTab = page.getByRole('button', { name: /Invites/i }).first();
-      if (await invitesTab.count()) {
-        await invitesTab.click();
-        await expect(page.locator('main')).toBeVisible();
+      if (path === '/dashboard/author/settings') {
+        await page.getByRole('button', { name: /Manage Billing|결제 관리/i }).click();
+        await page.waitForURL(/\/(?:en\/)?pricing\b/, { timeout: 10_000 });
       }
     }
   });

@@ -359,7 +359,7 @@ function CandidateCard({
                 <label className="block text-sm font-medium text-[var(--ink-900)] mb-1">
                   Tags (comma-separated)
                 </label>
-                <input
+                <input aria-label="Edit tags"
                   type="text"
                   value={editTags}
                   onChange={(e) => setEditTags(e.target.value)}

@@ -79,7 +79,7 @@ export function StrategyComparison({
     <div className="space-y-6">
       {/* Query Input */}
       <div className="flex gap-3">
-        <input
+        <input aria-label="Query"
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}

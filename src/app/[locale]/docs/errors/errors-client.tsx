@@ -287,7 +287,7 @@ export function ErrorDocsClient({ locale }: Props) {
             {/* Search */}
             <div className="relative flex-1">
               <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--ink-500)]" />
-              <input
+              <input aria-label="Search"
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}

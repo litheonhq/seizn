@@ -2,12 +2,13 @@ import { existsSync, readFileSync } from "fs";
 import path from "path";
 import { renderToStaticMarkup } from "react-dom/server";
 import { createElement } from "react";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import HomePage from "@/app/[locale]/page";
+import PublicApiDocsPage from "@/app/[locale]/api/page";
+import ChangelogPage from "@/app/[locale]/changelog/page";
 import {
   AuthorFlagshipLanding,
   getAuthorLandingCopy,
-  isAuthorEngineSurfaceLive,
 } from "@/components/landing/author-flagship-landing";
 import { DETECTOR_SEED } from "@/components/landing/conflict-detector";
 import { getPricingPageCopy } from "@/app/[locale]/pricing/pricing-copy";
@@ -23,20 +24,15 @@ vi.mock("next/navigation", () => ({
   useRouter: () => ({ push: vi.fn(), refresh: vi.fn() }),
 }));
 
+vi.mock("@/lib/auth", () => ({
+  auth: vi.fn(async () => null),
+}));
+
 const launchLocales = ["en", "ko", "ja", "zh-hans"] as const;
 const tiers = ["indie", "pro", "studio", "enterprise"] as const;
 const cadences = ["monthly", "yearly"] as const;
-const originalEngineSurfaceLive = process.env.NEXT_PUBLIC_ENGINE_SURFACE_LIVE;
 
 describe("Author flagship landing", () => {
-  afterEach(() => {
-    if (originalEngineSurfaceLive === undefined) {
-      delete process.env.NEXT_PUBLIC_ENGINE_SURFACE_LIVE;
-    } else {
-      process.env.NEXT_PUBLIC_ENGINE_SURFACE_LIVE = originalEngineSurfaceLive;
-    }
-  });
-
   it("ships the Round 2.1 English master copy and section inventory", async () => {
     const copy = await getAuthorLandingCopy("en");
 
@@ -74,27 +70,31 @@ describe("Author flagship landing", () => {
     expect(html).toContain("severity-cards");
   });
 
-  it("gates the engine tease behind the live surface env flag", async () => {
+  it("renders the 4-track splitter and keeps Engine teaser gated", async () => {
     const data = await loadSaebyeokDemoData();
     const copy = await getAuthorLandingCopy("en");
 
-    delete process.env.NEXT_PUBLIC_ENGINE_SURFACE_LIVE;
-    expect(isAuthorEngineSurfaceLive()).toBe(false);
-    expect(isAuthorEngineSurfaceLive("0")).toBe(false);
-    expect(isAuthorEngineSurfaceLive("false")).toBe(false);
-    expect(isAuthorEngineSurfaceLive("true")).toBe(true);
-    expect(isAuthorEngineSurfaceLive(" TRUE ")).toBe(true);
-    // Footer cross-link는 항상 노출 (양방향 dual-surface 정책, 2026-05-05 v118)
-    // Engine tease 배너만 NEXT_PUBLIC_ENGINE_SURFACE_LIVE 게이트
-    expect(renderToStaticMarkup(createElement(AuthorFlagshipLanding, { data, locale: "en", copy }))).not.toContain("engine-tease");
+    const html = renderToStaticMarkup(createElement(AuthorFlagshipLanding, { data, locale: "en", copy }));
 
-    process.env.NEXT_PUBLIC_ENGINE_SURFACE_LIVE = "1";
-    expect(isAuthorEngineSurfaceLive()).toBe(true);
-    const liveHtml = renderToStaticMarkup(createElement(AuthorFlagshipLanding, { data, locale: "en", copy }));
-    expect(liveHtml).toContain("engine-tease");
-    expect(liveHtml).toContain('href="https://engine.seizn.com"');
-    expect(liveHtml).toContain('target="_blank"');
-    expect(liveHtml).toContain('rel="noopener noreferrer"');
+    expect(html).toContain("tracks-splitter");
+    expect(html).toContain("Desktop app");
+    expect(html).toContain('href="/en/desktop"');
+    expect(html).toContain('href="/en/docs');
+    expect(html).not.toContain("engine-tease");
+  });
+
+  it("shows the Engine teaser only when the Engine surface is explicitly live", async () => {
+    vi.stubEnv("NEXT_PUBLIC_ENGINE_SURFACE_LIVE", "true");
+    try {
+      const data = await loadSaebyeokDemoData();
+      const copy = await getAuthorLandingCopy("en");
+      const html = renderToStaticMarkup(createElement(AuthorFlagshipLanding, { data, locale: "en", copy }));
+
+      expect(html).toContain("engine-tease");
+      expect(html).toContain("https://engine.seizn.com");
+    } finally {
+      vi.unstubAllEnvs();
+    }
   });
 
   it("renders pricing cadence, secondary tiers, footer entity, and responsive hooks", async () => {
@@ -112,8 +112,45 @@ describe("Author flagship landing", () => {
     expect(html).toContain('href="/en/legal/privacy"');
     expect(html).toContain('href="/en/legal/terms"');
     expect(html).toContain('href="/en/legal/beta-disclosure"');
+    expect(html).toContain("track2-pricing-bridge");
+    expect(html).toContain("View API · MCP plans");
+    expect(html).toContain('href="/en/pricing#track-2"');
+    expect(html).toContain("Create a free API key");
+    expect(html).toContain("$11/mo");
+    expect(html).toContain("50 calls/day");
     expect(html).toContain("© 2026 Seizn by Litheon LLC · Wyoming");
     expect(html).toContain("v1.0 · saebyeok demo is synthetic data");
+  });
+
+  it("keeps public API docs pricing synced to the v9 Track 2 catalog", async () => {
+    const element = await PublicApiDocsPage({ params: Promise.resolve({ locale: "en" }) });
+    const html = renderToStaticMarkup(element);
+
+    expect(html).toContain("50 calls/day");
+    expect(html).toContain("$11/mo");
+    expect(html).toContain("$23/mo");
+    expect(html).toContain("$119/mo");
+    expect(html).toContain("$599/mo");
+    expect(html).toContain('href="/en/pricing#track-2"');
+    expect(html).not.toContain("100 calls/day");
+    expect(html).not.toContain("Stripe v8 catalog");
+    expect(html).not.toContain("$299");
+  });
+
+  it("keeps the public changelog Track 2 launch entry on the active v9 catalog", async () => {
+    const element = await ChangelogPage({ params: Promise.resolve({ locale: "en" }) });
+    const html = renderToStaticMarkup(element);
+    const text = html.replaceAll("<!-- -->", "");
+
+    expect(text).toContain("Free tier (50 calls/day)");
+    expect(text).toContain("Stripe v9 catalog");
+    expect(text).toContain("Indie $11/mo");
+    expect(text).toContain("Pro $23/mo");
+    expect(text).toContain("Studio $119/mo");
+    expect(text).toContain("Studio Managed $599/mo");
+    expect(text).not.toContain("100 calls/day");
+    expect(text).not.toContain("Stripe v8 catalog");
+    expect(text).not.toContain("$299");
   });
 
   it("registers Mark A favicon assets", () => {
@@ -155,10 +192,12 @@ describe("Author flagship landing", () => {
 
   it("renders the localized route with Phase C sample IP data", async () => {
     const element = await HomePage({ params: Promise.resolve({ locale: "en" }) });
+    const children = Array.isArray(element.props.children) ? element.props.children : [element.props.children];
+    const landing = children.find((child) => child?.props?.locale === "en");
 
-    expect(element).toHaveProperty("props.locale", "en");
-    expect(element).toHaveProperty("props.data.summary.characters", 8);
-    expect(element).toHaveProperty("props.data.summary.reviewCases", 50);
+    expect(landing).toHaveProperty("props.locale", "en");
+    expect(landing).toHaveProperty("props.data.summary.characters", 8);
+    expect(landing).toHaveProperty("props.data.summary.reviewCases", 50);
   });
 
   it("keeps the sample IP README free of private dogfood terms", async () => {
