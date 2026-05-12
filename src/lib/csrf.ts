@@ -19,11 +19,17 @@ const LOCAL_ALLOWED_ORIGINS = [
   'http://127.0.0.1:3100',
 ];
 
+const PRODUCTION_ALLOWED_ORIGINS = [
+  'https://www.seizn.com',
+  'https://seizn.com',
+];
+
 function vercelUrl(value: string | undefined): string | undefined {
   return value ? `https://${value}` : undefined;
 }
 
 const ALLOWED_ORIGINS = new Set([
+  ...PRODUCTION_ALLOWED_ORIGINS,
   process.env.NEXT_PUBLIC_SITE_URL,
   process.env.NEXT_PUBLIC_APP_URL,
   process.env.NEXTAUTH_URL,

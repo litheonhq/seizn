@@ -4,8 +4,12 @@ import Link from "next/link";
 import type { Locale } from "@/i18n/config";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { getReliabilityUpdatesCopy } from "@/lib/i18n/reliability-updates";
+import { DATA_RETENTION, SECURITY_POLICY, formatDays } from "@/lib/policy";
 
 type Dictionary = Record<string, unknown>;
+
+const keyExpiryOptions = SECURITY_POLICY.API_KEY_EXPIRY_OPTIONS_DAYS.map(formatDays).join(", ");
+const backupRetentionWindow = formatDays(DATA_RETENTION.BACKUP_RETENTION_DAYS);
 
 interface Props {
   locale: Locale;
@@ -161,7 +165,7 @@ npm run verify:e2e-encryption-db`}
                 <span className="text-[var(--ink-900)] text-xl">✓</span>
                 <div>
                   <h3 className="font-semibold text-[var(--ink-900)] mb-1">Automatic Expiration</h3>
-                  <p className="text-[var(--ink-600)]">Configure keys to auto-expire after 30, 60, 90 days, or custom periods. Expired keys are automatically rejected.</p>
+                  <p className="text-[var(--ink-600)]">Configure keys to auto-expire after {keyExpiryOptions}, or custom periods. Expired keys are automatically rejected.</p>
                 </div>
               </div>
 
@@ -195,7 +199,7 @@ npm run verify:e2e-encryption-db`}
                 <span className="text-[var(--ink-900)] text-xl">✓</span>
                 <div>
                   <h3 className="font-semibold text-[var(--ink-900)] mb-1">Hard Deletion</h3>
-                  <p className="text-[var(--ink-600)]">When you delete memories, they are permanently removed. No retention beyond 30-day backup window.</p>
+                  <p className="text-[var(--ink-600)]">When you delete memories, they are permanently removed. No retention beyond {backupRetentionWindow} backup window.</p>
                 </div>
               </div>
 

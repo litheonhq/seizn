@@ -263,7 +263,7 @@ export function CanonClient({
           </div>
 
           <Field label="NPC ID">
-            <input
+            <input aria-label="NPC ID"
               value={npcId}
               onChange={(event) => setNpcId(event.target.value)}
               placeholder="world-level if empty"
@@ -310,7 +310,7 @@ export function CanonClient({
           </Field>
 
           <Field label="Regex fast-path">
-            <input
+            <input aria-label="Regex Fastpath"
               value={regexFastpath}
               onChange={(event) => setRegexFastpath(event.target.value)}
               placeholder="Gretel|Third War"

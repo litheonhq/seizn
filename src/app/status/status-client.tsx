@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { formatDate } from "@/lib/format-date";
 
 interface ServiceStatus {
   name: string;
@@ -63,6 +62,22 @@ function computeOverallStatus(
   if (downCount >= 1) return 'partial_outage';
   if (degradedCount >= 1) return 'degraded';
   return 'operational';
+}
+
+function formatUtcTimestamp(value: string): string {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  const pad = (part: number) => part.toString().padStart(2, "0");
+  return `${date.getUTCFullYear()}-${pad(date.getUTCMonth() + 1)}-${pad(date.getUTCDate())} ${pad(
+    date.getUTCHours()
+  )}:${pad(date.getUTCMinutes())}:${pad(date.getUTCSeconds())} UTC`;
+}
+
+function formatUtcDate(value: string): string {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  const pad = (part: number) => part.toString().padStart(2, "0");
+  return `${date.getUTCFullYear()}-${pad(date.getUTCMonth() + 1)}-${pad(date.getUTCDate())}`;
 }
 
 export function StatusClient({ initialData }: StatusClientProps) {
@@ -161,7 +176,7 @@ export function StatusClient({ initialData }: StatusClientProps) {
         </Link>
         <div className="flex items-center gap-4">
           <label className="flex items-center gap-2 text-sm text-[var(--ink-600)]">
-            <input
+            <input aria-label="Auto Refresh"
               type="checkbox"
               checked={autoRefresh}
               onChange={(e) => setAutoRefresh(e.target.checked)}
@@ -195,7 +210,7 @@ export function StatusClient({ initialData }: StatusClientProps) {
               {currentStatus.label}
             </h1>
             <p className="text-[var(--ink-600)] text-sm mt-1">
-              Last updated: {new Date(data.last_updated).toLocaleString()}
+              Last updated: {formatUtcTimestamp(data.last_updated)}
             </p>
           </div>
         </div>
@@ -266,11 +281,11 @@ export function StatusClient({ initialData }: StatusClientProps) {
       <div className="mt-8 text-center text-sm text-[var(--ink-600)]">
         <p>
           Subscribe to status updates via{" "}
-          <a href="#" className="text-[var(--ink-900)] hover:underline">
+          <a href="#" className="text-[var(--ink-900)] underline underline-offset-2">
             RSS
           </a>{" "}
           or{" "}
-          <a href="#" className="text-[var(--ink-900)] hover:underline">
+          <a href="#" className="text-[var(--ink-900)] underline underline-offset-2">
             Email
           </a>
         </p>
@@ -365,7 +380,7 @@ function IncidentCard({ incident }: { incident: Incident }) {
           {incident.updates.slice(0, 3).map((update, idx) => (
             <div key={idx} className="text-sm">
               <span className="font-medium">
-                {new Date(update.timestamp).toLocaleString()}
+                {formatUtcTimestamp(update.timestamp)}
               </span>
               <p className="mt-0.5">{update.message}</p>
             </div>
@@ -450,7 +465,7 @@ function IncidentHistory({ incidents }: { incidents?: HistoryIncident[] }) {
                       </span>
                     </div>
                     <div className="flex items-center gap-4 mt-1 text-sm text-[var(--ink-600)]">
-                      <span>{formatDate(incident.started_at)}</span>
+                      <span>{formatUtcDate(incident.started_at)}</span>
                       <span>Duration: {formatDuration(incident.started_at, incident.resolved_at)}</span>
                       <span>Affected: {incident.affected_services.join(", ")}</span>
                     </div>
@@ -499,7 +514,7 @@ function IncidentHistory({ incidents }: { incidents?: HistoryIncident[] }) {
                           <div key={idx} className="relative">
                             <div className="absolute -left-[21px] w-3 h-3 bg-[var(--ink-0)] border-2 border-[var(--ink-200)] rounded-full" />
                             <div className="text-xs text-[var(--ink-600)]">
-                              {new Date(update.timestamp).toLocaleString()}
+                              {formatUtcTimestamp(update.timestamp)}
                             </div>
                             <p className="text-sm text-[var(--ink-900)] mt-0.5">{update.message}</p>
                           </div>

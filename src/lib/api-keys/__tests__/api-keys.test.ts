@@ -228,6 +228,21 @@ describe('Track 2 audit, scopes, and rotation', () => {
   });
 
   it('rotates a key by revoking the old key and inserting a new key', async () => {
+    const select = vi.fn(() => ({
+      eq: () => ({
+        eq: () => ({
+          single: async () => ({
+            data: {
+              scopes: ['recall', 'extract'],
+              rate_limit_per_minute: 120,
+              monthly_quota: 10000,
+              monthly_quota_period: 'month',
+            },
+            error: null,
+          }),
+        }),
+      }),
+    }));
     const update = vi.fn(() => ({
       eq: () => ({
         eq: () => ({ error: null }),
@@ -245,7 +260,7 @@ describe('Track 2 audit, scopes, and rotation', () => {
     const supabase = {
       from(table: string) {
         if (table === 'api_keys') {
-          return { update, insert };
+          return { select, update, insert };
         }
 
         return { insert: auditInsert };
@@ -263,11 +278,16 @@ describe('Track 2 audit, scopes, and rotation', () => {
     expect(rotated.rotatedFromId).toBe('old-key');
     expect(rotated.key).toMatch(/^sk_seizn_/);
     expect(update).toHaveBeenCalled();
+    expect(update.mock.calls[0]?.[0]).not.toHaveProperty('updated_at');
+    expect(select).toHaveBeenCalledWith('scopes, rate_limit_per_minute, monthly_quota, monthly_quota_period');
     expect(insert).toHaveBeenCalledWith(
       expect.objectContaining({
         rotated_from_id: 'old-key',
         key_hash: rotated.hash,
         hash: rotated.hash,
+        scopes: ['recall'],
+        rate_limit_per_minute: 120,
+        monthly_quota: 10000,
       })
     );
     expect(auditInsert).toHaveBeenCalledWith(expect.objectContaining({ action: 'rotated' }));

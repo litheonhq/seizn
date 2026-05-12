@@ -220,7 +220,7 @@ export function BudgetSettings({
             </label>
             <div className="flex gap-4">
               <label className="flex items-center gap-2 cursor-pointer">
-                <input
+                <input aria-label="Mode Soft"
                   type="radio"
                   name="mode"
                   value="soft"
@@ -232,7 +232,7 @@ export function BudgetSettings({
                 <span className="text-sm text-[var(--ink-900)]">Soft</span>
               </label>
               <label className="flex items-center gap-2 cursor-pointer">
-                <input
+                <input aria-label="Mode Hard"
                   type="radio"
                   name="mode"
                   value="hard"

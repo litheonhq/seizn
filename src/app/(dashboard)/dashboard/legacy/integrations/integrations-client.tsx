@@ -242,7 +242,7 @@ export default function IntegrationsClient() {
       {/* Search and Filter */}
       <div className="flex flex-col lg:flex-row lg:items-center gap-4">
         <div className="flex-1">
-          <input
+          <input aria-label="Search query"
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}

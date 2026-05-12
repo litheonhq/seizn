@@ -92,31 +92,31 @@ export default function AuditClient({ entries }: { entries: AuditEntry[] }) {
   }, [entries, state]);
 
   return (
-    <section className="mx-auto w-full max-w-5xl px-6 py-10 text-ink">
+    <section className="mx-auto w-full max-w-5xl px-6 py-10 text-szn-text-1">
       <header className="flex items-center justify-between">
         <div>
           <h1 className="font-serif text-3xl">{t("dashboard.account.apiKeys.audit.title")}</h1>
-          <p className="mt-1 text-sm text-ink/70">
+          <p className="mt-1 text-sm text-szn-text-2">
             {t("dashboard.account.apiKeys.audit.description")}
           </p>
         </div>
         <Link
           href="/dashboard/account/api-keys"
-          className="text-sm text-terracotta underline"
+          className="text-sm text-szn-signal underline"
         >
           ← {t("dashboard.account.apiKeys.title")}
         </Link>
       </header>
 
       <div className="mt-6 flex flex-wrap items-end gap-3">
-        <label className="flex flex-col text-xs text-ink/70">
+        <label className="flex flex-col text-xs text-szn-text-2">
           {t("dashboard.account.apiKeys.audit.filterAction")}
           <select
             value={state.action}
             onChange={(event) =>
               dispatch({ type: "set-action", value: event.target.value as ActionFilter })
             }
-            className="mt-1 rounded-md border border-ink/20 px-3 py-1.5 text-sm"
+            className="mt-1 rounded-md border border-szn-border bg-szn-surface px-3 py-1.5 text-sm text-szn-text-1"
           >
             {ACTION_FILTERS.map((option) => (
               <option key={option} value={option}>
@@ -125,59 +125,61 @@ export default function AuditClient({ entries }: { entries: AuditEntry[] }) {
             ))}
           </select>
         </label>
-        <label className="flex flex-col text-xs text-ink/70">
+        <label className="flex flex-col text-xs text-szn-text-2">
           {t("dashboard.account.apiKeys.audit.from")}
           <input
+            id="track2-api-key-audit-from"
             type="date"
             value={state.from}
             onChange={(event) => dispatch({ type: "set-from", value: event.target.value })}
-            className="mt-1 rounded-md border border-ink/20 px-3 py-1.5 text-sm"
+            className="mt-1 rounded-md border border-szn-border bg-szn-surface px-3 py-1.5 text-sm text-szn-text-1"
           />
         </label>
-        <label className="flex flex-col text-xs text-ink/70">
+        <label className="flex flex-col text-xs text-szn-text-2">
           {t("dashboard.account.apiKeys.audit.to")}
           <input
+            id="track2-api-key-audit-to"
             type="date"
             value={state.to}
             onChange={(event) => dispatch({ type: "set-to", value: event.target.value })}
-            className="mt-1 rounded-md border border-ink/20 px-3 py-1.5 text-sm"
+            className="mt-1 rounded-md border border-szn-border bg-szn-surface px-3 py-1.5 text-sm text-szn-text-1"
           />
         </label>
         <button
           type="button"
           onClick={() => dispatch({ type: "reset" })}
-          className="rounded-md border border-ink/20 px-3 py-1.5 text-sm"
+          className="rounded-md border border-szn-border px-3 py-1.5 text-sm"
         >
           {t("dashboard.account.apiKeys.audit.reset")}
         </button>
         <button
           type="button"
           onClick={() => downloadCsv(filtered)}
-          className="ml-auto rounded-md bg-ink px-4 py-1.5 text-sm text-cream"
+          className="ml-auto rounded-md bg-szn-text-1 px-4 py-1.5 text-sm text-white"
         >
           {t("dashboard.account.apiKeys.audit.exportCsv")}
         </button>
       </div>
 
       {filtered.length === 0 ? (
-        <p className="mt-12 rounded-md border border-dashed border-ink/30 p-8 text-center text-sm text-ink/60">
+        <p className="mt-12 rounded-md border border-dashed border-szn-border p-8 text-center text-sm text-szn-text-2">
           {t("dashboard.account.apiKeys.audit.empty")}
         </p>
       ) : (
-        <ul className="mt-6 divide-y divide-ink/10 rounded-md border border-ink/10">
+        <ul className="mt-6 divide-y divide-szn-border-subtle rounded-md border border-szn-border-subtle">
           {filtered.map((entry) => (
             <li key={entry.id} className="flex flex-col gap-1 p-3 text-sm">
               <div className="flex items-center justify-between">
                 <span className="font-medium">
                   {t(`dashboard.account.apiKeys.audit.action.${entry.action}`)}
                 </span>
-                <time className="text-xs text-ink/60">{new Date(entry.occurredAt).toLocaleString()}</time>
+                <time className="text-xs text-szn-text-2">{new Date(entry.occurredAt).toLocaleString()}</time>
               </div>
-              <code className="text-xs text-ink/60">
+              <code className="text-xs text-szn-text-2">
                 {entry.apiKeyId ?? "—"}
               </code>
               {Object.keys(entry.metadata).length > 0 ? (
-                <pre className="mt-1 whitespace-pre-wrap rounded bg-ink/5 p-2 text-[11px]">
+                <pre className="mt-1 whitespace-pre-wrap rounded bg-szn-surface p-2 text-[11px]">
                   {JSON.stringify(entry.metadata, null, 2)}
                 </pre>
               ) : null}

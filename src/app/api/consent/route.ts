@@ -3,6 +3,7 @@ import { auth } from '@/lib/auth';
 import { normalizeAgeBracket } from '@/lib/compliance/age-gate';
 import { recordConsent } from '@/lib/compliance/consent';
 import { resolveComplianceOrganizationId } from '@/lib/compliance/organization';
+import { verifyCsrfToken } from '@/lib/csrf';
 import { logServerError } from '@/lib/server/logger';
 import { createServerClient } from '@/lib/supabase';
 
@@ -36,6 +37,9 @@ async function requireSessionOrg(): Promise<
 
 export async function POST(request: NextRequest) {
   try {
+    const csrfErr = verifyCsrfToken(request);
+    if (csrfErr) return csrfErr;
+
     const context = await requireSessionOrg();
     if ('error' in context) return context.error;
 

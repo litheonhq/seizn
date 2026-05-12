@@ -39,13 +39,13 @@ describe('WorkspaceShell tab routing fundamentals', () => {
     expect(params.get('tab')).toBe('characters');
   });
 
-  it('NAV_GROUPS workspace items match TopBar tab ids', async () => {
+  it('NAV_GROUPS work items contain author workspace tab ids', async () => {
     const { NAV_GROUPS } = await import(
       '@/components/dashboard/redesign/sidebar/nav-config'
     );
-    const workspace = NAV_GROUPS.find((g) => g.id === 'workspace');
-    expect(workspace).toBeDefined();
-    const ids = workspace!.items.map((i) => i.id);
+    const work = NAV_GROUPS.find((g) => g.id === 'work');
+    expect(work).toBeDefined();
+    const ids = work!.items.map((i) => i.id);
     for (const expected of [
       'inbox',
       'review',

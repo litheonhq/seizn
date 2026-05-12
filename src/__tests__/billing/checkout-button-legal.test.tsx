@@ -82,6 +82,7 @@ describe("CheckoutButton legal agreement", () => {
         body: JSON.stringify({
           tier: "pro",
           cadence: "yearly",
+          column: "managed",
           legalAccepted: true,
           legalVersions: CHECKOUT_LEGAL_VERSIONS,
         }),
@@ -121,6 +122,26 @@ describe("CheckoutButton legal agreement", () => {
 
     expect(queryCheckbox()).toBeNull();
     expect(getButton("Start Studio").disabled).toBe(false);
+  });
+
+  it("passes the selected billing column to checkout", async () => {
+    await render(
+      <CheckoutButton tier="indie" cadence="monthly" column="byok">
+        Start BYOK
+      </CheckoutButton>
+    );
+
+    await click(getCheckbox());
+    await click(getButton("Start BYOK"));
+
+    await waitForCondition(() => {
+      const [, init] = (global.fetch as ReturnType<typeof vi.fn>).mock.calls[0];
+      expect(JSON.parse(String(init?.body))).toMatchObject({
+        tier: "indie",
+        cadence: "monthly",
+        column: "byok",
+      });
+    });
   });
 });
 

@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import type { Dictionary } from "@/i18n/get-dictionary";
 import type { Locale } from "@/i18n/config";
+import { DATA_RETENTION, SECURITY_POLICY, formatDays, formatYears } from "@/lib/policy";
 
 interface TrustClientProps {
   dict: Dictionary;
@@ -67,6 +68,13 @@ const XIcon = ({ className }: { className?: string }) => (
     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
   </svg>
 );
+
+const apiKeyRotationWindow = formatDays(SECURITY_POLICY.API_KEY_ROTATION_DAYS);
+const apiLogsWindow = formatDays(DATA_RETENTION.API_LOGS_DAYS);
+const traceLogsWindow = formatDays(DATA_RETENTION.TRACE_LOGS_DAYS);
+const backupRetentionWindow = formatDays(DATA_RETENTION.BACKUP_RETENTION_DAYS);
+const auditLogRetentionWindow = formatYears(DATA_RETENTION.AUDIT_LOG_RETENTION_YEARS);
+const accountDeletionWindow = formatDays(DATA_RETENTION.ACCOUNT_DELETION_DAYS);
 
 // ============================================
 // Section Components
@@ -176,7 +184,7 @@ export function TrustClient({ dict, locale }: TrustClientProps) {
           title: "Key Management",
           items: [
             "API keys hashed with SHA-256 + salt",
-            "Automatic key rotation reminders (90 days)",
+            `Automatic key rotation reminders (${apiKeyRotationWindow})`,
             "Instant key revocation capability"
           ]
         }
@@ -204,17 +212,17 @@ export function TrustClient({ dict, locale }: TrustClientProps) {
         description: "How long we keep data and how to delete it",
         periods: [
           { type: "Memories", period: "Until deleted by user" },
-          { type: "API Logs", period: "90 days rolling" },
-          { type: "Traces", period: "30 days (configurable)" },
-          { type: "Audit Logs", period: "1 year" },
-          { type: "Backups", period: "30 days encrypted" }
+          { type: "API Logs", period: `${apiLogsWindow} rolling` },
+          { type: "Traces", period: `${traceLogsWindow} (configurable)` },
+          { type: "Audit Logs", period: auditLogRetentionWindow },
+          { type: "Backups", period: `${backupRetentionWindow} encrypted` }
         ],
         deletion: {
           title: "Deletion Process",
           items: [
             "DELETE /api/memories removes immediately",
-            "Account deletion: 30-day grace period",
-            "Hard delete from backups within 30 days",
+            `Account deletion: ${accountDeletionWindow} grace period`,
+            `Hard delete from backups within ${backupRetentionWindow}`,
             "GDPR/CCPA data export available on request"
           ]
         }

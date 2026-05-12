@@ -12,6 +12,11 @@ vi.mock('@/lib/api/request-user', () => ({
   getRequestUser: vi.fn(),
 }));
 
+vi.mock('@/lib/author/billing/feature-gate', () => ({
+  checkFeatureGate: vi.fn(async () => ({ allowed: true, remaining: null, cap: null })),
+  recordFeatureUsage: vi.fn(),
+}));
+
 const ORIGINAL_ENV = {
   NODE_ENV: process.env.NODE_ENV,
   AUTHOR_UI_ENABLED: process.env.AUTHOR_UI_ENABLED,

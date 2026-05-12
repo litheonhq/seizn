@@ -196,7 +196,7 @@ export function AutopilotToggle({
                       {Math.round(explorationRate * 100)}%
                     </span>
                   </div>
-                  <input
+                  <input aria-label="Exploration Rate slider"
                     type="range"
                     min="0"
                     max="0.5"

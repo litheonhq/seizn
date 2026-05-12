@@ -21,8 +21,9 @@ describe('Pro plan feature differentiators', () => {
     expect(PLANS.studio.apiCallsMonthly).toBe(1_000_000);
   });
 
-  it('applies a 25 percent Pro annual discount in plan config and Stripe cents', () => {
-    expect(PLANS.pro.priceYearly).toBe(8_991);
-    expect(PLAN_YEARLY_USD_CENTS.pro).toBe(899_100);
+  it('keeps Pro display pricing aligned with the v9 Stripe catalog', () => {
+    expect(PLANS.pro.priceMonthly).toBe(149);
+    expect(PLANS.pro.priceYearly).toBe(1_788);
+    expect(PLAN_YEARLY_USD_CENTS.pro).toBe(178_800);
   });
 });

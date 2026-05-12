@@ -1,5 +1,6 @@
 import { randomUUID } from "crypto";
-import { getStripeClient } from "@/lib/stripe";
+import { getStripeClient, hasStripeSecretKey } from "@/lib/stripe";
+import { STRIPE_METER_EVENT_NAMES } from "@/lib/stripe-metered";
 import { createServerClient, hasServerSupabaseServiceRoleConfig } from "@/lib/supabase";
 import {
   getAuthorTierConfig,
@@ -290,7 +291,7 @@ export async function emitAuthorTokenOverage(input: {
   }
 
   const eventName = readAuthorTokenMeterEventName();
-  if (!eventName || !process.env.STRIPE_SECRET_KEY) {
+  if (!eventName || !hasStripeSecretKey()) {
     return false;
   }
 
@@ -308,13 +309,16 @@ export async function emitAuthorTokenOverage(input: {
 }
 
 function hasAuthorTokenMeterPath(stripeCustomerId: string | null): boolean {
-  return Boolean(stripeCustomerId && readAuthorTokenMeterEventName() && process.env.STRIPE_SECRET_KEY);
+  return Boolean(stripeCustomerId && hasAuthorTokenMeterConfig() && hasStripeSecretKey());
 }
 
 function readAuthorTokenMeterEventName(): string | null {
-  return (
+  return process.env.STRIPE_AUTHOR_TOKEN_METER_EVENT_NAME?.trim() || STRIPE_METER_EVENT_NAMES.memories;
+}
+
+function hasAuthorTokenMeterConfig(): boolean {
+  return Boolean(
     process.env.STRIPE_METER_ID_MEMORIES?.trim() ||
-    process.env.STRIPE_METER_ID_OPS?.trim() ||
-    null
+    process.env.STRIPE_METERED_PRICE_ID_MEMORIES?.trim()
   );
 }

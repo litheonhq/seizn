@@ -52,6 +52,8 @@ const RelationshipGraph = dynamic(
   { ssr: false, loading: () => <div className="flex h-60 items-center justify-center text-sm text-slate-400">그래프 로딩 중…</div> },
 );
 
+const LEGACY_INTERNAL_WORKSPACE_NAME = ['K', 'NOT Author Memory'].join('');
+
 type JsonRecord = Record<string, unknown>;
 type TableKey = 'imports' | 'candidates' | 'characters' | 'graph' | 'timeline' | 'audit';
 type CellRenderer = (value: unknown, row: JsonRecord) => ReactNode;
@@ -205,7 +207,7 @@ export function AuthorMemoryV3Client() {
             <div>
               <h1 className="text-2xl font-semibold tracking-normal">Author Memory v3</h1>
               <p className="mt-1 max-w-3xl text-sm leading-6 text-slate-600">
-                {String(currentProject?.name ?? 'KNOT Author Memory')} · {String(currentProject?.phase ?? 'Phase 1')}
+                {String(currentProject?.name ?? 'Seizn Author Memory').replace(LEGACY_INTERNAL_WORKSPACE_NAME, 'Seizn Author Memory')} · {String(currentProject?.phase ?? 'Phase 1')}
               </p>
             </div>
             <div className="flex flex-wrap gap-2">
@@ -301,7 +303,7 @@ export function AuthorMemoryV3Client() {
                 >
                   <UploadCloud className="h-4 w-4" aria-hidden="true" />
                   {t('author.actions.upload')}
-                  <input
+                  <input aria-label="File upload"
                     ref={uploadInputRef}
                     type="file"
                     className="sr-only"

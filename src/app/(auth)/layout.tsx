@@ -31,8 +31,8 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Sign In · Seizn",
-  description: "Sign in to your Seizn account to manage NPC memory graphs.",
+  title: "Sign In - Seizn",
+  description: "Sign in to your Seizn account to manage author workspaces, canon, and Program waitlists.",
 };
 
 export default async function AuthLayout({
@@ -46,7 +46,7 @@ export default async function AuthLayout({
   const dir = isRtl(locale) ? "rtl" : "ltr";
 
   return (
-    <html lang={locale} dir={dir}>
+    <html lang={locale} dir={dir} data-scroll-behavior="smooth">
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable} auth-root antialiased`}
       >

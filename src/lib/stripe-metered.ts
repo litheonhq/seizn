@@ -1,6 +1,7 @@
 import { createServerClient } from '@/lib/supabase';
 import crypto from 'crypto';
 import { getPlan } from '@/lib/plan-limits';
+import { getStripeSecretKey } from '@/lib/stripe';
 import {
   migrateLegacyPlanName,
   type LegacyPlanName,
@@ -34,6 +35,10 @@ function resolveOpusOveragePriceId(
     if (v8Id && attachedPriceIds.has(v8Id)) return v8Id;
   }
   return v9Id ?? v8Id;
+}
+
+function hasConfiguredOpusOveragePriceId(): boolean {
+  return Boolean(getV9Track2OpusOveragePriceId() || getV8Track2OpusOveragePriceId());
 }
 import { logServerError, logServerWarn } from '@/lib/server/logger';
 
@@ -178,10 +183,6 @@ export function calculateOverageForecast(input: {
   };
 }
 
-function getStripeSecretKey(): string {
-  return process.env.STRIPE_SECRET_KEY || process.env.STRIPE_SECRET_KEY_SEIZN || '';
-}
-
 function getMeteredPriceIds(): string[] {
   return [
     process.env.STRIPE_METERED_PRICE_ID_MEMORIES,
@@ -205,7 +206,7 @@ async function stripeRequest<T>(
 ): Promise<T> {
   const secretKey = getStripeSecretKey();
   if (!secretKey) {
-    throw new Error('STRIPE_SECRET_KEY is not configured');
+    throw new Error('STRIPE_RESTRICTED_KEY, STRIPE_SECRET_KEY_SEIZN, or STRIPE_SECRET_KEY is not configured');
   }
 
   const response = await fetch(`${STRIPE_API_BASE}${path}`, {
@@ -324,6 +325,9 @@ export async function ensureV8Track2OpusOverageAttached(
   if (!subscriptionId) {
     return { attached: false, reason: 'missing_subscription' };
   }
+  if (!hasConfiguredOpusOveragePriceId()) {
+    return { attached: false, reason: 'missing_overage_price_env' };
+  }
 
   // Fetch subscription FIRST so we can check what's actually attached.
   // resolveOpusOveragePriceId then prefers the matching catalog version.
@@ -388,6 +392,9 @@ export async function ensureV8Track2OpusOverageDetached(
   }
   if (!subscriptionId) {
     return { detached: false, reason: 'missing_subscription' };
+  }
+  if (!hasConfiguredOpusOveragePriceId()) {
+    return { detached: false, reason: 'missing_overage_price_env' };
   }
 
   // Fetch subscription first so we can pick whichever catalog (v8 or v9)

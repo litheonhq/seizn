@@ -6,6 +6,7 @@ examples/
 
 # Development files
 *.log
+.codex-reports/
 .env.local
 .env.development.local
 .env.test.local

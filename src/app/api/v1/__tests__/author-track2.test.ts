@@ -28,7 +28,7 @@ import {
   ScopeDeniedError,
 } from '@/lib/api-keys';
 import { resetAuthorUiServiceForTests } from '@/lib/author/ui/service';
-import { __resetApiV1IdempotencyForTests } from '@/lib/api-v1/middleware';
+import { __resetApiV1IdempotencyForTests, handleApiV1 } from '@/lib/api-v1/middleware';
 import { GET as projectsGET, POST as projectsPOST } from '../projects/route';
 import { GET as usageGET } from '../usage/route';
 import { POST as approvePOST } from '../projects/[id]/canon/[entityId]/approve/route';
@@ -163,6 +163,26 @@ describe('Track 2 /api/v1 author facade', () => {
     expect(response.status).toBe(429);
     expect(response.headers.get('retry-after')).toBe('60');
     expect(body.code).toBe('rate_limited');
+  });
+
+  it('does not disclose unexpected internal exception messages', async () => {
+    const response = await handleApiV1(
+      request('/leak-check'),
+      { scope: 'projects:read', costUnits: 0, tool: 'projects' },
+      async () => {
+        throw new Error('database password=super-secret connection failed');
+      }
+    );
+    const body = await response.json();
+
+    expect(response.status).toBe(500);
+    expect(body).toMatchObject({
+      code: 'internal_server_error',
+      detail: 'Internal server error',
+      instance: '/api/v1/leak-check',
+    });
+    expect(JSON.stringify(body)).not.toContain('super-secret');
+    expect(JSON.stringify(body)).not.toContain('password');
   });
 
   it('returns payment required when quota is exhausted', async () => {

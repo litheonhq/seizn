@@ -595,7 +595,7 @@ export default function WebhooksClient() {
                 <label className="block text-sm font-medium text-[var(--ink-600)] mb-1">
                   {t("dashboard.webhooks.modal.name")}
                 </label>
-                <input
+                <input aria-label="Form Name"
                   type="text"
                   value={formName}
                   onChange={(e) => setFormName(e.target.value)}
@@ -607,7 +607,7 @@ export default function WebhooksClient() {
                 <label className="block text-sm font-medium text-[var(--ink-600)] mb-1">
                   {t("dashboard.webhooks.modal.url")}
                 </label>
-                <input
+                <input aria-label="Form Url"
                   type="url"
                   value={formUrl}
                   onChange={(e) => setFormUrl(e.target.value)}
@@ -625,7 +625,7 @@ export default function WebhooksClient() {
                       key={event.id}
                       className="flex items-start gap-3 p-2 rounded-lg hover:bg-[var(--ink-50)] cursor-pointer"
                     >
-                      <input
+                      <input aria-label="Event option"
                         type="checkbox"
                         checked={formEvents.includes(event.id)}
                         onChange={(e) => {

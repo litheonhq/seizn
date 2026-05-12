@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { CSSProperties } from "react";
 import Link from "next/link";
 import { CheckoutButton } from "@/components/checkout-button";
@@ -25,6 +25,13 @@ interface PricingClientProps {
 }
 
 const TIERS = ["indie", "pro", "studio", "enterprise"] as const satisfies readonly AuthorBillingTier[];
+type PricingTrack = "web" | "api" | "program";
+const dateFormatterOptions = {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+  timeZone: 'UTC',
+} as const satisfies Intl.DateTimeFormatOptions;
 
 interface PricePair {
   /** Charter (discounted) price in USD. Falls back to regular if Charter is null. */
@@ -33,6 +40,13 @@ interface PricePair {
   regular: number;
   /** True when the active price is the Charter price (different from regular). */
   isCharter: boolean;
+}
+
+function trackFromLocationHash(): PricingTrack {
+  if (typeof window === "undefined") return "web";
+  if (window.location.hash === "#track-2") return "api";
+  if (window.location.hash === "#track-3") return "program";
+  return "web";
 }
 
 function resolvePricePair(
@@ -78,8 +92,37 @@ function resolvePricePair(
 export function PricingClient({ locale, copy }: PricingClientProps) {
   const [cadence, setCadence] = useState<BillingCadence>("monthly");
   const [column, setColumn] = useState<BillingColumn>("managed");
+  const [activeTrack, setActiveTrack] = useState<PricingTrack>("web");
   const plans = useMemo(() => TIERS.map((tier) => AUTHOR_BILLING_TIERS[tier]), []);
-  const charterEnd = useMemo(() => new Date(CHARTER_WINDOW_END_AT).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' }), []);
+  const charterEnd = useMemo(
+    () => new Intl.DateTimeFormat(locale, dateFormatterOptions).format(new Date(CHARTER_WINDOW_END_AT)),
+    [locale],
+  );
+
+  useEffect(() => {
+    const syncTrackFromHash = () => {
+      setActiveTrack(trackFromLocationHash());
+    };
+
+    syncTrackFromHash();
+    const delayedSyncs = [0, 50, 250, 750].map((delay) => window.setTimeout(syncTrackFromHash, delay));
+    window.addEventListener("hashchange", syncTrackFromHash);
+    window.addEventListener("popstate", syncTrackFromHash);
+    window.addEventListener("pageshow", syncTrackFromHash);
+    return () => {
+      delayedSyncs.forEach((id) => window.clearTimeout(id));
+      window.removeEventListener("hashchange", syncTrackFromHash);
+      window.removeEventListener("popstate", syncTrackFromHash);
+      window.removeEventListener("pageshow", syncTrackFromHash);
+    };
+  }, []);
+
+  const selectTrack = (track: PricingTrack) => {
+    setActiveTrack(track);
+    if (typeof window === "undefined") return;
+    const hash = track === "api" ? "#track-2" : track === "program" ? "#track-3" : "#track-1";
+    window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}${hash}`);
+  };
 
   return (
     <div className="author-landing">
@@ -95,7 +138,7 @@ export function PricingClient({ locale, copy }: PricingClientProps) {
             <Link href={`/${locale}/pricing`} className="hidden text-sm font-medium md:block" style={{ color: "var(--ink-900)" }}>
               {copy.nav.pricing}
             </Link>
-            <Link href={`/${locale}/docs`} className="hidden text-sm md:block" style={{ color: "var(--ink-600)" }}>
+            <Link href={`/${locale}/api`} className="hidden text-sm md:block" style={{ color: "var(--ink-600)" }}>
               {copy.nav.docs}
             </Link>
             <Link
@@ -139,22 +182,24 @@ export function PricingClient({ locale, copy }: PricingClientProps) {
                   </button>
                 ))}
               </div>
-              <div className="inline-grid w-full gap-1 rounded-[var(--radius-md)] border p-1 sm:w-fit sm:grid-cols-2" style={{ borderColor: "var(--ink-200)", background: "var(--ink-50)" }}>
-                {(["managed", "byok"] as const).map((option) => (
-                  <button
-                    key={option}
-                    type="button"
-                    onClick={() => setColumn(option)}
-                    className="min-h-11 rounded-[var(--radius-md)] px-4 py-2 text-sm font-medium"
-                    style={{
-                      background: column === option ? "var(--ink-900)" : "transparent",
-                      color: column === option ? "var(--ink-0)" : "var(--ink-600)",
-                    }}
-                  >
-                    {option === "managed" ? "Managed" : "BYOK"}
-                  </button>
-                ))}
-              </div>
+              {activeTrack === "web" ? (
+                <div className="inline-grid w-full gap-1 rounded-[var(--radius-md)] border p-1 sm:w-fit sm:grid-cols-2" style={{ borderColor: "var(--ink-200)", background: "var(--ink-50)" }}>
+                  {(["managed", "byok"] as const).map((option) => (
+                    <button
+                      key={option}
+                      type="button"
+                      onClick={() => setColumn(option)}
+                      className="min-h-11 rounded-[var(--radius-md)] px-4 py-2 text-sm font-medium"
+                      style={{
+                        background: column === option ? "var(--ink-900)" : "transparent",
+                        color: column === option ? "var(--ink-0)" : "var(--ink-600)",
+                      }}
+                    >
+                      {option === "managed" ? "Managed" : "BYOK"}
+                    </button>
+                  ))}
+                </div>
+              ) : null}
               <p className="text-xs" style={{ color: "var(--ink-500)" }}>
                 Charter pricing through {charterEnd}
               </p>
@@ -165,61 +210,96 @@ export function PricingClient({ locale, copy }: PricingClientProps) {
         {/* Track tab nav (W3.1) — anchor-jump between Track 1 / 2 / 3 sections */}
         <nav aria-label="Pricing tracks" className="px-4 sm:px-6 lg:px-8">
           <div className="author-shell flex flex-wrap items-center gap-2 border-b pb-3" style={{ borderColor: "var(--ink-200)" }}>
-            <a href="#track-1" className="rounded-full px-4 py-2 text-sm font-medium" style={{ background: "var(--ink-100)", color: "var(--text-primary)" }}>
+            <button
+              type="button"
+              onClick={() => selectTrack("web")}
+              className="inline-flex min-h-10 items-center rounded-full px-4 py-2 text-sm transition-colors"
+              style={{
+                background: activeTrack === "web" ? "var(--ink-100)" : "transparent",
+                color: activeTrack === "web" ? "var(--text-primary)" : "var(--text-secondary)",
+                fontWeight: activeTrack === "web" ? 600 : 400,
+              }}
+            >
               Web (Author Memory)
-            </a>
-            <a href="#track-2" className="rounded-full px-4 py-2 text-sm" style={{ color: "var(--text-secondary)" }}>
+            </button>
+            <button
+              type="button"
+              onClick={() => selectTrack("api")}
+              className="inline-flex min-h-10 items-center rounded-full px-4 py-2 text-sm transition-colors"
+              style={{
+                background: activeTrack === "api" ? "var(--ink-100)" : "transparent",
+                color: activeTrack === "api" ? "var(--text-primary)" : "var(--text-secondary)",
+                fontWeight: activeTrack === "api" ? 600 : 400,
+              }}
+            >
               API · MCP
-            </a>
-            <a href="#track-3" className="rounded-full px-4 py-2 text-sm inline-flex items-center gap-2" style={{ color: "var(--text-secondary)" }}>
-              Desktop
+            </button>
+            <button
+              type="button"
+              onClick={() => selectTrack("program")}
+              className="inline-flex min-h-10 items-center gap-2 rounded-full px-4 py-2 text-sm transition-colors"
+              style={{
+                background: activeTrack === "program" ? "var(--ink-100)" : "transparent",
+                color: activeTrack === "program" ? "var(--text-primary)" : "var(--text-secondary)",
+                fontWeight: activeTrack === "program" ? 600 : 400,
+              }}
+            >
+              Program
               <span className="rounded-full px-2 py-0.5 text-[10px] font-medium" style={{ background: "var(--sev-p2-bg)", color: "var(--sev-p2-text)" }}>
                 Soon
               </span>
-            </a>
+            </button>
           </div>
         </nav>
 
-        <section id="track-1" className="px-4 pb-16 pt-8 sm:px-6 lg:px-8">
-          <div className="author-shell grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-            {plans.map((plan) => {
-              const pair = resolvePricePair(plan, plan.byokOnly && column === 'byok' ? 'managed' : column, cadence);
-              return (
-                <PricingCard
-                  key={plan.id}
-                  tier={plan.id}
-                  cadence={cadence}
-                  column={plan.byokOnly ? 'managed' : column}
-                  name={plan.label}
-                  price={pair.active}
-                  regularPrice={pair.regular}
-                  isCharter={pair.isCharter}
-                  tokenCap={plan.tokenCapMonth}
-                  features={copy.features[plan.id]}
-                  blurb={copy.blurbs[plan.id]}
-                  recommended={plan.recommended}
-                  byokRequired={plan.byokRequired}
-                  locale={locale}
-                  copy={copy}
-                />
-              );
-            })}
-          </div>
-        </section>
+        {activeTrack === "web" ? (
+          <>
+            <section id="track-1" className="px-4 pb-16 pt-8 sm:px-6 lg:px-8">
+              <div className="author-shell grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+                {plans.map((plan) => {
+                  const pair = resolvePricePair(plan, plan.byokOnly && column === 'byok' ? 'managed' : column, cadence);
+                  return (
+                    <PricingCard
+                      key={plan.id}
+                      tier={plan.id}
+                      cadence={cadence}
+                      column={plan.byokOnly ? 'managed' : column}
+                      name={plan.label}
+                      price={pair.active}
+                      regularPrice={pair.regular}
+                      isCharter={pair.isCharter}
+                      tokenCap={plan.tokenCapMonth}
+                      features={copy.features[plan.id]}
+                      blurb={copy.blurbs[plan.id]}
+                      recommended={plan.recommended}
+                      byokRequired={plan.byokRequired}
+                      locale={locale}
+                      copy={copy}
+                    />
+                  );
+                })}
+              </div>
+            </section>
 
-        <section className="border-y px-4 py-10 sm:px-6 lg:px-8" style={{ borderColor: "var(--ink-100)", background: "var(--ink-50)" }}>
-          <div className="author-shell grid gap-5 md:grid-cols-3">
-            {copy.launchNotes.map((note) => (
-              <LaunchNote key={note.title} title={note.title} body={note.body} />
-            ))}
-          </div>
-        </section>
+            <section className="border-y px-4 py-10 sm:px-6 lg:px-8" style={{ borderColor: "var(--ink-100)", background: "var(--ink-50)" }}>
+              <div className="author-shell grid gap-5 md:grid-cols-3">
+                {copy.launchNotes.map((note) => (
+                  <LaunchNote key={note.title} title={note.title} body={note.body} />
+                ))}
+              </div>
+            </section>
+          </>
+        ) : null}
 
-        <PricingTrack2Section locale={locale} />
+        {activeTrack === "api" ? (
+          <PricingTrack2Section locale={locale} cadence={cadence} checkoutCopy={copy.checkout} />
+        ) : null}
 
-        <section id="track-3" className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
-          <PricingTrack3Section locale={locale} />
-        </section>
+        {activeTrack === "program" ? (
+          <section id="track-3" className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
+            <PricingTrack3Section locale={locale} />
+          </section>
+        ) : null}
 
         <section className="mx-auto max-w-3xl px-4 py-16 sm:px-6">
           <h2 className="author-serif text-3xl" style={{ color: "var(--ink-900)" }}>
@@ -245,12 +325,12 @@ export function PricingClient({ locale, copy }: PricingClientProps) {
           <Link href={`/${locale}`} className="font-medium" style={{ color: "var(--ink-900)" }}>
             Seizn
           </Link>
-          <span>{copy.footer.copyright.replace("{year}", new Date().getFullYear().toString())}</span>
+          <span>{copy.footer.copyright.replace("{year}", new Date().getUTCFullYear().toString())}</span>
           <nav className="flex flex-wrap gap-5" aria-label="Pricing footer">
             <a href={`/${locale}/legal/privacy`} className="hover:underline">{copy.footer.privacy}</a>
             <a href={`/${locale}/legal/terms`} className="hover:underline">{copy.footer.terms}</a>
             <a href={`/${locale}/legal/beta-disclosure`} className="hover:underline">{copy.footer.beta}</a>
-            <a href={`/${locale}/docs/faq`} className="hover:underline">{copy.footer.contact}</a>
+            <a href="mailto:support@seizn.com" className="hover:underline">{copy.footer.contact}</a>
           </nav>
         </div>
       </footer>
@@ -313,7 +393,7 @@ function PricingCard({
           {isCharter && regularPrice !== price ? (
             <span
               className="text-base line-through"
-              style={{ color: recommended ? "oklch(1 0 0 / 0.40)" : "var(--ink-400)" }}
+              style={{ color: recommended ? "oklch(1 0 0 / 0.62)" : "var(--ink-400)" }}
               aria-label={`Regular price ${formatUsd(regularPrice)}`}
             >
               ${formatUsd(regularPrice)}
@@ -325,7 +405,7 @@ function PricingCard({
           </span>
         </div>
         {isCharter ? (
-          <p className="author-mono mt-1 text-[10px] uppercase tracking-wide" style={{ color: recommended ? "var(--signal-canon)" : "var(--signal-canon)" }}>
+          <p className="author-mono mt-1 text-[10px] uppercase tracking-wide" style={{ color: recommended ? "var(--signal-canon)" : "var(--signal-canon-ink)" }}>
             Charter pricing
           </p>
         ) : null}
@@ -366,7 +446,8 @@ function PricingCard({
         <CheckoutButton
           tier={tier}
           cadence={cadence}
-          successUrl="/dashboard/billing?success=true"
+          column={column}
+          successUrl="/dashboard/author/settings?section=billing&success=true"
           cancelUrl={`/${locale}/pricing`}
           privacyHref={`/${locale}/legal/privacy`}
           termsHref={`/${locale}/legal/terms`}

@@ -1,7 +1,9 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import { csrfFetch } from "@/lib/client/csrf-fetch";
 import type { ExpiresIn } from "@/lib/sharing/types";
+import { TOKENS, formatDays } from "@/lib/policy";
 
 // ============================================
 // Types
@@ -13,6 +15,8 @@ interface DebugBundleExportProps {
 }
 
 type ExportFormat = "json" | "markdown";
+
+const reviewTokenExpiryWindow = formatDays(TOKENS.REVIEW_TOKEN_EXPIRY_DAYS);
 
 // ============================================
 // Icons
@@ -88,21 +92,16 @@ export function DebugBundleExport({ traceId, onExported }: DebugBundleExportProp
   const [shareUrl, setShareUrl] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
-  const getApiKey = useCallback(() => {
-    return localStorage.getItem("seizn_api_key") || "";
-  }, []);
-
   // Download bundle
-  const handleDownload = async () => {
+  const handleDownload = useCallback(async () => {
     setLoading(true);
     setError(null);
 
     try {
-      const response = await fetch(`/api/traces/${traceId}/export-bundle`, {
+      const response = await csrfFetch(`/api/traces/${traceId}/export-bundle`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-api-key": getApiKey(),
         },
         body: JSON.stringify({
           format,
@@ -139,20 +138,19 @@ export function DebugBundleExport({ traceId, onExported }: DebugBundleExportProp
     } finally {
       setLoading(false);
     }
-  };
+  }, [format, hideRawContent, maskPii, maskSecrets, onExported, traceId]);
 
   // Create share link
-  const handleShare = async () => {
+  const handleShare = useCallback(async () => {
     setLoading(true);
     setError(null);
     setShareUrl(null);
 
     try {
-      const response = await fetch(`/api/traces/${traceId}/share`, {
+      const response = await csrfFetch(`/api/traces/${traceId}/share`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-api-key": getApiKey(),
         },
         body: JSON.stringify({
           expiresIn,
@@ -176,7 +174,7 @@ export function DebugBundleExport({ traceId, onExported }: DebugBundleExportProp
     } finally {
       setLoading(false);
     }
-  };
+  }, [expiresIn, hideRawContent, maskPii, maskSecrets, traceId]);
 
   // Copy share URL
   const handleCopy = async () => {
@@ -282,7 +280,7 @@ export function DebugBundleExport({ traceId, onExported }: DebugBundleExportProp
                     <span className="font-medium">Share link created!</span>
                   </div>
                   <div className="flex gap-2">
-                    <input
+                    <input aria-label="Share URL"
                       type="text"
                       value={shareUrl}
                       readOnly
@@ -308,7 +306,7 @@ export function DebugBundleExport({ traceId, onExported }: DebugBundleExportProp
                   <p className="text-xs text-gray-500 mt-3">
                     {expiresIn === "never"
                       ? "This link never expires."
-                      : `This link expires in ${expiresIn === "1h" ? "1 hour" : expiresIn === "24h" ? "24 hours" : "7 days"}.`}
+                      : `This link expires in ${expiresIn === "1h" ? "1 hour" : expiresIn === "24h" ? "24 hours" : reviewTokenExpiryWindow}.`}
                   </p>
                 </div>
               )}
@@ -414,7 +412,7 @@ export function DebugBundleExport({ traceId, onExported }: DebugBundleExportProp
                   <label className="block text-sm font-medium text-gray-300 mb-3">Privacy Options</label>
                   <div className="space-y-3">
                     <label className="flex items-center gap-3 cursor-pointer">
-                      <input
+                      <input aria-label="Mask Pii"
                         type="checkbox"
                         checked={maskPii}
                         onChange={(e) => setMaskPii(e.target.checked)}
@@ -427,7 +425,7 @@ export function DebugBundleExport({ traceId, onExported }: DebugBundleExportProp
                     </label>
 
                     <label className="flex items-center gap-3 cursor-pointer">
-                      <input
+                      <input aria-label="Mask Secrets"
                         type="checkbox"
                         checked={maskSecrets}
                         onChange={(e) => setMaskSecrets(e.target.checked)}
@@ -440,7 +438,7 @@ export function DebugBundleExport({ traceId, onExported }: DebugBundleExportProp
                     </label>
 
                     <label className="flex items-center gap-3 cursor-pointer">
-                      <input
+                      <input aria-label="Hide Raw Content"
                         type="checkbox"
                         checked={hideRawContent}
                         onChange={(e) => setHideRawContent(e.target.checked)}

@@ -4,6 +4,9 @@ import { StatusClient } from './status-client';
 export const metadata = {
   title: 'System Status · Seizn',
   description: 'Real-time system status and uptime information for Seizn API services',
+  alternates: {
+    canonical: '/status',
+  },
 };
 
 // ISR: Revalidate every 60 seconds
@@ -218,7 +221,7 @@ export default async function StatusPage() {
   const data = await getStatusData();
 
   return (
-    <div className="min-h-screen bg-[var(--ink-50)]">
+    <main className="min-h-screen bg-[var(--ink-50)]">
       {data && (
         <noscript>
           <SSRStatusContent data={data} />
@@ -232,6 +235,6 @@ export default async function StatusPage() {
         fallback also rendered SSRStatusContent before hydration completed.
       */}
       <StatusClient initialData={data} />
-    </div>
+    </main>
   );
 }

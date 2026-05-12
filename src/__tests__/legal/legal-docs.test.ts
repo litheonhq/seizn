@@ -18,10 +18,20 @@ import {
 } from "@/lib/checkout-copy";
 
 describe("legal document loader", () => {
-  it("loads all 4 launch locales across the 3 legal documents", async () => {
+  const englishLabels = [
+    "Privacy",
+    "Terms",
+    "Beta Disclosure",
+    "Refund Policy",
+    "Sub-processors",
+    "AI Transparency",
+    "DPA",
+  ];
+
+  it("loads all 4 launch locales across the 7 legal route documents", async () => {
     const documents = await listLegalDocumentsForLaunchLocales();
 
-    expect(documents).toHaveLength(12);
+    expect(documents).toHaveLength(28);
     for (const document of documents) {
       expect(LEGAL_DOCUMENTS).toContain(document.slug);
       expect(document.title.length).toBeGreaterThan(3);
@@ -30,32 +40,30 @@ describe("legal document loader", () => {
     }
   });
 
-  it("maps zh route variants to the shared zh legal source", async () => {
+  it("maps every launch route locale to the English legal source of truth", async () => {
     const simplified = await getLegalDocument("privacy", "zh-hans");
     const traditional = await getLegalDocument("terms", "zh-hant");
-    const bare = await getLegalDocument("beta-disclosure", "zh");
+    const korean = await getLegalDocument("beta-disclosure", "ko");
 
-    expect(simplified.contentLocale).toBe("zh");
-    expect(traditional.contentLocale).toBe("zh");
-    expect(bare.contentLocale).toBe("zh");
+    expect(simplified.contentLocale).toBe("en");
+    expect(traditional.contentLocale).toBe("en");
+    expect(korean.contentLocale).toBe("en");
   });
 
   it("keeps legal i18n copy complete for the four launch languages", () => {
     expect(() => assertLegalI18nComplete()).not.toThrow();
-    expect(resolveLegalContentLocale("ko")).toBe("ko");
+    expect(resolveLegalContentLocale("ko")).toBe("en");
     expect(resolveLegalContentLocale("fr")).toBe("en");
   });
 
-  it.each([
-    ["en", ["Privacy", "Terms", "Beta Disclosure"]],
-    ["ko", ["개인정보", "이용약관", "베타 고지"]],
-    ["ja", ["プライバシー", "利用規約", "ベータ開示"]],
-    ["zh-hans", ["隐私", "条款", "Beta 披露"]],
-  ])("returns localized legal nav labels for %s", (locale, expectedLabels) => {
-    const labels = getLegalDocumentLabels(locale);
+  it.each(["en", "ko", "ja", "zh-hans"])(
+    "returns English legal nav labels for %s under the single-SSOT policy",
+    (locale) => {
+      const labels = getLegalDocumentLabels(locale);
 
-    expect(LEGAL_DOCUMENTS.map((slug) => labels[slug])).toEqual(expectedLabels);
-  });
+      expect(LEGAL_DOCUMENTS.map((slug) => labels[slug])).toEqual(englishLabels);
+    },
+  );
 
   it("reads launch legal frontmatter used by runtime gates", async () => {
     await expect(getBetaDisclosureUntil("en")).resolves.toBe("2026-08-31");
@@ -72,10 +80,10 @@ describe("legal document loader", () => {
     expect(typeof privacyVersion).toBe("string");
 
     expect(CHECKOUT_LEGAL_VERSIONS.terms).toBe(
-      formatCheckoutLegalVersion(termsDocType as string, termsVersion as string)
+      formatCheckoutLegalVersion(termsDocType as string, termsVersion as string),
     );
     expect(CHECKOUT_LEGAL_VERSIONS.privacy).toBe(
-      formatCheckoutLegalVersion(privacyDocType as string, privacyVersion as string)
+      formatCheckoutLegalVersion(privacyDocType as string, privacyVersion as string),
     );
   });
 

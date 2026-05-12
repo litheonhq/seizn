@@ -454,7 +454,7 @@ export function LocaleDocsClient({ locale, dictionary }: Props) {
       <LandingNav locale={locale} ctaHref="/login" ctaLabel={t("docs.nav.getStarted")} />
 
       <main className="mx-auto flex max-w-7xl gap-12 px-6 py-12">
-        <nav className="hidden w-64 shrink-0 lg:block">
+        <nav aria-label="Documentation sections" className="hidden w-64 shrink-0 lg:block">
           <div className="sticky top-24 space-y-6">
             {copy.groups.map((group) => (
               <div key={group.title}>
@@ -545,7 +545,7 @@ export function LocaleDocsClient({ locale, dictionary }: Props) {
             Seizn
           </Link>
           <div className="text-sm text-szn-text-3">{t("footer.copyright", { year: currentYear })}</div>
-          <nav className="flex flex-wrap items-center gap-5">
+          <nav aria-label="Footer navigation" className="flex flex-wrap items-center gap-5">
             <Link href={`/${locale}/privacy`} className="text-sm text-szn-text-3 transition-colors hover:text-szn-text-1">
               {t("footer.privacy")}
             </Link>

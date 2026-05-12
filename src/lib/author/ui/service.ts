@@ -261,6 +261,7 @@ interface AuthorUiState {
   settingsByProject: Map<string, ReturnType<typeof buildDefaultSettings>>;
   auditLog: AuthorAuditLogStore;
   auditLogWrites: Set<Promise<void>>;
+  seedCheckedProjects: Set<string>;
   uiStore?: AuthorUiStore;
   byok: {
     enabled: boolean;
@@ -1478,7 +1479,11 @@ export class AuthorUiService {
     if (process.env.AUTHOR_UI_STORE !== 'supabase') {
       return;
     }
+    if (this.state.seedCheckedProjects.has(projectId)) {
+      return;
+    }
     await seedAuthorUiProject(this.store, this.userId, projectId, buildSeedRowsFromState(this.state, projectId));
+    this.state.seedCheckedProjects.add(projectId);
   }
 
   async flushAuditWrites(): Promise<void> {
@@ -1885,8 +1890,8 @@ function createSeedState(userId: string): AuthorUiState {
   const settings = buildDefaultSettings();
   const project: AuthorUiProject = {
     id: DEFAULT_PROJECT_ID,
-    name: 'KNOT Author Memory',
-    description: 'KNOT short 1 canon review workspace seeded from Author Memory v3 artifacts.',
+    name: 'Seizn Author Memory',
+    description: 'Seizn author canon review workspace seeded from Author Memory v3 artifacts.',
     scope: ['global', 'short1', 'main'],
     entity_count: characterMap.size,
     candidate_count: candidates.filter((candidate) => candidate.status === 'candidate').length,
@@ -1908,6 +1913,7 @@ function createSeedState(userId: string): AuthorUiState {
     settingsByProject: new Map([[DEFAULT_PROJECT_ID, settings]]),
     auditLog: createAuthorAuditLogStoreForUser({ userId }),
     auditLogWrites: new Set(),
+    seedCheckedProjects: new Set(),
     byok: {
       enabled: false,
       provider: null,

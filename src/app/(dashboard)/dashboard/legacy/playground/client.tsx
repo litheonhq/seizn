@@ -207,7 +207,7 @@ export function PlaygroundClient() {
             <label className="block text-sm font-medium text-[var(--ink-900)] mb-1">
               {t("dashboard.playground.namespace")}
             </label>
-            <input
+            <input aria-label="Namespace"
               type="text"
               value={namespace}
               onChange={(e) => setNamespace(e.target.value)}
@@ -224,7 +224,7 @@ export function PlaygroundClient() {
               <label className="block text-sm font-medium text-[var(--ink-900)] mb-1">
                 Top K
               </label>
-              <input
+              <input aria-label="Top K"
                 type="number"
                 min={1}
                 max={100}
@@ -239,7 +239,7 @@ export function PlaygroundClient() {
               <label className="block text-sm font-medium text-[var(--ink-900)] mb-1">
                 {t("dashboard.playground.threshold")}
               </label>
-              <input
+              <input aria-label="Threshold"
                 type="number"
                 min={0}
                 max={1}
@@ -276,7 +276,7 @@ export function PlaygroundClient() {
           {/* Rerank Toggle */}
           <div className="mb-6">
             <label className="flex items-center gap-3 cursor-pointer">
-              <input
+              <input aria-label="Enable Rerank"
                 type="checkbox"
                 checked={enableRerank}
                 onChange={(e) => setEnableRerank(e.target.checked)}

@@ -198,7 +198,7 @@ export function SimulationSetup({
         </label>
         <div className="flex gap-4">
           <label className="flex items-center gap-2">
-            <input
+            <input aria-label="Test Policy Mode Existing"
               type="radio"
               name="testPolicyMode"
               value="existing"
@@ -209,7 +209,7 @@ export function SimulationSetup({
             <span className="text-sm">Select existing policy</span>
           </label>
           <label className="flex items-center gap-2">
-            <input
+            <input aria-label="Test Policy Mode Yaml"
               type="radio"
               name="testPolicyMode"
               value="yaml"
@@ -255,7 +255,7 @@ export function SimulationSetup({
           <label className="block text-sm text-gray-600">
             Max Queries to Test
           </label>
-          <input
+          <input aria-label="Max Queries"
             type="number"
             value={maxQueries}
             onChange={(e) => setMaxQueries(parseInt(e.target.value) || 50)}

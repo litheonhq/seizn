@@ -1,5 +1,6 @@
 import { DESIGN_PARTNER_COUPON_CODE, isApprovedDesignPartnerStudio } from '@/lib/design-partners';
 import { createServerClient } from '@/lib/supabase';
+import { getStripeSecretKey } from '@/lib/stripe';
 import type { PlanName } from '@/lib/stripe-config';
 
 const STRIPE_API_BASE = 'https://api.stripe.com/v1';
@@ -31,10 +32,6 @@ export interface CreateStripeCheckoutSessionResult {
   appliedPromoCode: string | null;
 }
 
-function getStripeSecretKey(): string {
-  return process.env.STRIPE_SECRET_KEY || process.env.STRIPE_SECRET_KEY_SEIZN || '';
-}
-
 function getStripePriceId(plan: CheckoutPlanName, cadence: BillingCadence): string {
   const envKey = `STRIPE_PRICE_ID_${plan.toUpperCase()}_${cadence === 'yearly' ? 'YEARLY' : 'MONTHLY'}`;
   const priceId = process.env[envKey];
@@ -60,7 +57,7 @@ async function stripeRequest<T>(
 ): Promise<T> {
   const secretKey = getStripeSecretKey();
   if (!secretKey) {
-    throw new Error('STRIPE_SECRET_KEY is not configured');
+    throw new Error('STRIPE_RESTRICTED_KEY, STRIPE_SECRET_KEY_SEIZN, or STRIPE_SECRET_KEY is not configured');
   }
 
   const response = await fetch(`${STRIPE_API_BASE}${path}`, {

@@ -340,7 +340,7 @@ export function RerankerClient() {
                       : "border-[var(--ink-200)] hover:border-[var(--ink-200)]/80"
                   }`}
                 >
-                  <input
+                  <input aria-label="Model"
                     type="radio"
                     name="model"
                     value={model.id}
@@ -364,7 +364,7 @@ export function RerankerClient() {
             <div className="flex items-center justify-between mb-4">
               <h2 className="font-semibold text-[var(--ink-900)]">Content Domain</h2>
               <label className="flex items-center gap-2 text-sm">
-                <input
+                <input aria-label="Auto Detect"
                   type="checkbox"
                   checked={autoDetect}
                   onChange={(e) => setAutoDetect(e.target.checked)}
@@ -412,7 +412,7 @@ export function RerankerClient() {
           <div className="bg-[var(--ink-0)] rounded-lg border border-[var(--ink-200)] p-6">
             <h2 className="font-semibold text-[var(--ink-900)] mb-4">Relevance Threshold</h2>
             <div className="space-y-4">
-              <input
+              <input aria-label="Threshold slider"
                 type="range"
                 min="0"
                 max="1"
@@ -443,7 +443,7 @@ export function RerankerClient() {
                 <label className="block text-sm font-medium text-[var(--ink-900)] mb-1">
                   Query
                 </label>
-                <input
+                <input aria-label="Test Query"
                   type="text"
                   value={testQuery}
                   onChange={(e) => setTestQuery(e.target.value)}

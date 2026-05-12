@@ -318,7 +318,7 @@ export function RegionSelector({
                 <label className="block text-sm font-medium text-[var(--ink-900)] mb-1.5">
                   Reason for change (optional)
                 </label>
-                <input
+                <input aria-label="Reason"
                   type="text"
                   value={reason}
                   onChange={(e) => setReason(e.target.value)}

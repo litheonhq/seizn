@@ -1,7 +1,7 @@
 # Seizn -- Tech Stack Documentation
 > Auto-generated on 2026-03-02
 
-Seizn is an AI Memory Infrastructure platform that extracts, stores, and retrieves context for AI applications. The platform provides persistent memory via APIs, SDKs, and a management dashboard.
+Seizn is split into two public product surfaces: `www.seizn.com` serves Author Memory, the author dashboard, the Author API/MCP surface, and Seizn Program waitlist flows; `engine.seizn.com` serves the game/NPC AI Engine marketing surface. Both share the same Next.js codebase and deployment pipeline.
 
 ---
 
@@ -29,7 +29,7 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 | Data Grids | @tanstack/react-table | ^8.21.3 | Designer Memory UI spreadsheet grid with sorting/filtering |
 | Charts | Recharts | ^3.6.0 | Analytics, evals, traces, RetOps dashboards (7 files) |
 | Graph Visualization | @xyflow/react | ^12.10.0 | Memory mind map, knowledge graph canvas (8 files) |
-| Force Graphs | react-force-graph-2d | ^1.29.1 | NPC relationship graph canvas with 100+ interactive entity nodes |
+| Force Graphs | react-force-graph-2d / react-force-graph-3d + Three.js | ^1.29.1 / ^0.184.0 | NPC relationship graph canvas and Author relationship graph 2D/3D workspace views |
 | Markdown | react-markdown | ^10.1.0 | Homepage snippet tabs |
 | Code Highlighting | react-syntax-highlighter | ^16.1.0 | Homepage code snippets |
 | Error Boundaries | react-error-boundary | ^6.1.0 | AsyncBoundary component for streaming |
@@ -55,10 +55,12 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 | Memory Budgeting | Hot/warm/cold tier budgets | -- | Legacy v1 memories now support `entity_id`, `tier`, `pinned`, recall counters, recall promotion, byte sizing, scheduled `/api/cron/tier-demotion`, `/api/budget/tier-stats`, `/api/v1/memory-budget` telemetry, and `/dashboard/memories/budget` monitoring. |
 | Designer Memory UI | @tanstack/react-table + CSV/JSON round-trip | -- | `/dashboard/memory-editor` and `/dashboard/memory-editor/[npc_id]` provide spreadsheet editing; `/api/memory-editor/import` previews/applies diffs, runs Canon Lock validation, and relies on memory history/version triggers. |
 | NPC Timeline / Graph UI | SVG timeline + react-force-graph-2d | -- | `/dashboard/npcs/[id]/timeline`, `/dashboard/npcs/[id]/graph`, `/api/npcs/[id]/timeline`, and `/api/npcs/[id]/graph` visualize memory, canon, gossip, and belief relationships with SVG export support. |
+| Author Relationship Graph UI | SVG + react-force-graph-3d + Three.js | -- | `/dashboard/author?tab=graph` keeps the readable 2D graph and adds a mouse-rotatable 3D force graph in the same Author workspace shell. |
 | Theory-of-Mind Memory | Belief shards | -- | Perspective-aware recall via `belief_shards`, `/api/v1/beliefs`, `/api/v1/memories.recall`, and `/dashboard/memories/beliefs` so NPCs only retrieve facts they know. |
 | Memory Decay | Forgetting curves | -- | `decay_policies`, per-memory strength metadata, recall reinforcement, decay-aware reranking, `/api/v1/decay-policies`, and `/dashboard/memories/decay`. |
 | Bot Protection | Cloudflare Turnstile | -- | CAPTCHA on login/signup forms |
 | API Pattern | Next.js Route Handlers | -- | `src/app/api/` with 80+ route directories |
+| Public Surface Routing | Next.js proxy + host helpers | -- | `src/proxy.ts` and `src/lib/surface.ts` keep author marketing on `www.seizn.com` while redirecting Engine-owned public routes such as docs, enterprise, comparison, bench, design partners, and playground to `engine.seizn.com`. |
 | API Auth | Bearer token (`szn_` prefix) | -- | API key hash verification via Supabase, x-api-key deprecated (sunset 2026-05-01) |
 | Rate Limiting | Upstash Redis + in-memory fallback | -- | Sliding window algorithm, per-plan RPM limits |
 | Cache | Upstash Redis | ^1.36.1 | Embedding cache (7-day TTL), rate limit counters |
@@ -79,6 +81,7 @@ Seizn is an AI Memory Infrastructure platform that extracts, stores, and retriev
 | Persona Seeding | Nemotron-Personas-Korea + graph entities | -- | `/api/personas/preview` and `/api/personas/seed` let studios preview, auto-seed, or hybrid-approve Korean NPC personas into `graph_entities` with synthetic provenance and visible dataset attribution on `/[locale]/dashboard/personas`. |
 | Unity SDK | Unity 2022.3 LTS + UnityWebRequest | 0.1.0 | `packages/seizn-unity` ships the `com.seizn.unity` UPM package with memory, canon, and replay APIs, editor settings stored at `ProjectSettings/Seizn.asset`, coroutine alternatives, and a Basic NPC sample. |
 | Email | Resend | ^6.7.0 | Transactional emails (`src/lib/email/`) |
+| Program Waitlist | Next.js Route Handler + Resend | -- | `/api/waitlist/program` is the canonical Seizn Program waitlist endpoint. `/api/waitlist/desktop` remains a legacy alias, while confirmation tokens are stored as SHA-256 hashes in the existing `desktop_waitlist` table for migration compatibility. |
 | Payments | Stripe Billing | -- | 5-tier subscriptions, Stage 01 metered overage, and Stage 02 Design Partner coupons. `usage_events` and `usage_aggregates_monthly` feed `/api/internal/usage/flush`; `design_partner_applications` and `design_partner_relationships` gate `SEIZN_DP_2026` checkout discounts for approved Studio customers; `/api/health/env` detects missing metered billing env before silent zero-billing. |
 | Vector Search | Supabase pgvector (default) | -- | BYO vector store support: Pinecone, Weaviate, Qdrant |
 | Scene Context | Supabase + v1 scene API | -- | `scenes` stores bounded NPC/faction/location context; `/api/v1/memories` can apply scene-aware recall boosts via `scene_id` or `entity_ids`. |
@@ -197,6 +200,8 @@ Translation method: JSON dictionary files in `src/i18n/dictionaries/{locale}.jso
 | `@xyflow/react` | ^12.10.0 | Interactive graph/flow visualization (mind maps, knowledge graphs) |
 | `@tanstack/react-table` | ^8.21.3 | Spreadsheet-like dashboard data grids |
 | `react-force-graph-2d` | ^1.29.1 | Force-directed NPC relationship graphs |
+| `react-force-graph-3d` | ^1.29.1 | Mouse-rotatable Author relationship graph |
+| `three` / `three-spritetext` | ^0.184.0 / ^1.10.0 | WebGL scene rendering and node labels for the Author 3D graph |
 | `recharts` | ^3.6.0 | Data visualization charts (analytics, evals, traces) |
 | `@react-pdf/renderer` | ^4.5.1 | Server-side post-mortem PDF generation |
 | `@opentelemetry/sdk-node` | ^0.211.0 | Distributed tracing with OTLP export |
@@ -217,7 +222,7 @@ Translation method: JSON dictionary files in `src/i18n/dictionaries/{locale}.jso
 
 ### Routing Pattern
 - **App Router** with route groups: `(auth)`, `(dashboard)`, `[locale]`
-- Public marketing pages under `[locale]/` with 22-locale support
+- Public author marketing pages under `[locale]/` with 22-locale support; Engine-owned legacy public routes are redirected by host/path helpers instead of being linked from the Author surface
 - Dashboard at `(dashboard)/dashboard/` with 25+ sub-routes (analytics, autopilot, budget, devtools, evals, governance, integrations, keys, memories, organizations, playground, policy-marketplace, privacy, reports, reranker, security, settings, traces, usage, webhooks)
 - API routes at `api/` with 80+ endpoint directories organized by domain
 - Legal pages (`/terms`, `/privacy`, `/refund`) at root level without locale prefix
@@ -252,7 +257,8 @@ Translation method: JSON dictionary files in `src/i18n/dictionaries/{locale}.jso
 - Sentry integration for server + client instrumentation
 
 ### Security Patterns
-- CSRF protection (`src/lib/csrf.ts`)
+- CSRF protection (`src/lib/csrf.ts`, `/api/csrf`, and browser `csrfFetch` for cookie-auth state changes)
+- Dashboard-internal trace share/export APIs support session-cookie auth with strict CSRF while preserving API-key auth for external callers.
 - Rate limiting with sliding window (Redis + in-memory fallback)
 - API key hashing and expiration
 - Scoped API keys (`src/lib/scoped-api-keys/`)

@@ -2,9 +2,9 @@ import type { Metadata, Viewport } from "next";
 import { WebVitalsReporter } from "@/components/rum/WebVitalsReporter";
 import "./globals.css";
 
-const title = "Seizn · Memory for AI NPCs";
+const title = "Seizn - AI memory for fiction writers";
 const description =
-  "Plug into Inworld, Convai, or your own LLM. Seizn gives your NPCs persistent memory, relationships, and cross-generation recall — graph-priced, not per-seat.";
+  "Keep manuscripts, canon, conflict checks, and author memory in one workspace. Seizn helps fiction writers catch contradictions before readers do.";
 
 export const viewport: Viewport = {
   width: "device-width",

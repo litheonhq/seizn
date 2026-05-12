@@ -50,6 +50,16 @@ function buildSelectCount(count: number, error: unknown = null) {
   };
 }
 
+function buildPriorKeys(data: Array<{ monthly_quota: number | null; monthly_quota_period: string | null }> = []) {
+  return {
+    eq: vi.fn().mockReturnValue({
+      is: vi.fn().mockReturnValue({
+        limit: vi.fn().mockResolvedValue({ data, error: null }),
+      }),
+    }),
+  };
+}
+
 describe('createApiKey server action', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -102,7 +112,9 @@ describe('createApiKey server action', () => {
     const insert = vi.fn().mockReturnValue({ select: insertSelect });
     supabaseMock.client = mockSupabase({
       api_keys: {
-        select: vi.fn().mockReturnValue(buildSelectCount(2)),
+        select: vi.fn()
+          .mockReturnValueOnce(buildSelectCount(2))
+          .mockReturnValueOnce(buildPriorKeys()),
         insert,
         update: vi.fn(),
       },
@@ -137,7 +149,9 @@ describe('createApiKey server action', () => {
     const insert = vi.fn().mockReturnValue({ select: insertSelect });
     supabaseMock.client = mockSupabase({
       api_keys: {
-        select: vi.fn().mockReturnValue(buildSelectCount(0)),
+        select: vi.fn()
+          .mockReturnValueOnce(buildSelectCount(0))
+          .mockReturnValueOnce(buildPriorKeys()),
         insert,
         update: vi.fn(),
       },
@@ -200,18 +214,61 @@ describe('revokeApiKey server action', () => {
         }),
       }),
     };
+    const update = vi.fn().mockReturnValue(updateChain);
     supabaseMock.client = mockSupabase({
       api_keys: {
         select: vi.fn(),
         insert: vi.fn(),
-        update: vi.fn().mockReturnValue(updateChain),
+        update,
       },
     });
     const result = await revokeApiKey('key-9');
     expect(result).toEqual({ ok: true, id: 'key-9' });
+    expect(update.mock.calls[0]?.[0]).not.toHaveProperty('updated_at');
     expect(recordAuditMock).toHaveBeenCalledWith(
       expect.objectContaining({ action: 'revoked', apiKeyId: 'key-9' }),
     );
+  });
+
+  it('does not fail revoke when audit insert fails', async () => {
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    recordAuditMock.mockRejectedValueOnce(new Error('database internal detail'));
+    const updateChain = {
+      eq: vi.fn().mockReturnValue({
+        eq: vi.fn().mockReturnValue({
+          is: vi.fn().mockReturnValue({
+            select: vi.fn().mockReturnValue({
+              maybeSingle: vi.fn().mockResolvedValue({
+                data: { id: 'key-audit-soft-fail' },
+                error: null,
+              }),
+            }),
+          }),
+        }),
+      }),
+    };
+    const update = vi.fn().mockReturnValue(updateChain);
+    supabaseMock.client = mockSupabase({
+      api_keys: {
+        select: vi.fn(),
+        insert: vi.fn(),
+        update,
+      },
+    });
+
+    const result = await revokeApiKey('key-audit-soft-fail');
+
+    expect(result).toEqual({ ok: true, id: 'key-audit-soft-fail' });
+    expect(update.mock.calls[0]?.[0]).not.toHaveProperty('updated_at');
+    expect(consoleSpy).toHaveBeenCalledWith(
+      '[track2-api-keys] audit log failed',
+      expect.objectContaining({
+        action: 'revoked',
+        apiKeyId: 'key-audit-soft-fail',
+        operation: 'revoke',
+      }),
+    );
+    consoleSpy.mockRestore();
   });
 });
 

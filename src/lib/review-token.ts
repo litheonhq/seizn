@@ -42,6 +42,17 @@ export interface TokenVerifyResult {
   error?: string;
 }
 
+const MAX_REVIEW_TOKEN_LENGTH = 4096;
+
+function constantTimeStringEqual(left: string, right: string): boolean {
+  if (left.length !== right.length) return false;
+  let diff = 0;
+  for (let i = 0; i < left.length; i += 1) {
+    diff |= left.charCodeAt(i) ^ right.charCodeAt(i);
+  }
+  return diff === 0;
+}
+
 function base64urlDecode(str: string): string {
   let base64 = str.replace(/-/g, '+').replace(/_/g, '/');
   while (base64.length % 4) {
@@ -61,6 +72,10 @@ export async function verifyReviewToken(token: string): Promise<TokenVerifyResul
   }
 
   try {
+    if (!token || token.length > MAX_REVIEW_TOKEN_LENGTH) {
+      return { valid: false, error: 'Invalid token length' };
+    }
+
     const parts = token.split('.');
     if (parts.length !== 2) {
       return { valid: false, error: 'Invalid token format' };
@@ -69,7 +84,7 @@ export async function verifyReviewToken(token: string): Promise<TokenVerifyResul
     const [payloadStr, signature] = parts;
     const expectedSignature = await createSignature(payloadStr, tokenSecret);
 
-    if (signature !== expectedSignature) {
+    if (!constantTimeStringEqual(signature, expectedSignature)) {
       return { valid: false, error: 'Invalid signature' };
     }
 

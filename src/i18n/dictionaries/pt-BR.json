@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "title": "Seizn — Memória para NPCs com IA",
-    "description": "Plugue o Seizn no Inworld, Convai ou no seu LLM. Seus NPCs ganham memória, relacionamentos e lembranças entre gerações. Cobrança por entidade, não por assento."
+    "title": "Seizn - AI memory for fiction writers",
+    "description": "Keep manuscripts, canon, conflict checks, and author memory in one workspace. Seizn helps fiction writers catch contradictions before readers do."
   },
   "nav": {
     "features": "Recursos",
@@ -3676,17 +3676,12 @@
         "replay": "Repasse",
         "byok": "Guia BYOK",
         "changelog": "Mudanças",
-        "engine": "Engine →",
         "sdk": "@seizn/sdk-js",
-        "mcp": "@seizn/mcp"
+        "mcp": "@seizn/mcp",
+        "program": "Program"
       },
       "entity": "© 2026 Seizn by Litheon LLC · Wyoming",
       "version": "v1.0 · a demo Saebyeok é dado sintético"
-    },
-    "engine": {
-      "badge": "novo",
-      "body": "Está fazendo IA de NPC pra jogo? O mesmo motor de cânone, exposto como SDK.",
-      "cta": "engine.seizn.com"
     },
     "checkout": {
       "prefix": "Aceito os",
@@ -3696,6 +3691,12 @@
       "suffix": ".",
       "loading": "Abrindo Stripe...",
       "error": "Não foi possível iniciar o checkout."
+    },
+    "program": {
+      "badge": "in development",
+      "body": "Seizn Program is our native writing app for manuscripts, canon, review, and local files in one workspace.",
+      "cta": "Join Program waitlist",
+      "footerLabel": "Program"
     }
   }
 }

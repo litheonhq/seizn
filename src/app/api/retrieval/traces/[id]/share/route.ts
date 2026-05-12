@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest, isAuthError, authErrorResponse } from '@/lib/api-auth';
+import { authenticateSessionOrApiKey } from '@/lib/api/session-or-api-key';
 import { createServerClient } from '@/lib/supabase';
 import {
   generateShareToken,
@@ -32,9 +32,12 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const authResult = await authenticateRequest(request, { skipUsageCheck: true });
-    if (isAuthError(authResult)) {
-      return authErrorResponse(authResult.authError);
+    const authResult = await authenticateSessionOrApiKey(request, {
+      csrfForSession: true,
+      skipUsageCheck: true,
+    });
+    if (!authResult.ok) {
+      return authResult.response;
     }
 
     const { userId } = authResult;
@@ -151,9 +154,9 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const authResult = await authenticateRequest(request, { skipUsageCheck: true });
-    if (isAuthError(authResult)) {
-      return authErrorResponse(authResult.authError);
+    const authResult = await authenticateSessionOrApiKey(request, { skipUsageCheck: true });
+    if (!authResult.ok) {
+      return authResult.response;
     }
 
     const { userId } = authResult;
@@ -211,9 +214,12 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const authResult = await authenticateRequest(request, { skipUsageCheck: true });
-    if (isAuthError(authResult)) {
-      return authErrorResponse(authResult.authError);
+    const authResult = await authenticateSessionOrApiKey(request, {
+      csrfForSession: true,
+      skipUsageCheck: true,
+    });
+    if (!authResult.ok) {
+      return authResult.response;
     }
 
     const { userId } = authResult;

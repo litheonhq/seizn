@@ -3,10 +3,15 @@
 import { useState, useEffect, useCallback } from "react";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
 import { formatDate } from "@/lib/format-date";
+import { DATA_RETENTION, formatDays, formatYears } from "@/lib/policy";
 
 type TabType = "requests" | "subjects" | "certificates" | "settings";
 type RTBFStatus = "pending" | "in_progress" | "completed" | "rejected" | "expired";
 type RTBFPhase = "discovery" | "verification" | "deletion" | "completed" | "verified";
+
+const rtbfResponseWindow = formatDays(DATA_RETENTION.ACCOUNT_DELETION_DAYS);
+const rtbfComplexExtensionWindow = formatDays(DATA_RETENTION.RTBF_COMPLEX_EXTENSION_DAYS);
+const auditLogRetentionWindow = formatYears(DATA_RETENTION.TAX_RECORD_YEARS);
 
 interface RTBFRequest {
   id: string;
@@ -132,9 +137,9 @@ const mockCertificates: DeletionCertificate[] = [
 const defaultSettings: ComplianceSettings = {
   auto_discovery: true,
   verification_required: true,
-  response_deadline_days: 30,
+  response_deadline_days: DATA_RETENTION.ACCOUNT_DELETION_DAYS,
   notification_email: "privacy@company.com",
-  audit_retention_days: 2555, // ~7 years
+  audit_retention_days: DATA_RETENTION.TAX_RECORD_YEARS * 365,
 };
 
 export default function PrivacyClient() {
@@ -696,7 +701,7 @@ function NewRequestModal({
       <div className="bg-[var(--ink-0)] rounded-lg max-w-md w-full p-6">
         <h2 className="text-xl font-bold text-[var(--ink-900)] mb-4">New RTBF Request</h2>
         <p className="text-sm text-[var(--ink-600)] mb-6">
-          Create a new Right to be Forgotten request. The deadline will be set to 30 days from now per GDPR requirements.
+          Create a new Right to be Forgotten request. The deadline will be set to {rtbfResponseWindow} from now per GDPR requirements.
         </p>
 
         <div className="space-y-4">
@@ -704,7 +709,7 @@ function NewRequestModal({
             <label className="block text-sm font-medium text-[var(--ink-900)] mb-1">
               Data Subject Email
             </label>
-            <input
+            <input aria-label="Email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -959,9 +964,9 @@ function SettingsTab({
             Response Deadline (Days)
           </label>
           <p className="text-sm text-[var(--ink-600)] mb-2">
-            GDPR requires response within 30 days (extendable to 90 for complex requests)
+            GDPR requires response within {rtbfResponseWindow} (extendable to {rtbfComplexExtensionWindow} for complex requests)
           </p>
-          <input
+          <input aria-label="Response Deadline Days"
             type="number"
             value={localSettings.response_deadline_days}
             onChange={(e) => setLocalSettings({ ...localSettings, response_deadline_days: parseInt(e.target.value) })}
@@ -979,7 +984,7 @@ function SettingsTab({
           <p className="text-sm text-[var(--ink-600)] mb-2">
             Email address for RTBF request notifications
           </p>
-          <input
+          <input aria-label="Notification Email"
             type="email"
             value={localSettings.notification_email}
             onChange={(e) => setLocalSettings({ ...localSettings, notification_email: e.target.value })}
@@ -995,7 +1000,7 @@ function SettingsTab({
           <p className="text-sm text-[var(--ink-600)] mb-2">
             How long to retain audit logs for compliance purposes
           </p>
-          <input
+          <input aria-label="Audit retention days"
             type="number"
             value={localSettings.audit_retention_days}
             onChange={(e) => setLocalSettings({ ...localSettings, audit_retention_days: parseInt(e.target.value) })}
@@ -1026,9 +1031,9 @@ function SettingsTab({
           <div>
             <h4 className="font-medium text-blue-800">GDPR Compliance Notes</h4>
             <ul className="text-sm text-blue-700 mt-2 space-y-1 list-disc list-inside">
-              <li>RTBF requests must be fulfilled within 30 days (Article 17)</li>
-              <li>Complex requests may be extended to 90 days with notification</li>
-              <li>Audit logs should be retained for 7 years for legal compliance</li>
+              <li>RTBF requests must be fulfilled within {rtbfResponseWindow} (Article 17)</li>
+              <li>Complex requests may be extended to {rtbfComplexExtensionWindow} with notification</li>
+              <li>Audit logs should be retained for {auditLogRetentionWindow} for legal compliance</li>
               <li>Deletion certificates provide cryptographic proof of erasure</li>
             </ul>
           </div>

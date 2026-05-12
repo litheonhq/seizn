@@ -5,7 +5,9 @@ import { generateApiKey } from '@/lib/api-key';
 import { verifyCsrfToken } from '@/lib/csrf';
 import { sendEmail } from '@/lib/email';
 import { apiKeyRotatedEmail } from '@/lib/email/templates';
+import { safeJsonParse } from '@/lib/safe-json';
 import { logServerError } from '@/lib/server/logger';
+import { AuthErrors, ServerErrors, ValidationErrors } from '@/lib/api-error';
 
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 const DISABLE_KEY_EMAILS =
@@ -20,20 +22,19 @@ export async function POST(request: NextRequest) {
 
     const user = await getSessionUser();
     if (!user?.id) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return AuthErrors.unauthorized('API keys');
     }
 
-    const body = await request.json();
-    const keyId = body.keyId;
+    let body: Record<string, unknown>;
+    try {
+      body = await safeJsonParse<Record<string, unknown>>(request);
+    } catch {
+      return ValidationErrors.invalidBody('Body must be valid JSON.');
+    }
 
+    const keyId = typeof body.keyId === 'string' ? body.keyId.trim() : '';
     if (!keyId) {
-      return NextResponse.json(
-        { error: 'Key ID required' },
-        { status: 400 }
-      );
+      return ValidationErrors.missingField('keyId');
     }
 
     const supabase = createServerClient();
@@ -70,10 +71,7 @@ export async function POST(request: NextRequest) {
 
     if (updateError) {
       logServerError('Rotate key error', updateError);
-      return NextResponse.json(
-        { error: 'Failed to rotate key' },
-        { status: 500 }
-      );
+      return ServerErrors.database('rotate_key');
     }
 
     // Send API key rotated notification email (non-blocking).
@@ -97,9 +95,6 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     logServerError('Rotate key error', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return ServerErrors.internal('rotate_key');
   }
 }

@@ -2,6 +2,36 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { locales, defaultLocale, getLocaleFromCountry, type Locale } from '@/i18n/config';
 import { verifyReviewToken, isPathAllowed } from '@/lib/review-token';
+import { DASHBOARD_ROUTES, canonicalAuthorDashboardPath } from '@/lib/dashboard-routes';
+import {
+  AUTHOR_FLAGSHIP_ORIGIN,
+  ENGINE_ORIGIN,
+  ENGINE_HOST,
+  isEngineMarketingRoute,
+  normalizeHost,
+} from '@/lib/surface';
+
+const LEGACY_AUTH_COOKIE_NAMES = [
+  'next-auth.session-token',
+  '__Secure-next-auth.session-token',
+] as const;
+
+const SESSION_AUTH_COOKIE_NAMES = [
+  'authjs.session-token',
+  '__Secure-authjs.session-token',
+  ...LEGACY_AUTH_COOKIE_NAMES,
+] as const;
+
+const API_CSRF_ALLOWED_ORIGINS = new Set([
+  'https://www.seizn.com',
+  'https://seizn.com',
+  'http://localhost:3000',
+  'http://localhost:3001',
+  'http://localhost:3100',
+  'http://127.0.0.1:3000',
+  'http://127.0.0.1:3001',
+  'http://127.0.0.1:3100',
+]);
 
 // Paths that should not be locale-prefixed (completely skip middleware)
 const publicPaths = [
@@ -49,6 +79,46 @@ function isDashboardPath(pathname: string): boolean {
   return pathname.startsWith('/dashboard');
 }
 
+function isStateChangingMethod(method: string): boolean {
+  return !['GET', 'HEAD', 'OPTIONS'].includes(method.toUpperCase());
+}
+
+function hasSessionAuthCookie(request: NextRequest): boolean {
+  return SESSION_AUTH_COOKIE_NAMES.some((name) => Boolean(request.cookies.get(name)?.value));
+}
+
+function isAllowedApiCsrfOrigin(origin: string, requestOrigin: string): boolean {
+  return origin === requestOrigin || API_CSRF_ALLOWED_ORIGINS.has(origin);
+}
+
+function protectSessionCookieApiMutation(request: NextRequest): NextResponse | null {
+  if (!request.nextUrl.pathname.startsWith('/api/')) return null;
+  if (!isStateChangingMethod(request.method)) return null;
+  if (!hasSessionAuthCookie(request)) return null;
+
+  const requestOrigin = request.nextUrl.origin;
+  const origin = request.headers.get('origin');
+  if (origin) {
+    return isAllowedApiCsrfOrigin(origin, requestOrigin)
+      ? null
+      : NextResponse.json({ error: 'CSRF validation failed: origin not allowed' }, { status: 403 });
+  }
+
+  const referer = request.headers.get('referer');
+  if (referer) {
+    try {
+      const refererOrigin = new URL(referer).origin;
+      return isAllowedApiCsrfOrigin(refererOrigin, requestOrigin)
+        ? null
+        : NextResponse.json({ error: 'CSRF validation failed: referer not allowed' }, { status: 403 });
+    } catch {
+      return NextResponse.json({ error: 'CSRF validation failed: referer not allowed' }, { status: 403 });
+    }
+  }
+
+  return NextResponse.json({ error: 'CSRF validation failed: origin required' }, { status: 403 });
+}
+
 // Add security headers for dashboard routes (P0-4: review_token leak prevention)
 function addDashboardSecurityHeaders(response: NextResponse): NextResponse {
   // Keep consistent with next.config.ts dashboard headers (P0-4: review_token leak prevention)
@@ -57,6 +127,42 @@ function addDashboardSecurityHeaders(response: NextResponse): NextResponse {
   response.headers.set('X-DNS-Prefetch-Control', 'off');
   response.headers.set('X-Frame-Options', 'DENY');
   response.headers.set('Origin-Agent-Cluster', '?1');
+  response.headers.set('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
+  response.headers.set('Cross-Origin-Resource-Policy', 'same-site');
+  response.headers.set('X-Permitted-Cross-Domain-Policies', 'none');
+  return response;
+}
+
+function addDashboardSecurityHeadersIfNeeded(response: NextResponse, pathname: string): NextResponse {
+  return isDashboardPath(pathname) ? addDashboardSecurityHeaders(response) : response;
+}
+
+function normalizeCookieDomain(value: string | undefined): string | undefined {
+  const domain = value?.trim();
+  if (!domain || domain === 'localhost' || domain === '127.0.0.1') return undefined;
+  return domain.startsWith('.') ? domain : `.${domain}`;
+}
+
+function expireLegacyAuthCookies(response: NextResponse, host: string | null): NextResponse {
+  const configuredDomain = normalizeCookieDomain(process.env.AUTH_COOKIE_DOMAIN);
+  const domains = new Set<string | undefined>([undefined, configuredDomain]);
+  if (host === 'www.seizn.com') {
+    domains.add('.www.seizn.com');
+  }
+
+  for (const cookieName of LEGACY_AUTH_COOKIE_NAMES) {
+    for (const domain of domains) {
+      response.cookies.set(cookieName, '', {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 0,
+        ...(domain ? { domain } : {}),
+      });
+    }
+  }
+
   return response;
 }
 
@@ -177,13 +283,9 @@ async function handleReviewToken(
 }
 
 // Engine surface (engine.seizn.com) — rewrite to /engine/* before i18n redirect
-const ENGINE_HOST = 'engine.seizn.com';
-const AUTHOR_FLAGSHIP_ORIGIN = 'https://www.seizn.com';
-
 // Author-only entry points: redirect to seizn.com when accessed from engine surface
 const AUTHOR_ONLY_PREFIXES = [
   '/dashboard',
-  '/login',
   '/signup',
   '/device',
   '/invite',
@@ -205,27 +307,92 @@ function isSharedInfraPath(pathname: string): boolean {
   );
 }
 
+function requestHeadersWithPath(request: NextRequest): Headers {
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set('x-seizn-pathname', request.nextUrl.pathname);
+  requestHeaders.set('x-seizn-search', request.nextUrl.search);
+  return requestHeaders;
+}
+
+function redirectToCanonicalAuthorSettings(request: NextRequest, byok = false): NextResponse {
+  const url = request.nextUrl.clone();
+  url.pathname = '/dashboard/author/settings';
+  if (byok) {
+    url.searchParams.set('section', 'byok');
+  }
+  return addDashboardSecurityHeaders(NextResponse.redirect(url, 308));
+}
+
+function redirectToAuthorUsageTab(request: NextRequest): NextResponse {
+  const url = request.nextUrl.clone();
+  url.pathname = DASHBOARD_ROUTES.author;
+  url.searchParams.set('tab', 'usage');
+  return addDashboardSecurityHeaders(NextResponse.redirect(url, 308));
+}
+
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const host = (request.headers.get('host') || '').toLowerCase();
+  const host = normalizeHost(request.headers.get('x-forwarded-host') || request.headers.get('host'));
+
+  const apiCsrfResponse = protectSessionCookieApiMutation(request);
+  if (apiCsrfResponse) {
+    return apiCsrfResponse;
+  }
 
   // Engine surface routing (must run before i18n redirect)
   if (host === ENGINE_HOST) {
-    // Author-only entry: cross-domain redirect to seizn.com (308 — preserves method)
+    if (pathname === '/login') {
+      const url = request.nextUrl.clone();
+      url.pathname = '/engine/login';
+      return NextResponse.rewrite(url);
+    }
+
+    const canonicalAuthorPath = canonicalAuthorDashboardPath(pathname, request.nextUrl.search);
+    if (canonicalAuthorPath) {
+      return addDashboardSecurityHeadersIfNeeded(
+        NextResponse.redirect(`${AUTHOR_FLAGSHIP_ORIGIN}${canonicalAuthorPath}`, 308),
+        canonicalAuthorPath
+      );
+    }
+
+    // Author-only entry: cross-domain redirect to seizn.com (308 preserves method)
     if (AUTHOR_ONLY_PREFIXES.some((p) => pathname.startsWith(p))) {
-      return NextResponse.redirect(
-        `${AUTHOR_FLAGSHIP_ORIGIN}${pathname}${request.nextUrl.search}`,
-        308
+      return addDashboardSecurityHeadersIfNeeded(
+        NextResponse.redirect(
+          `${AUTHOR_FLAGSHIP_ORIGIN}${pathname}${request.nextUrl.search}`,
+          308
+        ),
+        pathname
       );
     }
     // /engine/* and shared infra: pass through
     if (pathname.startsWith('/engine') || isSharedInfraPath(pathname)) {
       return NextResponse.next();
     }
-    // Everything else: rewrite to /engine/*
+    // Everything else belongs to the Engine surface but may not have a
+    // path-level page yet. Serve the Engine landing instead of leaking a 404.
     const url = request.nextUrl.clone();
-    url.pathname = pathname === '/' ? '/engine' : `/engine${pathname}`;
+    url.pathname = '/engine';
     return NextResponse.rewrite(url);
+  }
+
+  if (isEngineMarketingRoute(pathname)) {
+    return NextResponse.redirect(ENGINE_ORIGIN, 308);
+  }
+
+  if (pathname === '/dashboard/settings/author') {
+    return redirectToCanonicalAuthorSettings(request);
+  }
+  if (pathname === '/dashboard/settings/byok') {
+    return redirectToCanonicalAuthorSettings(request, true);
+  }
+  if (pathname === DASHBOARD_ROUTES.authorUsage || pathname === DASHBOARD_ROUTES.legacyUsage) {
+    return redirectToAuthorUsageTab(request);
+  }
+
+  const pathnameLocale = getLocaleFromPath(pathname);
+  if (pathnameLocale && pathname === `/${pathnameLocale}/dashboard/author/settings`) {
+    return redirectToCanonicalAuthorSettings(request);
   }
 
   // Skip public paths (API routes, static files, etc.)
@@ -239,14 +406,19 @@ export async function proxy(request: NextRequest) {
         return reviewTokenResponse;
       }
 
-      const response = NextResponse.next();
+      const response = NextResponse.next({
+        request: {
+          headers: requestHeadersWithPath(request),
+        },
+      });
       return addDashboardSecurityHeaders(response);
     }
-    return NextResponse.next();
+    const response = NextResponse.next();
+    if (pathname === '/login') {
+      return expireLegacyAuthCookies(response, host);
+    }
+    return response;
   }
-
-  // Check if path already has a locale
-  const pathnameLocale = getLocaleFromPath(pathname);
 
   if (pathnameLocale) {
     // Path has a valid locale, continue
@@ -293,6 +465,8 @@ export async function proxy(request: NextRequest) {
   response.cookies.set('NEXT_LOCALE', detectedLocale, {
     maxAge: 60 * 60 * 24 * 365, // 1 year
     path: '/',
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
   });
 
   return response;
@@ -300,7 +474,8 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    // Match all paths except static files and API routes
-    '/((?!api|_next/static|_next/image|favicon.ico|monitoring|robots.txt|sitemap.xml|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js|woff|woff2)$).*)',
+    // Match all paths except static files. API routes are included for the
+    // edge session-cookie CSRF guard above.
+    '/((?!_next/static|_next/image|favicon.ico|monitoring|robots.txt|sitemap.xml|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js|woff|woff2)$).*)',
   ],
 };

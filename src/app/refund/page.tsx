@@ -1,14 +1,18 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { REFUND_POLICY, formatDays } from "@/lib/policy";
+
+const refundWindow = formatDays(REFUND_POLICY.GUARANTEE_DAYS);
+const refundWindowHyphen = `${REFUND_POLICY.GUARANTEE_DAYS}-day`;
+const refundGuaranteeLabel = `${REFUND_POLICY.GUARANTEE_DAYS}-Day Money-Back Guarantee`;
+const refundDescription = `Seizn refund policy. Learn about our ${refundWindowHyphen} money-back guarantee, eligibility conditions, and how to request a refund.`;
 
 export const metadata: Metadata = {
   title: "Refund Policy · Seizn",
-  description:
-    "Seizn refund policy. Learn about our 14-day money-back guarantee, eligibility conditions, and how to request a refund.",
+  description: refundDescription,
   openGraph: {
     title: "Refund Policy · Seizn",
-    description:
-      "Seizn refund policy. Learn about our 14-day money-back guarantee, eligibility conditions, and how to request a refund.",
+    description: refundDescription,
     type: "website",
     url: "https://www.seizn.com/refund",
   },
@@ -59,17 +63,17 @@ export default function RefundPolicyPage() {
 
             {/* Policy Content */}
             <div className="prose prose-gray max-w-none">
-              {/* 14-Day Money-Back Guarantee */}
+              {/* Money-back guarantee */}
               <section className="mb-12">
                 <h2 className="text-2xl font-semibold text-gray-900 mb-4 flex items-center gap-3">
                   <span className="w-8 h-8 rounded-full bg-[var(--ink-100)] text-[var(--ink-900)] flex items-center justify-center text-sm font-bold">
                     1
                   </span>
-                  14-Day Money-Back Guarantee
+                  {refundGuaranteeLabel}
                 </h2>
                 <div className="bg-gradient-to-r from-[var(--ink-50)] to-[var(--ink-100)] border border-[var(--ink-900)] rounded-xl p-6 mb-4">
                   <p className="text-gray-700 leading-relaxed">
-                    We offer a <strong>full refund within 14 days</strong> of your initial purchase
+                    We offer a <strong>full refund within {refundWindow}</strong> of your initial purchase
                     date. If you&apos;re not satisfied with Seizn for any reason during this period, you
                     can request a complete refund with no questions asked.
                   </p>
@@ -108,7 +112,7 @@ export default function RefundPolicyPage() {
                       />
                     </svg>
                     <span className="text-gray-600">
-                      The refund request must be made within 14 days of the original purchase date
+                      The refund request must be made within {refundWindow} of the original purchase date
                     </span>
                   </li>
                   <li className="flex items-start gap-3">
@@ -218,7 +222,7 @@ export default function RefundPolicyPage() {
                       </svg>
                       <span className="text-gray-600">
                         <strong>Subscription renewals:</strong> Automatic renewals after the initial
-                        subscription period are not eligible for the 14-day refund guarantee
+                        subscription period are not eligible for the {refundWindowHyphen} refund guarantee
                       </span>
                     </li>
                     <li className="flex items-start gap-3">
@@ -320,7 +324,7 @@ export default function RefundPolicyPage() {
                     <ul className="text-gray-600 text-sm space-y-2">
                       <li>Returns your payment (full or partial)</li>
                       <li>Access is terminated immediately upon refund</li>
-                      <li>Only available within the 14-day window</li>
+                      <li>Only available within the {refundWindowHyphen} window</li>
                       <li>Must be requested via email to support</li>
                     </ul>
                   </div>

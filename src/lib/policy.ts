@@ -171,6 +171,12 @@ export const DATA_RETENTION = {
   RAW_LOGS_DAYS: 30,
   INACTIVE_MEMORIES_DAYS: 90,
   EXPORT_GRACE_DAYS: 30,
+  API_LOGS_DAYS: 90,
+  TRACE_LOGS_DAYS: 30,
+  BACKUP_RETENTION_DAYS: 30,
+  AUDIT_LOG_RETENTION_YEARS: 1,
+  TAX_RECORD_YEARS: 7,
+  RTBF_COMPLEX_EXTENSION_DAYS: 90,
 } as const;
 
 // ============================================
@@ -191,6 +197,38 @@ export const COMMUNICATION = {
   POLICY_CHANGE_NOTICE_DAYS: 7,
   PRIVACY_RESPONSE_DAYS: 30,
   DATA_REQUEST_RESPONSE_DAYS: 30,
+  TERMS_CHANGE_NOTICE_DAYS: 30,
+  PRICE_CHANGE_NOTICE_DAYS: 30,
+} as const;
+
+// ============================================
+// Security Policies
+// ============================================
+
+export const SECURITY_POLICY = {
+  API_KEY_ROTATION_DAYS: 90,
+  API_KEY_EXPIRY_RECOMMENDED_DAYS: 90,
+  API_KEY_EXPIRY_OPTIONS_DAYS: [30, 60, 90] as const,
+} as const;
+
+// ============================================
+// Trial Policies
+// ============================================
+
+export const TRIAL_POLICY = {
+  AUTHOR_TRIAL_DAYS: 30,
+  TRIAL_ARCHIVE_READONLY_DAYS: 60,
+  V7_TRACK2_GRANDFATHER_DAYS: 90,
+} as const;
+
+// ============================================
+// Design Partner Policies
+// ============================================
+
+export const DESIGN_PARTNER_POLICY = {
+  STUDIO_PRICE_MONTHLY_USD: 99,
+  TERM_MONTHS: 12,
+  QUALIFIED_STUDIOS: 10,
 } as const;
 
 // ============================================
@@ -225,6 +263,14 @@ export function formatHours(hours: number): string {
   return hours === 1 ? '1 hour' : `${hours} hours`;
 }
 
+export function formatYears(years: number): string {
+  return years === 1 ? '1 year' : `${years} years`;
+}
+
+export function formatMonthlyUsd(amount: number): string {
+  return `$${amount}/month`;
+}
+
 export function getDataRetentionText(): string {
   return `${DATA_RETENTION.ACCOUNT_DELETION_DAYS} days after deletion request`;
 }
@@ -241,6 +287,9 @@ export const POLICY = {
   DATA_RETENTION,
   REFUND_POLICY,
   COMMUNICATION,
+  SECURITY_POLICY,
+  TRIAL_POLICY,
+  DESIGN_PARTNER_POLICY,
   TOKENS,
   SUPPORT,
   PLAN_LIMITS,

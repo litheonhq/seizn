@@ -1,95 +1,92 @@
 'use client';
 
 import { usePathname, useRouter } from 'next/navigation';
-import { useState, useRef, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { locales, localeNames, type Locale } from '@/i18n/config';
 
 interface LanguageSwitcherProps {
   currentLocale: Locale;
   className?: string;
+  variant?: 'light' | 'dark';
+  align?: 'left' | 'right';
+  fullWidth?: boolean;
 }
 
-const flagEmoji: Record<Locale, string> = {
-  en: '🇺🇸',
-  ko: '🇰🇷',
-  ja: '🇯🇵',
-  'zh-hans': '🇨🇳',
-  'zh-hant': '🇹🇼',
-  es: '🇪🇸',
-  ru: '🇷🇺',
-  uk: '🇺🇦',
-  he: '🇮🇱',
-  ar: '🇸🇦',
-  fr: '🇫🇷',
-  de: '🇩🇪',
-  it: '🇮🇹',
-  sv: '🇸🇪',
-  nl: '🇳🇱',
-  pl: '🇵🇱',
-  hi: '🇮🇳',
-  th: '🇹🇭',
-  id: '🇮🇩',
-  vi: '🇻🇳',
-  'pt-BR': '🇧🇷',
-  'pt-PT': '🇵🇹',
-};
+const languageGroups: Array<{ label: string; locales: Locale[] }> = [
+  { label: 'Primary', locales: ['en', 'ko', 'ja', 'zh-hans', 'zh-hant'] },
+  { label: 'Europe', locales: ['fr', 'de', 'es', 'it', 'nl', 'pl', 'sv', 'ru', 'uk', 'pt-PT'] },
+  { label: 'Asia and Middle East', locales: ['hi', 'th', 'id', 'vi', 'ar', 'he'] },
+  { label: 'Americas', locales: ['pt-BR'] },
+];
+const orderedLocales = languageGroups.flatMap((group) => group.locales);
 
-// Language groups for organized display
-const languageGroups = {
-  popular: ['en', 'ko', 'ja', 'zh-hans', 'zh-hant'] as Locale[],
-  europe: ['fr', 'de', 'es', 'it', 'nl', 'pl', 'sv', 'ru', 'uk', 'pt-PT'] as Locale[],
-  asia: ['hi', 'th', 'id', 'vi', 'ar', 'he'] as Locale[],
-  americas: ['pt-BR'] as Locale[],
-};
+function getLocaleCode(locale: Locale): string {
+  if (locale === 'zh-hans') return 'ZH-S';
+  if (locale === 'zh-hant') return 'ZH-T';
+  return locale.toUpperCase();
+}
 
-function changeLocale(newLocale: Locale, currentLocale: Locale, pathname: string, navigate: (path: string) => void) {
+export function getLocalizedPath(pathname: string, newLocale: Locale): string {
+  const segments = (pathname || '/').split('/');
+  const currentSegment = segments[1];
+
+  if (locales.includes(currentSegment as Locale)) {
+    segments[1] = newLocale;
+  } else {
+    segments.splice(1, 0, newLocale);
+  }
+
+  const nextPath = segments.join('/').replace(/\/{2,}/g, '/');
+  return nextPath === '' ? `/${newLocale}` : nextPath;
+}
+
+function changeLocale(
+  newLocale: Locale,
+  currentLocale: Locale,
+  pathname: string,
+  navigate: (path: string) => void,
+) {
   if (newLocale === currentLocale) return;
 
-  // Remove current locale from pathname and add new one
-  const segments = pathname.split('/');
-  segments[1] = newLocale;
-  const newPath = segments.join('/');
+  const newPath = getLocalizedPath(pathname, newLocale);
+  const urlSuffix = typeof window === 'undefined' ? '' : `${window.location.search}${window.location.hash}`;
 
-  // Set cookie
-  document.cookie = `NEXT_LOCALE=${newLocale};max-age=${60 * 60 * 24 * 365};path=/`;
-
-  // Persist to profile if logged in (best-effort)
-  fetch('/api/profile/language', {
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ language: newLocale }),
-    credentials: 'include',
-  }).catch(() => {
-    // ignore errors (e.g., anonymous user)
-  });
-
-  navigate(newPath);
+  document.cookie = `NEXT_LOCALE=${newLocale};max-age=${60 * 60 * 24 * 365};path=/;SameSite=Lax`;
+  window.dispatchEvent(new CustomEvent('localeChange', { detail: { locale: newLocale } }));
+  navigate(`${newPath}${urlSuffix}`);
 }
 
-export function LanguageSwitcher({ currentLocale, className = '' }: LanguageSwitcherProps) {
+export function LanguageSwitcher({
+  currentLocale,
+  className = '',
+  variant = 'light',
+  align = 'right',
+  fullWidth = false,
+}: LanguageSwitcherProps) {
   const pathname = usePathname();
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const isDark = variant === 'dark';
 
-  // Close on outside click
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
         setIsOpen(false);
       }
     }
+
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Close on escape key
   useEffect(() => {
     function handleEscape(event: KeyboardEvent) {
       if (event.key === 'Escape') {
         setIsOpen(false);
       }
     }
+
     document.addEventListener('keydown', handleEscape);
     return () => document.removeEventListener('keydown', handleEscape);
   }, []);
@@ -99,98 +96,45 @@ export function LanguageSwitcher({ currentLocale, className = '' }: LanguageSwit
     changeLocale(locale, currentLocale, pathname, (path) => router.push(path));
   };
 
+  const triggerClassName = [
+    'inline-flex min-h-10 items-center justify-center rounded-full border px-3.5 py-2 font-mono text-xs font-semibold uppercase tracking-[0.12em] transition-colors',
+    'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent-primary)]',
+    fullWidth ? 'w-full' : 'min-w-14',
+    isDark
+      ? 'border-white/15 bg-white/[0.07] text-white hover:border-white/25 hover:bg-white/[0.12]'
+      : 'border-szn-border-subtle bg-szn-card/85 text-szn-text-1 shadow-sm hover:bg-szn-surface',
+  ].join(' ');
+  const panelPosition = align === 'left' ? 'left-0' : 'right-0';
+
   return (
-    <div ref={containerRef} className={`relative ${className}`}>
-      {/* Trigger Button */}
+    <div ref={containerRef} className={`relative ${fullWidth ? 'w-full' : ''} ${className}`}>
       <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="szn-pill-glass"
-        aria-label={`Current language: ${localeNames[currentLocale]}. Click to change.`}
+        type="button"
+        onClick={() => setIsOpen((open) => !open)}
+        className={triggerClassName}
+        aria-label={`Current language: ${localeNames[currentLocale]}. Change language.`}
         aria-expanded={isOpen}
+        aria-haspopup="dialog"
+        data-testid="language-switcher-trigger"
       >
-        <span className="text-base">{flagEmoji[currentLocale]}</span>
-        <span className="text-sm text-szn-text-2">{localeNames[currentLocale]}</span>
-        <svg
-          className={`w-4 h-4 text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`}
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
+        {getLocaleCode(currentLocale)}
       </button>
 
-      {/* Dropdown Panel */}
       {isOpen && (
-        <div className="absolute right-0 top-full mt-2 w-80 max-h-96 overflow-y-auto rounded-xl border border-szn-border bg-szn-card shadow-xl z-50">
-          <div className="p-3 space-y-4">
-            {/* Popular Languages */}
-            <div>
-              <h4 className="text-xs font-semibold text-szn-text-2 uppercase tracking-wider mb-2 px-1">
-                Popular
-              </h4>
-              <div className="grid grid-cols-2 gap-1">
-                {languageGroups.popular.map((locale) => (
-                  <LanguageOption
-                    key={locale}
-                    locale={locale}
-                    isSelected={locale === currentLocale}
-                    onSelect={handleSelect}
-                  />
-                ))}
-              </div>
-            </div>
-
-            {/* Europe */}
-            <div>
-              <h4 className="text-xs font-semibold text-szn-text-2 uppercase tracking-wider mb-2 px-1">
-                Europe
-              </h4>
-              <div className="grid grid-cols-2 gap-1">
-                {languageGroups.europe.map((locale) => (
-                  <LanguageOption
-                    key={locale}
-                    locale={locale}
-                    isSelected={locale === currentLocale}
-                    onSelect={handleSelect}
-                  />
-                ))}
-              </div>
-            </div>
-
-            {/* Asia & Middle East */}
-            <div>
-              <h4 className="text-xs font-semibold text-szn-text-2 uppercase tracking-wider mb-2 px-1">
-                Asia & Middle East
-              </h4>
-              <div className="grid grid-cols-2 gap-1">
-                {languageGroups.asia.map((locale) => (
-                  <LanguageOption
-                    key={locale}
-                    locale={locale}
-                    isSelected={locale === currentLocale}
-                    onSelect={handleSelect}
-                  />
-                ))}
-              </div>
-            </div>
-
-            {/* Americas */}
-            <div>
-              <h4 className="text-xs font-semibold text-szn-text-2 uppercase tracking-wider mb-2 px-1">
-                Americas
-              </h4>
-              <div className="grid grid-cols-2 gap-1">
-                {languageGroups.americas.map((locale) => (
-                  <LanguageOption
-                    key={locale}
-                    locale={locale}
-                    isSelected={locale === currentLocale}
-                    onSelect={handleSelect}
-                  />
-                ))}
-              </div>
-            </div>
+        <div
+          className={`absolute ${panelPosition} top-full z-[80] mt-2 max-h-[70vh] w-[min(15rem,calc(100vw-2rem))] overflow-y-auto rounded-[var(--radius-md)] border border-[color:var(--ink-200)] bg-[color:var(--ink-0)] p-2 text-[color:var(--ink-900)] shadow-2xl`}
+          aria-label="Choose language"
+          tabIndex={0}
+        >
+          <div className="grid grid-cols-3 gap-1">
+            {orderedLocales.map((locale) => (
+              <LanguageOption
+                key={locale}
+                locale={locale}
+                isSelected={locale === currentLocale}
+                onSelect={handleSelect}
+              />
+            ))}
           </div>
         </div>
       )}
@@ -209,28 +153,30 @@ function LanguageOption({
 }) {
   return (
     <button
+      type="button"
       onClick={() => onSelect(locale)}
-      className={`flex items-center gap-2 px-3 py-2 rounded-lg text-left transition-colors ${
+      data-locale={locale}
+      aria-pressed={isSelected}
+      aria-label={localeNames[locale]}
+      className={`flex min-h-10 items-center justify-center rounded-[var(--radius-sm)] px-2 py-2 font-mono text-xs font-semibold uppercase tracking-[0.12em] transition-colors ${
         isSelected
-          ? 'bg-szn-success/10 text-szn-success'
-          : 'hover:bg-szn-surface-1 text-szn-text-2'
+          ? 'bg-[color:var(--terracotta-100)] text-[color:var(--ink-900)]'
+          : 'text-[color:var(--ink-700)] hover:bg-[color:var(--ink-100)] hover:text-[color:var(--ink-900)]'
       }`}
     >
-      <span className="text-base">{flagEmoji[locale]}</span>
-      <span className="text-sm font-medium truncate">{localeNames[locale]}</span>
-      {isSelected && (
-        <svg className="w-4 h-4 ml-auto text-szn-success shrink-0" fill="currentColor" viewBox="0 0 20 20">
-          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-        </svg>
-      )}
+      {getLocaleCode(locale)}
     </button>
   );
 }
 
-// Icon version for mobile/compact layouts
-export function LanguageSwitcherIcon({ currentLocale, className = '' }: LanguageSwitcherProps) {
+export function LanguageSwitcherIcon({
+  currentLocale,
+  className = '',
+  variant = 'light',
+}: LanguageSwitcherProps) {
   const pathname = usePathname();
   const router = useRouter();
+  const isDark = variant === 'dark';
 
   const cycleLocale = () => {
     const currentIndex = locales.indexOf(currentLocale);
@@ -241,12 +187,16 @@ export function LanguageSwitcherIcon({ currentLocale, className = '' }: Language
 
   return (
     <button
+      type="button"
       onClick={cycleLocale}
-      className={`flex items-center gap-1 px-2 py-1 rounded-full hover:bg-szn-surface-1 transition-colors ${className}`}
-      aria-label={`Current language: ${localeNames[currentLocale]}. Click to change.`}
+      className={`inline-flex min-h-10 items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm font-medium transition-colors ${
+        isDark
+          ? 'border-white/15 bg-white/[0.07] text-white hover:bg-white/[0.12]'
+          : 'border-szn-border-subtle bg-szn-card text-szn-text-1 hover:bg-szn-surface'
+      } ${className}`}
+      aria-label={`Current language: ${localeNames[currentLocale]}. Change language.`}
     >
-      <span className="text-lg">{flagEmoji[currentLocale]}</span>
-      <span className="text-xs text-szn-text-2 uppercase">{currentLocale}</span>
+      <span className="font-mono text-xs uppercase">{getLocaleCode(currentLocale)}</span>
     </button>
   );
 }

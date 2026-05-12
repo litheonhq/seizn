@@ -7,14 +7,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // Define locale-specific routes with priorities
   const localeRoutes = [
     { path: '', priority: 1.0, changeFreq: 'weekly' as const },
-    { path: '/enterprise', priority: 0.8, changeFreq: 'monthly' as const },
     { path: '/pricing', priority: 0.9, changeFreq: 'weekly' as const },
     { path: '/demo', priority: 0.85, changeFreq: 'weekly' as const },
-    { path: '/comparison', priority: 0.8, changeFreq: 'monthly' as const },
-    { path: '/docs', priority: 0.9, changeFreq: 'weekly' as const },
-    { path: '/docs/tutorial', priority: 0.85, changeFreq: 'monthly' as const },
-    { path: '/docs/api-reference', priority: 0.85, changeFreq: 'monthly' as const },
-    { path: '/docs/faq', priority: 0.7, changeFreq: 'monthly' as const },
+    { path: '/api', priority: 0.85, changeFreq: 'weekly' as const },
   ];
 
   // Generate sitemap entries for each locale

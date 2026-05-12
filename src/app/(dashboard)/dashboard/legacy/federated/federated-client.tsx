@@ -466,7 +466,7 @@ export function FederatedClient() {
         <div className="bg-[var(--ink-0)] rounded-lg border border-[var(--ink-200)] p-6 mb-8">
           <h3 className="font-semibold text-[var(--ink-900)] mb-4">Test Federated Search</h3>
           <div className="flex gap-4">
-            <input
+            <input aria-label="Test Query"
               type="text"
               value={testQuery}
               onChange={(e) => setTestQuery(e.target.value)}
@@ -573,7 +573,7 @@ export function FederatedClient() {
                     <label className="block text-sm font-medium text-[var(--ink-900)] mb-1">
                       Connector Name
                     </label>
-                    <input
+                    <input aria-label="Name"
                       type="text"
                       value={form.name}
                       onChange={(e) => setForm({ ...form, name: e.target.value })}
@@ -597,7 +597,7 @@ export function FederatedClient() {
                     <>
                       <div>
                         <label className="block text-sm font-medium text-[var(--ink-900)] mb-1">API Key *</label>
-                        <input
+                        <input aria-label="Pinecone Api Key"
                           type="password"
                           value={form.pinecone_apiKey}
                           onChange={(e) => setForm({ ...form, pinecone_apiKey: e.target.value })}
@@ -607,7 +607,7 @@ export function FederatedClient() {
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-[var(--ink-900)] mb-1">Environment / Host *</label>
-                        <input
+                        <input aria-label="Pinecone Environment"
                           type="text"
                           value={form.pinecone_environment}
                           onChange={(e) => setForm({ ...form, pinecone_environment: e.target.value })}
@@ -617,7 +617,7 @@ export function FederatedClient() {
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-[var(--ink-900)] mb-1">Index Name *</label>
-                        <input
+                        <input aria-label="Pinecone Index Name"
                           type="text"
                           value={form.pinecone_indexName}
                           onChange={(e) => setForm({ ...form, pinecone_indexName: e.target.value })}
@@ -626,7 +626,7 @@ export function FederatedClient() {
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-[var(--ink-900)] mb-1">Namespace (optional)</label>
-                        <input
+                        <input aria-label="Pinecone Namespace"
                           type="text"
                           value={form.pinecone_namespace}
                           onChange={(e) => setForm({ ...form, pinecone_namespace: e.target.value })}
@@ -641,7 +641,7 @@ export function FederatedClient() {
                     <>
                       <div>
                         <label className="block text-sm font-medium text-[var(--ink-900)] mb-1">Host *</label>
-                        <input
+                        <input aria-label="Weaviate Host"
                           type="text"
                           value={form.weaviate_host}
                           onChange={(e) => setForm({ ...form, weaviate_host: e.target.value })}
@@ -663,7 +663,7 @@ export function FederatedClient() {
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-[var(--ink-900)] mb-1">API Key (optional)</label>
-                          <input
+                          <input aria-label="Weaviate Api Key"
                             type="password"
                             value={form.weaviate_apiKey}
                             onChange={(e) => setForm({ ...form, weaviate_apiKey: e.target.value })}
@@ -673,7 +673,7 @@ export function FederatedClient() {
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-[var(--ink-900)] mb-1">Class Name *</label>
-                        <input
+                        <input aria-label="Weaviate Class Name"
                           type="text"
                           value={form.weaviate_className}
                           onChange={(e) => setForm({ ...form, weaviate_className: e.target.value })}
@@ -689,7 +689,7 @@ export function FederatedClient() {
                     <>
                       <div>
                         <label className="block text-sm font-medium text-[var(--ink-900)] mb-1">Host *</label>
-                        <input
+                        <input aria-label="Qdrant Host"
                           type="text"
                           value={form.qdrant_host}
                           onChange={(e) => setForm({ ...form, qdrant_host: e.target.value })}
@@ -699,7 +699,7 @@ export function FederatedClient() {
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-[var(--ink-900)] mb-1">API Key (optional)</label>
-                        <input
+                        <input aria-label="Qdrant Api Key"
                           type="password"
                           value={form.qdrant_apiKey}
                           onChange={(e) => setForm({ ...form, qdrant_apiKey: e.target.value })}
@@ -708,7 +708,7 @@ export function FederatedClient() {
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-[var(--ink-900)] mb-1">Collection Name *</label>
-                        <input
+                        <input aria-label="Qdrant Collection"
                           type="text"
                           value={form.qdrant_collection}
                           onChange={(e) => setForm({ ...form, qdrant_collection: e.target.value })}
@@ -790,7 +790,7 @@ export function FederatedClient() {
 
                   <div className="space-y-4">
                     <label className="flex items-start gap-3 p-4 rounded-lg border cursor-pointer hover:bg-[var(--ink-50)]">
-                      <input
+                      <input aria-label="Read Only"
                         type="checkbox"
                         checked={form.readOnly}
                         onChange={(e) => setForm({ ...form, readOnly: e.target.checked })}
@@ -806,7 +806,7 @@ export function FederatedClient() {
                       <label className="block text-sm font-medium text-[var(--ink-900)] mb-1">
                         Namespace Filter (optional)
                       </label>
-                      <input
+                      <input aria-label="Namespace Filter"
                         type="text"
                         value={form.namespaceFilter}
                         onChange={(e) => setForm({ ...form, namespaceFilter: e.target.value })}

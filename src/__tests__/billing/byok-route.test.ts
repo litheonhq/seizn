@@ -4,16 +4,17 @@ import { DELETE, GET, POST } from '@/app/api/account/byok/route';
 
 const mocks = vi.hoisted(() => ({
   userId: 'author-user-1',
+  byokProviders: ['anthropic', 'openai', 'google'] as readonly string[],
   serviceState: {
     enabled: false,
-    provider: null as 'anthropic' | null,
+    provider: null as 'anthropic' | 'openai' | 'google' | null,
     key_last_4: null as string | null,
     verified_at: null as string | null,
     status: 'missing' as 'active' | 'invalid' | 'missing',
   },
   byokStatus: {
     enabled: false,
-    provider: null as 'anthropic' | null,
+    provider: null as 'anthropic' | 'openai' | 'google' | null,
     status: 'missing' as 'active' | 'invalid' | 'missing',
   },
   saveAuthorByokKey: vi.fn(),
@@ -39,9 +40,12 @@ vi.mock('@/lib/author/ui', () => {
       const service = {
         getByok: () => mocks.serviceState,
         saveByok: (input: { provider?: string; api_key?: string }) => {
+          const provider = input.provider && mocks.byokProviders.includes(input.provider)
+            ? input.provider as 'anthropic' | 'openai' | 'google'
+            : null;
           mocks.serviceState = {
             enabled: true,
-            provider: input.provider === 'anthropic' ? 'anthropic' : null,
+            provider,
             key_last_4: input.api_key?.slice(-4) ?? null,
             verified_at: '2026-05-03T00:00:00.000Z',
             status: 'active',
@@ -74,6 +78,9 @@ vi.mock('@/lib/author/llm', () => ({
       super(message);
     }
   },
+  BYOK_PROVIDERS: mocks.byokProviders,
+  isByokProvider: (value: unknown) =>
+    typeof value === 'string' && mocks.byokProviders.includes(value),
   getAuthorByokStatus: async () => mocks.byokStatus,
   saveAuthorByokKey: mocks.saveAuthorByokKey,
 }));
@@ -95,6 +102,10 @@ vi.mock('@/lib/supabase', () => ({
       }),
     }),
   }),
+}));
+
+vi.mock('@/lib/analytics/funnel', () => ({
+  recordFirstFunnelEvent: vi.fn(async () => undefined),
 }));
 
 describe('account BYOK route', () => {

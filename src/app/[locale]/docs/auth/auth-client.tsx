@@ -3,8 +3,11 @@
 import Link from "next/link";
 import type { Locale } from "@/i18n/config";
 import { LanguageSwitcher } from "@/components/language-switcher";
+import { SECURITY_POLICY, formatDays } from "@/lib/policy";
 
 type Dictionary = Record<string, unknown>;
+
+const recommendedKeyExpiryWindow = formatDays(SECURITY_POLICY.API_KEY_EXPIRY_RECOMMENDED_DAYS);
 
 interface Props {
   locale: Locale;
@@ -284,7 +287,7 @@ const client = new Seizn({ apiKey: 'szn_xxx' });`}
                 <span className="text-[var(--ink-900)] mt-0.5">✓</span>
                 <div>
                   <strong className="text-[var(--ink-900)]">Set key expiration</strong>
-                  <p className="text-sm mt-1">Configure auto-expiration for keys (90 days recommended).</p>
+                  <p className="text-sm mt-1">Configure auto-expiration for keys ({recommendedKeyExpiryWindow} recommended).</p>
                 </div>
               </li>
             </ul>
