@@ -1,0 +1,88 @@
+name: Stripe Webhook URL Drift
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Daily at 13:00 UTC (~06:00 PT / ~22:00 KST)
+    - cron: '0 13 * * *'
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  verify-stripe-webhook-url:
+    name: Verify Stripe Webhook URL
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '20'
+
+      - name: Validate required secrets
+        run: |
+          if [ -z "${{ secrets.STRIPE_RESTRICTED_KEY }}" ]; then
+            echo "::error::Missing STRIPE_RESTRICTED_KEY secret. Add a Stripe restricted key with read access to webhook_endpoints."
+            exit 1
+          fi
+
+      - name: Run drift detector
+        env:
+          STRIPE_RESTRICTED_KEY: ${{ secrets.STRIPE_RESTRICTED_KEY }}
+          STRIPE_WEBHOOK_EXPECTED_URL: ${{ vars.STRIPE_WEBHOOK_EXPECTED_URL || 'https://www.seizn.com/api/webhooks/stripe' }}
+        run: node scripts/verify-stripe-webhook-url.mjs
+
+      - name: Open issue on drift
+        if: failure() && github.event_name == 'schedule'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const title = 'Stripe webhook URL drift detected';
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const body = [
+              '## Stripe webhook URL drift detected',
+              '',
+              `Scheduled run: ${runUrl}`,
+              '',
+              'The Stripe webhook URL diverged from the expected production URL or no matching endpoint is active.',
+              'Causes typically include: dashboard edit on the wrong account, apex URL re-introduced, endpoint disabled.',
+              '',
+              '### Action',
+              '1. Open the failed run logs above for the drifted endpoint id + URL.',
+              '2. Reconcile in Stripe Dashboard (production account, www URL only).',
+              '3. Re-run this workflow via `workflow_dispatch` to confirm.',
+              '',
+              '_Auto-filed by `.github/workflows/stripe-webhook-url-drift.yml`._',
+            ].join('\n');
+
+            const existing = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'stripe-drift',
+              per_page: 5,
+            });
+
+            if (existing.data.some((issue) => issue.title === title)) {
+              core.info('Open drift issue already exists; skipping.');
+              return;
+            }
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title,
+              body,
+              labels: ['stripe-drift', 'incident'],
+            });

@@ -72,9 +72,11 @@ function runVercelEnvPull() {
 }
 
 async function loadProductionEnv() {
-  runVercelEnvPull();
-  loadEnv({ path: tempEnvPath, override: true });
-  await rm(tempEnvPath, { force: true });
+  if (process.env.SMOKE_SKIP_VERCEL_PULL !== 'true') {
+    runVercelEnvPull();
+    loadEnv({ path: tempEnvPath, override: true });
+    await rm(tempEnvPath, { force: true });
+  }
 
   if (existsSync(smokeEnvPath)) {
     loadEnv({ path: smokeEnvPath, override: true });
