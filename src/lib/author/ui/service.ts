@@ -9,6 +9,9 @@ import { createAuthorMemorySnapshot } from '@/lib/author/memory-v3/snapshot';
 import {
   createAuthorAuditLogStoreForUser,
   createAuthorAuditLogEntry,
+  cursorFromEntry,
+  decodeAuthorAuditCursor,
+  encodeAuthorAuditCursor,
   hashAuthorAuditPrompt,
   replayAuthorAuditChain,
   type AuthorAuditEventType,
@@ -1242,9 +1245,19 @@ export class AuthorUiService {
     await this.flushAuditWrites();
     const filter = auditFilterFromSearchParams(projectId, filters);
     const auditLogs = await this.state.auditLog.search(filter);
+    // A page is "potentially-followed-by-more" only when we filled the limit
+    // and a cursor was requested. Older callers that don't pass cursor see
+    // null here and keep working with `total`.
+    const requestedCursorMode = filters.get('cursor') !== null || filters.get('paginate') === 'cursor';
+    const limitedTo = Math.max(1, Math.min(500, Number(filters.get('limit') ?? '100') || 100));
+    const nextCursor =
+      requestedCursorMode && auditLogs.length === limitedTo && auditLogs.length > 0
+        ? encodeAuthorAuditCursor(cursorFromEntry(auditLogs[auditLogs.length - 1]!))
+        : null;
     return {
       audit_logs: auditLogs.map(toAuthorAuditApiRecord),
       total: auditLogs.length,
+      next_cursor: nextCursor,
       replay_available: auditLogs.some((entry) => entry.decisionId),
     };
   }
@@ -1868,7 +1881,7 @@ function isAuthorConflictStatus(value: string | null): value is AuthorConflictSt
 }
 
 function auditFilterFromSearchParams(projectId: string, params: URLSearchParams): AuthorAuditSearchFilter {
-  return {
+  const filter: AuthorAuditSearchFilter = {
     projectId,
     eventTypes: auditEventTypesFromCsv(params.get('event_type') ?? params.get('event')),
     decisionId: readParam(params, 'decision_id'),
@@ -1877,6 +1890,9 @@ function auditFilterFromSearchParams(projectId: string, params: URLSearchParams)
     until: readParam(params, 'until'),
     limit: Math.max(1, Math.min(500, Number(params.get('limit') ?? '100') || 100)),
   };
+  const before = decodeAuthorAuditCursor(params.get('cursor'));
+  if (before) filter.before = before;
+  return filter;
 }
 
 function auditEventTypesFromCsv(value: string | null): AuthorAuditEventType[] | undefined {
@@ -1898,6 +1914,7 @@ function auditEventTypesFromCsv(value: string | null): AuthorAuditEventType[] | 
     'backlog.generated',
     'settings.updated',
     'byok.updated',
+    'coach.analysis',
   ]);
   const selected = value
     .split(',')

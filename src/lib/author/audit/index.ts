@@ -1,3 +1,4 @@
+export * from './cursor';
 export * from './logger';
 export * from './replay';
 export * from './types';

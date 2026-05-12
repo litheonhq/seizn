@@ -76,6 +76,12 @@ export interface AuthorAuditSearchFilter {
   since?: string;
   until?: string;
   limit?: number;
+  /**
+   * Keyset cursor for paginated reads. Results returned are strictly older
+   * than `(createdAt, id)` under the canonical sort order
+   * (created_at DESC, id DESC).
+   */
+  before?: { createdAt: string; id: string };
 }
 
 export interface AuthorAuditReplayResult {

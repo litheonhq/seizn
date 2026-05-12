@@ -350,6 +350,51 @@ describe('Author UI service', () => {
     delete process.env.AUTHOR_COACH_ENABLED;
   });
 
+  it('listAuditLogs supports keyset cursor pagination across two pages', async () => {
+    const service = resetAuthorUiServiceForTests('cursor-pagination-user');
+    const projectId = service.listProjects().projects[0].id;
+
+    // Generate several audit-log entries by running multiple simulations.
+    // Each simulation.run write produces an audit entry under the same project.
+    for (let i = 0; i < 4; i += 1) {
+      await service.runSimulation(projectId, {
+        scene_input: { text: `scene ${i}`, candidate_count: 1 },
+      });
+    }
+    await service.flushAuditWrites();
+
+    const firstPage = await service.listAuditLogs(
+      projectId,
+      new URLSearchParams('event_type=simulation.run&limit=2&cursor='),
+    );
+    expect(firstPage.audit_logs).toHaveLength(2);
+    expect(firstPage.next_cursor).toBeTypeOf('string');
+
+    const secondPage = await service.listAuditLogs(
+      projectId,
+      new URLSearchParams(`event_type=simulation.run&limit=2&cursor=${firstPage.next_cursor}`),
+    );
+    expect(secondPage.audit_logs).toHaveLength(2);
+
+    // No row should appear in both pages.
+    const firstIds = new Set(firstPage.audit_logs.map((entry) => entry.id));
+    for (const entry of secondPage.audit_logs) {
+      expect(firstIds.has(entry.id)).toBe(false);
+    }
+  });
+
+  it('listAuditLogs accepts coach.analysis as an event-type filter', async () => {
+    const service = resetAuthorUiServiceForTests('coach-event-filter-user');
+    const projectId = service.listProjects().projects[0].id;
+
+    const result = await service.listAuditLogs(
+      projectId,
+      new URLSearchParams('event_type=coach.analysis&limit=10'),
+    );
+    expect(result.audit_logs).toEqual([]);
+    expect(result.total).toBe(0);
+  });
+
   it('analyzeCoach blocks Free-tier users via the charter-only feature gate', async () => {
     const { checkFeatureGate } = await import('@/lib/author/billing/feature-gate');
     const gateMock = checkFeatureGate as unknown as ReturnType<typeof vi.fn>;
