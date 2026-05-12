@@ -3,6 +3,7 @@
 
 import type { AuthorJsonSchema } from '@/lib/author/llm/types';
 import {
+  CRITIC_PERSONA_IDS,
   STORY_LAYER_IDS,
   type AntiClicheFinding,
   type CharacterArcDirection,
@@ -91,16 +92,9 @@ export const COACH_LLM_SCHEMA: AuthorJsonSchema = {
         properties: {
           critic: {
             type: 'string',
-            enum: [
-              'layer_auditor',
-              'rhetoric_examiner',
-              'freshness_inspector',
-              'reader_surrogate',
-              'subtext_analyst',
-              'continuity_editor',
-              'pacing_surgeon',
-              'voice_enforcer',
-            ],
+            // Derived from CRITIC_PERSONAS in frameworks/critics.ts so adding
+            // a critic in one place propagates here automatically.
+            enum: [...CRITIC_PERSONA_IDS],
           },
           rating: { type: 'integer' },
           suggestions: {

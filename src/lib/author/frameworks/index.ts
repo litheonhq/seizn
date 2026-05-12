@@ -40,6 +40,7 @@ export {
 
 export {
   CRITIC_PERSONAS,
+  CRITIC_PERSONA_IDS,
   CRITIC_OUTPUT_RULES,
   mandatoryCritics,
   optionalCritics,
