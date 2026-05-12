@@ -22,17 +22,20 @@ const [dictPath, fixesPath] = argv.slice(2);
 const dict = JSON.parse(await readFile(dictPath, 'utf8'));
 const fixes = JSON.parse(await readFile(fixesPath, 'utf8'));
 
+const UNSAFE_SEGMENTS = new Set(['__proto__', 'prototype', 'constructor']);
+
 function setAtPath(obj, path, value) {
   const parts = path.split('.');
+  if (parts.some((p) => UNSAFE_SEGMENTS.has(p))) return false;
   let node = obj;
   for (let i = 0; i < parts.length - 1; i += 1) {
-    if (node == null || typeof node !== 'object' || !(parts[i] in node)) {
-      return false;
-    }
+    if (node == null || typeof node !== 'object') return false;
+    if (!Object.prototype.hasOwnProperty.call(node, parts[i])) return false;
     node = node[parts[i]];
   }
   const leaf = parts[parts.length - 1];
-  if (node == null || typeof node !== 'object' || !(leaf in node)) return false;
+  if (node == null || typeof node !== 'object') return false;
+  if (!Object.prototype.hasOwnProperty.call(node, leaf)) return false;
   if (typeof node[leaf] !== 'string') return false;
   node[leaf] = value;
   return true;
