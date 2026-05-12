@@ -3459,7 +3459,7 @@
         {
           "severity": "critical",
           "rule": "character.han_iseul.eye_color",
-          "fact": "Rozdział 11: Han Iseul ma szare oczy.",
+          "fact": "Rozdział 11: Mira ma szare oczy.",
           "against": "Kanon w rozdziale 2 mówi — brązowe.",
           "cited": [
             "scene.2.1",
@@ -3469,7 +3469,7 @@
         {
           "severity": "major",
           "rule": "rule.r03 dostęp na dach",
-          "fact": "Rozdział 7: Park Jio wchodzi na dach 9. dnia.",
+          "fact": "Rozdział 7: Eli wchodzi na dach 9. dnia.",
           "against": "Zasada r03 zamyka dach do 14. dnia.",
           "cited": [
             "rule.r03",
@@ -3498,7 +3498,7 @@
           "side": "safe",
           "label": "Bezpieczna ścieżka",
           "score": 92,
-          "title": "Han Iseul zostaje w obserwatorium do świtu.",
+          "title": "Mira zostaje w obserwatorium do świtu.",
           "body": "Trzyma r02 i r04. Brak nowych konfliktów. Ciągłość trzyma się.",
           "tokens": [
             "scene.continues",
@@ -3510,7 +3510,7 @@
           "side": "risk",
           "label": "Ryzykowna ścieżka",
           "score": 41,
-          "title": "Han Iseul wychodzi przed szczytem zaćmienia.",
+          "title": "Mira wychodzi przed szczytem zaćmienia.",
           "body": "Kotwica r02 odpada. Dwie kolejne sceny tracą wydarzenie nośne.",
           "tokens": [
             "drops.r02",

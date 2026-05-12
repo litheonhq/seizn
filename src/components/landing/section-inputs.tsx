@@ -122,7 +122,7 @@ function ModePreview({ kind }: { kind: ModeId }) {
           scene 14 / the observatory
         </p>
         <p className="text-sm leading-7" style={{ color: "var(--ink-800)" }}>
-          Han Iseul climbed the rooftop on day{" "}
+          Mira climbed the rooftop on day{" "}
           <span className="rounded px-1.5 py-0.5" style={{ background: "var(--signal-conflict-soft)", color: "var(--signal-conflict-ink)", borderBottom: "1px solid var(--signal-conflict)" }}>
             9
           </span>

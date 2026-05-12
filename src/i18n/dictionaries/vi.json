@@ -3461,7 +3461,7 @@
         {
           "severity": "critical",
           "rule": "character.han_iseul.eye_color",
-          "fact": "Chương 11: Han Iseul có đôi mắt xám.",
+          "fact": "Chương 11: Mira có đôi mắt xám.",
           "against": "Canon chương 2 ghi nâu.",
           "cited": [
             "scene.2.1",
@@ -3471,7 +3471,7 @@
         {
           "severity": "major",
           "rule": "rule.r03 lối lên mái",
-          "fact": "Chương 7: Park Jio lên mái vào ngày 9.",
+          "fact": "Chương 7: Eli lên mái vào ngày 9.",
           "against": "Quy tắc r03 khoá mái tới ngày 14.",
           "cited": [
             "rule.r03",
@@ -3500,7 +3500,7 @@
           "side": "safe",
           "label": "Đường an toàn",
           "score": 92,
-          "title": "Han Iseul ở lại đài thiên văn tới rạng đông.",
+          "title": "Mira ở lại đài thiên văn tới rạng đông.",
           "body": "Tôn trọng r02 và r04. Không có xung đột mới. Mạch chuyện vẫn liền.",
           "tokens": [
             "scene.continues",
@@ -3512,7 +3512,7 @@
           "side": "risk",
           "label": "Đường rủi ro",
           "score": 41,
-          "title": "Han Iseul rời đi trước đỉnh nhật thực.",
+          "title": "Mira rời đi trước đỉnh nhật thực.",
           "body": "Mỏ neo r02 tuột. Hai cảnh sau mất sự kiện đỡ chân.",
           "tokens": [
             "drops.r02",

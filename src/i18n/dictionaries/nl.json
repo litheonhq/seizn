@@ -3459,7 +3459,7 @@
         {
           "severity": "critical",
           "rule": "character.han_iseul.eye_color",
-          "fact": "Hoofdstuk 11: Han Iseul heeft grijze ogen.",
+          "fact": "Hoofdstuk 11: Mira heeft grijze ogen.",
           "against": "De canon in hoofdstuk 2 zegt bruin.",
           "cited": [
             "scene.2.1",
@@ -3469,7 +3469,7 @@
         {
           "severity": "major",
           "rule": "rule.r03 toegang tot het dak",
-          "fact": "Hoofdstuk 7: Park Jio gaat op dag 9 het dak op.",
+          "fact": "Hoofdstuk 7: Eli gaat op dag 9 het dak op.",
           "against": "Regel r03 sluit het dak tot dag 14.",
           "cited": [
             "rule.r03",
@@ -3498,7 +3498,7 @@
           "side": "safe",
           "label": "Veilig pad",
           "score": 92,
-          "title": "Han Iseul blijft tot zonsopgang in het observatorium.",
+          "title": "Mira blijft tot zonsopgang in het observatorium.",
           "body": "Eert r02 en r04. Geen nieuwe conflicten. De continuïteit blijft staan.",
           "tokens": [
             "scene.continues",
@@ -3510,7 +3510,7 @@
           "side": "risk",
           "label": "Risicopad",
           "score": 41,
-          "title": "Han Iseul vertrekt voor de top van de eclips.",
+          "title": "Mira vertrekt voor de top van de eclips.",
           "body": "Het anker r02 valt weg. Twee latere scènes verliezen de gebeurtenis die hen draagt.",
           "tokens": [
             "drops.r02",

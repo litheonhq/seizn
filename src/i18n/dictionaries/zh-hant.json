@@ -3673,7 +3673,7 @@
         {
           "severity": "critical",
           "rule": "character.han_iseul.eye_color",
-          "fact": "第 11 章：韓以瑟眼睛是灰色。",
+          "fact": "第 11 章：Mira眼睛是灰色。",
           "against": "第 2 章設定寫的是棕色。",
           "cited": [
             "scene.2.1",
@@ -3712,7 +3712,7 @@
           "side": "safe",
           "label": "安全路線",
           "score": 92,
-          "title": "韓以瑟在天文臺守到天亮。",
+          "title": "Mira在天文臺守到天亮。",
           "body": "守住 r02 與 r04。沒有新衝突。後續連得上。",
           "tokens": [
             "scene.continues",
@@ -3724,7 +3724,7 @@
           "side": "risk",
           "label": "風險路線",
           "score": 41,
-          "title": "韓以瑟在食蝕頂點前先離開。",
+          "title": "Mira在食蝕頂點前先離開。",
           "body": "r02 的錨就掉了。後面兩個場景失了著力點。",
           "tokens": [
             "drops.r02",
