@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDashboardTranslation } from '@/contexts/DashboardLocaleContext';
+import { useToast } from '@/contexts/ToastContext';
 import { useAnalyzeCoach } from '@/hooks/useAuthorMemoryV3';
 import {
   STORY_LAYERS,
@@ -9,7 +10,7 @@ import {
   type AntiClicheCategory,
   type AntiClicheFinding,
 } from '@/lib/author/frameworks';
-import { FeatherIcon, SparkIcon } from '../icons';
+import { FeatherIcon, SparkIcon, XIcon } from '../icons';
 
 interface CoachAnalysisResponse {
   hash: string;
@@ -130,6 +131,7 @@ export function buildHighlightedMarkup(text: string, findings: AntiClicheFinding
 
 export function CoachView({ projectId }: CoachViewProps) {
   const { t } = useDashboardTranslation();
+  const { toast } = useToast();
   const [text, setText] = useState('');
   const [serverResult, setServerResult] = useState<CoachAnalysisResponse | null>(null);
   const [dismissedKeys, setDismissedKeys] = useState<Set<string>>(() => new Set());
@@ -146,10 +148,11 @@ export function CoachView({ projectId }: CoachViewProps) {
       const result = (await analyze.trigger({ text })) as unknown as CoachAnalysisResponse;
       setServerResult(result);
       setDismissedKeys(new Set());
-    } catch {
-      // analyze.error is surfaced by SWR Mutation hook
+    } catch (error) {
+      const message = classifyAnalyzeError(error, t);
+      toast('error', message);
     }
-  }, [analyze, isReady, text]);
+  }, [analyze, isReady, text, toast, t]);
 
   useEffect(() => {
     // Clear stale server result + dismissals whenever the input text changes
@@ -212,6 +215,7 @@ export function CoachView({ projectId }: CoachViewProps) {
 
   return (
     <div
+      className="coach-grid"
       style={{
         flex: 1,
         display: 'grid',
@@ -315,7 +319,8 @@ export function CoachView({ projectId }: CoachViewProps) {
             type="button"
             onClick={handleAnalyze}
             disabled={!isReady || analyze.isMutating}
-            title={t('dashboard.coach.analyzeKbd')}
+            aria-label={`${t('dashboard.coach.analyze')} (${t('dashboard.coach.analyzeKbd')})`}
+            aria-busy={analyze.isMutating ? true : undefined}
             style={{
               padding: '10px 18px',
               borderRadius: 999,
@@ -340,25 +345,16 @@ export function CoachView({ projectId }: CoachViewProps) {
                 ? t('dashboard.coach.analyzing')
                 : t('dashboard.coach.analyze')}
             </span>
-            <span style={kbdHintStyle}>{t('dashboard.coach.analyzeKbd')}</span>
+            <span style={kbdHintStyle} aria-hidden="true">
+              {t('dashboard.coach.analyzeKbd')}
+            </span>
           </button>
         </footer>
-        {analyze.error ? (
-          <div
-            style={{
-              padding: '12px 14px',
-              borderRadius: 10,
-              border: '1px solid rgba(201, 100, 66, 0.4)',
-              background: 'rgba(201, 100, 66, 0.08)',
-              fontSize: 12.5,
-              color: 'var(--terracotta-500)',
-            }}
-          >
-            {analyze.error.message}
-          </div>
-        ) : null}
       </section>
       <aside
+        className="coach-findings"
+        aria-live="polite"
+        aria-busy={analyze.isMutating ? true : undefined}
         style={{
           borderLeft: '1px solid var(--border-subtle)',
           padding: 24,
@@ -398,8 +394,50 @@ export function CoachView({ projectId }: CoachViewProps) {
           </div>
         ) : null}
       </aside>
+      <style>{`
+        @media (max-width: 720px) {
+          .coach-grid {
+            grid-template-columns: 1fr !important;
+            grid-template-rows: minmax(360px, 1fr) auto;
+          }
+          .coach-findings {
+            border-left: 0 !important;
+            border-top: 1px solid var(--border-subtle);
+          }
+        }
+      `}</style>
     </div>
   );
+}
+
+function classifyAnalyzeError(error: unknown, t: (key: string) => string): string {
+  if (!error) return t('dashboard.coach.error.unknown');
+  const raw =
+    typeof error === 'object' && error !== null && 'message' in error
+      ? String((error as { message?: unknown }).message ?? '')
+      : String(error);
+  const lower = raw.toLowerCase();
+  if (lower.includes('available on indie plans') || lower.includes('feature limit')) {
+    return raw;
+  }
+  if (lower.includes('temporarily disabled')) {
+    return raw;
+  }
+  if (
+    lower.includes('failed to fetch') ||
+    lower.includes('networkerror') ||
+    lower.includes('network request failed') ||
+    lower.includes('typeerror: load failed')
+  ) {
+    return t('dashboard.coach.error.network');
+  }
+  if (lower.includes('text is required')) {
+    return t('dashboard.coach.error.empty');
+  }
+  if (lower.includes('csrf')) {
+    return t('dashboard.coach.error.csrf');
+  }
+  return raw || t('dashboard.coach.error.unknown');
 }
 
 interface SectionProps {
@@ -419,26 +457,24 @@ function CoachClicheSection({
   const listRef = useRef<HTMLUListElement>(null);
 
   const handleKeyDown = (
-    event: React.KeyboardEvent<HTMLLIElement>,
+    event: React.KeyboardEvent<HTMLButtonElement>,
     finding: AntiClicheFinding,
     index: number,
   ) => {
     const list = listRef.current;
     if (!list) return;
-    const items = Array.from(list.querySelectorAll<HTMLLIElement>('li[data-cliche-item]'));
+    const items = Array.from(list.querySelectorAll<HTMLButtonElement>('button[data-cliche-item]'));
     if (event.key === 'ArrowDown') {
       event.preventDefault();
       items[Math.min(index + 1, items.length - 1)]?.focus();
     } else if (event.key === 'ArrowUp') {
       event.preventDefault();
       items[Math.max(index - 1, 0)]?.focus();
-    } else if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      onScrollTo(finding);
     } else if (event.key === 'Escape' || event.key === 'Delete') {
       event.preventDefault();
       onDismiss(finding);
     }
+    // Native <button> handles Enter / Space → onClick automatically.
   };
 
   return (
@@ -448,30 +484,42 @@ function CoachClicheSection({
       ) : (
         <ul ref={listRef} style={listReset}>
           {findings.slice(0, 12).map((finding, index) => (
-            <li
-              key={`${finding.index}-${index}`}
-              data-cliche-item="true"
-              tabIndex={0}
-              role="button"
-              onClick={() => onScrollTo(finding)}
-              onKeyDown={(event) => handleKeyDown(event, finding, index)}
-              style={{ ...listItem, cursor: 'pointer', outline: 'none' }}
-              onFocus={(event) => {
-                event.currentTarget.style.boxShadow = '0 0 0 2px rgba(201, 100, 66, 0.32)';
-              }}
-              onBlur={(event) => {
-                event.currentTarget.style.boxShadow = 'none';
-              }}
-            >
-              <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8 }}>
-                <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>
-                  &ldquo;{finding.match}&rdquo;
-                </span>
-                <span style={categoryBadge(finding.category)}>{CATEGORY_LABEL[finding.category]}</span>
-              </div>
-              <p style={listItemBody}>{finding.reason}</p>
-              <p style={listItemHint}>{finding.freshAlternative}</p>
-              <div style={listItemKbd}>{t('dashboard.coach.cliche.kbdHint')}</div>
+            <li key={`${finding.index}-${index}`} style={{ ...listItem, padding: 0, position: 'relative' }}>
+              <button
+                type="button"
+                data-cliche-item="true"
+                onClick={() => onScrollTo(finding)}
+                onKeyDown={(event) => handleKeyDown(event, finding, index)}
+                aria-label={`${t('dashboard.coach.section.cliche')}: ${finding.match}. ${finding.reason}`}
+                style={clicheButtonStyle}
+                onFocus={(event) => {
+                  event.currentTarget.style.boxShadow = '0 0 0 2px rgba(201, 100, 66, 0.32)';
+                }}
+                onBlur={(event) => {
+                  event.currentTarget.style.boxShadow = 'none';
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8 }}>
+                  <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>
+                    &ldquo;{finding.match}&rdquo;
+                  </span>
+                  <span style={categoryBadge(finding.category)}>{CATEGORY_LABEL[finding.category]}</span>
+                </div>
+                <p style={listItemBody}>{finding.reason}</p>
+                <p style={listItemHint}>{finding.freshAlternative}</p>
+                <div style={listItemKbd}>{t('dashboard.coach.cliche.kbdHint')}</div>
+              </button>
+              <button
+                type="button"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  onDismiss(finding);
+                }}
+                aria-label={t('dashboard.coach.cliche.dismiss')}
+                style={clicheDismissStyle}
+              >
+                <XIcon size={12} />
+              </button>
             </li>
           ))}
           {findings.length > 12 ? (
@@ -668,15 +716,48 @@ const listItemKbd: React.CSSProperties = {
   color: 'var(--text-tertiary)',
 };
 
+const clicheButtonStyle: React.CSSProperties = {
+  appearance: 'none',
+  background: 'transparent',
+  border: 'none',
+  cursor: 'pointer',
+  outline: 'none',
+  padding: '10px 36px 10px 12px',
+  width: '100%',
+  textAlign: 'left',
+  font: 'inherit',
+  color: 'inherit',
+  display: 'block',
+  borderRadius: 8,
+};
+
+const clicheDismissStyle: React.CSSProperties = {
+  position: 'absolute',
+  top: 8,
+  right: 8,
+  width: 24,
+  height: 24,
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  borderRadius: 999,
+  border: 'none',
+  background: 'rgba(122, 92, 58, 0.10)',
+  color: 'var(--text-tertiary)',
+  cursor: 'pointer',
+};
+
 const kbdHintStyle: React.CSSProperties = {
   fontSize: 10.5,
-  fontWeight: 500,
+  fontWeight: 600,
   letterSpacing: '0.06em',
   textTransform: 'uppercase',
   padding: '2px 6px',
   borderRadius: 4,
-  background: 'rgba(255, 255, 255, 0.18)',
-  color: 'rgba(255, 255, 255, 0.85)',
+  // Solid 50% white tile + near-opaque text → contrast ratio against the
+  // terracotta button background reads above 4.5:1 (WCAG AA).
+  background: 'rgba(255, 255, 255, 0.92)',
+  color: 'var(--terracotta-500)',
 };
 
 function categoryBadge(category: AntiClicheCategory): React.CSSProperties {
