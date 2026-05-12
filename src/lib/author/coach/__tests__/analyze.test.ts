@@ -7,7 +7,7 @@ import type {
   AuthorAuditLogStore,
   AuthorAuditSearchFilter,
 } from '@/lib/author/audit/types';
-import { analyzeCoachInput, hashCoachInput } from '../analyze';
+import { analyzeCoachInput, CoachAnalyzeTimeoutError, hashCoachInput } from '../analyze';
 import type { CoachLlmResponse } from '../schema';
 
 function makeLlmResponse(json: Partial<CoachLlmResponse>): AuthorLlmResponse<CoachLlmResponse> {
@@ -170,5 +170,21 @@ describe('analyzeCoachInput', () => {
       { generate, auditStore: store },
     );
     expect(generate).toHaveBeenCalledTimes(2);
+  });
+
+  it('rejects with CoachAnalyzeTimeoutError when the LLM hangs past the timeout window', async () => {
+    vi.useFakeTimers();
+    try {
+      // Promise that never resolves — simulates a hung LLM call.
+      const generate = vi.fn(() => new Promise<AuthorLlmResponse<CoachLlmResponse>>(() => {}));
+      const pending = analyzeCoachInput(
+        { userId: 'u', projectId: 'p', text: 'A scene that hangs.' },
+        { generate },
+      );
+      vi.advanceTimersByTime(21_000);
+      await expect(pending).rejects.toBeInstanceOf(CoachAnalyzeTimeoutError);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });
