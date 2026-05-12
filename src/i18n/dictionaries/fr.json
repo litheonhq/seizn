@@ -1351,10 +1351,10 @@
       }
     },
     "topBar": {
-      "personal": "Compte Personnel",
+      "personal": "Compte personnel",
       "manageOrgs": "Gérer les projets",
       "create": "Créer",
-      "createApiKey": "Nouvelle Clé API",
+      "createApiKey": "Nouvelle clé API",
       "createOrg": "Nouveau projet",
       "switchOrg": "Changer de projet"
     },
@@ -1621,7 +1621,7 @@
         "done": "Terminé",
         "name": "Nom",
         "scopes": "Portées",
-        "scopesDefault": "Portées par défaut : recall, remember, graph, search.",
+        "scopesDefault": "Portées par défaut : recall, remember, graph et search.",
         "copyKey": "Copier la clé",
         "saveItNow": "Notez-la maintenant – elle ne sera plus affichée.",
         "created": "Clé API créée",
@@ -1629,9 +1629,9 @@
         "rotate": "Renouveler",
         "revoke": "Révoquer",
         "revokeTitle": "Révoquer la clé API ?",
-        "revokeBody": "Révoquer « {name} » arrête tous les appels utilisant cette clé. Les apps existantes auront besoin d'une nouvelle clé.",
+        "revokeBody": "Révoquer « {name} » interrompt tous les appels effectués avec cette clé. Les applications existantes devront utiliser une nouvelle clé.",
         "rotateTitle": "Renouveler la clé API ?",
-        "rotateBody": "Renouveler « {name} » génère une nouvelle clé et révoque l'actuelle. Mettez vos apps à jour avant que l'ancienne ne cesse de fonctionner.",
+        "rotateBody": "Renouveler « {name} » génère une nouvelle clé et révoque l'actuelle. Mettez vos applications à jour avant que l'ancienne ne fonctionne plus.",
         "usage": "Utilisation",
         "rateLimit": "Limite de requêtes",
         "lastUsed": "Dernière utilisation",
@@ -1646,7 +1646,7 @@
           "copyFailed": "Impossible de copier la clé."
         },
         "toasts": {
-          "copied": "Clé copiée dans le presse-papier.",
+          "copied": "Clé copiée dans le presse-papiers.",
           "revoked": "Clé révoquée."
         },
         "audit": {

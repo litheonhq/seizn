@@ -1,0 +1,10 @@
+[
+  { "path": "dashboard.commandPalette.placeholder", "value": "पेज खोजें..." },
+  { "path": "dashboard.commandPalette.enter", "value": "Enter" },
+  { "path": "dashboard.account.apiKeys.description", "value": "Seizn API और MCP कुंजियाँ बनाएँ और मैनेज करें।" },
+  { "path": "dashboard.account.apiKeys.audit.exportCsv", "value": "CSV एक्सपोर्ट" },
+  { "path": "dashboard.account.apiKeys.audit.filterAction", "value": "कार्रवाई" },
+  { "path": "dashboard.account.apiKeys.audit.empty", "value": "कोई मेल खाता ऑडिट इवेंट नहीं।" },
+  { "path": "dashboard.account.apiKeys.toasts.copied", "value": "कुंजी कॉपी हो गई।" },
+  { "path": "dashboard.topBar.manageOrgs", "value": "प्रोजेक्ट मैनेज करें" }
+]

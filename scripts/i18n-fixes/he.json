@@ -1,0 +1,7 @@
+[
+  { "path": "dashboard.account.apiKeys.revoke", "value": "ביטול" },
+  { "path": "dashboard.account.apiKeys.revokeTitle", "value": "לבטל את מפתח ה-API?" },
+  { "path": "dashboard.account.apiKeys.revokeBody", "value": "ביטול \"{name}\" יעצור את כל הקריאות שמשתמשות במפתח. עדכנו את האפליקציות לפני שהמפתח יפסיק לפעול." },
+  { "path": "dashboard.account.apiKeys.errors.capReached", "value": "הגעתם למספר המרבי של מפתחות API בחשבון." },
+  { "path": "dashboard.account.apiKeys.audit.action.quota_exceeded", "value": "חריגה ממכסה" }
+]

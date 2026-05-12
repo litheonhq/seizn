@@ -440,9 +440,9 @@
       "graph": "関係グラフ",
       "timeline": "タイムライン",
       "conflicts": "対立",
-      "coach": "コーチ",
-      "simulate": "シミュレート",
-      "byok": "APIキー連携"
+      "coach": "執筆コーチ",
+      "simulate": "シミュレーション",
+      "byok": "持ち込みAPIキー"
     },
     "pinSidebar": "サイドバーを固定",
     "unpinSidebar": "サイドバーを折りたたむ",
@@ -1320,7 +1320,7 @@
     "topBar": {
       "personal": "個人アカウント",
       "manageOrgs": "プロジェクト管理",
-      "create": "作成",
+      "create": "新規作成",
       "createApiKey": "新しいAPIキー",
       "createOrg": "新規プロジェクト",
       "switchOrg": "プロジェクトを切り替え",
@@ -1542,26 +1542,26 @@
     "workspace": {
       "switcher": {
         "studio": "Studio",
-        "entries": "{count}件のエントリ"
+        "entries": "エントリ {count} 件"
       }
     },
     "memoryHealth": {
       "synced": "メモリ同期済み",
       "syncing": "同期中...",
       "error": "同期エラー",
-      "factsCount": "{relativeTime}・事実{count}件"
+      "factsCount": "{relativeTime}・事実 {count} 件"
     },
     "inbox": {
       "title": "インボックス",
       "newCount": "新着{count}件",
       "filter": {
         "all": "すべて",
-        "conflicts": "対立",
+        "conflicts": "矛盾",
         "reviews": "レビュー",
         "characters": "人物"
       },
       "empty": "インボックスは空です。",
-      "emptyBody": "下書き中にMemory v3がキャノン・人物・タイムラインの対立をここに集めます。",
+      "emptyBody": "下書きを書いている間に、Seizn がキャノン・人物・タイムラインの矛盾をここに集めます。",
       "detail": {
         "evidence": "根拠",
         "suggestion": "提案された解決",
@@ -1592,8 +1592,8 @@
         "canonFacts": "キャノン事実",
         "relationships": "関係"
       },
-      "empty": "ここは静かですね。",
-      "emptyBody": "最初の人物を追加してください。キャノンを記録しながら矛盾を見守ります。",
+      "empty": "まだ人物がいません。",
+      "emptyBody": "最初の人物を追加してください。キャノンを記録しながら矛盾を見つけます。",
       "emptyCta": "人物を追加"
     },
     "graph": {
@@ -1612,16 +1612,16 @@
         "conflict": "対立"
       },
       "detail": {
-        "directTies": "直接関係・{count}",
+        "directTies": "直接の関係 {count} 件",
         "tieStrength": "関係の強さ",
-        "avgStrength": "平均 {percent}% ・関係 {count}本"
+        "avgStrength": "平均 {percent}%・関係 {count} 件"
       },
       "empty": "まだ関係はありません。",
-      "emptyBody": "人物二名と関係を追加してください。執筆中にグラフが自動で埋まります — 手作業は不要です。",
+      "emptyBody": "人物を二名と関係を追加してください。執筆中にグラフが自動で埋まっていきます。手作業は要りません。",
       "emptyCta": "関係を追加"
     },
     "conflicts": {
-      "title": "対立",
+      "title": "矛盾",
       "criticalCount": "重大 {count}件",
       "warningCount": "警告 {count}件",
       "severity": {
@@ -1638,7 +1638,7 @@
     "simulate": {
       "empty": {
         "title": "最初のシーンをシミュレート",
-        "body": "人物二名と一拍のビートを置いてください。キャノンに対する反応を再生します — 本文に書く前に確認できます。",
+        "body": "人物を二名と、ビートを一つ置いてください。キャノンに対する反応を再生します。本文に書く前に確認できます。",
         "cta": "シミュレーションを設定"
       },
       "hint": {
@@ -1648,15 +1648,15 @@
     },
     "coach": {
       "title": "コーチ",
-      "subtitle": "シーンを貼り付けると、フレームワーク基準で読み解きます — 紋切り表現、レイヤー、人物アーク、批評家メモ。",
-      "placeholder": "シーンや章を貼り付けてください。Will StorrのSacred Flawエンジン、Pressfieldアンカー、7レイヤーシステム、フレッシュネス検査を一括で実行します。",
+      "subtitle": "シーンを貼り付けると、フレームワークに沿って読み解きます。紋切り表現、レイヤー、人物アーク、批評家メモを確認できます。",
+      "placeholder": "シーンや章を貼り付けてください。Will Storr の Sacred Flaw エンジン、Pressfield アンカー、7 レイヤーシステム、フレッシュネスチェックを一度に実行します。",
       "analyze": "シーンを分析",
       "analyzing": "分析中…",
       "analyzeKbd": "⌘⏎",
       "words": "語",
       "cliches": "件の紋切り表現",
       "cached": "キャッシュ",
-      "runHint": "準備ができたら「分析」を押してください。紋切り表現の検査は入力中に自動で走ります。",
+      "runHint": "準備ができたら「分析」を押してください。紋切り表現のチェックは入力中に自動で動きます。",
       "section": {
         "cliche": "紋切り表現スキャン",
         "layers": "ストーリーレイヤー",
@@ -1664,7 +1664,7 @@
         "critics": "批評家メモ"
       },
       "cliche": {
-        "empty": "紋切り表現は見つかりませんでした。続けてください。",
+        "empty": "紋切り表現は見つかりませんでした。このまま進めてください。",
         "more": "件追加",
         "kbdHint": "Enter で移動 · Esc で無視",
         "dismiss": "この紋切り表現を無視"
@@ -1674,7 +1674,7 @@
         "network": "ネットワークに接続できません。接続を確認して再試行してください。",
         "empty": "まず分析する本文を貼り付けてください。",
         "csrf": "セッションが切れました。ページを再読み込みしてからもう一度お試しください。",
-        "tooLong": "場面が長すぎます。上限まで切り詰めました。"
+        "tooLong": "シーンが長すぎます。上限まで縮めました。"
       },
       "critic": {
         "layer_auditor": "レイヤー監査",
@@ -1697,19 +1697,19 @@
       },
       "arc": {
         "sacredFlaw": "Sacred flaw",
-        "want": "外面の欲求",
-        "need": "内面の必要"
+        "want": "表向きの欲求",
+        "need": "本当の願い"
       }
     },
     "timeline": {
       "title": "タイムライン",
-      "subtitle": "このプロジェクトで起きた出来事を新しい順に記録します。",
+      "subtitle": "このプロジェクトで起きた出来事を新しい順に表示します。",
       "loadMore": "もっと見る",
       "loadingMore": "読み込み中…",
       "error": "タイムラインを読み込めませんでした。もう一度お試しください。",
       "empty": {
         "title": "まだ活動がありません。",
-        "body": "インポート、判定、シミュレーション、Coach の結果がここに集まります。"
+        "body": "インポート、判定、シミュレーション、Coach の結果がここに表示されます。"
       },
       "day": {
         "today": "今日",
@@ -1719,28 +1719,82 @@
         "window": "最初 {first} · 最後 {last}"
       },
       "event": {
-        "projectCreated":     { "label": "プロジェクトを作成",       "group": "プロジェクトを {count} 件作成" },
-        "importUpload":       { "label": "ファイルをアップロード",   "group": "{count} 件のファイルをアップロード" },
-        "importParsed":       { "label": "インポートを解析",         "group": "{count} 件を解析" },
-        "importFailed":       { "label": "インポート失敗",           "group": "{count} 件のインポートが失敗" },
-        "importRetried":      { "label": "インポートを再試行",       "group": "{count} 件のインポートを再試行" },
-        "importDeleted":      { "label": "インポートを削除",         "group": "{count} 件のインポートを削除" },
-        "candidateAdded":     { "label": "候補を追加",               "group": "{count} 件の候補を追加" },
-        "candidateDecided":   { "label": "候補を判定",               "group": "{count} 件の候補を判定" },
-        "candidateBatch":     { "label": "一括判定",                 "group": "{count} 件の一括判定" },
-        "characterUpdated":   { "label": "キャラクターを更新",       "group": "{count} 件のキャラクターを更新" },
-        "conflictResolved":   { "label": "矛盾を解消",               "group": "{count} 件の矛盾を解消" },
-        "simulationRun":      { "label": "シミュレーションを実行",   "group": "{count} 回のシミュレーション" },
-        "simulationReplay":   { "label": "シミュレーションを再生",   "group": "{count} 回のリプレイ" },
-        "backlogGenerated":   { "label": "バックログを生成",         "group": "{count} 件のバックログ生成" },
-        "settingsUpdated":    { "label": "設定を更新",               "group": "{count} 件の設定変更" },
-        "byokUpdated":        { "label": "BYOK を更新",              "group": "{count} 件の BYOK 更新" },
-        "coachAnalysis":      { "label": "Coach でシーン分析",       "group": "Coach 分析 {count} 回" },
-        "unknown":            { "label": "活動を記録",               "group": "{count} 件の活動" }
+        "projectCreated": {
+          "label": "プロジェクトを作成",
+          "group": "プロジェクトを {count} 件作成"
+        },
+        "importUpload": {
+          "label": "ファイルをアップロード",
+          "group": "{count} 件のファイルをアップロード"
+        },
+        "importParsed": {
+          "label": "インポートを解析",
+          "group": "{count} 件を解析"
+        },
+        "importFailed": {
+          "label": "インポート失敗",
+          "group": "{count} 件のインポートが失敗"
+        },
+        "importRetried": {
+          "label": "インポートを再試行",
+          "group": "{count} 件のインポートを再試行"
+        },
+        "importDeleted": {
+          "label": "インポートを削除",
+          "group": "{count} 件のインポートを削除"
+        },
+        "candidateAdded": {
+          "label": "候補を追加",
+          "group": "{count} 件の候補を追加"
+        },
+        "candidateDecided": {
+          "label": "候補を判定",
+          "group": "{count} 件の候補を判定"
+        },
+        "candidateBatch": {
+          "label": "一括判定",
+          "group": "{count} 件の一括判定"
+        },
+        "characterUpdated": {
+          "label": "キャラクターを更新",
+          "group": "{count} 件のキャラクターを更新"
+        },
+        "conflictResolved": {
+          "label": "矛盾を解消",
+          "group": "{count} 件の矛盾を解消"
+        },
+        "simulationRun": {
+          "label": "シミュレーションを実行",
+          "group": "{count} 回のシミュレーション"
+        },
+        "simulationReplay": {
+          "label": "シミュレーションを再生",
+          "group": "{count} 回のリプレイ"
+        },
+        "backlogGenerated": {
+          "label": "バックログを生成",
+          "group": "{count} 件のバックログ生成"
+        },
+        "settingsUpdated": {
+          "label": "設定を更新",
+          "group": "{count} 件の設定変更"
+        },
+        "byokUpdated": {
+          "label": "BYOK を更新",
+          "group": "{count} 件の BYOK 更新"
+        },
+        "coachAnalysis": {
+          "label": "Coach でシーン分析",
+          "group": "Coach 分析 {count} 回"
+        },
+        "unknown": {
+          "label": "活動を記録",
+          "group": "{count} 件の活動"
+        }
       }
     },
     "fallback": {
-      "body": "この画面はまだ準備中です。作業の妨げになる場合はお知らせください。"
+      "body": "この画面はまだ準備中です。作業に支障があればお知らせください。"
     },
     "account": {
       "apiKeys": {
@@ -1755,7 +1809,7 @@
         "scopes": "スコープ",
         "scopesDefault": "デフォルトのスコープ: recall, remember, graph, search.",
         "copyKey": "キーをコピー",
-        "saveItNow": "いま保存してください。このキーは二度と表示されません。",
+        "saveItNow": "今すぐ保存してください。このキーは一度しか表示されません。",
         "created": "API キーを作成しました",
         "rotated": "API キーをローテートしました",
         "rotate": "ローテート",
@@ -1768,7 +1822,7 @@
         "rateLimit": "分間レート",
         "lastUsed": "最終使用",
         "createdAt": "作成日",
-        "empty": "有効なキーはまだありません。「新しい API キー」から発行してください。",
+        "empty": "有効なキーはまだありません。「新しい API キー」を押して発行してください。",
         "errors": {
           "capReached": "アカウントあたりのキー上限に達しました。",
           "invalidName": "キー名を入力してください。",

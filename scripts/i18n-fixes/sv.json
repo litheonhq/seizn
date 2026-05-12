@@ -1,0 +1,10 @@
+[
+  { "path": "dashboard.nav.candidates", "value": "Händelseinkorg" },
+  { "path": "dashboard.nav.docs", "value": "Dokumentation" },
+  { "path": "dashboard.nav.groups.finops", "value": "ANVÄNDNING OCH KOSTNAD" },
+  { "path": "dashboard.topBar.personal", "value": "Personligt konto" },
+  { "path": "dashboard.commandPalette.placeholder", "value": "Sök efter sidor…" },
+  { "path": "dashboard.commandPalette.commands.openEventInbox", "value": "Öppna händelseinkorgen" },
+  { "path": "dashboard.account.apiKeys.toasts.copied", "value": "Nyckeln kopierades till urklipp." },
+  { "path": "dashboard.account.apiKeys.errors.internal", "value": "Det gick inte att slutföra åtgärden. Försök igen." }
+]

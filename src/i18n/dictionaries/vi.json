@@ -332,7 +332,7 @@
       "governance": "Chính sách nội dung",
       "privacy": "Quyền riêng tư",
       "security": "Bảo mật",
-      "enterprise": "Cho studio",
+      "enterprise": "Dành cho studio",
       "usage": "Sử dụng",
       "budget": "Ngân sách",
       "reports": "Báo cáo",
@@ -1350,8 +1350,8 @@
       "neverExpires": "Link này không bao giờ hết hạn.",
       "error": "Không thể tạo link chia sẻ",
       "revoke": "Thu hồi Link",
-      "revokeConfirm": "Bạn có chắc chắn muốn thu hồi link này không?",
-      "linkRevoked": "Link đã được thu hồi thành công"
+      "revokeConfirm": "Thu hồi liên kết này?",
+      "linkRevoked": "Đã thu hồi liên kết"
     },
     "theme": {
       "light": "Sáng",
@@ -1475,11 +1475,11 @@
       "edit": "Chỉnh sửa",
       "delete": "Xóa",
       "retry": "Thử lại",
-      "deleteConfirm": "Bạn có chắc chắn muốn xóa webhook này không? Hành động này không thể hoàn tác.",
+      "deleteConfirm": "Xóa webhook này? Không thể hoàn tác.",
       "empty": {
         "title": "Chưa cấu hình webhooks",
         "description": "Tạo webhook để nhận thông báo theo thời gian thực về các sự kiện.",
-        "cta": "Tạo Webhook Đầu tiên của Bạn"
+        "cta": "Tạo webhook đầu tiên"
       },
       "table": {
         "event": "Sự kiện",
@@ -1594,7 +1594,7 @@
     },
     "commandPalette": {
       "title": "Bảng lệnh",
-      "placeholder": "Tìm kiếm trang...",
+      "placeholder": "Tìm trang…",
       "noResults": "Không tìm thấy kết quả",
       "navigate": "Điều hướng",
       "open": "Mở",
@@ -1613,7 +1613,7 @@
     "account": {
       "apiKeys": {
         "title": "Khóa API",
-        "description": "Tạo và quản lý các khóa Seizn API + MCP cho Track 2.",
+        "description": "Tạo và quản lý khóa Seizn API và MCP cho Track 2.",
         "capHint": "Bạn có thể tạo tối đa {cap} khóa API cho mỗi tài khoản.",
         "newKey": "Khóa API mới",
         "create": "Tạo",

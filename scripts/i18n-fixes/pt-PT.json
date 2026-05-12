@@ -1,0 +1,8 @@
+[
+  { "path": "dashboard.nav.groups.finops", "value": "UTILIZAÇÃO E CUSTO" },
+  { "path": "dashboard.topBar.personal", "value": "Conta pessoal" },
+  { "path": "dashboard.topBar.createApiKey", "value": "Nova chave de API" },
+  { "path": "dashboard.account.apiKeys.revokeBody", "value": "Ao revogar \"{name}\", todas as chamadas com esta chave são interrompidas. As aplicações existentes precisarão de uma nova chave." },
+  { "path": "dashboard.account.apiKeys.rotateBody", "value": "Ao rodar \"{name}\", é gerada uma nova chave e a atual é revogada. Atualize as aplicações antes de a chave antiga deixar de funcionar." },
+  { "path": "dashboard.account.apiKeys.errors.capReached", "value": "Atingiu o limite de chaves de API para esta conta." }
+]

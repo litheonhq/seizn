@@ -393,7 +393,7 @@
       "overview": "Огляд",
       "memories": "Сутності",
       "mindMap": "Граф відносин",
-      "candidates": "Ящик подій",
+      "candidates": "Вхідні події",
       "devTools": "DevTools",
       "playground": "Пісочниця",
       "evals": "Сценарні тести",
@@ -405,7 +405,7 @@
       "usage": "Використання",
       "budget": "Бюджет",
       "reports": "Звіти",
-      "calculator": "Оцінювач вартості",
+      "calculator": "Калькулятор вартості",
       "apiKeys": "API-ключі",
       "integrations": "Плагіни рушія",
       "webhooks": "Вебхуки",
@@ -425,7 +425,7 @@
       "memoryEditor": "Редактор пам’яті"
     },
     "pinSidebar": "Закріпити бічну панель",
-    "unpinSidebar": "Згорнути бічну панель",
+    "unpinSidebar": "Відкріпити бічну панель",
     "playground": "Пісочниця",
     "playgroundPage": {
       "title": "Консоль відладки",
@@ -1600,11 +1600,11 @@
       "open": "Відкрити",
       "close": "Закрити",
       "enter": "Enter",
-      "workflowGroup": "Сценарії NPC",
+      "workflowGroup": "Робочі процеси NPC",
       "commands": {
         "createEntity": "Створити сутність",
         "viewRelationGraph": "Переглянути граф зв'язків",
-        "openEventInbox": "Відкрити вхідні подій"
+        "openEventInbox": "Відкрити вхідні події"
       }
     },
     "northStar": {
@@ -1613,7 +1613,7 @@
     "account": {
       "apiKeys": {
         "title": "API-ключі",
-        "description": "Створюйте та керуйте ключами Seizn API і MCP для Track 2.",
+        "description": "Створюйте ключі Seizn API та MCP для Track 2 і керуйте ними.",
         "capHint": "Ви можете створити до {cap} API-ключів на акаунт.",
         "newKey": "Новий API-ключ",
         "create": "Створити",
@@ -1638,7 +1638,7 @@
         "createdAt": "Створено",
         "empty": "Немає активних ключів. Натисніть «Новий API-ключ», щоб створити.",
         "errors": {
-          "capReached": "Досягнуто ліміту API-ключів для цього акаунту.",
+          "capReached": "Ви досягли ліміту API-ключів для цього акаунту.",
           "invalidName": "Введіть назву ключа.",
           "internal": "Не вдалося завершити дію. Спробуйте ще раз.",
           "revokeFailed": "Не вдалося відкликати ключ.",

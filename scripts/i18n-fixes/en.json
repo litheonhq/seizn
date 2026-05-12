@@ -1,0 +1,17 @@
+[
+  { "path": "dashboard.fallback.body", "value": "We're still building this page. Let us know if it's blocking your workflow." },
+  { "path": "dashboard.coach.subtitle", "value": "Paste a scene. Get a structured read — cliches, layers, arcs, critic notes." },
+  { "path": "dashboard.coach.placeholder", "value": "Drop a scene or chapter. The coach runs it through Will Storr's sacred-flaw engine, Steven Pressfield's anchors, the seven-layer system, and a freshness pass." },
+  { "path": "dashboard.coach.layers.pending", "value": "Story layers will appear after you analyze." },
+  { "path": "dashboard.coach.cliche.empty", "value": "No cliches found." },
+  { "path": "dashboard.coach.error.tooLong", "value": "Scene was too long — we trimmed it to the maximum length." },
+  { "path": "dashboard.simulate.empty.body", "value": "Drop two characters and a beat. We replay how they'd play out under your canon — useful before you lock a scene into the draft." },
+  { "path": "dashboard.timeline.subtitle", "value": "A log of what you and Seizn have done on this project, newest first." },
+  { "path": "dashboard.timeline.event.candidateBatch.label", "value": "Decided candidates in batch" },
+  { "path": "dashboard.timeline.event.candidateBatch.group", "value": "{count} candidates decided in batch" },
+  { "path": "dashboard.timeline.event.settingsUpdated.group", "value": "Updated settings {count} times" },
+  { "path": "dashboard.timeline.event.byokUpdated.group", "value": "Updated BYOK {count} times" },
+  { "path": "dashboard.timeline.event.unknown.label", "value": "Activity logged" },
+  { "path": "dashboard.account.apiKeys.errors.internal", "value": "Something went wrong. Try again." },
+  { "path": "dashboard.account.apiKeys.empty", "value": "No active keys yet. Click \"New API key\" to create one." }
+]

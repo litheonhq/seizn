@@ -431,7 +431,7 @@
       },
       "memoryEditor": "記憶編輯器",
       "inbox": "收件匣",
-      "review": "檢視",
+      "review": "審閱",
       "characters": "人物",
       "graph": "關係圖",
       "timeline": "時間軸",
@@ -1615,9 +1615,9 @@
     },
     "commandPalette": {
       "title": "命令面板",
-      "placeholder": "搜尋頁面...",
-      "noResults": "未找到結果",
-      "navigate": "導航",
+      "placeholder": "搜尋頁面…",
+      "noResults": "找不到結果",
+      "navigate": "前往",
       "open": "開啟",
       "close": "關閉",
       "enter": "Enter",
@@ -1637,12 +1637,12 @@
     "workspace": {
       "switcher": {
         "studio": "Studio",
-        "entries": "{count} 筆條目"
+        "entries": "{count} 個條目"
       }
     },
     "memoryHealth": {
       "synced": "記憶已同步",
-      "syncing": "同步中...",
+      "syncing": "同步中…",
       "error": "同步錯誤",
       "factsCount": "{relativeTime} · 事實 {count} 筆"
     },
@@ -1652,14 +1652,14 @@
       "filter": {
         "all": "全部",
         "conflicts": "衝突",
-        "reviews": "檢視",
+        "reviews": "待審",
         "characters": "人物"
       },
       "empty": "收件匣已清空。",
-      "emptyBody": "Memory v3 會在你寫作時，把規範、人物與時間軸的衝突彙整到這裡。",
+      "emptyBody": "Seizn 會在你寫作時，把設定、人物與時間軸的衝突彙整到這裡。",
       "detail": {
         "evidence": "證據",
-        "suggestion": "建議的解法",
+        "suggestion": "建議解法",
         "memorySuggests": "Memory v3 建議",
         "applySuggestion": "套用建議",
         "openIn": "在 {episode} 開啟",
@@ -1684,11 +1684,11 @@
         "minor": "次要"
       },
       "detail": {
-        "canonFacts": "規範事實",
+        "canonFacts": "設定事實",
         "relationships": "關係"
       },
       "empty": "這裡靜悄悄的。",
-      "emptyBody": "新增你的第一位人物。我們會建立規範條目，並在你寫作時留意一致性。",
+      "emptyBody": "新增你的第一位人物。我們會建立設定條目，並在你寫作時留意一致性。",
       "emptyCta": "新增人物"
     },
     "graph": {
@@ -1712,7 +1712,7 @@
         "avgStrength": "平均 {percent}% · 關係 {count} 條"
       },
       "empty": "尚無關係。",
-      "emptyBody": "新增兩位人物和一段關係。圖會在你寫作時自動填充 — 不必手動維護。",
+      "emptyBody": "新增兩位人物和一段關係，關係圖會在你寫作時自動補上 — 不必手動維護。",
       "emptyCta": "新增關係"
     },
     "conflicts": {
@@ -1733,20 +1733,20 @@
     "simulate": {
       "empty": {
         "title": "執行你的第一次場景模擬",
-        "body": "放入兩位人物與一個節拍。我們會按照你的規範回放他們的反應 — 落筆前確認很有用。",
+        "body": "選兩位人物與一個節拍，我們會依你的設定回放他們的反應 — 落筆前確認很有用。",
         "cta": "設定模擬"
       },
       "hint": {
         "new": "新增模擬",
-        "help": "模擬使用方式"
+        "help": "如何使用模擬"
       }
     },
     "timeline": {
       "title": "時間軸",
-      "subtitle": "依時間倒序記錄此專案的活動。",
+      "subtitle": "依時間倒序顯示此專案的活動。",
       "loadMore": "載入更早",
       "loadingMore": "載入中…",
-      "error": "時間軸載入失敗,請重試。",
+      "error": "時間軸載入失敗，請重試。",
       "empty": {
         "title": "尚無活動。",
         "body": "匯入、判定、模擬與 Coach 分析都會集中顯示在這裡。"
@@ -1759,28 +1759,82 @@
         "window": "首次 {first} · 最近 {last}"
       },
       "event": {
-        "projectCreated":     { "label": "建立專案",       "group": "建立 {count} 個專案" },
-        "importUpload":       { "label": "上傳檔案",       "group": "上傳 {count} 個檔案" },
-        "importParsed":       { "label": "解析匯入",       "group": "解析 {count} 項匯入" },
-        "importFailed":       { "label": "匯入失敗",       "group": "{count} 項匯入失敗" },
-        "importRetried":      { "label": "重試匯入",       "group": "重試 {count} 項匯入" },
-        "importDeleted":      { "label": "刪除匯入",       "group": "刪除 {count} 項匯入" },
-        "candidateAdded":     { "label": "新增候選",       "group": "新增 {count} 個候選" },
-        "candidateDecided":   { "label": "判定候選",       "group": "判定 {count} 個候選" },
-        "candidateBatch":     { "label": "批次判定",       "group": "{count} 次批次判定" },
-        "characterUpdated":   { "label": "更新角色",       "group": "更新 {count} 個角色" },
-        "conflictResolved":   { "label": "解決衝突",       "group": "解決 {count} 項衝突" },
-        "simulationRun":      { "label": "執行模擬",       "group": "{count} 次模擬" },
-        "simulationReplay":   { "label": "回放模擬",       "group": "{count} 次回放" },
-        "backlogGenerated":   { "label": "生成 Backlog",   "group": "生成 {count} 次 Backlog" },
-        "settingsUpdated":    { "label": "更新設定",       "group": "{count} 次設定變更" },
-        "byokUpdated":        { "label": "更新 BYOK",      "group": "{count} 次 BYOK 變更" },
-        "coachAnalysis":      { "label": "Coach 分析場景", "group": "{count} 次 Coach 分析" },
-        "unknown":            { "label": "活動紀錄",       "group": "{count} 項活動" }
+        "projectCreated": {
+          "label": "建立專案",
+          "group": "建立 {count} 個專案"
+        },
+        "importUpload": {
+          "label": "上傳檔案",
+          "group": "上傳 {count} 個檔案"
+        },
+        "importParsed": {
+          "label": "解析匯入",
+          "group": "解析 {count} 項匯入"
+        },
+        "importFailed": {
+          "label": "匯入失敗",
+          "group": "{count} 項匯入失敗"
+        },
+        "importRetried": {
+          "label": "重試匯入",
+          "group": "重試 {count} 項匯入"
+        },
+        "importDeleted": {
+          "label": "刪除匯入",
+          "group": "刪除 {count} 項匯入"
+        },
+        "candidateAdded": {
+          "label": "新增候選",
+          "group": "新增 {count} 個候選"
+        },
+        "candidateDecided": {
+          "label": "判定候選",
+          "group": "判定 {count} 個候選"
+        },
+        "candidateBatch": {
+          "label": "批次判定",
+          "group": "{count} 次批次判定"
+        },
+        "characterUpdated": {
+          "label": "更新角色",
+          "group": "更新 {count} 個角色"
+        },
+        "conflictResolved": {
+          "label": "解決衝突",
+          "group": "解決 {count} 項衝突"
+        },
+        "simulationRun": {
+          "label": "執行模擬",
+          "group": "{count} 次模擬"
+        },
+        "simulationReplay": {
+          "label": "回放模擬",
+          "group": "{count} 次回放"
+        },
+        "backlogGenerated": {
+          "label": "產生 Backlog",
+          "group": "產生 {count} 次 Backlog"
+        },
+        "settingsUpdated": {
+          "label": "更新設定",
+          "group": "{count} 次設定變更"
+        },
+        "byokUpdated": {
+          "label": "更新 BYOK",
+          "group": "{count} 次 BYOK 變更"
+        },
+        "coachAnalysis": {
+          "label": "Coach 分析場景",
+          "group": "{count} 次 Coach 分析"
+        },
+        "unknown": {
+          "label": "活動紀錄",
+          "group": "{count} 項活動"
+        }
       }
     },
     "fallback": {
-      "body": "此頁籤使用相同的殼層樣式。"
+      "body": "此頁籤沿用相同的版面樣式。"
     },
     "account": {
       "apiKeys": {
@@ -1793,16 +1847,16 @@
         "done": "完成",
         "name": "名稱",
         "scopes": "權限範圍",
-        "scopesDefault": "預設權限:recall、remember、graph、search。",
+        "scopesDefault": "預設權限：recall、remember、graph、search。",
         "copyKey": "複製金鑰",
         "saveItNow": "請立刻儲存。此金鑰僅顯示一次。",
         "created": "已建立 API 金鑰",
         "rotated": "已輪換 API 金鑰",
         "rotate": "輪換",
         "revoke": "撤銷",
-        "revokeTitle": "撤銷此金鑰?",
-        "revokeBody": "撤銷「{name}」後,使用此金鑰的呼叫會立即停止,應用程式需要更換新金鑰。",
-        "rotateTitle": "輪換此金鑰?",
+        "revokeTitle": "撤銷此金鑰？",
+        "revokeBody": "撤銷「{name}」後，使用此金鑰的呼叫會立即停止，應用程式需要更換新金鑰。",
+        "rotateTitle": "輪換此金鑰？",
         "rotateBody": "輪換「{name}」會產生新金鑰並撤銷現有金鑰。請先更新您的應用程式再繼續。",
         "usage": "使用量",
         "rateLimit": "每分鐘上限",
@@ -1812,7 +1866,7 @@
         "errors": {
           "capReached": "已達帳號金鑰上限。",
           "invalidName": "請填寫金鑰名稱。",
-          "internal": "操作未能完成,請稍後再試。",
+          "internal": "操作失敗，請稍後再試。",
           "revokeFailed": "撤銷金鑰失敗。",
           "rotateFailed": "輪換金鑰失敗。",
           "copyFailed": "複製失敗。"
@@ -1824,7 +1878,7 @@
         "audit": {
           "link": "稽核紀錄",
           "title": "API 金鑰稽核紀錄",
-          "description": "記錄 API 金鑰的建立、撤銷、輪換、限速、配額與權限事件。",
+          "description": "記錄 API 金鑰的建立、撤銷、輪換、速率限制、配額與權限事件。",
           "filterAction": "事件",
           "from": "起始日期",
           "to": "結束日期",

@@ -1,0 +1,7 @@
+[
+  { "path": "dashboard.account.apiKeys.revokeBody", "value": "Revogar \"{name}\" interrompe todas as chamadas que usam esta chave. Os aplicativos existentes precisarão de uma nova chave." },
+  { "path": "dashboard.account.apiKeys.rotateBody", "value": "Rotacionar \"{name}\" gera uma nova chave e revoga a atual. Atualize seus aplicativos antes que a chave antiga deixe de funcionar." },
+  { "path": "dashboard.account.apiKeys.saveItNow", "value": "Copie agora — você não verá esta chave novamente." },
+  { "path": "dashboard.account.apiKeys.scopesDefault", "value": "Escopos padrão: recall, remember, graph e search." },
+  { "path": "dashboard.topBar.personal", "value": "Conta pessoal" }
+]
