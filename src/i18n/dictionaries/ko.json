@@ -345,6 +345,7 @@
         "graph": "관계도",
         "timeline": "시간축",
         "conflicts": "충돌",
+        "coach": "코치",
         "simulate": "장면 미리보기",
         "audit": "결정 기록",
         "usage": "사용량",
@@ -362,6 +363,7 @@
       "graph": "관계 그래프",
       "timeline": "타임라인",
       "conflicts": "갈등",
+      "coach": "코치",
       "simulate": "시뮬레이션",
       "audit": "감사 로그",
       "byok": "API 키 연결",
@@ -1774,6 +1776,43 @@
       "hint": {
         "new": "새 시뮬레이션",
         "help": "시뮬레이션 사용법"
+      }
+    },
+    "coach": {
+      "title": "코치",
+      "subtitle": "장면을 붙여 넣으면 프레임워크 기준으로 읽어 드려요 — 진부 표현, 레이어, 인물 호, 비평가 메모.",
+      "placeholder": "장면이나 챕터를 붙여 넣으세요. Will Storr의 sacred-flaw 엔진, Pressfield 앵커, 7-layer 시스템, freshness 검수 패스를 함께 돌립니다.",
+      "analyze": "장면 분석",
+      "analyzing": "분석 중…",
+      "analyzeKbd": "⌘⏎",
+      "words": "단어",
+      "cliches": "건의 진부 표현",
+      "cached": "캐시",
+      "runHint": "준비되면 분석 버튼을 눌러요. 진부 표현 검사는 입력하는 동안 자동 실행됩니다.",
+      "section": {
+        "cliche": "진부 표현 스캔",
+        "layers": "스토리 레이어",
+        "arcs": "인물 호",
+        "critics": "비평가 메모"
+      },
+      "cliche": {
+        "empty": "발견된 진부 표현이 없습니다. 계속 진행하세요.",
+        "more": "건 더",
+        "kbdHint": "Enter 이동 · Esc 무시"
+      },
+      "layers": {
+        "pending": "스토리 레이어 점검은 분석을 실행하면 표시됩니다."
+      },
+      "arcs": {
+        "empty": "아직 인물 호가 감지되지 않았습니다."
+      },
+      "critics": {
+        "empty": "비평가 메모는 분석이 끝나면 표시됩니다."
+      },
+      "arc": {
+        "sacredFlaw": "Sacred flaw",
+        "want": "겉으로 드러나는 욕망",
+        "need": "내면의 필요"
       }
     },
     "fallback": {
