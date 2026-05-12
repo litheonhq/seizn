@@ -42,7 +42,12 @@ export function SidebarItem({
   return (
     <Link
       href={item.href}
-      prefetch={isAuthorTabLink ? false : undefined}
+      // Author-tab links are intra-page (no route change), so skip prefetch.
+      // Cross-route sidebar links (memories, account, billing, etc.) are
+      // always-visible nav — prefetch eagerly so clicks feel instant instead
+      // of the ~1s SSR delay we hit with the App Router's default lazy
+      // prefetch.
+      prefetch={isAuthorTabLink ? false : true}
       onClick={(event) => {
         if (!onAuthorTab || !isAuthorTabLink) return;
         if (event.defaultPrevented || event.button !== 0) return;
