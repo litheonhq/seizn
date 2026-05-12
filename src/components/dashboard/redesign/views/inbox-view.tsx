@@ -422,11 +422,14 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
   );
 }
 
+export type InboxFilterId = 'all' | 'conflicts' | 'reviews' | 'characters';
+
 export interface InboxViewProps {
   rows: InboxRowDetail[];
+  defaultFilter?: InboxFilterId;
 }
 
-export function InboxView({ rows }: InboxViewProps) {
+export function InboxView({ rows, defaultFilter = 'all' }: InboxViewProps) {
   const { t } = useDashboardTranslation();
   const [selected, setSelected] = useState(rows[0]?.id ?? '');
   const row = rows.find((r) => r.id === selected) ?? rows[0];
@@ -435,13 +438,13 @@ export function InboxView({ rows }: InboxViewProps) {
   const reviewsCount = rows.filter((r) => r.kind === 'Review').length;
   const charactersCount = rows.filter((r) => r.kind === 'Character').length;
 
-  const filters: { id: 'all' | 'conflicts' | 'reviews' | 'characters'; labelKey: string; n: number }[] = [
+  const filters: { id: InboxFilterId; labelKey: string; n: number }[] = [
     { id: 'all', labelKey: 'dashboard.inbox.filter.all', n: rows.length },
     { id: 'conflicts', labelKey: 'dashboard.inbox.filter.conflicts', n: conflictsCount },
     { id: 'reviews', labelKey: 'dashboard.inbox.filter.reviews', n: reviewsCount },
     { id: 'characters', labelKey: 'dashboard.inbox.filter.characters', n: charactersCount },
   ];
-  const [filter, setFilter] = useState<typeof filters[number]['id']>('all');
+  const [filter, setFilter] = useState<InboxFilterId>(defaultFilter);
 
   const visibleRows = rows.filter((r) => {
     if (filter === 'all') return true;
