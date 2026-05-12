@@ -1353,7 +1353,7 @@
     },
     "topBar": {
       "personal": "व्यक्तिगत खाता",
-      "manageOrgs": "प्रोजेक्ट प्रबंधित करें",
+      "manageOrgs": "प्रोजेक्ट मैनेज करें",
       "create": "बनाएं",
       "createApiKey": "नई API Key",
       "createOrg": "नया प्रोजेक्ट",
@@ -1594,12 +1594,12 @@
     },
     "commandPalette": {
       "title": "कमांड पैलेट",
-      "placeholder": "पृष्ठ खोजें...",
+      "placeholder": "पेज खोजें...",
       "noResults": "कोई परिणाम नहीं मिला",
       "navigate": "नेविगेट",
       "open": "खोलें",
       "close": "बंद करें",
-      "enter": "एंटर",
+      "enter": "Enter",
       "workflowGroup": "NPC वर्कफ़्लो",
       "commands": {
         "createEntity": "एंटिटी बनाएं",
@@ -1613,7 +1613,7 @@
     "account": {
       "apiKeys": {
         "title": "API कुंजियाँ",
-        "description": "Track 2 के लिए Seizn API + MCP कुंजियाँ बनाएँ और प्रबंधित करें।",
+        "description": "Seizn API और MCP कुंजियाँ बनाएँ और मैनेज करें।",
         "capHint": "आप प्रति खाता {cap} API कुंजियाँ तक बना सकते हैं।",
         "newKey": "नई API कुंजी",
         "create": "बनाएँ",
@@ -1646,19 +1646,19 @@
           "copyFailed": "कुंजी कॉपी नहीं की जा सकी।"
         },
         "toasts": {
-          "copied": "कुंजी क्लिपबोर्ड में कॉपी हो गई।",
+          "copied": "कुंजी कॉपी हो गई।",
           "revoked": "कुंजी निरस्त कर दी गई।"
         },
         "audit": {
           "link": "ऑडिट लॉग",
           "title": "API कुंजी ऑडिट लॉग",
           "description": "आपकी API कुंजियों के लिए सभी निर्माण, निरस्तीकरण, बदलाव, दर सीमा, कोटा और स्कोप घटनाएँ।",
-          "filterAction": "क्रिया",
+          "filterAction": "कार्रवाई",
           "from": "से",
           "to": "तक",
           "reset": "रीसेट",
-          "exportCsv": "CSV निर्यात",
-          "empty": "कोई मेल खाती ऑडिट घटना नहीं।",
+          "exportCsv": "CSV एक्सपोर्ट",
+          "empty": "कोई मेल खाता ऑडिट इवेंट नहीं।",
           "action": {
             "all": "सभी",
             "created": "बनाया गया",

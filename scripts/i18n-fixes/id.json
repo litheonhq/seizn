@@ -1,0 +1,16 @@
+[
+  { "path": "dashboard.nav.enterprise", "value": "Studio" },
+  { "path": "dashboard.nav.governance", "value": "Tata kelola" },
+  { "path": "dashboard.nav.docs", "value": "Dokumentasi" },
+  { "path": "dashboard.nav.calculator", "value": "Kalkulator" },
+  { "path": "dashboard.nav.organizations", "value": "Organisasi" },
+  { "path": "dashboard.commandPalette.noResults", "value": "Tidak ada hasil" },
+  { "path": "dashboard.account.apiKeys.capHint", "value": "Maksimal {cap} kunci API per akun." },
+  { "path": "dashboard.account.apiKeys.errors.capReached", "value": "Sudah mencapai batas kunci API untuk akun ini." },
+  { "path": "dashboard.account.apiKeys.errors.invalidName", "value": "Masukkan nama kunci." },
+  { "path": "dashboard.account.apiKeys.errors.internal", "value": "Tindakan gagal. Coba lagi." },
+  { "path": "dashboard.account.apiKeys.errors.revokeFailed", "value": "Gagal mencabut kunci." },
+  { "path": "dashboard.account.apiKeys.errors.rotateFailed", "value": "Gagal memutar kunci." },
+  { "path": "dashboard.account.apiKeys.errors.copyFailed", "value": "Gagal menyalin kunci." },
+  { "path": "dashboard.account.apiKeys.toasts.copied", "value": "Kunci disalin." }
+]

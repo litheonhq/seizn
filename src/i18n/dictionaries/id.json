@@ -329,19 +329,19 @@
       "playground": "Playground",
       "evals": "Uji skenario",
       "analytics": "Analitik",
-      "governance": "Kebijakan konten",
+      "governance": "Tata kelola",
       "privacy": "Privasi",
       "security": "Keamanan",
-      "enterprise": "Untuk studio",
+      "enterprise": "Studio",
       "usage": "Penggunaan",
       "budget": "Anggaran",
       "reports": "Laporan",
-      "calculator": "Estimasi biaya",
+      "calculator": "Kalkulator",
       "apiKeys": "Kunci API",
       "integrations": "Plugin mesin",
       "webhooks": "Webhooks",
-      "docs": "Docs",
-      "organizations": "Proyek",
+      "docs": "Dokumentasi",
+      "organizations": "Organisasi",
       "settings": "Pengaturan",
       "groups": {
         "memory": "MEMORI NPC",
@@ -1595,7 +1595,7 @@
     "commandPalette": {
       "title": "Palet perintah",
       "placeholder": "Cari halaman...",
-      "noResults": "Tidak ada hasil ditemukan",
+      "noResults": "Tidak ada hasil",
       "navigate": "Navigasi",
       "open": "Buka",
       "close": "Tutup",
@@ -1614,7 +1614,7 @@
       "apiKeys": {
         "title": "Kunci API",
         "description": "Buat dan kelola kunci Seizn API + MCP untuk Track 2.",
-        "capHint": "Anda dapat membuat hingga {cap} kunci API per akun.",
+        "capHint": "Maksimal {cap} kunci API per akun.",
         "newKey": "Kunci API Baru",
         "create": "Buat",
         "cancel": "Batal",
@@ -1638,15 +1638,15 @@
         "createdAt": "Dibuat",
         "empty": "Belum ada kunci aktif. Klik \"Kunci API Baru\" untuk membuatnya.",
         "errors": {
-          "capReached": "Anda telah mencapai batas kunci API untuk akun ini.",
-          "invalidName": "Silakan masukkan nama kunci.",
-          "internal": "Tindakan tidak dapat diselesaikan. Coba lagi.",
-          "revokeFailed": "Tidak dapat mencabut kunci.",
-          "rotateFailed": "Tidak dapat merotasi kunci.",
-          "copyFailed": "Tidak dapat menyalin kunci."
+          "capReached": "Sudah mencapai batas kunci API untuk akun ini.",
+          "invalidName": "Masukkan nama kunci.",
+          "internal": "Tindakan gagal. Coba lagi.",
+          "revokeFailed": "Gagal mencabut kunci.",
+          "rotateFailed": "Gagal memutar kunci.",
+          "copyFailed": "Gagal menyalin kunci."
         },
         "toasts": {
-          "copied": "Kunci disalin ke papan klip.",
+          "copied": "Kunci disalin.",
           "revoked": "Kunci dicabut."
         },
         "audit": {

@@ -332,13 +332,13 @@
       "governance": "Politica dei contenuti",
       "privacy": "Privacy",
       "security": "Sicurezza",
-      "enterprise": "Per i studio",
+      "enterprise": "Per gli studi",
       "usage": "Utilizzo",
       "budget": "Budget",
       "reports": "Report",
       "calculator": "Stima costi",
       "apiKeys": "Chiavi API",
-      "integrations": "Plugin motore",
+      "integrations": "Plugin del motore",
       "webhooks": "Webhooks",
       "docs": "Docs",
       "organizations": "Progetti",
@@ -353,7 +353,7 @@
         "build": "Sviluppo",
         "integrate": "Integrazione"
       },
-      "memoryEditor": "Editor memoria"
+      "memoryEditor": "Editor della memoria"
     },
     "pinSidebar": "Fissa barra laterale",
     "unpinSidebar": "Comprimi barra laterale",
@@ -1598,7 +1598,7 @@
     },
     "commandPalette": {
       "title": "Palette comandi",
-      "placeholder": "Cerca pagine...",
+      "placeholder": "Cerca una pagina…",
       "noResults": "Nessun risultato trovato",
       "navigate": "Naviga",
       "open": "Apri",
@@ -1607,7 +1607,7 @@
       "workflowGroup": "Workflow NPC",
       "commands": {
         "createEntity": "Crea entità",
-        "viewRelationGraph": "Visualizza grafo relazioni",
+        "viewRelationGraph": "Visualizza il grafo delle relazioni",
         "openEventInbox": "Apri inbox eventi"
       }
     },
@@ -1618,7 +1618,7 @@
       "apiKeys": {
         "title": "Chiavi API",
         "description": "Crea e gestisci le chiavi Seizn API + MCP per Track 2.",
-        "capHint": "Puoi creare fino a {cap} chiavi API per account.",
+        "capHint": "Puoi creare fino a {cap} chiavi API per ogni account.",
         "newKey": "Nuova chiave API",
         "create": "Crea",
         "cancel": "Annulla",
@@ -1633,14 +1633,14 @@
         "rotate": "Ruota",
         "revoke": "Revoca",
         "revokeTitle": "Revocare la chiave API?",
-        "revokeBody": "Revocando \"{name}\" tutte le chiamate che usano questa chiave si interromperanno. Le app esistenti avranno bisogno di una nuova chiave.",
+        "revokeBody": "Se revochi \"{name}\", tutte le chiamate che usano questa chiave si interromperanno.",
         "rotateTitle": "Ruotare la chiave API?",
-        "rotateBody": "Ruotando \"{name}\" verrà generata una nuova chiave e quella attuale verrà revocata. Aggiorna le tue app prima che la chiave precedente smetta di funzionare.",
+        "rotateBody": "Se ruoti \"{name}\", verrà generata una nuova chiave e quella attuale sarà revocata. Aggiorna le tue app prima che la chiave precedente smetta di funzionare.",
         "usage": "Utilizzo",
         "rateLimit": "Limite di richieste",
         "lastUsed": "Ultimo utilizzo",
         "createdAt": "Creata",
-        "empty": "Nessuna chiave attiva. Fai clic su \"Nuova chiave API\" per crearne una.",
+        "empty": "Nessuna chiave attiva. Clicca su \"Nuova chiave API\" per crearne una.",
         "errors": {
           "capReached": "Hai raggiunto il limite di chiavi API per questo account.",
           "invalidName": "Inserisci un nome per la chiave.",

@@ -1,0 +1,7 @@
+[
+  { "path": "dashboard.account.apiKeys.revokeBody", "value": "Si revocas \"{name}\", se detendrán todas las llamadas que usen esta clave y tus aplicaciones tendrán que usar una nueva." },
+  { "path": "dashboard.account.apiKeys.rotateBody", "value": "Si rotas \"{name}\", se generará una clave nueva y la actual quedará revocada. Actualiza tus aplicaciones antes de que la antigua deje de funcionar." },
+  { "path": "dashboard.nav.groups.finops", "value": "USO Y COSTO" },
+  { "path": "dashboard.topBar.personal", "value": "Cuenta personal" },
+  { "path": "dashboard.account.apiKeys.audit.title", "value": "Auditoría de claves API" }
+]

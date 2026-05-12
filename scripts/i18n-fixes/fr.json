@@ -1,0 +1,8 @@
+[
+  { "path": "dashboard.account.apiKeys.toasts.copied", "value": "Clé copiée dans le presse-papiers." },
+  { "path": "dashboard.account.apiKeys.scopesDefault", "value": "Portées par défaut : recall, remember, graph et search." },
+  { "path": "dashboard.account.apiKeys.revokeBody", "value": "Révoquer « {name} » interrompt tous les appels effectués avec cette clé. Les applications existantes devront utiliser une nouvelle clé." },
+  { "path": "dashboard.account.apiKeys.rotateBody", "value": "Renouveler « {name} » génère une nouvelle clé et révoque l'actuelle. Mettez vos applications à jour avant que l'ancienne ne fonctionne plus." },
+  { "path": "dashboard.topBar.personal", "value": "Compte personnel" },
+  { "path": "dashboard.topBar.createApiKey", "value": "Nouvelle clé API" }
+]

@@ -1,0 +1,11 @@
+[
+  { "path": "dashboard.nav.candidates", "value": "Входящие события" },
+  { "path": "dashboard.nav.calculator", "value": "Калькулятор стоимости" },
+  { "path": "dashboard.nav.docs", "value": "Документация" },
+  { "path": "dashboard.commandPalette.commands.openEventInbox", "value": "Открыть входящие события" },
+  { "path": "dashboard.account.apiKeys.description", "value": "Создавайте ключи Seizn API и MCP для Track 2 и управляйте ими." },
+  { "path": "dashboard.account.apiKeys.capHint", "value": "До {cap} API-ключей на один аккаунт." },
+  { "path": "dashboard.account.apiKeys.scopesDefault", "value": "Разрешения по умолчанию: recall, remember, graph, search." },
+  { "path": "dashboard.account.apiKeys.errors.invalidName", "value": "Введите название ключа." },
+  { "path": "dashboard.account.apiKeys.revokeBody", "value": "После отзыва «{name}» все вызовы с этим ключом перестанут работать. Существующим приложениям потребуется новый ключ." }
+]
