@@ -1816,7 +1816,14 @@
       "cliche": {
         "empty": "No cliches surfaced. Keep going.",
         "more": "more",
-        "kbdHint": "Enter scroll · Esc dismiss"
+        "kbdHint": "Enter scroll · Esc dismiss",
+        "dismiss": "Dismiss this cliche"
+      },
+      "error": {
+        "unknown": "Coach analysis failed. Try again in a moment.",
+        "network": "Network unavailable. Check your connection and retry.",
+        "empty": "Add some text first — Coach needs a scene to analyze.",
+        "csrf": "Session expired. Reload the page and try again."
       },
       "layers": {
         "pending": "Story layer presence appears after you analyze."
