@@ -437,7 +437,6 @@
       "timeline": "时间线",
       "conflicts": "冲突",
       "simulate": "模拟",
-      "audit": "审计日志",
       "byok": "API密钥"
     },
     "pinSidebar": "固定侧边栏",
