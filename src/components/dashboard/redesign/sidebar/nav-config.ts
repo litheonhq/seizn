@@ -7,6 +7,7 @@ import {
   CharactersIcon,
   ConflictIcon,
   EditIcon,
+  FeatherIcon,
   GraphIcon,
   type IconProps,
   InboxIcon,
@@ -27,6 +28,7 @@ export type NavItemId =
   | 'graph'
   | 'timeline'
   | 'conflicts'
+  | 'coach'
   | 'simulate'
   | 'audit'
   | 'memories'
@@ -119,6 +121,13 @@ export const NAV_GROUPS: NavGroup[] = [
         badgeKey: 'conflicts.open',
         dotKey: 'conflicts.has_p1',
         kbd: 'X',
+      },
+      {
+        id: 'coach',
+        labelKey: 'dashboard.nav.coach',
+        href: authorTabHref('coach'),
+        icon: FeatherIcon,
+        kbd: 'O',
       },
       {
         id: 'simulate',

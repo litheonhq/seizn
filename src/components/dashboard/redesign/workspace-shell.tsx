@@ -15,6 +15,7 @@ import { TopBar, type TopBarTab } from './top-bar';
 import type { Density } from './types';
 import { AuthorUsageView } from './views/author-usage-view';
 import { CharactersView } from './views/characters-view';
+import { CoachView } from './views/coach-view';
 import { ConflictsView } from './views/conflicts-view';
 import { FallbackView } from './views/fallback-view';
 import { GraphView } from './views/graph-view';
@@ -156,6 +157,8 @@ export function WorkspaceShell({
         );
       case 'conflicts':
         return <ConflictsView conflicts={conflicts.data} />;
+      case 'coach':
+        return <CoachView projectId={projectId} />;
       case 'simulate':
         return <SimulateEmpty />;
       case 'usage':

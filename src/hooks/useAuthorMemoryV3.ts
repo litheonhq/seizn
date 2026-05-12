@@ -427,3 +427,17 @@ export function useRetryAuthorImport(projectId?: string, importId?: string) {
     }
   );
 }
+
+export function useAnalyzeCoach(projectId?: string) {
+  return useSWRMutation<JsonRecord, Error, string | null, JsonRecord>(
+    projectId ? `/api/projects/${projectId}/coach/analyze` : null,
+    postJson,
+    {
+      onSuccess: () => {
+        if (projectId) {
+          void globalMutate((key) => typeof key === 'string' && key.includes(`/api/projects/${projectId}/audit`));
+        }
+      },
+    }
+  );
+}

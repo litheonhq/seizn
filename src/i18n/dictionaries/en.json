@@ -343,6 +343,7 @@
         "graph": "Graph",
         "timeline": "Timeline",
         "conflicts": "Conflicts",
+        "coach": "Coach",
         "simulate": "Simulate",
         "audit": "Audit",
         "usage": "Usage",
@@ -366,6 +367,7 @@
       "graph": "Graph",
       "timeline": "Timeline",
       "conflicts": "Conflicts",
+      "coach": "Coach",
       "simulate": "Simulate",
       "audit": "Audit",
       "byok": "BYOK",
@@ -1792,6 +1794,41 @@
       "hint": {
         "new": "New simulation",
         "help": "How simulations work"
+      }
+    },
+    "coach": {
+      "title": "Coach",
+      "subtitle": "Paste a scene. Get a framework read — cliches, layers, arcs, critic notes.",
+      "placeholder": "Drop a scene or chapter. The coach will read it through Will Storr's sacred-flaw engine, Steven Pressfield's anchors, the seven-layer system, and a freshness pass.",
+      "analyze": "Analyze scene",
+      "analyzing": "Analyzing…",
+      "words": "words",
+      "cliches": "cliches found",
+      "cached": "cached",
+      "runHint": "Hit Analyze when you're ready. The cliche scan runs as you type.",
+      "section": {
+        "cliche": "Cliche scan",
+        "layers": "Story layers",
+        "arcs": "Character arcs",
+        "critics": "Critic notes"
+      },
+      "cliche": {
+        "empty": "No cliches surfaced. Keep going.",
+        "more": "more"
+      },
+      "layers": {
+        "pending": "Story layer presence appears after you analyze."
+      },
+      "arcs": {
+        "empty": "No character arcs detected yet."
+      },
+      "critics": {
+        "empty": "Critic notes appear after the analysis returns."
+      },
+      "arc": {
+        "sacredFlaw": "Sacred flaw",
+        "want": "External want",
+        "need": "Internal need"
       }
     },
     "fallback": {
