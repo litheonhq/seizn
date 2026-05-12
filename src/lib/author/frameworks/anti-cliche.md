@@ -26,4 +26,4 @@ Cliche is the first thing that comes to mind. Fresh prose requires going past th
 
 ## Programmatic audit
 
-`auditText(text)` performs a deterministic regex scan over the banned-phrase table and returns one `AntiClicheFinding` per match (category, reason, fresh-alternative pattern, index in source). Use it as a cheap pre-screen before any LLM-based revision pass.
+`auditText(text)` performs a deterministic literal-substring scan over the banned-phrase table (lower-cases input once, then `indexOf` per phrase — no dynamic regex, no ReDoS surface) and returns one `AntiClicheFinding` per match (category, reason, fresh-alternative pattern, index in source). Variants (pronouns, optional punctuation) are expanded into explicit entries. Use it as a cheap pre-screen before any LLM-based revision pass.
