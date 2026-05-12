@@ -3503,7 +3503,7 @@
         {
           "severity": "critical",
           "rule": "character.han_iseul.eye_color",
-          "fact": "Capitolo 11: Han Iseul ha gli occhi grigi.",
+          "fact": "Capitolo 11: Mira ha gli occhi grigi.",
           "against": "Il canone del capitolo 2 dice marroni.",
           "cited": [
             "scene.2.1",
@@ -3513,7 +3513,7 @@
         {
           "severity": "major",
           "rule": "rule.r03 accesso al tetto",
-          "fact": "Capitolo 7: Park Jio sale sul tetto al giorno 9.",
+          "fact": "Capitolo 7: Eli sale sul tetto al giorno 9.",
           "against": "La regola r03 chiude il tetto fino al giorno 14.",
           "cited": [
             "rule.r03",
@@ -3542,7 +3542,7 @@
           "side": "safe",
           "label": "Percorso sicuro",
           "score": 92,
-          "title": "Han Iseul resta all'osservatorio fino all'alba.",
+          "title": "Mira resta all'osservatorio fino all'alba.",
           "body": "Rispetta r02 e r04. Nessun nuovo conflitto. La continuità tiene.",
           "tokens": [
             "scene.continues",
@@ -3554,7 +3554,7 @@
           "side": "risk",
           "label": "Percorso a rischio",
           "score": 41,
-          "title": "Han Iseul se ne va prima del culmine dell'eclisse.",
+          "title": "Mira se ne va prima del culmine dell'eclisse.",
           "body": "L'ancora di r02 cade. Due scene successive perdono l'evento che le sosteneva.",
           "tokens": [
             "drops.r02",

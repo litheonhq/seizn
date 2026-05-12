@@ -3626,7 +3626,7 @@
         {
           "severity": "critical",
           "rule": "character.han_iseul.eye_color",
-          "fact": "11話: ハン・イスルの瞳が灰色。",
+          "fact": "11話: Miraの瞳が灰色。",
           "against": "2話のカノンでは茶色。",
           "cited": [
             "scene.2.1",
@@ -3636,7 +3636,7 @@
         {
           "severity": "major",
           "rule": "rule.r03 屋上の出入り",
-          "fact": "7話: パク・ジオが9日目に屋上へ。",
+          "fact": "7話: Eliが9日目に屋上へ。",
           "against": "ルール r03 は14日まで屋上を閉じます。",
           "cited": [
             "rule.r03",
@@ -3665,7 +3665,7 @@
           "side": "safe",
           "label": "安全な道",
           "score": 92,
-          "title": "ハン・イスルが夜明けまで天文台に残る。",
+          "title": "Miraが夜明けまで天文台に残る。",
           "body": "r02 と r04 を守ります。新しい衝突なし。続きは保たれます。",
           "tokens": [
             "scene.continues",
@@ -3677,7 +3677,7 @@
           "side": "risk",
           "label": "危ない道",
           "score": 41,
-          "title": "ハン・イスルが食の頂点前に去る。",
+          "title": "Miraが食の頂点前に去る。",
           "body": "r02 の錨が外れます。後続の二つの場面が拠り所を失います。",
           "tokens": [
             "drops.r02",

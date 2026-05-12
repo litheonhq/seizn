@@ -12,23 +12,23 @@ interface PromptCase {
   explain: string;
 }
 
-export const DETECTOR_SEED = "Han Iseul transfers to Class 2 on day 9.";
+export const DETECTOR_SEED = "Mira transfers to Class 2 on day 9.";
 
 const PROMPTS: PromptCase[] = [
   {
     label: DETECTOR_SEED,
     text: DETECTOR_SEED,
     verdict: "conflict",
-    rule: "character.han_iseul.class = 1",
+    rule: "character.mira.class = 1",
     explain:
-      "Canon registers Han Iseul in Class 1 from day 1. A transfer event on day 9 needs a new rule or this fact reverts.",
+      "Canon registers Mira in Class 1 from day 1. A transfer event on day 9 needs a new rule or this fact reverts.",
   },
   {
-    label: "Han Iseul has gray eyes.",
-    text: "Han Iseul has gray eyes.",
+    label: "Mira has gray eyes.",
+    text: "Mira has gray eyes.",
     verdict: "conflict",
-    rule: "character.han_iseul.eye_color = brown",
-    explain: "Canon establishes Han Iseul with brown eyes. The proposed fact contradicts the ledger.",
+    rule: "character.mira.eye_color = brown",
+    explain: "Canon establishes Mira with brown eyes. The proposed fact contradicts the ledger.",
   },
   {
     label: "The eclipse happens on day 23.",
@@ -38,8 +38,8 @@ const PROMPTS: PromptCase[] = [
     explain: "Matches established rule r02. No further review needed.",
   },
   {
-    label: "Jeong Serin and Han Iseul argue at the observatory.",
-    text: "Jeong Serin and Han Iseul argue at the observatory.",
+    label: "Sasha and Mira argue at the observatory.",
+    text: "Sasha and Mira argue at the observatory.",
     verdict: "pending",
     rule: "scene.new",
     explain: "New scene fact. No conflicts detected. Author review queued.",
@@ -54,10 +54,10 @@ function pickVerdict(text: string): PromptCase | null {
     if (value === prompt.text.toLowerCase()) return prompt;
   }
 
-  if (/(gray|grey|blue|green) eyes?/.test(value) && /han iseul/.test(value)) {
+  if (/(gray|grey|blue|green) eyes?/.test(value) && /mira/.test(value)) {
     return PROMPTS[1];
   }
-  if (/class 2|transfer/.test(value) && /han iseul/.test(value)) {
+  if (/class 2|transfer/.test(value) && /mira/.test(value)) {
     return PROMPTS[0];
   }
   if (/eclipse/.test(value) && /day 23/.test(value)) {
@@ -117,7 +117,7 @@ export function ConflictDetector({ compact = false }: { compact?: boolean }) {
           aria-describedby="author-conflict-result author-conflict-help"
           className="w-full resize-none rounded-[var(--radius-md)] border px-3.5 py-3 text-[15px] leading-6 outline-none transition-shadow"
           style={{ borderColor: "var(--ink-200)", background: "var(--ink-0)", color: "var(--ink-900)" }}
-          placeholder="e.g. Han Iseul has gray eyes."
+          placeholder="e.g. Mira has gray eyes."
         />
 
         <div className="mt-3 flex flex-wrap items-center gap-1.5">

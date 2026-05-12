@@ -3459,7 +3459,7 @@
         {
           "severity": "critical",
           "rule": "character.han_iseul.eye_color",
-          "fact": "Kapitel 11: Han Iseul har grå ögon.",
+          "fact": "Kapitel 11: Mira har grå ögon.",
           "against": "Kanon i kapitel 2 säger bruna.",
           "cited": [
             "scene.2.1",
@@ -3469,7 +3469,7 @@
         {
           "severity": "major",
           "rule": "rule.r03 åtkomst till tak",
-          "fact": "Kapitel 7: Park Jio går upp på taket dag 9.",
+          "fact": "Kapitel 7: Eli går upp på taket dag 9.",
           "against": "Regel r03 låser taket till dag 14.",
           "cited": [
             "rule.r03",
@@ -3498,7 +3498,7 @@
           "side": "safe",
           "label": "Säkert spår",
           "score": 92,
-          "title": "Han Iseul stannar i observatoriet till gryningen.",
+          "title": "Mira stannar i observatoriet till gryningen.",
           "body": "Hedrar r02 och r04. Inga nya konflikter. Kontinuiteten håller.",
           "tokens": [
             "scene.continues",
@@ -3510,7 +3510,7 @@
           "side": "risk",
           "label": "Risk-spår",
           "score": 41,
-          "title": "Han Iseul går innan förmörkelsens topp.",
+          "title": "Mira går innan förmörkelsens topp.",
           "body": "Ankaret r02 släpper. Två senare scener tappar händelsen som bär dem.",
           "tokens": [
             "drops.r02",

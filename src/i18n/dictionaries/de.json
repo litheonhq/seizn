@@ -3503,7 +3503,7 @@
         {
           "severity": "critical",
           "rule": "character.han_iseul.eye_color",
-          "fact": "Kapitel 11: Han Iseul hat graue Augen.",
+          "fact": "Kapitel 11: Mira hat graue Augen.",
           "against": "Der Kanon in Kapitel 2 sagt braun.",
           "cited": [
             "scene.2.1",
@@ -3513,7 +3513,7 @@
         {
           "severity": "major",
           "rule": "rule.r03 Dachzugang",
-          "fact": "Kapitel 7: Park Jio betritt das Dach an Tag 9.",
+          "fact": "Kapitel 7: Eli betritt das Dach an Tag 9.",
           "against": "Regel r03 sperrt das Dach bis Tag 14.",
           "cited": [
             "rule.r03",
@@ -3542,7 +3542,7 @@
           "side": "safe",
           "label": "Sicherer Pfad",
           "score": 92,
-          "title": "Han Iseul bleibt bis zur Morgendämmerung im Observatorium.",
+          "title": "Mira bleibt bis zur Morgendämmerung im Observatorium.",
           "body": "Hält r02 und r04. Keine neuen Konflikte. Die Kontinuität bleibt.",
           "tokens": [
             "scene.continues",
@@ -3554,7 +3554,7 @@
           "side": "risk",
           "label": "Risikopfad",
           "score": 41,
-          "title": "Han Iseul geht vor dem Höhepunkt der Finsternis.",
+          "title": "Mira geht vor dem Höhepunkt der Finsternis.",
           "body": "Der Anker r02 fällt. Zwei spätere Szenen verlieren ihr tragendes Ereignis.",
           "tokens": [
             "drops.r02",

@@ -3501,7 +3501,7 @@
         {
           "severity": "critical",
           "rule": "character.han_iseul.eye_color",
-          "fact": "Chapitre 11 : Han Iseul a les yeux gris.",
+          "fact": "Chapitre 11 : Mira a les yeux gris.",
           "against": "Le canon du chapitre 2 dit marron.",
           "cited": [
             "scene.2.1",
@@ -3511,7 +3511,7 @@
         {
           "severity": "major",
           "rule": "rule.r03 accès au toit",
-          "fact": "Chapitre 7 : Park Jio monte au toit le jour 9.",
+          "fact": "Chapitre 7 : Eli monte au toit le jour 9.",
           "against": "La règle r03 verrouille le toit jusqu'au jour 14.",
           "cited": [
             "rule.r03",
@@ -3540,7 +3540,7 @@
           "side": "safe",
           "label": "Chemin sûr",
           "score": 92,
-          "title": "Han Iseul reste à l'observatoire jusqu'à l'aube.",
+          "title": "Mira reste à l'observatoire jusqu'à l'aube.",
           "body": "Honore r02 et r04. Aucun nouveau conflit. La continuité tient.",
           "tokens": [
             "scene.continues",
@@ -3552,7 +3552,7 @@
           "side": "risk",
           "label": "Chemin à risque",
           "score": 41,
-          "title": "Han Iseul part avant le pic de l'éclipse.",
+          "title": "Mira part avant le pic de l'éclipse.",
           "body": "L'ancrage de r02 saute. Deux scènes ultérieures perdent leur événement de soutien.",
           "tokens": [
             "drops.r02",

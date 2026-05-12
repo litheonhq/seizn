@@ -3464,7 +3464,7 @@
         {
           "severity": "critical",
           "rule": "character.han_iseul.eye_color",
-          "fact": "Bab 11: Han Iseul bermata abu-abu.",
+          "fact": "Bab 11: Mira bermata abu-abu.",
           "against": "Kanon di bab 2 mengatakan cokelat.",
           "cited": [
             "scene.2.1",
@@ -3474,7 +3474,7 @@
         {
           "severity": "major",
           "rule": "rule.r03 akses atap",
-          "fact": "Bab 7: Park Jio naik ke atap pada hari ke-9.",
+          "fact": "Bab 7: Eli naik ke atap pada hari ke-9.",
           "against": "Aturan r03 mengunci atap sampai hari ke-14.",
           "cited": [
             "rule.r03",
@@ -3503,7 +3503,7 @@
           "side": "safe",
           "label": "Jalur aman",
           "score": 92,
-          "title": "Han Iseul tinggal di observatorium sampai fajar.",
+          "title": "Mira tinggal di observatorium sampai fajar.",
           "body": "Menjaga r02 dan r04. Tidak ada kontradiksi baru. Kontinuitas tetap utuh.",
           "tokens": [
             "scene.continues",
@@ -3515,7 +3515,7 @@
           "side": "risk",
           "label": "Jalur risiko",
           "score": 41,
-          "title": "Han Iseul pergi sebelum puncak gerhana.",
+          "title": "Mira pergi sebelum puncak gerhana.",
           "body": "Jangkar r02 lepas. Dua adegan setelahnya kehilangan peristiwa yang menopang.",
           "tokens": [
             "drops.r02",

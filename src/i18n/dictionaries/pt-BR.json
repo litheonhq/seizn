@@ -3499,7 +3499,7 @@
         {
           "severity": "critical",
           "rule": "character.han_iseul.eye_color",
-          "fact": "Capítulo 11: Han Iseul tem olhos cinzas.",
+          "fact": "Capítulo 11: Mira tem olhos cinzas.",
           "against": "O cânone do capítulo 2 diz castanhos.",
           "cited": [
             "scene.2.1",
@@ -3509,7 +3509,7 @@
         {
           "severity": "major",
           "rule": "rule.r03 acesso ao terraço",
-          "fact": "Capítulo 7: Park Jio sobe ao terraço no dia 9.",
+          "fact": "Capítulo 7: Eli sobe ao terraço no dia 9.",
           "against": "A regra r03 tranca o terraço até o dia 14.",
           "cited": [
             "rule.r03",
@@ -3538,7 +3538,7 @@
           "side": "safe",
           "label": "Caminho seguro",
           "score": 92,
-          "title": "Han Iseul fica no observatório até o amanhecer.",
+          "title": "Mira fica no observatório até o amanhecer.",
           "body": "Honra r02 e r04. Sem novos conflitos. A continuidade segue intacta.",
           "tokens": [
             "scene.continues",
@@ -3550,7 +3550,7 @@
           "side": "risk",
           "label": "Caminho de risco",
           "score": 41,
-          "title": "Han Iseul sai antes do auge do eclipse.",
+          "title": "Mira sai antes do auge do eclipse.",
           "body": "A âncora de r02 cai. Duas cenas posteriores ficam sem o evento que as sustenta.",
           "tokens": [
             "drops.r02",

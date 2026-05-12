@@ -4363,7 +4363,7 @@
         {
           "severity": "critical",
           "rule": "character.han_iseul.eye_color",
-          "fact": "11화: 한이슬 눈동자가 회색.",
+          "fact": "11화: Mira 눈동자가 회색.",
           "against": "2화 캐논은 갈색이에요.",
           "cited": [
             "scene.2.1",
@@ -4373,7 +4373,7 @@
         {
           "severity": "major",
           "rule": "rule.r03 옥상 출입",
-          "fact": "7화: 박지오가 9일째 옥상에 들어가요.",
+          "fact": "7화: Eli가 9일째 옥상에 들어가요.",
           "against": "규칙 r03은 14일까지 옥상을 잠그라 했어요.",
           "cited": [
             "rule.r03",
@@ -4402,7 +4402,7 @@
           "side": "safe",
           "label": "안전한 길",
           "score": 92,
-          "title": "한이슬이 새벽까지 천문대에 머물러요.",
+          "title": "Mira이 새벽까지 천문대에 머물러요.",
           "body": "r02·r04를 지켜요. 새 충돌은 없고, 흐름은 그대로 이어져요.",
           "tokens": [
             "scene.continues",
@@ -4414,7 +4414,7 @@
           "side": "risk",
           "label": "위험한 길",
           "score": 41,
-          "title": "한이슬이 식 절정 전에 자리를 떠요.",
+          "title": "Mira이 식 절정 전에 자리를 떠요.",
           "body": "r02 닻이 빠져요. 뒤따르는 두 장면이 근거를 잃어요.",
           "tokens": [
             "drops.r02",

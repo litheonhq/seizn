@@ -3500,7 +3500,7 @@
         {
           "severity": "critical",
           "rule": "character.han_iseul.eye_color",
-          "fact": "Capítulo 11: Han Iseul tiene los ojos grises.",
+          "fact": "Capítulo 11: Mira tiene los ojos grises.",
           "against": "El canon del capítulo 2 dice marrones.",
           "cited": [
             "scene.2.1",
@@ -3510,7 +3510,7 @@
         {
           "severity": "major",
           "rule": "rule.r03 acceso a la azotea",
-          "fact": "Capítulo 7: Park Jio sube a la azotea el día 9.",
+          "fact": "Capítulo 7: Eli sube a la azotea el día 9.",
           "against": "La regla r03 deja la azotea cerrada hasta el día 14.",
           "cited": [
             "rule.r03",
@@ -3539,7 +3539,7 @@
           "side": "safe",
           "label": "Camino seguro",
           "score": 92,
-          "title": "Han Iseul se queda en el observatorio hasta el alba.",
+          "title": "Mira se queda en el observatorio hasta el alba.",
           "body": "Honra r02 y r04. Sin nuevos conflictos. La continuidad sigue intacta.",
           "tokens": [
             "scene.continues",
@@ -3551,7 +3551,7 @@
           "side": "risk",
           "label": "Camino de riesgo",
           "score": 41,
-          "title": "Han Iseul se va antes del pico del eclipse.",
+          "title": "Mira se va antes del pico del eclipse.",
           "body": "Cae el ancla de r02. Dos escenas posteriores se quedan sin su evento de soporte.",
           "tokens": [
             "drops.r02",
