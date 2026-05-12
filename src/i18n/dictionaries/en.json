@@ -1795,7 +1795,7 @@
       }
     },
     "fallback": {
-      "body": "This tab uses the same shell pattern."
+      "body": "We're still building this surface. Let us know if it's blocking your workflow."
     },
     "account": {
       "apiKeys": {
