@@ -1701,6 +1701,44 @@
         "need": "内面の必要"
       }
     },
+    "timeline": {
+      "title": "タイムライン",
+      "subtitle": "このプロジェクトで起きた出来事を新しい順に記録します。",
+      "loadMore": "もっと見る",
+      "loadingMore": "読み込み中…",
+      "error": "タイムラインを読み込めませんでした。もう一度お試しください。",
+      "empty": {
+        "title": "まだ活動がありません。",
+        "body": "インポート、判定、シミュレーション、Coach の結果がここに集まります。"
+      },
+      "day": {
+        "today": "今日",
+        "yesterday": "昨日"
+      },
+      "range": {
+        "window": "最初 {first} · 最後 {last}"
+      },
+      "event": {
+        "projectCreated":     { "label": "プロジェクトを作成",       "group": "プロジェクトを {count} 件作成" },
+        "importUpload":       { "label": "ファイルをアップロード",   "group": "{count} 件のファイルをアップロード" },
+        "importParsed":       { "label": "インポートを解析",         "group": "{count} 件を解析" },
+        "importFailed":       { "label": "インポート失敗",           "group": "{count} 件のインポートが失敗" },
+        "importRetried":      { "label": "インポートを再試行",       "group": "{count} 件のインポートを再試行" },
+        "importDeleted":      { "label": "インポートを削除",         "group": "{count} 件のインポートを削除" },
+        "candidateAdded":     { "label": "候補を追加",               "group": "{count} 件の候補を追加" },
+        "candidateDecided":   { "label": "候補を判定",               "group": "{count} 件の候補を判定" },
+        "candidateBatch":     { "label": "一括判定",                 "group": "{count} 件の一括判定" },
+        "characterUpdated":   { "label": "キャラクターを更新",       "group": "{count} 件のキャラクターを更新" },
+        "conflictResolved":   { "label": "矛盾を解消",               "group": "{count} 件の矛盾を解消" },
+        "simulationRun":      { "label": "シミュレーションを実行",   "group": "{count} 回のシミュレーション" },
+        "simulationReplay":   { "label": "シミュレーションを再生",   "group": "{count} 回のリプレイ" },
+        "backlogGenerated":   { "label": "バックログを生成",         "group": "{count} 件のバックログ生成" },
+        "settingsUpdated":    { "label": "設定を更新",               "group": "{count} 件の設定変更" },
+        "byokUpdated":        { "label": "BYOK を更新",              "group": "{count} 件の BYOK 更新" },
+        "coachAnalysis":      { "label": "Coach でシーン分析",       "group": "Coach 分析 {count} 回" },
+        "unknown":            { "label": "活動を記録",               "group": "{count} 件の活動" }
+      }
+    },
     "fallback": {
       "body": "この画面はまだ準備中です。作業の妨げになる場合はお知らせください。"
     },

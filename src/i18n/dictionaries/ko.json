@@ -1832,6 +1832,44 @@
         "need": "내면의 필요"
       }
     },
+    "timeline": {
+      "title": "타임라인",
+      "subtitle": "이 프로젝트에서 일어난 일을 최신순으로 모은 기록.",
+      "loadMore": "더 보기",
+      "loadingMore": "불러오는 중…",
+      "error": "타임라인을 불러오지 못했습니다. 다시 시도해주세요.",
+      "empty": {
+        "title": "아직 활동이 없습니다.",
+        "body": "임포트, 결정, 시뮬레이션, Coach 분석이 여기에 모입니다."
+      },
+      "day": {
+        "today": "오늘",
+        "yesterday": "어제"
+      },
+      "range": {
+        "window": "처음 {first} · 마지막 {last}"
+      },
+      "event": {
+        "projectCreated":     { "label": "프로젝트 생성",      "group": "프로젝트 {count}건 생성" },
+        "importUpload":       { "label": "파일 업로드",        "group": "파일 {count}건 업로드" },
+        "importParsed":       { "label": "파싱 완료",          "group": "파싱 {count}건" },
+        "importFailed":       { "label": "임포트 실패",        "group": "임포트 {count}건 실패" },
+        "importRetried":      { "label": "임포트 재시도",      "group": "임포트 {count}건 재시도" },
+        "importDeleted":      { "label": "임포트 삭제",        "group": "임포트 {count}건 삭제" },
+        "candidateAdded":     { "label": "후보 추가",          "group": "후보 {count}건 추가" },
+        "candidateDecided":   { "label": "후보 결정",          "group": "후보 {count}건 결정" },
+        "candidateBatch":     { "label": "일괄 결정",          "group": "일괄 결정 {count}건" },
+        "characterUpdated":   { "label": "캐릭터 수정",        "group": "캐릭터 {count}건 수정" },
+        "conflictResolved":   { "label": "충돌 해결",          "group": "충돌 {count}건 해결" },
+        "simulationRun":      { "label": "시뮬레이션 실행",    "group": "시뮬레이션 {count}회" },
+        "simulationReplay":   { "label": "시뮬레이션 리플레이","group": "리플레이 {count}회" },
+        "backlogGenerated":   { "label": "백로그 생성",        "group": "백로그 {count}회 생성" },
+        "settingsUpdated":    { "label": "설정 변경",          "group": "설정 변경 {count}건" },
+        "byokUpdated":        { "label": "BYOK 변경",          "group": "BYOK 변경 {count}건" },
+        "coachAnalysis":      { "label": "Coach 분석 실행",    "group": "Coach 분석 {count}회" },
+        "unknown":            { "label": "활동 기록",          "group": "활동 {count}건" }
+      }
+    },
     "fallback": {
       "body": "이 화면은 아직 만들고 있어요. 작업이 막힌다면 알려주세요."
     },
