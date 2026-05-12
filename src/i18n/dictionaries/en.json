@@ -4363,7 +4363,7 @@
         {
           "severity": "critical",
           "rule": "character.han_iseul.eye_color",
-          "fact": "Chapter 11: Han Iseul has gray eyes.",
+          "fact": "Chapter 11: Mira has gray eyes.",
           "against": "Canon in chapter 2 says brown.",
           "cited": [
             "scene.2.1",
@@ -4373,7 +4373,7 @@
         {
           "severity": "major",
           "rule": "rule.r03 rooftop access",
-          "fact": "Chapter 7: Park Jio enters the rooftop on day 9.",
+          "fact": "Chapter 7: Eli enters the rooftop on day 9.",
           "against": "Rule r03 locks rooftop access until day 14.",
           "cited": [
             "rule.r03",
@@ -4402,7 +4402,7 @@
           "side": "safe",
           "label": "Safe path",
           "score": 92,
-          "title": "Han Iseul stays at the observatory until dawn.",
+          "title": "Mira stays at the observatory until dawn.",
           "body": "Honors r02 and r04. No new conflicts. Continuity stays intact.",
           "tokens": [
             "scene.continues",
@@ -4414,7 +4414,7 @@
           "side": "risk",
           "label": "Risk path",
           "score": 41,
-          "title": "Han Iseul leaves before the eclipse peak.",
+          "title": "Mira leaves before the eclipse peak.",
           "body": "Drops r02 anchoring. Two downstream scenes lose their grounding event.",
           "tokens": [
             "drops.r02",

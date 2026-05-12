@@ -3673,7 +3673,7 @@
         {
           "severity": "critical",
           "rule": "character.han_iseul.eye_color",
-          "fact": "第 11 章：韩以瑟眼睛是灰色。",
+          "fact": "第 11 章：Mira眼睛是灰色。",
           "against": "第 2 章设定写的是棕色。",
           "cited": [
             "scene.2.1",
@@ -3683,7 +3683,7 @@
         {
           "severity": "major",
           "rule": "rule.r03 屋顶通行",
-          "fact": "第 7 章：朴志吾在第 9 天进了屋顶。",
+          "fact": "第 7 章：Eli在第 9 天进了屋顶。",
           "against": "规则 r03 把屋顶锁到第 14 天。",
           "cited": [
             "rule.r03",
@@ -3712,7 +3712,7 @@
           "side": "safe",
           "label": "安全路线",
           "score": 92,
-          "title": "韩以瑟在天文台守到天亮。",
+          "title": "Mira在天文台守到天亮。",
           "body": "守住 r02 与 r04。没有新冲突。后续连得上。",
           "tokens": [
             "scene.continues",
@@ -3724,7 +3724,7 @@
           "side": "risk",
           "label": "风险路线",
           "score": 41,
-          "title": "韩以瑟在食蚀顶点前先离开。",
+          "title": "Mira在食蚀顶点前先离开。",
           "body": "r02 的锚就掉了。后面两个场景失了着力点。",
           "tokens": [
             "drops.r02",

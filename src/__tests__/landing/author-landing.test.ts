@@ -65,7 +65,7 @@ describe("Author flagship landing", () => {
     const html = renderToStaticMarkup(createElement(AuthorFlagshipLanding, { data, locale: "en", copy }));
 
     expect(html).toContain(DETECTOR_SEED);
-    expect(html).toContain("character.han_iseul.class = 1");
+    expect(html).toContain("character.mira.class = 1");
     expect(html).toContain("canon graph D30");
     expect(html).toContain("severity-cards");
   });

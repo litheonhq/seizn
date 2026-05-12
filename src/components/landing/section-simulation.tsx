@@ -67,14 +67,14 @@ function TokenPreview({ copy }: { copy: AuthorLandingCopy }) {
       </div>
       <div className="author-mono text-[13px] leading-7" style={{ color: "oklch(1 0 0 / 0.90)" }}>
         <p>
-          <span style={{ color: "oklch(1 0 0 / 0.48)" }}>14:</span> Han Iseul climbed the rooftop on day{" "}
+          <span style={{ color: "oklch(1 0 0 / 0.48)" }}>14:</span> Mira climbed the rooftop on day{" "}
           <span className="rounded px-1" style={{ background: "oklch(0.60 0.21 27 / 0.18)", color: "var(--signal-conflict)" }}>
             9
           </span>{" "}
           <span style={{ color: "oklch(1 0 0 / 0.64)" }}>{"// proposed"}</span>
         </p>
         <p>
-          <span style={{ color: "oklch(1 0 0 / 0.48)" }}>14:</span> Han Iseul climbed the rooftop on day{" "}
+          <span style={{ color: "oklch(1 0 0 / 0.48)" }}>14:</span> Mira climbed the rooftop on day{" "}
           <span className="rounded px-1" style={{ background: "oklch(0.62 0.16 148 / 0.16)", color: "var(--signal-canon)" }}>
             14
           </span>{" "}

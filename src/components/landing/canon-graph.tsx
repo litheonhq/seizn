@@ -1,12 +1,12 @@
 import { getArray, getString, type SaebyeokDemoData } from "@/lib/sample-ip-demo";
 
 const GRAPH_NODES = [
-  { fallback: "Han Iseul", role: "protagonist", x: 0.22, y: 0.30, r: 30 },
-  { fallback: "Jeong Serin", role: "co-lead", x: 0.62, y: 0.18, r: 26 },
-  { fallback: "Yun Hana", role: "supporting", x: 0.84, y: 0.42, r: 24 },
-  { fallback: "Park Jio", role: "supporting", x: 0.30, y: 0.74, r: 22 },
-  { fallback: "Choe Doyun", role: "antagonist", x: 0.70, y: 0.70, r: 26 },
-  { fallback: "Kim Minchae", role: "supporting", x: 0.52, y: 0.50, r: 20 },
+  { fallback: "Mira", role: "protagonist", x: 0.22, y: 0.30, r: 30 },
+  { fallback: "Sasha", role: "co-lead", x: 0.62, y: 0.18, r: 26 },
+  { fallback: "Iris", role: "supporting", x: 0.84, y: 0.42, r: 24 },
+  { fallback: "Eli", role: "supporting", x: 0.30, y: 0.74, r: 22 },
+  { fallback: "Cal", role: "antagonist", x: 0.70, y: 0.70, r: 26 },
+  { fallback: "Mia", role: "supporting", x: 0.52, y: 0.50, r: 20 },
 ] as const;
 
 const GRAPH_EDGES = [

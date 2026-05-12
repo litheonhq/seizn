@@ -195,10 +195,10 @@ function LandingNav({
 
 function CharacterChipStrip() {
   const chips = [
-    { label: "Han Iseul", tone: "canon" },
-    { label: "Jeong Serin", tone: "canon" },
-    { label: "Yun Hana", tone: "conflict" },
-    { label: "Park Jio", tone: "canon" },
+    { label: "Mira", tone: "canon" },
+    { label: "Sasha", tone: "canon" },
+    { label: "Iris", tone: "conflict" },
+    { label: "Eli", tone: "canon" },
   ];
 
   return (
