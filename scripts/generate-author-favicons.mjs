@@ -1,5 +1,5 @@
 import sharp from "sharp";
-import toIco from "to-ico";
+import pngToIco from "png-to-ico";
 import { readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 
@@ -32,7 +32,7 @@ const icoBuffers = await Promise.all(
       .toBuffer(),
   ),
 );
-const icoBuffer = await toIco(icoBuffers);
+const icoBuffer = await pngToIco(icoBuffers);
 for (const target of ["public/favicon.ico", "src/app/favicon.ico"]) {
   writeFileSync(resolve(target), icoBuffer);
   console.log(`generated ${target} (16/32/48 multi-size ICO)`);
