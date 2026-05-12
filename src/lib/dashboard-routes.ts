@@ -3,11 +3,13 @@ export const DASHBOARD_ROUTES = {
   author: '/dashboard/author',
   authorSettings: '/dashboard/author/settings',
   authorSettingsByok: '/dashboard/author/settings?section=byok',
+  authorSettingsBilling: '/dashboard/author/settings?section=billing',
   authorUsage: '/dashboard/author/usage',
   memories: '/dashboard/memories',
   memoryEditor: '/dashboard/memory-editor',
   mindmap: '/dashboard/memories/mindmap',
   replay: '/dashboard/replay',
+  billing: '/dashboard/billing',
   genericSettings: '/dashboard/settings',
   legacyAuthorSettings: '/dashboard/settings/author',
   legacyByokSettings: '/dashboard/settings/byok',
@@ -81,9 +83,11 @@ export function canonicalAuthorDashboardPath(pathname: string, search = ''): str
 
   switch (normalizedPathname) {
     case DASHBOARD_ROUTES.root:
-      return withSearch(DASHBOARD_ROUTES.author, search);
+      return withSearch(DASHBOARD_ROUTES.root, search);
     case DASHBOARD_ROUTES.author:
     case DASHBOARD_ROUTES.authorSettings:
+    case DASHBOARD_ROUTES.apiKeys:
+    case DASHBOARD_ROUTES.billing:
       return withSearch(normalizedPathname, search);
     case DASHBOARD_ROUTES.authorUsage:
       return authorTabPath('usage', search);
@@ -94,6 +98,8 @@ export function canonicalAuthorDashboardPath(pathname: string, search = ''): str
       return authorSettingsPath(search, 'byok');
     case DASHBOARD_ROUTES.legacyUsage:
       return authorTabPath('usage', search);
+    case DASHBOARD_ROUTES.legacyApiKeys:
+      return withSearch(DASHBOARD_ROUTES.apiKeys, search);
     case DASHBOARD_ROUTES.memories:
       return withSearch(DASHBOARD_ROUTES.memories, search);
     case DASHBOARD_ROUTES.memoryEditor:
@@ -123,14 +129,14 @@ export function shouldUseLocalAuthorTabNavigation(
 }
 
 export function sanitizeDashboardCallbackUrl(value: string | null | undefined): string {
-  if (!value) return DASHBOARD_ROUTES.author;
-  if (!value.startsWith('/') || value.startsWith('//')) return DASHBOARD_ROUTES.author;
+  if (!value) return DASHBOARD_ROUTES.root;
+  if (!value.startsWith('/') || value.startsWith('//')) return DASHBOARD_ROUTES.root;
   try {
     const parsed = new URL(value, 'https://www.seizn.com');
     const dashboardPath = parsed.pathname === '/dashboard' || parsed.pathname.startsWith('/dashboard/');
-    if (!dashboardPath) return DASHBOARD_ROUTES.author;
+    if (!dashboardPath) return DASHBOARD_ROUTES.root;
     return `${parsed.pathname}${parsed.search}${parsed.hash}`;
   } catch {
-    return DASHBOARD_ROUTES.author;
+    return DASHBOARD_ROUTES.root;
   }
 }

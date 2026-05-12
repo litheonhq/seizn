@@ -885,7 +885,7 @@ export default function MemoriesClient() {
           <label className="flex items-center gap-2 px-4 py-2 text-sm rounded-xl border border-szn-border text-szn-text-1 bg-szn-card hover:bg-szn-surface-1 transition-colors cursor-pointer">
             {isImporting ? <LoadingSpinner className="w-4 h-4" /> : <UploadIcon className="w-4 h-4" />}
             {t("dashboard.memoriesPage.import") || "Import"}
-            <input
+            <input aria-label="File upload"
               type="file"
               accept=".json"
               onChange={handleImport}
@@ -917,12 +917,12 @@ export default function MemoriesClient() {
               <SearchIcon className="w-4 h-4 inline mr-1" />
               {t("dashboard.memoriesPage.search") || "Search"}
             </label>
-            <input
+              <input
               type="text"
+              aria-label={t("dashboard.memoriesPage.search") || "Search entities"}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={t("dashboard.memoriesPage.searchPlaceholder") || "Search entities..."}
-              aria-label={t("dashboard.memoriesPage.search") || "Search entities"}
               className="w-full px-4 py-2 rounded-xl border border-szn-border bg-szn-surface-1 text-szn-text-1 placeholder:text-szn-text-3 focus:outline-none focus:ring-2 focus:ring-szn-accent"
             />
           </div>
@@ -968,7 +968,7 @@ export default function MemoriesClient() {
                   ))}
                 </select>
               ) : (
-                <input
+                <input aria-label="Namespace"
                   type="text"
                   value={namespace}
                   onChange={(e) => setNamespace(e.target.value)}
@@ -1049,11 +1049,11 @@ export default function MemoriesClient() {
                   <label className="block text-xs text-szn-text-2 mb-1">
                     {t("dashboard.memoriesPage.after") || "After"}
                   </label>
-                  <input
+                    <input
                     type="date"
+                    aria-label={t("dashboard.memoriesPage.after") || "After date"}
                     value={afterDate}
                     onChange={(e) => setAfterDate(e.target.value)}
-                    aria-label={t("dashboard.memoriesPage.after") || "After date"}
                     className="w-full px-3 py-1.5 text-sm rounded-lg border border-szn-border bg-szn-surface-1 text-szn-text-1 focus:outline-none focus:ring-2 focus:ring-szn-accent"
                   />
                 </div>
@@ -1061,11 +1061,11 @@ export default function MemoriesClient() {
                   <label className="block text-xs text-szn-text-2 mb-1">
                     {t("dashboard.memoriesPage.before") || "Before"}
                   </label>
-                  <input
+                    <input
                     type="date"
+                    aria-label={t("dashboard.memoriesPage.before") || "Before date"}
                     value={beforeDate}
                     onChange={(e) => setBeforeDate(e.target.value)}
-                    aria-label={t("dashboard.memoriesPage.before") || "Before date"}
                     className="w-full px-3 py-1.5 text-sm rounded-lg border border-szn-border bg-szn-surface-1 text-szn-text-1 focus:outline-none focus:ring-2 focus:ring-szn-accent"
                   />
                 </div>
@@ -1083,7 +1083,7 @@ export default function MemoriesClient() {
               <div className="space-y-2">
                 {memoryTypes.map((type) => (
                   <label key={type} className="flex items-center gap-2 cursor-pointer">
-                    <input
+                    <input aria-label="Includes Type"
                       type="checkbox"
                       checked={selectedTypes.includes(type)}
                       onChange={() => toggleType(type)}

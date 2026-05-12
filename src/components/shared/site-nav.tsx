@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { LanguageSwitcher } from "@/components/language-switcher";
@@ -48,17 +47,17 @@ export function LandingNav({
   ];
 
   return (
-    <nav className="sticky left-0 right-0 top-0 z-50 border-b border-szn-border-subtle bg-szn-bg/80 backdrop-blur-xl">
+    <nav
+      aria-label="Primary navigation"
+      className="sticky left-0 right-0 top-0 z-50 border-b border-szn-border-subtle bg-szn-bg/80 backdrop-blur-xl"
+    >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
         <div className="flex items-center gap-10">
           <Link href={`/${locale}`} className="flex items-center gap-2">
-            <Image
-              src="/icons/seizn-mark.svg"
-              alt="Seizn"
-              className="h-7 w-7"
-              width={28}
-              height={28}
-              priority
+            <span
+              aria-hidden="true"
+              className="block h-7 w-7 bg-contain bg-center bg-no-repeat"
+              style={{ backgroundImage: "url('/icons/seizn-mark.svg')" }}
             />
             <span className="text-[15px] font-medium text-szn-text-1">Seizn</span>
           </Link>

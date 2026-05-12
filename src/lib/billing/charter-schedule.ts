@@ -12,7 +12,7 @@
  */
 
 import type Stripe from 'stripe';
-import { getStripeClient } from '@/lib/stripe';
+import { getStripeClient, hasStripeSecretKey } from '@/lib/stripe';
 
 /**
  * Release a Stripe Subscription Schedule when its parent subscription is
@@ -25,7 +25,7 @@ import { getStripeClient } from '@/lib/stripe';
 export async function releaseChartersOnCancel(
   subscriptionId: string,
 ): Promise<{ released: boolean; reason?: string }> {
-  if (!process.env.STRIPE_SECRET_KEY) {
+  if (!hasStripeSecretKey()) {
     return { released: false, reason: 'stripe_not_configured' };
   }
   const stripe = getStripeClient();
@@ -85,7 +85,7 @@ export async function scheduleCharterToRegularSwap(
   | { ok: true; scheduleId: string }
   | { ok: false; reason: string }
 > {
-  if (!process.env.STRIPE_SECRET_KEY) {
+  if (!hasStripeSecretKey()) {
     return { ok: false, reason: 'stripe_not_configured' };
   }
   const stripe = getStripeClient();
@@ -175,7 +175,7 @@ export async function scheduleTrack2CharterToRegularSwap(
   | { ok: true; scheduleId: string }
   | { ok: false; reason: string }
 > {
-  if (!process.env.STRIPE_SECRET_KEY) {
+  if (!hasStripeSecretKey()) {
     return { ok: false, reason: 'stripe_not_configured' };
   }
   const stripe = getStripeClient();

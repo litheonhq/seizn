@@ -340,7 +340,7 @@ export function DashboardClient({ user }: { user: User }) {
 
           {/* Create New Key */}
           <div className="flex gap-3 mb-6">
-            <input
+            <input aria-label="New Key Name"
               type="text"
               value={newKeyName}
               onChange={(e) => setNewKeyName(e.target.value)}

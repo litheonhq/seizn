@@ -7,6 +7,12 @@ import {
   getBillingCadenceFromStripePriceId,
   isAuthorBillingTier,
 } from "@/lib/stripe-config";
+import {
+  buildTrack2StateFromProfile,
+  recoverLiveTrack2ProfileAndKeys,
+  type Track2ProfileRow,
+  type Track2SubscriptionState,
+} from "@/lib/billing/track2-subscription-state";
 import { getAuthorByokStatus, getAuthorModelUsageSummary } from "@/lib/author/llm";
 import {
   AuthorUiNotFoundError,
@@ -21,7 +27,7 @@ interface SubscriptionActionBody {
   action?: unknown;
 }
 
-interface BillingProfile {
+interface BillingProfile extends Track2ProfileRow {
   id: string;
   email?: string | null;
   plan?: string | null;
@@ -39,6 +45,14 @@ interface BillingProfile {
   subscription_payment_failed?: boolean | null;
   subscription_payment_failed_at?: string | null;
   price_lock_version?: string | null;
+}
+
+function billingStartResponse() {
+  return {
+    url: "/pricing",
+    destination: "pricing",
+    reason: "no_billing_account",
+  };
 }
 
 export async function GET(request: NextRequest) {
@@ -64,6 +78,18 @@ export async function GET(request: NextRequest) {
         "subscription_payment_failed",
         "subscription_payment_failed_at",
         "price_lock_version",
+        "track2_tier",
+        "track2_subscription_id",
+        "track2_subscription_status",
+        "track2_price_id",
+        "track2_billing_cadence",
+        "track2_price_lock_version",
+        "track2_current_period_start",
+        "track2_current_period_end",
+        "track2_subscription_renews_at",
+        "track2_subscription_cancelled",
+        "track2_subscription_payment_failed",
+        "track2_subscription_payment_failed_at",
       ].join(","))
       .eq("id", userId)
       .single<BillingProfile>();
@@ -80,6 +106,7 @@ export async function GET(request: NextRequest) {
     const billingCadence = profile.stripe_price_id
       ? getBillingCadenceFromStripePriceId(profile.stripe_price_id)
       : null;
+    const track2 = await resolveTrack2State(profile, supabase, userId);
 
     return {
       plan: profile.plan ?? "free",
@@ -102,6 +129,7 @@ export async function GET(request: NextRequest) {
       payment_failed_at: profile.subscription_payment_failed_at ?? null,
       byok_active: byokStatus.enabled,
       price_lock_version: profile.price_lock_version ?? AUTHOR_PRICE_LOCK_VERSION,
+      track2,
       usage: {
         tokens_used_month: usage?.total_tokens ?? 0,
         tokens_cap_month: tierConfig?.tokenCapMonth ?? null,
@@ -110,6 +138,31 @@ export async function GET(request: NextRequest) {
       },
     };
   });
+}
+
+async function resolveTrack2State(
+  profile: BillingProfile,
+  supabase: ReturnType<typeof createServerClient>,
+  userId: string,
+): Promise<Track2SubscriptionState | null> {
+  const stored = buildTrack2StateFromProfile(profile);
+  if (stored && stored.status !== "cancelled" && stored.status !== "incomplete") {
+    return stored;
+  }
+
+  try {
+    const live = await recoverLiveTrack2ProfileAndKeys(
+      supabase as unknown as Parameters<typeof recoverLiveTrack2ProfileAndKeys>[0],
+      userId,
+      profile.stripe_customer_id,
+    );
+    if (!live) return stored;
+
+    return live;
+  } catch (error) {
+    console.error("[track2] live subscription lookup failed", { userId, error });
+    return stored;
+  }
 }
 
 export async function POST(request: NextRequest) {
@@ -127,16 +180,15 @@ export async function POST(request: NextRequest) {
       .eq("id", userId)
       .single<{ stripe_customer_id?: string | null; stripe_subscription_id?: string | null }>();
 
-    const stripe = getStripeClient();
-
     if (action === "portal") {
       if (!profile?.stripe_customer_id) {
-        throw new AuthorUiNotFoundError("No billing account found");
+        return billingStartResponse();
       }
 
+      const stripe = getStripeClient();
       const portalSession = await stripe.billingPortal.sessions.create({
         customer: profile.stripe_customer_id,
-        return_url: `${request.nextUrl.origin}/dashboard/billing`,
+        return_url: `${request.nextUrl.origin}/dashboard/author/settings?section=billing`,
       });
       return { url: portalSession.url };
     }
@@ -145,6 +197,7 @@ export async function POST(request: NextRequest) {
       throw new AuthorUiNotFoundError("No active subscription found");
     }
 
+    const stripe = getStripeClient();
     const cancelAtPeriodEnd = action === "cancel";
     const subscription = await stripe.subscriptions.update(profile.stripe_subscription_id, {
       cancel_at_period_end: cancelAtPeriodEnd,
@@ -184,4 +237,3 @@ function readStripeTimestamp(value: unknown, key: string): string | null {
   const timestamp = (value as Record<string, unknown>)?.[key];
   return typeof timestamp === "number" ? new Date(timestamp * 1000).toISOString() : null;
 }
-

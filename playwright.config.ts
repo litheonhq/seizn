@@ -143,6 +143,7 @@ export default defineConfig({
             // Force-disable Turnstile in local E2E runs.
             TURNSTILE_SECRET_KEY: '',
             NEXT_PUBLIC_TURNSTILE_SITE_KEY: '',
+            E2E_ALLOW_AUTO_PROVISION: '1',
           }
         : {}),
     },

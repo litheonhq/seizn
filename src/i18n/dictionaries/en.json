@@ -323,7 +323,10 @@
         "build": "Build",
         "integrate": "Integrate",
         "workspace": "Workspace",
-        "account": "Account"
+        "account": "Account",
+        "work": "Work",
+        "developer": "Developer",
+        "admin": "Admin"
       },
       "memory": {
         "author_memory": "Author Memory"
@@ -365,7 +368,9 @@
       "conflicts": "Conflicts",
       "simulate": "Simulate",
       "audit": "Audit",
-      "byok": "BYOK"
+      "byok": "BYOK",
+      "billing": "Billing",
+      "adminMetrics": "Admin metrics"
     },
     "pinSidebar": "Pin sidebar",
     "unpinSidebar": "Collapse sidebar",
@@ -419,7 +424,12 @@
         "copy": "Copy",
         "copied": "Copied!",
         "viewDocs": "View full documentation",
-        "done": "Done"
+        "done": "Done",
+        "subtitle": "Install the Seizn SDK in your project",
+        "npm": "npm install seizn",
+        "pip": "pip install seizn",
+        "curl": "Use curl",
+        "close": "Close"
       },
       "tour": {
         "welcome": {
@@ -543,7 +553,8 @@
       "sendTestRequest": "Send Test Request",
       "noKeyData": "No API key usage",
       "noKeyDescription": "Create and use an API key to see per-key analytics",
-      "createApiKey": "Create API Key"
+      "createApiKey": "Create API Key",
+      "dailyApiCalls": "Daily API calls"
     },
     "organizationsPage": {
       "title": "Projects",
@@ -1057,7 +1068,8 @@
         "total": "Total Integrations",
         "available": "Available",
         "beta": "In Beta",
-        "comingSoon": "Coming Soon"
+        "comingSoon": "Coming Soon",
+        "integrations": "Integrations"
       },
       "categories": {
         "all": "All",
@@ -2924,22 +2936,33 @@
         "langchain": {
           "badge": "Official",
           "title": "LangChain",
-          "description": "Drop-in retriever for LangChain RAG pipelines. Works with Python and TypeScript."
+          "description": "Drop-in retriever for LangChain RAG pipelines. Works with Python and TypeScript.",
+          "cta": "View guide"
         },
         "llamaindex": {
           "badge": "Official",
           "title": "LlamaIndex",
-          "description": "Native retriever for LlamaIndex query engines. Supports streaming and hybrid search."
+          "description": "Native retriever for LlamaIndex query engines. Supports streaming and hybrid search.",
+          "cta": "View guide"
         },
         "opentelemetry": {
           "badge": "Official",
           "title": "OpenTelemetry",
-          "description": "Export traces to Datadog, Grafana, Jaeger, and any OTLP-compatible backend."
+          "description": "Export traces to Datadog, Grafana, Jaeger, and any OTLP-compatible backend.",
+          "cta": "View guide"
         }
       },
       "comingSoon": {
         "title": "Coming Soon",
-        "description": "More integrations are on the way. Let us know what you need!"
+        "description": "More integrations are on the way. Let us know what you need!",
+        "vercel": {
+          "title": "Vercel AI SDK",
+          "description": "Memory for the useChat hook"
+        },
+        "llamaparse": {
+          "title": "LlamaParse",
+          "description": "Direct ingest for document parsing"
+        }
       },
       "backToDocs": "Back to Documentation"
     },
@@ -2960,11 +2983,17 @@
       },
       "installation": {
         "title": "Installation",
-        "description": "Install the Seizn SDK alongside LangChain."
+        "description": "Install the Seizn SDK alongside LangChain.",
+        "npm": "npm install seizn @langchain/core",
+        "pip": "pip install seizn langchain"
       },
       "example": {
         "title": "5-Minute Example",
-        "description": "Create a RAG chain with SeiznRetriever in just a few lines of code."
+        "description": "Create a RAG chain with SeiznRetriever in just a few lines of code.",
+        "tabs": {
+          "typescript": "TypeScript",
+          "python": "Python"
+        }
       },
       "production": {
         "title": "Production Tips",
@@ -2991,11 +3020,44 @@
         "rateCause": "Too many requests per second",
         "rateSolution": "Implement exponential backoff or upgrade plan",
         "emptyCause": "Threshold too high or no matching documents",
-        "emptySolution": "Lower threshold or check dataset contents"
+        "emptySolution": "Lower threshold or check dataset contents",
+        "columns": {
+          "issue": "Issue",
+          "solution": "Solution"
+        },
+        "rows": {
+          "noResults": {
+            "issue": "No results returned",
+            "solution": "Lower the threshold to 0.5 and confirm the namespace is correct"
+          },
+          "slowQueries": {
+            "issue": "Queries are slow",
+            "solution": "Try enabling caching, lowering topK, or disabling reranking"
+          },
+          "authError": {
+            "issue": "Authentication error",
+            "solution": "Confirm the SEIZN_API_KEY environment variable is set correctly"
+          }
+        }
       },
       "nav": {
         "backToIntegrations": "Back to Integrations",
         "nextLlamaIndex": "LlamaIndex Integration"
+      },
+      "productionTips": {
+        "title": "Production tips",
+        "caching": {
+          "title": "Caching",
+          "description": "Enable caching for repeated queries to reduce latency and cost."
+        },
+        "reranking": {
+          "title": "Reranking",
+          "description": "Enable reranking to improve retrieval accuracy."
+        },
+        "filtering": {
+          "title": "Filtering",
+          "description": "Use namespaces and metadata filters to narrow retrieval scope."
+        }
       }
     },
     "llamaindexPage": {
@@ -3015,11 +3077,17 @@
       },
       "installation": {
         "title": "Installation",
-        "description": "Install the Seizn SDK alongside LlamaIndex."
+        "description": "Install the Seizn SDK alongside LlamaIndex.",
+        "npm": "npm install seizn llamaindex",
+        "pip": "pip install seizn llama-index"
       },
       "example": {
         "title": "5-Minute Example",
-        "description": "Build a query engine with SeiznRetriever for your RAG application."
+        "description": "Build a query engine with SeiznRetriever for your RAG application.",
+        "tabs": {
+          "typescript": "TypeScript",
+          "python": "Python"
+        }
       },
       "production": {
         "title": "Production Tips",
@@ -3046,11 +3114,44 @@
         "datasetCause": "Dataset name not found",
         "datasetSolution": "Verify dataset exists in dashboard",
         "relevanceCause": "Query-document mismatch",
-        "relevanceSolution": "Try hybrid search or adjust threshold"
+        "relevanceSolution": "Try hybrid search or adjust threshold",
+        "columns": {
+          "issue": "Issue",
+          "solution": "Solution"
+        },
+        "rows": {
+          "noResults": {
+            "issue": "No results returned",
+            "solution": "Lower similarity_threshold to 0.5 and confirm the dataset has documents"
+          },
+          "streamingIssues": {
+            "issue": "Streaming does not work",
+            "solution": "Confirm you are on Python 3.9+ and the latest LlamaIndex version"
+          },
+          "memoryIssues": {
+            "issue": "Memory issues",
+            "solution": "Use batch processing for large datasets and reduce top_k"
+          }
+        }
       },
       "nav": {
         "prevLangChain": "LangChain Integration",
         "nextOpenTelemetry": "OpenTelemetry Integration"
+      },
+      "advancedUsage": {
+        "title": "Advanced usage",
+        "streaming": {
+          "title": "Streaming responses",
+          "description": "Enable streaming for large result sets."
+        },
+        "hybridSearch": {
+          "title": "Hybrid search",
+          "description": "Combine vector and keyword search."
+        },
+        "nodePostprocessors": {
+          "title": "Node postprocessors",
+          "description": "Use Seizn with custom postprocessors."
+        }
       }
     },
     "opentelemetryPage": {
@@ -3076,13 +3177,16 @@
       "examples": {
         "title": "Backend Examples",
         "datadog": {
-          "description": "Export traces to Datadog APM via the Datadog Agent or direct API."
+          "description": "Export traces to Datadog APM via the Datadog Agent or direct API.",
+          "title": "Datadog"
         },
         "grafana": {
-          "description": "Send traces to Grafana Tempo (Cloud or self-hosted)."
+          "description": "Send traces to Grafana Tempo (Cloud or self-hosted).",
+          "title": "Grafana Tempo"
         },
         "jaeger": {
-          "description": "Export to Jaeger with native OTLP receiver support."
+          "description": "Export to Jaeger with native OTLP receiver support.",
+          "title": "Jaeger"
         }
       },
       "production": {
@@ -3115,11 +3219,57 @@
         "missingSpansCause": "Sampling rate too low",
         "missingSpansSolution": "Increase sampling rate or disable sampling",
         "debugTitle": "Debug Mode",
-        "debugDescription": "Enable debug logging to troubleshoot telemetry issues."
+        "debugDescription": "Enable debug logging to troubleshoot telemetry issues.",
+        "columns": {
+          "issue": "Issue",
+          "solution": "Solution"
+        },
+        "rows": {
+          "noTraces": {
+            "issue": "Traces do not appear",
+            "solution": "Check that OTEL_EXPORTER_OTLP_ENDPOINT is correct and the network is reachable"
+          },
+          "highLatency": {
+            "issue": "High export latency",
+            "solution": "Use a batch exporter and tune the batch size"
+          },
+          "authError": {
+            "issue": "Authentication failed",
+            "solution": "Confirm the correct API key is set in OTEL_EXPORTER_OTLP_HEADERS"
+          }
+        }
       },
       "nav": {
         "prevLlamaIndex": "LlamaIndex Integration",
         "backToIntegrations": "Back to Integrations"
+      },
+      "collectors": {
+        "title": "Supported collectors",
+        "datadog": "Datadog",
+        "grafana": "Grafana Tempo",
+        "jaeger": "Jaeger"
+      },
+      "setup": {
+        "title": "Setup",
+        "envVars": {
+          "title": "Environment variables",
+          "description": "Set these environment variables to configure the OTLP exporter."
+        }
+      },
+      "productionTips": {
+        "title": "Production tips",
+        "sampling": {
+          "title": "Sampling",
+          "description": "Use sampling in high-traffic environments to control cost."
+        },
+        "customAttributes": {
+          "title": "Custom attributes",
+          "description": "Add custom attributes to traces to make debugging easier."
+        },
+        "batching": {
+          "title": "Batching",
+          "description": "Use batch exporters to reduce network overhead."
+        }
       }
     }
   },

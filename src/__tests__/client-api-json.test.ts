@@ -40,4 +40,30 @@ describe('readApiJson', () => {
       status: 500,
     } satisfies Partial<ApiJsonResponseError>);
   });
+
+  it('maps 401 HTML responses to a session-expired message', async () => {
+    const response = new Response('<html><body>Login</body></html>', {
+      status: 401,
+      headers: { 'content-type': 'text/html; charset=utf-8' },
+    });
+
+    await expect(readApiJson(response, 'Request failed')).rejects.toMatchObject({
+      name: 'ApiJsonResponseError',
+      message: 'Your session expired. Refresh the page and sign in again.',
+      status: 401,
+    } satisfies Partial<ApiJsonResponseError>);
+  });
+
+  it('reports empty bodies without exposing parser internals', async () => {
+    const response = new Response('', {
+      status: 200,
+      headers: { 'content-type': 'application/json' },
+    });
+
+    await expect(readApiJson(response, 'Request failed')).rejects.toMatchObject({
+      name: 'ApiJsonResponseError',
+      message: 'Request failed. The server returned an empty response.',
+      status: 200,
+    } satisfies Partial<ApiJsonResponseError>);
+  });
 });

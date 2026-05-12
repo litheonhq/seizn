@@ -11,7 +11,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { timingSafeEqual } from 'node:crypto';
-import { getStripeClient } from '@/lib/stripe';
+import { getStripeClient, hasStripeSecretKey } from '@/lib/stripe';
 import { createServerClient, hasServerSupabaseServiceRoleConfig } from '@/lib/supabase';
 import {
   getAuthorTierFromStripePriceId,
@@ -50,7 +50,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   if (!hasServerSupabaseServiceRoleConfig()) {
     return NextResponse.json({ error: 'service_role_not_configured' }, { status: 500 });
   }
-  if (!process.env.STRIPE_SECRET_KEY) {
+  if (!hasStripeSecretKey()) {
     return NextResponse.json({ error: 'stripe_not_configured' }, { status: 500 });
   }
 

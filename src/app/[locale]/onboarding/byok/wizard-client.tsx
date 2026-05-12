@@ -125,7 +125,7 @@ export default function ByokWizardClient() {
                 provider === p ? 'border-primary' : ''
               }`}
             >
-              <input
+              <input aria-label="Provider"
                 type="radio"
                 name="provider"
                 value={p}
@@ -165,7 +165,7 @@ export default function ByokWizardClient() {
             </a>
             .
           </p>
-          <input
+          <input aria-label="API key"
             type="password"
             placeholder={PROVIDER_INFO[provider].keyPrefix}
             value={apiKey}

@@ -7,7 +7,7 @@ import { checkProductionEnv } from './src/lib/env-guard';
 // See: https://github.com/vercel/next.js/issues - colons in filenames not supported on Windows
 const isWindows = process.platform === 'win32';
 
-if (process.env.VERCEL_ENV === 'production' || process.env.NODE_ENV === 'production') {
+if (process.env.VERCEL_ENV === 'production' || process.env.SEIZN_STRICT_ENV_CHECK === '1') {
   const result = checkProductionEnv();
   if (!result.ok) {
     console.warn('[env-guard] Missing production env vars:', result.missing.join(', '));
@@ -38,6 +38,10 @@ const nextConfig: NextConfig = {
       value: 'public, max-age=31536000, immutable',
     };
     const isProduction = process.env.NODE_ENV === 'production';
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? '';
+    const shouldUpgradeInsecureRequests =
+      process.env.VERCEL_ENV === 'production' ||
+      (appUrl.startsWith('https://') && !appUrl.includes('localhost') && !appUrl.includes('127.0.0.1'));
     const contentSecurityPolicy = [
       "default-src 'self'",
       "base-uri 'self'",
@@ -81,8 +85,8 @@ const nextConfig: NextConfig = {
       ].filter(Boolean).join(' '),
       "frame-src 'self' https://challenges.cloudflare.com https://js.stripe.com https://checkout.stripe.com",
       "worker-src 'self' blob:",
-      "upgrade-insecure-requests",
-    ].join('; ');
+      shouldUpgradeInsecureRequests ? 'upgrade-insecure-requests' : '',
+    ].filter(Boolean).join('; ');
 
     // Security headers for all routes
     const securityHeaders = [
@@ -129,11 +133,8 @@ const nextConfig: NextConfig = {
         source: '/:path*',
         headers: securityHeaders,
       },
-      // Cache headers for static assets
-      {
-        source: '/_next/static/:path*',
-        headers: [cacheHeader],
-      },
+      // Next.js owns /_next/static cache headers. Keep custom immutable
+      // caching to public assets only to avoid framework cache warnings.
       // Split static asset caching into individual patterns (Next.js doesn't support regex groups)
       { source: '/:path*.png', headers: [cacheHeader] },
       { source: '/:path*.jpg', headers: [cacheHeader] },

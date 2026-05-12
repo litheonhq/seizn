@@ -13,6 +13,7 @@ import {
   CHECKOUT_LEGAL_VERSIONS,
   DEFAULT_CHECKOUT_LEGAL_COPY,
 } from '@/lib/checkout-copy';
+import { readApiJson } from '@/lib/client/api-json';
 import type { Locale } from '@/i18n/config';
 import { REFUND_POLICY, formatDays } from '@/lib/policy';
 
@@ -56,7 +57,7 @@ function resolvePrice(plan: AuthorBillingTierConfig, column: BillingColumn, cade
 }
 
 function formatUsd(amount: number): string {
-  return amount.toLocaleString(undefined, {
+  return amount.toLocaleString('en-US', {
     style: 'currency',
     currency: 'USD',
     minimumFractionDigits: amount % 1 === 0 ? 0 : 2,
@@ -65,6 +66,12 @@ function formatUsd(amount: number): string {
 }
 
 const refundWindow = formatDays(REFUND_POLICY.GUARANTEE_DAYS);
+const charterDateFormatterOptions = {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+  timeZone: 'UTC',
+} as const satisfies Intl.DateTimeFormatOptions;
 
 export function CheckoutClient({ locale, tier, cadence, column, planConfig }: CheckoutClientProps) {
   const agreementId = useId();
@@ -74,11 +81,9 @@ export function CheckoutClient({ locale, tier, cadence, column, planConfig }: Ch
 
   const price = resolvePrice(planConfig, column, cadence);
   const isCharter = price.active < price.regular;
-  const charterEndDate = new Date(CHARTER_WINDOW_END_AT).toLocaleDateString(locale, {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
+  const charterEndDate = new Intl.DateTimeFormat(locale, charterDateFormatterOptions).format(
+    new Date(CHARTER_WINDOW_END_AT)
+  );
 
   const handleSubmit = async () => {
     if (!accepted || loading) return;
@@ -98,14 +103,13 @@ export function CheckoutClient({ locale, tier, cadence, column, planConfig }: Ch
           tier,
           cadence,
           column,
-          successUrl: '/dashboard/billing?success=true',
+          successUrl: '/dashboard/author/settings?section=billing&success=true',
           cancelUrl: `/${locale}/pricing`,
           legalAccepted: true,
           legalVersions: CHECKOUT_LEGAL_VERSIONS,
         }),
       });
 
-      const data = await response.json().catch(() => ({}));
       if (response.status === 401) {
         const callbackUrl = `${window.location.pathname}${window.location.search}${window.location.hash}` || '/';
         window.open(
@@ -115,8 +119,9 @@ export function CheckoutClient({ locale, tier, cadence, column, planConfig }: Ch
         );
         return;
       }
-      if (!response.ok || typeof data.url !== 'string') {
-        throw new Error(typeof data.error === 'string' ? data.error : DEFAULT_CHECKOUT_LEGAL_COPY.error);
+      const data = await readApiJson<{ url?: string }>(response, DEFAULT_CHECKOUT_LEGAL_COPY.error);
+      if (typeof data.url !== 'string') {
+        throw new Error(DEFAULT_CHECKOUT_LEGAL_COPY.error);
       }
       window.open(data.url, '_self', 'noopener,noreferrer');
     } catch (err) {
@@ -165,7 +170,7 @@ export function CheckoutClient({ locale, tier, cadence, column, planConfig }: Ch
           <li>
             Token cap:{' '}
             {planConfig.tokenCapMonth != null
-              ? `${planConfig.tokenCapMonth.toLocaleString()} / month`
+              ? `${planConfig.tokenCapMonth.toLocaleString('en-US')} / month`
               : 'unlimited (contact sales)'}
           </li>
           <li>{column === 'managed' ? 'Managed inference included' : 'BYOK — bring your own API key'}</li>

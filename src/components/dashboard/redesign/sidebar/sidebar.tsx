@@ -9,7 +9,9 @@ import type { Density, MemoryHealthState } from '../types';
 import { MemoryHealth } from './memory-health';
 import {
   NAV_GROUPS,
+  filterNavGroupsByCapability,
   type NavBadgeMap,
+  type NavCapabilityMap,
   type NavDotMap,
   type NavItem,
 } from './nav-config';
@@ -30,6 +32,7 @@ export interface SidebarProps {
   memoryHealth: MemoryHealthState;
   badges?: NavBadgeMap;
   dots?: NavDotMap;
+  capabilities?: NavCapabilityMap;
   onCommandPalette?: () => void;
   activeAuthorTab?: AuthorWorkspaceTab;
   onAuthorTab?: (tab: AuthorWorkspaceTab) => void;
@@ -54,6 +57,7 @@ function isItemActive(
 ): boolean {
   if (!pathname) return false;
 
+  if (item.id === 'overview') return pathname === DASHBOARD_ROUTES.root;
   if (item.id === 'usage' && pathname.startsWith(DASHBOARD_ROUTES.authorUsage)) return true;
 
   if (item.href.startsWith('/dashboard/author?tab=')) {
@@ -72,6 +76,13 @@ function isItemActive(
   }
   if (item.id === 'mindmap' && pathname.startsWith('/dashboard/memories/mindmap')) return true;
   if (item.id === 'replay' && pathname.startsWith(DASHBOARD_ROUTES.replay)) return true;
+  if (item.id === 'api-keys') {
+    return (
+      pathname.startsWith(DASHBOARD_ROUTES.apiKeys) ||
+      pathname.startsWith(DASHBOARD_ROUTES.legacyApiKeys)
+    );
+  }
+  if (item.id === 'billing' && pathname.startsWith(DASHBOARD_ROUTES.billing)) return true;
   if (item.id === 'byok' && pathname.startsWith(DASHBOARD_ROUTES.authorSettings)) {
     return section === 'byok';
   }
@@ -93,6 +104,7 @@ export function Sidebar({
   memoryHealth,
   badges = {},
   dots = {},
+  capabilities = {},
   onCommandPalette,
   activeAuthorTab,
   onAuthorTab,
@@ -110,7 +122,9 @@ export function Sidebar({
     count: memoryHealth.factsCount,
   });
 
-  const groupNodes = NAV_GROUPS.map((group) => (
+  const visibleGroups = filterNavGroupsByCapability(NAV_GROUPS, capabilities);
+
+  const groupNodes = visibleGroups.map((group) => (
     <SidebarGroup key={group.id} label={t(group.labelKey)} collapsed={collapsed}>
       {group.items.map((item) => {
         const active = isItemActive(item, pathname, tab, section);

@@ -197,7 +197,7 @@ export function ShareTraceModal({
                 <span className="font-medium">Share link created!</span>
               </div>
               <div className="flex gap-2">
-                <input
+                <input aria-label="Share URL"
                   type="text"
                   value={shareUrl}
                   readOnly
@@ -245,7 +245,7 @@ export function ShareTraceModal({
                 </label>
                 <div className="space-y-3">
                   <label className="flex items-center gap-3 cursor-pointer">
-                    <input
+                    <input aria-label="Mask Pii"
                       type="checkbox"
                       checked={maskPii}
                       onChange={(e) => setMaskPii(e.target.checked)}
@@ -262,7 +262,7 @@ export function ShareTraceModal({
                   </label>
 
                   <label className="flex items-center gap-3 cursor-pointer">
-                    <input
+                    <input aria-label="Mask Secrets"
                       type="checkbox"
                       checked={maskSecrets}
                       onChange={(e) => setMaskSecrets(e.target.checked)}
@@ -279,7 +279,7 @@ export function ShareTraceModal({
                   </label>
 
                   <label className="flex items-center gap-3 cursor-pointer">
-                    <input
+                    <input aria-label="Hide Raw Content"
                       type="checkbox"
                       checked={hideRawContent}
                       onChange={(e) => setHideRawContent(e.target.checked)}

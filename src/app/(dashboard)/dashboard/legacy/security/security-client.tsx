@@ -575,7 +575,7 @@ function CreateKeyModal({ onClose }: { onClose: () => void }) {
             <label className="block text-sm font-medium text-[var(--ink-900)] mb-1">
               {t("dashboard.securityPage.keys.keyName")}
             </label>
-            <input
+            <input aria-label="Name"
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -590,7 +590,7 @@ function CreateKeyModal({ onClose }: { onClose: () => void }) {
             </label>
             <div className="flex gap-4">
               <label className="flex items-center gap-2">
-                <input
+                <input aria-label="Type Test"
                   type="radio"
                   value="test"
                   checked={type === "test"}
@@ -599,7 +599,7 @@ function CreateKeyModal({ onClose }: { onClose: () => void }) {
                 <span className="text-sm">{t("dashboard.securityPage.keys.test")}</span>
               </label>
               <label className="flex items-center gap-2">
-                <input
+                <input aria-label="Type Live"
                   type="radio"
                   value="live"
                   checked={type === "live"}

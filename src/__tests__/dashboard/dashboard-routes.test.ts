@@ -13,6 +13,7 @@ describe('dashboard route registry', () => {
   it('keeps Author account routes canonical', () => {
     expect(DASHBOARD_ROUTES.authorSettings).toBe('/dashboard/author/settings');
     expect(DASHBOARD_ROUTES.authorSettingsByok).toBe('/dashboard/author/settings?section=byok');
+    expect(DASHBOARD_ROUTES.authorSettingsBilling).toBe('/dashboard/author/settings?section=billing');
     expect(DASHBOARD_ROUTES.authorUsage).toBe('/dashboard/author/usage');
   });
 
@@ -25,10 +26,10 @@ describe('dashboard route registry', () => {
     expect(isAuthorWorkspaceTab('usage')).toBe(true);
   });
 
-  it('canonicalizes engine dashboard entrypoints to Author workspace routes', () => {
-    expect(canonicalAuthorDashboardPath('/dashboard')).toBe('/dashboard/author');
+  it('keeps /dashboard as the canonical overview and maps legacy entrypoints', () => {
+    expect(canonicalAuthorDashboardPath('/dashboard')).toBe('/dashboard');
     expect(canonicalAuthorDashboardPath('/dashboard', '?from=engine')).toBe(
-      '/dashboard/author?from=engine',
+      '/dashboard?from=engine',
     );
     expect(canonicalAuthorDashboardPath('/dashboard/settings/byok', '?from=engine')).toBe(
       '/dashboard/author/settings?from=engine&section=byok',
@@ -43,14 +44,21 @@ describe('dashboard route registry', () => {
       '/dashboard/memories/mindmap',
     );
     expect(canonicalAuthorDashboardPath('/dashboard/replay')).toBe('/dashboard/replay');
-    expect(canonicalAuthorDashboardPath('/dashboard/account/api-keys')).toBeNull();
+    expect(canonicalAuthorDashboardPath('/dashboard/account/api-keys')).toBe(
+      '/dashboard/account/api-keys',
+    );
+    expect(canonicalAuthorDashboardPath('/dashboard/account/api-keys', '?from=engine')).toBe(
+      '/dashboard/account/api-keys?from=engine',
+    );
+    expect(canonicalAuthorDashboardPath('/dashboard/keys')).toBe('/dashboard/account/api-keys');
+    expect(canonicalAuthorDashboardPath('/dashboard/billing')).toBe('/dashboard/billing');
   });
 
   it('only accepts local dashboard callback URLs', () => {
     expect(sanitizeDashboardCallbackUrl('/dashboard/author?tab=review')).toBe('/dashboard/author?tab=review');
-    expect(sanitizeDashboardCallbackUrl('https://evil.example/dashboard')).toBe(DASHBOARD_ROUTES.author);
-    expect(sanitizeDashboardCallbackUrl('/api/auth/session')).toBe(DASHBOARD_ROUTES.author);
-    expect(sanitizeDashboardCallbackUrl('/dashboardish')).toBe(DASHBOARD_ROUTES.author);
+    expect(sanitizeDashboardCallbackUrl('https://evil.example/dashboard')).toBe(DASHBOARD_ROUTES.root);
+    expect(sanitizeDashboardCallbackUrl('/api/auth/session')).toBe(DASHBOARD_ROUTES.root);
+    expect(sanitizeDashboardCallbackUrl('/dashboardish')).toBe(DASHBOARD_ROUTES.root);
   });
 
   it('only enables native tab switching on the canonical Author workspace page', () => {

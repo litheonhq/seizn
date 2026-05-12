@@ -32,6 +32,8 @@ export function SubscriptionSection({
 }: SubscriptionSectionProps) {
   const planKey = (subscription.tier ?? subscription.plan ?? "free").toLowerCase();
   const priceDisplay = resolvePriceDisplay(planKey, subscription);
+  const track2 = subscription.track2 ?? null;
+  const statusLabel = track2 ? track2.status : subscription.status;
   const trialText =
     typeof subscription.trial_days_remaining === "number"
       ? `${subscription.trial_days_remaining}d`
@@ -60,7 +62,7 @@ export function SubscriptionSection({
         </button>
       </div>
 
-      {subscription.payment_failed ? (
+      {subscription.payment_failed || track2?.payment_failed ? (
         <div className="mt-5 flex items-start gap-2 rounded-md border border-[var(--signal-conflict)] bg-[var(--signal-conflict-soft)] p-3 text-sm text-[var(--signal-conflict-ink)]">
           <TriangleAlert className="mt-0.5 h-4 w-4" aria-hidden="true" />
           <span>{copy.paymentFailed}</span>
@@ -69,7 +71,9 @@ export function SubscriptionSection({
 
       <dl className="mt-5 grid gap-3 sm:grid-cols-2">
         <div className="rounded-md border border-[var(--ink-200)] bg-[var(--ink-50)] p-3">
-          <dt className="text-xs font-medium uppercase text-[var(--ink-500)]">{copy.currentPlan}</dt>
+          <dt className="text-xs font-medium uppercase text-[var(--ink-500)]">
+            {track2 ? "Web (Author Memory)" : copy.currentPlan}
+          </dt>
           <dd className="mt-1 break-words text-sm font-semibold text-[var(--ink-900)]">
             {subscription.tier_label} {priceDisplay.price ? ` - ${priceDisplay.price}` : ""}
           </dd>
@@ -77,9 +81,19 @@ export function SubscriptionSection({
             <dd className="mt-1 text-xs text-[var(--ink-500)]">{priceDisplay.note}</dd>
           ) : null}
         </div>
+        {track2 ? (
+          <div className="rounded-md border border-[var(--ink-200)] bg-[var(--ink-50)] p-3">
+            <dt className="text-xs font-medium uppercase text-[var(--ink-500)]">API · MCP</dt>
+            <dd className="mt-1 break-words text-sm font-semibold text-[var(--ink-900)]">
+              {track2.tier_label} {track2.price_label ? ` - ${track2.price_label}` : ""}
+            </dd>
+            <dd className="mt-1 text-xs text-[var(--ink-500)]">{formatTrack2Quota(track2)}</dd>
+          </div>
+        ) : null}
         <div className="rounded-md border border-[var(--ink-200)] bg-[var(--ink-50)] p-3">
           <dt className="text-xs font-medium uppercase text-[var(--ink-500)]">{copy.status}</dt>
-          <dd className="mt-1 text-sm font-semibold text-[var(--ink-900)]">{subscription.status}</dd>
+          <dd className="mt-1 text-sm font-semibold text-[var(--ink-900)]">{statusLabel}</dd>
+          {track2 ? <dd className="mt-1 text-xs text-[var(--ink-500)]">API · MCP subscription</dd> : null}
         </div>
         <div className="rounded-md border border-[var(--ink-200)] bg-[var(--ink-50)] p-3">
           <dt className="text-xs font-medium uppercase text-[var(--ink-500)]">{copy.trial}</dt>
@@ -88,12 +102,17 @@ export function SubscriptionSection({
         <div className="rounded-md border border-[var(--ink-200)] bg-[var(--ink-50)] p-3">
           <dt className="text-xs font-medium uppercase text-[var(--ink-500)]">{copy.renews}</dt>
           <dd className="mt-1 text-sm font-semibold text-[var(--ink-900)]">
-            {formatDate(subscription.renews_at ?? subscription.current_period_end, locale)}
+            {formatDate(track2?.renews_at ?? track2?.current_period_end ?? subscription.renews_at ?? subscription.current_period_end, locale)}
           </dd>
         </div>
       </dl>
     </section>
   );
+}
+
+function formatTrack2Quota(track2: NonNullable<SubscriptionState["track2"]>): string {
+  const period = track2.quota.period === "day" ? "day" : "mo";
+  return `${track2.quota.calls.toLocaleString("en")} calls/${period} · ${track2.quota.rate_limit_per_minute.toLocaleString("en")}/min`;
 }
 
 interface PriceDisplay {

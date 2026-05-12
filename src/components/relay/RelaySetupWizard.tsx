@@ -170,7 +170,7 @@ export function RelaySetupWizard({ apiKey, onComplete, onCancel }: RelaySetupWiz
               <label className="block text-sm font-medium text-[var(--ink-600)] mb-1">
                 Name *
               </label>
-              <input
+              <input aria-label="Name"
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -206,7 +206,7 @@ export function RelaySetupWizard({ apiKey, onComplete, onCancel }: RelaySetupWiz
 
             {collections.map((collection, index) => (
               <div key={index} className="flex gap-2">
-                <input
+                <input aria-label="Collection"
                   type="text"
                   value={collection}
                   onChange={(e) => updateCollection(index, e.target.value)}
@@ -244,7 +244,7 @@ export function RelaySetupWizard({ apiKey, onComplete, onCancel }: RelaySetupWiz
 
             <div className="space-y-3">
               <label className="flex items-start gap-3 p-4 border border-[var(--ink-200)] rounded-lg cursor-pointer hover:border-blue-300 dark:hover:border-blue-700">
-                <input
+                <input aria-label="Mode Callback"
                   type="radio"
                   name="mode"
                   value="callback"
@@ -264,7 +264,7 @@ export function RelaySetupWizard({ apiKey, onComplete, onCancel }: RelaySetupWiz
               </label>
 
               <label className="flex items-start gap-3 p-4 border border-[var(--ink-200)] rounded-lg cursor-pointer hover:border-blue-300 dark:hover:border-blue-700">
-                <input
+                <input aria-label="Mode Direct"
                   type="radio"
                   name="mode"
                   value="direct"
@@ -283,7 +283,7 @@ export function RelaySetupWizard({ apiKey, onComplete, onCancel }: RelaySetupWiz
               </label>
 
               <label className="flex items-start gap-3 p-4 border border-[var(--ink-200)] rounded-lg cursor-pointer hover:border-blue-300 dark:hover:border-blue-700">
-                <input
+                <input aria-label="Mode Hybrid"
                   type="radio"
                   name="mode"
                   value="hybrid"
@@ -307,7 +307,7 @@ export function RelaySetupWizard({ apiKey, onComplete, onCancel }: RelaySetupWiz
                 <label className="block text-sm font-medium text-[var(--ink-600)] mb-1">
                   Relay Endpoint URL
                 </label>
-                <input
+                <input aria-label="Endpoint URL"
                   type="url"
                   value={endpointUrl}
                   onChange={(e) => setEndpointUrl(e.target.value)}

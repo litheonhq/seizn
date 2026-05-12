@@ -110,12 +110,12 @@ function ReplayViz() {
       </div>
       <input
         type="range"
+        aria-label="scrub timeline"
         min={1}
         max={14}
         value={t}
         onChange={(e) => setT(parseInt(e.target.value, 10))}
         style={{ width: "100%", accentColor: "var(--engine-violet)" }}
-        aria-label="scrub timeline"
       />
       <div className="engine-mono" style={{ display: "flex", justifyContent: "space-between", marginTop: 6 }}>
         <span style={{ fontSize: 10, color: "var(--engine-text-dim)" }}>day 1</span>
@@ -187,7 +187,7 @@ function BudgetViz() {
           }}
         />
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10, marginTop: 14 }}>
+      <div className="engine-budget-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10, marginTop: 14 }}>
         {[
           { label: "entities", v: "12,408" },
           { label: "events / mo", v: "1.84M" },
@@ -217,7 +217,7 @@ function BudgetViz() {
 export function Wedges() {
   return (
     <Section eyebrow="Three wedges · why teams choose Seizn">
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 18 }}>
+      <div className="engine-wedge-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 18 }}>
         <WedgeCard
           index={1}
           eyebrow="Replay"

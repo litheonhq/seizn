@@ -37,7 +37,7 @@ export function RuntimeRow() {
         >
           Seizn is a memory layer, not a character runtime. Keep the agents you&apos;ve already chosen — we give them persistent, replayable, auditable memory.
         </p>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12 }}>
+        <div className="engine-runtime-card-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12 }}>
           {runtimes.map((r) => (
             <div
               key={r.name}
@@ -70,6 +70,7 @@ export function RuntimeRow() {
           <div style={{ position: "absolute", bottom: -2, color: "var(--engine-violet)", fontSize: 16 }}>▼</div>
         </div>
         <div
+          className="engine-runtime-summary"
           style={{
             padding: "26px 28px",
             border: "1px solid rgba(124,58,237,0.45)",

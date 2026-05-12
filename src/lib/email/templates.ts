@@ -422,7 +422,7 @@ export function paymentFailedEmail(
       ${ctaInvoice}
     </a>
     <br>` : ''}
-    <a href="https://www.seizn.com/dashboard/billing" style="display:inline-block;padding:12px 24px;background-color:#fff;color:#111827;text-decoration:none;border-radius:9999px;font-weight:500;border:1px solid #d1d5db;margin-top:8px;">
+    <a href="https://www.seizn.com/dashboard/author/settings?section=billing" style="display:inline-block;padding:12px 24px;background-color:#fff;color:#111827;text-decoration:none;border-radius:9999px;font-weight:500;border:1px solid #d1d5db;margin-top:8px;">
       ${ctaUpdate}
     </a>
     <p style="margin:24px 0 0;font-size:14px;color:#6b7280;">

@@ -189,7 +189,7 @@ export function PinDialog({
             <label className="block text-sm font-medium text-[var(--ink-600)]">
               PIN (4-6 digits)
             </label>
-            <input
+            <input aria-label="Pin"
               type="password"
               inputMode="numeric"
               autoComplete="one-time-code"
@@ -206,7 +206,7 @@ export function PinDialog({
               <label className="block text-sm font-medium text-[var(--ink-600)]">
                 Confirm PIN
               </label>
-              <input
+              <input aria-label="Confirm Pin"
                 type="password"
                 inputMode="numeric"
                 autoComplete="off"

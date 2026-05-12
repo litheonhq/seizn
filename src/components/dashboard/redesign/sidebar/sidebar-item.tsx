@@ -69,8 +69,9 @@ export function SidebarItem({
         cursor: 'pointer',
         background,
         color: active ? 'var(--terracotta-700)' : 'var(--text-secondary)',
-        fontSize: 13,
+        fontSize: item.secondary ? 12.5 : 13,
         fontWeight: active ? 600 : 500,
+        opacity: item.secondary && !active ? 0.86 : 1,
         position: 'relative',
         transition: 'background .12s, color .12s',
       }}

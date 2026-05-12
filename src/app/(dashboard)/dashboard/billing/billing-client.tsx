@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { CreditCard, ExternalLink, PauseCircle, RefreshCw, RotateCcw } from "lucide-react";
+import { readApiJson } from "@/lib/client/api-json";
 import { getErrorMessage } from "@/lib/ui-error";
 
 interface SubscriptionState {
@@ -18,6 +19,21 @@ interface SubscriptionState {
   payment_failed: boolean;
   byok_active: boolean;
   price_lock_version: string;
+  track2?: {
+    tier: string;
+    tier_label: string;
+    status: string;
+    price_label: string;
+    billing_cadence: "monthly" | "yearly" | null;
+    current_period_end: string | null;
+    renews_at: string | null;
+    payment_failed: boolean;
+    quota: {
+      calls: number;
+      period: "day" | "month";
+      rate_limit_per_minute: number;
+    };
+  } | null;
   usage: {
     tokens_used_month: number;
     tokens_cap_month: number | null;
@@ -32,6 +48,10 @@ interface UsageState {
   overage_tokens?: number;
   overage_charges_usd?: number;
   byok_active?: boolean;
+}
+
+interface BillingActionResponse {
+  url?: string;
 }
 
 function getCsrfToken(): string | null {
@@ -73,12 +93,16 @@ export function BillingDashboardClient() {
         fetch("/api/account/usage", { credentials: "include", headers: csrfHeaders }),
       ]);
 
-      if (!subscriptionResponse.ok) {
-        throw new Error("Subscription state could not be loaded.");
-      }
+      const subscriptionData = await readApiJson<SubscriptionState>(
+        subscriptionResponse,
+        "Subscription state could not be loaded",
+      );
+      const usageData = usageResponse.ok
+        ? await readApiJson<UsageState>(usageResponse, "Account usage could not be loaded")
+        : null;
 
-      setSubscription(await subscriptionResponse.json());
-      setUsage(usageResponse.ok ? await usageResponse.json() : null);
+      setSubscription(subscriptionData);
+      setUsage(usageData);
     } catch (loadError) {
       setError(getErrorMessage(loadError, "Billing could not be loaded."));
     } finally {
@@ -107,6 +131,7 @@ export function BillingDashboardClient() {
     typeof subscription?.trial_days_remaining === "number" &&
     subscription.trial_days_remaining <= 3 &&
     subscription.trial_days_remaining > 0;
+  const track2 = subscription?.track2 ?? null;
 
   const runAction = async (nextAction: "portal" | "cancel" | "resume") => {
     setAction(nextAction);
@@ -122,10 +147,7 @@ export function BillingDashboardClient() {
         },
         body: JSON.stringify({ action: nextAction }),
       });
-      const data = await response.json().catch(() => ({}));
-      if (!response.ok) {
-        throw new Error(typeof data.error === "string" ? data.error : "Billing action failed.");
-      }
+      const data = await readApiJson<BillingActionResponse>(response, "Billing action failed.");
       if (nextAction === "portal" && typeof data.url === "string") {
         window.open(data.url, "_self", "noopener,noreferrer");
         return;
@@ -147,7 +169,7 @@ export function BillingDashboardClient() {
       <header className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-sm text-[var(--ink-600)]">Billing</p>
-          <h1 className="text-2xl font-semibold text-[var(--ink-900)]">Author subscription</h1>
+          <h1 className="text-2xl font-semibold text-[var(--ink-900)]">Subscriptions</h1>
         </div>
         <button
           type="button"
@@ -171,7 +193,7 @@ export function BillingDashboardClient() {
         </div>
       ) : null}
 
-      {subscription?.payment_failed ? (
+      {subscription?.payment_failed || track2?.payment_failed ? (
         <div className="rounded-lg border border-[var(--signal-conflict)] bg-[var(--signal-conflict-soft)] px-4 py-3 text-sm text-[var(--signal-conflict-ink)]">
           Payment failed. Open billing portal to update payment details.
         </div>
@@ -183,10 +205,12 @@ export function BillingDashboardClient() {
             <div>
               <p className="text-sm text-[var(--ink-600)]">Current plan</p>
               <h2 className="mt-1 text-3xl font-semibold text-[var(--ink-900)]">
-                {subscription?.tier_label ?? "Free"}
+                {track2 ? `API · MCP ${track2.tier_label}` : (subscription?.tier_label ?? "Free")}
               </h2>
               <p className="mt-2 text-sm text-[var(--ink-600)]">
-                {subscription?.status ?? "inactive"} · {subscription?.price_lock_version ?? "v7"}
+                {track2
+                  ? `${track2.status} · ${track2.price_label || "Track 2"}`
+                  : `${subscription?.status ?? "inactive"} · ${subscription?.price_lock_version ?? "v7"}`}
               </p>
             </div>
             <div className="flex flex-wrap gap-2">
@@ -199,7 +223,7 @@ export function BillingDashboardClient() {
                 <CreditCard className="h-4 w-4" />
                 {action === "portal" ? "Opening..." : "Manage"}
               </button>
-              {subscription?.cancel_at_period_end ? (
+              {!track2 && subscription?.cancel_at_period_end ? (
                 <button
                   type="button"
                   onClick={() => runAction("resume")}
@@ -209,7 +233,7 @@ export function BillingDashboardClient() {
                   <RotateCcw className="h-4 w-4" />
                   Resume
                 </button>
-              ) : (
+              ) : !track2 ? (
                 <button
                   type="button"
                   onClick={() => runAction("cancel")}
@@ -219,18 +243,18 @@ export function BillingDashboardClient() {
                   <PauseCircle className="h-4 w-4" />
                   Cancel
                 </button>
-              )}
+              ) : null}
             </div>
           </div>
 
           <dl className="mt-6 grid gap-4 sm:grid-cols-2">
             <div>
               <dt className="text-xs uppercase text-[var(--ink-600)]">Renews</dt>
-              <dd className="mt-1 text-sm font-medium text-[var(--ink-900)]">{formatDate(subscription?.renews_at ?? null)}</dd>
+              <dd className="mt-1 text-sm font-medium text-[var(--ink-900)]">{formatDate(track2?.renews_at ?? subscription?.renews_at ?? null)}</dd>
             </div>
             <div>
               <dt className="text-xs uppercase text-[var(--ink-600)]">Access ends</dt>
-              <dd className="mt-1 text-sm font-medium text-[var(--ink-900)]">{formatDate(subscription?.current_period_end ?? null)}</dd>
+              <dd className="mt-1 text-sm font-medium text-[var(--ink-900)]">{formatDate(track2?.current_period_end ?? subscription?.current_period_end ?? null)}</dd>
             </div>
           </dl>
         </div>
@@ -263,7 +287,7 @@ export function BillingDashboardClient() {
               Upgrade
             </Link>
             <Link
-              href="/dashboard/settings"
+              href="/dashboard/account/api-keys"
               className="inline-flex items-center gap-2 rounded-lg border border-[var(--ink-200)] px-3 py-2 text-sm font-medium text-[var(--ink-900)] hover:bg-[var(--ink-50)]"
             >
               <ExternalLink className="h-4 w-4" />
@@ -275,4 +299,3 @@ export function BillingDashboardClient() {
     </div>
   );
 }
-

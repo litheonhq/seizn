@@ -168,7 +168,7 @@ export default async function LocaleLayout({
   const dir = isRtl(locale) ? 'rtl' : 'ltr';
 
   return (
-    <html lang={locale} dir={dir}>
+    <html lang={locale} dir={dir} data-scroll-behavior="smooth">
       <head>
         {/* DNS prefetch for API endpoints */}
         <link rel="dns-prefetch" href="https://api.seizn.com" />

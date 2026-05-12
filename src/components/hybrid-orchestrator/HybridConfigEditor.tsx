@@ -248,7 +248,7 @@ export function HybridConfigEditor({
         <label className="block text-sm font-medium text-[var(--ink-600)] mb-1">
           Config Name
         </label>
-        <input
+        <input aria-label="Name"
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
@@ -328,7 +328,7 @@ export function HybridConfigEditor({
             RRF K Parameter
           </label>
           <div className="flex items-center gap-3">
-            <input
+            <input aria-label="Rrf K slider"
               type="range"
               min="1"
               max="100"
@@ -352,7 +352,7 @@ export function HybridConfigEditor({
             Cascade Threshold
           </label>
           <div className="flex items-center gap-3">
-            <input
+            <input aria-label="Cascade Threshold slider"
               type="range"
               min="0"
               max="1"
@@ -443,7 +443,7 @@ function StrategyEditor({
             Weight
           </label>
           <div className="flex items-center gap-2">
-            <input
+            <input aria-label="Weight slider"
               type="range"
               min="0"
               max="1"
@@ -463,7 +463,7 @@ function StrategyEditor({
           <label className="block text-xs text-[var(--ink-600)] mb-1">
             Top K
           </label>
-          <input
+          <input aria-label="Top K"
             type="number"
             min="1"
             max="100"
@@ -483,7 +483,7 @@ function StrategyEditor({
             <label className="block text-xs text-[var(--ink-600)] mb-1">
               Threshold
             </label>
-            <input
+            <input aria-label="Threshold"
               type="number"
               min="0"
               max="1"
@@ -506,7 +506,7 @@ function StrategyEditor({
               <label className="block text-xs text-[var(--ink-600)] mb-1">
                 Expansions
               </label>
-              <input
+              <input aria-label="Expansion count"
                 type="number"
                 min="1"
                 max="10"

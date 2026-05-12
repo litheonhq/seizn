@@ -1,7 +1,7 @@
 {
   "version": 1,
   "generatedBy": "scripts/verify-api-auth-surface.mjs",
-  "routeCount": 560,
+  "routeCount": 561,
   "routes": [
     {
       "route": "/api",
@@ -1161,6 +1161,17 @@
       "methods": [],
       "authMarkers": [
         "csrf"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/dashboard/account/api-keys/[id]",
+      "methods": [
+        "DELETE"
+      ],
+      "authMarkers": [
+        "csrf",
+        "sessionUser"
       ],
       "authState": "auth-marker-present"
     },

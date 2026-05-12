@@ -1890,8 +1890,8 @@ function createSeedState(userId: string): AuthorUiState {
   const settings = buildDefaultSettings();
   const project: AuthorUiProject = {
     id: DEFAULT_PROJECT_ID,
-    name: 'KNOT Author Memory',
-    description: 'KNOT short 1 canon review workspace seeded from Author Memory v3 artifacts.',
+    name: 'Seizn Author Memory',
+    description: 'Seizn author canon review workspace seeded from Author Memory v3 artifacts.',
     scope: ['global', 'short1', 'main'],
     entity_count: characterMap.size,
     candidate_count: candidates.filter((candidate) => candidate.status === 'candidate').length,

@@ -46,7 +46,7 @@ export default async function AuthLayout({
   const dir = isRtl(locale) ? "rtl" : "ltr";
 
   return (
-    <html lang={locale} dir={dir}>
+    <html lang={locale} dir={dir} data-scroll-behavior="smooth">
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable} auth-root antialiased`}
       >

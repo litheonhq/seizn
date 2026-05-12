@@ -24,7 +24,6 @@ const ENGINE_MARKETING_ROUTE_PREFIXES = [
   '/bench',
   '/comparison',
   '/design-partners',
-  '/docs',
   '/enterprise',
   '/playground',
 ] as const;

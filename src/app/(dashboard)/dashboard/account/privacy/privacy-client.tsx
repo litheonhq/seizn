@@ -709,7 +709,7 @@ function NewRequestModal({
             <label className="block text-sm font-medium text-[var(--ink-900)] mb-1">
               Data Subject Email
             </label>
-            <input
+            <input aria-label="Email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -966,7 +966,7 @@ function SettingsTab({
           <p className="text-sm text-[var(--ink-600)] mb-2">
             GDPR requires response within {rtbfResponseWindow} (extendable to {rtbfComplexExtensionWindow} for complex requests)
           </p>
-          <input
+          <input aria-label="Response Deadline Days"
             type="number"
             value={localSettings.response_deadline_days}
             onChange={(e) => setLocalSettings({ ...localSettings, response_deadline_days: parseInt(e.target.value) })}
@@ -984,7 +984,7 @@ function SettingsTab({
           <p className="text-sm text-[var(--ink-600)] mb-2">
             Email address for RTBF request notifications
           </p>
-          <input
+          <input aria-label="Notification Email"
             type="email"
             value={localSettings.notification_email}
             onChange={(e) => setLocalSettings({ ...localSettings, notification_email: e.target.value })}
@@ -1000,7 +1000,7 @@ function SettingsTab({
           <p className="text-sm text-[var(--ink-600)] mb-2">
             How long to retain audit logs for compliance purposes
           </p>
-          <input
+          <input aria-label="Audit retention days"
             type="number"
             value={localSettings.audit_retention_days}
             onChange={(e) => setLocalSettings({ ...localSettings, audit_retention_days: parseInt(e.target.value) })}

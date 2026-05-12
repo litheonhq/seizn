@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
 import { createLatestRequestGuard, isAbortError } from "@/lib/client-request";
+import { readApiJson } from "@/lib/client/api-json";
 import { DASHBOARD_ROUTES } from "@/lib/dashboard-routes";
 import { formatDate } from "@/lib/format-date";
 import { getErrorMessage } from "@/lib/ui-error";
@@ -53,6 +54,12 @@ interface UsageData {
   summary: UsageSummary;
 }
 
+interface UsageApiResponse {
+  success?: boolean;
+  usage?: UsageData;
+  error?: unknown;
+}
+
 export function UsageClient() {
   const requestGuardRef = useRef(createLatestRequestGuard());
   const { t } = useDashboardTranslation();
@@ -71,14 +78,11 @@ export function UsageClient() {
       const res = await fetch(`/api/dashboard/usage?period=${period}`, {
         signal: request.signal,
       });
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(getErrorMessage(data?.error, "Failed to fetch usage"));
-      }
+      const data = await readApiJson<UsageApiResponse>(res, "Failed to fetch usage");
       if (!requestGuardRef.current.isCurrent(request.id)) {
         return;
       }
-      if (data.success) {
+      if (data.success && data.usage) {
         setUsage(data.usage);
       } else {
         setError(getErrorMessage(data.error, "Failed to fetch usage"));

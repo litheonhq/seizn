@@ -126,7 +126,7 @@ export function PostMortemClient({ reports: initialReports, loadError = null, li
           <h2 className="text-lg font-semibold text-szn-text-1">Generate</h2>
           <label className="mt-5 block text-sm text-szn-text-2">
             Title
-            <input
+            <input aria-label="Title"
               value={title}
               onChange={(event) => setTitle(event.target.value)}
               placeholder="Launch 1.0 post-mortem"

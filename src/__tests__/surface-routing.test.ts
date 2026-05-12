@@ -7,13 +7,14 @@ describe('surface routing helpers', () => {
     expect(isEngineMarketingRoute('/ko/comparison')).toBe(true);
     expect(isEngineMarketingRoute('/bench/methodology')).toBe(true);
     expect(isEngineMarketingRoute('/en/design-partners')).toBe(true);
-    expect(isEngineMarketingRoute('/en/docs/quickstart')).toBe(true);
     expect(isEngineMarketingRoute('/enterprise')).toBe(true);
     expect(isEngineMarketingRoute('/ja/playground')).toBe(true);
   });
 
   it('keeps Author routes on the Author surface', () => {
     expect(isEngineMarketingRoute('/en')).toBe(false);
+    expect(isEngineMarketingRoute('/en/docs')).toBe(false);
+    expect(isEngineMarketingRoute('/en/docs/quickstart')).toBe(false);
     expect(isEngineMarketingRoute('/ko/pricing')).toBe(false);
     expect(isEngineMarketingRoute('/dashboard/author')).toBe(false);
     expect(stripLocalePrefix('/ko/pricing')).toBe('/pricing');

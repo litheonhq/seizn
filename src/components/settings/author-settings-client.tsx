@@ -133,7 +133,7 @@ export function AuthorSettingsClient({ navigateToBilling = defaultNavigate }: Au
       const response = await fetchJson<{ url?: string }>("/api/account/billing-portal", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ return_to: "/dashboard/author/settings" }),
+        body: JSON.stringify({ return_to: "/dashboard/author/settings?section=billing" }),
       });
       if (!response.url) {
         throw new Error("Billing portal URL missing.");

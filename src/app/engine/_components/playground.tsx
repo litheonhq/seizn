@@ -148,6 +148,7 @@ export function Playground({ accent = "violet" }: { accent?: "violet" | "cyan" }
 
   return (
     <div
+      className="engine-playground-grid"
       style={{
         display: "grid",
         gridTemplateColumns: "1.1fr 1fr",
@@ -160,7 +161,7 @@ export function Playground({ accent = "violet" }: { accent?: "violet" | "cyan" }
       }}
     >
       {/* LEFT — chat */}
-      <div style={{ display: "flex", flexDirection: "column", borderRight: "1px solid var(--engine-line)", minHeight: 560 }}>
+      <div className="engine-playground-chat" style={{ display: "flex", flexDirection: "column", borderRight: "1px solid var(--engine-line)", minHeight: 560 }}>
         {/* header */}
         <div
           style={{
@@ -206,6 +207,7 @@ export function Playground({ accent = "violet" }: { accent?: "violet" | "cyan" }
         {/* transcript */}
         <div
           ref={transcriptRef}
+          tabIndex={0}
           style={{
             flex: 1,
             padding: "20px 18px",
@@ -467,7 +469,7 @@ export function Playground({ accent = "violet" }: { accent?: "violet" | "cyan" }
           </div>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", borderBottom: "1px solid var(--engine-line)" }}>
+        <div className="engine-memory-tier-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", borderBottom: "1px solid var(--engine-line)" }}>
           {(["Spring", "Summer", "Fall", "Winter"] as const).map((s) => {
             const count = memories.filter((m) => m.season === s).length;
             return (
@@ -506,7 +508,7 @@ export function Playground({ accent = "violet" }: { accent?: "violet" | "cyan" }
           })}
         </div>
 
-        <div style={{ flex: 1, overflowY: "auto", padding: 12, display: "flex", flexDirection: "column", gap: 8 }}>
+        <div tabIndex={0} style={{ flex: 1, overflowY: "auto", padding: 12, display: "flex", flexDirection: "column", gap: 8 }}>
           {memories.length === 0 ? (
             <div className="engine-mono" style={{ margin: "auto", textAlign: "center", color: "var(--engine-text-dim)", fontSize: 12 }}>
               {"// memory.writes will appear here"}

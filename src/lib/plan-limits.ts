@@ -101,7 +101,7 @@ export const PLANS: Record<string, PlanConfig> = {
     priceYearly: 0,
   },
 
-  // Indie — $39/mo (renamed from legacy "starter"). Jam games and solo builds.
+  // Indie - $39/mo (renamed from legacy "starter"). Jam games and solo builds.
   indie: {
     name: 'Indie',
     memories: 100_000,
@@ -133,10 +133,10 @@ export const PLANS: Record<string, PlanConfig> = {
     maxInputTokens: 8_000,
     maxOutputTokens: 2_000,
     priceMonthly: 39,
-    priceYearly: 398,  // 15% off annual
+    priceYearly: 468,
   },
 
-  // Studio — $299/mo (renamed from legacy "plus"). One shipped title.
+  // Studio - $499/mo (renamed from legacy "plus"). One shipped title.
   studio: {
     name: 'Studio',
     memories: 1_000_000,
@@ -167,11 +167,11 @@ export const PLANS: Record<string, PlanConfig> = {
     },
     maxInputTokens: 16_000,
     maxOutputTokens: 4_000,
-    priceMonthly: 299,
-    priceYearly: 3050,  // 15% off
+    priceMonthly: 499,
+    priceYearly: 5988,
   },
 
-  // Pro — $999/mo. Multi-title live ops.
+  // Pro - $149/mo. Multi-title live ops.
   pro: {
     name: 'Pro',
     memories: 5_000_000,
@@ -202,8 +202,8 @@ export const PLANS: Record<string, PlanConfig> = {
     },
     maxInputTokens: 32_000,
     maxOutputTokens: 8_000,
-    priceMonthly: 999,
-    priceYearly: Math.round(99900 * 12 * 0.75) / 100,  // 25% off
+    priceMonthly: 149,
+    priceYearly: 1788,
   },
 
   // Enterprise — starts $2,500/mo, custom above.
@@ -274,7 +274,7 @@ export const PLANS: Record<string, PlanConfig> = {
     maxInputTokens: 8_000,
     maxOutputTokens: 2_000,
     priceMonthly: 39,
-    priceYearly: 398,
+    priceYearly: 468,
   },
   plus: {
     name: 'Studio (legacy)',
@@ -306,8 +306,8 @@ export const PLANS: Record<string, PlanConfig> = {
     },
     maxInputTokens: 16_000,
     maxOutputTokens: 4_000,
-    priceMonthly: 299,
-    priceYearly: 3050,
+    priceMonthly: 499,
+    priceYearly: 5988,
   },
 };
 

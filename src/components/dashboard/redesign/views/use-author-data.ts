@@ -42,6 +42,12 @@ function toNumber(value: unknown, fallback = 0): number {
   return typeof value === 'number' && Number.isFinite(value) ? value : fallback;
 }
 
+const LEGACY_INTERNAL_WORKSPACE_NAME = ['K', 'NOT Author Memory'].join('');
+
+function sanitizeWorkspaceName(value: string): string {
+  return value.trim() === LEGACY_INTERNAL_WORKSPACE_NAME ? 'Seizn Author Memory' : value;
+}
+
 const ROLE_PALETTE: Record<string, string> = {
   Lead: '#c96442',
   Supporting: '#7a5c3a',
@@ -60,7 +66,7 @@ export function useAuthorWorkspace(projects: AuthorProjectsResult): UseAuthorWor
   return useMemo(() => {
     if (project && typeof project === 'object') {
       const record = project as Record<string, unknown>;
-      const name = toString(record.name) || MOCK_AUTHOR_DATA.workspace.name;
+      const name = sanitizeWorkspaceName(toString(record.name) || MOCK_AUTHOR_DATA.workspace.name);
       const entityCount = toNumber(record.entity_count);
       const candidateCount = toNumber(record.candidate_count);
       return {

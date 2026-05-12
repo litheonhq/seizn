@@ -1,18 +1,23 @@
 "use client";
 
 import { useId, useState } from "react";
-import type { AuthorBillingTier, BillingCadence } from "@/lib/stripe-config";
+import type { AuthorBillingTier, BillingCadence, BillingColumn } from "@/lib/stripe-config";
+import type { V9Track2Tier } from "@/lib/billing/v9-products";
 import {
   CHECKOUT_LEGAL_VERSIONS,
   DEFAULT_CHECKOUT_LEGAL_COPY,
   type CheckoutLegalCopy,
 } from "@/lib/checkout-copy";
+import { readApiJson } from "@/lib/client/api-json";
 
 interface CheckoutButtonProps {
   children: React.ReactNode;
   className?: string;
+  channel?: "author" | "track2";
   tier?: AuthorBillingTier;
+  track2Tier?: V9Track2Tier;
   cadence?: BillingCadence;
+  column?: BillingColumn;
   priceId?: string;
   quantity?: number;
   successUrl?: string;
@@ -43,8 +48,11 @@ function getCheckoutAuthRedirectUrl(): string {
 export function CheckoutButton({
   children,
   className = "",
+  channel = "author",
   tier,
+  track2Tier,
   cadence = "monthly",
+  column = "managed",
   priceId,
   successUrl,
   cancelUrl,
@@ -76,7 +84,14 @@ export function CheckoutButton({
           ...(csrfToken ? { "x-csrf-token": csrfToken } : {}),
         },
         body: JSON.stringify({
-          ...(legacyTier ? { tier: legacyTier, cadence } : priceId ? { priceId } : { tier, cadence }),
+          ...(channel === "track2"
+            ? { channel, tier: track2Tier, cadence }
+            : legacyTier
+              ? { tier: legacyTier, cadence }
+              : priceId
+                ? { priceId }
+                : { tier, cadence }),
+          ...(channel === "track2" ? {} : { column }),
           ...(successUrl ? { successUrl } : {}),
           ...(cancelUrl ? { cancelUrl } : {}),
           ...(requireLegalAgreement
@@ -88,15 +103,15 @@ export function CheckoutButton({
         }),
       });
 
-      const data = await response.json().catch(() => ({}));
       if (response.status === 401) {
         setIsLoading(false);
         window.open(getCheckoutAuthRedirectUrl(), "_self", "noopener,noreferrer");
         return;
       }
 
-      if (!response.ok || typeof data.url !== "string") {
-        throw new Error(typeof data.error === "string" ? data.error : legalCopy.error);
+      const data = await readApiJson<{ url?: string }>(response, legalCopy.error);
+      if (typeof data.url !== "string") {
+        throw new Error(legalCopy.error);
       }
 
       window.open(data.url, "_self", "noopener,noreferrer");
@@ -109,7 +124,7 @@ export function CheckoutButton({
   return (
     <div className="space-y-2">
       {requireLegalAgreement ? (
-        <div className="flex items-start gap-2 text-left text-xs leading-5 text-[var(--ink-600)]">
+        <div className="flex items-start gap-2 text-left text-xs leading-5 text-[var(--checkout-copy-color,var(--szn-text-2,var(--ink-600)))]">
           <input
             id={agreementId}
             type="checkbox"
@@ -128,7 +143,7 @@ export function CheckoutButton({
               href={termsHref}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-medium text-[var(--checkout-link-color,var(--signal-canon-ink))] underline-offset-2 hover:underline"
+              className="font-medium text-[var(--checkout-link-color,var(--signal-canon-ink))] underline underline-offset-2"
             >
               {legalCopy.terms}
             </a>{" "}
@@ -139,7 +154,7 @@ export function CheckoutButton({
               href={privacyHref}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-medium text-[var(--checkout-link-color,var(--signal-canon-ink))] underline-offset-2 hover:underline"
+              className="font-medium text-[var(--checkout-link-color,var(--signal-canon-ink))] underline underline-offset-2"
             >
               {legalCopy.privacy}
             </a>

@@ -33,7 +33,7 @@ export default async function DashboardLayout({
   const betaUntil = await getBetaDisclosureUntil(locale);
 
   return (
-    <html lang={locale} dir={dir}>
+    <html lang={locale} dir={dir} data-scroll-behavior="smooth">
       <body
         className="antialiased szn-app-bg min-h-screen"
       >

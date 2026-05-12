@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { getAuthOrReview } from "@/lib/auth-or-review";
 import type { Metadata } from "next";
 import { WorkspaceShell } from "@/components/dashboard/redesign/workspace-shell";
+import { getDashboardCapabilities } from "@/lib/dashboard-capabilities";
 import MindMapCanvas from "./MindMapCanvas";
 
 export const metadata: Metadata = {
@@ -40,6 +41,7 @@ export default async function MindMapPage() {
       userName={user.name ?? user.email ?? "Author"}
       userPlanLabel="Studio"
       currentLabel="Mind Map"
+      capabilities={getDashboardCapabilities(user)}
     >
       <main className="min-h-0 flex-1 overflow-hidden bg-[var(--bg-app)] p-4">
         <Suspense fallback={<MindMapSkeleton />}>

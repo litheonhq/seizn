@@ -20,6 +20,7 @@ import {
 } from '../icons';
 
 export type NavItemId =
+  | 'overview'
   | 'inbox'
   | 'review'
   | 'characters'
@@ -33,10 +34,15 @@ export type NavItemId =
   | 'mindmap'
   | 'replay'
   | 'usage'
+  | 'api-keys'
   | 'byok'
-  | 'settings';
+  | 'billing'
+  | 'settings'
+  | 'admin-metrics';
 
-export type NavGroupId = 'workspace' | 'memory' | 'account';
+export type NavGroupId = 'work' | 'memory' | 'developer' | 'account' | 'admin';
+
+export type NavCapability = 'track2' | 'admin' | 'billing';
 
 export interface NavItem {
   id: NavItemId;
@@ -46,6 +52,8 @@ export interface NavItem {
   badgeKey?: string;
   dotKey?: string;
   kbd?: string;
+  requiredCapability?: NavCapability;
+  secondary?: boolean;
 }
 
 export interface NavGroup {
@@ -56,9 +64,15 @@ export interface NavGroup {
 
 export const NAV_GROUPS: NavGroup[] = [
   {
-    id: 'workspace',
-    labelKey: 'dashboard.nav.groups.workspace',
+    id: 'work',
+    labelKey: 'dashboard.nav.groups.work',
     items: [
+      {
+        id: 'overview',
+        labelKey: 'dashboard.nav.overview',
+        href: DASHBOARD_ROUTES.root,
+        icon: BrainIcon,
+      },
       {
         id: 'inbox',
         labelKey: 'dashboard.nav.inbox',
@@ -119,6 +133,7 @@ export const NAV_GROUPS: NavGroup[] = [
         href: authorTabHref('audit'),
         icon: AuditIcon,
         kbd: 'A',
+        secondary: true,
       },
     ],
   },
@@ -137,18 +152,39 @@ export const NAV_GROUPS: NavGroup[] = [
         labelKey: 'dashboard.nav.memoryEditor',
         href: DASHBOARD_ROUTES.memoryEditor,
         icon: EditIcon,
+        secondary: true,
       },
       {
         id: 'mindmap',
         labelKey: 'dashboard.nav.mindMap',
         href: DASHBOARD_ROUTES.mindmap,
         icon: MapIcon,
+        secondary: true,
       },
       {
         id: 'replay',
         labelKey: 'dashboard.nav.replay',
         href: DASHBOARD_ROUTES.replay,
         icon: ReplayIcon,
+        secondary: true,
+      },
+    ],
+  },
+  {
+    id: 'developer',
+    labelKey: 'dashboard.nav.groups.developer',
+    items: [
+      {
+        id: 'api-keys',
+        labelKey: 'dashboard.nav.apiKeys',
+        href: DASHBOARD_ROUTES.apiKeys,
+        icon: ByokIcon,
+      },
+      {
+        id: 'usage',
+        labelKey: 'dashboard.nav.usage',
+        href: authorTabHref('usage'),
+        icon: UsageIcon,
       },
     ],
   },
@@ -156,12 +192,6 @@ export const NAV_GROUPS: NavGroup[] = [
     id: 'account',
     labelKey: 'dashboard.nav.groups.account',
     items: [
-      {
-        id: 'usage',
-        labelKey: 'dashboard.nav.usage',
-        href: authorTabHref('usage'),
-        icon: UsageIcon,
-      },
       {
         id: 'byok',
         labelKey: 'dashboard.nav.byok',
@@ -174,9 +204,46 @@ export const NAV_GROUPS: NavGroup[] = [
         href: DASHBOARD_ROUTES.authorSettings,
         icon: SettingsIcon,
       },
+      {
+        id: 'billing',
+        labelKey: 'dashboard.nav.billing',
+        href: DASHBOARD_ROUTES.billing,
+        icon: UsageIcon,
+        requiredCapability: 'billing',
+      },
+    ],
+  },
+  {
+    id: 'admin',
+    labelKey: 'dashboard.nav.groups.admin',
+    items: [
+      {
+        id: 'admin-metrics',
+        labelKey: 'dashboard.nav.adminMetrics',
+        href: '/en/admin/metrics',
+        icon: AuditIcon,
+        requiredCapability: 'admin',
+      },
     ],
   },
 ];
 
 export type NavBadgeMap = Partial<Record<string, number | string>>;
 export type NavDotMap = Partial<Record<string, boolean>>;
+
+export type NavCapabilityMap = Partial<Record<NavCapability, boolean>>;
+
+export function filterNavGroupsByCapability(
+  groups: readonly NavGroup[],
+  capabilities: NavCapabilityMap = {}
+): NavGroup[] {
+  return groups
+    .map((group) => ({
+      ...group,
+      items: group.items.filter((item) => {
+        if (!item.requiredCapability) return true;
+        return capabilities[item.requiredCapability] === true;
+      }),
+    }))
+    .filter((group) => group.items.length > 0);
+}

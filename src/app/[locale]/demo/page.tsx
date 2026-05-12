@@ -14,6 +14,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title,
     description: "Read-only synthetic Sample IP demo data for Seizn Author.",
+    alternates: {
+      canonical: `/${locale}/demo`,
+    },
   };
 }
 

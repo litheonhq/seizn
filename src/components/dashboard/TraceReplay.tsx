@@ -102,7 +102,7 @@ export function TraceReplay({
               Hybrid Alpha (semantic weight)
             </label>
             <div className="flex items-center gap-3">
-              <input
+              <input aria-label="Hybrid Alpha slider"
                 type="range"
                 min="0"
                 max="1"
@@ -162,7 +162,7 @@ export function TraceReplay({
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Top K Results
           </label>
-          <input
+          <input aria-label="Top K"
             type="number"
             min="1"
             max="100"

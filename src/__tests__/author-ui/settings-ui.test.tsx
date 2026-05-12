@@ -171,6 +171,28 @@ describe("Author settings UI", () => {
     });
   });
 
+  it("opens pricing instead of surfacing a portal error when no billing customer exists", async () => {
+    const requests = installFetchMocks({
+      billingPortalResponse: {
+        url: "/pricing",
+        destination: "pricing",
+        reason: "no_billing_account",
+      },
+    });
+    const navigate = vi.fn();
+    await render(<AuthorSettingsClient navigateToBilling={navigate} />);
+
+    await click(await findButton("Manage Billing"));
+
+    await waitForCondition(() => {
+      expect(requests.some((request) =>
+        request.url === "/api/account/billing-portal" && request.method === "POST"
+      )).toBe(true);
+      expect(navigate).toHaveBeenCalledWith("/pricing");
+      expect(renderedText()).not.toContain("No billing account found");
+    });
+  });
+
   it("shows Unlimited (BYOK) when usage has no managed token cap", async () => {
     await render(
       <UsageSection
@@ -356,7 +378,10 @@ function beforeReactAct(): void {
   (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 }
 
-function installFetchMocks() {
+function installFetchMocks(options: {
+  billingPortalResponse?: unknown;
+  billingPortalStatus?: number;
+} = {}) {
   const requests: Array<{ url: string; method: string; body?: BodyInit | null; csrf?: string | null }> = [];
   global.fetch = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
     const url = String(input);
@@ -382,7 +407,10 @@ function installFetchMocks() {
       return jsonResponse(missingByok);
     }
     if (url === "/api/account/billing-portal" && method === "POST") {
-      return jsonResponse({ url: "https://billing.stripe.test/session" });
+      return jsonResponse(
+        options.billingPortalResponse ?? { url: "https://billing.stripe.test/session" },
+        options.billingPortalStatus ?? 200,
+      );
     }
     if (url === "/api/account/llm-provider") {
       return jsonResponse({ provider: "anthropic", env_default: "anthropic" });

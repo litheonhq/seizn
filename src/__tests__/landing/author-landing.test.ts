@@ -4,6 +4,8 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { createElement } from "react";
 import { describe, expect, it, vi } from "vitest";
 import HomePage from "@/app/[locale]/page";
+import PublicApiDocsPage from "@/app/[locale]/api/page";
+import ChangelogPage from "@/app/[locale]/changelog/page";
 import {
   AuthorFlagshipLanding,
   getAuthorLandingCopy,
@@ -68,18 +70,31 @@ describe("Author flagship landing", () => {
     expect(html).toContain("severity-cards");
   });
 
-  it("promotes Seizn Program instead of the separate Engine surface", async () => {
+  it("renders the 4-track splitter and keeps Engine teaser gated", async () => {
     const data = await loadSaebyeokDemoData();
     const copy = await getAuthorLandingCopy("en");
 
     const html = renderToStaticMarkup(createElement(AuthorFlagshipLanding, { data, locale: "en", copy }));
 
-    expect(html).toContain("program-tease");
-    expect(html).toContain("Seizn Program");
-    expect(html).toContain('href="/en/pricing#track-3"');
+    expect(html).toContain("tracks-splitter");
+    expect(html).toContain("Desktop app");
+    expect(html).toContain('href="/en/desktop"');
+    expect(html).toContain('href="/en/docs');
     expect(html).not.toContain("engine-tease");
-    expect(html).not.toContain("https://engine.seizn.com");
-    expect(html).not.toContain('href="/en/docs');
+  });
+
+  it("shows the Engine teaser only when the Engine surface is explicitly live", async () => {
+    vi.stubEnv("NEXT_PUBLIC_ENGINE_SURFACE_LIVE", "true");
+    try {
+      const data = await loadSaebyeokDemoData();
+      const copy = await getAuthorLandingCopy("en");
+      const html = renderToStaticMarkup(createElement(AuthorFlagshipLanding, { data, locale: "en", copy }));
+
+      expect(html).toContain("engine-tease");
+      expect(html).toContain("https://engine.seizn.com");
+    } finally {
+      vi.unstubAllEnvs();
+    }
   });
 
   it("renders pricing cadence, secondary tiers, footer entity, and responsive hooks", async () => {
@@ -97,8 +112,45 @@ describe("Author flagship landing", () => {
     expect(html).toContain('href="/en/legal/privacy"');
     expect(html).toContain('href="/en/legal/terms"');
     expect(html).toContain('href="/en/legal/beta-disclosure"');
+    expect(html).toContain("track2-pricing-bridge");
+    expect(html).toContain("View API · MCP plans");
+    expect(html).toContain('href="/en/pricing#track-2"');
+    expect(html).toContain("Create a free API key");
+    expect(html).toContain("$11/mo");
+    expect(html).toContain("50 calls/day");
     expect(html).toContain("© 2026 Seizn by Litheon LLC · Wyoming");
     expect(html).toContain("v1.0 · saebyeok demo is synthetic data");
+  });
+
+  it("keeps public API docs pricing synced to the v9 Track 2 catalog", async () => {
+    const element = await PublicApiDocsPage({ params: Promise.resolve({ locale: "en" }) });
+    const html = renderToStaticMarkup(element);
+
+    expect(html).toContain("50 calls/day");
+    expect(html).toContain("$11/mo");
+    expect(html).toContain("$23/mo");
+    expect(html).toContain("$119/mo");
+    expect(html).toContain("$599/mo");
+    expect(html).toContain('href="/en/pricing#track-2"');
+    expect(html).not.toContain("100 calls/day");
+    expect(html).not.toContain("Stripe v8 catalog");
+    expect(html).not.toContain("$299");
+  });
+
+  it("keeps the public changelog Track 2 launch entry on the active v9 catalog", async () => {
+    const element = await ChangelogPage({ params: Promise.resolve({ locale: "en" }) });
+    const html = renderToStaticMarkup(element);
+    const text = html.replaceAll("<!-- -->", "");
+
+    expect(text).toContain("Free tier (50 calls/day)");
+    expect(text).toContain("Stripe v9 catalog");
+    expect(text).toContain("Indie $11/mo");
+    expect(text).toContain("Pro $23/mo");
+    expect(text).toContain("Studio $119/mo");
+    expect(text).toContain("Studio Managed $599/mo");
+    expect(text).not.toContain("100 calls/day");
+    expect(text).not.toContain("Stripe v8 catalog");
+    expect(text).not.toContain("$299");
   });
 
   it("registers Mark A favicon assets", () => {
@@ -119,7 +171,7 @@ describe("Author flagship landing", () => {
       "src/components/landing/brand-marks.tsx",
       "src/components/landing/canon-graph.tsx",
       "src/components/landing/conflict-detector.tsx",
-      "src/components/landing/program-tease.tsx",
+      "src/components/landing/engine-tease.tsx",
       "src/components/landing/hero-split-detector.tsx",
       "src/components/landing/section-conflicts.tsx",
       "src/components/landing/section-faq.tsx",

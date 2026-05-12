@@ -171,7 +171,7 @@ export function AdapterTrainingCard({
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Epochs
             </label>
-            <input
+            <input aria-label="Epochs"
               type="number"
               value={epochs}
               onChange={(e) => setEpochs(parseInt(e.target.value) || 10)}
@@ -185,7 +185,7 @@ export function AdapterTrainingCard({
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Batch Size
             </label>
-            <input
+            <input aria-label="Batch Size"
               type="number"
               value={batchSize}
               onChange={(e) => setBatchSize(parseInt(e.target.value) || 32)}
@@ -199,7 +199,7 @@ export function AdapterTrainingCard({
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Learning Rate
             </label>
-            <input
+            <input aria-label="Learning Rate"
               type="number"
               value={learningRate}
               onChange={(e) => setLearningRate(parseFloat(e.target.value) || 0.001)}

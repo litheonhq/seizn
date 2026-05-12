@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { getAuthOrReview } from "@/lib/auth-or-review";
 import { createServerClient } from "@/lib/supabase";
-import DashboardShell from "@/components/dashboard/DashboardShell";
+import { WorkspaceShell } from "@/components/dashboard/redesign/workspace-shell";
+import { getDashboardCapabilities } from "@/lib/dashboard-capabilities";
 import AuditClient from "./audit-client";
 import type { ApiKeyAuditAction } from "@/lib/api-keys";
 
@@ -54,9 +55,17 @@ async function loadAudit(userId: string): Promise<AuditEntry[]> {
 export default async function ApiKeysAuditPage() {
   const { user } = await getAuthOrReview();
   const entries = user.id === "review" ? [] : await loadAudit(user.id);
+  const userName = user.name ?? user.email ?? "Author";
   return (
-    <DashboardShell>
-      <AuditClient entries={entries} />
-    </DashboardShell>
+    <WorkspaceShell
+      userName={userName}
+      userPlanLabel="Studio"
+      currentLabel="API key audit"
+      capabilities={getDashboardCapabilities(user)}
+    >
+      <main className="min-h-0 flex-1 overflow-y-auto bg-[var(--bg-app)]">
+        <AuditClient entries={entries} />
+      </main>
+    </WorkspaceShell>
   );
 }

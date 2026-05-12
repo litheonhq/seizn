@@ -215,7 +215,7 @@ export function WhyNotPanel({ traceId, className = "" }: WhyNotPanelProps) {
         <div className="flex gap-2">
           <div className="flex-1 relative">
             <DocumentIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-            <input
+            <input aria-label="Document ID"
               type="text"
               value={documentId}
               onChange={(e) => setDocumentId(e.target.value)}

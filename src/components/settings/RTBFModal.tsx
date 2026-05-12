@@ -441,7 +441,7 @@ export function RTBFModal({
 
               {/* Confirmation Checkbox */}
               <label className="flex items-start gap-3 cursor-pointer p-4 rounded-xl border-2 border-[var(--signal-conflict)] dark:border-[var(--signal-conflict)] bg-[var(--signal-conflict-soft)] dark:bg-[var(--signal-conflict-ink)]/20">
-                <input
+                <input aria-label="Confirmed"
                   type="checkbox"
                   checked={confirmed}
                   onChange={(e) => setConfirmed(e.target.checked)}

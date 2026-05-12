@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { WorkspaceShell } from "@/components/dashboard/redesign/workspace-shell";
 import { MemoryEditorGrid } from "@/components/memory-editor/grid";
 import { getAuthOrReview } from "@/lib/auth-or-review";
+import { getDashboardCapabilities } from "@/lib/dashboard-capabilities";
 import { resolveMemoryBudgetOrganizationId } from "@/lib/memory/budget";
 import { loadMemoryEditorRows } from "@/lib/memory-editor/server";
 import type { MemoryEditorRow } from "@/lib/memory-editor/diff";
@@ -40,6 +41,7 @@ export default async function MemoryEditorPage() {
       userName={authState.user.name ?? authState.user.email ?? "Author"}
       userPlanLabel="Studio"
       currentLabel="Memory Editor"
+      capabilities={getDashboardCapabilities(authState.user)}
     >
       <main className="min-h-0 flex-1 overflow-y-auto bg-[var(--bg-app)]">
         <div className="mx-auto max-w-7xl px-4 py-8 pb-16">

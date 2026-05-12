@@ -44,14 +44,20 @@ function generatePassword() {
 }
 
 function runVercelEnvPull() {
-  const vercelBin = process.platform === 'win32' ? 'vercel.cmd' : 'vercel';
+  const vercelArgs = ['env', 'pull', tempEnvPath, '--environment=production', '--yes'];
+  const windowsCliPath =
+    process.platform === 'win32' && process.env.APPDATA
+      ? join(process.env.APPDATA, 'npm', 'node_modules', 'vercel', 'dist', 'vc.js')
+      : null;
+  const vercelBin = windowsCliPath && existsSync(windowsCliPath) ? process.execPath : 'vercel';
+  const args = windowsCliPath && existsSync(windowsCliPath) ? [windowsCliPath, ...vercelArgs] : vercelArgs;
   const result = spawnSync(
     vercelBin,
-    ['env', 'pull', tempEnvPath, '--environment=production', '--yes'],
+    args,
     {
       cwd: repoRoot,
       encoding: 'utf8',
-      shell: process.platform === 'win32',
+      windowsHide: true,
     }
   );
 

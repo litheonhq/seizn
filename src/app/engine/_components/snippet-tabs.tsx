@@ -88,7 +88,7 @@ const KEYWORDS = new Set([
 
 const COLOR = {
   string:  "#34D399",
-  comment: "#64748B",
+  comment: "#8EA0B8",
   keyword: "#A78BFA",
   number:  "#FBBF24",
   fn:      "#22D3EE",
@@ -191,8 +191,8 @@ export function SnippetTabs() {
 
   return (
     <div style={{ background: "var(--engine-bg-card)", border: "1px solid var(--engine-line)", borderRadius: 14, overflow: "hidden" }}>
-      <div style={{ display: "flex", alignItems: "center", borderBottom: "1px solid var(--engine-line)", background: "rgba(255,255,255,0.012)" }}>
-        <div style={{ display: "flex" }}>
+      <div className="engine-snippet-toolbar" style={{ display: "flex", alignItems: "center", borderBottom: "1px solid var(--engine-line)", background: "rgba(255,255,255,0.012)" }}>
+        <div className="engine-snippet-tabs" style={{ display: "flex" }}>
           {langs.map((l) => (
             <button
               key={l}
@@ -236,6 +236,7 @@ export function SnippetTabs() {
         </button>
       </div>
       <div
+        className="engine-snippet-install"
         style={{
           padding: "12px 20px",
           borderBottom: "1px solid var(--engine-line)",
@@ -248,9 +249,9 @@ export function SnippetTabs() {
         <span className="engine-mono" style={{ color: "var(--engine-violet-soft)", fontSize: 13 }}>$</span>
         <span className="engine-mono" style={{ fontSize: 13, color: "var(--engine-text-strong)" }}>{snip.install}</span>
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: "auto 1fr" }}>
+      <div className="engine-snippet-code-grid" style={{ display: "grid", gridTemplateColumns: "auto 1fr" }}>
         <pre
-          className="engine-mono"
+          className="engine-mono engine-snippet-line-numbers"
           style={{
             margin: 0,
             padding: "20px 12px 20px 20px",
@@ -266,6 +267,7 @@ export function SnippetTabs() {
         </pre>
         <pre
           className="engine-mono"
+          tabIndex={0}
           style={{
             margin: 0,
             padding: "20px 22px",

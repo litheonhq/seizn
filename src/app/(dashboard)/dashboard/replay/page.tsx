@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { WorkspaceShell } from "@/components/dashboard/redesign/workspace-shell";
 import { getAuthOrReview } from "@/lib/auth-or-review";
+import { getDashboardCapabilities } from "@/lib/dashboard-capabilities";
 import { createServerClient } from "@/lib/supabase";
 import { resolveReplayOrganizationId } from "@/lib/replay/snapshot";
 
@@ -47,6 +48,7 @@ export default async function ReplayPage({ searchParams }: ReplayPageProps) {
       userName={user.name ?? user.email ?? "Author"}
       userPlanLabel="Studio"
       currentLabel="Replay"
+      capabilities={getDashboardCapabilities(user)}
     >
       <main className="min-h-0 flex-1 overflow-y-auto bg-[var(--bg-app)] px-4 py-8 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl space-y-8 pb-16">

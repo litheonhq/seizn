@@ -48,6 +48,9 @@ const POLICY_PATTERNS = [
   { pattern: /\b(2|3|5|10|100)\s*(API\s*keys|collections)/gi, description: 'Plan feature limit' },
 ];
 
+const LEGACY_TAILWIND_CLASS_PATTERN =
+  /\b(?:bg|text|border|divide)-(?:cream|ink|terracotta)(?:\/\d+)?\b/g;
+
 // Files/directories to scan
 const SCAN_PATHS = [
   'src/app',
@@ -216,6 +219,34 @@ function scanFile(filePath) {
   return issues;
 }
 
+function scanLegacyTailwindClasses(filePath) {
+  const content = readFileSync(filePath, 'utf-8');
+  const lines = content.split('\n');
+  const issues = [];
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+
+    LEGACY_TAILWIND_CLASS_PATTERN.lastIndex = 0;
+    let match;
+    while ((match = LEGACY_TAILWIND_CLASS_PATTERN.exec(line)) !== null) {
+      if (isCommentLine(line)) {
+        continue;
+      }
+
+      issues.push({
+        file: filePath.replace(ROOT_DIR + '/', ''),
+        line: i + 1,
+        match: match[0],
+        description: 'Legacy Tailwind color class',
+        context: line.trim().substring(0, 100),
+      });
+    }
+  }
+
+  return issues;
+}
+
 // ============================================
 // Main
 // ============================================
@@ -236,7 +267,7 @@ function main() {
 
   let allIssues = [];
   for (const file of allFiles) {
-    const issues = scanFile(file);
+    const issues = scanFile(file).concat(scanLegacyTailwindClasses(file));
     allIssues = allIssues.concat(issues);
   }
 

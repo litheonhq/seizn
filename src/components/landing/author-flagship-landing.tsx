@@ -1,7 +1,10 @@
 import type { Locale } from "@/i18n/config";
 import type { SaebyeokDemoData } from "@/lib/sample-ip-demo";
-import { type AuthorLandingCopy } from "./author-landing-copy";
-import { ProgramTease } from "./program-tease";
+import {
+  isAuthorEngineSurfaceLive,
+  type AuthorLandingCopy,
+} from "./author-landing-copy";
+import { EngineTease } from "./engine-tease";
 import { HeroSplitDetector } from "./hero-split-detector";
 import { SectionWorkflow } from "./section-workflow";
 import { SectionInputs } from "./section-inputs";
@@ -15,6 +18,7 @@ import { SectionFooter } from "./section-footer";
 
 export {
   getAuthorLandingCopy,
+  isAuthorEngineSurfaceLive,
 } from "./author-landing-copy";
 
 export function AuthorFlagshipLanding({
@@ -28,9 +32,11 @@ export function AuthorFlagshipLanding({
   copy: AuthorLandingCopy;
   isAuthenticated?: boolean;
 }) {
+  const engineLive = isAuthorEngineSurfaceLive();
+
   return (
     <div className="author-landing">
-      <ProgramTease copy={copy} locale={locale} />
+      {engineLive ? <EngineTease copy={copy} /> : null}
       <HeroSplitDetector copy={copy} locale={locale} isAuthenticated={isAuthenticated} />
       <main>
         <SectionTracks copy={copy} locale={locale} />

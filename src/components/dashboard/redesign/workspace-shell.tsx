@@ -8,6 +8,7 @@ import {
   isAuthorWorkspaceTab,
   shouldUseLocalAuthorTabNavigation,
 } from '@/lib/dashboard-routes';
+import type { NavCapabilityMap } from './sidebar/nav-config';
 import { useAuthorConflicts, useAuthorProjects } from '@/hooks/useAuthorMemoryV3';
 import { Sidebar } from './sidebar/sidebar';
 import { TopBar, type TopBarTab } from './top-bar';
@@ -48,6 +49,7 @@ export interface WorkspaceShellProps {
   userName: string;
   userPlanLabel: string;
   currentLabel?: string;
+  capabilities?: NavCapabilityMap;
   children?: ReactNode;
 }
 
@@ -58,6 +60,7 @@ export function WorkspaceShell({
   userName,
   userPlanLabel,
   currentLabel,
+  capabilities = { track2: true, billing: true, admin: false },
   children,
 }: WorkspaceShellProps) {
   const pathname = usePathname();
@@ -69,6 +72,7 @@ export function WorkspaceShell({
   const canUseLocalAuthorTabs = shouldUseLocalAuthorTabNavigation(pathname, children != null);
 
   const [collapsed, setCollapsed] = useState(initialCollapsed);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const projects = useAuthorProjects();
   const projectId = useAuthorProjectId(projects);
   const workspace = useAuthorWorkspace(projects);
@@ -94,7 +98,13 @@ export function WorkspaceShell({
     []
   );
 
-  const toggleSidebar = useCallback(() => setCollapsed((c) => !c), []);
+  const toggleSidebar = useCallback(() => {
+    if (typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches) {
+      setMobileSidebarOpen(true);
+      return;
+    }
+    setCollapsed((c) => !c);
+  }, []);
 
   useEffect(() => {
     const readTabFromLocation = () => {
@@ -162,21 +172,55 @@ export function WorkspaceShell({
         overflow: 'hidden',
       }}
     >
-      <Sidebar
-        collapsed={collapsed}
-        density={density}
-        workspaceName={workspace.data.workspaceName}
-        workspacePlanLabel={workspace.data.planLabel}
-        workspaceEntries={workspace.data.episodeCount}
-        workspaceHasMore={workspace.data.hasMore ?? false}
-        userName={userName}
-        userPlanLabel={userPlanLabel}
-        memoryHealth={memoryHealth.data}
-        badges={badges}
-        dots={dots}
-        activeAuthorTab={tab}
-        onAuthorTab={canUseLocalAuthorTabs ? setTab : undefined}
-      />
+      <div className="dashboard-redesign-sidebar">
+        <Sidebar
+          collapsed={collapsed}
+          density={density}
+          workspaceName={workspace.data.workspaceName}
+          workspacePlanLabel={workspace.data.planLabel}
+          workspaceEntries={workspace.data.episodeCount}
+          workspaceHasMore={workspace.data.hasMore ?? false}
+          userName={userName}
+          userPlanLabel={userPlanLabel}
+          memoryHealth={memoryHealth.data}
+          badges={badges}
+          dots={dots}
+          capabilities={capabilities}
+          activeAuthorTab={tab}
+          onAuthorTab={canUseLocalAuthorTabs ? setTab : undefined}
+        />
+      </div>
+      {mobileSidebarOpen ? (
+        <div className="dashboard-redesign-mobile-layer" role="dialog" aria-modal="true">
+          <button
+            type="button"
+            className="dashboard-redesign-mobile-backdrop"
+            aria-label="Close navigation"
+            onClick={() => setMobileSidebarOpen(false)}
+          />
+          <div className="dashboard-redesign-mobile-panel">
+            <Sidebar
+              collapsed={false}
+              density={density}
+              workspaceName={workspace.data.workspaceName}
+              workspacePlanLabel={workspace.data.planLabel}
+              workspaceEntries={workspace.data.episodeCount}
+              workspaceHasMore={workspace.data.hasMore ?? false}
+              userName={userName}
+              userPlanLabel={userPlanLabel}
+              memoryHealth={memoryHealth.data}
+              badges={badges}
+              dots={dots}
+              capabilities={capabilities}
+              activeAuthorTab={tab}
+              onAuthorTab={(next) => {
+                setMobileSidebarOpen(false);
+                if (canUseLocalAuthorTabs) setTab(next);
+              }}
+            />
+          </div>
+        </div>
+      ) : null}
       <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
         <TopBar
           tab={tab}
@@ -188,6 +232,42 @@ export function WorkspaceShell({
         />
         <div style={{ flex: 1, display: 'flex', minHeight: 0, minWidth: 0 }}>{view}</div>
       </div>
+      <style>{`
+        .dashboard-redesign-sidebar {
+          display: flex;
+          min-height: 0;
+        }
+        .dashboard-redesign-mobile-layer {
+          position: fixed;
+          inset: 0;
+          z-index: 80;
+          display: none;
+        }
+        .dashboard-redesign-mobile-backdrop {
+          position: absolute;
+          inset: 0;
+          border: 0;
+          background: rgba(26, 22, 18, 0.62);
+          backdrop-filter: blur(2px);
+        }
+        .dashboard-redesign-mobile-panel {
+          position: relative;
+          width: min(86vw, 300px);
+          height: 100%;
+          box-shadow: 24px 0 60px rgba(20, 17, 13, 0.28);
+        }
+        @media (max-width: 767px) {
+          .dashboard-redesign {
+            height: 100dvh;
+          }
+          .dashboard-redesign-sidebar {
+            display: none;
+          }
+          .dashboard-redesign-mobile-layer {
+            display: block;
+          }
+        }
+      `}</style>
     </div>
   );
 }

@@ -1,7 +1,6 @@
-import { getAuthOrReview } from "@/lib/auth-or-review";
 import type { Metadata } from "next";
-import DashboardShell from "@/components/dashboard/DashboardShell";
-import ApiKeysClient from "./client";
+import { redirect } from "next/navigation";
+import { DASHBOARD_ROUTES } from "@/lib/dashboard-routes";
 
 export const metadata: Metadata = {
   title: "API Keys - Seizn Dashboard",
@@ -18,11 +17,5 @@ export const metadata: Metadata = {
 };
 
 export default async function ApiKeysPage() {
-  await getAuthOrReview();
-
-  return (
-    <DashboardShell>
-      <ApiKeysClient />
-    </DashboardShell>
-  );
+  redirect(DASHBOARD_ROUTES.apiKeys);
 }

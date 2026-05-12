@@ -22,6 +22,7 @@ export function NavBar() {
       }}
     >
       <div
+        className="engine-nav-shell"
         style={{
           maxWidth: 1280,
           margin: "0 auto",
@@ -33,7 +34,7 @@ export function NavBar() {
       >
         <div style={{ display: "flex", alignItems: "center", gap: 36 }}>
           <Logo />
-          <div style={{ display: "flex", gap: 24 }}>
+          <div className="engine-nav-links" style={{ display: "flex", gap: 24 }}>
             {NAV_LINKS.map((l) => (
               <a
                 key={l.label}
@@ -47,7 +48,7 @@ export function NavBar() {
             ))}
           </div>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+        <div className="engine-nav-actions" style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <Link
             href="/login"
             style={{ fontSize: 13, color: "var(--engine-text-muted)", textDecoration: "none" }}

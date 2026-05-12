@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Menu } from "lucide-react";
 import { useState, type CSSProperties } from "react";
 import { CheckoutButton } from "@/components/checkout-button";
+import { LanguageSwitcher } from "@/components/language-switcher";
 import {
   AUTHOR_BILLING_TIERS,
   type AuthorBillingTier,
@@ -115,9 +116,10 @@ function LandingNav({
           <a href="#pricing" className="text-sm font-medium" style={{ color: "oklch(1 0 0 / 0.66)" }}>
             {copy.nav.pricing}
           </a>
-          <Link href={`/${locale}/pricing#track-3`} className="text-sm font-medium" style={{ color: "oklch(1 0 0 / 0.66)" }}>
-            {copy.program.footerLabel}
+          <Link href={`/${locale}/docs`} className="text-sm font-medium" style={{ color: "oklch(1 0 0 / 0.66)" }}>
+            {copy.nav.docs}
           </Link>
+          <LanguageSwitcher currentLocale={locale} variant="dark" />
           <span className="h-5 w-px" style={{ background: "oklch(1 0 0 / 0.12)" }} />
           <Link
             href={isAuthenticated ? "/dashboard/author" : "/login"}
@@ -162,9 +164,12 @@ function LandingNav({
             <a href="#pricing" onClick={closeMobileMenu} className="min-h-11 py-3 text-sm font-medium" style={{ color: "oklch(1 0 0 / 0.78)" }}>
               {copy.nav.pricing}
             </a>
-            <Link href={`/${locale}/pricing#track-3`} onClick={closeMobileMenu} className="min-h-11 py-3 text-sm font-medium" style={{ color: "oklch(1 0 0 / 0.78)" }}>
-              {copy.program.footerLabel}
+            <Link href={`/${locale}/docs`} onClick={closeMobileMenu} className="min-h-11 py-3 text-sm font-medium" style={{ color: "oklch(1 0 0 / 0.78)" }}>
+              {copy.nav.docs}
             </Link>
+            <div className="py-2">
+              <LanguageSwitcher currentLocale={locale} variant="dark" align="left" fullWidth />
+            </div>
             <Link
               href={isAuthenticated ? "/dashboard/author" : "/login"}
               onClick={closeMobileMenu}
@@ -278,7 +283,7 @@ function PlanPicker({
           <CheckoutButton
             tier={selectedPlan}
             cadence={cadence}
-            successUrl="/dashboard/billing?success=true"
+            successUrl="/dashboard/author/settings?section=billing&success=true"
             cancelUrl={`/${locale}/pricing`}
             privacyHref={`/${locale}/legal/privacy`}
             termsHref={`/${locale}/legal/terms`}

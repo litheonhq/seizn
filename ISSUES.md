@@ -1,3 +1,104 @@
+### P0 — `memories.is_deleted` schema drift makes ALL stored memories invisible to GET (prod-wide)
+**상태:** 데이터 백필 완료 (2026-05-11). 코드 패치 + 스키마 마이그레이션은 `docs/handoff/2026-05-11-prod-p0-memories-and-webhook-rootcause.md` §1.1-1.3로 codex 핸드오프.
+**날짜:** 2026-05-11
+**증상:** `POST /api/v1/memories`는 200 success + memory ID 반환하지만, 같은 ID로 `GET /api/v1/memories/{id}` 호출 시 404 "Memory not found". `GET /api/v1/memories` (browse), `?tags=...` 필터, `?include_history=true`, 비-v1 `/api/memories` 모두 0건 반환. `profile.memory_count`는 정상 증가. 100% 재현. 영향: ALL API customers — 저장된 메모리를 API로 다시 읽지 못함. 검증 deployment: `dpl_8ndoY6ZMxmwfGXyNzeMH6uXqwW5t` (2026-05-10 어제 codex 배포 빌드).
+
+**원인:** 마이그레이션 025 (`025_summer_versioning.sql`)는 `ALTER TABLE memories ADD COLUMN IF NOT EXISTS is_deleted BOOLEAN NOT NULL DEFAULT FALSE`로 선언되었지만, prod DB 실제 컬럼 메타데이터는:
+- `is_nullable: YES`
+- `column_default: null`
+
+`information_schema.columns` 직접 조회로 확인. 마이그레이션이 적용되지 않았거나, 이전에 다른 정의로 추가된 후 025의 `IF NOT EXISTS` 가드가 정의 변경을 막은 것으로 추정.
+
+POST insertPayload에는 `is_deleted` 키가 없음 (DB default 의존). 따라서 새 행은 `is_deleted = NULL`로 저장됨. GET 핸들러 3곳 모두 `.eq('is_deleted', false)` 필터 사용 → PostgreSQL 3-valued logic으로 NULL 행 제외 → 404/0.
+
+**증거 (DB 직접 조회 2026-05-11):**
+- 2개 테스트 행 모두 존재, `user_id='34821db7-71e6-401f-a376-e9f1e215cd7c'`, `canon_status='canon'`, `is_deleted=NULL`, `deleted_at=NULL`
+- 컬럼 메타: `is_deleted boolean YES null` ← 마이그레이션 025 의도와 불일치
+- `user_id` 컬럼은 `text` (uuid 아님 — 2026-02-21 FK 타입 mismatch 이슈와 동일 패턴)
+
+**해결:**
+- ✅ **데이터 백필 (2026-05-11 03:14 UTC)**: `UPDATE memories SET is_deleted = false WHERE is_deleted IS NULL` 실행, 20행 영향. 백필 후 GET /api/v1/memories/{id} 및 browse 정상 동작 확인.
+- ⏳ **코드 패치 (pending — codex)**: `src/app/api/v1/memories/route.ts` insertPayload에 `is_deleted: false`, `deleted_at: null` 명시. 다른 insert path 동시 패치.
+- ⏳ **스키마 마이그레이션 (pending — codex)**: `ALTER COLUMN is_deleted SET NOT NULL, SET DEFAULT FALSE`. 핸드오프 doc에 마이그레이션 sql 포함.
+- ⏳ **E2E 회귀 테스트 (pending — codex)**: POST→GET-by-id round-trip. 이 버그는 e2e 부재로 prod 진입.
+
+**참조:** `src/app/api/v1/memories/route.ts:903-950, 1392-1396` (browse `is_deleted=false` 필터), `src/app/api/v1/memories/[id]/route.ts:85-93` (GET-by-id 필터), `supabase/migrations/025_summer_versioning.sql:11`.
+
+---
+
+### P0 — Stripe webhook URL apex→www 308 redirect으로 모든 결제 webhook이 prod에서 stuck
+**상태:** URL hotfix 적용 완료 (2026-05-11). Stripe가 pending 이벤트 자동 재시도 중. 회귀 방지 가드는 codex 핸드오프 §2.2-2.3.
+**날짜:** 2026-05-11
+**증상:** Stripe Dashboard 등록 URL은 `https://seizn.com/api/webhooks/stripe`. 실제 핸들러는 `https://www.seizn.com/api/webhooks/stripe`. apex → www가 308 redirect되는데 Stripe는 webhook 전송 시 redirect 미추적 → 모든 결제 이벤트가 `pending: 1` 상태로 영구 stuck. 영향: 결제는 Stripe에 정상 기록되지만 DB sync 코드(api_keys 업데이트 등)가 전혀 안 돔. 어제 codex의 "Fix dashboard API key issuance" 패치는 API 키 생성 시 Stripe를 직접 조회해서 이 문제를 우회 — 하지만 webhook 자체 문제는 그대로.
+
+**증거:** test customer `cus_UUbogaNptWlOF5` 의 핵심 5개 이벤트 (`checkout.session.completed`, `customer.subscription.created`, `invoice.paid`, `customer.created`, `customer.updated`) 모두 `pending_webhooks: 1`. apex URL 직접 POST → `HTTP 308 → Location: https://www.seizn.com/...`로 확인.
+
+**원인:** Webhook endpoint 등록 시점에 apex/www 분리를 인지 못 한 채 apex URL을 등록. Vercel 도메인 설정에 apex → www 308 redirect 룰이 들어 있어서 처음부터 작동 불가였음.
+
+**해결:**
+- ✅ **URL 변경 (2026-05-11 03:13 UTC)**: `PATCH /v1/webhook_endpoints/we_1TJdnB8XSoMws9Ufpu272MHY` `url=https://www.seizn.com/api/webhooks/stripe`. 즉시 enabled 상태로 적용. Stripe 자동 재시도가 pending 이벤트를 처리할 것 (수시간~3일 retry window).
+- ⏳ **회귀 방지 가드 (pending — codex)**:
+  - production smoke test에 webhook URL 308 체크 추가
+  - Stripe webhook URL drift detector (cron 또는 CI assertion)
+
+**참조:** `docs/handoff/2026-05-11-prod-p0-memories-and-webhook-rootcause.md` §2.
+
+---
+
+### P0 — Stripe checkout 완료 후 `profile.plan` 미동기화 (UI 표시는 어제 fix, DB sync는 여전히 깨짐)
+**상태:** 본인 계정 hotfix 적용 (2026-05-11). 다른 결제자 동일 문제 — webhook 핸들러 코드 패치 필요 (codex 핸드오프 §3).
+**날짜:** 2026-05-11
+**증상:** 사용자(`iruhana25@gmail.com`, `user_id=34821db7-71e6-401f-a376-e9f1e215cd7c`)가 Track 2 Pro BYOK Charter Monthly ($23/월) 결제 완료. Stripe subscription `sub_1TVdva8XSoMws9UfForYHtyY` 상태 `active`, payment_intent `succeeded`, invoice `paid`. 그러나 `/api/me`와 `profiles` 테이블 모두 `plan: "free"`. API rate limit과 entitlement이 Free로 적용됨.
+
+**어제 codex fix와의 관계:** 2026-05-10 codex 작업("Track 2 API Pro 결제 후에도 Free / inactive로 보이던 표시 문제를 수정했습니다")은 dashboard UI 표시 레이어를 fix함. 즉 화면엔 "Pro active"로 보이게 됨. 하지만 백엔드 `profiles.plan` row 자체는 'free'로 남아있어 API 엔트리먼트(`/api/me`, rate limit, feature gating)는 여전히 Free 동작. UI fix와 sync fix는 별개 문제.
+
+**Stripe 데이터:**
+- Customer `cus_UUbogaNptWlOF5` created 2026-05-10 19:00 UTC, metadata.user_id 정확히 매핑
+- Checkout session `cs_live_b1G0DK2k...` status=complete, payment_status=paid, mode=subscription, paid 2026-05-10 20:26 UTC
+- Subscription metadata: `track2_tier=pro`, `billing_cadence=monthly`, `billing_channel=track2`, `price_lock_version=v9`
+- Subscription `current_period_start`/`current_period_end`는 null (status active임에도 — 별도 확인 필요)
+- (참고) 결제 전에 3번 abandoned checkout: $11 indie/$11 indie/$29 indie
+
+**원인 (추정):** `checkout.session.completed` 또는 `customer.subscription.created` 웹훅 핸들러가 `profiles.plan='pro'`를 INSERT/UPDATE하지 못했거나, 웹훅이 도달 안 했거나, track2 분기에서 매핑 누락. Stripe Dashboard webhook 로그 확인 필요.
+
+**해결:**
+- ✅ **본인 계정 hotfix (2026-05-11 03:11 UTC)**: `UPDATE profiles SET plan='pro', updated_at=NOW() WHERE id='34821db7-71e6-401f-a376-e9f1e215cd7c'`. `/api/me`가 plan='pro' Pro limits 반환 확인.
+- ✅ **근본 원인 #1 (Stripe URL) 해결됨**: 별도 entry 참고 — webhook 재시도가 일어나면 `customer.subscription.created` 핸들러는 작동하지만 `applyV9Track2TierToApiKeys`만 호출되어 `api_keys` 테이블만 업데이트. 이 함수는 `profile.plan`을 안 건드림 — **이게 #2 별개 버그**.
+- ⏳ **근본 원인 #2 (handler 패치) pending — codex**: `src/app/api/webhooks/stripe/route.ts` `customer.subscription.created` 분기에 `profile.plan = v9.tier` 업데이트 추가. `updated`/`deleted` 분기도 미러링. Path A/B 결정 + 패치 코드는 핸드오프 doc §3에 명시.
+
+**참조:** `docs/handoff/2026-05-11-prod-p0-memories-and-webhook-rootcause.md` §3. Stripe customer `cus_UUbogaNptWlOF5`, subscription `sub_1TVdva8XSoMws9UfForYHtyY`.
+
+---
+
+### P1 — SpringV4 bridge 미러링이 prod에서 매 POST마다 실패 (target 테이블 부재)
+**날짜:** 2026-05-11
+**증상:** `POST /api/v1/memories` 응답에 항상 `bridge.springV4: { mirrored: false, springNoteId: null, skippedReason: "mirror_failed" }`. 서버 로그에 `[v1/memories] Spring v4 mirror error` 매 POST마다 기록되어 Sentry/Vercel logs 오염.
+
+**원인:** `MEMORY_V1_SPRING_BRIDGE_MIRROR` env var가 enabled (default 또는 명시) 이지만 target 테이블 `spring_memory_notes`가 prod DB에 존재하지 않음 (`relation "spring_memory_notes" does not exist` DB 직접 조회 확인). `mirrorLegacyMemoryToSpringV4()`가 throw → catch 블록에서 `mirror_failed` 반환. `MEMORY_V1_SPRING_BRIDGE_MIRROR_REQUIRED=false`로 추정되어 사용자에겐 200 반환되지만 로그 노이즈.
+
+**권장 해결 (택1):**
+- A. SpringV4 schema 마이그레이션 (`020_spring_schema.sql`) prod 적용 → 미러링 정상 동작
+- B. Vercel env에서 `MEMORY_V1_SPRING_BRIDGE_MIRROR=false` 설정 → SpringV4 도입 전까지 미러 시도 차단 → 깔끔한 로그
+
+**참조:** `src/lib/memory/v1-spring-bridge.ts:110-158`, `src/app/api/v1/memories/route.ts:1189-1232`, `supabase/migrations/020_spring_schema.sql`.
+
+---
+
+### P2 — `/api/v1/memories?mode=hybrid` Vercel timeout (504)
+**날짜:** 2026-05-11
+**증상:** 인증된 hybrid search 호출이 콜드 스타트에서 504 Gateway Timeout. 빈 메모리 풀에서도 발생.
+
+**원인 (추정):** Voyage AI embedding 생성 + 벡터 + 키워드 + hybrid rerank 체인이 Vercel function timeout (60s) 초과. 빈 상태에선 더 빨라야 정상인데 504 → embedding API 호출 자체가 콜드 스타트에서 느림 + (위 P1과 같이) SpringV4 search 경로 실패 폴백까지 가는 동안 시간 소진 가능성.
+
+**권장 해결:**
+1. POST 후 hybrid search 재현 + Vercel function 메트릭(latency, max duration) 확인
+2. SpringV4 search 폴백 timeout 추가 (현재 catch만 있고 자체 timeout 없음 — search hang 가능)
+3. Voyage AI 호출에 명시적 fetch timeout 적용
+
+**참조:** `src/app/api/v1/memories/route.ts:1887-1920` (Spring v4 bridge search), `searchViaSpringV4Bridge`.
+
+---
+
 ### BYOK Encryption KDF Collapse — Re-encryption Pending
 **날짜:** 2026-05-09  
 **증상:** R27 보안 audit에서 `getEncryptionKey()`가 `BYOK_ENCRYPTION_SECRET || NEXTAUTH_SECRET` + `BYOK_ENCRYPTION_SALT || NEXTAUTH_SECRET`로 fallback. 두 환경변수 모두 미설정 시 scrypt(NEXTAUTH_SECRET, NEXTAUTH_SECRET) — salt 효과 무력화.  
@@ -184,3 +285,38 @@
 **Symptom:** Soft-deleted memories could continue counting against profile memory quota.
 **Cause:** The live `update_memory_count()` trigger behavior drifted from active-row counting semantics.
 **Resolution:** `supabase/migrations/20260511002_prod_p0_memory_schema_convergence.sql` replaces `update_memory_count()` with explicit insert/delete/update soft-delete handling and recomputes `profiles.memory_count` from active memories.
+### Track 2 API Key Revoke Surfaced HTML-as-JSON and Schema Drift
+**Date:** 2026-05-10
+**Symptom:** The dashboard API key revoke flow showed `Unexpected token '<', "<script ty"... is not valid JSON`, test keys remained active, and the revoke confirm dialog looked transparent.
+**Cause:** The client was invoking a server action from the revoke dialog, so transport failures could surface as HTML parsed as JSON. The replacement revoke path also initially wrote `api_keys.updated_at`, but the active schema cache does not expose that column.
+**Resolution:** Moved revoke to a CSRF-protected JSON DELETE route, wrapped client mutations so raw transport errors become product toasts, removed `updated_at` writes from API key revoke/rotate updates, and strengthened modal overlay/card opacity. Added a Playwright create-and-revoke regression.
+
+### Billing Portal 404 For Accounts Without Stripe Customer
+**Date:** 2026-05-10
+**Symptom:** Clicking billing management on `/dashboard/author/settings` could show `{"error":"No billing account found"}` for Free/new accounts that had no Stripe customer yet.
+**Cause:** Author settings, dashboard billing, and the legacy billing portal endpoint treated a missing `stripe_customer_id` as a hard portal error. That is valid backend state for Free accounts, but wrong UX for a billing management CTA.
+**Resolution:** Portal actions now return a pricing destination (`/pricing`, `reason: no_billing_account`) when no Stripe customer exists, so the user can start checkout instead of seeing raw JSON. Stripe secret handling was also centralized so billing code accepts `STRIPE_SECRET_KEY_SEIZN` wherever the env guard allows it.
+
+### Pricing Checkout Column Drift
+**Date:** 2026-05-10
+**Symptom:** The `/pricing` page could visually show BYOK pricing while `/api/billing/checkout` still selected a Managed price, or an active BYOK user could click a Managed CTA and be routed to the BYOK price.
+**Cause:** The checkout API ignored the explicit Managed/BYOK column from the client and derived the column only from the saved BYOK state. Checkout metadata also did not include the billing column, so open checkout session reuse could cross Managed/BYOK selections for the same tier and cadence.
+**Resolution:** Pricing and checkout clients now send `column`, the checkout route validates it, resolves the Stripe price from the explicit column first, records `billing_column` in metadata, and regression tests cover BYOK/Managed selection and invalid column fallback prevention.
+
+### Author Token Meter Event Used Meter ID As Event Name
+**Date:** 2026-05-10
+**Symptom:** Managed author token overage events could be submitted to Stripe with a meter ID such as `meter_...` in the `event_name` field.
+**Cause:** `emitAuthorTokenOverage()` read `STRIPE_METER_ID_MEMORIES` / `STRIPE_METER_ID_OPS` as the Stripe meter event name, but Stripe expects the configured meter event name, not the meter object ID.
+**Resolution:** Author token overage now uses the canonical `seizn_memories_overage` event name from `stripe-metered.ts` while still requiring meter config and a Stripe secret before allowing over-cap managed usage. Tests now assert the correct event name.
+
+### Production Checkout Failed With Expired Stripe Secret Key
+**Date:** 2026-05-11
+**Symptom:** Clicking a pricing checkout button on production returned `{"error":"Failed to create checkout session"}` and Vercel logs showed a Stripe authentication failure for an expired live API key.
+**Cause:** Production only had the legacy `STRIPE_SECRET_KEY` configured, and that key had expired. A valid live restricted key was present in the local Litheon secret bucket but was not configured in Vercel or accepted first by the runtime helper.
+**Resolution:** Verified the restricted key can retrieve prices, create/list/expire checkout sessions, list subscriptions, and create/delete customers without printing secret values. Stripe runtime resolution now prefers `STRIPE_RESTRICTED_KEY`, the production env guard accepts it, and focused billing/env tests cover the fallback.
+
+### Track 2 Paid Subscription Displayed As Free In Dashboard
+**Date:** 2026-05-11
+**Symptom:** A paid API/MCP Pro monthly subscriber still saw `Free - $0` and `inactive` in the dashboard billing card, and the active API key retained Free quota.
+**Cause:** Track 2 Stripe webhook branches applied quota to `api_keys` but did not persist Track 2 subscription state separately from Track 1 Author Memory fields. `/api/account/subscription` only read Track 1 profile columns, so a valid Track 2 subscription could look inactive in billing UI.
+**Resolution:** Added separate `profiles.track2_*` subscription columns, synced them from Track 2 webhook events, added live Stripe recovery in `/api/account/subscription` and the API keys page, and updated billing UI to show Web and API/MCP subscriptions separately. Backfilled the affected account from Stripe live state and updated active API keys to Pro quota.

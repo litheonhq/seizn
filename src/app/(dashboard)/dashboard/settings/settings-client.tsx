@@ -6,6 +6,7 @@ import Link from "next/link";
 import { locales, localeNames, type Locale } from "@/i18n/config";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
 import { createLatestRequestGuard, isAbortError } from "@/lib/client-request";
+import { readApiJson } from "@/lib/client/api-json";
 import { csrfFetch } from "@/lib/client/csrf-fetch";
 import { getErrorMessage } from "@/lib/ui-error";
 import { RTBFModal, DataExportModal, DeleteMemoriesModal } from '@/components/settings';
@@ -46,6 +47,32 @@ interface RegionPreferenceData {
   regionPinAvailable: boolean;
 }
 
+interface ProfileResponse {
+  user?: ProfileData | null;
+}
+
+interface BudgetSettingsResponse {
+  settings?: BudgetSettings;
+}
+
+interface QuotaResponse {
+  plan?: string;
+  memories?: { used?: number; limit?: number };
+  apiCalls?: { used?: number; limit?: number };
+  apiKeys?: { used?: number; limit?: number };
+}
+
+interface RegionPreferenceResponse {
+  preferredRegion?: unknown;
+  regionPinAvailable?: unknown;
+}
+
+type DashboardJsonResult<T> = {
+  ok: boolean;
+  status: number;
+  data: T | null;
+};
+
 // Plan limits for UI display. Keep in sync with src/lib/plan-limits.ts (canonical source).
 const PLAN_LIMITS: Record<string, { memories: number; apiCalls: number; apiKeys: number; price: string }> = {
   free: { memories: 10_000, apiCalls: 10_000, apiKeys: 2, price: "$0" },
@@ -82,6 +109,21 @@ function isUsageWarning(used: number, limit: number): boolean {
   if (limit === -1) return false;
   const ratio = used / limit;
   return ratio >= 0.7 && ratio < 0.9;
+}
+
+async function readDashboardJson<T>(
+  response: Response,
+  fallback: string,
+  emptyStatuses: number[] = [],
+): Promise<DashboardJsonResult<T>> {
+  if (emptyStatuses.includes(response.status)) {
+    return { ok: response.ok, status: response.status, data: null };
+  }
+  return {
+    ok: response.ok,
+    status: response.status,
+    data: await readApiJson<T>(response, fallback),
+  };
 }
 
 type SettingsTab = "profile" | "billing" | "budget" | "notifications" | "security" | "danger";
@@ -143,23 +185,18 @@ export function SettingsClient() {
 
     try {
       const [profileResult, budgetResult, quotaResult, regionResult] = await Promise.allSettled([
-        csrfFetch("/api/me", { signal: request.signal }).then(async (res) => ({
-          status: res.status,
-          data: res.status === 401 ? null : await res.json(),
-        })),
-        csrfFetch("/api/budget/settings", { signal: request.signal }).then(async (res) => ({
-          ok: res.ok,
-          data: res.ok ? await res.json() : null,
-        })),
-        csrfFetch("/api/quota", { signal: request.signal }).then(async (res) => ({
-          ok: res.ok,
-          data: res.ok ? await res.json() : null,
-        })),
-        csrfFetch("/api/personas/region-preference", { signal: request.signal }).then(async (res) => ({
-          ok: res.ok,
-          status: res.status,
-          data: res.ok ? await res.json() : null,
-        })),
+        csrfFetch("/api/me", { signal: request.signal }).then((res) =>
+          readDashboardJson<ProfileResponse>(res, "Profile data could not be loaded.", [401]),
+        ),
+        csrfFetch("/api/budget/settings", { signal: request.signal }).then((res) =>
+          readDashboardJson<BudgetSettingsResponse>(res, "Budget settings could not be loaded."),
+        ),
+        csrfFetch("/api/quota", { signal: request.signal }).then((res) =>
+          readDashboardJson<QuotaResponse>(res, "Quota data could not be loaded."),
+        ),
+        csrfFetch("/api/personas/region-preference", { signal: request.signal }).then((res) =>
+          readDashboardJson<RegionPreferenceResponse>(res, "Data residency preference could not be loaded.", [403]),
+        ),
       ]);
 
       if (!requestGuardRef.current.isCurrent(request.id)) {
@@ -168,14 +205,14 @@ export function SettingsClient() {
 
       let failedCount = 0;
 
-      if (profileResult.status === "fulfilled" && profileResult.value.status !== 401 && profileResult.value.data) {
-        const data = profileResult.value.data;
+      if (profileResult.status === "fulfilled" && profileResult.value.status !== 401 && profileResult.value.data?.user) {
+        const user = profileResult.value.data.user;
         setProfile({
-          email: data?.user?.email,
-          name: data?.user?.name,
-          language: data?.user?.language || "en",
+          email: user.email,
+          name: user.name,
+          language: user.language || "en",
         });
-        setLanguage((data?.user?.language as Locale) || "en");
+        setLanguage((user.language as Locale) || "en");
       } else if (profileResult.status === "rejected" && !isAbortError(profileResult.reason)) {
         failedCount += 1;
       }
@@ -191,19 +228,21 @@ export function SettingsClient() {
 
       if (quotaResult.status === "fulfilled" && quotaResult.value.ok && quotaResult.value.data) {
         const data = quotaResult.value.data;
+        const plan = data.plan || "free";
+        const planLimits = PLAN_LIMITS[plan] ?? PLAN_LIMITS.free;
         setQuotaData({
-          plan: data.plan || "free",
+          plan,
           memories: {
             used: data.memories?.used || 0,
-            limit: data.memories?.limit || PLAN_LIMITS[data.plan || "free"]?.memories || 10000,
+            limit: data.memories?.limit || planLimits.memories,
           },
           apiCalls: {
             used: data.apiCalls?.used || 0,
-            limit: data.apiCalls?.limit || PLAN_LIMITS[data.plan || "free"]?.apiCalls || 1000,
+            limit: data.apiCalls?.limit || planLimits.apiCalls,
           },
           apiKeys: {
             used: data.apiKeys?.used || 0,
-            limit: data.apiKeys?.limit || PLAN_LIMITS[data.plan || "free"]?.apiKeys || 3,
+            limit: data.apiKeys?.limit || planLimits.apiKeys,
           },
         });
       } else if (
@@ -295,11 +334,10 @@ export function SettingsClient() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ preferredRegion }),
       });
-      if (!res.ok) {
-        const data = await res.json().catch(() => null);
-        throw new Error(data?.error?.message || "Failed to save data residency preference");
-      }
-      const data = await res.json();
+      const data = await readApiJson<RegionPreferenceResponse>(
+        res,
+        "Failed to save data residency preference",
+      );
       setRegionPreference({
         preferredRegion: normalizePreferredRegion(data.preferredRegion),
         regionPinAvailable: Boolean(data.regionPinAvailable),
@@ -407,10 +445,11 @@ export function SettingsClient() {
               </h2>
               <div className="grid gap-4 md:grid-cols-2">
                 <div>
-                  <label className="block text-sm font-medium text-[var(--ink-600)] mb-1">
+                  <label htmlFor="settings-profile-email" className="block text-sm font-medium text-[var(--ink-600)] mb-1">
                     {t("dashboard.settingsPage.email")}
                   </label>
                   <input
+                    id="settings-profile-email"
                     type="email"
                     value={profile.email || ""}
                     disabled
@@ -418,10 +457,11 @@ export function SettingsClient() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-[var(--ink-600)] mb-1">
+                  <label htmlFor="settings-profile-name" className="block text-sm font-medium text-[var(--ink-600)] mb-1">
                     {t("dashboard.settingsPage.name")}
                   </label>
                   <input
+                    id="settings-profile-name"
                     type="text"
                     value={profile.name || ""}
                     disabled
@@ -652,12 +692,13 @@ export function SettingsClient() {
                 {/* Budget Limits */}
                 <div className="grid gap-4 md:grid-cols-2">
                   <div>
-                    <label className="block text-sm font-medium text-[var(--ink-600)] mb-1">
+                    <label htmlFor="settings-budget-daily" className="block text-sm font-medium text-[var(--ink-600)] mb-1">
                       {t("dashboard.settingsPage.budget.dailyLimit")}
                     </label>
                     <div className="relative">
                       <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--ink-500)]">$</span>
                       <input
+                        id="settings-budget-daily"
                         type="number"
                         min={0}
                         step={1}
@@ -671,12 +712,13 @@ export function SettingsClient() {
                     </div>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-[var(--ink-600)] mb-1">
+                    <label htmlFor="settings-budget-monthly" className="block text-sm font-medium text-[var(--ink-600)] mb-1">
                       {t("dashboard.settingsPage.budget.monthlyLimit")}
                     </label>
                     <div className="relative">
                       <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--ink-500)]">$</span>
                       <input
+                        id="settings-budget-monthly"
                         type="number"
                         min={0}
                         step={1}
@@ -693,12 +735,13 @@ export function SettingsClient() {
 
                 {/* Per-Query Limit */}
                 <div>
-                  <label className="block text-sm font-medium text-[var(--ink-600)] mb-1">
+                  <label htmlFor="settings-budget-per-query" className="block text-sm font-medium text-[var(--ink-600)] mb-1">
                     {t("dashboard.settingsPage.budget.perQueryMax")}
                   </label>
                   <div className="relative max-w-xs">
                     <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--ink-500)]">$</span>
                     <input
+                      id="settings-budget-per-query"
                       type="number"
                       min={0}
                       step={0.01}
@@ -714,11 +757,12 @@ export function SettingsClient() {
 
                 {/* Alert Threshold */}
                 <div>
-                  <label className="block text-sm font-medium text-[var(--ink-600)] mb-1">
+                  <label htmlFor="settings-budget-alert-threshold" className="block text-sm font-medium text-[var(--ink-600)] mb-1">
                     {t("dashboard.settingsPage.budget.alertThreshold")}
                   </label>
                   <div className="flex items-center gap-4">
                     <input
+                      id="settings-budget-alert-threshold"
                       type="range"
                       min={50}
                       max={100}
@@ -747,6 +791,7 @@ export function SettingsClient() {
                   <div className="flex gap-4">
                     <label className="flex items-center gap-2 cursor-pointer">
                       <input
+                        id="settings-budget-mode-soft"
                         type="radio"
                         name="budgetMode"
                         value="soft"
@@ -765,6 +810,7 @@ export function SettingsClient() {
                     </label>
                     <label className="flex items-center gap-2 cursor-pointer">
                       <input
+                        id="settings-budget-mode-hard"
                         type="radio"
                         name="budgetMode"
                         value="hard"

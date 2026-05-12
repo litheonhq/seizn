@@ -164,7 +164,7 @@ export default function CommandPalette({ isOpen, onClose, navigationGroups, t }:
         {/* Search input */}
         <div className="flex items-center gap-3 px-4 py-3 border-b border-[var(--ink-200)]">
           <SearchIcon className="w-5 h-5 text-[var(--ink-500)] flex-shrink-0" />
-          <input
+          <input aria-label="Query"
             ref={inputRef}
             type="text"
             value={query}

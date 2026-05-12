@@ -268,7 +268,7 @@ export default function BudgetPage() {
               </label>
               <div className="relative">
                 <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[var(--ink-500)]" />
-                <input
+                <input aria-label="Budget Limit"
                   type="number"
                   value={budgetLimit}
                   onChange={(e) => setBudgetLimit(e.target.value)}
@@ -286,7 +286,7 @@ export default function BudgetPage() {
                 Alert Threshold (%)
               </label>
               <div className="relative">
-                <input
+                <input aria-label="Alert Threshold slider"
                   type="range"
                   min="50"
                   max="100"

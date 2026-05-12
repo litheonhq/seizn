@@ -74,7 +74,7 @@ export default async function CompliancePage() {
                 <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-szn-text-3">
                   subject_id
                 </span>
-                <input
+                <input aria-label="Subject ID"
                   name="subject_id"
                   placeholder="player_7f4a"
                   className="mt-2 w-full rounded-md border border-szn-border-subtle bg-szn-surface-1 px-3 py-2 text-sm text-szn-text-1 outline-none focus:border-szn-signal"
@@ -102,7 +102,7 @@ export default async function CompliancePage() {
                 <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-szn-text-3">
                   subject_id
                 </span>
-                <input
+                <input aria-label="Subject ID"
                   name="subject_id"
                   placeholder="player_7f4a"
                   className="mt-2 w-full rounded-md border border-szn-border-subtle bg-szn-surface-1 px-3 py-2 text-sm text-szn-text-1 outline-none focus:border-szn-signal"
@@ -112,7 +112,7 @@ export default async function CompliancePage() {
                 <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-szn-text-3">
                   reason
                 </span>
-                <input
+                <input aria-label="GDPR Article 17 request"
                   name="reason"
                   placeholder="GDPR Article 17 request"
                   className="mt-2 w-full rounded-md border border-szn-border-subtle bg-szn-surface-1 px-3 py-2 text-sm text-szn-text-1 outline-none focus:border-szn-signal"
