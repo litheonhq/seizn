@@ -828,7 +828,7 @@ async function handleAddObservations(observations) {
     const results = [];
     for (const obs of observations) {
         // First search for the entity
-        const searchResponse = await apiRequest(`/api/v1/memories?query=${encodeURIComponent(obs.entityName)}&limit=1&mode=hybrid`);
+        const searchResponse = await apiRequest(`/api/v1/memories?query=${encodeURIComponent(obs.entityName)}&limit=1&mode=keyword`);
         if (searchResponse.data?.results && searchResponse.data.results.length > 0) {
             // Add new observations as new memories linked to the entity
             for (const content of obs.contents) {
@@ -873,7 +873,7 @@ async function handleReadGraph(namespace) {
 async function handleOpenNodes(names) {
     const results = [];
     for (const name of names) {
-        const response = await apiRequest(`/api/v1/memories?query=${encodeURIComponent(name)}&limit=5&mode=hybrid`);
+        const response = await apiRequest(`/api/v1/memories?query=${encodeURIComponent(name)}&limit=5&mode=keyword`);
         if (response.data?.results && response.data.results.length > 0) {
             results.push({
                 name,
@@ -888,7 +888,7 @@ async function handleDeleteEntities(entityNames) {
     const deleted = [];
     for (const name of entityNames) {
         // Search for memories with this entity name
-        const response = await apiRequest(`/api/v1/memories?query=${encodeURIComponent(name)}&limit=50&mode=hybrid`);
+        const response = await apiRequest(`/api/v1/memories?query=${encodeURIComponent(name)}&limit=50&mode=keyword`);
         if (response.data?.results && response.data.results.length > 0) {
             const ids = response.data.results.map((m) => m.id).join(",");
             await apiRequest(`/api/v1/memories?ids=${ids}`, "DELETE");
@@ -903,7 +903,7 @@ async function handleDeleteObservations(deletions) {
         let deletedCount = 0;
         for (const observation of del.observations) {
             // Search for memories matching this observation content
-            const searchResponse = await apiRequest(`/api/v1/memories?query=${encodeURIComponent(`[${del.entityName}] ${observation}`)}&limit=5&mode=hybrid`);
+            const searchResponse = await apiRequest(`/api/v1/memories?query=${encodeURIComponent(`[${del.entityName}] ${observation}`)}&limit=5&mode=keyword`);
             const matches = searchResponse.data?.results?.filter((m) => m.content.includes(observation) && m.tags?.includes('observation')) || [];
             if (matches.length > 0) {
                 const ids = matches.map((m) => m.id).join(",");
@@ -920,7 +920,7 @@ async function handleDeleteRelations(relations) {
     for (const rel of relations) {
         // Relations are stored as memories with tags
         const query = `${rel.from} ${rel.relationType} ${rel.to}`;
-        const searchResponse = await apiRequest(`/api/v1/memories?query=${encodeURIComponent(query)}&limit=10&mode=hybrid`);
+        const searchResponse = await apiRequest(`/api/v1/memories?query=${encodeURIComponent(query)}&limit=10&mode=keyword`);
         const matches = searchResponse.data?.results?.filter((m) => m.content.includes(rel.from) &&
             m.content.includes(rel.to) &&
             m.tags?.includes('relation')) || [];
