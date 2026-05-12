@@ -7,6 +7,7 @@ name: Production Smoke
 # Required repo secrets (configure under Settings → Secrets and variables → Actions):
 #   PROD_SUPABASE_URL              — Supabase production URL
 #   PROD_SUPABASE_SERVICE_ROLE_KEY — service-role JWT for admin user mgmt
+#   PROD_SUPABASE_ANON_KEY         — anon JWT for smoke user sign-in
 #   PROD_NEXTAUTH_URL              — e.g. https://www.seizn.com (no trailing slash)
 #   PROD_SMOKE_USER_EMAIL          — optional, defaults to smoke+production-dashboard@seizn.test
 #   PROD_SMOKE_USER_PASSWORD       — optional, regenerated each run if absent
@@ -50,7 +51,7 @@ jobs:
       - name: Validate required secrets
         run: |
           missing=0
-          for name in PROD_SUPABASE_URL PROD_SUPABASE_SERVICE_ROLE_KEY PROD_NEXTAUTH_URL; do
+          for name in PROD_SUPABASE_URL PROD_SUPABASE_SERVICE_ROLE_KEY PROD_SUPABASE_ANON_KEY PROD_NEXTAUTH_URL; do
             if [ -z "${!name}" ]; then
               echo "::error::Missing required secret: $name"
               missing=1
@@ -60,6 +61,7 @@ jobs:
         env:
           PROD_SUPABASE_URL: ${{ secrets.PROD_SUPABASE_URL }}
           PROD_SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}
+          PROD_SUPABASE_ANON_KEY: ${{ secrets.PROD_SUPABASE_ANON_KEY }}
           PROD_NEXTAUTH_URL: ${{ secrets.PROD_NEXTAUTH_URL }}
 
       - name: Install dependencies
@@ -73,6 +75,8 @@ jobs:
           SMOKE_SKIP_VERCEL_PULL: 'true'
           SUPABASE_URL: ${{ secrets.PROD_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.PROD_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.PROD_SUPABASE_ANON_KEY }}
           NEXTAUTH_URL: ${{ secrets.PROD_NEXTAUTH_URL }}
           TEST_USER_EMAIL: ${{ secrets.PROD_SMOKE_USER_EMAIL }}
           TEST_USER_PASSWORD: ${{ secrets.PROD_SMOKE_USER_PASSWORD }}
