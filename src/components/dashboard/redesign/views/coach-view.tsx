@@ -56,38 +56,159 @@ function useDebouncedAntiCliche(text: string, delayMs = 300): AntiClicheFinding[
   return findings;
 }
 
+function findingKey(finding: AntiClicheFinding): string {
+  return `${finding.index}:${finding.match.toLowerCase()}`;
+}
+
+export function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+const editorBaseStyle: React.CSSProperties = {
+  position: 'absolute',
+  inset: 0,
+  padding: '20px 22px',
+  borderRadius: 12,
+  border: '1px solid var(--border-subtle)',
+  background: 'var(--bg-primary)',
+  fontFamily: 'inherit',
+  fontSize: 14.5,
+  lineHeight: 1.65,
+  color: 'var(--text-primary)',
+  whiteSpace: 'pre-wrap',
+  wordWrap: 'break-word',
+  overflow: 'auto',
+  overflowWrap: 'break-word',
+  pointerEvents: 'none',
+  margin: 0,
+};
+
+const HIGHLIGHT_PALETTE: Record<AntiClicheCategory, string> = {
+  opening: 'rgba(122, 92, 58, 0.22)',
+  emotional: 'rgba(201, 100, 66, 0.22)',
+  description: 'rgba(216, 168, 109, 0.28)',
+  action: 'rgba(122, 92, 58, 0.22)',
+  dialogue: 'rgba(112, 130, 152, 0.24)',
+  ai_specific: 'rgba(201, 100, 66, 0.32)',
+};
+
+export function buildHighlightedMarkup(text: string, findings: AntiClicheFinding[]): string {
+  if (findings.length === 0) {
+    return escapeHtml(text) + '​';
+  }
+  // Findings must be non-overlapping; if any overlap we keep the earliest.
+  const ordered = [...findings].sort((a, b) => a.index - b.index);
+  const trimmed: AntiClicheFinding[] = [];
+  let lastEnd = -1;
+  for (const finding of ordered) {
+    if (finding.index < lastEnd) continue;
+    trimmed.push(finding);
+    lastEnd = finding.index + finding.match.length;
+  }
+  let cursor = 0;
+  let html = '';
+  for (const finding of trimmed) {
+    if (finding.index > cursor) {
+      html += escapeHtml(text.slice(cursor, finding.index));
+    }
+    const segment = escapeHtml(text.slice(finding.index, finding.index + finding.match.length));
+    const color = HIGHLIGHT_PALETTE[finding.category];
+    html += `<mark style="background:${color};color:inherit;border-radius:2px;padding:0 1px;">${segment}</mark>`;
+    cursor = finding.index + finding.match.length;
+  }
+  if (cursor < text.length) {
+    html += escapeHtml(text.slice(cursor));
+  }
+  // Trailing zero-width ensures the overlay matches textarea height even on a trailing newline.
+  return html + '​';
+}
+
 export function CoachView({ projectId }: CoachViewProps) {
   const { t } = useDashboardTranslation();
   const [text, setText] = useState('');
   const [serverResult, setServerResult] = useState<CoachAnalysisResponse | null>(null);
+  const [dismissedKeys, setDismissedKeys] = useState<Set<string>>(() => new Set());
   const localFindings = useDebouncedAntiCliche(text);
   const analyze = useAnalyzeCoach(projectId);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
   const wordCount = useMemo(() => (text.trim() ? text.trim().split(/\s+/).length : 0), [text]);
   const isReady = projectId && text.trim().length > 0;
 
   const handleAnalyze = useCallback(async () => {
-    if (!isReady) return;
+    if (!isReady || analyze.isMutating) return;
     try {
       const result = (await analyze.trigger({ text })) as unknown as CoachAnalysisResponse;
       setServerResult(result);
+      setDismissedKeys(new Set());
     } catch {
       // analyze.error is surfaced by SWR Mutation hook
     }
   }, [analyze, isReady, text]);
 
   useEffect(() => {
-    // Clear stale server result whenever the input text changes
+    // Clear stale server result + dismissals whenever the input text changes
     if (serverResult && serverResult.hash) {
       setServerResult(null);
+    }
+    if (dismissedKeys.size > 0) {
+      setDismissedKeys(new Set());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [text]);
 
-  const cliches = serverResult?.antiCliche ?? localFindings;
+  const rawCliches = serverResult?.antiCliche ?? localFindings;
+  const cliches = useMemo(
+    () => rawCliches.filter((finding) => !dismissedKeys.has(findingKey(finding))),
+    [rawCliches, dismissedKeys]
+  );
   const layers = serverResult?.storyLayers ?? [];
   const arcs = serverResult?.characterArcs ?? [];
   const critics = serverResult?.criticNotes ?? [];
+
+  const dismissCliche = useCallback((finding: AntiClicheFinding) => {
+    setDismissedKeys((prev) => {
+      const next = new Set(prev);
+      next.add(findingKey(finding));
+      return next;
+    });
+  }, []);
+
+  const scrollToCliche = useCallback((finding: AntiClicheFinding) => {
+    const textarea = textAreaRef.current;
+    if (!textarea) return;
+    textarea.focus();
+    const end = Math.min(text.length, finding.index + finding.match.length);
+    textarea.setSelectionRange(finding.index, end);
+    // Best-effort scroll: place the selection at ~30% from the top.
+    const linesBefore = text.slice(0, finding.index).split('\n').length - 1;
+    const lineHeight = parseFloat(getComputedStyle(textarea).lineHeight || '24') || 24;
+    const desired = Math.max(0, linesBefore * lineHeight - textarea.clientHeight * 0.3);
+    textarea.scrollTop = desired;
+  }, [text]);
+
+  const handleTextareaKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+      if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
+        event.preventDefault();
+        void handleAnalyze();
+      }
+    },
+    [handleAnalyze]
+  );
+
+  const handleOverlayScroll = useCallback(() => {
+    const textarea = textAreaRef.current;
+    const overlay = overlayRef.current;
+    if (!textarea || !overlay) return;
+    overlay.scrollTop = textarea.scrollTop;
+    overlay.scrollLeft = textarea.scrollLeft;
+  }, []);
 
   return (
     <div
@@ -143,27 +264,39 @@ export function CoachView({ projectId }: CoachViewProps) {
             </div>
           </div>
         </header>
-        <textarea
-          ref={textAreaRef}
-          value={text}
-          onChange={(event) => setText(event.target.value)}
-          placeholder={t('dashboard.coach.placeholder')}
-          spellCheck
+        <div
           style={{
+            position: 'relative',
             flex: 1,
             minHeight: 320,
-            padding: '20px 22px',
-            borderRadius: 12,
-            border: '1px solid var(--border-subtle)',
-            background: 'var(--bg-primary)',
-            fontFamily: 'inherit',
-            fontSize: 14.5,
-            lineHeight: 1.65,
-            color: 'var(--text-primary)',
-            resize: 'vertical',
-            outline: 'none',
+            display: 'flex',
           }}
-        />
+        >
+          <div
+            ref={overlayRef}
+            aria-hidden="true"
+            style={editorBaseStyle}
+            dangerouslySetInnerHTML={{ __html: buildHighlightedMarkup(text, cliches) }}
+          />
+          <textarea
+            ref={textAreaRef}
+            value={text}
+            onChange={(event) => setText(event.target.value)}
+            onScroll={handleOverlayScroll}
+            onKeyDown={handleTextareaKeyDown}
+            placeholder={t('dashboard.coach.placeholder')}
+            spellCheck
+            style={{
+              ...editorBaseStyle,
+              position: 'relative',
+              background: 'transparent',
+              color: 'var(--text-primary)',
+              resize: 'vertical',
+              outline: 'none',
+              caretColor: 'var(--terracotta-500)',
+            }}
+          />
+        </div>
         <footer
           style={{
             display: 'flex',
@@ -182,6 +315,7 @@ export function CoachView({ projectId }: CoachViewProps) {
             type="button"
             onClick={handleAnalyze}
             disabled={!isReady || analyze.isMutating}
+            title={t('dashboard.coach.analyzeKbd')}
             style={{
               padding: '10px 18px',
               borderRadius: 999,
@@ -196,11 +330,17 @@ export function CoachView({ projectId }: CoachViewProps) {
                   : 'rgba(201, 100, 66, 0.4)',
               color: '#fff',
               transition: 'background 120ms ease, transform 120ms ease',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 8,
             }}
           >
-            {analyze.isMutating
-              ? t('dashboard.coach.analyzing')
-              : t('dashboard.coach.analyze')}
+            <span>
+              {analyze.isMutating
+                ? t('dashboard.coach.analyzing')
+                : t('dashboard.coach.analyze')}
+            </span>
+            <span style={kbdHintStyle}>{t('dashboard.coach.analyzeKbd')}</span>
           </button>
         </footer>
         {analyze.error ? (
@@ -230,7 +370,12 @@ export function CoachView({ projectId }: CoachViewProps) {
           minHeight: 0,
         }}
       >
-        <CoachClicheSection findings={cliches} t={t} />
+        <CoachClicheSection
+          findings={cliches}
+          onScrollTo={scrollToCliche}
+          onDismiss={dismissCliche}
+          t={t}
+        />
         <CoachLayerSection layers={layers} t={t} hasServerResult={serverResult !== null} />
         <CoachArcSection arcs={arcs} t={t} />
         <CoachCriticSection critics={critics} t={t} />
@@ -261,15 +406,63 @@ interface SectionProps {
   t: (key: string) => string;
 }
 
-function CoachClicheSection({ findings, t }: SectionProps & { findings: AntiClicheFinding[] }) {
+function CoachClicheSection({
+  findings,
+  onScrollTo,
+  onDismiss,
+  t,
+}: SectionProps & {
+  findings: AntiClicheFinding[];
+  onScrollTo: (finding: AntiClicheFinding) => void;
+  onDismiss: (finding: AntiClicheFinding) => void;
+}) {
+  const listRef = useRef<HTMLUListElement>(null);
+
+  const handleKeyDown = (
+    event: React.KeyboardEvent<HTMLLIElement>,
+    finding: AntiClicheFinding,
+    index: number,
+  ) => {
+    const list = listRef.current;
+    if (!list) return;
+    const items = Array.from(list.querySelectorAll<HTMLLIElement>('li[data-cliche-item]'));
+    if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      items[Math.min(index + 1, items.length - 1)]?.focus();
+    } else if (event.key === 'ArrowUp') {
+      event.preventDefault();
+      items[Math.max(index - 1, 0)]?.focus();
+    } else if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      onScrollTo(finding);
+    } else if (event.key === 'Escape' || event.key === 'Delete') {
+      event.preventDefault();
+      onDismiss(finding);
+    }
+  };
+
   return (
     <SectionShell title={t('dashboard.coach.section.cliche')} count={findings.length}>
       {findings.length === 0 ? (
         <EmptyHint text={t('dashboard.coach.cliche.empty')} />
       ) : (
-        <ul style={listReset}>
+        <ul ref={listRef} style={listReset}>
           {findings.slice(0, 12).map((finding, index) => (
-            <li key={`${finding.index}-${index}`} style={listItem}>
+            <li
+              key={`${finding.index}-${index}`}
+              data-cliche-item="true"
+              tabIndex={0}
+              role="button"
+              onClick={() => onScrollTo(finding)}
+              onKeyDown={(event) => handleKeyDown(event, finding, index)}
+              style={{ ...listItem, cursor: 'pointer', outline: 'none' }}
+              onFocus={(event) => {
+                event.currentTarget.style.boxShadow = '0 0 0 2px rgba(201, 100, 66, 0.32)';
+              }}
+              onBlur={(event) => {
+                event.currentTarget.style.boxShadow = 'none';
+              }}
+            >
               <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8 }}>
                 <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>
                   &ldquo;{finding.match}&rdquo;
@@ -278,6 +471,7 @@ function CoachClicheSection({ findings, t }: SectionProps & { findings: AntiClic
               </div>
               <p style={listItemBody}>{finding.reason}</p>
               <p style={listItemHint}>{finding.freshAlternative}</p>
+              <div style={listItemKbd}>{t('dashboard.coach.cliche.kbdHint')}</div>
             </li>
           ))}
           {findings.length > 12 ? (
@@ -464,6 +658,25 @@ const listItemHint: React.CSSProperties = {
   lineHeight: 1.5,
   color: 'var(--text-tertiary)',
   fontStyle: 'italic',
+};
+
+const listItemKbd: React.CSSProperties = {
+  marginTop: 6,
+  fontSize: 10.5,
+  letterSpacing: '0.08em',
+  textTransform: 'uppercase',
+  color: 'var(--text-tertiary)',
+};
+
+const kbdHintStyle: React.CSSProperties = {
+  fontSize: 10.5,
+  fontWeight: 500,
+  letterSpacing: '0.06em',
+  textTransform: 'uppercase',
+  padding: '2px 6px',
+  borderRadius: 4,
+  background: 'rgba(255, 255, 255, 0.18)',
+  color: 'rgba(255, 255, 255, 0.85)',
 };
 
 function categoryBadge(category: AntiClicheCategory): React.CSSProperties {

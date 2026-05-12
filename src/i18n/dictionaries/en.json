@@ -1802,6 +1802,7 @@
       "placeholder": "Drop a scene or chapter. The coach will read it through Will Storr's sacred-flaw engine, Steven Pressfield's anchors, the seven-layer system, and a freshness pass.",
       "analyze": "Analyze scene",
       "analyzing": "Analyzing…",
+      "analyzeKbd": "⌘⏎",
       "words": "words",
       "cliches": "cliches found",
       "cached": "cached",
@@ -1814,7 +1815,8 @@
       },
       "cliche": {
         "empty": "No cliches surfaced. Keep going.",
-        "more": "more"
+        "more": "more",
+        "kbdHint": "Enter scroll · Esc dismiss"
       },
       "layers": {
         "pending": "Story layer presence appears after you analyze."
