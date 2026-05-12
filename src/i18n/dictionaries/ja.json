@@ -1674,7 +1674,18 @@
         "unknown": "コーチ分析に失敗しました。しばらくしてからもう一度お試しください。",
         "network": "ネットワークに接続できません。接続を確認して再試行してください。",
         "empty": "まず分析する本文を貼り付けてください。",
-        "csrf": "セッションが切れました。ページを再読み込みしてからもう一度お試しください。"
+        "csrf": "セッションが切れました。ページを再読み込みしてからもう一度お試しください。",
+        "tooLong": "場面が長すぎます。上限まで切り詰めました。"
+      },
+      "critic": {
+        "layer_auditor": "レイヤー監査",
+        "rhetoric_examiner": "修辞検査",
+        "freshness_inspector": "新鮮度",
+        "reader_surrogate": "読者の視点",
+        "subtext_analyst": "サブテキスト",
+        "continuity_editor": "連続性",
+        "pacing_surgeon": "ペーシング",
+        "voice_enforcer": "ボイス"
       },
       "layers": {
         "pending": "ストーリーレイヤーの結果は分析後に表示されます。"
