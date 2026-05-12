@@ -11,6 +11,16 @@ export type StoryLayerId =
   | 'relationships'
   | 'prose';
 
+export const STORY_LAYER_IDS = [
+  'meaning',
+  'character_change',
+  'plot',
+  'mystery',
+  'world',
+  'relationships',
+  'prose',
+] as const satisfies readonly StoryLayerId[];
+
 export interface StoryLayer {
   id: StoryLayerId;
   name: string;

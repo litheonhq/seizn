@@ -3,6 +3,7 @@
 
 export {
   STORY_LAYERS,
+  STORY_LAYER_IDS,
   STORY_LAYER_INTERACTION_RULES,
   getStoryLayer,
   type StoryLayer,
