@@ -155,12 +155,17 @@ export function CoachView({ projectId }: CoachViewProps) {
   }, [analyze, isReady, text, toast, t]);
 
   useEffect(() => {
-    // Clear stale server result + dismissals whenever the input text changes
+    // Clear stale server result + dismissals whenever the input text changes.
+    // Also reset the SWR mutation so a late-arriving response from a previous
+    // text submission cannot clobber fresh state.
     if (serverResult && serverResult.hash) {
       setServerResult(null);
     }
     if (dismissedKeys.size > 0) {
       setDismissedKeys(new Set());
+    }
+    if (analyze.isMutating || analyze.error) {
+      analyze.reset();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [text]);

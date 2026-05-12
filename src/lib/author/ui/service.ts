@@ -1520,6 +1520,7 @@ export class AuthorUiService {
 
     if (!result.cached) {
       await recordFeatureUsage({ userId: this.userId, feature: 'coach' });
+      void recordFirstFunnelEvent({ userId: this.userId, eventType: 'first_coach_analyze' });
     }
 
     return result;
