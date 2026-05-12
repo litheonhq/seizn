@@ -96,98 +96,79 @@ describe('analyzeCoachInput', () => {
     expect(captured!.jsonSchema).toBeDefined();
   });
 
-  it('persists a coach.analysis audit entry with hash + llmMeta', async () => {
+  it('persists a coach.analysis audit entry with hash + counts + llmMeta (no user text)', async () => {
     const { store, log, entries } = makeAuditStore();
-    const generate = vi.fn(async () => makeLlmResponse({}));
+    const generate = vi.fn(async () =>
+      makeLlmResponse({
+        storyLayers: [{ layer: 'plot', present: true, evidence: 'opening conflict' }],
+        characterArcs: [
+          {
+            characterName: 'Alice',
+            inferredSacredFlaw: 'pride',
+            inferredInternalNeed: 'humility',
+            inferredExternalWant: 'win the contest',
+            arcPhaseFit: 'rising',
+            arcDirection: 'positive',
+          },
+        ],
+        criticNotes: [
+          { critic: 'layer_auditor', rating: 4, suggestions: ['tighten the third paragraph'] },
+        ],
+      }),
+    );
     await analyzeCoachInput(
       { userId: 'u', projectId: 'p', text: 'Sample scene.' },
-      { generate, auditStore: store }
+      { generate, auditStore: store },
     );
     expect(log).toHaveBeenCalledTimes(1);
     const entry = entries[0];
     expect(entry.eventType).toBe('coach.analysis');
-    expect((entry.payload as { hash: string }).hash).toBe(hashCoachInput('Sample scene.'));
+
+    const payload = entry.payload as {
+      hash: string;
+      counts: { cliche: number; layers_present: number; character_arcs: number; critic_notes: number };
+      latency_ms: number;
+    };
+    expect(payload.hash).toBe(hashCoachInput('Sample scene.'));
+    expect(payload.counts).toEqual({ cliche: 0, layers_present: 1, character_arcs: 1, critic_notes: 1 });
+    expect(typeof payload.latency_ms).toBe('number');
+
+    // The payload must NOT contain user prose or LLM interpretation strings.
+    const stringified = JSON.stringify(entry.payload);
+    expect(stringified).not.toContain('pride');
+    expect(stringified).not.toContain('Alice');
+    expect(stringified).not.toContain('tighten');
+    expect(stringified).not.toContain('opening conflict');
+
     expect(entry.llmMeta?.provider).toBe('anthropic');
     expect(entry.llmMeta?.operation).toBe('coach.analyze');
   });
 
-  it('returns cached analysis without invoking the LLM on hash hit', async () => {
-    const text = 'Cached scene.';
-    const hash = hashCoachInput(text);
-    const cachedEntry: AuthorAuditLogEntry = {
-      id: 'audit-1',
-      projectId: 'p',
-      userId: 'u',
-      eventType: 'coach.analysis',
-      payload: {
-        hash,
-        analysis: {
-          hash,
-          storyLayers: STORY_LAYER_IDS.map((layer) => ({ layer, present: false, evidence: '' })),
-          characterArcs: [],
-          criticNotes: [],
-          antiCliche: [],
-          latencyMs: 200,
-        },
-      },
-      decisionId: 'd-1',
-      createdAt: new Date().toISOString(),
-    };
-    const { store, search } = makeAuditStore([cachedEntry]);
-    const generate = vi.fn();
-    const result = await analyzeCoachInput(
-      { userId: 'u', projectId: 'p', text },
-      { generate: generate as never, auditStore: store }
-    );
-    expect(generate).not.toHaveBeenCalled();
-    expect(search).toHaveBeenCalledTimes(1);
-    expect(result.cached).toBe(true);
-  });
-
-  it('ignores cache entries older than the TTL window', async () => {
-    const text = 'Stale cached scene.';
-    const hash = hashCoachInput(text);
-    const eightDaysAgo = new Date(Date.now() - 8 * 24 * 60 * 60 * 1000).toISOString();
-    const staleEntry: AuthorAuditLogEntry = {
-      id: 'audit-old',
-      projectId: 'p',
-      userId: 'u',
-      eventType: 'coach.analysis',
-      payload: {
-        hash,
-        analysis: {
-          hash,
-          storyLayers: STORY_LAYER_IDS.map((layer) => ({ layer, present: false, evidence: '' })),
-          characterArcs: [],
-          criticNotes: [],
-          antiCliche: [],
-          latencyMs: 0,
-        },
-      },
-      decisionId: 'd-old',
-      createdAt: eightDaysAgo,
-    };
-    const { store } = makeAuditStore([staleEntry]);
-    const generate = vi.fn(async () => makeLlmResponse({}));
-    const result = await analyzeCoachInput(
-      { userId: 'u', projectId: 'p', text },
-      { generate, auditStore: store }
-    );
-    expect(generate).toHaveBeenCalledTimes(1);
-    expect(result.cached).toBe(false);
-  });
-
-  it('records computed latency in the audit entry payload', async () => {
-    // now() is consumed three times: cache TTL cutoff, LLM start, LLM end.
-    const times = [500, 1_000, 1_650];
+  it('records computed latency in the trimmed audit entry payload', async () => {
+    // now() is consumed twice: LLM start, LLM end.
+    const times = [1_000, 1_650];
     const now = vi.fn(() => new Date(times.shift() ?? 1_650));
     const { store, entries } = makeAuditStore();
     const generate = vi.fn(async () => makeLlmResponse({}));
     await analyzeCoachInput(
       { userId: 'u', projectId: 'p', text: 'timed scene' },
-      { generate, auditStore: store, now }
+      { generate, auditStore: store, now },
     );
     const entry = entries[0];
-    expect((entry.payload as { latencyMs: number }).latencyMs).toBe(650);
+    expect((entry.payload as { latency_ms: number }).latency_ms).toBe(650);
+  });
+
+  it('re-runs the LLM on the same text (no cache lookup)', async () => {
+    const { store } = makeAuditStore();
+    const generate = vi.fn(async () => makeLlmResponse({}));
+    await analyzeCoachInput(
+      { userId: 'u', projectId: 'p', text: 'Same scene.' },
+      { generate, auditStore: store },
+    );
+    await analyzeCoachInput(
+      { userId: 'u', projectId: 'p', text: 'Same scene.' },
+      { generate, auditStore: store },
+    );
+    expect(generate).toHaveBeenCalledTimes(2);
   });
 });

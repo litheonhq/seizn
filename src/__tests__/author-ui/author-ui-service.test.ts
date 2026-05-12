@@ -338,4 +338,35 @@ describe('Author UI service', () => {
     expect(rows.some((row) => row.event_type === 'simulation.run')).toBe(true);
     expect(audit.audit_logs.some((entry) => entry.decision_id === run.decision_id)).toBe(true);
   });
+
+  it('analyzeCoach refuses to run when AUTHOR_COACH_ENABLED is "0"', async () => {
+    const service = resetAuthorUiServiceForTests('coach-kill-switch-user');
+    const projectId = service.listProjects().projects[0].id;
+
+    process.env.AUTHOR_COACH_ENABLED = '0';
+    await expect(service.analyzeCoach(projectId, { text: 'sample' })).rejects.toThrowError(
+      /temporarily disabled/i,
+    );
+    delete process.env.AUTHOR_COACH_ENABLED;
+  });
+
+  it('analyzeCoach blocks Free-tier users via the charter-only feature gate', async () => {
+    const { checkFeatureGate } = await import('@/lib/author/billing/feature-gate');
+    const gateMock = checkFeatureGate as unknown as ReturnType<typeof vi.fn>;
+    gateMock.mockImplementationOnce(async () => ({
+      allowed: false,
+      remaining: 0,
+      cap: 0,
+      reason: 'feature_charter_only',
+    }));
+
+    const service = resetAuthorUiServiceForTests('coach-free-user');
+    const projectId = service.listProjects().projects[0].id;
+
+    await expect(service.analyzeCoach(projectId, { text: 'sample' })).rejects.toThrowError(
+      /available on Indie plans/i,
+    );
+    gateMock.mockReset();
+    gateMock.mockImplementation(async () => ({ allowed: true, remaining: null, cap: null }));
+  });
 });
