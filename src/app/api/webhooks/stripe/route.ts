@@ -38,6 +38,11 @@ import {
   syncTrack2ProfileAndKeys,
 } from "@/lib/billing/track2-subscription-state";
 import {
+  syncTrack2ProfileSubscription,
+  syncTrack2ProfileCancellation,
+  stripeTimestampToIso,
+} from "@/lib/billing/track2-profile-sync";
+import {
   getAuthorTierFromStripePriceId,
   getBillingColumnFromStripePriceId,
   getCharterStatusFromStripePriceId,
@@ -213,10 +218,6 @@ function extractPriceId(items?: { data: StripeSubscriptionItem[] }): string | nu
   return items.data[0]?.price?.id || null;
 }
 
-function stripeTimestampToIso(value?: number | null): string | null {
-  return value ? new Date(value * 1000).toISOString() : null;
-}
-
 function buildSubscriptionProfileUpdates(eventData: StripeEventObject): Record<string, unknown> {
   const priceId = extractPriceId(eventData.items);
   const plan = priceId ? getAuthorTierFromStripePriceId(priceId) : null;
@@ -263,67 +264,8 @@ function buildSubscriptionProfileUpdates(eventData: StripeEventObject): Record<s
   return updates;
 }
 
-type Track2ProfilePlan = "free" | "indie" | "pro" | "studio" | "enterprise";
-
-function track2TierToProfilePlan(tier: V8Track2Tier | V9Track2Tier): Track2ProfilePlan {
-  if (tier === "studio_managed") return "studio";
-  return tier;
-}
-
 function failTrack2Webhook(message: string, error?: string): never {
   throw new Error(error ? `${message}: ${error}` : message);
-}
-
-async function syncTrack2ProfileSubscription(
-  supabase: ReturnType<typeof createServerClient>,
-  params: {
-    userId: string;
-    customerId: string;
-    eventData: StripeEventObject;
-    tier: V8Track2Tier | V9Track2Tier;
-    priceLockVersion: string;
-  },
-): Promise<{ ok: true } | { ok: false; error: string }> {
-  const { error } = await supabase
-    .from("profiles")
-    .update({
-      ...buildSubscriptionProfileUpdates(params.eventData),
-      stripe_customer_id: params.customerId,
-      plan: track2TierToProfilePlan(params.tier),
-      plan_updated_at: new Date().toISOString(),
-      price_lock_version: params.priceLockVersion,
-    })
-    .eq("id", params.userId);
-
-  if (error) return { ok: false, error: error.message };
-  return { ok: true };
-}
-
-async function syncTrack2ProfileCancellation(
-  supabase: ReturnType<typeof createServerClient>,
-  userId: string,
-  eventData: StripeEventObject,
-): Promise<{ ok: true } | { ok: false; error: string }> {
-  const endedAtIso = stripeTimestampToIso(eventData.ended_at) ?? new Date().toISOString();
-  const { error } = await supabase
-    .from("profiles")
-    .update({
-      plan: "free",
-      plan_updated_at: new Date().toISOString(),
-      stripe_subscription_id: null,
-      stripe_subscription_status: "canceled",
-      subscription_status: "cancelled",
-      stripe_price_id: null,
-      stripe_current_period_end: endedAtIso,
-      subscription_cancelled: true,
-      subscription_ends_at: endedAtIso,
-      subscription_ended_at: endedAtIso,
-      subscription_renews_at: null,
-    })
-    .eq("id", userId);
-
-  if (error) return { ok: false, error: error.message };
-  return { ok: true };
 }
 
 /**
@@ -745,7 +687,7 @@ export async function POST(request: NextRequest) {
             const profileSync = await syncTrack2ProfileSubscription(supabase, {
               userId: user.id,
               customerId,
-              eventData,
+              baseSubscriptionUpdates: buildSubscriptionProfileUpdates(eventData),
               tier: v9.tier,
               priceLockVersion: V9_PRICE_LOCK_VERSION,
             });
@@ -834,7 +776,7 @@ export async function POST(request: NextRequest) {
             const profileSync = await syncTrack2ProfileSubscription(supabase, {
               userId: user.id,
               customerId,
-              eventData,
+              baseSubscriptionUpdates: buildSubscriptionProfileUpdates(eventData),
               tier: v8.tier,
               priceLockVersion: V8_PRICE_LOCK_VERSION,
             });
@@ -1001,7 +943,7 @@ export async function POST(request: NextRequest) {
               const profileSync = await syncTrack2ProfileSubscription(supabase, {
                 userId: user.id,
                 customerId,
-                eventData,
+                baseSubscriptionUpdates: buildSubscriptionProfileUpdates(eventData),
                 tier: v9Update.tier,
                 priceLockVersion: V9_PRICE_LOCK_VERSION,
               });
@@ -1049,7 +991,7 @@ export async function POST(request: NextRequest) {
               const profileSync = await syncTrack2ProfileSubscription(supabase, {
                 userId: user.id,
                 customerId,
-                eventData,
+                baseSubscriptionUpdates: buildSubscriptionProfileUpdates(eventData),
                 tier: v8.tier,
                 priceLockVersion: V8_PRICE_LOCK_VERSION,
               });
