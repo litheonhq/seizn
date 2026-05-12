@@ -336,7 +336,7 @@
       "usage": "การใช้งาน",
       "budget": "งบประมาณ",
       "reports": "รายงาน",
-      "calculator": "ประมาณต้นทุน",
+      "calculator": "คำนวณต้นทุน",
       "apiKeys": "คีย์ API",
       "integrations": "ปลั๊กอิน Engine",
       "webhooks": "Webhooks",
@@ -345,7 +345,7 @@
       "settings": "การตั้งค่า",
       "groups": {
         "memory": "MEMORY",
-        "observe": "การเฝ้าระวัง",
+        "observe": "การติดตาม",
         "govern": "POLICIES",
         "finops": "USAGE & COST",
         "connect": "INTEGRATE",
@@ -356,7 +356,7 @@
       "memoryEditor": "ตัวแก้ไขหน่วยความจำ"
     },
     "pinSidebar": "ปักหมุดแถบด้านข้าง",
-    "unpinSidebar": "ยุบแถบด้านข้าง",
+    "unpinSidebar": "เลิกปักหมุดแถบด้านข้าง",
     "playground": "พื้นที่ทดสอบ",
     "playgroundPage": {
       "title": "Playground",
@@ -1352,7 +1352,7 @@
       }
     },
     "topBar": {
-      "personal": "บัญชีส่วนตัว",
+      "personal": "บัญชีส่วนบุคคล",
       "manageOrgs": "จัดการโปรเจ็กต์",
       "create": "สร้าง",
       "createApiKey": "API Key ใหม่",
@@ -1621,7 +1621,7 @@
         "done": "เสร็จสิ้น",
         "name": "ชื่อ",
         "scopes": "ขอบเขต",
-        "scopesDefault": "ขอบเขตเริ่มต้น: recall, remember, graph, search",
+        "scopesDefault": "สิทธิ์เริ่มต้น: recall, remember, graph, search",
         "copyKey": "คัดลอกคีย์",
         "saveItNow": "บันทึกตอนนี้ — คุณจะไม่เห็นคีย์นี้อีก",
         "created": "สร้างคีย์ API แล้ว",
@@ -1636,11 +1636,11 @@
         "rateLimit": "ขีดจำกัดอัตรา",
         "lastUsed": "ใช้งานล่าสุด",
         "createdAt": "สร้างเมื่อ",
-        "empty": "ยังไม่มีคีย์ที่ใช้งานอยู่ คลิก \"คีย์ API ใหม่\" เพื่อสร้าง",
+        "empty": "ยังไม่มีคีย์ที่ใช้งานอยู่ คลิก \"คีย์ API ใหม่\" เพื่อสร้างคีย์",
         "errors": {
           "capReached": "คุณถึงขีดจำกัดคีย์ API ของบัญชีนี้แล้ว",
           "invalidName": "โปรดป้อนชื่อสำหรับคีย์",
-          "internal": "ไม่สามารถดำเนินการให้เสร็จสมบูรณ์ได้ โปรดลองอีกครั้ง",
+          "internal": "ดำเนินการไม่สำเร็จ โปรดลองอีกครั้ง",
           "revokeFailed": "ไม่สามารถเพิกถอนคีย์ได้",
           "rotateFailed": "ไม่สามารถหมุนคีย์ได้",
           "copyFailed": "ไม่สามารถคัดลอกคีย์ได้"

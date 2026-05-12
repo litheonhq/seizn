@@ -1,0 +1,13 @@
+[
+  { "path": "dashboard.commandPalette.noResults", "value": "لا توجد نتائج" },
+  { "path": "dashboard.commandPalette.placeholder", "value": "ابحث في الصفحات…" },
+  { "path": "dashboard.nav.mindMap", "value": "خريطة ذهنية" },
+  { "path": "dashboard.nav.calculator", "value": "حاسبة" },
+  { "path": "dashboard.nav.governance", "value": "الحوكمة" },
+  { "path": "dashboard.account.apiKeys.created", "value": "أُنشئ مفتاح API" },
+  { "path": "dashboard.account.apiKeys.toasts.copied", "value": "نُسخ المفتاح إلى الحافظة." },
+  { "path": "dashboard.account.apiKeys.toasts.revoked", "value": "أُبطل المفتاح." },
+  { "path": "dashboard.account.apiKeys.empty", "value": "لا توجد مفاتيح نشطة بعد. انقر على «مفتاح API جديد» لإصدار مفتاح." },
+  { "path": "dashboard.account.apiKeys.errors.invalidName", "value": "أدخل اسمًا للمفتاح." },
+  { "path": "dashboard.account.apiKeys.errors.internal", "value": "تعذّر إكمال العملية. أعد المحاولة." }
+]

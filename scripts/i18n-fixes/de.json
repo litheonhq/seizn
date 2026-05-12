@@ -1,0 +1,6 @@
+[
+  { "path": "dashboard.account.apiKeys.revokeBody", "value": "Wenn du „{name}\" widerrufst, funktionieren alle Aufrufe über diesen Schlüssel nicht mehr. Bestehende Apps benötigen dann einen neuen Schlüssel." },
+  { "path": "dashboard.account.apiKeys.rotateBody", "value": "Beim Rotieren von „{name}\" wird ein neuer Schlüssel erzeugt und der aktuelle widerrufen. Aktualisiere deine Apps, bevor der alte Schlüssel ungültig wird." },
+  { "path": "dashboard.account.apiKeys.empty", "value": "Noch keine aktiven Schlüssel. Klicke auf „Neuer API-Schlüssel\", um einen anzulegen." },
+  { "path": "dashboard.account.apiKeys.saveItNow", "value": "Jetzt speichern – der Schlüssel wird nicht erneut angezeigt." }
+]

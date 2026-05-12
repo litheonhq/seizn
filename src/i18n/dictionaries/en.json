@@ -1787,7 +1787,7 @@
     "simulate": {
       "empty": {
         "title": "Run your first scene simulation",
-        "body": "Drop two characters and a beat. We replay how they'd react against your canon — useful before you commit a scene to draft.",
+        "body": "Drop two characters and a beat. We replay how they'd play out under your canon — useful before you lock a scene into the draft.",
         "cta": "Set up a simulation"
       },
       "hint": {
@@ -1797,8 +1797,8 @@
     },
     "coach": {
       "title": "Coach",
-      "subtitle": "Paste a scene. Get a framework read — cliches, layers, arcs, critic notes.",
-      "placeholder": "Drop a scene or chapter. The coach will read it through Will Storr's sacred-flaw engine, Steven Pressfield's anchors, the seven-layer system, and a freshness pass.",
+      "subtitle": "Paste a scene. Get a structured read — cliches, layers, arcs, critic notes.",
+      "placeholder": "Drop a scene or chapter. The coach runs it through Will Storr's sacred-flaw engine, Steven Pressfield's anchors, the seven-layer system, and a freshness pass.",
       "analyze": "Analyze scene",
       "analyzing": "Analyzing…",
       "analyzeKbd": "⌘⏎",
@@ -1813,7 +1813,7 @@
         "critics": "Critic notes"
       },
       "cliche": {
-        "empty": "No cliches surfaced. Keep going.",
+        "empty": "No cliches found.",
         "more": "more",
         "kbdHint": "Enter scroll · Esc dismiss",
         "dismiss": "Dismiss this cliche"
@@ -1823,7 +1823,7 @@
         "network": "Network unavailable. Check your connection and retry.",
         "empty": "Add some text first — Coach needs a scene to analyze.",
         "csrf": "Session expired. Reload the page and try again.",
-        "tooLong": "Scene is too long. Trimmed to the maximum length."
+        "tooLong": "Scene was too long — we trimmed it to the maximum length."
       },
       "critic": {
         "layer_auditor": "Layer Auditor",
@@ -1836,7 +1836,7 @@
         "voice_enforcer": "Voice Enforcer"
       },
       "layers": {
-        "pending": "Story layer presence appears after you analyze."
+        "pending": "Story layers will appear after you analyze."
       },
       "arcs": {
         "empty": "No character arcs detected yet."
@@ -1852,7 +1852,7 @@
     },
     "timeline": {
       "title": "Timeline",
-      "subtitle": "A reverse-chronological log of what you and Seizn did on this project.",
+      "subtitle": "A log of what you and Seizn have done on this project, newest first.",
       "loadMore": "Load older",
       "loadingMore": "Loading…",
       "error": "Couldn't load timeline. Please retry.",
@@ -1868,28 +1868,82 @@
         "window": "First {first} · last {last}"
       },
       "event": {
-        "projectCreated":     { "label": "Project created",          "group": "{count} projects created" },
-        "importUpload":       { "label": "Uploaded a file",          "group": "Uploaded {count} files" },
-        "importParsed":       { "label": "Parsed an import",         "group": "Parsed {count} imports" },
-        "importFailed":       { "label": "Import failed",            "group": "{count} imports failed" },
-        "importRetried":      { "label": "Retried an import",        "group": "Retried {count} imports" },
-        "importDeleted":      { "label": "Deleted an import",        "group": "Deleted {count} imports" },
-        "candidateAdded":     { "label": "Added a candidate",        "group": "Added {count} candidates" },
-        "candidateDecided":   { "label": "Decided on a candidate",   "group": "Decided on {count} candidates" },
-        "candidateBatch":     { "label": "Batch-decided candidates", "group": "{count} batch decisions" },
-        "characterUpdated":   { "label": "Updated a character",      "group": "Updated {count} characters" },
-        "conflictResolved":   { "label": "Resolved a conflict",      "group": "Resolved {count} conflicts" },
-        "simulationRun":      { "label": "Ran a simulation",         "group": "Ran {count} simulations" },
-        "simulationReplay":   { "label": "Replayed a simulation",    "group": "Replayed {count} simulations" },
-        "backlogGenerated":   { "label": "Generated a backlog",      "group": "Generated {count} backlogs" },
-        "settingsUpdated":    { "label": "Updated settings",         "group": "{count} setting updates" },
-        "byokUpdated":        { "label": "Updated BYOK",             "group": "{count} BYOK updates" },
-        "coachAnalysis":      { "label": "Analyzed a scene with Coach", "group": "Coach reviewed {count} scenes" },
-        "unknown":            { "label": "Activity recorded",        "group": "{count} activities" }
+        "projectCreated": {
+          "label": "Project created",
+          "group": "{count} projects created"
+        },
+        "importUpload": {
+          "label": "Uploaded a file",
+          "group": "Uploaded {count} files"
+        },
+        "importParsed": {
+          "label": "Parsed an import",
+          "group": "Parsed {count} imports"
+        },
+        "importFailed": {
+          "label": "Import failed",
+          "group": "{count} imports failed"
+        },
+        "importRetried": {
+          "label": "Retried an import",
+          "group": "Retried {count} imports"
+        },
+        "importDeleted": {
+          "label": "Deleted an import",
+          "group": "Deleted {count} imports"
+        },
+        "candidateAdded": {
+          "label": "Added a candidate",
+          "group": "Added {count} candidates"
+        },
+        "candidateDecided": {
+          "label": "Decided on a candidate",
+          "group": "Decided on {count} candidates"
+        },
+        "candidateBatch": {
+          "label": "Decided candidates in batch",
+          "group": "{count} candidates decided in batch"
+        },
+        "characterUpdated": {
+          "label": "Updated a character",
+          "group": "Updated {count} characters"
+        },
+        "conflictResolved": {
+          "label": "Resolved a conflict",
+          "group": "Resolved {count} conflicts"
+        },
+        "simulationRun": {
+          "label": "Ran a simulation",
+          "group": "Ran {count} simulations"
+        },
+        "simulationReplay": {
+          "label": "Replayed a simulation",
+          "group": "Replayed {count} simulations"
+        },
+        "backlogGenerated": {
+          "label": "Generated a backlog",
+          "group": "Generated {count} backlogs"
+        },
+        "settingsUpdated": {
+          "label": "Updated settings",
+          "group": "Updated settings {count} times"
+        },
+        "byokUpdated": {
+          "label": "Updated BYOK",
+          "group": "Updated BYOK {count} times"
+        },
+        "coachAnalysis": {
+          "label": "Analyzed a scene with Coach",
+          "group": "Coach reviewed {count} scenes"
+        },
+        "unknown": {
+          "label": "Activity logged",
+          "group": "{count} activities"
+        }
       }
     },
     "fallback": {
-      "body": "We're still building this surface. Let us know if it's blocking your workflow."
+      "body": "We're still building this page. Let us know if it's blocking your workflow."
     },
     "account": {
       "apiKeys": {
@@ -1917,11 +1971,11 @@
         "rateLimit": "Rate limit",
         "lastUsed": "Last used",
         "createdAt": "Created",
-        "empty": "No active keys yet. Click \"New API key\" to issue one.",
+        "empty": "No active keys yet. Click \"New API key\" to create one.",
         "errors": {
           "capReached": "You've reached the API key cap for this account.",
           "invalidName": "Please enter a name for the key.",
-          "internal": "We couldn't complete this action. Try again.",
+          "internal": "Something went wrong. Try again.",
           "revokeFailed": "Could not revoke the key.",
           "rotateFailed": "Could not rotate the key.",
           "copyFailed": "Could not copy the key."

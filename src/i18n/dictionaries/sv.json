@@ -324,7 +324,7 @@
       "overview": "Översikt",
       "memories": "Entiteter",
       "mindMap": "Relationsgraf",
-      "candidates": "Event-inkorg",
+      "candidates": "Händelseinkorg",
       "devTools": "DevTools",
       "playground": "Playground",
       "evals": "Scenariotester",
@@ -340,14 +340,14 @@
       "apiKeys": "API-nycklar",
       "integrations": "Motorplugins",
       "webhooks": "Webhooks",
-      "docs": "Docs",
+      "docs": "Dokumentation",
       "organizations": "Projekt",
       "settings": "Inställningar",
       "groups": {
         "memory": "NPC-MINNE",
         "observe": "ÖVERVAKA",
         "govern": "POLICYER",
-        "finops": "ANVÄNDNING & KOSTNAD",
+        "finops": "ANVÄNDNING OCH KOSTNAD",
         "connect": "INTEGRERA",
         "system": "ARBETSYTA",
         "build": "Utveckla",
@@ -1352,7 +1352,7 @@
       }
     },
     "topBar": {
-      "personal": "Personligt Konto",
+      "personal": "Personligt konto",
       "manageOrgs": "Hantera projekt",
       "create": "Skapa",
       "createApiKey": "Ny API-nyckel",
@@ -1594,7 +1594,7 @@
     },
     "commandPalette": {
       "title": "Kommandopalett",
-      "placeholder": "Sök sidor...",
+      "placeholder": "Sök efter sidor…",
       "noResults": "Inga resultat hittades",
       "navigate": "Navigera",
       "open": "Öppna",
@@ -1604,7 +1604,7 @@
       "commands": {
         "createEntity": "Skapa entitet",
         "viewRelationGraph": "Visa relationsgraf",
-        "openEventInbox": "Öppna händelseinkorg"
+        "openEventInbox": "Öppna händelseinkorgen"
       }
     },
     "northStar": {
@@ -1640,13 +1640,13 @@
         "errors": {
           "capReached": "Du har nått gränsen för API-nycklar på det här kontot.",
           "invalidName": "Ange ett namn för nyckeln.",
-          "internal": "Åtgärden kunde inte slutföras. Försök igen.",
+          "internal": "Det gick inte att slutföra åtgärden. Försök igen.",
           "revokeFailed": "Det gick inte att återkalla nyckeln.",
           "rotateFailed": "Det gick inte att rotera nyckeln.",
           "copyFailed": "Det gick inte att kopiera nyckeln."
         },
         "toasts": {
-          "copied": "Nyckel kopierad till urklipp.",
+          "copied": "Nyckeln kopierades till urklipp.",
           "revoked": "Nyckel återkallad."
         },
         "audit": {

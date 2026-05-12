@@ -1,0 +1,11 @@
+[
+  { "path": "dashboard.nav.enterprise", "value": "Per gli studi" },
+  { "path": "dashboard.nav.integrations", "value": "Plugin del motore" },
+  { "path": "dashboard.nav.memoryEditor", "value": "Editor della memoria" },
+  { "path": "dashboard.commandPalette.commands.viewRelationGraph", "value": "Visualizza il grafo delle relazioni" },
+  { "path": "dashboard.commandPalette.placeholder", "value": "Cerca una pagina…" },
+  { "path": "dashboard.account.apiKeys.revokeBody", "value": "Se revochi \"{name}\", tutte le chiamate che usano questa chiave si interromperanno." },
+  { "path": "dashboard.account.apiKeys.rotateBody", "value": "Se ruoti \"{name}\", verrà generata una nuova chiave e quella attuale sarà revocata. Aggiorna le tue app prima che la chiave precedente smetta di funzionare." },
+  { "path": "dashboard.account.apiKeys.empty", "value": "Nessuna chiave attiva. Clicca su \"Nuova chiave API\" per crearne una." },
+  { "path": "dashboard.account.apiKeys.capHint", "value": "Puoi creare fino a {cap} chiavi API per ogni account." }
+]

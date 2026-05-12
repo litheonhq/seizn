@@ -1,0 +1,9 @@
+[
+  { "path": "dashboard.nav.enterprise", "value": "Dành cho studio" },
+  { "path": "dashboard.commandPalette.placeholder", "value": "Tìm trang…" },
+  { "path": "dashboard.share.revokeConfirm", "value": "Thu hồi liên kết này?" },
+  { "path": "dashboard.share.linkRevoked", "value": "Đã thu hồi liên kết" },
+  { "path": "dashboard.webhooks.deleteConfirm", "value": "Xóa webhook này? Không thể hoàn tác." },
+  { "path": "dashboard.webhooks.empty.cta", "value": "Tạo webhook đầu tiên" },
+  { "path": "dashboard.account.apiKeys.description", "value": "Tạo và quản lý khóa Seizn API và MCP cho Track 2." }
+]

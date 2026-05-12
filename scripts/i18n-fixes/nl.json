@@ -1,0 +1,10 @@
+[
+  { "path": "dashboard.nav.enterprise", "value": "Voor studio's" },
+  { "path": "dashboard.topBar.personal", "value": "Persoonlijk account" },
+  { "path": "dashboard.commandPalette.noResults", "value": "Geen resultaten" },
+  { "path": "dashboard.account.apiKeys.capHint", "value": "Je kunt maximaal {cap} API-sleutels per account aanmaken." },
+  { "path": "dashboard.account.apiKeys.saveItNow", "value": "Sla hem nu op — je krijgt deze sleutel niet meer te zien." },
+  { "path": "dashboard.account.apiKeys.errors.revokeFailed", "value": "Intrekken van de sleutel is mislukt." },
+  { "path": "dashboard.account.apiKeys.errors.rotateFailed", "value": "Roteren van de sleutel is mislukt." },
+  { "path": "dashboard.account.apiKeys.errors.copyFailed", "value": "Kopiëren van de sleutel is mislukt." }
+]

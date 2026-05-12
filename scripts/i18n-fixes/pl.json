@@ -1,0 +1,9 @@
+[
+  { "path": "dashboard.commandPalette.workflowGroup", "value": "Przepływy NPC" },
+  { "path": "dashboard.account.apiKeys.rotate", "value": "Wymień" },
+  { "path": "dashboard.account.apiKeys.rotated", "value": "Klucz API wymieniony" },
+  { "path": "dashboard.account.apiKeys.rotateTitle", "value": "Wymienić klucz API?" },
+  { "path": "dashboard.account.apiKeys.rotateBody", "value": "Wymiana „{name}\" wygeneruje nowy klucz i unieważni obecny. Zaktualizuj aplikacje, zanim stary klucz przestanie działać." },
+  { "path": "dashboard.account.apiKeys.audit.action.rotated", "value": "Wymieniono" },
+  { "path": "dashboard.account.apiKeys.saveItNow", "value": "Zapisz go teraz, bo nie pojawi się ponownie." }
+]

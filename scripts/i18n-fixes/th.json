@@ -1,0 +1,9 @@
+[
+  { "path": "dashboard.nav.calculator", "value": "คำนวณต้นทุน" },
+  { "path": "dashboard.nav.groups.observe", "value": "การติดตาม" },
+  { "path": "dashboard.unpinSidebar", "value": "เลิกปักหมุดแถบด้านข้าง" },
+  { "path": "dashboard.topBar.personal", "value": "บัญชีส่วนบุคคล" },
+  { "path": "dashboard.account.apiKeys.scopesDefault", "value": "สิทธิ์เริ่มต้น: recall, remember, graph, search" },
+  { "path": "dashboard.account.apiKeys.empty", "value": "ยังไม่มีคีย์ที่ใช้งานอยู่ คลิก \"คีย์ API ใหม่\" เพื่อสร้างคีย์" },
+  { "path": "dashboard.account.apiKeys.errors.internal", "value": "ดำเนินการไม่สำเร็จ โปรดลองอีกครั้ง" }
+]

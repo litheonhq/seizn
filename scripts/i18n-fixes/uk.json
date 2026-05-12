@@ -1,0 +1,9 @@
+[
+  { "path": "dashboard.nav.candidates", "value": "Вхідні події" },
+  { "path": "dashboard.nav.calculator", "value": "Калькулятор вартості" },
+  { "path": "dashboard.unpinSidebar", "value": "Відкріпити бічну панель" },
+  { "path": "dashboard.commandPalette.commands.openEventInbox", "value": "Відкрити вхідні події" },
+  { "path": "dashboard.commandPalette.workflowGroup", "value": "Робочі процеси NPC" },
+  { "path": "dashboard.account.apiKeys.description", "value": "Створюйте ключі Seizn API та MCP для Track 2 і керуйте ними." },
+  { "path": "dashboard.account.apiKeys.errors.capReached", "value": "Ви досягли ліміту API-ключів для цього акаунту." }
+]
