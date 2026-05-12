@@ -24,7 +24,7 @@ import { createServerClient, hasServerSupabaseServiceRoleConfig } from '@/lib/su
 import { isAuthorBillingTier } from '@/lib/stripe-config';
 import { recordFunnelEvent } from '@/lib/analytics/funnel';
 
-export type GatedFeature = 'check' | 'dialog' | 'extract' | 'backlog';
+export type GatedFeature = 'check' | 'dialog' | 'extract' | 'backlog' | 'coach';
 
 export type FeatureGateDecision =
   | { allowed: true; remaining: number | null; cap: number | null; reason?: never }
@@ -64,7 +64,7 @@ const FREE_LIMITS = {
   // extraction are Charter-only — no quota counter, just blocked.
 } as const;
 
-const CHARTER_ONLY_FEATURES: GatedFeature[] = ['backlog'];
+const CHARTER_ONLY_FEATURES: GatedFeature[] = ['backlog', 'coach'];
 
 /**
  * Returns whether the user can run `feature` right now. For metered features
