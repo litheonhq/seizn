@@ -10,11 +10,18 @@ import process from "node:process";
 
 const reportPath = path.join(process.cwd(), ".next", "analyze", "static-bundle-report.json");
 
+// `maxFile*` ceilings cover any single .js/.css file, including lazy
+// dynamic-imported chunks. The 3D relationship graph view (`graph-view-3d.tsx`)
+// is dynamic-imported with `ssr: false`, but its chunk still bundles
+// `react-force-graph-3d` + `three` + `three-spritetext`, which lands around
+// 1.22 MB raw / 327 KB gzip. We raise the per-file caps to fit that chunk plus
+// a small margin; per-file budget still acts as a guardrail against a single
+// accidental eager import dominating the bundle.
 const budget = {
-  totalBytes: readKbBudget("SEIZN_BUNDLE_TOTAL_KB", 8050) * 1024,
-  totalGzipBytes: readKbBudget("SEIZN_BUNDLE_TOTAL_GZIP_KB", 2400) * 1024,
-  maxFileBytes: readKbBudget("SEIZN_BUNDLE_MAX_FILE_KB", 550) * 1024,
-  maxFileGzipBytes: readKbBudget("SEIZN_BUNDLE_MAX_FILE_GZIP_KB", 170) * 1024,
+  totalBytes: readKbBudget("SEIZN_BUNDLE_TOTAL_KB", 9500) * 1024,
+  totalGzipBytes: readKbBudget("SEIZN_BUNDLE_TOTAL_GZIP_KB", 2750) * 1024,
+  maxFileBytes: readKbBudget("SEIZN_BUNDLE_MAX_FILE_KB", 1350) * 1024,
+  maxFileGzipBytes: readKbBudget("SEIZN_BUNDLE_MAX_FILE_GZIP_KB", 340) * 1024,
 };
 
 if (!fs.existsSync(reportPath)) {
