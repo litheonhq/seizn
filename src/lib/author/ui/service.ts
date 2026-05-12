@@ -39,6 +39,7 @@ import {
 } from '@/lib/author/extraction';
 import { checkFeatureGate, recordFeatureUsage } from '@/lib/author/billing/feature-gate';
 import { isByokProvider, type ByokProvider } from '@/lib/author/llm';
+import { analyzeCoachInput, type CoachAnalysis } from '@/lib/author/coach';
 import { recordFirstFunnelEvent } from '@/lib/analytics/funnel';
 import { InMemoryAuthorUiStore } from './in-memory-store';
 import { conflictStatusForDecision, normalizeConflictResolution } from './conflict-resolution';
@@ -1489,6 +1490,20 @@ export class AuthorUiService {
     }
     await seedAuthorUiProject(this.store, this.userId, projectId, buildSeedRowsFromState(this.state, projectId));
     this.state.seedCheckedProjects.add(projectId);
+  }
+
+  async analyzeCoach(projectId: string, input: JsonRecord = {}): Promise<CoachAnalysis> {
+    if (!this.state.projects.has(projectId)) {
+      throw new AuthorUiNotFoundError(`Project not found: ${projectId}`);
+    }
+    const text = readString(input, 'text');
+    if (typeof text !== 'string') {
+      throw new AuthorUiValidationError('text is required');
+    }
+    return analyzeCoachInput(
+      { userId: this.userId, projectId, text },
+      { auditStore: this.state.auditLog }
+    );
   }
 
   async flushAuditWrites(): Promise<void> {

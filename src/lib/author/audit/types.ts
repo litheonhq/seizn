@@ -17,6 +17,7 @@ export const AUTHOR_AUDIT_EVENT_TYPES = [
   'backlog.generated',
   'settings.updated',
   'byok.updated',
+  'coach.analysis',
 ] as const;
 
 export type AuthorAuditEventType = typeof AUTHOR_AUDIT_EVENT_TYPES[number];
