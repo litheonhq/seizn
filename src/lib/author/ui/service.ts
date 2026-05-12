@@ -189,6 +189,11 @@ export interface AuthorUiCharacterDetail extends AuthorUiCharacterSummary {
   }>;
   voice_samples: Array<{ source_event_id: string; dialogue_text: string }>;
   current_arc_phase: string;
+  sacred_flaw: string | null;
+  internal_need: string | null;
+  external_want: string | null;
+  philosophical_purpose: string | null;
+  arc_direction: 'positive' | 'negative' | 'flat' | null;
 }
 
 export interface AuthorUiSimulation {
@@ -1686,6 +1691,11 @@ function authorCharacterToRow(item: AuthorUiCharacterDetail, userId: string, pro
     recent_important_memories: canonicalize(item.recent_important_memories),
     voice_samples: canonicalize(item.voice_samples),
     current_arc_phase: item.current_arc_phase,
+    sacred_flaw: item.sacred_flaw,
+    internal_need: item.internal_need,
+    external_want: item.external_want,
+    philosophical_purpose: item.philosophical_purpose,
+    arc_direction: item.arc_direction,
     created_at: nowIso(),
     updated_at: nowIso(),
   };
@@ -2062,6 +2072,11 @@ function buildSeedCharacters(): AuthorUiCharacterDetail[] {
       })),
       voice_samples: readVoiceSamples(item, events),
       current_arc_phase: readString(item, 'current_status') ?? 'active',
+      sacred_flaw: null,
+      internal_need: null,
+      external_want: null,
+      philosophical_purpose: null,
+      arc_direction: null,
     };
   });
 }

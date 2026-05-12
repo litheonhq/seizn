@@ -65,6 +65,31 @@ describe('SupabaseAuthorUiStore', () => {
     );
   });
 
+  it('persists Storr arc fields on the character row', async () => {
+    const { client, builder } = createClient();
+    const store = new SupabaseAuthorUiStore({ userId: 'user-1', client });
+
+    await store.upsertCharacter({
+      ...sampleCharacterRow(),
+      sacred_flaw: 'I must prove my worth.',
+      internal_need: 'Intrinsic self-acceptance.',
+      external_want: 'Win the contest.',
+      philosophical_purpose: 'Worth is intrinsic.',
+      arc_direction: 'positive',
+    });
+
+    expect(builder.upsert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        sacred_flaw: 'I must prove my worth.',
+        internal_need: 'Intrinsic self-acceptance.',
+        external_want: 'Win the contest.',
+        philosophical_purpose: 'Worth is intrinsic.',
+        arc_direction: 'positive',
+      }),
+      { onConflict: 'user_id,project_id,character_key' }
+    );
+  });
+
   it('resolves conflict rows through an owner-scoped update', async () => {
     const { client, fromSpy, builder } = createClient();
     const store = new SupabaseAuthorUiStore({ userId: 'user-1', client });
@@ -249,6 +274,11 @@ function sampleCharacterRow(): AuthorCharacterRow {
     recent_important_memories: [],
     voice_samples: [],
     current_arc_phase: 'active',
+    sacred_flaw: null,
+    internal_need: null,
+    external_want: null,
+    philosophical_purpose: null,
+    arc_direction: null,
     created_at: '2026-05-03T00:00:00.000Z',
     updated_at: '2026-05-03T00:00:00.000Z',
   };
