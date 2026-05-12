@@ -440,6 +440,7 @@
       "graph": "関係グラフ",
       "timeline": "タイムライン",
       "conflicts": "対立",
+      "coach": "コーチ",
       "simulate": "シミュレート",
       "audit": "監査ログ",
       "byok": "APIキー連携"
@@ -1644,6 +1645,43 @@
       "hint": {
         "new": "新規シミュレーション",
         "help": "シミュレーションの使い方"
+      }
+    },
+    "coach": {
+      "title": "コーチ",
+      "subtitle": "シーンを貼り付けると、フレームワーク基準で読み解きます — 紋切り表現、レイヤー、人物アーク、批評家メモ。",
+      "placeholder": "シーンや章を貼り付けてください。Will StorrのSacred Flawエンジン、Pressfieldアンカー、7レイヤーシステム、フレッシュネス検査を一括で実行します。",
+      "analyze": "シーンを分析",
+      "analyzing": "分析中…",
+      "analyzeKbd": "⌘⏎",
+      "words": "語",
+      "cliches": "件の紋切り表現",
+      "cached": "キャッシュ",
+      "runHint": "準備ができたら「分析」を押してください。紋切り表現の検査は入力中に自動で走ります。",
+      "section": {
+        "cliche": "紋切り表現スキャン",
+        "layers": "ストーリーレイヤー",
+        "arcs": "人物アーク",
+        "critics": "批評家メモ"
+      },
+      "cliche": {
+        "empty": "紋切り表現は見つかりませんでした。続けてください。",
+        "more": "件追加",
+        "kbdHint": "Enter で移動 · Esc で無視"
+      },
+      "layers": {
+        "pending": "ストーリーレイヤーの結果は分析後に表示されます。"
+      },
+      "arcs": {
+        "empty": "まだ人物アークは検出されていません。"
+      },
+      "critics": {
+        "empty": "批評家メモは分析が完了すると表示されます。"
+      },
+      "arc": {
+        "sacredFlaw": "Sacred flaw",
+        "want": "外面の欲求",
+        "need": "内面の必要"
       }
     },
     "fallback": {
