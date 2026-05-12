@@ -30,7 +30,6 @@ const REDESIGN_PATHS = [
   'dashboard.nav.timeline',
   'dashboard.nav.conflicts',
   'dashboard.nav.simulate',
-  'dashboard.nav.audit',
   'dashboard.nav.overview',
   'dashboard.nav.usage',
   'dashboard.nav.apiKeys',

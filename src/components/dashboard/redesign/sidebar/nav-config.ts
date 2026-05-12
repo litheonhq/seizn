@@ -30,7 +30,6 @@ export type NavItemId =
   | 'conflicts'
   | 'coach'
   | 'simulate'
-  | 'audit'
   | 'memories'
   | 'memory-edit'
   | 'mindmap'
@@ -135,14 +134,6 @@ export const NAV_GROUPS: NavGroup[] = [
         href: authorTabHref('simulate'),
         icon: SimulateIcon,
         kbd: 'S',
-      },
-      {
-        id: 'audit',
-        labelKey: 'dashboard.nav.audit',
-        href: authorTabHref('audit'),
-        icon: AuditIcon,
-        kbd: 'A',
-        secondary: true,
       },
     ],
   },

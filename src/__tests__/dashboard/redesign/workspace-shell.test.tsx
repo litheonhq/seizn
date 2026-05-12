@@ -54,7 +54,6 @@ describe('WorkspaceShell tab routing fundamentals', () => {
       'timeline',
       'conflicts',
       'simulate',
-      'audit',
     ]) {
       expect(ids).toContain(expected);
     }

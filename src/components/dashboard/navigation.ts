@@ -157,7 +157,6 @@ export function buildAuthorNavigationGroups(t: (key: string) => string): NavGrou
         { label: t("dashboard.nav.author.timeline"), href: authorTabHref('timeline'), icon: Clock3Icon },
         { label: t("dashboard.nav.author.conflicts"), href: authorTabHref('conflicts'), icon: AlertTriangleIcon },
         { label: t("dashboard.nav.author.simulate"), href: authorTabHref('simulate'), icon: PlayIcon },
-        { label: t("dashboard.nav.author.audit"), href: authorTabHref('audit'), icon: ScrollTextIcon },
       ],
     },
     {
