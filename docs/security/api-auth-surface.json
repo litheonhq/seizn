@@ -1,7 +1,7 @@
 {
   "version": 1,
   "generatedBy": "scripts/verify-api-auth-surface.mjs",
-  "routeCount": 561,
+  "routeCount": 562,
   "routes": [
     {
       "route": "/api",
@@ -3026,6 +3026,17 @@
     },
     {
       "route": "/api/projects/[projectId]/characters/[characterId]/backlog",
+      "methods": [
+        "POST"
+      ],
+      "authMarkers": [
+        "csrf",
+        "sessionUser"
+      ],
+      "authState": "auth-marker-present"
+    },
+    {
+      "route": "/api/projects/[projectId]/coach/analyze",
       "methods": [
         "POST"
       ],
