@@ -17,6 +17,7 @@ import { AuthorUsageView } from './views/author-usage-view';
 import { CharactersView } from './views/characters-view';
 import { CoachView } from './views/coach-view';
 import { ConflictsView } from './views/conflicts-view';
+import { TimelineView } from './views/timeline-view';
 import { FallbackView } from './views/fallback-view';
 import { GraphView } from './views/graph-view';
 import { InboxView } from './views/inbox-view';
@@ -159,6 +160,8 @@ export function WorkspaceShell({
         return <ConflictsView conflicts={conflicts.data} />;
       case 'coach':
         return <CoachView projectId={projectId} />;
+      case 'timeline':
+        return <TimelineView projectId={projectId} />;
       case 'simulate':
         return <SimulateEmpty />;
       case 'usage':

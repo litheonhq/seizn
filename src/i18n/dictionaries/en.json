@@ -1850,6 +1850,44 @@
         "need": "Internal need"
       }
     },
+    "timeline": {
+      "title": "Timeline",
+      "subtitle": "A reverse-chronological log of what you and Seizn did on this project.",
+      "loadMore": "Load older",
+      "loadingMore": "Loading…",
+      "error": "Couldn't load timeline. Please retry.",
+      "empty": {
+        "title": "No activity yet.",
+        "body": "Imports, decisions, simulations and Coach runs will appear here."
+      },
+      "day": {
+        "today": "Today",
+        "yesterday": "Yesterday"
+      },
+      "range": {
+        "window": "First {first} · last {last}"
+      },
+      "event": {
+        "projectCreated":     { "label": "Project created",          "group": "{count} projects created" },
+        "importUpload":       { "label": "Uploaded a file",          "group": "Uploaded {count} files" },
+        "importParsed":       { "label": "Parsed an import",         "group": "Parsed {count} imports" },
+        "importFailed":       { "label": "Import failed",            "group": "{count} imports failed" },
+        "importRetried":      { "label": "Retried an import",        "group": "Retried {count} imports" },
+        "importDeleted":      { "label": "Deleted an import",        "group": "Deleted {count} imports" },
+        "candidateAdded":     { "label": "Added a candidate",        "group": "Added {count} candidates" },
+        "candidateDecided":   { "label": "Decided on a candidate",   "group": "Decided on {count} candidates" },
+        "candidateBatch":     { "label": "Batch-decided candidates", "group": "{count} batch decisions" },
+        "characterUpdated":   { "label": "Updated a character",      "group": "Updated {count} characters" },
+        "conflictResolved":   { "label": "Resolved a conflict",      "group": "Resolved {count} conflicts" },
+        "simulationRun":      { "label": "Ran a simulation",         "group": "Ran {count} simulations" },
+        "simulationReplay":   { "label": "Replayed a simulation",    "group": "Replayed {count} simulations" },
+        "backlogGenerated":   { "label": "Generated a backlog",      "group": "Generated {count} backlogs" },
+        "settingsUpdated":    { "label": "Updated settings",         "group": "{count} setting updates" },
+        "byokUpdated":        { "label": "Updated BYOK",             "group": "{count} BYOK updates" },
+        "coachAnalysis":      { "label": "Analyzed a scene with Coach", "group": "Coach reviewed {count} scenes" },
+        "unknown":            { "label": "Activity recorded",        "group": "{count} activities" }
+      }
+    },
     "fallback": {
       "body": "We're still building this surface. Let us know if it's blocking your workflow."
     },

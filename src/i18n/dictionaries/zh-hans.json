@@ -1741,6 +1741,44 @@
         "help": "模拟使用方式"
       }
     },
+    "timeline": {
+      "title": "时间线",
+      "subtitle": "按时间倒序记录该项目的活动。",
+      "loadMore": "加载更早",
+      "loadingMore": "加载中…",
+      "error": "时间线加载失败,请重试。",
+      "empty": {
+        "title": "暂无活动。",
+        "body": "导入、决策、模拟和 Coach 分析都会显示在这里。"
+      },
+      "day": {
+        "today": "今天",
+        "yesterday": "昨天"
+      },
+      "range": {
+        "window": "首次 {first} · 最近 {last}"
+      },
+      "event": {
+        "projectCreated":     { "label": "创建项目",       "group": "创建 {count} 个项目" },
+        "importUpload":       { "label": "上传文件",       "group": "上传 {count} 个文件" },
+        "importParsed":       { "label": "解析导入",       "group": "解析 {count} 项导入" },
+        "importFailed":       { "label": "导入失败",       "group": "{count} 项导入失败" },
+        "importRetried":      { "label": "重试导入",       "group": "重试 {count} 项导入" },
+        "importDeleted":      { "label": "删除导入",       "group": "删除 {count} 项导入" },
+        "candidateAdded":     { "label": "添加候选",       "group": "添加 {count} 个候选" },
+        "candidateDecided":   { "label": "判定候选",       "group": "判定 {count} 个候选" },
+        "candidateBatch":     { "label": "批量判定",       "group": "{count} 次批量判定" },
+        "characterUpdated":   { "label": "更新角色",       "group": "更新 {count} 个角色" },
+        "conflictResolved":   { "label": "解决冲突",       "group": "解决 {count} 项冲突" },
+        "simulationRun":      { "label": "运行模拟",       "group": "{count} 次模拟" },
+        "simulationReplay":   { "label": "回放模拟",       "group": "{count} 次回放" },
+        "backlogGenerated":   { "label": "生成 Backlog",   "group": "生成 {count} 次 Backlog" },
+        "settingsUpdated":    { "label": "更新设置",       "group": "{count} 次设置变更" },
+        "byokUpdated":        { "label": "更新 BYOK",      "group": "{count} 次 BYOK 变更" },
+        "coachAnalysis":      { "label": "Coach 分析场景", "group": "{count} 次 Coach 分析" },
+        "unknown":            { "label": "活动记录",       "group": "{count} 项活动" }
+      }
+    },
     "fallback": {
       "body": "此选项卡使用相同的外壳模式。"
     },
