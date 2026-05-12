@@ -122,7 +122,7 @@
     "png-to-ico": "^3.0.1",
     "postgres": "^3.4.8",
     "tailwindcss": "^4",
-    "typescript": "^5",
+    "typescript": "^6",
     "vite": "^7.3.2",
     "vitest": "^4.0.17",
     "wait-on": "^9.0.3"
