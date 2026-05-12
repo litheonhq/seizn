@@ -6,6 +6,7 @@ import { AUTHOR_IMPORT_MAX_BYTES, getAuthorUiService } from '@/lib/author/ui/ser
 import { CSRF_COOKIE_NAME, CSRF_HEADER_NAME } from '@/lib/csrf';
 import { POST as postProjectImport } from '@/app/api/projects/[projectId]/imports/route';
 import { POST as postCharacterBacklog } from '@/app/api/projects/[projectId]/characters/[characterId]/backlog/route';
+import { POST as postCoachAnalyze } from '@/app/api/projects/[projectId]/coach/analyze/route';
 import { GET as getProjectAudit } from '@/app/api/projects/[projectId]/audit/route';
 
 vi.mock('@/lib/api/request-user', () => ({
@@ -16,6 +17,28 @@ vi.mock('@/lib/author/billing/feature-gate', () => ({
   checkFeatureGate: vi.fn(async () => ({ allowed: true, remaining: null, cap: null })),
   recordFeatureUsage: vi.fn(),
 }));
+
+vi.mock('@/lib/author/llm', async () => {
+  const actual = await vi.importActual<typeof import('@/lib/author/llm')>('@/lib/author/llm');
+  return {
+    ...actual,
+    generateAuthorLlm: vi.fn(async () => ({
+      provider: 'anthropic',
+      model: 'claude-opus-4-7',
+      text: '{}',
+      json: {
+        storyLayers: [{ layer: 'plot', present: true, evidence: 'opener' }],
+        characterArcs: [],
+        criticNotes: [
+          { critic: 'layer_auditor', rating: 4, suggestions: ['tighten beat 2'] },
+        ],
+      },
+      requestId: 'req-coach-test',
+      byok: false,
+      usage: { tokensIn: 100, tokensOut: 100 },
+    })),
+  };
+});
 
 const ORIGINAL_ENV = {
   NODE_ENV: process.env.NODE_ENV,
@@ -344,6 +367,54 @@ describe('Author UI route guard', () => {
     const replayBody = await replayResponse.json() as { replayStatus: string; chainLength: number };
     expect(replayBody.replayStatus).toBe('deterministic');
     expect(replayBody.chainLength).toBeGreaterThanOrEqual(1);
+  });
+
+  it('runs the Coach analyze pipeline end-to-end through the HTTP route', async () => {
+    process.env.NODE_ENV = 'test';
+    vi.mocked(getRequestUser).mockResolvedValue({
+      id: 'route-coach-user',
+      email: 'route-coach@example.com',
+      name: null,
+      lastSignInAt: null,
+      organizationId: null,
+      organizationSelection: null,
+    });
+
+    const request = new NextRequest('https://example.com/api/projects/knot/coach/analyze', {
+      method: 'POST',
+      body: JSON.stringify({
+        text: 'In a world where the bell tolled, a chill ran down her spine.',
+      }),
+      headers: csrfHeaders({ 'content-type': 'application/json', origin: 'http://localhost:3000' }),
+    });
+    const response = await postCoachAnalyze(request, {
+      params: Promise.resolve({ projectId: 'knot' }),
+    });
+
+    expect(response.status).toBe(200);
+    const body = await response.json() as {
+      hash: string;
+      storyLayers: Array<{ layer: string; present: boolean }>;
+      antiCliche: Array<{ category: string; match: string }>;
+      criticNotes: Array<{ critic: string; rating: number }>;
+      cached: boolean;
+      latencyMs: number;
+    };
+
+    // Seven canonical layers always returned.
+    expect(body.storyLayers).toHaveLength(7);
+    expect(body.storyLayers.find((entry) => entry.layer === 'plot')?.present).toBe(true);
+
+    // Local anti-cliche scan caught the two known phrases without an LLM call for them.
+    const categories = new Set(body.antiCliche.map((finding) => finding.category));
+    expect(categories.has('opening')).toBe(true);
+    expect(categories.has('emotional')).toBe(true);
+
+    // Mocked LLM critic note made it through the route.
+    expect(body.criticNotes[0]?.critic).toBe('layer_auditor');
+
+    expect(typeof body.latencyMs).toBe('number');
+    expect(body.cached).toBe(false);
   });
 });
 
