@@ -152,7 +152,20 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
   }
 }
 
-// PATCH /api/v1/memories/[id] - Update budget metadata for a memory
+// Upper bound for content rewrites via PATCH. Matches the same ceiling we
+// enforce on POST: large content bloats Voyage embedding cost and slows the
+// keyword tsvector + index lookups. Anything over this should be split into
+// multiple memories.
+const MAX_PATCH_CONTENT_LENGTH = 16_000;
+
+// PATCH /api/v1/memories/[id] - Update budget metadata or rewrite content
+//
+// Accepted shapes:
+//   { pinned: boolean }
+//   { content: string }   - replaces the row's content text; the generated
+//                            content_tsv column is recomputed automatically
+//                            by Postgres on UPDATE.
+// At least one of pinned/content must be provided.
 export async function PATCH(request: NextRequest, { params }: RouteParams) {
   const startTime = Date.now();
 
@@ -163,27 +176,72 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
       return authResult.error;
     }
 
-    const body = (await request.json().catch(() => null)) as { pinned?: unknown } | null;
-    if (!body || typeof body.pinned !== 'boolean') {
+    const body = (await request.json().catch(() => null)) as
+      | { pinned?: unknown; content?: unknown }
+      | null;
+    const hasPinned = typeof body?.pinned === 'boolean';
+    const hasContent = typeof body?.content === 'string';
+
+    if (!body || (!hasPinned && !hasContent)) {
       return NextResponse.json(
         {
           success: false,
-          error: { code: 'invalid_field', message: 'pinned must be a boolean' },
+          error: {
+            code: 'invalid_field',
+            message: 'At least one of `pinned` (boolean) or `content` (string) is required.',
+          },
           meta: { ...META, latencyMs: Date.now() - startTime },
         },
         { status: 400 }
       );
     }
 
+    if (hasContent) {
+      const content = body.content as string;
+      if (content.length === 0) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: { code: 'invalid_field', message: 'content must be non-empty.' },
+            meta: { ...META, latencyMs: Date.now() - startTime },
+          },
+          { status: 400 }
+        );
+      }
+      if (content.length > MAX_PATCH_CONTENT_LENGTH) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: {
+              code: 'invalid_field',
+              message: `content must be <= ${MAX_PATCH_CONTENT_LENGTH} characters.`,
+            },
+            meta: { ...META, latencyMs: Date.now() - startTime },
+          },
+          { status: 400 }
+        );
+      }
+    }
+
     const { userId, keyId } = authResult;
     const supabase = createServerClient();
+    const updatePayload: Record<string, unknown> = { updated_at: new Date().toISOString() };
+    if (hasPinned) updatePayload.pinned = body.pinned;
+    if (hasContent) {
+      updatePayload.content = body.content;
+      // Reset embedding so the v4 mirror / re-embedding pipeline picks up the
+      // new content. Keyword search via content_tsv is updated automatically
+      // (generated column).
+      updatePayload.embedding = null;
+    }
+
     const { data: memory, error: updateError } = await supabase
       .from('memories')
-      .update({ pinned: body.pinned, updated_at: new Date().toISOString() })
+      .update(updatePayload)
       .eq('id', id)
       .eq('user_id', userId)
       .eq('is_deleted', false)
-      .select('id, pinned, tier, entity_id, updated_at')
+      .select('id, pinned, tier, entity_id, updated_at, content')
       .single();
 
     if (updateError) {
