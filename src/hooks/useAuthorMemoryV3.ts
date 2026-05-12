@@ -2,6 +2,7 @@
 
 import { useMemo } from 'react';
 import useSWR, { mutate as globalMutate } from 'swr';
+import useSWRInfinite from 'swr/infinite';
 import useSWRMutation from 'swr/mutation';
 import { csrfFetch } from '@/lib/client/csrf-fetch';
 
@@ -440,4 +441,47 @@ export function useAnalyzeCoach(projectId?: string) {
       },
     }
   );
+}
+
+export interface AuthorAuditLogPage {
+  audit_logs: JsonRecord[];
+  total: number;
+  next_cursor: string | null;
+  replay_available?: boolean;
+}
+
+/**
+ * Paginated audit-log loader for the Timeline view. Pages are cursor-based;
+ * each subsequent fetch passes the prior page's next_cursor. Returns null
+ * (which SWR treats as "stop") once the API stops emitting a cursor.
+ */
+export function useAuthorAuditLogPages(
+  projectId?: string,
+  options?: { types?: string[]; pageSize?: number },
+) {
+  const types = options?.types ?? [];
+  const pageSize = options?.pageSize ?? 50;
+  const typesKey = useMemo(() => [...types].sort().join(','), [types]);
+
+  const getKey = (pageIndex: number, previousPageData: AuthorAuditLogPage | null) => {
+    if (!projectId) return null;
+    if (previousPageData && previousPageData.next_cursor === null) return null;
+    const params = new URLSearchParams();
+    params.set('limit', String(pageSize));
+    if (typesKey) params.set('event_type', typesKey);
+    if (pageIndex === 0) {
+      params.set('cursor', '');
+    } else {
+      const prevCursor = previousPageData?.next_cursor;
+      if (!prevCursor) return null;
+      params.set('cursor', prevCursor);
+    }
+    return `/api/projects/${projectId}/audit?${params.toString()}`;
+  };
+
+  return useSWRInfinite<AuthorAuditLogPage>(getKey, fetchJson, {
+    revalidateOnFocus: false,
+    revalidateFirstPage: false,
+    persistSize: false,
+  });
 }
