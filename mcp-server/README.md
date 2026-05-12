@@ -1,9 +1,10 @@
 # Seizn MCP Server
 
+> **Status (2026-05-12):** This package (`seizn-mcp`) is **not currently published to npm**. The lean, KNOT/NPC-focused MCP at [`packages/seizn-mcp/`](../packages/seizn-mcp) is the actively maintained product, published as [`@seizn/mcp`](https://www.npmjs.com/package/@seizn/mcp). The code in this directory remains the source of truth for the comprehensive AI-memory tooling (knowledge graph, profile, webhooks, multi-editor config sync, OAuth) and can be run locally via `node mcp-server/dist/index.js`, but `npx seizn-mcp@latest` does not resolve. Use the local dev path or `@seizn/mcp` instead.
+
 MCP (Model Context Protocol) server for [Seizn](https://seizn.com) AI Memory - Persistent memory for AI applications.
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![npm version](https://img.shields.io/npm/v/seizn-mcp.svg)](https://www.npmjs.com/package/seizn-mcp)
 
 ## Features
 
