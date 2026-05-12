@@ -1493,6 +1493,9 @@ export class AuthorUiService {
   }
 
   async analyzeCoach(projectId: string, input: JsonRecord = {}): Promise<CoachAnalysis> {
+    if (process.env.AUTHOR_COACH_ENABLED === '0' || process.env.AUTHOR_COACH_ENABLED === 'false') {
+      throw new AuthorUiValidationError('Coach is temporarily disabled. Please try again later.');
+    }
     if (!this.state.projects.has(projectId)) {
       throw new AuthorUiNotFoundError(`Project not found: ${projectId}`);
     }
@@ -1500,10 +1503,26 @@ export class AuthorUiService {
     if (typeof text !== 'string') {
       throw new AuthorUiValidationError('text is required');
     }
-    return analyzeCoachInput(
+
+    const gate = await checkFeatureGate({ userId: this.userId, feature: 'coach' });
+    if (!gate.allowed) {
+      throw new AuthorUiValidationError(
+        gate.reason === 'feature_charter_only'
+          ? 'Coach is available on Indie plans and above. Upgrade to unlock.'
+          : 'Feature limit reached for this month.',
+      );
+    }
+
+    const result = await analyzeCoachInput(
       { userId: this.userId, projectId, text },
       { auditStore: this.state.auditLog }
     );
+
+    if (!result.cached) {
+      await recordFeatureUsage({ userId: this.userId, feature: 'coach' });
+    }
+
+    return result;
   }
 
   async flushAuditWrites(): Promise<void> {
