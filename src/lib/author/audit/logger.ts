@@ -88,9 +88,13 @@ export class SupabaseAuthorAuditLogStore implements AuthorAuditLogStore {
   }
 
   async search(filter: AuthorAuditSearchFilter = {}): Promise<AuthorAuditLogEntry[]> {
-    const rpcRows = await this.searchViaRpc(filter);
-    if (rpcRows) {
-      return rpcRows;
+    // The RPC predates keyset cursors; skip it when a cursor is supplied so
+    // we exercise the direct-query path that knows about `before`.
+    if (!filter.before) {
+      const rpcRows = await this.searchViaRpc(filter);
+      if (rpcRows) {
+        return rpcRows;
+      }
     }
 
     let query = this.client
@@ -103,9 +107,18 @@ export class SupabaseAuthorAuditLogStore implements AuthorAuditLogStore {
     if (filter.eventTypes?.length) query = query.in('event_type', filter.eventTypes);
     if (filter.since) query = query.gte('created_at', filter.since);
     if (filter.until) query = query.lte('created_at', filter.until);
+    if (filter.before) {
+      // Keyset pagination: rows strictly older than (before.createdAt, before.id).
+      // Expressed as: created_at < before.createdAt OR
+      //              (created_at = before.createdAt AND id < before.id).
+      query = query.or(
+        `created_at.lt.${filter.before.createdAt},and(created_at.eq.${filter.before.createdAt},id.lt.${filter.before.id})`,
+      );
+    }
 
     const { data, error } = await query
       .order('created_at', { ascending: false })
+      .order('id', { ascending: false })
       .limit(Math.max(1, Math.min(500, filter.limit ?? 100)));
 
     if (error) {
@@ -200,6 +213,15 @@ export function searchAuthorAuditEntries(
     .filter((entry) => !filter.eventTypes?.length || filter.eventTypes.includes(entry.eventType))
     .filter((entry) => !Number.isFinite(sinceTime) || Date.parse(entry.createdAt) >= Number(sinceTime))
     .filter((entry) => !Number.isFinite(untilTime) || Date.parse(entry.createdAt) <= Number(untilTime))
+    .filter((entry) => {
+      if (!filter.before) return true;
+      // Strict (createdAt, id) keyset cursor: keep entries older than the
+      // cursor under the (created_at DESC, id DESC) sort order.
+      const cmp = entry.createdAt.localeCompare(filter.before.createdAt);
+      if (cmp < 0) return true;
+      if (cmp > 0) return false;
+      return entry.id.localeCompare(filter.before.id) < 0;
+    })
     .filter((entry) => {
       if (!q) return true;
       return [
