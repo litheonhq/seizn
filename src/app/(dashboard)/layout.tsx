@@ -17,7 +17,7 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: "Dashboard - Seizn",
-  description: "Manage NPC memory projects, entities, and API keys.",
+  description: "Manage author workspaces, canon memory, usage, and API keys.",
 };
 
 export default async function DashboardLayout({
@@ -33,7 +33,7 @@ export default async function DashboardLayout({
   const betaUntil = await getBetaDisclosureUntil(locale);
 
   return (
-    <html lang={locale} dir={dir}>
+    <html lang={locale} dir={dir} data-scroll-behavior="smooth">
       <body
         className="antialiased szn-app-bg min-h-screen"
       >

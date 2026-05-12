@@ -1,11 +1,19 @@
 'use client';
 
 import { Newsreader } from 'next/font/google';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useCallback, useMemo, useState } from 'react';
+import { usePathname, useSearchParams } from 'next/navigation';
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
+import {
+  DASHBOARD_ROUTES,
+  isAuthorWorkspaceTab,
+  shouldUseLocalAuthorTabNavigation,
+} from '@/lib/dashboard-routes';
+import type { NavCapabilityMap } from './sidebar/nav-config';
+import { useAuthorConflicts, useAuthorProjects } from '@/hooks/useAuthorMemoryV3';
 import { Sidebar } from './sidebar/sidebar';
 import { TopBar, type TopBarTab } from './top-bar';
 import type { Density } from './types';
+import { AuthorUsageView } from './views/author-usage-view';
 import { CharactersView } from './views/characters-view';
 import { ConflictsView } from './views/conflicts-view';
 import { FallbackView } from './views/fallback-view';
@@ -30,19 +38,8 @@ const newsreader = Newsreader({
   display: 'swap',
 });
 
-const VALID_TABS: TopBarTab[] = [
-  'inbox',
-  'review',
-  'characters',
-  'graph',
-  'timeline',
-  'conflicts',
-  'simulate',
-  'audit',
-];
-
 function isValidTab(value: string | null): value is TopBarTab {
-  return value != null && (VALID_TABS as string[]).includes(value);
+  return isAuthorWorkspaceTab(value);
 }
 
 export interface WorkspaceShellProps {
@@ -51,6 +48,9 @@ export interface WorkspaceShellProps {
   density?: Density;
   userName: string;
   userPlanLabel: string;
+  currentLabel?: string;
+  capabilities?: NavCapabilityMap;
+  children?: ReactNode;
 }
 
 export function WorkspaceShell({
@@ -59,31 +59,65 @@ export function WorkspaceShell({
   density = 'comfortable',
   userName,
   userPlanLabel,
+  currentLabel,
+  capabilities = { track2: true, billing: true, admin: false },
+  children,
 }: WorkspaceShellProps) {
-  const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
   const tabFromUrl = searchParams?.get('tab') ?? null;
-  const tab: TopBarTab = isValidTab(tabFromUrl) ? tabFromUrl : defaultTab;
+  const [tab, setTabState] = useState<TopBarTab>(
+    isValidTab(tabFromUrl) ? tabFromUrl : defaultTab
+  );
+  const canUseLocalAuthorTabs = shouldUseLocalAuthorTabNavigation(pathname, children != null);
 
   const [collapsed, setCollapsed] = useState(initialCollapsed);
-  const projectId = useAuthorProjectId();
-  const workspace = useAuthorWorkspace();
-  const inbox = useAuthorInbox(projectId);
-  const characters = useAuthorCharactersList(projectId);
-  const graph = useAuthorGraphData(projectId);
-  const conflicts = useAuthorConflictsList(projectId);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  const projects = useAuthorProjects();
+  const projectId = useAuthorProjectId(projects);
+  const workspace = useAuthorWorkspace(projects);
+  const needsConflicts = tab === 'inbox' || tab === 'review' || tab === 'conflicts';
+  const needsCharacters = tab === 'characters' || tab === 'graph';
+  const needsGraph = tab === 'graph';
+  const rawConflicts = useAuthorConflicts(projectId, { status: 'open' }, { enabled: needsConflicts });
+  const inbox = useAuthorInbox(projectId, rawConflicts);
+  const characters = useAuthorCharactersList(projectId, { enabled: needsCharacters });
+  const graph = useAuthorGraphData(projectId, { enabled: needsGraph });
+  const conflicts = useAuthorConflictsList(projectId, rawConflicts);
   const memoryHealth = useAuthorUiHealth(projectId);
 
   const setTab = useCallback(
     (next: TopBarTab) => {
-      const params = new URLSearchParams(Array.from(searchParams?.entries() ?? []));
+      setTabState(next);
+      if (typeof window === 'undefined') return;
+      const params = new URLSearchParams(window.location.search);
       params.set('tab', next);
-      router.push(`/dashboard/author?${params.toString()}`);
+      const nextUrl = `${DASHBOARD_ROUTES.author}?${params.toString()}`;
+      window.history.pushState(null, '', nextUrl);
     },
-    [router, searchParams]
+    []
   );
 
-  const toggleSidebar = useCallback(() => setCollapsed((c) => !c), []);
+  const toggleSidebar = useCallback(() => {
+    if (typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches) {
+      setMobileSidebarOpen(true);
+      return;
+    }
+    setCollapsed((c) => !c);
+  }, []);
+
+  useEffect(() => {
+    const readTabFromLocation = () => {
+      const next = new URLSearchParams(window.location.search).get('tab');
+      setTabState(isValidTab(next) ? next : defaultTab);
+    };
+    window.addEventListener('popstate', readTabFromLocation);
+    window.addEventListener('pageshow', readTabFromLocation);
+    return () => {
+      window.removeEventListener('popstate', readTabFromLocation);
+      window.removeEventListener('pageshow', readTabFromLocation);
+    };
+  }, [defaultTab]);
 
   const badges = useMemo(() => {
     const inboxUnread = inbox.data.filter((row) => row.unread).length;
@@ -104,7 +138,7 @@ export function WorkspaceShell({
     [conflicts.data]
   );
 
-  const view = (() => {
+  const view = children ?? (() => {
     switch (tab) {
       case 'inbox':
         return <InboxView rows={inbox.data} />;
@@ -122,6 +156,8 @@ export function WorkspaceShell({
         return <ConflictsView conflicts={conflicts.data} />;
       case 'simulate':
         return <SimulateEmpty />;
+      case 'usage':
+        return <AuthorUsageView />;
       default:
         return <FallbackView tab={tab} />;
     }
@@ -136,19 +172,55 @@ export function WorkspaceShell({
         overflow: 'hidden',
       }}
     >
-      <Sidebar
-        collapsed={collapsed}
-        density={density}
-        workspaceName={workspace.data.workspaceName}
-        workspacePlanLabel={workspace.data.planLabel}
-        workspaceEntries={workspace.data.episodeCount}
-        workspaceHasMore={workspace.data.hasMore ?? false}
-        userName={userName}
-        userPlanLabel={userPlanLabel}
-        memoryHealth={memoryHealth.data}
-        badges={badges}
-        dots={dots}
-      />
+      <div className="dashboard-redesign-sidebar">
+        <Sidebar
+          collapsed={collapsed}
+          density={density}
+          workspaceName={workspace.data.workspaceName}
+          workspacePlanLabel={workspace.data.planLabel}
+          workspaceEntries={workspace.data.episodeCount}
+          workspaceHasMore={workspace.data.hasMore ?? false}
+          userName={userName}
+          userPlanLabel={userPlanLabel}
+          memoryHealth={memoryHealth.data}
+          badges={badges}
+          dots={dots}
+          capabilities={capabilities}
+          activeAuthorTab={tab}
+          onAuthorTab={canUseLocalAuthorTabs ? setTab : undefined}
+        />
+      </div>
+      {mobileSidebarOpen ? (
+        <div className="dashboard-redesign-mobile-layer" role="dialog" aria-modal="true">
+          <button
+            type="button"
+            className="dashboard-redesign-mobile-backdrop"
+            aria-label="Close navigation"
+            onClick={() => setMobileSidebarOpen(false)}
+          />
+          <div className="dashboard-redesign-mobile-panel">
+            <Sidebar
+              collapsed={false}
+              density={density}
+              workspaceName={workspace.data.workspaceName}
+              workspacePlanLabel={workspace.data.planLabel}
+              workspaceEntries={workspace.data.episodeCount}
+              workspaceHasMore={workspace.data.hasMore ?? false}
+              userName={userName}
+              userPlanLabel={userPlanLabel}
+              memoryHealth={memoryHealth.data}
+              badges={badges}
+              dots={dots}
+              capabilities={capabilities}
+              activeAuthorTab={tab}
+              onAuthorTab={(next) => {
+                setMobileSidebarOpen(false);
+                if (canUseLocalAuthorTabs) setTab(next);
+              }}
+            />
+          </div>
+        </div>
+      ) : null}
       <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
         <TopBar
           tab={tab}
@@ -156,9 +228,46 @@ export function WorkspaceShell({
           density={density}
           workspaceLabel={workspace.data.workspaceName}
           onToggleSidebar={toggleSidebar}
+          currentLabel={currentLabel}
         />
         <div style={{ flex: 1, display: 'flex', minHeight: 0, minWidth: 0 }}>{view}</div>
       </div>
+      <style>{`
+        .dashboard-redesign-sidebar {
+          display: flex;
+          min-height: 0;
+        }
+        .dashboard-redesign-mobile-layer {
+          position: fixed;
+          inset: 0;
+          z-index: 80;
+          display: none;
+        }
+        .dashboard-redesign-mobile-backdrop {
+          position: absolute;
+          inset: 0;
+          border: 0;
+          background: rgba(26, 22, 18, 0.62);
+          backdrop-filter: blur(2px);
+        }
+        .dashboard-redesign-mobile-panel {
+          position: relative;
+          width: min(86vw, 300px);
+          height: 100%;
+          box-shadow: 24px 0 60px rgba(20, 17, 13, 0.28);
+        }
+        @media (max-width: 767px) {
+          .dashboard-redesign {
+            height: 100dvh;
+          }
+          .dashboard-redesign-sidebar {
+            display: none;
+          }
+          .dashboard-redesign-mobile-layer {
+            display: block;
+          }
+        }
+      `}</style>
     </div>
   );
 }

@@ -6,6 +6,10 @@ import { normalizeProfileUserId } from './profile/normalize';
 import { normalizeSessionOrganizationId } from './profile/organization';
 import { createServerClient } from './supabase';
 import { logServerError } from '@/lib/server/logger';
+import {
+  getAuthCookiePrefix,
+  getSharedAuthCookieOptions,
+} from '@/lib/auth/cookie-options';
 
 const TURNSTILE_SECRET_KEY = process.env.TURNSTILE_SECRET_KEY;
 const TURNSTILE_VERIFY_URL = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
@@ -46,35 +50,8 @@ async function verifyTurnstileToken(token: string): Promise<boolean> {
   }
 }
 
-const useSecureCookies = process.env.NODE_ENV === 'production';
-const cookiePrefix = useSecureCookies ? '__Secure-' : '';
-
-function getCookieDomain() {
-  if (process.env.AUTH_COOKIE_DOMAIN) {
-    return process.env.AUTH_COOKIE_DOMAIN;
-  }
-
-  const url = process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_SITE_URL;
-  if (!url) return undefined;
-
-  try {
-    const hostname = new URL(url).hostname;
-    if (hostname === 'localhost' || hostname === '127.0.0.1') return undefined;
-    return hostname.startsWith('.') ? hostname : `.${hostname}`;
-  } catch {
-    return undefined;
-  }
-}
-
-const cookieDomain = getCookieDomain();
-
-const sharedCookieOptions = {
-  httpOnly: true,
-  sameSite: 'lax' as const,
-  path: '/',
-  secure: useSecureCookies,
-  ...(cookieDomain ? { domain: cookieDomain } : {}),
-};
+const cookiePrefix = getAuthCookiePrefix();
+const sharedCookieOptions = getSharedAuthCookieOptions();
 
 function getOAuthEmailVerified(token: { email_verified?: unknown }, profile?: Profile): boolean {
   const profileRecord = profile as Record<string, unknown> | undefined;
@@ -263,54 +240,82 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
     async session({ session, token }) {
       if (token && session.user) {
-        const resolvedProfileId = await normalizeProfileUserId({
-          userId:
-            typeof token.id === 'string'
-              ? token.id
-              : typeof token.sub === 'string'
-                ? token.sub
-                : null,
-          email:
-            token.oauthEmailVerified !== false
-              ? session.user.email ?? (typeof token.email === 'string' ? token.email : null)
-              : null,
-        });
-
-        if (resolvedProfileId) {
-          session.user.id = resolvedProfileId;
-        } else if (typeof token.id === 'string') {
-          session.user.id = token.id;
-        }
-
-        if (token.organizationSelection === 'personal') {
-          session.user.organizationId = null;
-          session.user.organizationSelection = 'personal';
-          token.organizationId = null;
-        } else {
-          const resolvedOrganizationId =
-            (await normalizeSessionOrganizationId({
-              userId: session.user.id,
-              email:
-                token.oauthEmailVerified !== false
-                  ? session.user.email ??
-                    (typeof token.email === 'string' ? token.email : null)
+        try {
+          const resolvedProfileId = await normalizeProfileUserId({
+            userId:
+              typeof token.id === 'string'
+                ? token.id
+                : typeof token.sub === 'string'
+                  ? token.sub
                   : null,
-              organizationSelection: null,
-            })) ||
-            (typeof token.organizationId === 'string' && token.organizationId.trim()
-              ? token.organizationId
-              : null);
+            email:
+              token.oauthEmailVerified !== false
+                ? session.user.email ?? (typeof token.email === 'string' ? token.email : null)
+                : null,
+          });
 
-          if (resolvedOrganizationId) {
-            session.user.organizationId = resolvedOrganizationId;
-            session.user.organizationSelection = 'organization';
-            token.organizationId = resolvedOrganizationId;
-            token.organizationSelection = 'organization';
-          } else {
-            session.user.organizationId = null;
-            session.user.organizationSelection = undefined;
-            token.organizationId = null;
+          if (resolvedProfileId) {
+            session.user.id = resolvedProfileId;
+          } else if (typeof token.id === 'string') {
+            session.user.id = token.id;
+          } else if (typeof token.sub === 'string') {
+            session.user.id = token.sub;
           }
+
+          if (token.organizationSelection === 'personal') {
+            session.user.organizationId = null;
+            session.user.organizationSelection = 'personal';
+            token.organizationId = null;
+          } else {
+            const resolvedOrganizationId =
+              (await normalizeSessionOrganizationId({
+                userId: session.user.id,
+                email:
+                  token.oauthEmailVerified !== false
+                    ? session.user.email ??
+                      (typeof token.email === 'string' ? token.email : null)
+                    : null,
+                organizationSelection: null,
+              })) ||
+              (typeof token.organizationId === 'string' && token.organizationId.trim()
+                ? token.organizationId
+                : null);
+
+            if (resolvedOrganizationId) {
+              session.user.organizationId = resolvedOrganizationId;
+              session.user.organizationSelection = 'organization';
+              token.organizationId = resolvedOrganizationId;
+              token.organizationSelection = 'organization';
+            } else {
+              session.user.organizationId = null;
+              session.user.organizationSelection = undefined;
+              token.organizationId = null;
+            }
+          }
+        } catch (error) {
+          logServerError('Auth session normalization failed; preserving token fallback', error, {
+            hasTokenId: typeof token.id === 'string',
+            hasTokenSub: typeof token.sub === 'string',
+            hasEmail: typeof token.email === 'string',
+          });
+          if (!session.user.id) {
+            session.user.id =
+              typeof token.id === 'string'
+                ? token.id
+                : typeof token.sub === 'string'
+                  ? token.sub
+                  : session.user.id;
+          }
+          session.user.organizationId =
+            token.organizationSelection === 'personal'
+              ? null
+              : typeof token.organizationId === 'string'
+                ? token.organizationId
+                : session.user.organizationId ?? null;
+          session.user.organizationSelection =
+            token.organizationSelection === 'personal' || token.organizationSelection === 'organization'
+              ? token.organizationSelection
+              : session.user.organizationSelection;
         }
       }
       return session;

@@ -4,12 +4,14 @@ import Link from "next/link";
 import { useReducer, useTransition, type FormEvent } from "react";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
 import { useToast } from "@/contexts/ToastContext";
+import { readApiJson } from "@/lib/client/api-json";
+import { csrfFetch } from "@/lib/client/csrf-fetch";
 import type { UserUsageSummary } from "@/lib/api-keys";
 import {
   createApiKey,
-  revokeApiKey,
   rotateApiKey,
 } from "./actions";
+import type { RevokeApiKeyResult } from "./constants";
 import type { ApiKeySummary } from "./page";
 import { UsageSummary } from "./usage-summary";
 
@@ -91,6 +93,14 @@ function formatTimestamp(value: string | null): string {
   }
 }
 
+async function revokeApiKeyRequest(id: string): Promise<RevokeApiKeyResult> {
+  const response = await csrfFetch(`/api/dashboard/account/api-keys/${encodeURIComponent(id)}`, {
+    method: "DELETE",
+    cache: "no-store",
+  });
+  return readApiJson<RevokeApiKeyResult>(response, "Failed to revoke API key");
+}
+
 export default function ApiKeysClient({
   initialKeys,
   cap,
@@ -119,7 +129,13 @@ export default function ApiKeysClient({
       return;
     }
     startTransition(async () => {
-      const result = await createApiKey({ name });
+      let result;
+      try {
+        result = await createApiKey({ name });
+      } catch {
+        toast("error", t("dashboard.account.apiKeys.errors.internal"));
+        return;
+      }
       if (!result.ok) {
         toast(
           "error",
@@ -152,7 +168,13 @@ export default function ApiKeysClient({
 
   const onRevoke = (id: string) => {
     startTransition(async () => {
-      const result = await revokeApiKey(id);
+      let result;
+      try {
+        result = await revokeApiKeyRequest(id);
+      } catch {
+        toast("error", t("dashboard.account.apiKeys.errors.revokeFailed"));
+        return;
+      }
       if (!result.ok) {
         toast("error", t("dashboard.account.apiKeys.errors.revokeFailed"));
         return;
@@ -166,7 +188,13 @@ export default function ApiKeysClient({
   const onRotate = (id: string) => {
     const original = state.keys.find((entry) => entry.id === id);
     startTransition(async () => {
-      const result = await rotateApiKey(id);
+      let result;
+      try {
+        result = await rotateApiKey(id);
+      } catch {
+        toast("error", t("dashboard.account.apiKeys.errors.rotateFailed"));
+        return;
+      }
       if (!result.ok) {
         toast("error", t("dashboard.account.apiKeys.errors.rotateFailed"));
         return;
@@ -197,13 +225,13 @@ export default function ApiKeysClient({
   };
 
   return (
-    <section className="mx-auto w-full max-w-5xl px-6 py-10 text-ink">
+    <section className="mx-auto w-full max-w-5xl px-6 py-10 text-szn-text-1">
       <header className="flex flex-col gap-2">
         <h1 className="font-serif text-3xl">{t("dashboard.account.apiKeys.title")}</h1>
-        <p className="text-sm text-ink/70">
+        <p className="text-sm text-szn-text-2">
           {t("dashboard.account.apiKeys.description")}
         </p>
-        <p className="text-xs text-ink/50">
+        <p className="text-xs text-szn-text-3">
           {t("dashboard.account.apiKeys.capHint").replace("{cap}", String(cap))}
         </p>
       </header>
@@ -213,13 +241,13 @@ export default function ApiKeysClient({
       </div>
 
       <div className="mt-6 flex items-center justify-between">
-        <div className="text-sm text-ink/70">
+        <div className="text-sm text-szn-text-2">
           {state.keys.length} / {cap}
         </div>
         <div className="flex items-center gap-3">
           <Link
             href="/dashboard/account/api-keys/audit"
-            className="text-sm text-terracotta underline"
+            className="text-sm text-szn-signal underline"
           >
             {t("dashboard.account.apiKeys.audit.link")}
           </Link>
@@ -227,7 +255,7 @@ export default function ApiKeysClient({
             type="button"
             disabled={atCap || isPending}
             onClick={() => dispatch({ type: "open-create" })}
-            className="rounded-md bg-ink px-4 py-2 text-sm text-cream disabled:opacity-50"
+            className="rounded-md bg-szn-text-1 px-4 py-2 text-sm text-white disabled:opacity-50"
           >
             {t("dashboard.account.apiKeys.newKey")}
           </button>
@@ -235,11 +263,11 @@ export default function ApiKeysClient({
       </div>
 
       {state.keys.length === 0 ? (
-        <p className="mt-12 rounded-md border border-dashed border-ink/30 p-8 text-center text-sm text-ink/60">
+        <p className="mt-12 rounded-md border border-dashed border-szn-border p-8 text-center text-sm text-szn-text-2">
           {t("dashboard.account.apiKeys.empty")}
         </p>
       ) : (
-        <ul className="mt-6 divide-y divide-ink/10 rounded-md border border-ink/10">
+        <ul className="mt-6 divide-y divide-szn-border-subtle rounded-md border border-szn-border-subtle">
           {state.keys.map((entry) => {
             const usagePct = entry.monthlyQuota
               ? Math.min(100, Math.round((entry.used / entry.monthlyQuota) * 100))
@@ -249,16 +277,16 @@ export default function ApiKeysClient({
                 <div className="flex flex-col gap-1">
                   <div className="flex items-center gap-2">
                     <span className="font-medium">{entry.name}</span>
-                    <code className="rounded bg-ink/5 px-2 py-0.5 text-xs">{entry.prefix}…</code>
+                    <code className="rounded bg-szn-surface px-2 py-0.5 text-xs">{entry.prefix}…</code>
                   </div>
-                  <div className="text-xs text-ink/60">
+                  <div className="text-xs text-szn-text-2">
                     {t("dashboard.account.apiKeys.scopes")}: {entry.scopes.join(", ") || "—"}
                   </div>
-                  <div className="text-xs text-ink/60">
+                  <div className="text-xs text-szn-text-2">
                     {t("dashboard.account.apiKeys.usage")}: {entry.used} / {entry.monthlyQuota} ({usagePct}%) ·{" "}
                     {t("dashboard.account.apiKeys.rateLimit")}: {entry.rateLimitPerMinute}/min
                   </div>
-                  <div className="text-xs text-ink/40">
+                  <div className="text-xs text-szn-text-3">
                     {t("dashboard.account.apiKeys.lastUsed")}: {formatTimestamp(entry.lastUsedAt)} ·{" "}
                     {t("dashboard.account.apiKeys.createdAt")}: {formatTimestamp(entry.createdAt)}
                   </div>
@@ -268,7 +296,7 @@ export default function ApiKeysClient({
                     type="button"
                     disabled={isPending}
                     onClick={() => dispatch({ type: "open-confirm-rotate", id: entry.id, name: entry.name })}
-                    className="rounded-md border border-ink/20 px-3 py-1.5 text-xs"
+                    className="rounded-md border border-szn-border px-3 py-1.5 text-xs"
                   >
                     {t("dashboard.account.apiKeys.rotate")}
                   </button>
@@ -276,7 +304,7 @@ export default function ApiKeysClient({
                     type="button"
                     disabled={isPending}
                     onClick={() => dispatch({ type: "open-confirm-revoke", id: entry.id, name: entry.name })}
-                    className="rounded-md border border-terracotta/40 px-3 py-1.5 text-xs text-terracotta"
+                    className="rounded-md border border-szn-danger px-3 py-1.5 text-xs text-szn-danger"
                   >
                     {t("dashboard.account.apiKeys.revoke")}
                   </button>
@@ -288,24 +316,25 @@ export default function ApiKeysClient({
       )}
 
       {state.dialog.kind === "creating" ? (
-        <div className="fixed inset-0 z-40 flex items-center justify-center bg-ink/40">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[rgba(26,22,18,0.72)] px-4 backdrop-blur-sm">
           <form
             onSubmit={onCreate}
-            className="w-full max-w-md rounded-lg bg-cream p-6 shadow-xl"
+            className="w-full max-w-md rounded-lg border border-szn-border bg-[var(--bg-elevated)] p-6 text-szn-text-1 shadow-[var(--shadow-pop)]"
           >
             <h2 className="font-serif text-xl">{t("dashboard.account.apiKeys.newKey")}</h2>
-            <label className="mt-4 block text-sm text-ink/80">
+            <label className="mt-4 block text-sm text-szn-text-1">
               {t("dashboard.account.apiKeys.name")}
               <input
+                id="track2-api-key-name"
                 type="text"
                 value={state.draftName}
                 onChange={(event) => dispatch({ type: "set-draft-name", value: event.target.value })}
-                className="mt-1 w-full rounded-md border border-ink/20 px-3 py-2"
+                className="mt-1 w-full rounded-md border border-szn-border bg-szn-surface px-3 py-2 text-szn-text-1"
                 maxLength={80}
                 required
               />
             </label>
-            <p className="mt-2 text-xs text-ink/50">
+            <p className="mt-2 text-xs text-szn-text-3">
               {t("dashboard.account.apiKeys.scopesDefault")}
             </p>
             <div className="mt-6 flex justify-end gap-3">
@@ -319,7 +348,7 @@ export default function ApiKeysClient({
               <button
                 type="submit"
                 disabled={isPending || !state.draftName.trim()}
-                className="rounded-md bg-ink px-4 py-2 text-sm text-cream disabled:opacity-50"
+                className="rounded-md bg-szn-text-1 px-4 py-2 text-sm text-white disabled:opacity-50"
               >
                 {t("dashboard.account.apiKeys.create")}
               </button>
@@ -329,31 +358,31 @@ export default function ApiKeysClient({
       ) : null}
 
       {state.dialog.kind === "secret-revealed" ? (
-        <div className="fixed inset-0 z-40 flex items-center justify-center bg-ink/40">
-          <div className="w-full max-w-lg rounded-lg bg-cream p-6 shadow-xl">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[rgba(26,22,18,0.72)] px-4 backdrop-blur-sm">
+          <div className="w-full max-w-lg rounded-lg border border-szn-border bg-[var(--bg-elevated)] p-6 text-szn-text-1 shadow-[var(--shadow-pop)]">
             <h2 className="font-serif text-xl">
               {state.dialog.mode === "rotated"
                 ? t("dashboard.account.apiKeys.rotated")
                 : t("dashboard.account.apiKeys.created")}
             </h2>
-            <p className="mt-2 text-sm text-terracotta">
+            <p className="mt-2 text-sm text-szn-danger">
               {t("dashboard.account.apiKeys.saveItNow")}
             </p>
-            <code className="mt-4 block break-all rounded bg-ink/5 p-3 text-xs">
+            <code className="mt-4 block break-all rounded bg-szn-surface p-3 text-xs">
               {state.dialog.key}
             </code>
             <div className="mt-6 flex justify-end gap-3">
               <button
                 type="button"
                 onClick={() => onCopySecret(state.dialog.kind === "secret-revealed" ? state.dialog.key : "")}
-                className="rounded-md border border-ink/20 px-4 py-2 text-sm"
+                className="rounded-md border border-szn-border px-4 py-2 text-sm"
               >
                 {t("dashboard.account.apiKeys.copyKey")}
               </button>
               <button
                 type="button"
                 onClick={() => dispatch({ type: "close-dialog" })}
-                className="rounded-md bg-ink px-4 py-2 text-sm text-cream"
+                className="rounded-md bg-szn-text-1 px-4 py-2 text-sm text-white"
               >
                 {t("dashboard.account.apiKeys.done")}
               </button>
@@ -407,10 +436,10 @@ function ConfirmDialog({
   onConfirm: () => void;
 }) {
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-ink/40">
-      <div className="w-full max-w-md rounded-lg bg-cream p-6 shadow-xl">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[rgba(26,22,18,0.72)] px-4 backdrop-blur-sm">
+      <div className="w-full max-w-md rounded-lg border border-szn-border bg-[var(--bg-elevated)] p-6 text-szn-text-1 shadow-[var(--shadow-pop)]">
         <h2 className="font-serif text-xl">{title}</h2>
-        <p className="mt-2 text-sm text-ink/70">{body}</p>
+        <p className="mt-2 text-sm text-szn-text-2">{body}</p>
         <div className="mt-6 flex justify-end gap-3">
           <button
             type="button"
@@ -425,8 +454,8 @@ function ConfirmDialog({
             onClick={onConfirm}
             className={
               confirmVariant === "danger"
-                ? "rounded-md bg-terracotta px-4 py-2 text-sm text-cream disabled:opacity-50"
-                : "rounded-md bg-ink px-4 py-2 text-sm text-cream disabled:opacity-50"
+                ? "rounded-md bg-szn-danger px-4 py-2 text-sm text-white disabled:opacity-50"
+                : "rounded-md bg-szn-text-1 px-4 py-2 text-sm text-white disabled:opacity-50"
             }
           >
             {confirmLabel}

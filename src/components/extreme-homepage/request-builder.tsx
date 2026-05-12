@@ -429,7 +429,7 @@ export function RequestBuilder({
             <span className="text-sm font-medium text-[var(--ink-900)]">{t?.hybridSearch || "Hybrid Search"}</span>
             {!compact && <p className="text-xs text-[var(--ink-600)]">{t?.hybridSearchDesc || "Combine vector + keyword"}</p>}
           </div>
-          <input
+          <input aria-label="Hybrid Search"
             type="checkbox"
             checked={config.hybridSearch}
             onChange={(e) => updateConfig({ hybridSearch: e.target.checked })}
@@ -443,7 +443,7 @@ export function RequestBuilder({
             <span className="text-sm font-medium text-[var(--ink-900)]">{t?.rerank || "Rerank"}</span>
             {!compact && <p className="text-xs text-[var(--ink-600)]">{t?.rerankDesc || "Re-score with cross-encoder"}</p>}
           </div>
-          <input
+          <input aria-label="Rerank"
             type="checkbox"
             checked={config.rerank}
             onChange={(e) => updateConfig({ rerank: e.target.checked })}
@@ -457,7 +457,7 @@ export function RequestBuilder({
             <span className="text-sm font-medium text-[var(--ink-900)]">{t?.answerContract || "Answer Contract"}</span>
             {!compact && <p className="text-xs text-[var(--ink-600)]">{t?.answerContractDesc || "Validate answer quality"}</p>}
           </div>
-          <input
+          <input aria-label="Answer Contract"
             type="checkbox"
             checked={config.answerContract}
             onChange={(e) => updateConfig({ answerContract: e.target.checked })}

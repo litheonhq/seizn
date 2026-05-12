@@ -169,7 +169,7 @@ export function ShareTraceModal({ isOpen, onClose, traceId }: ShareTraceModalPro
               </label>
               <div className="space-y-2">
                 <label className="flex items-center gap-2">
-                  <input
+                  <input aria-label="Redact Pii"
                     type="checkbox"
                     checked={redactPii}
                     onChange={(e) => setRedactPii(e.target.checked)}
@@ -180,7 +180,7 @@ export function ShareTraceModal({ isOpen, onClose, traceId }: ShareTraceModalPro
                   </span>
                 </label>
                 <label className="flex items-center gap-2">
-                  <input
+                  <input aria-label="Redact Secrets"
                     type="checkbox"
                     checked={redactSecrets}
                     onChange={(e) => setRedactSecrets(e.target.checked)}

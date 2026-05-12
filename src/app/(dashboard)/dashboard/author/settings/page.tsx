@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import DashboardShell from "@/components/dashboard/DashboardShell";
+import { WorkspaceShell } from "@/components/dashboard/redesign/workspace-shell";
 import { AuthorSettingsClient } from "@/components/settings/author-settings-client";
 import { getAuthOrReview } from "@/lib/auth-or-review";
+import { getDashboardCapabilities } from "@/lib/dashboard-capabilities";
 
 export const metadata: Metadata = {
   title: "Author Settings - Seizn Dashboard",
@@ -13,11 +14,20 @@ export const metadata: Metadata = {
 };
 
 export default async function AuthorSettingsPage() {
-  await getAuthOrReview();
+  const { user } = await getAuthOrReview();
 
   return (
-    <DashboardShell>
-      <AuthorSettingsClient />
-    </DashboardShell>
+    <WorkspaceShell
+      userName={user.name ?? user.email ?? "Author"}
+      userPlanLabel="Studio"
+      currentLabel="Settings"
+      capabilities={getDashboardCapabilities(user)}
+    >
+      <main className="min-h-0 flex-1 overflow-y-auto bg-[var(--bg-app)] px-4 py-5 sm:px-6 lg:px-8">
+        <div className="mx-auto w-full max-w-7xl pb-16">
+          <AuthorSettingsClient />
+        </div>
+      </main>
+    </WorkspaceShell>
   );
 }

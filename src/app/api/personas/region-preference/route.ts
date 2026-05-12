@@ -9,6 +9,7 @@ import {
 import { resolvePersonaRouteAuth } from '@/lib/personas/route-auth';
 import { logServerError } from '@/lib/server/logger';
 import { createServerClient } from '@/lib/supabase';
+import { verifyCsrfToken } from '@/lib/csrf';
 
 type RegionPreferenceBody = {
   preferredRegion?: unknown;
@@ -63,6 +64,9 @@ export async function GET(request: NextRequest) {
 
 export async function PATCH(request: NextRequest) {
   try {
+    const csrfError = verifyCsrfToken(request);
+    if (csrfError) return csrfError;
+
     const resolved = await resolvePersonaRouteAuth(request);
     if ('response' in resolved) return resolved.response;
 

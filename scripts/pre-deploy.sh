@@ -10,7 +10,7 @@ echo "========================="
 # 0. Verify public demo and marketing surfaces do not leak internal-only IP terms
 echo ""
 echo "Running KNOT separation guard..."
-npm run verify:knot-separation
+npm run check:knot-isolation
 
 # 1. Check tsconfig.json excludes mcp-server
 if grep -q '"mcp-server"' tsconfig.json; then

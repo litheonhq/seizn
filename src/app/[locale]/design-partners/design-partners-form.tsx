@@ -258,7 +258,7 @@ function TextField({
   return (
     <label className="block bg-szn-bg p-5">
       <span className="szn-eyebrow">{label}</span>
-      <input
+      <input aria-label="Value"
         type={type}
         value={value}
         onChange={(event) => onChange(event.target.value)}
@@ -283,7 +283,7 @@ function CheckboxField({
 }) {
   return (
     <label className="flex min-h-[96px] items-start gap-3 bg-szn-bg p-5 text-[13px] leading-[1.55] text-szn-text-2">
-      <input
+      <input aria-label="Confirmation checkbox"
         type="checkbox"
         checked={checked}
         onChange={(event) => onChange(event.target.checked)}

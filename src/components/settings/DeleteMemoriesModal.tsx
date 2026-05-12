@@ -339,7 +339,7 @@ export function DeleteMemoriesModal({
               </p>
 
               <div>
-                <input
+                <input aria-label="Confirm Text"
                   type="text"
                   value={confirmText}
                   onChange={(e) => setConfirmText(e.target.value.toUpperCase())}

@@ -10,6 +10,7 @@ import { DataResidencyPreference } from '@/app/(dashboard)/dashboard/settings/se
 import { getRequestUser } from '@/lib/api/request-user';
 import { PERSONA_SEEDING, recordConsent } from '@/lib/compliance/consent';
 import { resolveComplianceOrganizationId } from '@/lib/compliance/organization';
+import { CSRF_COOKIE_NAME, CSRF_HEADER_NAME } from '@/lib/csrf';
 import { getPreferredRegion, requireKoreanResidency } from '@/lib/personas/region-pref';
 import { personasToGraphEntityRows } from '@/lib/personas/api';
 import { clearPersonaCacheForTests, loadPersonas } from '@/lib/personas/source';
@@ -63,6 +64,7 @@ vi.mock('@/lib/supabase', () => ({
 
 const USER_ID = '00000000-0000-4000-8000-000000000101';
 const ORG_ID = '00000000-0000-4000-8000-000000000102';
+const CSRF_TOKEN = 'batch-c-csrf-token';
 
 interface BatchCSmokeState {
   consent_records: Array<Record<string, unknown>>;
@@ -270,7 +272,12 @@ function makePostRequest(path: string, body: Record<string, unknown>): NextReque
 function makePatchRequest(path: string, body: Record<string, unknown>): NextRequest {
   return new NextRequest(new URL(path, 'https://test.seizn.com'), {
     method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      origin: 'http://localhost:3000',
+      cookie: `${CSRF_COOKIE_NAME}=${CSRF_TOKEN}`,
+      [CSRF_HEADER_NAME]: CSRF_TOKEN,
+    },
     body: JSON.stringify(body),
   });
 }

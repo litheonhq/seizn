@@ -7,8 +7,13 @@ interface RequiredEnvVar {
 export const REQUIRED_PRODUCTION_ENV_VARS: RequiredEnvVar[] = [
   {
     name: 'STRIPE_SECRET_KEY',
-    condition: () => Boolean(process.env.STRIPE_SECRET_KEY || process.env.STRIPE_SECRET_KEY_SEIZN),
-    description: 'Stripe live secret key for all billing API calls',
+    condition: () =>
+      Boolean(
+        process.env.STRIPE_RESTRICTED_KEY ||
+          process.env.STRIPE_SECRET_KEY_SEIZN ||
+          process.env.STRIPE_SECRET_KEY,
+      ),
+    description: 'Stripe live restricted or secret key for all billing API calls',
   },
   {
     name: 'STRIPE_METERED_PRICE_ID_MEMORIES',

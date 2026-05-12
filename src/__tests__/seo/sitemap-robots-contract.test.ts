@@ -17,13 +17,14 @@ describe('SEO surface contract', () => {
   });
 
   it('emits hreflang alternates for every supported locale on localized routes', () => {
-    const localizedEntry = sitemap().find((entry) => entry.url === 'https://www.seizn.com/en/docs');
+    const localizedEntry = sitemap().find((entry) => entry.url === 'https://www.seizn.com/en/pricing');
 
     expect(localizedEntry?.alternates?.languages).toBeDefined();
     for (const locale of locales) {
-      expect(localizedEntry?.alternates?.languages?.[locale]).toBe(`https://www.seizn.com/${locale}/docs`);
+      const expectedLocale = locale === 'en' || locale === 'ko' ? locale : 'en';
+      expect(localizedEntry?.alternates?.languages?.[locale]).toBe(`https://www.seizn.com/${expectedLocale}/pricing`);
     }
-    expect(localizedEntry?.alternates?.languages?.['x-default']).toBe('https://www.seizn.com/en/docs');
+    expect(localizedEntry?.alternates?.languages?.['x-default']).toBe('https://www.seizn.com/en/pricing');
   });
 
   it('disallows API and dashboard crawling for broad crawlers', () => {

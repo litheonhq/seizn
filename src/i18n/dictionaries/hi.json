@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "title": "Seizn — AI NPC के लिए memory",
-    "description": "Inworld, Convai या अपने LLM से जोड़ें। Seizn आपके NPC को टिकी हुई memory, रिश्ते और पीढ़ियों भर की याद देता है। Pricing entity के हिसाब से, per-seat नहीं।"
+    "title": "Seizn - AI memory for fiction writers",
+    "description": "Keep manuscripts, canon, conflict checks, and author memory in one workspace. Seizn helps fiction writers catch contradictions before readers do."
   },
   "nav": {
     "features": "विशेषताएं",
@@ -3681,17 +3681,12 @@
         "replay": "रीप्ले",
         "byok": "BYOK गाइड",
         "changelog": "बदलाव",
-        "engine": "Engine →",
         "sdk": "@seizn/sdk-js",
-        "mcp": "@seizn/mcp"
+        "mcp": "@seizn/mcp",
+        "program": "Program"
       },
       "entity": "© 2026 Seizn by Litheon LLC · Wyoming",
       "version": "v1.0 · Saebyeok डेमो कृत्रिम डेटा है"
-    },
-    "engine": {
-      "badge": "नया",
-      "body": "गेम NPC AI बना रहे हैं? वही कैनन इंजन, SDK के रूप में।",
-      "cta": "engine.seizn.com"
     },
     "checkout": {
       "prefix": "मैं स्वीकार करता हूँ",
@@ -3701,6 +3696,12 @@
       "suffix": "।",
       "loading": "Stripe खोला जा रहा है...",
       "error": "चेकआउट शुरू नहीं हो सका।"
+    },
+    "program": {
+      "badge": "in development",
+      "body": "Seizn Program is our native writing app for manuscripts, canon, review, and local files in one workspace.",
+      "cta": "Join Program waitlist",
+      "footerLabel": "Program"
     }
   }
 }

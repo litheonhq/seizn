@@ -1,6 +1,8 @@
 import { auth } from "@/lib/auth";
 import { cookies } from "next/headers";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { sanitizeDashboardCallbackUrl } from "@/lib/dashboard-routes";
 
 /**
  * 인증된 사용자 또는 리뷰 모드 확인
@@ -13,7 +15,11 @@ export async function getAuthOrReview() {
 
   // Allow access if authenticated OR in review mode
   if (!session?.user && !isReviewMode) {
-    redirect("/login");
+    const headerStore = await headers();
+    const pathname = headerStore.get("x-seizn-pathname") || "/dashboard";
+    const search = headerStore.get("x-seizn-search") || "";
+    const callbackUrl = sanitizeDashboardCallbackUrl(`${pathname}${search}`);
+    redirect(`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`);
   }
 
   // In review mode without auth, provide a mock user for display

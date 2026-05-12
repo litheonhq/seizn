@@ -85,13 +85,18 @@ describe("account billing portal route", () => {
     });
   });
 
-  it("returns 404 when no billing customer exists", async () => {
+  it("returns a pricing destination when no billing customer exists", async () => {
     mocks.profile = { stripe_customer_id: null };
 
     const response = await POST(portalRequest({ return_to: "/dashboard/author/settings" }));
 
-    expect(response.status).toBe(404);
-    await expect(response.json()).resolves.toEqual({ error: "No billing account found" });
+    expect(response.status).toBe(200);
+    await expect(response.json()).resolves.toEqual({
+      url: "/pricing",
+      destination: "pricing",
+      reason: "no_billing_account",
+    });
+    expect(mocks.portalCreate).not.toHaveBeenCalled();
   });
 
   it("applies the Author UI CSRF guard to portal creation", async () => {

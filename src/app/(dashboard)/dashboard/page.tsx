@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
-import { redirect } from "next/navigation";
-import DashboardShell from "@/components/dashboard/DashboardShell";
+import { WorkspaceShell } from "@/components/dashboard/redesign/workspace-shell";
 import { getAuthOrReview } from "@/lib/auth-or-review";
-import { isAuthorUiAccessAllowed } from "@/lib/author/ui/route";
+import { getDashboardCapabilities } from "@/lib/dashboard-capabilities";
 import DashboardOverviewClient from "./overview-client";
 
 export const metadata: Metadata = {
@@ -20,20 +19,17 @@ export const metadata: Metadata = {
 };
 
 export default async function DashboardPage() {
-  const { user, isAuthenticated } = await getAuthOrReview();
-
-  if (
-    isAuthenticated &&
-    user &&
-    typeof user.id === "string" &&
-    isAuthorUiAccessAllowed({ id: user.id, email: user.email ?? undefined })
-  ) {
-    redirect("/dashboard/author");
-  }
+  const { user } = await getAuthOrReview();
+  const capabilities = getDashboardCapabilities(user);
 
   return (
-    <DashboardShell>
-      <DashboardOverviewClient user={user} />
-    </DashboardShell>
+    <WorkspaceShell
+      userName={user.name ?? user.email ?? "Author"}
+      userPlanLabel="Author"
+      currentLabel="Overview"
+      capabilities={capabilities}
+    >
+      <DashboardOverviewClient user={user} track2Enabled={capabilities.track2 === true} />
+    </WorkspaceShell>
   );
 }

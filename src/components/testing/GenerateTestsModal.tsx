@@ -153,7 +153,7 @@ export function GenerateTestsModal({
                   Number of Tests
                 </label>
                 <div className="flex items-center gap-4">
-                  <input
+                  <input aria-label="Count slider"
                     type="range"
                     min="5"
                     max="50"
@@ -173,7 +173,7 @@ export function GenerateTestsModal({
                 </label>
                 <div className="space-y-2">
                   <label className="flex items-center gap-3">
-                    <input
+                    <input aria-label="Positive"
                       type="checkbox"
                       checked={types.positive}
                       onChange={(e) => setTypes({ ...types, positive: e.target.checked })}
@@ -182,7 +182,7 @@ export function GenerateTestsModal({
                     <span className="text-sm">Positive (should find answer)</span>
                   </label>
                   <label className="flex items-center gap-3">
-                    <input
+                    <input aria-label="Negative"
                       type="checkbox"
                       checked={types.negative}
                       onChange={(e) => setTypes({ ...types, negative: e.target.checked })}
@@ -191,7 +191,7 @@ export function GenerateTestsModal({
                     <span className="text-sm">Negative (should not find answer)</span>
                   </label>
                   <label className="flex items-center gap-3">
-                    <input
+                    <input aria-label="Edge Case"
                       type="checkbox"
                       checked={types.edge_case}
                       onChange={(e) => setTypes({ ...types, edge_case: e.target.checked })}
@@ -209,7 +209,7 @@ export function GenerateTestsModal({
                 </label>
                 <div className="flex gap-4">
                   <label className="flex items-center gap-2">
-                    <input
+                    <input aria-label="Model Haiku"
                       type="radio"
                       name="model"
                       value="haiku"
@@ -220,7 +220,7 @@ export function GenerateTestsModal({
                     <span className="text-sm">Haiku (faster)</span>
                   </label>
                   <label className="flex items-center gap-2">
-                    <input
+                    <input aria-label="Model Sonnet"
                       type="radio"
                       name="model"
                       value="sonnet"

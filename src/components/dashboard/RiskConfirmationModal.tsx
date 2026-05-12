@@ -47,7 +47,7 @@ export function RiskConfirmationModal({
 
         {/* Confirmation checkbox */}
         <label className="szn-check-row">
-          <input
+          <input aria-label="Confirmation checkbox"
             type="checkbox"
             checked={checked}
             onChange={(e) => setChecked(e.target.checked)}

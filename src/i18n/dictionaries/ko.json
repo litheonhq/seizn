@@ -308,6 +308,8 @@
       "reports": "리포트",
       "calculator": "계산기",
       "apiKeys": "API 키",
+      "billing": "결제",
+      "adminMetrics": "관리자 지표",
       "integrations": "통합",
       "webhooks": "웹훅",
       "docs": "문서",
@@ -322,7 +324,10 @@
         "system": "시스템",
         "build": "개발",
         "integrate": "연동",
+        "work": "작업",
         "workspace": "작업 공간",
+        "developer": "개발",
+        "admin": "관리자",
         "account": "계정"
       },
       "memory": {
@@ -359,7 +364,13 @@
       "conflicts": "갈등",
       "simulate": "시뮬레이션",
       "audit": "감사 로그",
-      "byok": "API 키 연결"
+      "byok": "API 키 연결",
+      "import": "가져오기",
+      "canon": "Canon Lock",
+      "chaos": "Chaos Monkey",
+      "storyHealth": "Story Health",
+      "postMortem": "Post-Mortem",
+      "moderation": "Moderation"
     },
     "pinSidebar": "사이드바 고정",
     "unpinSidebar": "사이드바 접기",
@@ -632,7 +643,8 @@
         "reject": "요청 거부",
         "cache": "캐시 반환",
         "degrade": "품질 저하",
-        "queue": "요청 대기열"
+        "queue": "요청 대기열",
+        "alertThresholdHint": "사용량이 예산의 이 비율에 도달하면 경고합니다."
       },
       "notifications": {
         "title": "알림 설정",
@@ -665,7 +677,8 @@
         "enable2FA": "2FA 활성화",
         "sessions": "활성 세션",
         "sessionsDesc": "활성 세션 관리",
-        "viewSessions": "세션 보기"
+        "viewSessions": "세션 보기",
+        "changePasswordDesc": "비밀번호 변경은 로그인 제공업체에서 관리합니다."
       },
       "dangerZone": {
         "title": "데이터 정리",
@@ -679,7 +692,8 @@
         "deleteAccount": "계정 삭제",
         "deleteAccountDesc": "계정과 모든 데이터 영구 삭제",
         "deleteAccountButton": "계정 삭제",
-        "confirmDelete": "확인하려면 DELETE 입력"
+        "confirmDelete": "확인하려면 DELETE 입력",
+        "titleDesc": "데이터를 내보내거나 저장된 메모리를 삭제하거나 계정을 닫습니다."
       },
       "billing": {
         "title": "결제 및 사용량",
@@ -1193,7 +1207,14 @@
       "beliefTab": "믿음 그래프",
       "decayTab": "감쇠",
       "branchTab": "브랜치",
-      "provenanceTab": "출처"
+      "provenanceTab": "출처",
+      "filters": "필터",
+      "dateRange": "날짜 범위",
+      "after": "이후",
+      "before": "이전",
+      "sortBy": "엔티티 정렬",
+      "fetchError": "엔티티를 불러오지 못했습니다",
+      "retry": "다시 시도"
     },
     "budgetPage": {
       "title": "예산 및 비용 관리",
@@ -1609,7 +1630,39 @@
       "attributionUrlLabel": "데이터셋 카드"
     },
     "northStar": {
-      "subtitle": "NPC 메모리 신뢰성 핵심 지표"
+      "subtitle": "NPC 메모리 신뢰성 핵심 지표",
+      "title": "핵심 지표",
+      "refresh": "새로고침",
+      "improving": "개선 중",
+      "declining": "악화 중",
+      "stable": "안정적",
+      "insufficientData": "데이터 부족",
+      "blocked": "차단됨",
+      "regressions": "회귀",
+      "target": "목표",
+      "average": "평균",
+      "saved": "절감",
+      "blockRate": "차단율",
+      "rolledBack": "롤백됨",
+      "detectionRate": "탐지율",
+      "lastUpdated": "마지막 업데이트",
+      "last30Days": "최근 30일",
+      "ttft": {
+        "title": "첫 트레이스까지 걸린 시간",
+        "subtitle": "가입부터 첫 트레이스까지(p75)"
+      },
+      "ttd": {
+        "title": "디버깅 소요 시간",
+        "subtitle": "인시던트부터 원인 파악까지"
+      },
+      "cost": {
+        "title": "비용 예측성",
+        "subtitle": "차단된 예산 초과"
+      },
+      "regression": {
+        "title": "회귀율",
+        "subtitle": "탐지된 평가 하락"
+      }
     },
     "brand": {
       "tagline": "작가 메모리 · 라이브"
@@ -1786,6 +1839,24 @@
           }
         }
       }
+    },
+    "traceComparePage": {
+      "title": "트레이스 비교",
+      "subtitle": "두 트레이스 실행의 차이를 분석합니다",
+      "selectTitle": "비교할 트레이스 선택",
+      "traceABaseline": "트레이스 A(기준)",
+      "traceBComparison": "트레이스 B(비교)",
+      "selectTrace": "트레이스 선택...",
+      "pasteTraceId": "또는 트레이스 ID 붙여넣기:",
+      "traceIdPlaceholder": "트레이스 ID...",
+      "compareButton": "트레이스 비교",
+      "replayTraceA": "트레이스 A 다시 실행",
+      "cancel": "취소",
+      "helpTitle": "트레이스 차이 보는 법",
+      "helpLine1": "두 트레이스를 선택해 결과, 지연시간, 비용 차이를 비교합니다.",
+      "helpLine2": "Replay로 설정을 바꾼 트레이스를 다시 실행할 수 있습니다.",
+      "helpLine3": "원본 실행과 재실행 결과를 비교해 설정 변경의 영향을 확인합니다.",
+      "helpLine4": "순위 변화는 실행 사이에 결과가 어떻게 이동했는지 보여줍니다."
     }
   },
   "pricingPage": {

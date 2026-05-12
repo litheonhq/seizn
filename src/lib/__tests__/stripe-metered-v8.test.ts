@@ -12,6 +12,7 @@ type FetchCall = {
 };
 
 const ORIGINAL_ENV = { ...process.env };
+const V9_OPUS_OVERAGE_ENV = 'STRIPE_PRICE_ID_V9_TRACK2_STUDIO_MANAGED_OPUS_OVERAGE';
 
 function asURLSearchParams(body: BodyInit | null | undefined): URLSearchParams | null {
   if (!body) return null;
@@ -29,6 +30,7 @@ describe('ensureV8Track2OpusOverageAttached', () => {
       STRIPE_SECRET_KEY: 'sk_test_dummy',
       STRIPE_PRICE_ID_V8_STUDIO_MANAGED_OPUS_OVERAGE: 'price_overage',
     };
+    delete process.env[V9_OPUS_OVERAGE_ENV];
   });
 
   afterEach(() => {
@@ -58,6 +60,7 @@ describe('ensureV8Track2OpusOverageAttached', () => {
 
   it('skips when overage price env is unset', async () => {
     delete process.env.STRIPE_PRICE_ID_V8_STUDIO_MANAGED_OPUS_OVERAGE;
+    delete process.env[V9_OPUS_OVERAGE_ENV];
     const fetchMock = vi.fn();
     vi.stubGlobal('fetch', fetchMock);
 
@@ -147,6 +150,7 @@ describe('ensureV8Track2OpusOverageDetached', () => {
       STRIPE_SECRET_KEY: 'sk_test_dummy',
       STRIPE_PRICE_ID_V8_STUDIO_MANAGED_OPUS_OVERAGE: 'price_overage',
     };
+    delete process.env[V9_OPUS_OVERAGE_ENV];
   });
 
   afterEach(() => {
@@ -172,6 +176,7 @@ describe('ensureV8Track2OpusOverageDetached', () => {
 
   it('skips when overage price env is unset', async () => {
     delete process.env.STRIPE_PRICE_ID_V8_STUDIO_MANAGED_OPUS_OVERAGE;
+    delete process.env[V9_OPUS_OVERAGE_ENV];
     const fetchMock = vi.fn();
     vi.stubGlobal('fetch', fetchMock);
     const result = await ensureV8Track2OpusOverageDetached('sub_123', 'studio');

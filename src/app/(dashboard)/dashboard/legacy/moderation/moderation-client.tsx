@@ -362,7 +362,7 @@ export function ModerationClient({ initialDecisions = [], decisionLoadError = nu
 
           <label className="mt-5 block text-sm font-medium text-szn-text-1">
             Policy name
-            <input
+            <input aria-label="Policy Name"
               value={policyName}
               onChange={(event) => setPolicyName(event.target.value)}
               className="mt-2 w-full rounded-lg border border-szn-border-subtle bg-szn-surface-1 px-3 py-2 text-sm text-szn-text-1 outline-none focus:border-szn-signal"
@@ -372,7 +372,7 @@ export function ModerationClient({ initialDecisions = [], decisionLoadError = nu
 
           <label className="mt-4 block text-sm font-medium text-szn-text-1">
             Memory class
-            <input
+            <input aria-label="Memory Class"
               value={memoryClass}
               onChange={(event) => setMemoryClass(event.target.value)}
               placeholder="fact, preference, quest, npc"
@@ -408,7 +408,7 @@ export function ModerationClient({ initialDecisions = [], decisionLoadError = nu
 
           <label className="mt-4 block text-sm font-medium text-szn-text-1">
             Threshold
-            <input
+            <input aria-label="Threshold"
               value={threshold}
               onChange={(event) => setThreshold(event.target.value)}
               inputMode="decimal"

@@ -65,7 +65,7 @@ export function SeasonRow() {
     { name: "Winter", color: "var(--engine-winter)", label: "Consolidated — 30d+" },
   ];
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12 }}>
+    <div className="engine-season-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12 }}>
       {seasons.map((s) => (
         <div key={s.name} style={{ display: "flex", flexDirection: "column", gap: 6, paddingTop: 12, borderTop: "1px solid var(--engine-line)" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -86,11 +86,14 @@ type BtnVariant = "primary" | "secondary" | "ghost" | "cyan";
 const BTN_BASE: CSSProperties = {
   display: "inline-flex",
   alignItems: "center",
+  justifyContent: "center",
   gap: 8,
   padding: "11px 18px",
+  minHeight: 44,
   borderRadius: 8,
   fontSize: 14,
   fontWeight: 500,
+  textDecoration: "none",
   transition: "all 160ms ease",
   border: "1px solid transparent",
   fontFamily: "var(--engine-font-sans)",
@@ -198,6 +201,7 @@ export function Section({
 }) {
   return (
     <section
+      className="engine-section"
       id={id}
       style={{
         position: "relative",
@@ -213,7 +217,7 @@ export function Section({
           {eyebrow}
         </div>
       ) : null}
-      <div style={{ maxWidth: 1280, margin: "0 auto" }}>{children}</div>
+      <div className="engine-section-shell" style={{ maxWidth: 1280, margin: "0 auto" }}>{children}</div>
     </section>
   );
 }

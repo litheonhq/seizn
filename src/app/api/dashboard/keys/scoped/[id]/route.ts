@@ -6,6 +6,7 @@ import {
   revokeScopedApiKey,
   deleteScopedApiKey,
 } from '@/lib/scoped-api-keys';
+import { verifyCsrfToken } from '@/lib/csrf';
 import { logServerError } from '@/lib/server/logger';
 
 interface RouteParams {
@@ -54,6 +55,9 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
  */
 export async function PATCH(request: NextRequest, { params }: RouteParams) {
   try {
+    const csrfErr = verifyCsrfToken(request);
+    if (csrfErr) return csrfErr;
+
     const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.json(
@@ -103,6 +107,9 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
  */
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
   try {
+    const csrfErr = verifyCsrfToken(request);
+    if (csrfErr) return csrfErr;
+
     const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.json(

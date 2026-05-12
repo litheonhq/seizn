@@ -211,7 +211,7 @@ export function MindMapFilters({
         <div>
           <div className="relative">
             <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-szn-text-3" />
-            <input
+            <input aria-label="Search query"
               type="text"
               value={filters.searchQuery}
               onChange={(e) => updateSearch(e.target.value)}
@@ -247,7 +247,7 @@ export function MindMapFilters({
                 <span>Recent</span>
                 <span>30 days ago</span>
               </div>
-              <input
+              <input aria-label="Time range slider"
                 type="range"
                 min={0}
                 max={100}
@@ -296,7 +296,7 @@ export function MindMapFilters({
                   key={type.value}
                   className="flex items-center gap-3 p-2 rounded-lg hover:bg-szn-surface-1 cursor-pointer transition-colors"
                 >
-                  <input
+                  <input aria-label="Value"
                     type="checkbox"
                     checked={filters.types.includes(type.value)}
                     onChange={() => toggleType(type.value)}
@@ -341,7 +341,7 @@ export function MindMapFilters({
                   key={status.value}
                   className="flex items-center gap-3 p-2 rounded-lg hover:bg-szn-surface-1 cursor-pointer transition-colors"
                 >
-                  <input
+                  <input aria-label="Value"
                     type="checkbox"
                     checked={filters.statuses.includes(status.value)}
                     onChange={() => toggleStatus(status.value)}
@@ -386,7 +386,7 @@ export function MindMapFilters({
                   key={privacy.value}
                   className="flex items-center gap-3 p-2 rounded-lg hover:bg-szn-surface-1 cursor-pointer transition-colors"
                 >
-                  <input
+                  <input aria-label="Value"
                     type="checkbox"
                     checked={filters.privacyClasses.includes(privacy.value)}
                     onChange={() => togglePrivacy(privacy.value)}

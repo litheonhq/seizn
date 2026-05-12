@@ -1,4 +1,5 @@
 import type { ComponentType } from 'react';
+import { DASHBOARD_ROUTES, authorTabHref } from '@/lib/dashboard-routes';
 import {
   AuditIcon,
   BrainIcon,
@@ -19,6 +20,7 @@ import {
 } from '../icons';
 
 export type NavItemId =
+  | 'overview'
   | 'inbox'
   | 'review'
   | 'characters'
@@ -32,10 +34,15 @@ export type NavItemId =
   | 'mindmap'
   | 'replay'
   | 'usage'
+  | 'api-keys'
   | 'byok'
-  | 'settings';
+  | 'billing'
+  | 'settings'
+  | 'admin-metrics';
 
-export type NavGroupId = 'workspace' | 'memory' | 'account';
+export type NavGroupId = 'work' | 'memory' | 'developer' | 'account' | 'admin';
+
+export type NavCapability = 'track2' | 'admin' | 'billing';
 
 export interface NavItem {
   id: NavItemId;
@@ -45,6 +52,8 @@ export interface NavItem {
   badgeKey?: string;
   dotKey?: string;
   kbd?: string;
+  requiredCapability?: NavCapability;
+  secondary?: boolean;
 }
 
 export interface NavGroup {
@@ -55,13 +64,19 @@ export interface NavGroup {
 
 export const NAV_GROUPS: NavGroup[] = [
   {
-    id: 'workspace',
-    labelKey: 'dashboard.nav.groups.workspace',
+    id: 'work',
+    labelKey: 'dashboard.nav.groups.work',
     items: [
+      {
+        id: 'overview',
+        labelKey: 'dashboard.nav.overview',
+        href: DASHBOARD_ROUTES.root,
+        icon: BrainIcon,
+      },
       {
         id: 'inbox',
         labelKey: 'dashboard.nav.inbox',
-        href: '/dashboard/author?tab=inbox',
+        href: authorTabHref('inbox'),
         icon: InboxIcon,
         badgeKey: 'inbox.unread',
         kbd: 'I',
@@ -69,7 +84,7 @@ export const NAV_GROUPS: NavGroup[] = [
       {
         id: 'review',
         labelKey: 'dashboard.nav.review',
-        href: '/dashboard/author?tab=review',
+        href: authorTabHref('review'),
         icon: ReviewIcon,
         badgeKey: 'review.pending',
         kbd: 'R',
@@ -77,7 +92,7 @@ export const NAV_GROUPS: NavGroup[] = [
       {
         id: 'characters',
         labelKey: 'dashboard.nav.characters',
-        href: '/dashboard/author?tab=characters',
+        href: authorTabHref('characters'),
         icon: CharactersIcon,
         badgeKey: 'characters.count',
         kbd: 'C',
@@ -85,21 +100,21 @@ export const NAV_GROUPS: NavGroup[] = [
       {
         id: 'graph',
         labelKey: 'dashboard.nav.graph',
-        href: '/dashboard/author?tab=graph',
+        href: authorTabHref('graph'),
         icon: GraphIcon,
         kbd: 'G',
       },
       {
         id: 'timeline',
         labelKey: 'dashboard.nav.timeline',
-        href: '/dashboard/author?tab=timeline',
+        href: authorTabHref('timeline'),
         icon: TimelineIcon,
         kbd: 'T',
       },
       {
         id: 'conflicts',
         labelKey: 'dashboard.nav.conflicts',
-        href: '/dashboard/author?tab=conflicts',
+        href: authorTabHref('conflicts'),
         icon: ConflictIcon,
         badgeKey: 'conflicts.open',
         dotKey: 'conflicts.has_p1',
@@ -108,16 +123,17 @@ export const NAV_GROUPS: NavGroup[] = [
       {
         id: 'simulate',
         labelKey: 'dashboard.nav.simulate',
-        href: '/dashboard/author?tab=simulate',
+        href: authorTabHref('simulate'),
         icon: SimulateIcon,
         kbd: 'S',
       },
       {
         id: 'audit',
         labelKey: 'dashboard.nav.audit',
-        href: '/dashboard/author?tab=audit',
+        href: authorTabHref('audit'),
         icon: AuditIcon,
         kbd: 'A',
+        secondary: true,
       },
     ],
   },
@@ -128,26 +144,47 @@ export const NAV_GROUPS: NavGroup[] = [
       {
         id: 'memories',
         labelKey: 'dashboard.nav.memories',
-        href: '/dashboard/memories',
+        href: DASHBOARD_ROUTES.memories,
         icon: BrainIcon,
       },
       {
         id: 'memory-edit',
         labelKey: 'dashboard.nav.memoryEditor',
-        href: '/dashboard/memory-editor',
+        href: DASHBOARD_ROUTES.memoryEditor,
         icon: EditIcon,
+        secondary: true,
       },
       {
         id: 'mindmap',
         labelKey: 'dashboard.nav.mindMap',
-        href: '/dashboard/memories/mindmap',
+        href: DASHBOARD_ROUTES.mindmap,
         icon: MapIcon,
+        secondary: true,
       },
       {
         id: 'replay',
         labelKey: 'dashboard.nav.replay',
-        href: '/dashboard/replay',
+        href: DASHBOARD_ROUTES.replay,
         icon: ReplayIcon,
+        secondary: true,
+      },
+    ],
+  },
+  {
+    id: 'developer',
+    labelKey: 'dashboard.nav.groups.developer',
+    items: [
+      {
+        id: 'api-keys',
+        labelKey: 'dashboard.nav.apiKeys',
+        href: DASHBOARD_ROUTES.apiKeys,
+        icon: ByokIcon,
+      },
+      {
+        id: 'usage',
+        labelKey: 'dashboard.nav.usage',
+        href: authorTabHref('usage'),
+        icon: UsageIcon,
       },
     ],
   },
@@ -156,22 +193,36 @@ export const NAV_GROUPS: NavGroup[] = [
     labelKey: 'dashboard.nav.groups.account',
     items: [
       {
-        id: 'usage',
-        labelKey: 'dashboard.nav.usage',
-        href: '/dashboard/usage',
-        icon: UsageIcon,
-      },
-      {
         id: 'byok',
         labelKey: 'dashboard.nav.byok',
-        href: '/dashboard/settings/byok',
+        href: DASHBOARD_ROUTES.authorSettingsByok,
         icon: ByokIcon,
       },
       {
         id: 'settings',
         labelKey: 'dashboard.nav.settings',
-        href: '/dashboard/settings',
+        href: DASHBOARD_ROUTES.authorSettings,
         icon: SettingsIcon,
+      },
+      {
+        id: 'billing',
+        labelKey: 'dashboard.nav.billing',
+        href: DASHBOARD_ROUTES.billing,
+        icon: UsageIcon,
+        requiredCapability: 'billing',
+      },
+    ],
+  },
+  {
+    id: 'admin',
+    labelKey: 'dashboard.nav.groups.admin',
+    items: [
+      {
+        id: 'admin-metrics',
+        labelKey: 'dashboard.nav.adminMetrics',
+        href: '/en/admin/metrics',
+        icon: AuditIcon,
+        requiredCapability: 'admin',
       },
     ],
   },
@@ -179,3 +230,20 @@ export const NAV_GROUPS: NavGroup[] = [
 
 export type NavBadgeMap = Partial<Record<string, number | string>>;
 export type NavDotMap = Partial<Record<string, boolean>>;
+
+export type NavCapabilityMap = Partial<Record<NavCapability, boolean>>;
+
+export function filterNavGroupsByCapability(
+  groups: readonly NavGroup[],
+  capabilities: NavCapabilityMap = {}
+): NavGroup[] {
+  return groups
+    .map((group) => ({
+      ...group,
+      items: group.items.filter((item) => {
+        if (!item.requiredCapability) return true;
+        return capabilities[item.requiredCapability] === true;
+      }),
+    }))
+    .filter((group) => group.items.length > 0);
+}

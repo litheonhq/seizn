@@ -7,6 +7,7 @@ import {
   ScopeLevel,
   ActionType,
 } from '@/lib/scoped-api-keys';
+import { verifyCsrfToken } from '@/lib/csrf';
 import { logServerError } from '@/lib/server/logger';
 
 /**
@@ -55,6 +56,9 @@ export async function GET(request: NextRequest) {
  */
 export async function POST(request: NextRequest) {
   try {
+    const csrfErr = verifyCsrfToken(request);
+    if (csrfErr) return csrfErr;
+
     const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.json(

@@ -9,6 +9,9 @@ import { getRequestUser } from '@/lib/api/request-user';
 import { createServerClient } from '@/lib/supabase';
 import { verifyCompliance } from '@/lib/winter/rtbf/verification';
 import { logServerError } from '@/lib/server/logger';
+import { DATA_RETENTION, formatDays } from '@/lib/policy';
+
+const rtbfResponseWindow = formatDays(DATA_RETENTION.ACCOUNT_DELETION_DAYS);
 
 interface RouteParams {
   params: Promise<{ requestId: string }>;
@@ -63,7 +66,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
         checks_passed: Object.values(compliance.checks).filter(Boolean).length,
         checks_total: Object.keys(compliance.checks).length,
         response_time: `${compliance.response_time_days} days`,
-        response_deadline: '30 days (GDPR)',
+        response_deadline: `${rtbfResponseWindow} (GDPR)`,
       },
     });
   } catch (error) {

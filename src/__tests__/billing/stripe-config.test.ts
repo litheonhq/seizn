@@ -10,41 +10,43 @@ import {
   isValidStripePriceId,
   type AuthorBillingTier,
   type BillingCadence,
+  type BillingColumn,
+  type CharterStatus,
 } from '@/lib/stripe-config';
 
 const ENV = {
-  STRIPE_PRICE_ID_INDIE_MONTHLY: 'price_indie_monthly_v7',
-  STRIPE_PRICE_ID_INDIE_YEARLY: 'price_indie_yearly_v7',
-  STRIPE_PRICE_ID_PRO_MONTHLY: 'price_pro_monthly_v7',
-  STRIPE_PRICE_ID_PRO_YEARLY: 'price_pro_yearly_v7',
-  STRIPE_PRICE_ID_STUDIO_MONTHLY: 'price_studio_monthly_v7',
-  STRIPE_PRICE_ID_STUDIO_YEARLY: 'price_studio_yearly_v7',
-  STRIPE_PRICE_ID_ENTERPRISE_MONTHLY: 'price_enterprise_monthly_v7',
-  STRIPE_PRICE_ID_ENTERPRISE_YEARLY: 'price_enterprise_yearly_v7',
+  STRIPE_PRICE_ID_V9_INDIE_MANAGED_MONTHLY_CHARTER: 'price_indie_managed_monthly_charter_v9',
+  STRIPE_PRICE_ID_V9_INDIE_MANAGED_ANNUAL_CHARTER: 'price_indie_managed_annual_charter_v9',
+  STRIPE_PRICE_ID_V9_PRO_MANAGED_MONTHLY_CHARTER: 'price_pro_managed_monthly_charter_v9',
+  STRIPE_PRICE_ID_V9_PRO_MANAGED_ANNUAL_CHARTER: 'price_pro_managed_annual_charter_v9',
+  STRIPE_PRICE_ID_V9_STUDIO_MANAGED_MONTHLY_CHARTER: 'price_studio_managed_monthly_charter_v9',
+  STRIPE_PRICE_ID_V9_STUDIO_MANAGED_ANNUAL_CHARTER: 'price_studio_managed_annual_charter_v9',
+  STRIPE_PRICE_ID_V9_ENTERPRISE_MANAGED_MONTHLY_CHARTER: 'price_enterprise_managed_monthly_charter_v9',
+  STRIPE_PRICE_ID_V9_ENTERPRISE_MANAGED_ANNUAL_CHARTER: 'price_enterprise_managed_annual_charter_v9',
 } as NodeJS.ProcessEnv;
 
-const CASES: Array<[AuthorBillingTier, BillingCadence, string]> = [
-  ['indie', 'monthly', 'price_indie_monthly_v7'],
-  ['indie', 'yearly', 'price_indie_yearly_v7'],
-  ['pro', 'monthly', 'price_pro_monthly_v7'],
-  ['pro', 'yearly', 'price_pro_yearly_v7'],
-  ['studio', 'monthly', 'price_studio_monthly_v7'],
-  ['studio', 'yearly', 'price_studio_yearly_v7'],
-  ['enterprise', 'monthly', 'price_enterprise_monthly_v7'],
-  ['enterprise', 'yearly', 'price_enterprise_yearly_v7'],
+const CASES: Array<[AuthorBillingTier, BillingColumn, BillingCadence, CharterStatus, string]> = [
+  ['indie', 'managed', 'monthly', 'charter', 'price_indie_managed_monthly_charter_v9'],
+  ['indie', 'managed', 'yearly', 'charter', 'price_indie_managed_annual_charter_v9'],
+  ['pro', 'managed', 'monthly', 'charter', 'price_pro_managed_monthly_charter_v9'],
+  ['pro', 'managed', 'yearly', 'charter', 'price_pro_managed_annual_charter_v9'],
+  ['studio', 'managed', 'monthly', 'charter', 'price_studio_managed_monthly_charter_v9'],
+  ['studio', 'managed', 'yearly', 'charter', 'price_studio_managed_annual_charter_v9'],
+  ['enterprise', 'managed', 'monthly', 'charter', 'price_enterprise_managed_monthly_charter_v9'],
+  ['enterprise', 'managed', 'yearly', 'charter', 'price_enterprise_managed_annual_charter_v9'],
 ];
 
-describe('Stripe v7 author billing config', () => {
-  it.each(CASES)('resolves %s %s to the configured Stripe price', (tier, cadence, priceId) => {
-    expect(getAuthorStripePriceId(tier, cadence, ENV)).toBe(priceId);
+describe('Stripe v9 author billing config', () => {
+  it.each(CASES)('resolves %s %s %s %s to the configured Stripe price', (tier, column, cadence, charter, priceId) => {
+    expect(getAuthorStripePriceId(tier, column, cadence, charter, ENV)).toBe(priceId);
     expect(getAuthorTierFromStripePriceId(priceId, ENV)).toBe(tier);
     expect(getBillingCadenceFromStripePriceId(priceId, ENV)).toBe(cadence);
     expect(getPlanFromStripePriceId(priceId, ENV)).toBe(tier);
     expect(isValidStripePriceId(priceId, ENV)).toBe(true);
   });
 
-  it.each(CASES)('does not invent a Stripe price when %s %s env is missing', (tier, cadence) => {
-    expect(getAuthorStripePriceId(tier, cadence, {})).toBeNull();
+  it.each(CASES)('does not invent a Stripe price when %s %s %s %s env is missing', (tier, column, cadence, charter) => {
+    expect(getAuthorStripePriceId(tier, column, cadence, charter, {})).toBeNull();
   });
 
   it('does not accept legacy hard-coded Stripe prices', () => {
@@ -52,11 +54,11 @@ describe('Stripe v7 author billing config', () => {
     expect(getPlanFromStripePriceId('price_1TJdcm8XSoMws9UfAYJ7xu7G', ENV)).toBeNull();
   });
 
-  it('keeps the v7 public tier amounts and caps locked', () => {
-    expect(AUTHOR_BILLING_TIERS.indie.monthlyUsd).toBe(39);
-    expect(AUTHOR_BILLING_TIERS.pro.monthlyUsd).toBe(149);
-    expect(AUTHOR_BILLING_TIERS.studio.monthlyUsd).toBe(499);
-    expect(AUTHOR_BILLING_TIERS.enterprise.monthlyUsd).toBe(2500);
+  it('keeps the v9 public managed tier amounts and caps locked', () => {
+    expect(AUTHOR_BILLING_TIERS.indie.managedMonthlyUsd).toBe(39);
+    expect(AUTHOR_BILLING_TIERS.pro.managedMonthlyUsd).toBe(149);
+    expect(AUTHOR_BILLING_TIERS.studio.managedMonthlyUsd).toBe(499);
+    expect(AUTHOR_BILLING_TIERS.enterprise.managedMonthlyUsd).toBe(2500);
     expect(getAuthorTokenCap('indie')).toBe(1_000_000);
     expect(getAuthorTokenCap('pro')).toBe(5_000_000);
     expect(getAuthorTokenCap('studio')).toBe(20_000_000);
@@ -65,8 +67,8 @@ describe('Stripe v7 author billing config', () => {
 
   it('returns both cadence price IDs for a plan', () => {
     expect(getStripePriceIdsForPlan('studio', ENV)).toEqual([
-      'price_studio_monthly_v7',
-      'price_studio_yearly_v7',
+      'price_studio_managed_monthly_charter_v9',
+      'price_studio_managed_annual_charter_v9',
     ]);
   });
 });

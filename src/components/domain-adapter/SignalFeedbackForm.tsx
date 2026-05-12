@@ -160,7 +160,7 @@ export function SignalFeedbackForm({
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Query
           </label>
-          <input
+          <input aria-label="Query"
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
@@ -177,7 +177,7 @@ export function SignalFeedbackForm({
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Relevant Document IDs
               </label>
-              <input
+              <input aria-label="Relevant document IDs"
                 type="text"
                 value={relevantDocIds}
                 onChange={(e) => setRelevantDocIds(e.target.value)}
@@ -193,7 +193,7 @@ export function SignalFeedbackForm({
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Irrelevant Document IDs
               </label>
-              <input
+              <input aria-label="Irrelevant document IDs"
                 type="text"
                 value={irrelevantDocIds}
                 onChange={(e) => setIrrelevantDocIds(e.target.value)}
@@ -214,7 +214,7 @@ export function SignalFeedbackForm({
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Clicked Document ID
               </label>
-              <input
+              <input aria-label="Clicked document ID"
                 type="text"
                 value={clickedDocId}
                 onChange={(e) => setClickedDocId(e.target.value)}
@@ -228,7 +228,7 @@ export function SignalFeedbackForm({
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Position in Results
               </label>
-              <input
+              <input aria-label="Position"
                 type="number"
                 value={position}
                 onChange={(e) => setPosition(parseInt(e.target.value) || 1)}
@@ -250,7 +250,7 @@ export function SignalFeedbackForm({
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Document ID
               </label>
-              <input
+              <input aria-label="Dwell document ID"
                 type="text"
                 value={dwellDocId}
                 onChange={(e) => setDwellDocId(e.target.value)}
@@ -264,7 +264,7 @@ export function SignalFeedbackForm({
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Dwell Time (seconds)
               </label>
-              <input
+              <input aria-label="Dwell Time"
                 type="number"
                 value={dwellTime}
                 onChange={(e) => setDwellTime(parseInt(e.target.value) || 30)}
@@ -286,7 +286,7 @@ export function SignalFeedbackForm({
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Converted Document ID
               </label>
-              <input
+              <input aria-label="Converted document ID"
                 type="text"
                 value={convertedDocId}
                 onChange={(e) => setConvertedDocId(e.target.value)}

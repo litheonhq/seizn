@@ -71,7 +71,7 @@ function ScoreSlider({
         </div>
         <span className="text-sm font-medium text-gray-900">{percentage}%</span>
       </div>
-      <input
+      <input aria-label="Value slider"
         type="range"
         min={min}
         max={max}
@@ -110,7 +110,7 @@ function NumberInput({
     <div className="space-y-1">
       <label className="text-sm font-medium text-gray-700">{label}</label>
       {description && <p className="text-xs text-gray-500">{description}</p>}
-      <input
+      <input aria-label="Value"
         type="number"
         min={min}
         max={max}
@@ -147,7 +147,7 @@ function TextInput({
         {required && <span className="text-[var(--signal-conflict-ink)] ml-1">*</span>}
       </label>
       {description && <p className="text-xs text-gray-500">{description}</p>}
-      <input
+      <input aria-label="Value"
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}

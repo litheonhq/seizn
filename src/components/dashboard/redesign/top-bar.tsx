@@ -1,6 +1,7 @@
 'use client';
 
 import { useDashboardTranslation } from '@/contexts/DashboardLocaleContext';
+import { getAuthorTabLabelKey, type AuthorWorkspaceTab } from '@/lib/dashboard-routes';
 import { Kbd } from './atoms';
 import {
   BellIcon,
@@ -13,15 +14,7 @@ import type { Density } from './types';
 
 export type TopBarVariant = 'A' | 'B';
 
-export type TopBarTab =
-  | 'inbox'
-  | 'review'
-  | 'characters'
-  | 'graph'
-  | 'timeline'
-  | 'conflicts'
-  | 'simulate'
-  | 'audit';
+export type TopBarTab = AuthorWorkspaceTab;
 
 export interface TopBarProps {
   variant?: TopBarVariant;
@@ -29,6 +22,7 @@ export interface TopBarProps {
   onTab?: (tab: TopBarTab) => void;
   density?: Density;
   workspaceLabel?: string;
+  currentLabel?: string;
   onToggleSidebar?: () => void;
   onCommand?: () => void;
   onNotifications?: () => void;
@@ -42,17 +36,6 @@ const VARIANT_B_TABS: { id: TopBarTab; labelKey: string }[] = [
   { id: 'conflicts', labelKey: 'dashboard.nav.conflicts' },
   { id: 'timeline', labelKey: 'dashboard.nav.timeline' },
 ];
-
-const TAB_LABEL_KEYS: Record<TopBarTab, string> = {
-  inbox: 'dashboard.nav.inbox',
-  review: 'dashboard.nav.review',
-  characters: 'dashboard.nav.characters',
-  graph: 'dashboard.nav.graph',
-  timeline: 'dashboard.nav.timeline',
-  conflicts: 'dashboard.nav.conflicts',
-  simulate: 'dashboard.nav.simulate',
-  audit: 'dashboard.nav.audit',
-};
 
 const ICON_BTN_STYLE = {
   all: 'unset',
@@ -72,6 +55,7 @@ export function TopBar({
   onTab,
   density = 'comfortable',
   workspaceLabel,
+  currentLabel,
   onToggleSidebar,
   onCommand,
   onNotifications,
@@ -82,10 +66,11 @@ export function TopBar({
   const height = density === 'compact' ? 48 : density === 'spacious' ? 60 : 54;
 
   const breadcrumbWorkspace = workspaceLabel ?? t('dashboard.topBar.workspace');
-  const breadcrumbTabLabel = t(TAB_LABEL_KEYS[tab] ?? 'dashboard.topBar.workspace');
+  const breadcrumbTabLabel = currentLabel ?? t(getAuthorTabLabelKey(tab));
 
   return (
     <header
+      className="dashboard-redesign-topbar"
       style={{
         height,
         flexShrink: 0,
@@ -119,7 +104,7 @@ export function TopBar({
           <ChevronRightIcon size={14} />
         </span>
         <span
-          className="serif"
+          className="serif dashboard-redesign-breadcrumb-current"
           style={{
             fontSize: 16,
             fontWeight: 500,
@@ -191,8 +176,10 @@ export function TopBar({
           <span style={{ display: 'flex' }} aria-hidden="true">
             <CommandIcon size={14} />
           </span>
-          <span>{t('dashboard.topBar.command')}</span>
-          <Kbd>{'⌘K'}</Kbd>
+          <span className="dashboard-redesign-command-label">{t('dashboard.topBar.command')}</span>
+          <span className="dashboard-redesign-command-kbd">
+            <Kbd>{'⌘K'}</Kbd>
+          </span>
         </button>
         <button
           type="button"
@@ -225,9 +212,34 @@ export function TopBar({
           <span style={{ display: 'flex' }} aria-hidden="true">
             <FeatherIcon size={14} />
           </span>
-          <span>{t('dashboard.topBar.write')}</span>
+          <span className="dashboard-redesign-write-label">{t('dashboard.topBar.write')}</span>
         </button>
       </div>
+      <style>{`
+        @media (max-width: 767px) {
+          .dashboard-redesign-topbar {
+            padding: 0 10px !important;
+            gap: 8px !important;
+            min-width: 0;
+          }
+          .dashboard-redesign-breadcrumb-current {
+            max-width: 45vw;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            letter-spacing: 0 !important;
+          }
+          .dashboard-redesign-command-label,
+          .dashboard-redesign-command-kbd,
+          .dashboard-redesign-write-label {
+            display: none;
+          }
+          .dashboard-redesign-topbar button {
+            min-width: 44px;
+            min-height: 44px;
+          }
+        }
+      `}</style>
     </header>
   );
 }

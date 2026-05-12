@@ -4,6 +4,8 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
 import { createLatestRequestGuard, isAbortError } from "@/lib/client-request";
+import { readApiJson } from "@/lib/client/api-json";
+import { DASHBOARD_ROUTES } from "@/lib/dashboard-routes";
 import { formatDate } from "@/lib/format-date";
 import { getErrorMessage } from "@/lib/ui-error";
 
@@ -52,6 +54,12 @@ interface UsageData {
   summary: UsageSummary;
 }
 
+interface UsageApiResponse {
+  success?: boolean;
+  usage?: UsageData;
+  error?: unknown;
+}
+
 export function UsageClient() {
   const requestGuardRef = useRef(createLatestRequestGuard());
   const { t } = useDashboardTranslation();
@@ -70,14 +78,11 @@ export function UsageClient() {
       const res = await fetch(`/api/dashboard/usage?period=${period}`, {
         signal: request.signal,
       });
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(getErrorMessage(data?.error, "Failed to fetch usage"));
-      }
+      const data = await readApiJson<UsageApiResponse>(res, "Failed to fetch usage");
       if (!requestGuardRef.current.isCurrent(request.id)) {
         return;
       }
-      if (data.success) {
+      if (data.success && data.usage) {
         setUsage(data.usage);
       } else {
         setError(getErrorMessage(data.error, "Failed to fetch usage"));
@@ -126,7 +131,7 @@ export function UsageClient() {
                 onClick={() => setPeriod(p)}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                   period === p
-                    ? "bg-[var(--ink-900)] text-[var(--ink-900)]"
+                    ? "bg-[var(--ink-900)] text-white"
                     : "bg-[var(--ink-50)] text-[var(--ink-600)] hover:text-[var(--ink-900)]"
                 }`}
               >
@@ -297,7 +302,7 @@ export function UsageClient() {
                     description={t("dashboard.usagePage.noEndpointDescription")}
                     cta={{
                       label: t("dashboard.usagePage.sendTestRequest"),
-                      href: "/dashboard/keys",
+                      href: DASHBOARD_ROUTES.apiKeys,
                     }}
                   />
                 ) : (
@@ -346,7 +351,7 @@ export function UsageClient() {
                     description={t("dashboard.usagePage.noKeyDescription")}
                     cta={{
                       label: t("dashboard.usagePage.createApiKey"),
-                      href: "/dashboard/keys",
+                      href: DASHBOARD_ROUTES.apiKeys,
                     }}
                   />
                 ) : (
@@ -403,7 +408,7 @@ export function UsageClient() {
               </p>
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
                 <Link
-                  href="/dashboard/keys"
+                  href={DASHBOARD_ROUTES.apiKeys}
                   className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-[var(--ink-900)] text-white text-sm font-medium hover:from-[var(--ink-900)]/90 hover:to-[var(--ink-900)]/70 transition-all"
                 >
                   <KeyIcon className="w-4 h-4" />

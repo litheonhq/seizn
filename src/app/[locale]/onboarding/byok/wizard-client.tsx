@@ -14,6 +14,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { csrfFetch } from '@/lib/client/csrf-fetch';
 
 type Provider = 'anthropic' | 'openai';
 type Step = 'provider' | 'paste' | 'verify' | 'done';
@@ -60,7 +61,7 @@ export default function ByokWizardClient() {
     setVerifying(true);
     setVerifyResult(null);
     try {
-      const response = await fetch('/api/onboarding/byok/test', {
+      const response = await csrfFetch('/api/onboarding/byok/test', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ provider, api_key: apiKey }),
@@ -81,7 +82,7 @@ export default function ByokWizardClient() {
     setPersisting(true);
     setPersistError(null);
     try {
-      const response = await fetch('/api/account/byok', {
+      const response = await csrfFetch('/api/account/byok', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ provider, api_key: apiKey }),
@@ -124,7 +125,7 @@ export default function ByokWizardClient() {
                 provider === p ? 'border-primary' : ''
               }`}
             >
-              <input
+              <input aria-label="Provider"
                 type="radio"
                 name="provider"
                 value={p}
@@ -164,7 +165,7 @@ export default function ByokWizardClient() {
             </a>
             .
           </p>
-          <input
+          <input aria-label="API key"
             type="password"
             placeholder={PROVIDER_INFO[provider].keyPrefix}
             value={apiKey}

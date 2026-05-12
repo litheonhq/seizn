@@ -23,6 +23,7 @@ export function Hero() {
         }}
       />
       <div
+        className="engine-hero-grid"
         style={{
           position: "relative",
           maxWidth: 1280,
@@ -35,11 +36,12 @@ export function Hero() {
         }}
       >
         <div>
-          <div style={{ display: "flex", gap: 8, marginBottom: 28 }}>
+          <div className="engine-pill-row" style={{ display: "flex", gap: 8, marginBottom: 28 }}>
             <Pill tone="violet">Memory infrastructure · v1</Pill>
             <Pill tone="muted">engine.seizn.com · live</Pill>
           </div>
           <h1
+            className="engine-hero-title"
             style={{
               margin: 0,
               fontSize: 72,
@@ -74,7 +76,7 @@ export function Hero() {
           >
             Memory infrastructure for game NPCs. A drop-in SDK on top of Inworld, Convai, NVIDIA ACE, or your own runtime — replay every memory, audit every decision, cap every budget.
           </p>
-          <div style={{ display: "flex", gap: 12, marginTop: 36 }}>
+          <div className="engine-hero-actions" style={{ display: "flex", gap: 12, marginTop: 36 }}>
             <Btn variant="primary" icon={<Arrow />} href="mailto:hello@seizn.com?subject=Engine%20demo%20request">
               Book a 30-min demo
             </Btn>

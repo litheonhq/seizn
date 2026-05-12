@@ -81,7 +81,7 @@ export const TRACK2_PRICING_COPY: Record<Track2PricingLocale, Track2PricingCopy>
         cta: "Choose Studio",
       },
       studioManaged: {
-        notes: "We host the LLM. Includes 500 Opus calls; $0.15 / call metered overage. No BYOK setup.",
+        notes: "We host the LLM. Includes 500 Opus calls; {overage} / call metered overage. No BYOK setup.",
         cta: "Choose Studio Managed",
       },
       enterprise: {
@@ -125,7 +125,7 @@ export const TRACK2_PRICING_COPY: Record<Track2PricingLocale, Track2PricingCopy>
         cta: "Studio 선택",
       },
       studioManaged: {
-        notes: "LLM을 시즌이 호스팅합니다. 월 500회 Opus 호출 포함, 초과분은 회당 $0.15 메터링. BYOK 설정 불필요.",
+        notes: "LLM을 시즌이 호스팅합니다. 월 500회 Opus 호출 포함, 초과분은 회당 {overage} 메터링. BYOK 설정 불필요.",
         cta: "Studio Managed 선택",
       },
       enterprise: {
@@ -169,7 +169,7 @@ export const TRACK2_PRICING_COPY: Record<Track2PricingLocale, Track2PricingCopy>
         cta: "Studio を選ぶ",
       },
       studioManaged: {
-        notes: "LLM を Seizn 側でホストします。月 500 回の Opus 呼び出しを含み、超過は 1 回 $0.15 のメータリング課金。BYOK 設定は不要です。",
+        notes: "LLM を Seizn 側でホストします。月 500 回の Opus 呼び出しを含み、超過は 1 回 {overage} のメータリング課金。BYOK 設定は不要です。",
         cta: "Studio Managed を選ぶ",
       },
       enterprise: {
@@ -213,7 +213,7 @@ export const TRACK2_PRICING_COPY: Record<Track2PricingLocale, Track2PricingCopy>
         cta: "选择 Studio",
       },
       studioManaged: {
-        notes: "由 Seizn 托管 LLM。每月含 500 次 Opus 调用,超额按每次 $0.15 计费,无需 BYOK 配置。",
+        notes: "由 Seizn 托管 LLM。每月含 500 次 Opus 调用,超额按每次 {overage} 计费,无需 BYOK 配置。",
         cta: "选择 Studio Managed",
       },
       enterprise: {

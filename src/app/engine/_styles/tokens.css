@@ -27,8 +27,8 @@
   /* text */
   --engine-text-base: #E5E7EB;
   --engine-text-strong: #F8FAFC;
-  --engine-text-muted: #94A3B8;
-  --engine-text-dim: #64748B;
+  --engine-text-muted: #AAB8CC;
+  --engine-text-dim: #8EA0B8;
 
   /* lines */
   --engine-line: #1F2937;
@@ -38,7 +38,7 @@
   /* status */
   --engine-live: #34D399;
   --engine-progress: #FBBF24;
-  --engine-roadmap: #64748B;
+  --engine-roadmap: #8EA0B8;
 
   /* type */
   --engine-font-sans: "Pretendard Variable", "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", sans-serif;
@@ -62,6 +62,23 @@
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   min-height: 100vh;
+  overflow-x: clip;
+  width: 100%;
+}
+
+[data-engine-surface],
+[data-engine-surface] * {
+  box-sizing: border-box;
+}
+
+[data-engine-surface] a,
+[data-engine-surface] button {
+  min-height: 44px;
+}
+
+[data-engine-surface] pre,
+[data-engine-surface] code {
+  max-width: 100%;
 }
 
 [data-engine-surface] ::selection {
@@ -100,6 +117,123 @@
 [data-engine-surface] ::-webkit-scrollbar-track { background: transparent; }
 [data-engine-surface] ::-webkit-scrollbar-thumb { background: #1a1f2e; border-radius: 4px; }
 [data-engine-surface] ::-webkit-scrollbar-thumb:hover { background: #2a3245; }
+
+@media (max-width: 980px) {
+  [data-engine-surface] .engine-hero-grid,
+  [data-engine-surface] .engine-sdk-grid,
+  [data-engine-surface] .engine-playground-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  [data-engine-surface] .engine-runtime-card-grid,
+  [data-engine-surface] .engine-wedge-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  [data-engine-surface] .engine-footer-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+}
+
+@media (max-width: 760px) {
+  [data-engine-surface] .engine-nav-shell {
+    padding: 12px 20px !important;
+    gap: 12px !important;
+  }
+
+  [data-engine-surface] .engine-nav-links,
+  [data-engine-surface] .engine-nav-actions > a:first-child,
+  [data-engine-surface] .engine-nav-actions > a:nth-child(2) {
+    display: none !important;
+  }
+
+  [data-engine-surface] .engine-hero-grid {
+    gap: 32px !important;
+    padding: 72px 20px 56px !important;
+  }
+
+  [data-engine-surface] .engine-hero-grid > * {
+    min-width: 0;
+  }
+
+  [data-engine-surface] .engine-hero-title {
+    font-size: 44px !important;
+    line-height: 1.05 !important;
+    letter-spacing: 0 !important;
+  }
+
+  [data-engine-surface] .engine-pill-row {
+    flex-wrap: wrap !important;
+  }
+
+  [data-engine-surface] .engine-hero-actions {
+    align-items: stretch !important;
+    flex-direction: column !important;
+  }
+
+  [data-engine-surface] .engine-hero-actions > a {
+    width: 100%;
+  }
+
+  [data-engine-surface] .engine-section {
+    padding: 64px 20px !important;
+  }
+
+  [data-engine-surface] .engine-section-heading-row {
+    align-items: flex-start !important;
+    flex-direction: column !important;
+  }
+
+  [data-engine-surface] .engine-season-grid,
+  [data-engine-surface] .engine-memory-tier-grid,
+  [data-engine-surface] .engine-budget-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  [data-engine-surface] .engine-runtime-card-grid,
+  [data-engine-surface] .engine-wedge-grid,
+  [data-engine-surface] .engine-footer-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  [data-engine-surface] .engine-playground-chat {
+    border-right: 0 !important;
+    border-bottom: 1px solid var(--engine-line) !important;
+  }
+
+  [data-engine-surface] .engine-runtime-summary {
+    align-items: flex-start !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+
+  [data-engine-surface] .engine-sdk-spec-row {
+    grid-template-columns: 1fr !important;
+    gap: 4px !important;
+  }
+
+  [data-engine-surface] .engine-snippet-toolbar,
+  [data-engine-surface] .engine-snippet-install {
+    overflow-x: auto !important;
+  }
+
+  [data-engine-surface] .engine-snippet-tabs {
+    min-width: max-content;
+  }
+
+  [data-engine-surface] .engine-snippet-code-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  [data-engine-surface] .engine-snippet-line-numbers {
+    display: none !important;
+  }
+
+  [data-engine-surface] .engine-footer-bottom {
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+}
 
 @keyframes engine-pulse-soft {
   0%, 100% { opacity: 0.5; }

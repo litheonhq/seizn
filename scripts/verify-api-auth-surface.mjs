@@ -16,14 +16,15 @@ const baselinePath = path.join(process.cwd(), "docs", "security", "api-auth-surf
 const updateMode = process.argv.includes("--update");
 
 const markerPatterns = [
-  ["apiKey", /\b(authenticateRequest|validateApiKey|extractApiKey)\b/],
+  ["apiKey", /\b(authenticateRequest|authenticateSessionOrApiKey|validateApiKey|extractApiKey|getSupabaseUserFromBearer|handleApiV1|resolveVersioningAuth|requireReplayRouteAuth|requireComplianceApiActor)\b/],
   ["apiScope", /\b(requireApiScope|hasApiScope)\b/],
   ["scopedPermission", /\b(requireScopedPermission|authenticateScopedRequest)\b/],
-  ["sessionUser", /\b(getRequestUser|getSessionUser|getServerSession)\b|\bauth\s*\(/],
+  ["sessionUser", /\b(authenticateSessionOrApiKey|getRequestUser|getSessionUser|getServerSession|withAuthorUiService|resolveChaosContext|resolvePersonaRouteAuth)\b|\bauth\s*\(/],
+  ["internalKey", /\b(verifyInternalKey|INTERNAL_API_KEY|x-internal-key)\b/],
   ["scim", /\bauthenticateSCIMRequest\b/],
   ["cronSecret", /\b(CRON_SECRET|cron-auth|verifyCron)\b/],
   ["webhookSignature", /\b(webhook|signature|svix|stripe-signature|x-hub-signature|X-Seizn-Signature)\b/i],
-  ["csrf", /\b(csrf|validateCsrf|enforceCsrf)\b/i],
+  ["csrf", /\b(csrf|validateCsrf|enforceCsrf|withAuthorUiService)\b/i],
 ];
 
 if (!fs.existsSync(apiRoot)) {

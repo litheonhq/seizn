@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "title": "Seizn — ذاكرة لشخصيات NPC",
-    "description": "وصِّل Seizn بـ Inworld أو Convai أو LLM الخاص بك. ذاكرة وعلاقات تتذكّرها شخصيات NPC عبر الأجيال، بتسعير حسب الرسم البياني لا حسب المقعد."
+    "title": "Seizn - AI memory for fiction writers",
+    "description": "Keep manuscripts, canon, conflict checks, and author memory in one workspace. Seizn helps fiction writers catch contradictions before readers do."
   },
   "nav": {
     "features": "المميزات",
@@ -3641,17 +3641,12 @@
         "replay": "إعادة",
         "byok": "دليل BYOK",
         "changelog": "سجل التغييرات",
-        "engine": "Engine →",
         "sdk": "@seizn/sdk-js",
-        "mcp": "@seizn/mcp"
+        "mcp": "@seizn/mcp",
+        "program": "Program"
       },
       "entity": "© 2026 Seizn by Litheon LLC · Wyoming",
       "version": "v1.0 · عرض Saebyeok بيانات اصطناعية"
-    },
-    "engine": {
-      "badge": "جديد",
-      "body": "هل تبني ذكاء اصطناعي لشخصيات اللعبة؟ المحرك نفسه، مكشوف كـ SDK.",
-      "cta": "engine.seizn.com"
     },
     "checkout": {
       "prefix": "أوافق على",
@@ -3661,6 +3656,12 @@
       "suffix": ".",
       "loading": "جارٍ فتح Stripe...",
       "error": "تعذّر بدء الدفع."
+    },
+    "program": {
+      "badge": "in development",
+      "body": "Seizn Program is our native writing app for manuscripts, canon, review, and local files in one workspace.",
+      "cta": "Join Program waitlist",
+      "footerLabel": "Program"
     }
   }
 }

@@ -10,6 +10,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { createServerClient } from '@/lib/supabase';
 import { getConnector, type ConnectorType } from '@/lib/connectors/external';
+import { verifyCsrfToken } from '@/lib/csrf';
 import { logServerError, logServerWarn } from '@/lib/server/logger';
 
 export async function GET(
@@ -110,6 +111,9 @@ export async function DELETE(
   { params }: { params: Promise<{ type: string }> }
 ) {
   try {
+    const csrfErr = verifyCsrfToken(request);
+    if (csrfErr) return csrfErr;
+
     const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });

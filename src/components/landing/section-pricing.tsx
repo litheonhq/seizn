@@ -1,16 +1,24 @@
-import Link from "next/link";
 import type { CSSProperties } from "react";
+import Link from "next/link";
 import { CheckoutButton } from "@/components/checkout-button";
 import {
   AUTHOR_BILLING_TIERS,
   type AuthorBillingTier,
 } from "@/lib/stripe-config";
+import {
+  formatTrack2Price,
+  formatTrack2Quota,
+  formatTrack2Rate,
+  formatTrack2RegularPrice,
+} from "@/lib/billing/track2-display";
+import { V9_TRACK2_PRODUCTS, type V9Track2Tier } from "@/lib/billing/v9-products";
 import type { Locale } from "@/i18n/config";
 import type { AuthorLandingCopy } from "./author-landing-copy";
 import { SectionHeader } from "./section-header";
 
 const PRIMARY_TIERS = ["indie", "pro"] as const satisfies readonly AuthorBillingTier[];
 const SECONDARY_TIERS = ["studio", "enterprise"] as const satisfies readonly AuthorBillingTier[];
+const TRACK2_LANDING_TIERS = ["free", "indie", "pro", "studio", "studio_managed"] as const satisfies readonly V9Track2Tier[];
 
 export function SectionPricing({ copy, locale }: { copy: AuthorLandingCopy; locale: Locale }) {
   return (
@@ -27,8 +35,80 @@ export function SectionPricing({ copy, locale }: { copy: AuthorLandingCopy; loca
             <PricingRowSecondary key={tier} tier={tier} copy={copy} locale={locale} />
           ))}
         </div>
+        <ApiMcpPricingBridge locale={locale} />
       </div>
     </section>
+  );
+}
+
+function ApiMcpPricingBridge({ locale }: { locale: Locale }) {
+  const bridgeCopy = getApiMcpBridgeCopy(locale);
+
+  return (
+    <div
+      className="mt-5 rounded-[var(--radius-lg)] border p-5 md:p-6"
+      data-testid="track2-pricing-bridge"
+      style={{ borderColor: "var(--ink-200)", background: "var(--bg-elevated)", boxShadow: "var(--shadow-sm)" }}
+    >
+      <div className="grid gap-5 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.4fr)] lg:items-start">
+        <div>
+          <p className="author-eyebrow" style={{ color: "var(--ink-500)" }}>
+            {bridgeCopy.eyebrow}
+          </p>
+          <h3 className="author-serif mt-3 text-3xl" style={{ color: "var(--ink-900)" }}>
+            {bridgeCopy.title}
+          </h3>
+          <p className="mt-3 text-sm leading-6" style={{ color: "var(--ink-600)", textWrap: "pretty" }}>
+            {bridgeCopy.body}
+          </p>
+          <div className="mt-5 flex flex-wrap gap-2">
+            <Link href={`/${locale}/pricing#track-2`} className="author-btn min-h-11 px-4 py-2 text-sm" style={{ background: "var(--ink-900)", color: "var(--ink-0)" }}>
+              {bridgeCopy.primaryCta}
+            </Link>
+            <Link href="/dashboard/account/api-keys" className="author-btn min-h-11 border px-4 py-2 text-sm" style={{ borderColor: "var(--ink-300)", color: "var(--ink-800)" }}>
+              {bridgeCopy.secondaryCta}
+            </Link>
+          </div>
+          <p className="mt-3 text-xs leading-5" style={{ color: "var(--ink-500)" }}>
+            {bridgeCopy.note}
+          </p>
+        </div>
+
+        <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-5">
+          {TRACK2_LANDING_TIERS.map((tier) => (
+            <Track2MiniPrice key={tier} tier={tier} />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Track2MiniPrice({ tier }: { tier: V9Track2Tier }) {
+  const product = V9_TRACK2_PRODUCTS[tier];
+  const activePrice = formatTrack2Price(tier);
+  const regularPrice = formatTrack2RegularPrice(tier);
+  const showRegularPrice = Boolean(regularPrice && regularPrice !== activePrice);
+
+  return (
+    <article className="rounded-[var(--radius-md)] border p-3" style={{ borderColor: "var(--ink-100)", background: "var(--ink-50)" }}>
+      <h4 className="text-sm font-semibold" style={{ color: "var(--ink-900)" }}>
+        {product.label}
+      </h4>
+      <div className="mt-2 flex flex-wrap items-baseline gap-1.5">
+        {showRegularPrice ? (
+          <span className="text-[11px] line-through" style={{ color: "var(--ink-500)" }}>
+            {regularPrice}
+          </span>
+        ) : null}
+        <span className="author-mono text-sm" style={{ color: "var(--ink-900)" }}>
+          {activePrice}
+        </span>
+      </div>
+      <p className="mt-2 text-[11px] leading-5" style={{ color: "var(--ink-600)" }}>
+        {formatTrack2Quota(tier)} · {formatTrack2Rate(tier)}
+      </p>
+    </article>
   );
 }
 
@@ -90,7 +170,7 @@ function PricingCardPrimary({ tier, copy, locale }: { tier: AuthorBillingTier; c
         <CheckoutButton
           tier={tier}
           cadence="monthly"
-          successUrl="/dashboard/billing?success=true"
+          successUrl="/dashboard/author/settings?section=billing&success=true"
           cancelUrl={`/${locale}/pricing`}
           privacyHref={`/${locale}/legal/privacy`}
           termsHref={`/${locale}/legal/terms`}
@@ -132,18 +212,18 @@ function PricingRowSecondary({ tier, copy, locale }: { tier: AuthorBillingTier; 
           {price}
         </p>
         {tier === "enterprise" ? (
-          <Link
-            href={`/${locale}/docs/faq`}
+          <a
+            href="mailto:support@seizn.com"
             className="author-btn min-h-9 border px-3 text-xs"
             style={{ borderColor: "var(--ink-300)", color: "var(--ink-800)" }}
           >
             {copy.pricing.contact}
-          </Link>
+          </a>
         ) : (
           <CheckoutButton
             tier={tier}
             cadence="monthly"
-            successUrl="/dashboard/billing?success=true"
+            successUrl="/dashboard/author/settings?section=billing&success=true"
             cancelUrl={`/${locale}/pricing`}
             privacyHref={`/${locale}/legal/privacy`}
             termsHref={`/${locale}/legal/terms`}
@@ -157,6 +237,50 @@ function PricingRowSecondary({ tier, copy, locale }: { tier: AuthorBillingTier; 
       </div>
     </article>
   );
+}
+
+function getApiMcpBridgeCopy(locale: Locale) {
+  if (locale === "ko") {
+    return {
+      eyebrow: "API · MCP",
+      title: "Claude, Cursor, Cline에서 쓰는 API 플랜",
+      body: "웹 앱이 아니라 기존 AI 도구 안에서 Seizn 캐논을 불러오고, 충돌 검사와 타임라인을 호출하는 Track 2 가격입니다.",
+      primaryCta: "API · MCP 플랜 보기",
+      secondaryCta: "무료 API 키 만들기",
+      note: "결제와 약관 동의는 가격 페이지의 API · MCP 탭에서 한 번에 진행됩니다.",
+    };
+  }
+
+  if (locale === "ja") {
+    return {
+      eyebrow: "API · MCP",
+      title: "API plans for Claude, Cursor, and Cline",
+      body: "Track 2 connects Seizn canon recall, conflict checks, and timeline tools to the AI workspace you already use.",
+      primaryCta: "View API · MCP plans",
+      secondaryCta: "Create a free API key",
+      note: "Checkout and legal consent stay on the pricing page's API · MCP tab.",
+    };
+  }
+
+  if (locale === "zh-hans" || locale === "zh-hant") {
+    return {
+      eyebrow: "API · MCP",
+      title: "API plans for Claude, Cursor, and Cline",
+      body: "Track 2 connects Seizn canon recall, conflict checks, and timeline tools to the AI workspace you already use.",
+      primaryCta: "View API · MCP plans",
+      secondaryCta: "Create a free API key",
+      note: "Checkout and legal consent stay on the pricing page's API · MCP tab.",
+    };
+  }
+
+  return {
+    eyebrow: "API · MCP",
+    title: "API plans for Claude, Cursor, and Cline",
+    body: "Track 2 connects Seizn canon recall, conflict checks, and timeline tools to the AI workspace you already use.",
+    primaryCta: "View API · MCP plans",
+    secondaryCta: "Create a free API key",
+    note: "Checkout and legal consent stay on the pricing page's API · MCP tab.",
+  };
 }
 
 function TokenBudgetBar({ cap, highlight }: { cap: number | null; highlight: boolean }) {

@@ -13,6 +13,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { createServerClient } from '@/lib/supabase';
 import { createSCIMToken, getSCIMConfig, updateSCIMConfig, revokeSCIMToken } from '@/lib/scim/auth';
+import { verifyCsrfToken } from '@/lib/csrf';
 
 interface RouteParams {
   params: Promise<{ orgId: string }>;
@@ -99,6 +100,9 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
  * Returns the token ONLY ONCE - it cannot be retrieved again
  */
 export async function POST(request: NextRequest, { params }: RouteParams) {
+  const csrfErr = verifyCsrfToken(request);
+  if (csrfErr) return csrfErr;
+
   const session = await auth();
   if (!session?.user?.id) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -140,6 +144,9 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
  * Update SCIM settings
  */
 export async function PUT(request: NextRequest, { params }: RouteParams) {
+  const csrfErr = verifyCsrfToken(request);
+  if (csrfErr) return csrfErr;
+
   const session = await auth();
   if (!session?.user?.id) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -187,6 +194,9 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
  * Disable SCIM and revoke token
  */
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
+  const csrfErr = verifyCsrfToken(request);
+  if (csrfErr) return csrfErr;
+
   const session = await auth();
   if (!session?.user?.id) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });

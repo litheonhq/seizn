@@ -147,7 +147,7 @@ function TextInput({
   return (
     <label className="block">
       <span className="szn-eyebrow">{label}</span>
-      <input
+      <input aria-label="Value"
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}

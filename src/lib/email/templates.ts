@@ -422,7 +422,7 @@ export function paymentFailedEmail(
       ${ctaInvoice}
     </a>
     <br>` : ''}
-    <a href="https://www.seizn.com/dashboard/billing" style="display:inline-block;padding:12px 24px;background-color:#fff;color:#111827;text-decoration:none;border-radius:9999px;font-weight:500;border:1px solid #d1d5db;margin-top:8px;">
+    <a href="https://www.seizn.com/dashboard/author/settings?section=billing" style="display:inline-block;padding:12px 24px;background-color:#fff;color:#111827;text-decoration:none;border-radius:9999px;font-weight:500;border:1px solid #d1d5db;margin-top:8px;">
       ${ctaUpdate}
     </a>
     <p style="margin:24px 0 0;font-size:14px;color:#6b7280;">
@@ -573,7 +573,8 @@ export function foundingMemberRelaunchEmail(
   return baseTemplate(content, heading);
 }
 
-// Track 3 desktop waitlist confirmation (W3.1)
+// Track 3 Program waitlist confirmation (W3.1). The storage table keeps its
+// original desktop_waitlist name for migration compatibility.
 export function waitlistConfirmEmail(
   email: string,
   confirmLink: string,
@@ -582,23 +583,23 @@ export function waitlistConfirmEmail(
   const safeEmail = escapeHtml(email);
   const heading = tBilingual(
     "You're on the list",
-    '대기 명단에 등록되었습니다',
+    '대기명단에 등록되었습니다',
     locale
   );
   const body = tBilingual(
-    `Thanks for joining the Seizn Desktop waitlist. To confirm <strong>${safeEmail}</strong>, click the button below.`,
-    `Seizn Desktop 대기 명단에 등록해주셔서 감사합니다. <strong>${safeEmail}</strong> 인증을 위해 아래 버튼을 눌러주세요.`,
+    `Thanks for joining the Seizn Program waitlist. To confirm <strong>${safeEmail}</strong>, click the button below.`,
+    `Seizn Program 대기명단에 등록해주셔서 감사합니다. <strong>${safeEmail}</strong> 인증을 위해 아래 버튼을 눌러주세요.`,
     locale
   );
   const cta = tBilingual('Confirm Email', '이메일 인증하기', locale);
   const expiry = tBilingual(
-    'This link expires in 7 days. Once Desktop launches, you will be among the first to hear.',
-    '이 링크는 7일 동안 유효합니다. Desktop이 출시되면 가장 먼저 알려드립니다.',
+    'This link expires in 7 days. Once Program opens, you will be among the first to hear.',
+    '이 링크는 7일 동안 유효합니다. Program이 공개되면 가장 먼저 알려드립니다.',
     locale
   );
   const ignore = tBilingual(
     "If you didn't sign up, you can ignore this email.",
-    '대기 명단에 등록하신 적이 없다면 이 메일은 무시하셔도 됩니다.',
+    '대기명단에 등록한 적이 없다면 이 메일은 무시하셔도 됩니다.',
     locale
   );
 

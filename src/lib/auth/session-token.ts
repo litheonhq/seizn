@@ -2,6 +2,10 @@ import 'server-only';
 
 import { encode, getToken } from '@auth/core/jwt';
 import { headers } from 'next/headers';
+import {
+  getAuthJsSessionCookieName as getSharedAuthJsSessionCookieName,
+  getSharedAuthCookieOptions,
+} from './cookie-options';
 
 type CreateAuthJsSessionTokenParams = {
   userId: string;
@@ -23,37 +27,12 @@ type AuthJsSessionTokenClaims = {
 };
 
 export function getAuthJsSessionCookieName(): string {
-  const useSecureCookies = process.env.NODE_ENV === 'production';
-  const cookiePrefix = useSecureCookies ? '__Secure-' : '';
-  return `${cookiePrefix}authjs.session-token`;
-}
-
-function getCookieDomain() {
-  if (process.env.AUTH_COOKIE_DOMAIN) {
-    return process.env.AUTH_COOKIE_DOMAIN;
-  }
-
-  const url = process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_SITE_URL;
-  if (!url) return undefined;
-
-  try {
-    const hostname = new URL(url).hostname;
-    if (hostname === 'localhost' || hostname === '127.0.0.1') return undefined;
-    return hostname.startsWith('.') ? hostname : `.${hostname}`;
-  } catch {
-    return undefined;
-  }
+  return getSharedAuthJsSessionCookieName();
 }
 
 export function getAuthJsSessionCookieOptions(maxAgeSeconds = 30 * 24 * 60 * 60) {
-  const cookieDomain = getCookieDomain();
-
   return {
-    httpOnly: true,
-    sameSite: 'lax' as const,
-    path: '/',
-    secure: process.env.NODE_ENV === 'production',
-    ...(cookieDomain ? { domain: cookieDomain } : {}),
+    ...getSharedAuthCookieOptions(),
     maxAge: maxAgeSeconds,
   };
 }

@@ -33,6 +33,11 @@ import {
 } from "@/lib/billing/charter-schedule";
 import { syncManagedEntitlements } from "@/lib/author/billing/managed-entitlements";
 import {
+  buildTrack2StateFromStripeSubscription,
+  downgradeTrack2ProfileAndKeys,
+  syncTrack2ProfileAndKeys,
+} from "@/lib/billing/track2-subscription-state";
+import {
   getAuthorTierFromStripePriceId,
   getBillingColumnFromStripePriceId,
   getCharterStatusFromStripePriceId,
@@ -376,6 +381,30 @@ async function logBillingEvent(
     });
   } catch (error) {
     console.error("Failed to log billing event:", error);
+  }
+}
+
+async function syncTrack2StateFromWebhook(
+  supabase: ReturnType<typeof createServerClient>,
+  userId: string,
+  eventData: StripeEventObject,
+): Promise<void> {
+  const state = buildTrack2StateFromStripeSubscription(
+    eventData as unknown as Parameters<typeof buildTrack2StateFromStripeSubscription>[0],
+  );
+  if (!state) return;
+
+  const sync = await syncTrack2ProfileAndKeys(
+    supabase as unknown as Parameters<typeof syncTrack2ProfileAndKeys>[0],
+    userId,
+    state,
+  );
+  if (!sync.ok) {
+    console.error("[track2] profile subscription sync failed", {
+      userId,
+      subscriptionId: eventData.id,
+      error: sync.error,
+    });
   }
 }
 
@@ -732,6 +761,7 @@ export async function POST(request: NextRequest) {
               failTrack2Webhook("Failed to sync v9 Track 2 profile plan", profileSync.error);
             }
             await attachV8Track2ManagedOverage(subscriptionId, v9.tier);
+            await syncTrack2StateFromWebhook(supabase, user.id, eventData);
             await logBillingEvent(supabase, user.id, "subscription_created", {
               subscription_id: subscriptionId,
               channel: "track2",
@@ -820,6 +850,7 @@ export async function POST(request: NextRequest) {
               failTrack2Webhook("Failed to sync v8 Track 2 profile plan", profileSync.error);
             }
             await attachV8Track2ManagedOverage(subscriptionId, v8.tier);
+            await syncTrack2StateFromWebhook(supabase, user.id, eventData);
             await logBillingEvent(supabase, user.id, "subscription_created", {
               subscription_id: subscriptionId,
               channel: "track2",
@@ -987,6 +1018,7 @@ export async function POST(request: NextRequest) {
               }
               await attachV8Track2ManagedOverage(subscriptionId, v9Update.tier);
               await detachV8Track2ManagedOverageIfDowngrade(subscriptionId, v9Update.tier);
+              await syncTrack2StateFromWebhook(supabase, user.id, eventData);
               await logBillingEvent(supabase, user.id, "subscription_updated", {
                 subscription_id: subscriptionId,
                 channel: "track2",
@@ -1037,6 +1069,7 @@ export async function POST(request: NextRequest) {
               // detach if they moved off it. Both calls are idempotent.
               await attachV8Track2ManagedOverage(subscriptionId, v8.tier);
               await detachV8Track2ManagedOverageIfDowngrade(subscriptionId, v8.tier);
+              await syncTrack2StateFromWebhook(supabase, user.id, eventData);
               await logBillingEvent(supabase, user.id, "subscription_updated", {
                 subscription_id: subscriptionId,
                 channel: "track2",
@@ -1127,11 +1160,16 @@ export async function POST(request: NextRequest) {
         if (priceId) {
           // v9 first: downgrade Track 2 v9 subscriptions to free.
           const v9Tier = getV9Track2TierFromStripePriceId(priceId);
-          if (v9Tier) {
-            const downgrade = await applyV9Track2TierToApiKeys(
+            if (v9Tier) {
+            const downgrade = await downgradeTrack2ProfileAndKeys(
+              supabase as unknown as Parameters<typeof downgradeTrack2ProfileAndKeys>[0],
               user.id,
-              "free",
-              supabase as unknown as Parameters<typeof applyV9Track2TierToApiKeys>[2],
+              {
+                subscriptionId,
+                priceId,
+                endedAt: stripeTimestampToIso(eventData.ended_at),
+                catalog: "v9",
+              },
             );
             const profileSync = await syncTrack2ProfileCancellation(supabase, user.id, eventData);
             if (!profileSync.ok) {
@@ -1191,10 +1229,15 @@ export async function POST(request: NextRequest) {
           }
           const v8Tier = getV8Track2TierFromStripePriceId(priceId);
           if (v8Tier) {
-            const downgrade = await applyV8Track2TierToApiKeys(
+            const downgrade = await downgradeTrack2ProfileAndKeys(
+              supabase as unknown as Parameters<typeof downgradeTrack2ProfileAndKeys>[0],
               user.id,
-              "free",
-              supabase as unknown as Parameters<typeof applyV8Track2TierToApiKeys>[2],
+              {
+                subscriptionId,
+                priceId,
+                endedAt: stripeTimestampToIso(eventData.ended_at),
+                catalog: "v8",
+              },
             );
             const profileSync = await syncTrack2ProfileCancellation(supabase, user.id, eventData);
             if (!profileSync.ok) {

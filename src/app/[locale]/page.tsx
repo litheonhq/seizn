@@ -6,6 +6,7 @@ import {
 } from "@/components/landing/author-flagship-landing";
 import { loadSaebyeokDemoData } from "@/lib/sample-ip-demo";
 import { StructuredData } from "@/components/seo/StructuredData";
+import { auth } from "@/lib/auth";
 
 type Props = {
   params: Promise<{ locale: Locale }>;
@@ -30,15 +31,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function Home({ params }: Props) {
   const { locale } = await params;
-  const [data, copy] = await Promise.all([
+  const [data, copy, session] = await Promise.all([
     loadSaebyeokDemoData(),
     getAuthorLandingCopy(locale),
+    auth(),
   ]);
 
   return (
     <>
       <StructuredData />
-      <AuthorFlagshipLanding data={data} locale={locale} copy={copy} />
+      <AuthorFlagshipLanding
+        data={data}
+        locale={locale}
+        copy={copy}
+        isAuthenticated={Boolean(session?.user)}
+      />
     </>
   );
 }

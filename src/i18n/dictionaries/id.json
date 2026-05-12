@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "title": "Seizn — Memori untuk NPC AI",
-    "description": "Colok ke Inworld, Convai, atau LLM Anda. Seizn memberi NPC memori yang menempel, hubungan, dan ingatan lintas generasi. Harga per entity, bukan per seat."
+    "title": "Seizn - AI memory for fiction writers",
+    "description": "Keep manuscripts, canon, conflict checks, and author memory in one workspace. Seizn helps fiction writers catch contradictions before readers do."
   },
   "nav": {
     "features": "Fitur",
@@ -3641,17 +3641,12 @@
         "replay": "Replay",
         "byok": "Panduan BYOK",
         "changelog": "Perubahan",
-        "engine": "Engine →",
         "sdk": "@seizn/sdk-js",
-        "mcp": "@seizn/mcp"
+        "mcp": "@seizn/mcp",
+        "program": "Program"
       },
       "entity": "© 2026 Seizn by Litheon LLC · Wyoming",
       "version": "v1.0 · demo Saebyeok adalah data sintetis"
-    },
-    "engine": {
-      "badge": "baru",
-      "body": "Sedang membangun AI NPC untuk game? Mesin kanon yang sama, dipaparkan sebagai SDK.",
-      "cta": "engine.seizn.com"
     },
     "checkout": {
       "prefix": "Saya menyetujui",
@@ -3661,6 +3656,12 @@
       "suffix": ".",
       "loading": "Membuka Stripe...",
       "error": "Checkout gagal dimulai."
+    },
+    "program": {
+      "badge": "in development",
+      "body": "Seizn Program is our native writing app for manuscripts, canon, review, and local files in one workspace.",
+      "cta": "Join Program waitlist",
+      "footerLabel": "Program"
     }
   }
 }

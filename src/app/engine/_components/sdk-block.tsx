@@ -10,7 +10,7 @@ const SPECS = [
 export function SDKBlock() {
   return (
     <Section eyebrow="30-second integration">
-      <div style={{ display: "grid", gridTemplateColumns: "0.85fr 1.15fr", gap: 56, alignItems: "start" }}>
+      <div className="engine-sdk-grid" style={{ display: "grid", gridTemplateColumns: "0.85fr 1.15fr", gap: 56, alignItems: "start" }}>
         <div>
           <h2
             style={{
@@ -43,6 +43,7 @@ export function SDKBlock() {
             {SPECS.map((s) => (
               <div
                 key={s.k}
+                className="engine-sdk-spec-row"
                 style={{
                   display: "grid",
                   gridTemplateColumns: "120px 1fr",

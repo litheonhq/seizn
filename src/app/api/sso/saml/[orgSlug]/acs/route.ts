@@ -18,7 +18,11 @@ import { createServerClient } from '@/lib/supabase';
 import { getSSOConnection, getSSOConnections } from '@/lib/sso';
 import { extractUserAttributes, parseSAMLResponse } from '@/lib/sso/saml-provider';
 import { sanitizeRelativeRedirect, sanitizeSameOriginRedirect } from '@/lib/security/redirect';
-import { createAuthJsSessionToken } from '@/lib/auth/session-token';
+import {
+  createAuthJsSessionToken,
+  getAuthJsSessionCookieName,
+  getAuthJsSessionCookieOptions,
+} from '@/lib/auth/session-token';
 import { logServerError } from '@/lib/server/logger';
 
 interface RouteParams {
@@ -33,20 +37,6 @@ type LoginAttemptLookup = {
 
 function getBaseUrl(request: NextRequest): string {
   return process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_SITE_URL || request.nextUrl.origin;
-}
-
-function getCookieDomain(baseUrl: string): string | undefined {
-  if (process.env.AUTH_COOKIE_DOMAIN) {
-    return process.env.AUTH_COOKIE_DOMAIN;
-  }
-
-  try {
-    const hostname = new URL(baseUrl).hostname;
-    if (hostname === 'localhost' || hostname === '127.0.0.1') return undefined;
-    return hostname.startsWith('.') ? hostname : `.${hostname}`;
-  } catch {
-    return undefined;
-  }
 }
 
 function extractInResponseToFromSamlResponse(samlResponse: string): string | null {
@@ -306,18 +296,11 @@ async function handleAcs(
 
     const response = NextResponse.redirect(new URL(redirectPath, baseUrl));
 
-    const useSecureCookies = process.env.NODE_ENV === 'production';
-    const cookiePrefix = useSecureCookies ? '__Secure-' : '';
-    const cookieDomain = getCookieDomain(baseUrl);
-
-    response.cookies.set(`${cookiePrefix}authjs.session-token`, sessionToken, {
-      httpOnly: true,
-      secure: useSecureCookies,
-      sameSite: 'lax',
-      path: '/',
-      maxAge: 24 * 60 * 60,
-      ...(cookieDomain ? { domain: cookieDomain } : {}),
-    });
+    response.cookies.set(
+      getAuthJsSessionCookieName(),
+      sessionToken,
+      getAuthJsSessionCookieOptions(24 * 60 * 60)
+    );
 
     return response;
   } catch (err) {

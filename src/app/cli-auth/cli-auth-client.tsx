@@ -3,6 +3,16 @@
 import { useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import { Check, Copy, KeyRound, RefreshCw, Terminal } from "lucide-react";
+import { readApiJson } from "@/lib/client/api-json";
+import { csrfFetch } from "@/lib/client/csrf-fetch";
+import { getErrorMessage } from "@/lib/ui-error";
+
+type CreateCliKeyResponse = {
+  success?: boolean;
+  key?: string;
+  error?: unknown;
+  message?: string;
+};
 
 interface CliAuthClientProps {
   email: string;
@@ -24,18 +34,18 @@ export function CliAuthClient({ email }: CliAuthClientProps) {
     setCopied(null);
     setIsCreating(true);
     try {
-      const response = await fetch("/api/dashboard/keys", {
+      const response = await csrfFetch("/api/dashboard/keys", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: "Seizn CLI" }),
       });
-      const payload = await response.json().catch(() => null);
-      if (!response.ok || !payload?.key) {
-        throw new Error(payload?.error?.message || payload?.message || "Failed to create CLI key");
+      const payload = await readApiJson<CreateCliKeyResponse>(response, "Failed to create CLI key");
+      if (!payload.success || !payload.key) {
+        throw new Error(getErrorMessage(payload.error ?? payload.message, "Failed to create CLI key"));
       }
       setApiKey(payload.key);
     } catch (createError) {
-      setError(createError instanceof Error ? createError.message : "Failed to create CLI key");
+      setError(getErrorMessage(createError, "Failed to create CLI key"));
     } finally {
       setIsCreating(false);
     }

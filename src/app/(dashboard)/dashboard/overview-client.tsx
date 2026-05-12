@@ -1,931 +1,328 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
-import { useDashboardTranslation } from "@/contexts/DashboardLocaleContext";
-import { OnboardingWizard } from "@/components/dashboard/OnboardingWizard";
-import { NorthStarMetrics } from "@/components/dashboard/NorthStarMetrics";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { ArrowRight, CheckCircle2, CircleAlert, CircleDashed, RefreshCw } from "lucide-react";
+import { readApiJson } from "@/lib/client/api-json";
 import { createLatestRequestGuard, isAbortError } from "@/lib/client-request";
-import { getReliabilityUpdatesCopy } from "@/lib/i18n/reliability-updates";
-import { formatDate } from "@/lib/format-date";
+import {
+  buildDashboardOverviewState,
+  type DashboardOverviewState,
+  type DashboardOverviewStatus,
+} from "@/lib/dashboard-overview";
 import { getErrorMessage } from "@/lib/ui-error";
 import type {
-  DashboardUser as User,
-  DashboardStats as Stats,
-  RecentMemory,
   DailyUsage,
+  DashboardStats,
+  DashboardUser,
   RecentActivity,
+  RecentMemory,
 } from "@/types/dashboard";
 
-const RELIABILITY_CARD_META = [
-  {
-    href: "/dashboard/legacy/organizations",
-    tone: "bg-szn-surface-1 border-szn-border-subtle hover:border-szn-signal-line",
-  },
-  {
-    href: "/dashboard/legacy/webhooks",
-    tone: "bg-szn-surface-1 border-szn-border-subtle hover:border-szn-signal-line",
-  },
-  {
-    href: (locale: string) => `/${locale}/docs/security`,
-    tone: "bg-szn-surface-1 border-szn-border-subtle hover:border-szn-signal-line",
-  },
-  {
-    href: (locale: string) => `/${locale}/docs/security`,
-    tone: "bg-szn-surface-1 border-szn-border-subtle hover:border-szn-signal-line",
-  },
-] as const;
+type StatsResponse = {
+  success?: boolean;
+  stats?: DashboardStats;
+  error?: unknown;
+};
 
-export default function DashboardOverviewClient({ user }: { user: User }) {
-  const { t, locale } = useDashboardTranslation();
-  const [stats, setStats] = useState<Stats | null>(null);
+type MemoriesResponse = {
+  success?: boolean;
+  memories?: RecentMemory[];
+  results?: RecentMemory[];
+  error?: unknown;
+};
+
+type UsageResponse = {
+  success?: boolean;
+  usage?: {
+    daily?: DailyUsage[];
+  };
+  error?: unknown;
+};
+
+type ActivityResponse = {
+  success?: boolean;
+  activity?: RecentActivity[];
+  error?: unknown;
+};
+
+export default function DashboardOverviewClient({
+  user,
+  track2Enabled,
+}: {
+  user: DashboardUser;
+  track2Enabled: boolean;
+}) {
+  const requestGuardRef = useRef(createLatestRequestGuard());
+  const [stats, setStats] = useState<DashboardStats | null>(null);
   const [recentMemories, setRecentMemories] = useState<RecentMemory[]>([]);
   const [recentActivity, setRecentActivity] = useState<RecentActivity[]>([]);
   const [dailyUsage, setDailyUsage] = useState<DailyUsage[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const requestGuardRef = useRef(createLatestRequestGuard());
 
-  const fetchData = useCallback(async () => {
+  const refresh = useCallback(async () => {
     const request = requestGuardRef.current.begin();
+    setIsRefreshing(true);
     try {
-      const results = await Promise.allSettled([
-        fetch("/api/dashboard/stats", { signal: request.signal }).then((res) => res.json()),
-        fetch("/api/memories?limit=5", { signal: request.signal }).then((res) => res.json()),
-        fetch("/api/dashboard/usage?period=7d", { signal: request.signal }).then((res) => res.json()),
-        fetch("/api/dashboard/activity?limit=10", { signal: request.signal }).then((res) => res.json()),
+      const [statsResult, memoriesResult, usageResult, activityResult] = await Promise.allSettled([
+        fetch("/api/dashboard/stats", { signal: request.signal }).then((response) =>
+          readApiJson<StatsResponse>(response, "Dashboard stats could not be loaded")
+        ),
+        fetch("/api/memories?limit=5", { signal: request.signal }).then((response) =>
+          readApiJson<MemoriesResponse>(response, "Recent memories could not be loaded")
+        ),
+        fetch("/api/dashboard/usage?period=7d", { signal: request.signal }).then((response) =>
+          readApiJson<UsageResponse>(response, "Usage could not be loaded")
+        ),
+        fetch("/api/dashboard/activity?limit=10", { signal: request.signal }).then((response) =>
+          readApiJson<ActivityResponse>(response, "Recent activity could not be loaded")
+        ),
       ]);
 
-      if (!requestGuardRef.current.isCurrent(request.id)) {
-        return;
-      }
+      if (!requestGuardRef.current.isCurrent(request.id)) return;
 
-      const [statsResult, memoriesResult, usageResult, activityResult] = results;
       let failedCount = 0;
 
-      if (statsResult.status === "fulfilled" && statsResult.value.success) {
-        const statsData = statsResult.value;
-        setStats(statsData.stats);
-      } else if (
-        (statsResult.status === "fulfilled" && !statsResult.value.success) ||
-        (statsResult.status === "rejected" && !isAbortError(statsResult.reason))
-      ) {
+      if (statsResult.status === "fulfilled" && statsResult.value.success && statsResult.value.stats) {
+        setStats(statsResult.value.stats);
+      } else if (statsResult.status === "rejected" && !isAbortError(statsResult.reason)) {
+        failedCount += 1;
+      } else if (statsResult.status === "fulfilled" && !statsResult.value.success) {
         failedCount += 1;
       }
 
       if (memoriesResult.status === "fulfilled" && memoriesResult.value.success) {
-        const memoriesData = memoriesResult.value;
-        setRecentMemories(memoriesData.memories || []);
-      } else if (
-        (memoriesResult.status === "fulfilled" && !memoriesResult.value.success) ||
-        (memoriesResult.status === "rejected" && !isAbortError(memoriesResult.reason))
-      ) {
+        setRecentMemories(memoriesResult.value.results ?? memoriesResult.value.memories ?? []);
+      } else if (memoriesResult.status === "rejected" && !isAbortError(memoriesResult.reason)) {
+        failedCount += 1;
+      } else if (memoriesResult.status === "fulfilled" && !memoriesResult.value.success) {
         failedCount += 1;
       }
 
-      if (usageResult.status === "fulfilled" && usageResult.value.success && usageResult.value.usage?.daily) {
-        const usageData = usageResult.value;
-        setDailyUsage(usageData.usage.daily);
-      } else if (
-        (usageResult.status === "fulfilled" && !usageResult.value.success) ||
-        (usageResult.status === "rejected" && !isAbortError(usageResult.reason))
-      ) {
+      if (usageResult.status === "fulfilled" && usageResult.value.success) {
+        setDailyUsage(usageResult.value.usage?.daily ?? []);
+      } else if (usageResult.status === "rejected" && !isAbortError(usageResult.reason)) {
+        failedCount += 1;
+      } else if (usageResult.status === "fulfilled" && !usageResult.value.success) {
         failedCount += 1;
       }
 
       if (activityResult.status === "fulfilled" && activityResult.value.success) {
-        const activityData = activityResult.value;
-        setRecentActivity(activityData.activity || []);
-      } else if (
-        (activityResult.status === "fulfilled" && !activityResult.value.success) ||
-        (activityResult.status === "rejected" && !isAbortError(activityResult.reason))
-      ) {
+        setRecentActivity(activityResult.value.activity ?? []);
+      } else if (activityResult.status === "rejected" && !isAbortError(activityResult.reason)) {
+        failedCount += 1;
+      } else if (activityResult.status === "fulfilled" && !activityResult.value.success) {
         failedCount += 1;
       }
 
-      setError(failedCount > 0 ? "Some dashboard sections failed to refresh." : null);
-    } catch (err) {
-      if (!isAbortError(err) && requestGuardRef.current.isCurrent(request.id)) {
-        setError(getErrorMessage(err, "Failed to load dashboard overview."));
+      setError(failedCount > 0 ? "Some dashboard panels could not refresh. The available data is still shown." : null);
+    } catch (loadError) {
+      if (!isAbortError(loadError) && requestGuardRef.current.isCurrent(request.id)) {
+        setError(getErrorMessage(loadError, "Dashboard overview could not be loaded."));
       }
     } finally {
       if (requestGuardRef.current.isCurrent(request.id)) {
         setIsLoading(false);
+        setIsRefreshing(false);
         requestGuardRef.current.finish(request.id);
       }
     }
   }, []);
 
   useEffect(() => {
-    fetchData();
-    // Auto-refresh every 30 seconds when tab is visible
-    const interval = setInterval(() => {
-      if (!document.hidden) fetchData();
+    refresh();
+    const requestGuard = requestGuardRef.current;
+    const interval = window.setInterval(() => {
+      if (!document.hidden) refresh();
     }, 30_000);
-    return () => clearInterval(interval);
-  }, [fetchData]);
-
-  useEffect(() => () => requestGuardRef.current.cancel(), []);
-
-  const getGreeting = () => {
-    const hour = new Date().getHours();
-    if (hour < 12) return t("dashboard.greeting.morning");
-    if (hour < 18) return t("dashboard.greeting.afternoon");
-    return t("dashboard.greeting.evening");
-  };
-
-  const greeting = getGreeting();
-  const hasApiKeys = (stats?.keys || 0) > 0;
-  const reliabilityCopy = getReliabilityUpdatesCopy(locale).dashboard;
-  const reliabilityUpdates = reliabilityCopy.cards.map((card, index) => {
-    const meta = RELIABILITY_CARD_META[index] ?? RELIABILITY_CARD_META[0];
-    const href = typeof meta.href === "function" ? meta.href(locale) : meta.href;
-    return {
-      ...card,
-      href,
-      tone: meta.tone,
+    return () => {
+      window.clearInterval(interval);
+      requestGuard.cancel();
     };
-  });
+  }, [refresh]);
 
-  const getMemoryTypeIcon = (type: string) => {
-    switch (type) {
-      case "fact":
-        return "📝";
-      case "preference":
-        return "⭐";
-      case "experience":
-        return "🎯";
-      case "relationship":
-        return "🤝";
-      case "instruction":
-        return "📋";
-      default:
-        return "💭";
-    }
-  };
+  const overview = useMemo<DashboardOverviewState>(
+    () =>
+      buildDashboardOverviewState({
+        user,
+        stats,
+        recentMemories,
+        recentActivity,
+        dailyUsage,
+        track2Enabled,
+      }),
+    [dailyUsage, recentActivity, recentMemories, stats, track2Enabled, user]
+  );
 
   return (
-    <div className="space-y-10">
-      {/* Onboarding Wizard - Shows until all steps are complete */}
-      <OnboardingWizard userId={user.id} />
-
-      {error && (
-        <div className="rounded-md border border-amber-300/40 bg-amber-500/10 px-4 py-3 text-[13px] text-amber-200">
-          {error}
-        </div>
-      )}
-
-      {/* Welcome — editorial header with plasma signal glow */}
-      <div className="relative overflow-hidden py-10 sm:py-12">
-        <div className="absolute inset-0 szn-glow-signal opacity-50 pointer-events-none" aria-hidden="true" />
-        <div className="relative">
-          <div className="szn-section-number mb-5">CONTROL TOWER · {new Date().toISOString().slice(0,10)}</div>
-          <h1 className="szn-serif text-[clamp(36px,4.4vw,64px)] text-szn-text-1 leading-[1.02] tracking-[-0.025em] mb-3">
-            {greeting},{" "}
-            <em className="italic text-szn-signal font-normal">
-              {user.name || user.email?.split("@")[0]}
-            </em>
-            .
-          </h1>
-          <p className="text-szn-text-2 text-[15px] max-w-xl leading-[1.6]">
-            {t("dashboard.overviewPage.subtitle")}
-          </p>
-        </div>
-      </div>
-
-      {/* Security & Reliability Updates - Collapsible */}
-      <ReliabilitySection
-        reliabilityCopy={reliabilityCopy}
-        reliabilityUpdates={reliabilityUpdates}
-        locale={locale}
-      />
-
-      {/* Stats — connected hairline grid, mono numerics, editorial */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-szn-border-subtle border-y border-szn-border-subtle">
-        {/* Memories */}
-        <StatCell
-          eyebrow={t("dashboard.overviewPage.totalMemories")}
-          icon={BrainIcon}
-          tag={stats?.planDisplay || "Free"}
-          isLoading={isLoading}
-          value={stats?.memories.count.toLocaleString() || "0"}
-          footerLabel={t("dashboard.overviewPage.usage")}
-          footerValue={stats?.memories.limit === -1 ? t("dashboard.stats.unlimited") : `${stats?.memories.percentage || 0}%`}
-          progress={stats?.memories.percentage || 0}
-        />
-        {/* API Calls */}
-        <StatCell
-          eyebrow={t("dashboard.overviewPage.apiCalls")}
-          icon={ApiIcon}
-          tag={t("dashboard.overviewPage.today")}
-          isLoading={isLoading}
-          value={stats?.apiCalls.today.toLocaleString() || "0"}
-          footerLabel={t("dashboard.overviewPage.dailyLimit")}
-          footerValue={stats?.apiCalls.limit === -1 ? t("dashboard.stats.unlimited") : stats?.apiCalls.limit.toLocaleString() || "0"}
-          progress={stats?.apiCalls.percentage || 0}
-        />
-        {/* Active Keys */}
-        <StatCell
-          eyebrow={t("dashboard.overviewPage.activeKeys")}
-          icon={KeyIcon}
-          tag={null}
-          isLoading={isLoading}
-          value={String(stats?.keys || 0)}
-          footerLabel={null}
-          footerValue={null}
-          actionHref="/dashboard/keys"
-          actionLabel={t("dashboard.overviewPage.manageKeys")}
-        />
-        {/* Plan */}
-        <StatCell
-          eyebrow={t("dashboard.overviewPage.currentPlan")}
-          icon={SparkleIcon}
-          tag={null}
-          isLoading={isLoading}
-          value={stats?.planDisplay || "Free"}
-          valueAccent
-          footerLabel={null}
-          footerValue={null}
-          actionHref="/pricing"
-          actionLabel={t("dashboard.overviewPage.upgradePlan")}
-        />
-      </div>
-
-
-      {/* North Star Metrics */}
-      <NorthStarMetrics />
-
-      {/* 7-Day API Usage Chart — editorial framing */}
-      <div className="border-y border-szn-border-subtle">
-        <div className="py-5 flex items-center justify-between">
-          <div>
-            <div className="szn-eyebrow mb-2">{t("dashboard.overviewPage.last7days")}</div>
-            <h2 className="szn-serif text-[28px] text-szn-text-1 leading-[1.1]">{t("dashboard.overviewPage.apiUsageChart")}</h2>
+    <main className="min-h-0 flex-1 overflow-y-auto bg-[var(--bg-app)] px-4 py-5 sm:px-6 lg:px-8">
+      <div className="mx-auto w-full max-w-7xl pb-16">
+        <header className="flex flex-col gap-4 border-b border-[var(--border-subtle)] pb-5 lg:flex-row lg:items-end lg:justify-between">
+          <div className="min-w-0">
+            <p className="text-sm font-medium text-[var(--text-muted)]">Dashboard</p>
+            <h1 className="mt-1 font-serif text-3xl font-medium text-[var(--text-primary)] sm:text-4xl">
+              Welcome back, {overview.userLabel}
+            </h1>
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-[var(--text-secondary)]">
+              One workspace for Author Memory, billing, API keys, MCP readiness, and recent operations.
+            </p>
           </div>
-          <Link href="/dashboard/usage" className="font-mono text-[12px] text-szn-signal hover:text-szn-signal-hover uppercase tracking-[0.12em] transition-colors">
-            {t("dashboard.overviewPage.viewDetails")} →
-          </Link>
-        </div>
-        <div className="pb-6">
-          {isLoading ? (
-            <div className="h-48 flex items-center justify-center">
-              <div className="animate-pulse w-full h-32 bg-szn-surface rounded-lg" />
-            </div>
-          ) : dailyUsage.length === 0 ? (
-            <div className="h-48 flex flex-col items-center justify-center text-szn-text-2">
-              <ChartIcon className="w-12 h-12 text-gray-300 dark:text-gray-600 mb-2" />
-              <p>{t("dashboard.overviewPage.noUsageData")}</p>
-            </div>
-          ) : (
-            <UsageChart data={dailyUsage} locale={locale} />
-          )}
-        </div>
-      </div>
+          <button
+            type="button"
+            onClick={refresh}
+            disabled={isRefreshing}
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-[var(--border-subtle)] bg-[var(--bg-elevated)] px-4 text-sm font-medium text-[var(--text-primary)] hover:bg-[var(--ink-25)] disabled:opacity-60"
+          >
+            <RefreshCw className={`h-4 w-4 ${isRefreshing ? "animate-spin" : ""}`} aria-hidden="true" />
+            Refresh
+          </button>
+        </header>
 
-      {/* Recent Activity — editorial framing */}
-      <div className="border-y border-szn-border-subtle">
-        <div className="py-5 flex items-center justify-between">
-          <div>
-            <div className="szn-eyebrow mb-2">{t("dashboard.overviewPage.last10Requests")}</div>
-            <h2 className="szn-serif text-[28px] text-szn-text-1 leading-[1.1]">{t("dashboard.overviewPage.recentActivity")}</h2>
+        {error ? (
+          <div className="mt-5 rounded-md border border-[var(--signal-pending)] bg-[var(--signal-pending-soft)] px-4 py-3 text-sm text-[var(--signal-pending-ink)]">
+            {error}
           </div>
-          <Link href="/dashboard/usage" className="font-mono text-[12px] text-szn-signal hover:text-szn-signal-hover uppercase tracking-[0.12em] transition-colors">
-            {t("dashboard.overviewPage.viewAllActivity")} →
-          </Link>
-        </div>
-        <div className="overflow-x-auto">
-          {isLoading ? (
-            <div className="p-6">
-              <div className="animate-pulse space-y-3">
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <div key={i} className="flex items-center gap-4">
-                    <div className="w-16 h-6 bg-szn-surface rounded" />
-                    <div className="flex-1 h-4 bg-szn-surface rounded" />
-                    <div className="w-12 h-4 bg-szn-surface rounded" />
-                    <div className="w-16 h-4 bg-szn-surface rounded" />
-                  </div>
-                ))}
-              </div>
-            </div>
-          ) : recentActivity.length === 0 ? (
-            <div className="p-8 text-center">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center" style={{ background: "color-mix(in srgb, var(--theme-primary) 10%, transparent)" }}>
-                <ActivityIcon className="w-8 h-8 theme-primary" />
-              </div>
-              <h3 className="text-szn-text-1 font-medium mb-2">{t("dashboard.overviewPage.noActivityYet")}</h3>
-              <p className="text-sm text-szn-text-2 mb-4">
-                {t("dashboard.overviewPage.noActivityDescription")}
-              </p>
+        ) : null}
+
+        <section className="mt-6 grid gap-4 lg:grid-cols-[minmax(0,1fr)_360px]">
+          <div className="grid gap-4 sm:grid-cols-2">
+            {overview.cards.map((card) => (
               <Link
-                href={hasApiKeys ? "/dashboard/legacy/playground" : "/dashboard/keys"}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-white text-sm font-medium theme-gradient-btn"
+                key={card.id}
+                href={card.href}
+                className="group rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-elevated)] p-5 text-[var(--text-primary)] no-underline transition hover:border-[var(--terracotta-300)]"
               >
-                <KeyIcon className="w-4 h-4" />
-                {hasApiKeys
-                  ? t("dashboard.overviewPage.sendFirstRequest")
-                  : t("dashboard.overviewPage.createApiKey")}
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--text-muted)]">
+                      {card.label}
+                    </p>
+                    <p className="mt-3 text-2xl font-semibold">{isLoading ? "..." : card.value}</p>
+                  </div>
+                  <StatusIcon status={card.status} />
+                </div>
+                <p className="mt-3 min-h-10 text-sm leading-5 text-[var(--text-secondary)]">{card.detail}</p>
+                <span className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-[var(--terracotta-700)]">
+                  {card.cta}
+                  <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" aria-hidden="true" />
+                </span>
+              </Link>
+            ))}
+          </div>
+
+          <aside className="rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-elevated)] p-5">
+            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--text-muted)]">
+              Setup checklist
+            </p>
+            <div className="mt-4 grid gap-3">
+              {overview.setup.map((step) => (
+                <Link
+                  key={step.id}
+                  href={step.href}
+                  className="flex min-h-14 items-start gap-3 rounded-md border border-[var(--border-subtle)] bg-[var(--bg-app)] p-3 text-[var(--text-primary)] no-underline hover:bg-[var(--ink-25)]"
+                >
+                  <StatusIcon status={step.status} />
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-sm font-medium">{step.title}</span>
+                    <span className="mt-0.5 block text-xs leading-5 text-[var(--text-secondary)]">{step.detail}</span>
+                  </span>
+                  <span className="text-xs font-medium text-[var(--terracotta-700)]">{step.cta}</span>
+                </Link>
+              ))}
+            </div>
+          </aside>
+        </section>
+
+        <section className="mt-5 grid gap-4 xl:grid-cols-[minmax(0,1fr)_420px]">
+          <div className="rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-elevated)] p-5">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--text-muted)]">
+                  Last 7 days
+                </p>
+                <h2 className="mt-1 text-lg font-semibold text-[var(--text-primary)]">API usage</h2>
+              </div>
+              <Link href="/dashboard/author?tab=usage" className="text-sm font-medium text-[var(--terracotta-700)]">
+                Usage
               </Link>
             </div>
-          ) : (
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="bg-szn-bg">
-                  <th className="px-4 py-3 text-left text-xs font-medium text-szn-text-2 uppercase tracking-wider">
-                    {t("dashboard.activity.endpoint")}
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-szn-text-2 uppercase tracking-wider">
-                    {t("dashboard.activity.status")}
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-szn-text-2 uppercase tracking-wider">
-                    {t("dashboard.activity.latency")}
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-szn-text-2 uppercase tracking-wider">
-                    {t("dashboard.activity.cost")}
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-szn-text-2 uppercase tracking-wider">
-                    {t("dashboard.activity.key")}
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-szn-text-2 uppercase tracking-wider">
-                    {t("dashboard.activity.time")}
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-szn-border">
-                {recentActivity.map((activity) => (
-                  <tr key={activity.id} className="hover:bg-white/50 dark:hover:bg-gray-800/40 transition-colors">
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-2">
-                        <span className={`px-1.5 py-0.5 text-xs font-medium rounded ${
-                          activity.method === 'GET' ? 'bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300' :
-                          activity.method === 'POST' ? 'bg-green-100 text-green-700 dark:bg-green-950/40 dark:text-green-300' :
-                          activity.method === 'PUT' ? 'bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300' :
-                          activity.method === 'DELETE' ? 'bg-red-100 text-red-700 dark:bg-red-950/40 dark:text-red-300' :
-                          'bg-szn-surface text-szn-text-1'
-                        }`}>
-                          {activity.method}
-                        </span>
-                        <span className="text-szn-text-1 font-mono text-xs truncate max-w-[200px]">
-                          {activity.endpoint}
+            <div className="mt-5 grid h-44 grid-cols-7 items-end gap-2">
+              {overview.dailyUsage.length === 0
+                ? Array.from({ length: 7 }).map((_, index) => (
+                    <div key={index} className="h-8 rounded-md bg-[var(--ink-25)]" />
+                  ))
+                : overview.dailyUsage.slice(-7).map((day) => {
+                    const max = Math.max(...overview.dailyUsage.map((entry) => entry.calls), 1);
+                    const height = Math.max(12, Math.round((day.calls / max) * 160));
+                    return (
+                      <div key={day.date} className="flex h-full flex-col justify-end gap-2">
+                        <div
+                          className="rounded-md bg-[var(--terracotta-500)]"
+                          style={{ height }}
+                          title={`${day.calls} calls`}
+                        />
+                        <span className="truncate text-center text-[10px] text-[var(--text-muted)]">
+                          {day.date.slice(5)}
                         </span>
                       </div>
-                    </td>
-                    <td className="px-4 py-3">
-                      <span className={`inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium rounded-full ${
-                        activity.statusCategory === 'success' ? 'bg-green-100 text-green-700 dark:bg-green-950/40 dark:text-green-300' :
-                        activity.statusCategory === 'redirect' ? 'bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300' :
-                        activity.statusCategory === 'client_error' ? 'bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300' :
-                        'bg-red-100 text-red-700 dark:bg-red-950/40 dark:text-red-300'
-                      }`}>
-                        {activity.statusCategory === 'success' && <SuccessIcon className="w-3 h-3" />}
-                        {activity.statusCategory === 'client_error' && <WarningIcon className="w-3 h-3" />}
-                        {activity.statusCategory === 'server_error' && <ErrorIcon className="w-3 h-3" />}
-                        {activity.status}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3">
-                      <span className={`text-xs font-mono ${
-                        (activity.latencyMs || 0) > 1000 ? 'text-red-600 dark:text-red-400' :
-                        (activity.latencyMs || 0) > 500 ? 'text-amber-600 dark:text-amber-400' :
-                        'text-szn-text-2'
-                      }`}>
-                        {activity.latencyMs ? `${activity.latencyMs}ms` : '-'}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3">
-                      <span className="text-xs text-szn-text-2">
-                        {activity.costCents > 0 ? `$${(activity.costCents / 100).toFixed(4)}` : '-'}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3">
-                      <span className="text-xs font-mono text-szn-text-2 bg-szn-surface px-1.5 py-0.5 rounded">
-                        {activity.keyPrefix}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 text-xs text-szn-text-2">
-                      {new Date(activity.timestamp).toLocaleString(locale, {
-                        month: 'short',
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                      })}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-        </div>
-      </div>
-
-      {/* Recent Memories & Quick Actions */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Recent Memories */}
-        <div className="lg:col-span-2 szn-card rounded-lg overflow-hidden">
-          <div className="p-4 border-b theme-border flex items-center justify-between">
-            <h2 className="font-semibold text-szn-text-1">{t("dashboard.overviewPage.recentMemories")}</h2>
-            <Link href="/dashboard/memories" className="text-sm theme-primary hover:underline">
-              {t("dashboard.overviewPage.viewAll")}
-            </Link>
+                    );
+                  })}
+            </div>
           </div>
-          {isLoading ? (
-            <div className="p-4 space-y-3">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="animate-pulse flex items-start gap-3">
-                  <div className="w-8 h-8 bg-szn-surface rounded-lg" />
-                  <div className="flex-1">
-                    <div className="h-4 bg-szn-surface rounded w-3/4 mb-2" />
-                    <div className="h-3 bg-szn-surface rounded w-1/2" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : recentMemories.length === 0 ? (
-            <div className="p-8 text-center text-szn-text-2">
-              <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-szn-surface flex items-center justify-center">
-                <BrainIcon className="w-6 h-6 text-szn-text-3" />
+
+          <div className="rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-elevated)] p-5">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--text-muted)]">
+                  Recent operations
+                </p>
+                <h2 className="mt-1 text-lg font-semibold text-[var(--text-primary)]">Activity</h2>
               </div>
-              <p>{t("dashboard.overviewPage.noMemories")}</p>
-              <p className="text-sm mt-1">{t("dashboard.overviewPage.noMemoriesHint")}</p>
+              <Link href="/dashboard/account/api-keys/audit" className="text-sm font-medium text-[var(--terracotta-700)]">
+                Audit log
+              </Link>
             </div>
-          ) : (
-            <div className="divide-y divide-szn-border">
-              {recentMemories.map((memory) => (
-                <div key={memory.id} className="p-4 hover:bg-white/50 dark:hover:bg-gray-800/40 transition-colors">
-                  <div className="flex items-start gap-3">
-                    <span className="text-lg">{getMemoryTypeIcon(memory.memory_type)}</span>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-szn-text-1 text-sm line-clamp-2">{memory.content}</p>
-                      <p className="text-xs text-szn-text-3 mt-1">
-                        {formatDate(memory.created_at, "long")}
+            <div className="mt-4 grid gap-3">
+              {overview.recentActivity.slice(0, 5).length === 0 ? (
+                <p className="rounded-md border border-dashed border-[var(--border-subtle)] p-5 text-sm text-[var(--text-secondary)]">
+                  No recent API activity yet. Create an API key or open the author workspace to start.
+                </p>
+              ) : (
+                overview.recentActivity.slice(0, 5).map((activity) => (
+                  <div key={activity.id} className="flex items-center justify-between gap-3 rounded-md bg-[var(--bg-app)] p-3">
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-medium text-[var(--text-primary)]">
+                        {activity.method} {activity.endpoint}
+                      </p>
+                      <p className="mt-0.5 text-xs text-[var(--text-muted)]">
+                        {activity.keyPrefix} - {activity.latencyMs ?? 0}ms
                       </p>
                     </div>
-                    <span className="text-xs px-2 py-1 bg-szn-surface text-szn-text-2 rounded-full">
-                      {memory.memory_type}
+                    <span className="rounded-full bg-[var(--ink-25)] px-2 py-1 text-xs text-[var(--text-secondary)]">
+                      {activity.status}
                     </span>
                   </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Quick Actions */}
-        <div className="szn-card rounded-lg p-6">
-          <h2 className="font-semibold text-szn-text-1 mb-4">{t("dashboard.overviewPage.quickStart")}</h2>
-          <div className="space-y-3">
-            <Link
-              href={hasApiKeys ? "/dashboard/legacy/playground" : "/dashboard/keys"}
-              className="flex items-center gap-3 p-3 rounded-xl hover:bg-white/60 dark:hover:bg-gray-800/50 transition-colors group"
-            >
-              <div className="w-10 h-10 rounded-lg theme-gradient-btn flex items-center justify-center group-hover:scale-110 transition-transform">
-                <KeyIcon className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <p className="font-medium text-szn-text-1 text-sm">
-                  {hasApiKeys
-                    ? t("dashboard.overviewPage.sendFirstRequest")
-                    : t("dashboard.overviewPage.createApiKey")}
-                </p>
-                <p className="text-xs text-szn-text-2">
-                  {hasApiKeys
-                    ? t("dashboard.onboarding.steps.firstQuery.description")
-                    : t("dashboard.overviewPage.getStartedApi")}
-                </p>
-              </div>
-            </Link>
-            <Link
-              href="/docs"
-              className="flex items-center gap-3 p-3 rounded-xl hover:bg-white/60 dark:hover:bg-gray-800/50 transition-colors group"
-            >
-              <div className="w-10 h-10 rounded-lg theme-gradient-btn flex items-center justify-center group-hover:scale-110 transition-transform" style={{ opacity: 0.85 }}>
-                <BookIcon className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <p className="font-medium text-szn-text-1 text-sm">{t("dashboard.overviewPage.viewDocumentation")}</p>
-                <p className="text-xs text-szn-text-2">{t("dashboard.overviewPage.learnSeizn")}</p>
-              </div>
-            </Link>
-            <Link
-              href="/dashboard/legacy/organizations"
-              className="flex items-center gap-3 p-3 rounded-xl hover:bg-white/60 dark:hover:bg-gray-800/50 transition-colors group"
-            >
-              <div className="w-10 h-10 rounded-lg theme-gradient-btn flex items-center justify-center group-hover:scale-110 transition-transform" style={{ opacity: 0.7 }}>
-                <UsersIcon className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <p className="font-medium text-szn-text-1 text-sm">{t("dashboard.overviewPage.createOrganization")}</p>
-                <p className="text-xs text-szn-text-2">{t("dashboard.overviewPage.collaborateTeam")}</p>
-              </div>
-            </Link>
-          </div>
-
-          {/* Code Example */}
-          <div className="mt-6 pt-6 border-t theme-border">
-            <p className="text-sm font-medium text-szn-text-1 mb-3">{t("dashboard.overviewPage.quickExample")}</p>
-            <div className="bg-gray-900 rounded-xl p-4 overflow-x-auto">
-              <pre className="text-xs text-gray-300">
-                <code>{`curl -X POST \\
-  https://seizn.com/api/memories \\
-  -H "x-api-key: YOUR_KEY" \\
-  -d '{"content": "Mira remembers the flood at the river shrine"}'`}</code>
-              </pre>
+                ))
+              )}
             </div>
           </div>
-        </div>
+        </section>
       </div>
-    </div>
+    </main>
   );
 }
 
-// Icons
-function BrainIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
-    </svg>
-  );
-}
-
-function ApiIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
-    </svg>
-  );
-}
-
-function KeyIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z" />
-    </svg>
-  );
-}
-
-function SparkleIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
-    </svg>
-  );
-}
-
-function ArrowIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-    </svg>
-  );
-}
-
-function BookIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
-    </svg>
-  );
-}
-
-function UsersIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
-    </svg>
-  );
-}
-
-function ChartIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
-    </svg>
-  );
-}
-
-function ActivityIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
-    </svg>
-  );
-}
-
-function SuccessIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-    </svg>
-  );
-}
-
-function WarningIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
-    </svg>
-  );
-}
-
-function ErrorIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
-    </svg>
-  );
-}
-
-// Collapsible Reliability Section
-function ReliabilitySection({
-  reliabilityCopy,
-  reliabilityUpdates,
-  locale,
-}: {
-  reliabilityCopy: { heading: string; subtitle: string; docsCta: string };
-  reliabilityUpdates: { title: string; description: string; cta: string; href: string; tone: string }[];
-  locale: string;
-}) {
-  const [isOpen, setIsOpen] = useState(() => {
-    if (typeof window === "undefined") return true;
-    return localStorage.getItem("seizn:reliability-collapsed") !== "true";
-  });
-
-  const toggle = () => {
-    const next = !isOpen;
-    setIsOpen(next);
-    localStorage.setItem("seizn:reliability-collapsed", next ? "false" : "true");
-  };
-
-  return (
-    <div className="border-y border-szn-border-subtle">
-      <button
-        onClick={toggle}
-        className="w-full py-4 flex items-center justify-between text-left hover:bg-szn-surface-1 transition-colors"
-      >
-        <div className="flex items-center gap-3">
-          <ShieldSmallIcon className="w-4 h-4 text-szn-signal" />
-          <div>
-            <div className="szn-eyebrow mb-1">{reliabilityCopy.subtitle}</div>
-            <h2 className="text-[15px] font-medium text-szn-text-1 tracking-[-0.005em]">
-              {reliabilityCopy.heading}
-            </h2>
-          </div>
-        </div>
-        <div className="flex items-center gap-3">
-          <Link
-            href={`/${locale}/docs/security`}
-            className="font-mono text-[11px] uppercase tracking-[0.18em] text-szn-signal hover:text-szn-signal-hover hidden sm:inline transition-colors"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {reliabilityCopy.docsCta}
-          </Link>
-          <ChevronIcon className={`w-4 h-4 text-szn-text-3 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`} />
-        </div>
-      </button>
-      <div
-        className="transition-all duration-300 ease-in-out overflow-hidden"
-        style={{
-          maxHeight: isOpen ? "1000px" : "0px",
-          opacity: isOpen ? 1 : 0,
-        }}
-      >
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-px bg-szn-border-subtle border-t border-szn-border-subtle">
-          {reliabilityUpdates.map((item) => (
-            <Link
-              key={item.title}
-              href={item.href}
-              className="block bg-szn-bg p-5 transition-colors hover:bg-szn-signal-soft group"
-            >
-              <p className="text-[14px] font-medium text-szn-text-1 mb-2 tracking-[-0.005em]">{item.title}</p>
-              <p className="text-[12px] text-szn-text-2 leading-[1.55] mb-4">
-                {item.description}
-              </p>
-              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-szn-signal group-hover:text-szn-signal-hover inline-flex items-center transition-colors">
-                {item.cta}
-                <ArrowIcon className="w-3 h-3 ml-1" />
-              </span>
-            </Link>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function ShieldSmallIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-    </svg>
-  );
-}
-
-function ChevronIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-    </svg>
-  );
-}
-
-// Usage Chart Component
-function UsageChart({ data, locale }: { data: DailyUsage[]; locale: string }) {
-  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
-  const maxCalls = Math.max(...data.map(d => d.calls), 1);
-  const chartHeight = 120;
-
-  const formatWeekday = (dateStr: string) => {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString(locale, { weekday: 'short' });
-  };
-
-  return (
-    <div className="space-y-4">
-      {/* Summary Stats */}
-      <div className="grid grid-cols-3 gap-4 mb-4">
-        <div className="text-center p-3 bg-szn-bg rounded-xl">
-          <p className="text-2xl font-bold text-szn-text-1">
-            {data.reduce((sum, d) => sum + d.calls, 0).toLocaleString()}
-          </p>
-          <p className="text-xs text-szn-text-2">Total Calls</p>
-        </div>
-        <div className="text-center p-3 bg-szn-bg rounded-xl">
-          <p className="text-2xl font-bold text-szn-text-1">
-            {Math.round(data.reduce((sum, d) => sum + d.calls, 0) / data.length).toLocaleString()}
-          </p>
-          <p className="text-xs text-szn-text-2">Avg/Day</p>
-        </div>
-        <div className="text-center p-3 bg-szn-bg rounded-xl">
-          <p className="text-2xl font-bold text-szn-text-1">
-            {data[data.length - 1]?.calls.toLocaleString() || 0}
-          </p>
-          <p className="text-xs text-szn-text-2">Today</p>
-        </div>
-      </div>
-
-      {/* Bar Chart */}
-      <div className="relative" onMouseLeave={() => setHoveredIdx(null)}>
-        {/* Hover Tooltip */}
-        {hoveredIdx !== null && data[hoveredIdx] && (
-          <div
-            className="absolute -top-2 px-2.5 py-1.5 rounded-lg text-xs font-medium text-white shadow-lg pointer-events-none z-10 theme-gradient-btn"
-            style={{ left: `${(hoveredIdx / data.length) * 100 + 100 / data.length / 2}%`, transform: "translateX(-50%)" }}
-          >
-            {formatDate(data[hoveredIdx].date, "compact")}: {data[hoveredIdx].calls.toLocaleString()}
-          </div>
-        )}
-        <svg width="100%" height={chartHeight + 40} className="overflow-visible">
-          {data.map((day, i) => {
-            const barWidth = 100 / data.length;
-            const barHeight = Math.max((day.calls / maxCalls) * chartHeight, 2);
-            const x = i * barWidth + barWidth / 2;
-            const isHovered = hoveredIdx === i;
-
-            return (
-              <g
-                key={day.date}
-                onMouseEnter={() => setHoveredIdx(i)}
-                className="cursor-pointer"
-              >
-                {/* Hit area */}
-                <rect
-                  x={`${x - barWidth / 2}%`}
-                  y={0}
-                  width={`${barWidth}%`}
-                  height={chartHeight + 30}
-                  fill="transparent"
-                />
-                {/* Bar */}
-                <rect
-                  x={`${x - barWidth / 3}%`}
-                  y={chartHeight - barHeight}
-                  width={`${barWidth * 0.6}%`}
-                  height={barHeight}
-                  rx={4}
-                  fill={isHovered ? "var(--theme-primary)" : "var(--theme-secondary)"}
-                  opacity={isHovered ? 1 : 0.6}
-                  className="transition-all duration-150"
-                />
-                {/* Day label */}
-                <text
-                  x={`${x}%`}
-                  y={chartHeight + 20}
-                  textAnchor="middle"
-                  className="fill-gray-500 dark:fill-gray-400 text-xs"
-                  fontSize="11"
-                  fontWeight={isHovered ? 600 : 400}
-                >
-                  {formatWeekday(day.date)}
-                </text>
-                {/* Call count (only show if > 0) */}
-                {day.calls > 0 && !isHovered && (
-                  <text
-                    x={`${x}%`}
-                    y={chartHeight - barHeight - 5}
-                    textAnchor="middle"
-                    className="fill-gray-700 dark:fill-gray-200 text-xs font-medium"
-                    fontSize="10"
-                  >
-                    {day.calls.toLocaleString()}
-                  </text>
-                )}
-              </g>
-            );
-          })}
-          {/* Baseline */}
-          <line
-            x1="0"
-            y1={chartHeight}
-            x2="100%"
-            y2={chartHeight}
-            className="stroke-szn-border"
-            strokeWidth={1}
-          />
-        </svg>
-      </div>
-    </div>
-  );
-}
-
-// =============================================================================
-// StatCell — editorial stat with mono numerics + optional progress / action
-// =============================================================================
-
-function StatCell({
-  eyebrow,
-  icon: Icon,
-  tag,
-  isLoading,
-  value,
-  valueAccent = false,
-  footerLabel,
-  footerValue,
-  progress,
-  actionHref,
-  actionLabel,
-}: {
-  eyebrow: string;
-  icon: React.ComponentType<{ className?: string }>;
-  tag: string | null;
-  isLoading: boolean;
-  value: string;
-  valueAccent?: boolean;
-  footerLabel: string | null;
-  footerValue: string | null;
-  progress?: number;
-  actionHref?: string;
-  actionLabel?: string;
-}) {
-  return (
-    <div className="bg-szn-bg p-6 flex flex-col">
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-2.5">
-          <Icon className="w-4 h-4 text-szn-text-2" />
-          <span className="szn-eyebrow">{eyebrow}</span>
-        </div>
-        {tag && (
-          <span className="font-mono text-[10px] tracking-[0.2em] text-szn-text-3 uppercase">{tag}</span>
-        )}
-      </div>
-      <p
-        className={`font-mono text-[36px] leading-[1.05] tabular-nums tracking-[-0.02em] ${valueAccent ? "text-szn-signal" : "text-szn-text-1"}`}
-      >
-        {isLoading ? (
-          <span className="inline-block w-20 h-8 bg-szn-surface-1 rounded animate-pulse" />
-        ) : (
-          value
-        )}
-      </p>
-
-      {(footerLabel || progress !== undefined) && (
-        <div className="mt-5">
-          {footerLabel && (
-            <div className="flex items-center justify-between text-[11px] text-szn-text-3 mb-2 font-mono uppercase tracking-[0.12em]">
-              <span>{footerLabel}</span>
-              <span className="text-szn-text-2">{footerValue}</span>
-            </div>
-          )}
-          {progress !== undefined && (
-            <div className="h-[3px] bg-szn-surface-1 overflow-hidden">
-              <div
-                className="h-full bg-szn-signal transition-[width] duration-500"
-                style={{ width: `${Math.min(progress, 100)}%` }}
-              />
-            </div>
-          )}
-        </div>
-      )}
-
-      {actionHref && actionLabel && (
-        <Link
-          href={actionHref}
-          className="mt-5 inline-flex items-center gap-1 text-[12px] text-szn-signal hover:text-szn-signal-hover transition-colors font-mono uppercase tracking-[0.12em]"
-        >
-          {actionLabel}
-          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-          </svg>
-        </Link>
-      )}
-    </div>
-  );
+function StatusIcon({ status }: { status: DashboardOverviewStatus }) {
+  if (status === "done") {
+    return <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-[var(--signal-canon)]" aria-hidden="true" />;
+  }
+  if (status === "attention") {
+    return <CircleAlert className="mt-0.5 h-5 w-5 shrink-0 text-[var(--terracotta-500)]" aria-hidden="true" />;
+  }
+  if (status === "blocked") {
+    return <CircleAlert className="mt-0.5 h-5 w-5 shrink-0 text-[var(--signal-conflict)]" aria-hidden="true" />;
+  }
+  return <CircleDashed className="mt-0.5 h-5 w-5 shrink-0 text-[var(--text-muted)]" aria-hidden="true" />;
 }

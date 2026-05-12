@@ -21,11 +21,11 @@ interface LlmProviderSectionProps {
 const PROVIDER_LABELS: Record<AuthorLlmProvider, { name: string; tagline: string }> = {
   anthropic: {
     name: "Anthropic Claude Opus 4.7",
-    tagline: "Extended thinking · 1M context · longest-form prose",
+    tagline: "Extended reasoning, 1M context, long-form prose",
   },
   openai: {
     name: "OpenAI GPT-5.5",
-    tagline: "Reasoning xhigh · 1M context · structured output",
+    tagline: "Reasoning xhigh, 1M context, structured output",
   },
 };
 
@@ -68,7 +68,7 @@ export function LlmProviderSection({ state, busy, onSave }: LlmProviderSectionPr
       </div>
       <p className="mt-2 max-w-2xl text-sm leading-6 text-[var(--ink-600)]">
         Pick which frontier model writes your Author Memory v3 prose. Both run at xhigh reasoning
-        effort. Switching is instant — your next request hits the new provider.
+        effort. Switching applies to the next request.
       </p>
 
       <div className="mt-5 grid gap-3 sm:grid-cols-2">
