@@ -20,6 +20,7 @@ export type FunnelEventType =
   | 'first_extract'
   | 'first_check'
   | 'first_dialog'
+  | 'first_coach_analyze'
   | 'hit_check_limit'
   | 'hit_dialog_limit'
   | 'hit_chapter_limit'
@@ -35,6 +36,7 @@ export const FUNNEL_EVENT_TYPES: readonly FunnelEventType[] = [
   'first_extract',
   'first_check',
   'first_dialog',
+  'first_coach_analyze',
   'hit_check_limit',
   'hit_dialog_limit',
   'hit_chapter_limit',

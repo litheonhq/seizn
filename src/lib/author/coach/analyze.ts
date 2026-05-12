@@ -43,6 +43,30 @@ import {
 
 const COACH_LLM_MAX_TOKENS = 2400;
 const COACH_LLM_TEMPERATURE = 0.2;
+const COACH_LLM_TIMEOUT_MS = 20_000;
+
+export class CoachAnalyzeTimeoutError extends Error {
+  constructor() {
+    super('Coach analysis timed out. Please try again.');
+    this.name = 'CoachAnalyzeTimeoutError';
+  }
+}
+
+function withTimeout<T>(promise: Promise<T>, timeoutMs: number, onTimeout: () => Error): Promise<T> {
+  return new Promise<T>((resolve, reject) => {
+    const handle = setTimeout(() => reject(onTimeout()), timeoutMs);
+    promise.then(
+      (value) => {
+        clearTimeout(handle);
+        resolve(value);
+      },
+      (error) => {
+        clearTimeout(handle);
+        reject(error);
+      },
+    );
+  });
+}
 
 export interface AnalyzeCoachInput {
   userId: string;
@@ -93,21 +117,26 @@ export async function analyzeCoachInput(
 
   let response: AuthorLlmResponse<CoachLlmResponse>;
   try {
-    response = await generate({
-      userId: input.userId,
-      projectId: input.projectId,
-      system: buildCoachSystem(),
-      prompt: buildCoachPrompt(text),
-      responseFormat: 'json',
-      jsonSchema: COACH_LLM_SCHEMA,
-      maxTokens: COACH_LLM_MAX_TOKENS,
-      temperature: COACH_LLM_TEMPERATURE,
-      effort: 'medium',
-    });
+    response = await withTimeout(
+      generate({
+        userId: input.userId,
+        projectId: input.projectId,
+        system: buildCoachSystem(),
+        prompt: buildCoachPrompt(text),
+        responseFormat: 'json',
+        jsonSchema: COACH_LLM_SCHEMA,
+        maxTokens: COACH_LLM_MAX_TOKENS,
+        temperature: COACH_LLM_TEMPERATURE,
+        effort: 'medium',
+      }),
+      COACH_LLM_TIMEOUT_MS,
+      () => new CoachAnalyzeTimeoutError(),
+    );
   } catch (error) {
+    const isTimeout = error instanceof CoachAnalyzeTimeoutError;
     Sentry.withScope((scope) => {
       scope.setTag('feature', 'coach');
-      scope.setTag('coach.stage', 'llm');
+      scope.setTag('coach.stage', isTimeout ? 'llm_timeout' : 'llm');
       scope.setTag('coach.user_id', input.userId);
       scope.setTag('coach.project_id', input.projectId);
       Sentry.captureException(error);
