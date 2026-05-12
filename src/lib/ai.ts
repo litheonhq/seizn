@@ -15,10 +15,16 @@ import {
 // Voyage AI Embedding
 const VOYAGE_API_URL = 'https://api.voyageai.com/v1/embeddings';
 const VOYAGE_MODEL = 'voyage-3'; // 1024 dimensions
+// Inner ceiling on a single Voyage call. Mirrors the default in
+// `src/lib/summer/embedding/voyage.ts` so both Voyage entry points share the
+// same ceiling and the same env override (`VOYAGE_FETCH_TIMEOUT_MS`).
+// Outer layers (route `withTimeout`, search-executor `withTimeout`) usually
+// cut sooner; this is the safety net for callers without an outer deadline
+// (background jobs, ingestion).
 const VOYAGE_FETCH_TIMEOUT_MS = (() => {
   const raw = Number.parseInt(process.env.VOYAGE_FETCH_TIMEOUT_MS || '', 10);
   if (Number.isFinite(raw) && raw > 0) return raw;
-  return 5000;
+  return 10_000;
 })();
 
 // Internal function to call Voyage API
