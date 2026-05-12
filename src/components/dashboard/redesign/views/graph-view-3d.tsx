@@ -199,12 +199,56 @@ export function GraphView3D({
     linkForce?.distance?.(76);
     graph.d3ReheatSimulation();
 
+    // Park the camera at a known angle so the graph is framed immediately,
+    // before the force simulation settles. Without this the user can land on a
+    // blank scene and only sees content after manually rotating.
+    graph.cameraPosition({ x: 0, y: 80, z: 360 }, { x: 0, y: 0, z: 0 }, 0);
+
+    // A short kick zoom for the initial render — final fit is handled by the
+    // onEngineStop callback on <ForceGraph3D /> once positions converge.
     const timer = window.setTimeout(() => {
-      graph.zoomToFit(650, 58);
+      try {
+        graph.zoomToFit(650, 58);
+      } catch {
+        // The renderer may still be initializing on the first frame.
+      }
     }, 220);
 
     return () => window.clearTimeout(timer);
   }, [graphData]);
+
+  // One-time scene setup: lights and fog. `MeshStandardMaterial` on the node
+  // spheres needs proper lighting to avoid the muddy/dim look; fog gives
+  // depth cues so back-of-graph nodes recede naturally.
+  useEffect(() => {
+    const graph = graphRef.current;
+    if (!graph) return;
+    const scene = graph.scene?.();
+    if (!scene) return;
+
+    // Idempotent: tag the lights we add so re-runs don't duplicate them.
+    const SCENE_TAG = '__seiznGraphView3DLighting';
+    const sceneAny = scene as unknown as Record<string, unknown>;
+    if (sceneAny[SCENE_TAG]) return;
+    sceneAny[SCENE_TAG] = true;
+
+    scene.fog = new THREE.Fog(0xf8f3ea, 320, 920);
+
+    const ambient = new THREE.AmbientLight(0xfff6e3, 0.55);
+    scene.add(ambient);
+
+    const key = new THREE.DirectionalLight(0xfff1d6, 0.95);
+    key.position.set(180, 320, 280);
+    scene.add(key);
+
+    const fill = new THREE.DirectionalLight(0xe8d8c2, 0.45);
+    fill.position.set(-220, -120, 180);
+    scene.add(fill);
+
+    const hemi = new THREE.HemisphereLight(0xfff1d6, 0x6a4c2e, 0.32);
+    hemi.position.set(0, 320, 0);
+    scene.add(hemi);
+  }, []);
 
   const hasFocus = Boolean(selectedId || hoveredNodeId || activeTieKey);
 
@@ -417,6 +461,14 @@ export function GraphView3D({
         warmupTicks={54}
         cooldownTicks={112}
         d3VelocityDecay={0.34}
+        onEngineStop={() => {
+          try {
+            graphRef.current?.zoomToFit(720, 64);
+          } catch {
+            // Best-effort: the engine-stop hook may fire before the renderer
+            // is fully attached on first mount.
+          }
+        }}
         enableNodeDrag
         enableNavigationControls
         enablePointerInteraction

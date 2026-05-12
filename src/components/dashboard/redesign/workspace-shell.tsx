@@ -142,6 +142,8 @@ export function WorkspaceShell({
     switch (tab) {
       case 'inbox':
         return <InboxView rows={inbox.data} />;
+      case 'review':
+        return <InboxView rows={inbox.data} defaultFilter="reviews" />;
       case 'characters':
         return <CharactersView characters={characters.data} detail={characters.detail} />;
       case 'graph':
