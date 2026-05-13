@@ -30,6 +30,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import * as Sentry from '@sentry/nextjs';
 import { createServerClient } from '@/lib/supabase';
 import { createEmbedding, createQueryEmbedding } from '@/lib/ai';
 import {
@@ -1313,6 +1314,13 @@ async function handlePost(request: NextRequest) {
     if (error instanceof ComplianceError) {
       return complianceErrorResponse(error, startTime);
     }
+    Sentry.withScope((scope) => {
+      scope.setTag('api_version', 'v1');
+      scope.setTag('endpoint', '/api/v1/memories');
+      scope.setTag('method', 'POST');
+      scope.setTag('error_class', 'internal');
+      Sentry.captureException(error);
+    });
     logServerError('[v1/memories] POST error', error);
     return ServerErrors.internal('add_memory');
   }
@@ -2234,6 +2242,13 @@ async function handleGet(request: NextRequest) {
       result.rateLimitHeaders
     );
   } catch (error) {
+    Sentry.withScope((scope) => {
+      scope.setTag('api_version', 'v1');
+      scope.setTag('endpoint', '/api/v1/memories');
+      scope.setTag('method', 'GET');
+      scope.setTag('error_class', 'internal');
+      Sentry.captureException(error);
+    });
     logServerError('[v1/memories] GET error', error);
     return ServerErrors.internal('search_memories');
   }
@@ -2333,6 +2348,13 @@ export async function DELETE(request: NextRequest) {
       result.rateLimitHeaders
     );
   } catch (error) {
+    Sentry.withScope((scope) => {
+      scope.setTag('api_version', 'v1');
+      scope.setTag('endpoint', '/api/v1/memories');
+      scope.setTag('method', 'DELETE');
+      scope.setTag('error_class', 'internal');
+      Sentry.captureException(error);
+    });
     logServerError('[v1/memories] DELETE error', error);
     return ServerErrors.internal('delete_memories');
   }
