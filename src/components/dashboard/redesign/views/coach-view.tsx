@@ -37,7 +37,7 @@ export function CoachView({ projectId }: CoachViewProps) {
   const [serverResult, setServerResult] = useState<CoachAnalysisResponse | null>(null);
   const [dismissedKeys, setDismissedKeys] = useState<Set<string>>(() => new Set());
   const localFindings = useDebouncedAntiCliche(text);
-  const analyze = useAnalyzeCoach(projectId);
+  const analyze = useAnalyzeCoach<CoachAnalysisResponse & Record<string, unknown>>(projectId);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
   const wordCount = useMemo(() => (text.trim() ? text.trim().split(/\s+/).length : 0), [text]);
@@ -46,7 +46,7 @@ export function CoachView({ projectId }: CoachViewProps) {
   const handleAnalyze = useCallback(async () => {
     if (!isReady || analyze.isMutating) return;
     try {
-      const result = (await analyze.trigger({ text })) as unknown as CoachAnalysisResponse;
+      const result = await analyze.trigger({ text });
       setServerResult(result);
       setDismissedKeys(new Set());
     } catch (error) {

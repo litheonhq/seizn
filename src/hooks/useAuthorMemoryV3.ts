@@ -429,10 +429,14 @@ export function useRetryAuthorImport(projectId?: string, importId?: string) {
   );
 }
 
-export function useAnalyzeCoach(projectId?: string) {
-  return useSWRMutation<JsonRecord, Error, string | null, JsonRecord>(
+/**
+ * Generic over the expected response shape so call sites can avoid the
+ * `as unknown as T` cast: pass the type that matches your route's payload.
+ */
+export function useAnalyzeCoach<TResponse extends JsonRecord = JsonRecord>(projectId?: string) {
+  return useSWRMutation<TResponse, Error, string | null, JsonRecord>(
     projectId ? `/api/projects/${projectId}/coach/analyze` : null,
-    postJson,
+    postJson as never,
     {
       onSuccess: () => {
         if (projectId) {
