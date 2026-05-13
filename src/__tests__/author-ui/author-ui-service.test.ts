@@ -350,6 +350,22 @@ describe('Author UI service', () => {
     delete process.env.AUTHOR_COACH_ENABLED;
   });
 
+  it('analyzeCoach kill switch throws AuthorUiServiceUnavailableError (maps to 503 + Retry-After)', async () => {
+    const { AuthorUiServiceUnavailableError } = await import('@/lib/author/ui/service');
+    const service = resetAuthorUiServiceForTests('coach-kill-switch-503-user');
+    const projectId = service.listProjects().projects[0].id;
+
+    process.env.AUTHOR_COACH_ENABLED = 'false';
+    try {
+      await service.analyzeCoach(projectId, { text: 'sample' });
+      throw new Error('expected kill switch to reject');
+    } catch (err) {
+      expect(err).toBeInstanceOf(AuthorUiServiceUnavailableError);
+      expect((err as InstanceType<typeof AuthorUiServiceUnavailableError>).retryAfterSeconds).toBe(3600);
+    }
+    delete process.env.AUTHOR_COACH_ENABLED;
+  });
+
   it('listAuditLogs supports keyset cursor pagination across two pages', async () => {
     const service = resetAuthorUiServiceForTests('cursor-pagination-user');
     const projectId = service.listProjects().projects[0].id;

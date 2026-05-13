@@ -1507,7 +1507,7 @@ export class AuthorUiService {
 
   async analyzeCoach(projectId: string, input: JsonRecord = {}): Promise<CoachAnalysis> {
     if (process.env.AUTHOR_COACH_ENABLED === '0' || process.env.AUTHOR_COACH_ENABLED === 'false') {
-      throw new AuthorUiValidationError('Coach is temporarily disabled. Please try again later.');
+      throw new AuthorUiServiceUnavailableError('Coach is temporarily disabled. Please try again later.');
     }
     if (!this.state.projects.has(projectId)) {
       throw new AuthorUiNotFoundError(`Project not found: ${projectId}`);
@@ -1583,6 +1583,14 @@ export class AuthorUiService {
 
 export class AuthorUiValidationError extends Error {}
 export class AuthorUiNotFoundError extends Error {}
+export class AuthorUiServiceUnavailableError extends Error {
+  // Defaults to one-hour retry window for kill-switch outages.
+  readonly retryAfterSeconds: number;
+  constructor(message: string, retryAfterSeconds = 3600) {
+    super(message);
+    this.retryAfterSeconds = retryAfterSeconds;
+  }
+}
 
 function createInMemoryStoreFromState(state: AuthorUiState): InMemoryAuthorUiStore {
   const store = new InMemoryAuthorUiStore();
