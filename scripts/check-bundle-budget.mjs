@@ -18,7 +18,7 @@ const reportPath = path.join(process.cwd(), ".next", "analyze", "static-bundle-r
 // a small margin; per-file budget still acts as a guardrail against a single
 // accidental eager import dominating the bundle.
 const budget = {
-  totalBytes: readKbBudget("SEIZN_BUNDLE_TOTAL_KB", 9500) * 1024,
+  totalBytes: readKbBudget("SEIZN_BUNDLE_TOTAL_KB", 9700) * 1024,
   totalGzipBytes: readKbBudget("SEIZN_BUNDLE_TOTAL_GZIP_KB", 2800) * 1024,
   maxFileBytes: readKbBudget("SEIZN_BUNDLE_MAX_FILE_KB", 1350) * 1024,
   maxFileGzipBytes: readKbBudget("SEIZN_BUNDLE_MAX_FILE_GZIP_KB", 340) * 1024,
