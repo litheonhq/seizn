@@ -179,7 +179,7 @@ function EventRow({ entry, t }: EventRowProps) {
       <div style={{ display: 'flex', flexDirection: 'column', gap: 2, minWidth: 0 }}>
         <span style={{ fontSize: 13.5, color: 'var(--text-primary)' }}>{t(meta.labelKey)}</span>
         <span style={{ fontSize: 11.5, color: 'var(--text-tertiary)' }}>
-          {formatHourMinute(entry.createdAt)}
+          {formatHourMinute(entry.createdAt, t)}
         </span>
       </div>
     </div>
@@ -208,8 +208,8 @@ function GroupRow({ row, t, expanded, onToggle }: GroupRowProps) {
           </span>
           <span style={{ fontSize: 11.5, color: 'var(--text-tertiary)' }}>
             {t('dashboard.timeline.range.window', {
-              first: formatHourMinute(row.earliest.createdAt),
-              last: formatHourMinute(row.latest.createdAt),
+              first: formatHourMinute(row.earliest.createdAt, t),
+              last: formatHourMinute(row.latest.createdAt, t),
             })}
           </span>
         </div>
@@ -219,7 +219,7 @@ function GroupRow({ row, t, expanded, onToggle }: GroupRowProps) {
         <ul style={{ ...listReset, paddingLeft: 44, display: 'flex', flexDirection: 'column', gap: 2 }}>
           {row.entries.map((child) => (
             <li key={child.id} style={{ fontSize: 12, color: 'var(--text-secondary)' }}>
-              {formatHourMinute(child.createdAt)}
+              {formatHourMinute(child.createdAt, t)}
             </li>
           ))}
         </ul>
@@ -312,10 +312,10 @@ function rowKey(row: TimelineRow, index: number): string {
   return `g:${row.eventType}:${row.dayKey}:${row.latest.id}:${index}`;
 }
 
-function formatHourMinute(iso: string): string {
+function formatHourMinute(iso: string, t: DashboardTranslate): string {
   const hh = iso.slice(11, 13);
   const mm = iso.slice(14, 16);
-  return `${hh}:${mm} UTC`;
+  return t('dashboard.timeline.utcLabel', { hh, mm });
 }
 
 const listReset: React.CSSProperties = {

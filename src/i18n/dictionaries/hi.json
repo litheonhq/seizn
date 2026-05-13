@@ -1686,6 +1686,159 @@
           }
         }
       }
+    },
+    "coach": {
+      "title": "Coach",
+      "subtitle": "एक सीन पेस्ट करें। एक संरचित पढ़ाई पाएँ — क्लीशे, परतें, आर्क, क्रिटिक नोट्स।",
+      "placeholder": "एक सीन या चैप्टर डालें। Coach इसे Will Storr के sacred-flaw इंजन, Steven Pressfield के एंकर, सात-परत सिस्टम और एक ताज़गी जाँच से गुज़ारता है।",
+      "analyze": "सीन एनालाइज़ करें",
+      "analyzing": "एनालाइज़ हो रहा है…",
+      "analyzeKbd": "⌘⏎",
+      "words": "शब्द",
+      "cliches": "क्लीशे मिले",
+      "cached": "कैश्ड",
+      "runHint": "जब तैयार हों तो Analyze दबाएँ। क्लीशे स्कैन टाइप करते-करते चलता है।",
+      "section": {
+        "cliche": "क्लीशे स्कैन",
+        "layers": "स्टोरी परतें",
+        "arcs": "कैरेक्टर आर्क",
+        "critics": "क्रिटिक नोट्स"
+      },
+      "cliche": {
+        "empty": "कोई क्लीशे नहीं मिला।",
+        "more": "और",
+        "kbdHint": "Enter स्क्रॉल · Esc बंद",
+        "dismiss": "इस क्लीशे को हटाएँ"
+      },
+      "error": {
+        "unknown": "Coach एनालिसिस फ़ेल हो गया। थोड़ी देर में फिर से कोशिश करें।",
+        "network": "नेटवर्क उपलब्ध नहीं है। अपना कनेक्शन जाँचें और फिर से कोशिश करें।",
+        "empty": "पहले कुछ टेक्स्ट जोड़ें — Coach को एनालाइज़ करने के लिए एक सीन चाहिए।",
+        "csrf": "सेशन ख़त्म हो गया। पेज रीलोड करें और फिर से कोशिश करें।",
+        "tooLong": "सीन बहुत लंबा था — हमने इसे अधिकतम लंबाई तक छाँट दिया।"
+      },
+      "critic": {
+        "layer_auditor": "Layer Auditor",
+        "rhetoric_examiner": "Rhetoric Examiner",
+        "freshness_inspector": "Freshness Inspector",
+        "reader_surrogate": "Reader Surrogate",
+        "subtext_analyst": "Subtext Analyst",
+        "continuity_editor": "Continuity Editor",
+        "pacing_surgeon": "Pacing Surgeon",
+        "voice_enforcer": "Voice Enforcer"
+      },
+      "layers": {
+        "pending": "एनालाइज़ करने के बाद स्टोरी परतें दिखेंगी।"
+      },
+      "arcs": {
+        "empty": "अभी तक कोई कैरेक्टर आर्क नहीं मिला।"
+      },
+      "critics": {
+        "empty": "एनालिसिस लौटने के बाद क्रिटिक नोट्स दिखेंगे।"
+      },
+      "arc": {
+        "sacredFlaw": "Sacred flaw",
+        "want": "बाहरी चाहत",
+        "need": "अंदरूनी ज़रूरत"
+      }
+    },
+    "timeline": {
+      "title": "Timeline",
+      "subtitle": "आपने और Seizn ने इस प्रोजेक्ट पर जो किया उसका लॉग, सबसे नया पहले।",
+      "loadMore": "पुराने लोड करें",
+      "loadingMore": "लोड हो रहा है…",
+      "error": "टाइमलाइन लोड नहीं हो सकी। कृपया फिर से कोशिश करें।",
+      "empty": {
+        "title": "अभी तक कोई गतिविधि नहीं।",
+        "body": "इम्पोर्ट, फ़ैसले, सिमुलेशन और Coach रन यहाँ दिखेंगे।"
+      },
+      "day": {
+        "today": "आज",
+        "yesterday": "कल"
+      },
+      "range": {
+        "window": "पहला {first} · आख़िरी {last}"
+      },
+      "event": {
+        "projectCreated": {
+          "label": "प्रोजेक्ट बनाया",
+          "group": "{count} प्रोजेक्ट बनाए"
+        },
+        "importUpload": {
+          "label": "एक फ़ाइल अपलोड की",
+          "group": "{count} फ़ाइलें अपलोड कीं"
+        },
+        "importParsed": {
+          "label": "एक इम्पोर्ट पार्स किया",
+          "group": "{count} इम्पोर्ट पार्स किए"
+        },
+        "importFailed": {
+          "label": "इम्पोर्ट फ़ेल हुआ",
+          "group": "{count} इम्पोर्ट फ़ेल हुए"
+        },
+        "importRetried": {
+          "label": "इम्पोर्ट फिर से चलाया",
+          "group": "{count} इम्पोर्ट फिर से चलाए"
+        },
+        "importDeleted": {
+          "label": "एक इम्पोर्ट हटाया",
+          "group": "{count} इम्पोर्ट हटाए"
+        },
+        "candidateAdded": {
+          "label": "एक कैंडिडेट जोड़ा",
+          "group": "{count} कैंडिडेट जोड़े"
+        },
+        "candidateDecided": {
+          "label": "एक कैंडिडेट पर फ़ैसला किया",
+          "group": "{count} कैंडिडेट पर फ़ैसला किया"
+        },
+        "candidateBatch": {
+          "label": "बैच में कैंडिडेट पर फ़ैसला किया",
+          "group": "बैच में {count} कैंडिडेट पर फ़ैसला हुआ"
+        },
+        "characterUpdated": {
+          "label": "एक कैरेक्टर अपडेट किया",
+          "group": "{count} कैरेक्टर अपडेट किए"
+        },
+        "conflictResolved": {
+          "label": "एक टकराव सुलझाया",
+          "group": "{count} टकराव सुलझाए"
+        },
+        "simulationRun": {
+          "label": "एक सिमुलेशन चलाया",
+          "group": "{count} सिमुलेशन चलाए"
+        },
+        "simulationReplay": {
+          "label": "एक सिमुलेशन रीप्ले किया",
+          "group": "{count} सिमुलेशन रीप्ले किए"
+        },
+        "backlogGenerated": {
+          "label": "एक बैकलॉग बनाया",
+          "group": "{count} बैकलॉग बनाए"
+        },
+        "settingsUpdated": {
+          "label": "सेटिंग्स अपडेट कीं",
+          "group": "सेटिंग्स {count} बार अपडेट कीं"
+        },
+        "byokUpdated": {
+          "label": "BYOK अपडेट किया",
+          "group": "BYOK {count} बार अपडेट किया"
+        },
+        "coachAnalysis": {
+          "label": "Coach से एक सीन एनालाइज़ किया",
+          "group": "Coach ने {count} सीन देखे"
+        },
+        "unknown": {
+          "label": "गतिविधि दर्ज हुई",
+          "group": "{count} गतिविधियाँ"
+        }
+      },
+      "utcLabel": "{hh}:{mm} UTC"
+    },
+    "fallback": {
+      "body": "हम अभी इस पेज को बना रहे हैं। अगर इससे आपका काम रुक रहा है तो बताएँ।",
+      "systemAuthor": "System",
+      "conflictSurfaced": "System ने एक टकराव सामने रखा"
     }
   },
   "pricingPage": {

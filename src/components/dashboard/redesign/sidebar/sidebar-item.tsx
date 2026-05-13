@@ -86,7 +86,7 @@ export function SidebarItem({
           aria-hidden="true"
           style={{
             position: 'absolute',
-            left: -6,
+            insetInlineStart: -6,
             top: 6,
             bottom: 6,
             width: 2.5,

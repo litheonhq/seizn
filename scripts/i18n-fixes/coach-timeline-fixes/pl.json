@@ -1,0 +1,155 @@
+{
+  "coach": {
+    "title": "Coach",
+    "subtitle": "Wklej scenę. Dostań uporządkowaną analizę — klisze, warstwy, łuki, uwagi krytyków.",
+    "placeholder": "Wrzuć scenę albo rozdział. Coach przepuści ją przez silnik sacred-flaw Willa Storra, kotwice Stevena Pressfielda, siedmiowarstwowy system i kontrolę świeżości.",
+    "analyze": "Analizuj scenę",
+    "analyzing": "Analizuję…",
+    "analyzeKbd": "⌘⏎",
+    "words": "słów",
+    "cliches": "znalezionych klisz",
+    "cached": "z pamięci",
+    "runHint": "Kliknij Analizuj, kiedy będziesz gotowy. Skan klisz działa w trakcie pisania.",
+    "section": {
+      "cliche": "Skan klisz",
+      "layers": "Warstwy fabuły",
+      "arcs": "Łuki postaci",
+      "critics": "Uwagi krytyków"
+    },
+    "cliche": {
+      "empty": "Nie znaleziono klisz.",
+      "more": "więcej",
+      "kbdHint": "Enter przewija · Esc zamyka",
+      "dismiss": "Odrzuć tę kliszę"
+    },
+    "error": {
+      "unknown": "Analiza Coacha nie powiodła się. Spróbuj za chwilę.",
+      "network": "Brak połączenia z siecią. Sprawdź łącze i spróbuj ponownie.",
+      "empty": "Najpierw dodaj tekst — Coach potrzebuje sceny do analizy.",
+      "csrf": "Sesja wygasła. Odśwież stronę i spróbuj ponownie.",
+      "tooLong": "Scena była za długa — skróciliśmy ją do maksymalnej długości."
+    },
+    "critic": {
+      "layer_auditor": "Audytor Warstw",
+      "rhetoric_examiner": "Egzaminator Retoryki",
+      "freshness_inspector": "Inspektor Świeżości",
+      "reader_surrogate": "Czytelnik Zastępczy",
+      "subtext_analyst": "Analityk Podtekstu",
+      "continuity_editor": "Redaktor Ciągłości",
+      "pacing_surgeon": "Chirurg Tempa",
+      "voice_enforcer": "Strażnik Głosu"
+    },
+    "layers": {
+      "pending": "Warstwy fabuły pojawią się po analizie."
+    },
+    "arcs": {
+      "empty": "Nie wykryto jeszcze łuków postaci."
+    },
+    "critics": {
+      "empty": "Uwagi krytyków pojawią się po analizie."
+    },
+    "arc": {
+      "sacredFlaw": "Sacred flaw",
+      "want": "Zewnętrzne pragnienie",
+      "need": "Wewnętrzna potrzeba"
+    }
+  },
+  "timeline": {
+    "title": "Oś czasu",
+    "subtitle": "Zapis tego, co ty i Seizn zrobiliście w tym projekcie, od najnowszych wpisów.",
+    "loadMore": "Wczytaj starsze",
+    "loadingMore": "Wczytuję…",
+    "error": "Nie udało się wczytać osi czasu. Spróbuj ponownie.",
+    "empty": {
+      "title": "Brak aktywności.",
+      "body": "Importy, decyzje, symulacje i analizy Coacha pojawią się tutaj."
+    },
+    "day": {
+      "today": "Dziś",
+      "yesterday": "Wczoraj"
+    },
+    "range": {
+      "window": "Pierwszy {first} · ostatni {last}"
+    },
+    "event": {
+      "projectCreated": {
+        "label": "Utworzono projekt",
+        "group": "Utworzono {count} projektów"
+      },
+      "importUpload": {
+        "label": "Wgrano plik",
+        "group": "Wgrano {count} plików"
+      },
+      "importParsed": {
+        "label": "Sparsowano import",
+        "group": "Sparsowano {count} importów"
+      },
+      "importFailed": {
+        "label": "Import nie powiódł się",
+        "group": "Nie powiodło się {count} importów"
+      },
+      "importRetried": {
+        "label": "Ponowiono import",
+        "group": "Ponowiono {count} importów"
+      },
+      "importDeleted": {
+        "label": "Usunięto import",
+        "group": "Usunięto {count} importów"
+      },
+      "candidateAdded": {
+        "label": "Dodano kandydata",
+        "group": "Dodano {count} kandydatów"
+      },
+      "candidateDecided": {
+        "label": "Podjęto decyzję o kandydacie",
+        "group": "Podjęto decyzję o {count} kandydatach"
+      },
+      "candidateBatch": {
+        "label": "Zdecydowano o kandydatach hurtowo",
+        "group": "Zdecydowano hurtowo o {count} kandydatach"
+      },
+      "characterUpdated": {
+        "label": "Zaktualizowano postać",
+        "group": "Zaktualizowano {count} postaci"
+      },
+      "conflictResolved": {
+        "label": "Rozwiązano konflikt",
+        "group": "Rozwiązano {count} konfliktów"
+      },
+      "simulationRun": {
+        "label": "Uruchomiono symulację",
+        "group": "Uruchomiono {count} symulacji"
+      },
+      "simulationReplay": {
+        "label": "Powtórzono symulację",
+        "group": "Powtórzono {count} symulacji"
+      },
+      "backlogGenerated": {
+        "label": "Wygenerowano backlog",
+        "group": "Wygenerowano {count} backlogów"
+      },
+      "settingsUpdated": {
+        "label": "Zaktualizowano ustawienia",
+        "group": "Zaktualizowano ustawienia {count} razy"
+      },
+      "byokUpdated": {
+        "label": "Zaktualizowano BYOK",
+        "group": "Zaktualizowano BYOK {count} razy"
+      },
+      "coachAnalysis": {
+        "label": "Coach przeanalizował scenę",
+        "group": "Coach przejrzał {count} scen"
+      },
+      "unknown": {
+        "label": "Zapisano aktywność",
+        "group": "{count} aktywności"
+      }
+    },
+    "utcLabel": "{hh}:{mm} UTC"
+  },
+  "fallback": {
+    "body": "Wciąż budujemy tę stronę. Daj znać, jeśli blokuje ci to pracę.",
+    "systemAuthor": "System",
+    "conflictSurfaced": "System ujawnił konflikt"
+  }
+}

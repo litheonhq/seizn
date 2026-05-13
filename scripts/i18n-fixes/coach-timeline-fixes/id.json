@@ -1,0 +1,155 @@
+{
+  "coach": {
+    "title": "Coach",
+    "subtitle": "Tempelkan sebuah adegan. Dapatkan pembacaan terstruktur — klise, lapisan, busur karakter, catatan kritikus.",
+    "placeholder": "Letakkan sebuah adegan atau bab. Coach memprosesnya melalui mesin sacred-flaw Will Storr, jangkar Steven Pressfield, sistem tujuh lapisan, dan pemeriksaan kesegaran.",
+    "analyze": "Analisis adegan",
+    "analyzing": "Menganalisis…",
+    "analyzeKbd": "⌘⏎",
+    "words": "kata",
+    "cliches": "klise ditemukan",
+    "cached": "tersimpan",
+    "runHint": "Tekan Analisis saat Anda siap. Pemindaian klise berjalan saat Anda mengetik.",
+    "section": {
+      "cliche": "Pemindaian klise",
+      "layers": "Lapisan cerita",
+      "arcs": "Busur karakter",
+      "critics": "Catatan kritikus"
+    },
+    "cliche": {
+      "empty": "Tidak ada klise yang ditemukan.",
+      "more": "lainnya",
+      "kbdHint": "Enter gulir · Esc tutup",
+      "dismiss": "Abaikan klise ini"
+    },
+    "error": {
+      "unknown": "Analisis Coach gagal. Coba lagi sebentar.",
+      "network": "Jaringan tidak tersedia. Periksa koneksi Anda lalu coba lagi.",
+      "empty": "Tambahkan teks terlebih dahulu — Coach membutuhkan sebuah adegan untuk dianalisis.",
+      "csrf": "Sesi telah berakhir. Muat ulang halaman lalu coba lagi.",
+      "tooLong": "Adegan terlalu panjang — kami memangkasnya ke panjang maksimum."
+    },
+    "critic": {
+      "layer_auditor": "Auditor Lapisan",
+      "rhetoric_examiner": "Pemeriksa Retorika",
+      "freshness_inspector": "Inspektur Kesegaran",
+      "reader_surrogate": "Wakil Pembaca",
+      "subtext_analyst": "Analis Subteks",
+      "continuity_editor": "Editor Kesinambungan",
+      "pacing_surgeon": "Ahli Bedah Tempo",
+      "voice_enforcer": "Penjaga Suara"
+    },
+    "layers": {
+      "pending": "Lapisan cerita akan muncul setelah Anda menganalisis."
+    },
+    "arcs": {
+      "empty": "Belum ada busur karakter yang terdeteksi."
+    },
+    "critics": {
+      "empty": "Catatan kritikus akan muncul setelah analisis selesai."
+    },
+    "arc": {
+      "sacredFlaw": "Cacat suci",
+      "want": "Keinginan eksternal",
+      "need": "Kebutuhan internal"
+    }
+  },
+  "timeline": {
+    "title": "Timeline",
+    "subtitle": "Catatan aktivitas Anda dan Seizn pada proyek ini, terbaru di atas.",
+    "loadMore": "Muat yang lebih lama",
+    "loadingMore": "Memuat…",
+    "error": "Tidak dapat memuat timeline. Silakan coba lagi.",
+    "empty": {
+      "title": "Belum ada aktivitas.",
+      "body": "Impor, keputusan, simulasi, dan eksekusi Coach akan muncul di sini."
+    },
+    "day": {
+      "today": "Hari ini",
+      "yesterday": "Kemarin"
+    },
+    "range": {
+      "window": "Pertama {first} · terakhir {last}"
+    },
+    "event": {
+      "projectCreated": {
+        "label": "Proyek dibuat",
+        "group": "{count} proyek dibuat"
+      },
+      "importUpload": {
+        "label": "Mengunggah berkas",
+        "group": "Mengunggah {count} berkas"
+      },
+      "importParsed": {
+        "label": "Memproses impor",
+        "group": "Memproses {count} impor"
+      },
+      "importFailed": {
+        "label": "Impor gagal",
+        "group": "{count} impor gagal"
+      },
+      "importRetried": {
+        "label": "Mencoba ulang impor",
+        "group": "Mencoba ulang {count} impor"
+      },
+      "importDeleted": {
+        "label": "Menghapus impor",
+        "group": "Menghapus {count} impor"
+      },
+      "candidateAdded": {
+        "label": "Menambahkan kandidat",
+        "group": "Menambahkan {count} kandidat"
+      },
+      "candidateDecided": {
+        "label": "Memutuskan kandidat",
+        "group": "Memutuskan {count} kandidat"
+      },
+      "candidateBatch": {
+        "label": "Memutuskan kandidat secara batch",
+        "group": "{count} kandidat diputuskan secara batch"
+      },
+      "characterUpdated": {
+        "label": "Memperbarui karakter",
+        "group": "Memperbarui {count} karakter"
+      },
+      "conflictResolved": {
+        "label": "Menyelesaikan konflik",
+        "group": "Menyelesaikan {count} konflik"
+      },
+      "simulationRun": {
+        "label": "Menjalankan simulasi",
+        "group": "Menjalankan {count} simulasi"
+      },
+      "simulationReplay": {
+        "label": "Memutar ulang simulasi",
+        "group": "Memutar ulang {count} simulasi"
+      },
+      "backlogGenerated": {
+        "label": "Membuat backlog",
+        "group": "Membuat {count} backlog"
+      },
+      "settingsUpdated": {
+        "label": "Memperbarui pengaturan",
+        "group": "Memperbarui pengaturan sebanyak {count} kali"
+      },
+      "byokUpdated": {
+        "label": "Memperbarui BYOK",
+        "group": "Memperbarui BYOK sebanyak {count} kali"
+      },
+      "coachAnalysis": {
+        "label": "Menganalisis adegan dengan Coach",
+        "group": "Coach meninjau {count} adegan"
+      },
+      "unknown": {
+        "label": "Aktivitas tercatat",
+        "group": "{count} aktivitas"
+      }
+    },
+    "utcLabel": "{hh}:{mm} UTC"
+  },
+  "fallback": {
+    "body": "Kami masih membangun halaman ini. Beri tahu kami jika ini menghambat alur kerja Anda.",
+    "systemAuthor": "Sistem",
+    "conflictSurfaced": "Sistem memunculkan sebuah konflik"
+  }
+}

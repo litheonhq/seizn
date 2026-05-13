@@ -1,0 +1,155 @@
+{
+  "coach": {
+    "title": "Coach",
+    "subtitle": "Cola uma cena. Recebe uma leitura estruturada — clichés, camadas, arcos e notas dos críticos.",
+    "placeholder": "Larga aqui uma cena ou capítulo. O Coach passa-a pelo motor de defeito sagrado de Will Storr, pelas âncoras de Steven Pressfield, pelo sistema de sete camadas e por uma análise de frescura.",
+    "analyze": "Analisar cena",
+    "analyzing": "A analisar…",
+    "analyzeKbd": "⌘⏎",
+    "words": "palavras",
+    "cliches": "clichés encontrados",
+    "cached": "em cache",
+    "runHint": "Carrega em Analisar quando estiveres pronto. A varredura de clichés corre à medida que escreves.",
+    "section": {
+      "cliche": "Varredura de clichés",
+      "layers": "Camadas da história",
+      "arcs": "Arcos de personagem",
+      "critics": "Notas dos críticos"
+    },
+    "cliche": {
+      "empty": "Não foram encontrados clichés.",
+      "more": "mais",
+      "kbdHint": "Enter percorre · Esc dispensa",
+      "dismiss": "Dispensar este cliché"
+    },
+    "error": {
+      "unknown": "A análise do Coach falhou. Tenta de novo daqui a um momento.",
+      "network": "Rede indisponível. Verifica a ligação e tenta de novo.",
+      "empty": "Adiciona primeiro algum texto — o Coach precisa de uma cena para analisar.",
+      "csrf": "Sessão expirada. Recarrega a página e tenta de novo.",
+      "tooLong": "A cena era demasiado longa — cortámo-la para o tamanho máximo."
+    },
+    "critic": {
+      "layer_auditor": "Auditor de Camadas",
+      "rhetoric_examiner": "Examinador de Retórica",
+      "freshness_inspector": "Inspetor de Frescura",
+      "reader_surrogate": "Leitor Substituto",
+      "subtext_analyst": "Analista de Subtexto",
+      "continuity_editor": "Editor de Continuidade",
+      "pacing_surgeon": "Cirurgião do Ritmo",
+      "voice_enforcer": "Guardião da Voz"
+    },
+    "layers": {
+      "pending": "As camadas da história aparecem depois de analisares."
+    },
+    "arcs": {
+      "empty": "Ainda não foram detetados arcos de personagem."
+    },
+    "critics": {
+      "empty": "As notas dos críticos aparecem depois de a análise voltar."
+    },
+    "arc": {
+      "sacredFlaw": "Defeito sagrado",
+      "want": "Desejo externo",
+      "need": "Necessidade interna"
+    }
+  },
+  "timeline": {
+    "title": "Cronologia",
+    "subtitle": "Um registo do que tu e o Seizn fizeram neste projeto, do mais recente para o mais antigo.",
+    "loadMore": "Carregar mais antigos",
+    "loadingMore": "A carregar…",
+    "error": "Não foi possível carregar a cronologia. Tenta de novo.",
+    "empty": {
+      "title": "Ainda sem atividade.",
+      "body": "Importações, decisões, simulações e execuções do Coach vão aparecer aqui."
+    },
+    "day": {
+      "today": "Hoje",
+      "yesterday": "Ontem"
+    },
+    "range": {
+      "window": "Primeiro {first} · último {last}"
+    },
+    "event": {
+      "projectCreated": {
+        "label": "Projeto criado",
+        "group": "{count} projetos criados"
+      },
+      "importUpload": {
+        "label": "Ficheiro carregado",
+        "group": "{count} ficheiros carregados"
+      },
+      "importParsed": {
+        "label": "Importação processada",
+        "group": "{count} importações processadas"
+      },
+      "importFailed": {
+        "label": "Importação falhou",
+        "group": "{count} importações falharam"
+      },
+      "importRetried": {
+        "label": "Importação repetida",
+        "group": "{count} importações repetidas"
+      },
+      "importDeleted": {
+        "label": "Importação eliminada",
+        "group": "{count} importações eliminadas"
+      },
+      "candidateAdded": {
+        "label": "Candidato adicionado",
+        "group": "{count} candidatos adicionados"
+      },
+      "candidateDecided": {
+        "label": "Decisão sobre um candidato",
+        "group": "Decisão sobre {count} candidatos"
+      },
+      "candidateBatch": {
+        "label": "Candidatos decididos em lote",
+        "group": "{count} candidatos decididos em lote"
+      },
+      "characterUpdated": {
+        "label": "Personagem atualizada",
+        "group": "{count} personagens atualizadas"
+      },
+      "conflictResolved": {
+        "label": "Conflito resolvido",
+        "group": "{count} conflitos resolvidos"
+      },
+      "simulationRun": {
+        "label": "Simulação executada",
+        "group": "{count} simulações executadas"
+      },
+      "simulationReplay": {
+        "label": "Simulação repetida",
+        "group": "{count} simulações repetidas"
+      },
+      "backlogGenerated": {
+        "label": "Backlog gerado",
+        "group": "{count} backlogs gerados"
+      },
+      "settingsUpdated": {
+        "label": "Definições atualizadas",
+        "group": "Definições atualizadas {count} vezes"
+      },
+      "byokUpdated": {
+        "label": "BYOK atualizado",
+        "group": "BYOK atualizado {count} vezes"
+      },
+      "coachAnalysis": {
+        "label": "Cena analisada com o Coach",
+        "group": "O Coach reviu {count} cenas"
+      },
+      "unknown": {
+        "label": "Atividade registada",
+        "group": "{count} atividades"
+      }
+    },
+    "utcLabel": "{hh}:{mm} UTC"
+  },
+  "fallback": {
+    "body": "Ainda estamos a construir esta página. Avisa-nos se estiver a bloquear o teu fluxo de trabalho.",
+    "systemAuthor": "Sistema",
+    "conflictSurfaced": "O sistema detetou um conflito"
+  }
+}

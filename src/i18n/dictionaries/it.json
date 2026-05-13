@@ -1690,6 +1690,159 @@
           }
         }
       }
+    },
+    "coach": {
+      "title": "Coach",
+      "subtitle": "Incolla una scena. Ottieni una lettura strutturata: cliché, livelli, archi, note dei critici.",
+      "placeholder": "Lascia qui una scena o un capitolo. Coach la passa attraverso il motore della colpa sacra di Will Storr, gli ancoraggi di Steven Pressfield, il sistema a sette livelli e un controllo di freschezza.",
+      "analyze": "Analizza scena",
+      "analyzing": "Analisi in corso…",
+      "analyzeKbd": "⌘⏎",
+      "words": "parole",
+      "cliches": "cliché trovati",
+      "cached": "in cache",
+      "runHint": "Premi Analizza quando sei pronto. La scansione dei cliché parte mentre scrivi.",
+      "section": {
+        "cliche": "Scansione cliché",
+        "layers": "Livelli della storia",
+        "arcs": "Archi dei personaggi",
+        "critics": "Note dei critici"
+      },
+      "cliche": {
+        "empty": "Nessun cliché trovato.",
+        "more": "altri",
+        "kbdHint": "Invio scorri · Esc chiudi",
+        "dismiss": "Ignora questo cliché"
+      },
+      "error": {
+        "unknown": "L'analisi di Coach non è riuscita. Riprova tra un momento.",
+        "network": "Rete non disponibile. Controlla la connessione e riprova.",
+        "empty": "Aggiungi prima del testo: Coach ha bisogno di una scena da analizzare.",
+        "csrf": "Sessione scaduta. Ricarica la pagina e riprova.",
+        "tooLong": "La scena era troppo lunga: l'abbiamo tagliata alla lunghezza massima."
+      },
+      "critic": {
+        "layer_auditor": "Revisore dei livelli",
+        "rhetoric_examiner": "Esaminatore retorico",
+        "freshness_inspector": "Ispettore di freschezza",
+        "reader_surrogate": "Lettore surrogato",
+        "subtext_analyst": "Analista del sottotesto",
+        "continuity_editor": "Editor di continuità",
+        "pacing_surgeon": "Chirurgo del ritmo",
+        "voice_enforcer": "Custode della voce"
+      },
+      "layers": {
+        "pending": "I livelli della storia compariranno dopo l'analisi."
+      },
+      "arcs": {
+        "empty": "Nessun arco dei personaggi rilevato per ora."
+      },
+      "critics": {
+        "empty": "Le note dei critici compaiono al ritorno dell'analisi."
+      },
+      "arc": {
+        "sacredFlaw": "Colpa sacra",
+        "want": "Desiderio esterno",
+        "need": "Bisogno interno"
+      }
+    },
+    "timeline": {
+      "title": "Cronologia",
+      "subtitle": "Un registro di ciò che tu e Seizn avete fatto su questo progetto, dal più recente.",
+      "loadMore": "Carica più vecchi",
+      "loadingMore": "Caricamento…",
+      "error": "Impossibile caricare la cronologia. Riprova.",
+      "empty": {
+        "title": "Ancora nessuna attività.",
+        "body": "Import, decisioni, simulazioni e analisi di Coach compariranno qui."
+      },
+      "day": {
+        "today": "Oggi",
+        "yesterday": "Ieri"
+      },
+      "range": {
+        "window": "Primi {first} · ultimi {last}"
+      },
+      "event": {
+        "projectCreated": {
+          "label": "Progetto creato",
+          "group": "{count} progetti creati"
+        },
+        "importUpload": {
+          "label": "File caricato",
+          "group": "Caricati {count} file"
+        },
+        "importParsed": {
+          "label": "Import analizzato",
+          "group": "Analizzati {count} import"
+        },
+        "importFailed": {
+          "label": "Import fallito",
+          "group": "{count} import falliti"
+        },
+        "importRetried": {
+          "label": "Import ritentato",
+          "group": "Ritentati {count} import"
+        },
+        "importDeleted": {
+          "label": "Import eliminato",
+          "group": "Eliminati {count} import"
+        },
+        "candidateAdded": {
+          "label": "Candidato aggiunto",
+          "group": "Aggiunti {count} candidati"
+        },
+        "candidateDecided": {
+          "label": "Candidato deciso",
+          "group": "Decisi {count} candidati"
+        },
+        "candidateBatch": {
+          "label": "Candidati decisi in blocco",
+          "group": "{count} candidati decisi in blocco"
+        },
+        "characterUpdated": {
+          "label": "Personaggio aggiornato",
+          "group": "Aggiornati {count} personaggi"
+        },
+        "conflictResolved": {
+          "label": "Conflitto risolto",
+          "group": "Risolti {count} conflitti"
+        },
+        "simulationRun": {
+          "label": "Simulazione eseguita",
+          "group": "Eseguite {count} simulazioni"
+        },
+        "simulationReplay": {
+          "label": "Simulazione rieseguita",
+          "group": "Rieseguite {count} simulazioni"
+        },
+        "backlogGenerated": {
+          "label": "Backlog generato",
+          "group": "Generati {count} backlog"
+        },
+        "settingsUpdated": {
+          "label": "Impostazioni aggiornate",
+          "group": "Impostazioni aggiornate {count} volte"
+        },
+        "byokUpdated": {
+          "label": "BYOK aggiornato",
+          "group": "BYOK aggiornato {count} volte"
+        },
+        "coachAnalysis": {
+          "label": "Scena analizzata con Coach",
+          "group": "Coach ha rivisto {count} scene"
+        },
+        "unknown": {
+          "label": "Attività registrata",
+          "group": "{count} attività"
+        }
+      },
+      "utcLabel": "{hh}:{mm} UTC"
+    },
+    "fallback": {
+      "body": "Stiamo ancora costruendo questa pagina. Facci sapere se ti blocca il flusso di lavoro.",
+      "systemAuthor": "Sistema",
+      "conflictSurfaced": "Il sistema ha portato a galla un conflitto"
     }
   },
   "pricingPage": {

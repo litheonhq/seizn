@@ -1922,10 +1922,13 @@
           "label": "활동 기록",
           "group": "활동 {count}건"
         }
-      }
+      },
+      "utcLabel": "{hh}:{mm} UTC"
     },
     "fallback": {
-      "body": "이 화면은 아직 다듬는 중이에요. 막히는 부분이 있으면 알려 주세요."
+      "body": "이 화면은 아직 다듬는 중이에요. 막히는 부분이 있으면 알려 주세요.",
+      "systemAuthor": "시스템",
+      "conflictSurfaced": "시스템이 충돌을 감지했어요"
     },
     "account": {
       "apiKeys": {
