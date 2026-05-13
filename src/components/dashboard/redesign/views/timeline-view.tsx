@@ -73,7 +73,7 @@ export function TimelineView({ projectId }: TimelineViewProps) {
             borderRadius: 16,
             display: 'grid',
             placeItems: 'center',
-            background: 'rgba(122, 92, 58, 0.10)',
+            background: 'rgba(122, 92, 58, 0.22)',
             color: 'var(--text-secondary)',
           }}
         >
@@ -378,7 +378,9 @@ const iconBubbleStyle: React.CSSProperties = {
   borderRadius: 13,
   display: 'grid',
   placeItems: 'center',
-  background: 'rgba(122, 92, 58, 0.10)',
+  // Bumped from 0.10 → 0.22 so the icon's --text-secondary color clears
+  // WCAG AA contrast against the bubble background.
+  background: 'rgba(122, 92, 58, 0.22)',
   color: 'var(--text-secondary)',
   flexShrink: 0,
 };
@@ -387,7 +389,9 @@ const countChipStyle: React.CSSProperties = {
   marginLeft: 'auto',
   padding: '2px 8px',
   borderRadius: 999,
-  background: 'rgba(122, 92, 58, 0.12)',
+  // Bumped from 0.12 → 0.22 (count number now passes WCAG AA contrast
+  // against the chip background; old value rendered very faint).
+  background: 'rgba(122, 92, 58, 0.22)',
   color: 'var(--text-secondary)',
   fontSize: 11,
   fontWeight: 600,

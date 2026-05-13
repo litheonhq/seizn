@@ -1,9 +1,19 @@
 -- Rollback for the Author Coach feature (PRs #384, #385).
 --
 -- ⚠️ NOT a Supabase auto-migration. Living here under docs/operations/ so the
--- Supabase migration runner does NOT pick it up. To execute, copy into
--- supabase/migrations/ with a fresh timestamp and run via the standard
--- runner, or apply manually with psql against the target database.
+-- Supabase migration runner does NOT pick it up — moving this file into
+-- supabase/migrations/ WILL trigger automatic application on next deploy
+-- and rip Coach out of production. Don't do that without a deliberate plan.
+--
+-- To execute manually:
+--   1. Copy this file into supabase/migrations/ with a fresh timestamp
+--      (e.g. 20260601001_rollback_coach.sql) on a coordinated deploy, OR
+--   2. Apply directly via psql against the target database after
+--      verifying on staging.
+--
+-- Either path: also flip AUTHOR_COACH_ENABLED=0 in Vercel so the UI/API
+-- surface stops calling the dropped table columns before the migration
+-- lands. The kill switch landed in PR #389 specifically for this dance.
 --
 -- Verify on staging before touching production.
 --
