@@ -46,6 +46,7 @@ export function TimelineView({ projectId }: TimelineViewProps) {
 
   return (
     <div
+      className="timeline-view-root"
       style={{
         flex: 1,
         display: 'flex',
@@ -55,6 +56,7 @@ export function TimelineView({ projectId }: TimelineViewProps) {
       }}
     >
       <header
+        className="timeline-view-header"
         style={{
           padding: '24px 32px 16px',
           display: 'flex',
@@ -97,6 +99,7 @@ export function TimelineView({ projectId }: TimelineViewProps) {
       </header>
 
       <div
+        className="timeline-view-body"
         aria-live="polite"
         aria-busy={isLoading || isValidating ? 'true' : undefined}
         style={{
@@ -157,6 +160,16 @@ export function TimelineView({ projectId }: TimelineViewProps) {
           </button>
         ) : null}
       </div>
+      <style>{`
+        @media (max-width: 720px) {
+          .timeline-view-header {
+            padding: 16px 16px 12px !important;
+          }
+          .timeline-view-body {
+            padding: 16px 16px 24px !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }
