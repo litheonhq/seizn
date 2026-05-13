@@ -87,26 +87,45 @@ export async function recordFunnelEvent(input: FunnelEventInput): Promise<boolea
 /**
  * Helper for the "first_*" events: only record if the user has never
  * recorded the same event before. Returns true if a new event was written.
+ *
+ * Uses INSERT ... ON CONFLICT DO NOTHING against the partial unique index
+ * funnel_events_first_unique (migration 20260514002). Eliminates the race
+ * window the older SELECT-then-INSERT version had — two concurrent first
+ * actions can no longer both succeed.
  */
 export async function recordFirstFunnelEvent(input: FunnelEventInput): Promise<boolean> {
   if (!hasServerSupabaseServiceRoleConfig()) return false;
   const supabase = createServerClient();
-  const { data: existing, error: lookupError } = await supabase
-    .from('funnel_events')
-    .select('id')
-    .eq('user_id', input.userId)
-    .eq('event_type', input.eventType)
-    .limit(1);
-  if (lookupError) {
-    console.error('[funnel] first-event lookup failed', {
+  try {
+    const { data, error } = await supabase
+      .from('funnel_events')
+      .insert({
+        user_id: input.userId,
+        event_type: input.eventType,
+        metadata: input.metadata ?? null,
+        occurred_at: (input.occurredAt ?? new Date()).toISOString(),
+      })
+      .select('id');
+    if (error) {
+      // PostgreSQL unique-violation (SQLSTATE 23505) means the partial unique
+      // index funnel_events_first_unique (migration 20260514002) caught a
+      // concurrent duplicate. Treat as "already first" — return false, no log.
+      if (error.code === '23505') return false;
+      console.error('[funnel] first-event insert failed', {
+        eventType: input.eventType,
+        userId: input.userId,
+        error: error.message,
+      });
+      return false;
+    }
+    return Array.isArray(data) && data.length > 0;
+  } catch (err) {
+    // Defensive: never let instrumentation throw into the calling flow.
+    console.error('[funnel] first-event insert threw', {
       eventType: input.eventType,
       userId: input.userId,
-      error: lookupError.message,
+      error: err instanceof Error ? err.message : String(err),
     });
     return false;
   }
-  if (existing && existing.length > 0) {
-    return false;
-  }
-  return recordFunnelEvent(input);
 }

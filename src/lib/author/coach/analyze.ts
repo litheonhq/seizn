@@ -45,6 +45,7 @@ import {
   COACH_LLM_TEMPERATURE,
   COACH_LLM_TIMEOUT_MS,
 } from './config';
+import { getCachedCoachAnalysis, setCachedCoachAnalysis } from './cache';
 
 export class CoachAnalyzeTimeoutError extends Error {
   constructor() {
@@ -113,6 +114,27 @@ export async function analyzeCoachInput(
   const hash = hashCoachInput(text);
   const localCliches = auditText(text);
 
+  // Redis cache lookup. 7-day TTL — same scene text returns the prior
+  // analysis without burning an LLM call. Cache miss falls through silently.
+  const cached = await getCachedCoachAnalysis(hash);
+  if (cached) {
+    Sentry.addBreadcrumb({
+      category: 'coach',
+      message: 'cache_hit',
+      level: 'info',
+      data: { hash, userId: input.userId, projectId: input.projectId },
+    });
+    // Refresh local cliche scan (cheap, deterministic) so dismissals
+    // stay in sync with the user's current text edits.
+    return { ...cached, antiCliche: localCliches, cached: true };
+  }
+  Sentry.addBreadcrumb({
+    category: 'coach',
+    message: 'cache_miss',
+    level: 'info',
+    data: { hash, userId: input.userId, projectId: input.projectId },
+  });
+
   const start = (deps.now?.() ?? new Date()).getTime();
   const generate = deps.generate ?? (generateAuthorLlm as AnalyzeCoachDeps['generate'] & {});
 
@@ -148,6 +170,24 @@ export async function analyzeCoachInput(
   const end = (deps.now?.() ?? new Date()).getTime();
   const llm = response.json ?? { storyLayers: [], characterArcs: [], criticNotes: [] };
 
+  // BYOK / provider observability — record provider, model, byok flag, and
+  // token usage on every successful Coach call. Cost/usage telemetry lands
+  // in Sentry even when the user owns the LLM bill (BYOK).
+  Sentry.addBreadcrumb({
+    category: 'coach',
+    message: 'llm_complete',
+    level: 'info',
+    data: {
+      provider: response.provider,
+      model: response.model,
+      byok: response.byok,
+      tokensIn: response.usage.tokensIn,
+      tokensOut: response.usage.tokensOut,
+      latencyMs: end - start,
+      hash,
+    },
+  });
+
   const layers = ensureAllLayers(llm.storyLayers ?? [], input);
   const analysis: CoachAnalysis = {
     hash,
@@ -158,6 +198,10 @@ export async function analyzeCoachInput(
     latencyMs: end - start,
     cached: false,
   };
+
+  // Store the analysis for future cache hits. Fire-and-forget — failure
+  // doesn't block the response (best-effort write).
+  await setCachedCoachAnalysis(hash, analysis);
 
   if (deps.auditStore) {
     try {
