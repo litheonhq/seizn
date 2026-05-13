@@ -60,13 +60,31 @@ export async function withAuthorUiService(
         NextResponse.json({ error: error.message, code: error.code }, { status })
       );
     }
+    // Pre-audit, this returned `error.message` directly — which for store-
+    // layer failures was built as `Failed to ${op} ${table}: ${error.message}`,
+    // exposing exact Supabase table names (author_candidates, author_audit_log
+    // etc.), constraint names, missing-column hints, and RLS messages to the
+    // API consumer. Now we return a stable generic message + a request_id
+    // (the route-instance's user.id is already available; downstream log
+    // aggregation can correlate). Real error stays server-side.
     const message = error instanceof Error ? error.message : 'Internal error';
+    console.error('[author-ui] unhandled route error', {
+      user_id: user.id,
+      error: message,
+      ...(error instanceof Error ? { name: error.name, stack: error.stack } : {}),
+    });
     const debug = process.env.VERCEL_ENV !== 'production' && error instanceof Error
-      ? { stack: error.stack, name: error.name }
+      ? { stack: error.stack, name: error.name, message }
       : undefined;
     return ensureCsrfCookie(
       request,
-      NextResponse.json({ error: message, ...(debug ? { debug } : {}) }, { status: 500 })
+      NextResponse.json(
+        {
+          error: 'Internal error',
+          ...(debug ? { debug } : {}),
+        },
+        { status: 500 },
+      ),
     );
   }
 }
