@@ -10,6 +10,7 @@ import {
 } from '@/lib/dashboard-routes';
 import type { NavCapabilityMap } from './sidebar/nav-config';
 import { useAuthorConflicts, useAuthorProjects } from '@/hooks/useAuthorMemoryV3';
+import { useGlobalShortcuts } from './hooks/use-global-shortcuts';
 import { Sidebar } from './sidebar/sidebar';
 import { TopBar, type TopBarTab } from './top-bar';
 import type { Density } from './types';
@@ -107,6 +108,10 @@ export function WorkspaceShell({
     }
     setCollapsed((c) => !c);
   }, []);
+
+  // Wire nav-config `kbd` shortcuts (I/R/C/G/T/X/O/S) to actual navigation.
+  // The hook handles IME composition + modifier + focused-input guards internally.
+  useGlobalShortcuts({ onAuthorTab: canUseLocalAuthorTabs ? setTab : undefined });
 
   useEffect(() => {
     const readTabFromLocation = () => {

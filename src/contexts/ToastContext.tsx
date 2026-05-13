@@ -72,7 +72,12 @@ export function ToastProvider({ children }: { children: ReactNode }) {
           {toasts.map((t) => (
             <div
               key={t.id}
-              role="status"
+              // `error` toasts use role="alert" (implicit aria-live="assertive")
+              // so screen readers interrupt for network/server failures. Other
+              // toast types stay on role="status" (implicit aria-live="polite")
+              // and inherit the container's polite live region.
+              role={t.type === "error" ? "alert" : "status"}
+              aria-live={t.type === "error" ? "assertive" : undefined}
               style={{ animation: t.exiting ? `toast-out ${EXIT_MS}ms ease-in forwards` : `toast-in ${EXIT_MS}ms ease-out` }}
               className={`pointer-events-auto flex items-start gap-3 px-4 py-3 rounded-xl border shadow-lg max-w-sm ${variantStyles[t.type]}`}
             >
