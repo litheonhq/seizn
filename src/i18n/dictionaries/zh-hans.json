@@ -437,7 +437,9 @@
       "timeline": "时间线",
       "conflicts": "冲突",
       "simulate": "模拟",
-      "byok": "API密钥"
+      "byok": "自带密钥",
+      "coach": "教练",
+      "replay": "回放"
     },
     "pinSidebar": "固定侧边栏",
     "unpinSidebar": "折叠侧边栏",

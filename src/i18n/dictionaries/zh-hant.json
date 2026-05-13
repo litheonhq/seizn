@@ -437,7 +437,9 @@
       "timeline": "時間軸",
       "conflicts": "衝突",
       "simulate": "模擬",
-      "byok": "API 金鑰"
+      "byok": "自帶金鑰",
+      "coach": "教練",
+      "replay": "重播"
     },
     "pinSidebar": "固定側邊欄",
     "unpinSidebar": "摺疊側邊欄",
