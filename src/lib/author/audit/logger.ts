@@ -30,6 +30,43 @@ interface AuthorAuditLogRow {
   decision_id: string;
   parent_decision_id: string | null;
   created_at: string;
+  previous_hash?: string | null;
+  entry_hash?: string | null;
+}
+
+/**
+ * Compute the canonical sha256 of an audit-log entry. The hash includes
+ * `previous_hash` so re-derivation is deterministic — given the chain of
+ * parent hashes, every consumer can recompute the same value.
+ *
+ * MUST stay in lockstep with the migration's trigger expectations and the
+ * replay-side recomputation. Adding/removing fields here breaks tampering
+ * detection silently.
+ */
+export function computeAuthorAuditEntryHash(input: {
+  previousHash: string | null;
+  projectId: string;
+  userId: string;
+  eventType: AuthorAuditEventType;
+  payload: JsonValue;
+  llmMeta: AuthorAuditLogEntry['llmMeta'] | null;
+  sourceSpan: AuthorAuditLogEntry['sourceSpan'] | null;
+  decisionId: string;
+  parentDecisionId: string | null;
+  createdAt: string;
+}): string {
+  return sha256Hex({
+    previous_hash: input.previousHash,
+    project_id: input.projectId,
+    user_id: input.userId,
+    event_type: input.eventType,
+    payload: input.payload,
+    llm_meta: input.llmMeta,
+    source_span: input.sourceSpan,
+    decision_id: input.decisionId,
+    parent_decision_id: input.parentDecisionId,
+    created_at: input.createdAt,
+  });
 }
 
 const SECRET_KEY_PATTERN = /(api[_-]?key|authorization|bearer|credential|password|secret|token|private[_-]?key)/i;
@@ -67,6 +104,44 @@ export class SupabaseAuthorAuditLogStore implements AuthorAuditLogStore {
   }
 
   async log(entry: AuthorAuditLogEntry): Promise<void> {
+    // Defense-in-depth: refuse to write entries that don't belong to this
+    // store's user. Pre-audit, the store accepted any entry.userId because
+    // the surrounding service.ts always passed the right value — but a
+    // future refactor that iterated over multiple users would silently
+    // misattribute audit entries (HIGH finding from the memory-v3 audit).
+    if (entry.userId !== this.userId) {
+      throw new Error(
+        `Audit log store user mismatch: store user=${this.userId}, entry user=${entry.userId}`,
+      );
+    }
+
+    // Look up the parent's entry_hash so we can populate previous_hash. The
+    // chain trigger in the DB will re-verify; computing here keeps the
+    // app's view of the chain consistent with what gets stored.
+    let previousHash: string | null = null;
+    if (entry.parentDecisionId) {
+      const { data: parentRow } = await this.client
+        .from('author_audit_log')
+        .select('entry_hash')
+        .eq('user_id', this.userId)
+        .eq('decision_id', entry.parentDecisionId)
+        .maybeSingle();
+      previousHash = (parentRow as { entry_hash: string | null } | null)?.entry_hash ?? null;
+    }
+
+    const entryHash = computeAuthorAuditEntryHash({
+      previousHash,
+      projectId: entry.projectId,
+      userId: entry.userId,
+      eventType: entry.eventType,
+      payload: entry.payload,
+      llmMeta: entry.llmMeta ?? null,
+      sourceSpan: entry.sourceSpan ?? null,
+      decisionId: entry.decisionId,
+      parentDecisionId: entry.parentDecisionId ?? null,
+      createdAt: entry.createdAt,
+    });
+
     const { error } = await this.client
       .from('author_audit_log')
       .insert({
@@ -80,6 +155,8 @@ export class SupabaseAuthorAuditLogStore implements AuthorAuditLogStore {
         decision_id: entry.decisionId,
         parent_decision_id: entry.parentDecisionId ?? null,
         created_at: entry.createdAt,
+        previous_hash: previousHash,
+        entry_hash: entryHash,
       });
 
     if (error) {
@@ -99,7 +176,7 @@ export class SupabaseAuthorAuditLogStore implements AuthorAuditLogStore {
 
     let query = this.client
       .from('author_audit_log')
-      .select('id, project_id, user_id, event_type, payload, llm_meta, source_span, decision_id, parent_decision_id, created_at')
+      .select('id, project_id, user_id, event_type, payload, llm_meta, source_span, decision_id, parent_decision_id, created_at, previous_hash, entry_hash')
       .eq('user_id', filter.userId ?? this.userId);
 
     if (filter.projectId) query = query.eq('project_id', filter.projectId);
@@ -158,7 +235,7 @@ export class SupabaseAuthorAuditLogStore implements AuthorAuditLogStore {
   async getByDecisionId(decisionId: string): Promise<AuthorAuditLogEntry | undefined> {
     const { data, error } = await this.client
       .from('author_audit_log')
-      .select('id, project_id, user_id, event_type, payload, llm_meta, source_span, decision_id, parent_decision_id, created_at')
+      .select('id, project_id, user_id, event_type, payload, llm_meta, source_span, decision_id, parent_decision_id, created_at, previous_hash, entry_hash')
       .eq('user_id', this.userId)
       .eq('decision_id', decisionId)
       .maybeSingle();
@@ -179,7 +256,13 @@ export class AuthorAuditLogStoreConfigError extends Error {
 }
 
 export function createAuthorAuditLogEntry(input: AuthorAuditLogInput): AuthorAuditLogEntry {
-  const createdAt = input.createdAt ?? new Date().toISOString();
+  // Pre-audit (Phase 3 finding 2026-05-07), this accepted `input.createdAt`
+  // verbatim, allowing a buggy or compromised internal caller to backdate
+  // entries. Since entry_hash is derived from createdAt (among other
+  // fields), backdating let an attacker forge a chain. Now we always use
+  // server NOW(); callers that need a custom timestamp for testing should
+  // use a fake clock dependency instead.
+  const createdAt = new Date().toISOString();
   const llmMeta = input.llmMeta
     ? sanitizeAuthorAuditJson(input.llmMeta) as AuthorAuditLogEntry['llmMeta']
     : undefined;
@@ -298,6 +381,8 @@ function rowToEntry(row: AuthorAuditLogRow): AuthorAuditLogEntry {
     decisionId: row.decision_id,
     parentDecisionId: row.parent_decision_id ?? undefined,
     createdAt: row.created_at,
+    previousHash: row.previous_hash ?? null,
+    entryHash: row.entry_hash ?? null,
   };
 }
 
