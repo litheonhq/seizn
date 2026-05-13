@@ -181,8 +181,15 @@ describe('analyzeCoachInput', () => {
         { userId: 'u', projectId: 'p', text: 'A scene that hangs.' },
         { generate },
       );
-      vi.advanceTimersByTime(21_000);
-      await expect(pending).rejects.toBeInstanceOf(CoachAnalyzeTimeoutError);
+      // Pre-attach the rejection handler so vitest doesn't flag it as
+      // "unhandled" between the cache-lookup microtask flush and the timer
+      // advance below.
+      const assertion = expect(pending).rejects.toBeInstanceOf(CoachAnalyzeTimeoutError);
+      // Async timer advance flushes microtasks — needed since the new Redis
+      // cache lookup adds a microtask hop before the LLM-call timeout gets
+      // registered.
+      await vi.advanceTimersByTimeAsync(21_000);
+      await assertion;
     } finally {
       vi.useRealTimers();
     }
