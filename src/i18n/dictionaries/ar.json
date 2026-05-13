@@ -1686,6 +1686,159 @@
           }
         }
       }
+    },
+    "coach": {
+      "title": "Coach",
+      "subtitle": "الصق مشهداً واحصل على قراءة منظّمة؛ كليشيهات، طبقات، أقواس، وملاحظات نقدية.",
+      "placeholder": "أفلِت مشهداً أو فصلاً. يمرّره Coach عبر محرّك العيب المقدّس لـ Will Storr، ومراسي Steven Pressfield، ونظام الطبقات السبع، وفحص الطزاجة.",
+      "analyze": "حلّل المشهد",
+      "analyzing": "جارٍ التحليل…",
+      "analyzeKbd": "⌘⏎",
+      "words": "كلمة",
+      "cliches": "كليشيه تمّ رصده",
+      "cached": "مخزّن",
+      "runHint": "اضغط على «حلّل» عند الجاهزية. يعمل فحص الكليشيهات أثناء الكتابة.",
+      "section": {
+        "cliche": "فحص الكليشيهات",
+        "layers": "طبقات القصة",
+        "arcs": "أقواس الشخصيات",
+        "critics": "ملاحظات النقّاد"
+      },
+      "cliche": {
+        "empty": "لا توجد كليشيهات.",
+        "more": "المزيد",
+        "kbdHint": "Enter للتمرير · Esc للإغلاق",
+        "dismiss": "تجاهل هذا الكليشيه"
+      },
+      "error": {
+        "unknown": "فشل تحليل Coach. حاول مجدداً بعد لحظات.",
+        "network": "الشبكة غير متاحة. تحقّق من الاتصال ثمّ أعد المحاولة.",
+        "empty": "أضِف نصاً أولاً؛ يحتاج Coach إلى مشهد لتحليله.",
+        "csrf": "انتهت الجلسة. أعِد تحميل الصفحة ثمّ حاول مجدداً.",
+        "tooLong": "المشهد طويل جداً؛ اقتصصناه إلى الحدّ الأقصى."
+      },
+      "critic": {
+        "layer_auditor": "مدقّق الطبقات",
+        "rhetoric_examiner": "فاحص البلاغة",
+        "freshness_inspector": "مفتّش الطزاجة",
+        "reader_surrogate": "وكيل القارئ",
+        "subtext_analyst": "محلّل المعنى الضمني",
+        "continuity_editor": "محرّر الاتّساق",
+        "pacing_surgeon": "جرّاح الإيقاع",
+        "voice_enforcer": "حارس الصوت"
+      },
+      "layers": {
+        "pending": "ستظهر طبقات القصة بعد التحليل."
+      },
+      "arcs": {
+        "empty": "لم تُرصد أقواس شخصيات بعد."
+      },
+      "critics": {
+        "empty": "تظهر ملاحظات النقّاد بعد عودة التحليل."
+      },
+      "arc": {
+        "sacredFlaw": "العيب المقدّس",
+        "want": "الرغبة الخارجية",
+        "need": "الحاجة الداخلية"
+      }
+    },
+    "timeline": {
+      "title": "الجدول الزمني",
+      "subtitle": "سجلّ لما فعلتَه أنت وSeizn في هذا المشروع، من الأحدث إلى الأقدم.",
+      "loadMore": "تحميل الأقدم",
+      "loadingMore": "جارٍ التحميل…",
+      "error": "تعذّر تحميل الجدول الزمني. أعِد المحاولة.",
+      "empty": {
+        "title": "لا نشاط بعد.",
+        "body": "ستظهر هنا عمليات الاستيراد والقرارات والمحاكاة وتشغيلات Coach."
+      },
+      "day": {
+        "today": "اليوم",
+        "yesterday": "أمس"
+      },
+      "range": {
+        "window": "الأول {first} · الأخير {last}"
+      },
+      "event": {
+        "projectCreated": {
+          "label": "أُنشئ مشروع",
+          "group": "أُنشئ {count} مشروعاً"
+        },
+        "importUpload": {
+          "label": "رُفع ملف",
+          "group": "رُفع {count} ملفاً"
+        },
+        "importParsed": {
+          "label": "حُلّل استيراد",
+          "group": "حُلّل {count} استيراداً"
+        },
+        "importFailed": {
+          "label": "فشل الاستيراد",
+          "group": "فشل {count} استيراداً"
+        },
+        "importRetried": {
+          "label": "أُعيدت محاولة استيراد",
+          "group": "أُعيدت محاولة {count} استيراداً"
+        },
+        "importDeleted": {
+          "label": "حُذف استيراد",
+          "group": "حُذف {count} استيراداً"
+        },
+        "candidateAdded": {
+          "label": "أُضيف مرشّح",
+          "group": "أُضيف {count} مرشّحاً"
+        },
+        "candidateDecided": {
+          "label": "اتُّخذ قرار بشأن مرشّح",
+          "group": "اتُّخذ قرار بشأن {count} مرشّحاً"
+        },
+        "candidateBatch": {
+          "label": "قرارات مرشّحين بالجملة",
+          "group": "اتُّخذ قرار بشأن {count} مرشّحاً بالجملة"
+        },
+        "characterUpdated": {
+          "label": "حُدّثت شخصية",
+          "group": "حُدّثت {count} شخصية"
+        },
+        "conflictResolved": {
+          "label": "حُلّ تعارض",
+          "group": "حُلّ {count} تعارضاً"
+        },
+        "simulationRun": {
+          "label": "شُغّلت محاكاة",
+          "group": "شُغّلت {count} محاكاة"
+        },
+        "simulationReplay": {
+          "label": "أُعيد تشغيل محاكاة",
+          "group": "أُعيد تشغيل {count} محاكاة"
+        },
+        "backlogGenerated": {
+          "label": "أُنشئت قائمة أعمال",
+          "group": "أُنشئت {count} قائمة أعمال"
+        },
+        "settingsUpdated": {
+          "label": "حُدّثت الإعدادات",
+          "group": "حُدّثت الإعدادات {count} مرّة"
+        },
+        "byokUpdated": {
+          "label": "حُدّث BYOK",
+          "group": "حُدّث BYOK {count} مرّة"
+        },
+        "coachAnalysis": {
+          "label": "حلّل Coach مشهداً",
+          "group": "راجع Coach {count} مشهداً"
+        },
+        "unknown": {
+          "label": "نشاط مسجّل",
+          "group": "{count} نشاطاً"
+        }
+      },
+      "utcLabel": "{hh}:{mm} UTC"
+    },
+    "fallback": {
+      "body": "ما زلنا نبني هذه الصفحة. أخبِرنا إن كانت تعطّل سير عملك.",
+      "systemAuthor": "النظام",
+      "conflictSurfaced": "أظهر النظام تعارضاً"
     }
   },
   "pricingPage": {

@@ -1686,6 +1686,159 @@
           }
         }
       }
+    },
+    "coach": {
+      "title": "Coach",
+      "subtitle": "Cole uma cena. Receba uma leitura estruturada — clichês, camadas, arcos, notas dos críticos.",
+      "placeholder": "Solte uma cena ou capítulo. O coach passa o texto pelo sacred-flaw engine de Will Storr, pelas âncoras de Steven Pressfield, pelo sistema de sete camadas e por uma checagem de ineditismo.",
+      "analyze": "Analisar cena",
+      "analyzing": "Analisando…",
+      "analyzeKbd": "⌘⏎",
+      "words": "palavras",
+      "cliches": "clichês encontrados",
+      "cached": "em cache",
+      "runHint": "Toque em Analisar quando estiver pronto. A varredura de clichês roda enquanto você digita.",
+      "section": {
+        "cliche": "Varredura de clichês",
+        "layers": "Camadas da história",
+        "arcs": "Arcos de personagem",
+        "critics": "Notas dos críticos"
+      },
+      "cliche": {
+        "empty": "Nenhum clichê encontrado.",
+        "more": "mais",
+        "kbdHint": "Enter rola · Esc fecha",
+        "dismiss": "Descartar este clichê"
+      },
+      "error": {
+        "unknown": "A análise do Coach falhou. Tente novamente em instantes.",
+        "network": "Rede indisponível. Verifique sua conexão e tente de novo.",
+        "empty": "Adicione um texto primeiro — o Coach precisa de uma cena para analisar.",
+        "csrf": "Sessão expirada. Recarregue a página e tente novamente.",
+        "tooLong": "A cena estava longa demais — cortamos até o tamanho máximo."
+      },
+      "critic": {
+        "layer_auditor": "Auditor de Camadas",
+        "rhetoric_examiner": "Examinador de Retórica",
+        "freshness_inspector": "Inspetor de Ineditismo",
+        "reader_surrogate": "Leitor Substituto",
+        "subtext_analyst": "Analista de Subtexto",
+        "continuity_editor": "Editor de Continuidade",
+        "pacing_surgeon": "Cirurgião de Ritmo",
+        "voice_enforcer": "Guardião da Voz"
+      },
+      "layers": {
+        "pending": "As camadas da história vão aparecer depois da análise."
+      },
+      "arcs": {
+        "empty": "Nenhum arco de personagem detectado ainda."
+      },
+      "critics": {
+        "empty": "As notas dos críticos aparecem quando a análise voltar."
+      },
+      "arc": {
+        "sacredFlaw": "Falha sagrada",
+        "want": "Desejo externo",
+        "need": "Necessidade interna"
+      }
+    },
+    "timeline": {
+      "title": "Linha do tempo",
+      "subtitle": "Um registro do que você e a Seizn fizeram neste projeto, do mais recente ao mais antigo.",
+      "loadMore": "Carregar mais antigos",
+      "loadingMore": "Carregando…",
+      "error": "Não foi possível carregar a linha do tempo. Tente novamente.",
+      "empty": {
+        "title": "Sem atividade ainda.",
+        "body": "Importações, decisões, simulações e execuções do Coach vão aparecer aqui."
+      },
+      "day": {
+        "today": "Hoje",
+        "yesterday": "Ontem"
+      },
+      "range": {
+        "window": "Primeiro {first} · último {last}"
+      },
+      "event": {
+        "projectCreated": {
+          "label": "Projeto criado",
+          "group": "{count} projetos criados"
+        },
+        "importUpload": {
+          "label": "Enviou um arquivo",
+          "group": "Enviou {count} arquivos"
+        },
+        "importParsed": {
+          "label": "Processou uma importação",
+          "group": "Processou {count} importações"
+        },
+        "importFailed": {
+          "label": "Importação falhou",
+          "group": "{count} importações falharam"
+        },
+        "importRetried": {
+          "label": "Repetiu uma importação",
+          "group": "Repetiu {count} importações"
+        },
+        "importDeleted": {
+          "label": "Excluiu uma importação",
+          "group": "Excluiu {count} importações"
+        },
+        "candidateAdded": {
+          "label": "Adicionou um candidato",
+          "group": "Adicionou {count} candidatos"
+        },
+        "candidateDecided": {
+          "label": "Decidiu sobre um candidato",
+          "group": "Decidiu sobre {count} candidatos"
+        },
+        "candidateBatch": {
+          "label": "Decidiu candidatos em lote",
+          "group": "{count} candidatos decididos em lote"
+        },
+        "characterUpdated": {
+          "label": "Atualizou um personagem",
+          "group": "Atualizou {count} personagens"
+        },
+        "conflictResolved": {
+          "label": "Resolveu um conflito",
+          "group": "Resolveu {count} conflitos"
+        },
+        "simulationRun": {
+          "label": "Rodou uma simulação",
+          "group": "Rodou {count} simulações"
+        },
+        "simulationReplay": {
+          "label": "Repetiu uma simulação",
+          "group": "Repetiu {count} simulações"
+        },
+        "backlogGenerated": {
+          "label": "Gerou um backlog",
+          "group": "Gerou {count} backlogs"
+        },
+        "settingsUpdated": {
+          "label": "Atualizou as configurações",
+          "group": "Atualizou as configurações {count} vezes"
+        },
+        "byokUpdated": {
+          "label": "Atualizou o BYOK",
+          "group": "Atualizou o BYOK {count} vezes"
+        },
+        "coachAnalysis": {
+          "label": "Analisou uma cena com o Coach",
+          "group": "O Coach revisou {count} cenas"
+        },
+        "unknown": {
+          "label": "Atividade registrada",
+          "group": "{count} atividades"
+        }
+      },
+      "utcLabel": "{hh}:{mm} UTC"
+    },
+    "fallback": {
+      "body": "Ainda estamos construindo esta página. Avise se isso estiver travando seu fluxo de trabalho.",
+      "systemAuthor": "Sistema",
+      "conflictSurfaced": "O sistema trouxe à tona um conflito"
     }
   },
   "pricingPage": {

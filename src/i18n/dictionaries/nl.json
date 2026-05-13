@@ -1686,6 +1686,159 @@
           }
         }
       }
+    },
+    "coach": {
+      "title": "Coach",
+      "subtitle": "Plak een scène. Krijg een gestructureerde lezing: clichés, lagen, bogen, criticusnotities.",
+      "placeholder": "Plak een scène of hoofdstuk. De coach haalt het door Will Storrs sacred-flaw engine, de ankers van Steven Pressfield, het zevenlaagsysteem en een frisheidscheck.",
+      "analyze": "Scène analyseren",
+      "analyzing": "Analyseren…",
+      "analyzeKbd": "⌘⏎",
+      "words": "woorden",
+      "cliches": "clichés gevonden",
+      "cached": "gecachet",
+      "runHint": "Klik Analyseren als je klaar bent. De clichéscan loopt al mee terwijl je typt.",
+      "section": {
+        "cliche": "Clichéscan",
+        "layers": "Verhaallagen",
+        "arcs": "Personagebogen",
+        "critics": "Criticusnotities"
+      },
+      "cliche": {
+        "empty": "Geen clichés gevonden.",
+        "more": "meer",
+        "kbdHint": "Enter scrollt · Esc sluit",
+        "dismiss": "Dit cliché verbergen"
+      },
+      "error": {
+        "unknown": "Coach-analyse mislukt. Probeer het zo opnieuw.",
+        "network": "Geen netwerk. Controleer je verbinding en probeer opnieuw.",
+        "empty": "Voeg eerst tekst toe — Coach heeft een scène nodig om te analyseren.",
+        "csrf": "Sessie verlopen. Herlaad de pagina en probeer opnieuw.",
+        "tooLong": "De scène was te lang, we hebben hem ingekort tot de maximale lengte."
+      },
+      "critic": {
+        "layer_auditor": "Lagenauditor",
+        "rhetoric_examiner": "Retoriekonderzoeker",
+        "freshness_inspector": "Frisheidsinspecteur",
+        "reader_surrogate": "Lezersplaatsvervanger",
+        "subtext_analyst": "Subtekstanalist",
+        "continuity_editor": "Continuïteitsredacteur",
+        "pacing_surgeon": "Tempochirurg",
+        "voice_enforcer": "Stemhandhaver"
+      },
+      "layers": {
+        "pending": "Verhaallagen verschijnen zodra je analyseert."
+      },
+      "arcs": {
+        "empty": "Nog geen personagebogen gevonden."
+      },
+      "critics": {
+        "empty": "Criticusnotities verschijnen nadat de analyse terugkomt."
+      },
+      "arc": {
+        "sacredFlaw": "Heilige tekortkoming",
+        "want": "Externe wens",
+        "need": "Innerlijke behoefte"
+      }
+    },
+    "timeline": {
+      "title": "Tijdlijn",
+      "subtitle": "Een logboek van wat jij en Seizn op dit project hebben gedaan, nieuwste eerst.",
+      "loadMore": "Ouder laden",
+      "loadingMore": "Laden…",
+      "error": "Tijdlijn kon niet laden. Probeer opnieuw.",
+      "empty": {
+        "title": "Nog geen activiteit.",
+        "body": "Imports, beslissingen, simulaties en Coach-runs verschijnen hier."
+      },
+      "day": {
+        "today": "Vandaag",
+        "yesterday": "Gisteren"
+      },
+      "range": {
+        "window": "Eerste {first} · laatste {last}"
+      },
+      "event": {
+        "projectCreated": {
+          "label": "Project aangemaakt",
+          "group": "{count} projecten aangemaakt"
+        },
+        "importUpload": {
+          "label": "Een bestand geüpload",
+          "group": "{count} bestanden geüpload"
+        },
+        "importParsed": {
+          "label": "Een import verwerkt",
+          "group": "{count} imports verwerkt"
+        },
+        "importFailed": {
+          "label": "Import mislukt",
+          "group": "{count} imports mislukt"
+        },
+        "importRetried": {
+          "label": "Een import opnieuw geprobeerd",
+          "group": "{count} imports opnieuw geprobeerd"
+        },
+        "importDeleted": {
+          "label": "Een import verwijderd",
+          "group": "{count} imports verwijderd"
+        },
+        "candidateAdded": {
+          "label": "Een kandidaat toegevoegd",
+          "group": "{count} kandidaten toegevoegd"
+        },
+        "candidateDecided": {
+          "label": "Over een kandidaat beslist",
+          "group": "Over {count} kandidaten beslist"
+        },
+        "candidateBatch": {
+          "label": "Kandidaten in batch beslist",
+          "group": "{count} kandidaten in batch beslist"
+        },
+        "characterUpdated": {
+          "label": "Een personage bijgewerkt",
+          "group": "{count} personages bijgewerkt"
+        },
+        "conflictResolved": {
+          "label": "Een conflict opgelost",
+          "group": "{count} conflicten opgelost"
+        },
+        "simulationRun": {
+          "label": "Een simulatie uitgevoerd",
+          "group": "{count} simulaties uitgevoerd"
+        },
+        "simulationReplay": {
+          "label": "Een simulatie opnieuw afgespeeld",
+          "group": "{count} simulaties opnieuw afgespeeld"
+        },
+        "backlogGenerated": {
+          "label": "Een backlog gegenereerd",
+          "group": "{count} backlogs gegenereerd"
+        },
+        "settingsUpdated": {
+          "label": "Instellingen bijgewerkt",
+          "group": "Instellingen {count} keer bijgewerkt"
+        },
+        "byokUpdated": {
+          "label": "BYOK bijgewerkt",
+          "group": "BYOK {count} keer bijgewerkt"
+        },
+        "coachAnalysis": {
+          "label": "Een scène met Coach geanalyseerd",
+          "group": "Coach beoordeelde {count} scènes"
+        },
+        "unknown": {
+          "label": "Activiteit gelogd",
+          "group": "{count} activiteiten"
+        }
+      },
+      "utcLabel": "{hh}:{mm} UTC"
+    },
+    "fallback": {
+      "body": "We bouwen deze pagina nog. Laat het weten als het je workflow blokkeert.",
+      "systemAuthor": "Systeem",
+      "conflictSurfaced": "Systeem signaleerde een conflict"
     }
   },
   "pricingPage": {

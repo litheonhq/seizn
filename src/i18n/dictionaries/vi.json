@@ -1686,6 +1686,159 @@
           }
         }
       }
+    },
+    "coach": {
+      "title": "Cố vấn",
+      "subtitle": "Dán một cảnh vào. Nhận bản đọc có cấu trúc — sáo ngữ, lớp truyện, cung nhân vật, ghi chú từ nhà phê bình.",
+      "placeholder": "Thả một cảnh hoặc một chương vào đây. Cố vấn sẽ chạy qua bộ máy khiếm khuyết thiêng liêng của Will Storr, các điểm neo của Steven Pressfield, hệ bảy lớp, và một vòng kiểm tra độ mới.",
+      "analyze": "Phân tích cảnh",
+      "analyzing": "Đang phân tích…",
+      "analyzeKbd": "⌘⏎",
+      "words": "từ",
+      "cliches": "sáo ngữ tìm thấy",
+      "cached": "đã lưu cache",
+      "runHint": "Bấm Phân tích khi bạn sẵn sàng. Quét sáo ngữ chạy ngay lúc bạn gõ.",
+      "section": {
+        "cliche": "Quét sáo ngữ",
+        "layers": "Lớp truyện",
+        "arcs": "Cung nhân vật",
+        "critics": "Ghi chú phê bình"
+      },
+      "cliche": {
+        "empty": "Không thấy sáo ngữ nào.",
+        "more": "thêm",
+        "kbdHint": "Enter để cuộn · Esc để đóng",
+        "dismiss": "Bỏ qua sáo ngữ này"
+      },
+      "error": {
+        "unknown": "Phân tích Cố vấn thất bại. Hãy thử lại sau giây lát.",
+        "network": "Mạng không khả dụng. Kiểm tra kết nối rồi thử lại.",
+        "empty": "Thêm chữ vào trước đã — Cố vấn cần một cảnh để phân tích.",
+        "csrf": "Phiên đã hết hạn. Tải lại trang rồi thử lại.",
+        "tooLong": "Cảnh quá dài — chúng tôi đã cắt về độ dài tối đa."
+      },
+      "critic": {
+        "layer_auditor": "Kiểm toán Lớp truyện",
+        "rhetoric_examiner": "Giám khảo Tu từ",
+        "freshness_inspector": "Thanh tra Độ mới",
+        "reader_surrogate": "Người đọc Thay thế",
+        "subtext_analyst": "Nhà phân tích Hàm ngôn",
+        "continuity_editor": "Biên tập Liên tục",
+        "pacing_surgeon": "Bác sĩ Nhịp truyện",
+        "voice_enforcer": "Người giữ Giọng văn"
+      },
+      "layers": {
+        "pending": "Các lớp truyện sẽ hiện ra sau khi bạn phân tích."
+      },
+      "arcs": {
+        "empty": "Chưa phát hiện cung nhân vật nào."
+      },
+      "critics": {
+        "empty": "Ghi chú phê bình sẽ hiện ra khi phân tích trả về."
+      },
+      "arc": {
+        "sacredFlaw": "Khiếm khuyết thiêng liêng",
+        "want": "Mong muốn bên ngoài",
+        "need": "Nhu cầu bên trong"
+      }
+    },
+    "timeline": {
+      "title": "Dòng thời gian",
+      "subtitle": "Nhật ký những gì bạn và Seizn đã làm trên dự án này, mới nhất ở trên.",
+      "loadMore": "Tải mục cũ hơn",
+      "loadingMore": "Đang tải…",
+      "error": "Không tải được dòng thời gian. Hãy thử lại.",
+      "empty": {
+        "title": "Chưa có hoạt động nào.",
+        "body": "Nhập dữ liệu, quyết định, mô phỏng và lượt chạy Cố vấn sẽ xuất hiện ở đây."
+      },
+      "day": {
+        "today": "Hôm nay",
+        "yesterday": "Hôm qua"
+      },
+      "range": {
+        "window": "Đầu {first} · cuối {last}"
+      },
+      "event": {
+        "projectCreated": {
+          "label": "Đã tạo dự án",
+          "group": "Đã tạo {count} dự án"
+        },
+        "importUpload": {
+          "label": "Đã tải lên một tệp",
+          "group": "Đã tải lên {count} tệp"
+        },
+        "importParsed": {
+          "label": "Đã phân tích một lần nhập",
+          "group": "Đã phân tích {count} lần nhập"
+        },
+        "importFailed": {
+          "label": "Nhập thất bại",
+          "group": "{count} lần nhập thất bại"
+        },
+        "importRetried": {
+          "label": "Đã thử nhập lại",
+          "group": "Đã thử lại {count} lần nhập"
+        },
+        "importDeleted": {
+          "label": "Đã xóa một lần nhập",
+          "group": "Đã xóa {count} lần nhập"
+        },
+        "candidateAdded": {
+          "label": "Đã thêm một ứng viên",
+          "group": "Đã thêm {count} ứng viên"
+        },
+        "candidateDecided": {
+          "label": "Đã quyết định một ứng viên",
+          "group": "Đã quyết định {count} ứng viên"
+        },
+        "candidateBatch": {
+          "label": "Đã quyết định ứng viên theo lô",
+          "group": "Đã quyết định {count} ứng viên theo lô"
+        },
+        "characterUpdated": {
+          "label": "Đã cập nhật một nhân vật",
+          "group": "Đã cập nhật {count} nhân vật"
+        },
+        "conflictResolved": {
+          "label": "Đã giải quyết một xung đột",
+          "group": "Đã giải quyết {count} xung đột"
+        },
+        "simulationRun": {
+          "label": "Đã chạy một mô phỏng",
+          "group": "Đã chạy {count} mô phỏng"
+        },
+        "simulationReplay": {
+          "label": "Đã phát lại một mô phỏng",
+          "group": "Đã phát lại {count} mô phỏng"
+        },
+        "backlogGenerated": {
+          "label": "Đã tạo một backlog",
+          "group": "Đã tạo {count} backlog"
+        },
+        "settingsUpdated": {
+          "label": "Đã cập nhật cài đặt",
+          "group": "Đã cập nhật cài đặt {count} lần"
+        },
+        "byokUpdated": {
+          "label": "Đã cập nhật BYOK",
+          "group": "Đã cập nhật BYOK {count} lần"
+        },
+        "coachAnalysis": {
+          "label": "Đã phân tích cảnh với Cố vấn",
+          "group": "Cố vấn đã rà soát {count} cảnh"
+        },
+        "unknown": {
+          "label": "Hoạt động đã được ghi",
+          "group": "{count} hoạt động"
+        }
+      },
+      "utcLabel": "{hh}:{mm} UTC"
+    },
+    "fallback": {
+      "body": "Chúng tôi vẫn đang dựng trang này. Hãy báo cho chúng tôi nếu nó đang chặn luồng làm việc của bạn.",
+      "systemAuthor": "Hệ thống",
+      "conflictSurfaced": "Hệ thống đã nêu một xung đột"
     }
   },
   "pricingPage": {

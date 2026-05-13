@@ -1833,10 +1833,13 @@
           "label": "活动记录",
           "group": "{count} 项活动"
         }
-      }
+      },
+      "utcLabel": "{hh}:{mm} UTC"
     },
     "fallback": {
-      "body": "此选项卡使用相同的布局结构。"
+      "body": "此页面仍在构建中。如果阻碍了你的工作流，请告诉我们。",
+      "systemAuthor": "系统",
+      "conflictSurfaced": "系统检测到一处冲突"
     },
     "account": {
       "apiKeys": {
@@ -1897,6 +1900,61 @@
             "scope_denied": "权限被拒绝"
           }
         }
+      }
+    },
+    "coach": {
+      "title": "教练",
+      "subtitle": "粘贴一个场景，获得结构化解读——陈词、层次、弧线、评审意见。",
+      "placeholder": "放入一个场景或章节。教练会用 Will Storr 的神圣缺陷模型、Steven Pressfield 的锚点、七层体系和新鲜度扫描跑一遍。",
+      "analyze": "分析场景",
+      "analyzing": "分析中…",
+      "analyzeKbd": "⌘⏎",
+      "words": "字",
+      "cliches": "条陈词",
+      "cached": "已缓存",
+      "runHint": "准备好后点击「分析」。陈词扫描会在你输入时同步运行。",
+      "section": {
+        "cliche": "陈词扫描",
+        "layers": "故事层次",
+        "arcs": "人物弧线",
+        "critics": "评审意见"
+      },
+      "cliche": {
+        "empty": "未发现陈词。",
+        "more": "更多",
+        "kbdHint": "回车滚动 · Esc 关闭",
+        "dismiss": "忽略此条陈词"
+      },
+      "error": {
+        "unknown": "教练分析失败，请稍后重试。",
+        "network": "网络不可用，请检查连接后重试。",
+        "empty": "请先添加文本——教练需要一个场景来分析。",
+        "csrf": "会话已过期，请刷新页面后重试。",
+        "tooLong": "场景过长，已截断至最大长度。"
+      },
+      "critic": {
+        "layer_auditor": "层次审计员",
+        "rhetoric_examiner": "修辞检查员",
+        "freshness_inspector": "新鲜度督查",
+        "reader_surrogate": "读者代理",
+        "subtext_analyst": "潜台词分析师",
+        "continuity_editor": "连贯性编辑",
+        "pacing_surgeon": "节奏外科医师",
+        "voice_enforcer": "声音监督"
+      },
+      "layers": {
+        "pending": "故事层次将在分析后显示。"
+      },
+      "arcs": {
+        "empty": "尚未识别到人物弧线。"
+      },
+      "critics": {
+        "empty": "评审意见将在分析返回后显示。"
+      },
+      "arc": {
+        "sacredFlaw": "神圣缺陷",
+        "want": "外在欲望",
+        "need": "内在需求"
       }
     }
   },
