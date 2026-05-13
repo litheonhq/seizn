@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
+import { useDashboardTranslation } from '@/contexts/DashboardLocaleContext';
 import {
   useAuthorCharacters,
   useAuthorConflicts,
@@ -101,6 +102,7 @@ export function useAuthorInbox(
   projectId: string | undefined,
   conflicts: ReturnType<typeof useAuthorConflicts>
 ): UseAuthorInboxResult {
+  const { t } = useDashboardTranslation();
 
   return useMemo(() => {
     const rawConflicts = (conflicts.data?.conflicts ?? []) as unknown[];
@@ -121,13 +123,13 @@ export function useAuthorInbox(
           ? toString(conflict.payload.summary)
           : '';
         const title =
-          titleSource || toString(conflict.kind) || 'Memory v3 surfaced a conflict';
+          titleSource || toString(conflict.kind) || t('dashboard.fallback.conflictSurfaced');
         return {
           id,
           kind: 'Conflict' as const,
           title,
           episode: toString(conflict.scope, 'Ch. ?'),
-          author: 'Memory v3',
+          author: t('dashboard.fallback.systemAuthor'),
           time: toString(conflict.detected_at, 'recent'),
           priority: severityToPriority(toString(conflict.severity, 'medium')),
           unread: !toString(conflict.resolved_at),
@@ -140,7 +142,7 @@ export function useAuthorInbox(
       error: (conflicts.error as Error | undefined) ?? null,
       isFallback: rows.length === 0,
     };
-  }, [projectId, conflicts.data, conflicts.isLoading, conflicts.error]);
+  }, [projectId, conflicts.data, conflicts.isLoading, conflicts.error, t]);
 }
 
 function severityToPriority(severity: string): InboxRowDetail['priority'] {
@@ -267,6 +269,7 @@ export function useAuthorConflictsList(
   projectId: string | undefined,
   conflicts: ReturnType<typeof useAuthorConflicts>
 ): UseAuthorConflictsResult {
+  const { t } = useDashboardTranslation();
 
   return useMemo(() => {
     const raw = (conflicts.data?.conflicts ?? []) as unknown[];
@@ -287,7 +290,7 @@ export function useAuthorConflictsList(
         id,
         severity: severityToPriority(toString(conflict.severity, 'medium')),
         kind: toString(conflict.kind, 'Conflict'),
-        title: toString(payload.summary, 'Memory v3 surfaced a conflict'),
+        title: toString(payload.summary, t('dashboard.fallback.conflictSurfaced')),
         episode: toString(conflict.scope, 'Ch. ?'),
         why: toString(payload.detail) || undefined,
         refs: Array.isArray(payload.refs)
@@ -302,7 +305,7 @@ export function useAuthorConflictsList(
       error: (conflicts.error as Error | undefined) ?? null,
       isFallback: items.length === 0,
     };
-  }, [projectId, conflicts.data, conflicts.isLoading, conflicts.error]);
+  }, [projectId, conflicts.data, conflicts.isLoading, conflicts.error, t]);
 }
 
 export type UseAuthorUiHealthResult = DataState<AuthorUiHealth>;

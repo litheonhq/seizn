@@ -1792,10 +1792,13 @@
           "label": "活動を記録",
           "group": "{count} 件の活動"
         }
-      }
+      },
+      "utcLabel": "{hh}:{mm} UTC"
     },
     "fallback": {
-      "body": "この画面はまだ準備中です。作業に支障があればお知らせください。"
+      "body": "この画面はまだ準備中です。作業に支障があればお知らせください。",
+      "systemAuthor": "システム",
+      "conflictSurfaced": "システムが衝突を検出しました"
     },
     "account": {
       "apiKeys": {

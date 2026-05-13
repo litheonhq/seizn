@@ -1,0 +1,155 @@
+{
+  "coach": {
+    "title": "Coach",
+    "subtitle": "Klistra in en scen. Få en strukturerad läsning — klichéer, lager, bågar, kritikeranteckningar.",
+    "placeholder": "Släpp in en scen eller ett kapitel. Coach kör den genom Will Storrs sacred-flaw-motor, Steven Pressfields ankare, sjulagerssystemet och en fräschhetsgranskning.",
+    "analyze": "Analysera scen",
+    "analyzing": "Analyserar…",
+    "analyzeKbd": "⌘⏎",
+    "words": "ord",
+    "cliches": "klichéer hittade",
+    "cached": "cachad",
+    "runHint": "Tryck på Analysera när du är redo. Klichésökningen körs medan du skriver.",
+    "section": {
+      "cliche": "Klichésökning",
+      "layers": "Berättelselager",
+      "arcs": "Karaktärsbågar",
+      "critics": "Kritikeranteckningar"
+    },
+    "cliche": {
+      "empty": "Inga klichéer hittade.",
+      "more": "till",
+      "kbdHint": "Enter bläddrar · Esc stänger",
+      "dismiss": "Avfärda den här klichén"
+    },
+    "error": {
+      "unknown": "Coach-analysen misslyckades. Försök igen om en stund.",
+      "network": "Nätverket är otillgängligt. Kontrollera anslutningen och försök igen.",
+      "empty": "Lägg till lite text först — Coach behöver en scen att analysera.",
+      "csrf": "Sessionen har gått ut. Ladda om sidan och försök igen.",
+      "tooLong": "Scenen var för lång — vi kortade den till maxlängden."
+    },
+    "critic": {
+      "layer_auditor": "Lagergranskare",
+      "rhetoric_examiner": "Retorikgranskare",
+      "freshness_inspector": "Fräschhetsinspektör",
+      "reader_surrogate": "Läsarstand-in",
+      "subtext_analyst": "Subtextanalytiker",
+      "continuity_editor": "Kontinuitetsredaktör",
+      "pacing_surgeon": "Tempokirurg",
+      "voice_enforcer": "Röstvakt"
+    },
+    "layers": {
+      "pending": "Berättelselagren visas efter att du analyserat."
+    },
+    "arcs": {
+      "empty": "Inga karaktärsbågar upptäckta ännu."
+    },
+    "critics": {
+      "empty": "Kritikeranteckningarna visas när analysen är klar."
+    },
+    "arc": {
+      "sacredFlaw": "Sacred flaw",
+      "want": "Yttre vilja",
+      "need": "Inre behov"
+    }
+  },
+  "timeline": {
+    "title": "Tidslinje",
+    "subtitle": "En logg över vad du och Seizn har gjort i det här projektet, nyast först.",
+    "loadMore": "Ladda äldre",
+    "loadingMore": "Laddar…",
+    "error": "Kunde inte ladda tidslinjen. Försök igen.",
+    "empty": {
+      "title": "Ingen aktivitet ännu.",
+      "body": "Importer, beslut, simuleringar och Coach-körningar visas här."
+    },
+    "day": {
+      "today": "I dag",
+      "yesterday": "I går"
+    },
+    "range": {
+      "window": "Första {first} · senaste {last}"
+    },
+    "event": {
+      "projectCreated": {
+        "label": "Projekt skapat",
+        "group": "{count} projekt skapade"
+      },
+      "importUpload": {
+        "label": "Laddade upp en fil",
+        "group": "Laddade upp {count} filer"
+      },
+      "importParsed": {
+        "label": "Tolkade en import",
+        "group": "Tolkade {count} importer"
+      },
+      "importFailed": {
+        "label": "Import misslyckades",
+        "group": "{count} importer misslyckades"
+      },
+      "importRetried": {
+        "label": "Försökte importera igen",
+        "group": "Försökte importera {count} igen"
+      },
+      "importDeleted": {
+        "label": "Tog bort en import",
+        "group": "Tog bort {count} importer"
+      },
+      "candidateAdded": {
+        "label": "Lade till en kandidat",
+        "group": "Lade till {count} kandidater"
+      },
+      "candidateDecided": {
+        "label": "Beslutade om en kandidat",
+        "group": "Beslutade om {count} kandidater"
+      },
+      "candidateBatch": {
+        "label": "Beslutade kandidater i batch",
+        "group": "{count} kandidater beslutade i batch"
+      },
+      "characterUpdated": {
+        "label": "Uppdaterade en karaktär",
+        "group": "Uppdaterade {count} karaktärer"
+      },
+      "conflictResolved": {
+        "label": "Löste en konflikt",
+        "group": "Löste {count} konflikter"
+      },
+      "simulationRun": {
+        "label": "Körde en simulering",
+        "group": "Körde {count} simuleringar"
+      },
+      "simulationReplay": {
+        "label": "Spelade upp en simulering",
+        "group": "Spelade upp {count} simuleringar"
+      },
+      "backlogGenerated": {
+        "label": "Genererade en backlog",
+        "group": "Genererade {count} backloggar"
+      },
+      "settingsUpdated": {
+        "label": "Uppdaterade inställningar",
+        "group": "Uppdaterade inställningar {count} gånger"
+      },
+      "byokUpdated": {
+        "label": "Uppdaterade BYOK",
+        "group": "Uppdaterade BYOK {count} gånger"
+      },
+      "coachAnalysis": {
+        "label": "Analyserade en scen med Coach",
+        "group": "Coach granskade {count} scener"
+      },
+      "unknown": {
+        "label": "Aktivitet loggad",
+        "group": "{count} aktiviteter"
+      }
+    },
+    "utcLabel": "{hh}:{mm} UTC"
+  },
+  "fallback": {
+    "body": "Vi bygger fortfarande den här sidan. Säg till om den blockerar ditt arbetsflöde.",
+    "systemAuthor": "System",
+    "conflictSurfaced": "Systemet flaggade en konflikt"
+  }
+}

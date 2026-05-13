@@ -1,0 +1,155 @@
+{
+  "coach": {
+    "title": "Coach",
+    "subtitle": "הדביקו סצנה. קבלו קריאה מובנית — קלישאות, שכבות, קשתות והערות מבקרים.",
+    "placeholder": "שחררו כאן סצנה או פרק. ה-Coach מריץ אותם דרך מנוע הפגם המקודש של Will Storr, העוגנים של Steven Pressfield, מערכת שבע השכבות וסריקת רעננות.",
+    "analyze": "נתחו סצנה",
+    "analyzing": "מנתח…",
+    "analyzeKbd": "⌘⏎",
+    "words": "מילים",
+    "cliches": "קלישאות שזוהו",
+    "cached": "שמור במטמון",
+    "runHint": "לחצו על נתחו כשתהיו מוכנים. סריקת הקלישאות רצה תוך כדי הקלדה.",
+    "section": {
+      "cliche": "סריקת קלישאות",
+      "layers": "שכבות סיפור",
+      "arcs": "קשתות דמויות",
+      "critics": "הערות מבקרים"
+    },
+    "cliche": {
+      "empty": "לא נמצאו קלישאות.",
+      "more": "נוספות",
+      "kbdHint": "Enter לגלילה · Esc לסגירה",
+      "dismiss": "התעלמו מהקלישאה הזו"
+    },
+    "error": {
+      "unknown": "ניתוח Coach נכשל. נסו שוב בעוד רגע.",
+      "network": "אין חיבור לרשת. בדקו את החיבור ונסו שוב.",
+      "empty": "הוסיפו טקסט תחילה — ל-Coach דרושה סצנה לניתוח.",
+      "csrf": "ההתחברות פגה. רעננו את הדף ונסו שוב.",
+      "tooLong": "הסצנה הייתה ארוכה מדי — קיצרנו אותה לאורך המרבי."
+    },
+    "critic": {
+      "layer_auditor": "מבקר שכבות",
+      "rhetoric_examiner": "בוחן רטוריקה",
+      "freshness_inspector": "מפקח רעננות",
+      "reader_surrogate": "נציג הקורא",
+      "subtext_analyst": "מנתח תת-טקסט",
+      "continuity_editor": "עורך רציפות",
+      "pacing_surgeon": "מנתח קצב",
+      "voice_enforcer": "אוכף קול"
+    },
+    "layers": {
+      "pending": "שכבות הסיפור יופיעו לאחר הניתוח."
+    },
+    "arcs": {
+      "empty": "עדיין לא זוהו קשתות דמויות."
+    },
+    "critics": {
+      "empty": "הערות המבקרים יופיעו לאחר חזרת הניתוח."
+    },
+    "arc": {
+      "sacredFlaw": "פגם מקודש",
+      "want": "רצון חיצוני",
+      "need": "צורך פנימי"
+    }
+  },
+  "timeline": {
+    "title": "ציר זמן",
+    "subtitle": "יומן של מה שאתם ו-Seizn עשיתם בפרויקט הזה, מהחדש לישן.",
+    "loadMore": "טענו ישנים יותר",
+    "loadingMore": "טוען…",
+    "error": "לא הצלחנו לטעון את ציר הזמן. נסו שוב.",
+    "empty": {
+      "title": "אין עדיין פעילות.",
+      "body": "ייבוא, החלטות, סימולציות והרצות Coach יופיעו כאן."
+    },
+    "day": {
+      "today": "היום",
+      "yesterday": "אתמול"
+    },
+    "range": {
+      "window": "ראשון {first} · אחרון {last}"
+    },
+    "event": {
+      "projectCreated": {
+        "label": "פרויקט נוצר",
+        "group": "{count} פרויקטים נוצרו"
+      },
+      "importUpload": {
+        "label": "קובץ הועלה",
+        "group": "{count} קבצים הועלו"
+      },
+      "importParsed": {
+        "label": "ייבוא נותח",
+        "group": "{count} ייבואים נותחו"
+      },
+      "importFailed": {
+        "label": "ייבוא נכשל",
+        "group": "{count} ייבואים נכשלו"
+      },
+      "importRetried": {
+        "label": "ייבוא נוסה שוב",
+        "group": "{count} ייבואים נוסו שוב"
+      },
+      "importDeleted": {
+        "label": "ייבוא נמחק",
+        "group": "{count} ייבואים נמחקו"
+      },
+      "candidateAdded": {
+        "label": "מועמד נוסף",
+        "group": "{count} מועמדים נוספו"
+      },
+      "candidateDecided": {
+        "label": "הוכרע על מועמד",
+        "group": "הוכרע על {count} מועמדים"
+      },
+      "candidateBatch": {
+        "label": "הוכרעו מועמדים באצווה",
+        "group": "{count} מועמדים הוכרעו באצווה"
+      },
+      "characterUpdated": {
+        "label": "דמות עודכנה",
+        "group": "{count} דמויות עודכנו"
+      },
+      "conflictResolved": {
+        "label": "התנגשות נפתרה",
+        "group": "{count} התנגשויות נפתרו"
+      },
+      "simulationRun": {
+        "label": "סימולציה הורצה",
+        "group": "{count} סימולציות הורצו"
+      },
+      "simulationReplay": {
+        "label": "סימולציה הופעלה מחדש",
+        "group": "{count} סימולציות הופעלו מחדש"
+      },
+      "backlogGenerated": {
+        "label": "בקלוג נוצר",
+        "group": "{count} בקלוגים נוצרו"
+      },
+      "settingsUpdated": {
+        "label": "הגדרות עודכנו",
+        "group": "הגדרות עודכנו {count} פעמים"
+      },
+      "byokUpdated": {
+        "label": "BYOK עודכן",
+        "group": "BYOK עודכן {count} פעמים"
+      },
+      "coachAnalysis": {
+        "label": "סצנה נותחה עם Coach",
+        "group": "Coach סקר {count} סצנות"
+      },
+      "unknown": {
+        "label": "פעילות נרשמה",
+        "group": "{count} פעילויות"
+      }
+    },
+    "utcLabel": "{hh}:{mm} UTC"
+  },
+  "fallback": {
+    "body": "אנחנו עדיין בונים את הדף הזה. ספרו לנו אם הוא חוסם לכם את העבודה.",
+    "systemAuthor": "מערכת",
+    "conflictSurfaced": "המערכת הציפה התנגשות"
+  }
+}

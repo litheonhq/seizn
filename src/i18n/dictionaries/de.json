@@ -1690,6 +1690,159 @@
           }
         }
       }
+    },
+    "coach": {
+      "title": "Coach",
+      "subtitle": "Fügen Sie eine Szene ein. Sie erhalten eine strukturierte Lesart – Klischees, Ebenen, Bögen, Kritiker-Notizen.",
+      "placeholder": "Werfen Sie eine Szene oder ein Kapitel hinein. Der Coach prüft sie mit Will Storrs Sacred-Flaw-Engine, Steven Pressfields Ankern, dem Sieben-Ebenen-System und einem Frische-Durchgang.",
+      "analyze": "Szene analysieren",
+      "analyzing": "Wird analysiert …",
+      "analyzeKbd": "⌘⏎",
+      "words": "Wörter",
+      "cliches": "Klischees gefunden",
+      "cached": "gecacht",
+      "runHint": "Klicken Sie auf „Analysieren“, sobald Sie bereit sind. Der Klischee-Scan läuft beim Tippen mit.",
+      "section": {
+        "cliche": "Klischee-Scan",
+        "layers": "Story-Ebenen",
+        "arcs": "Figurenbögen",
+        "critics": "Kritiker-Notizen"
+      },
+      "cliche": {
+        "empty": "Keine Klischees gefunden.",
+        "more": "weitere",
+        "kbdHint": "Enter blättert · Esc schließt",
+        "dismiss": "Dieses Klischee verwerfen"
+      },
+      "error": {
+        "unknown": "Coach-Analyse fehlgeschlagen. Bitte versuchen Sie es gleich erneut.",
+        "network": "Netzwerk nicht erreichbar. Prüfen Sie Ihre Verbindung und versuchen Sie es erneut.",
+        "empty": "Fügen Sie zuerst Text ein – Coach braucht eine Szene zum Analysieren.",
+        "csrf": "Sitzung abgelaufen. Laden Sie die Seite neu und versuchen Sie es erneut.",
+        "tooLong": "Die Szene war zu lang – wir haben sie auf die maximale Länge gekürzt."
+      },
+      "critic": {
+        "layer_auditor": "Ebenen-Prüfer",
+        "rhetoric_examiner": "Rhetorik-Prüfer",
+        "freshness_inspector": "Frische-Inspektor",
+        "reader_surrogate": "Leser-Stellvertreter",
+        "subtext_analyst": "Subtext-Analyst",
+        "continuity_editor": "Kontinuitäts-Lektor",
+        "pacing_surgeon": "Tempo-Chirurg",
+        "voice_enforcer": "Stimm-Wächter"
+      },
+      "layers": {
+        "pending": "Story-Ebenen erscheinen nach der Analyse."
+      },
+      "arcs": {
+        "empty": "Bisher keine Figurenbögen erkannt."
+      },
+      "critics": {
+        "empty": "Kritiker-Notizen erscheinen, sobald die Analyse zurückkommt."
+      },
+      "arc": {
+        "sacredFlaw": "Heiliger Makel",
+        "want": "Äußeres Wollen",
+        "need": "Inneres Bedürfnis"
+      }
+    },
+    "timeline": {
+      "title": "Zeitleiste",
+      "subtitle": "Ein Protokoll dessen, was Sie und Seizn an diesem Projekt gemacht haben, neueste zuerst.",
+      "loadMore": "Ältere laden",
+      "loadingMore": "Wird geladen …",
+      "error": "Zeitleiste konnte nicht geladen werden. Bitte erneut versuchen.",
+      "empty": {
+        "title": "Noch keine Aktivität.",
+        "body": "Importe, Entscheidungen, Simulationen und Coach-Läufe erscheinen hier."
+      },
+      "day": {
+        "today": "Heute",
+        "yesterday": "Gestern"
+      },
+      "range": {
+        "window": "Erste {first} · letzte {last}"
+      },
+      "event": {
+        "projectCreated": {
+          "label": "Projekt erstellt",
+          "group": "{count} Projekte erstellt"
+        },
+        "importUpload": {
+          "label": "Datei hochgeladen",
+          "group": "{count} Dateien hochgeladen"
+        },
+        "importParsed": {
+          "label": "Import verarbeitet",
+          "group": "{count} Importe verarbeitet"
+        },
+        "importFailed": {
+          "label": "Import fehlgeschlagen",
+          "group": "{count} Importe fehlgeschlagen"
+        },
+        "importRetried": {
+          "label": "Import erneut versucht",
+          "group": "{count} Importe erneut versucht"
+        },
+        "importDeleted": {
+          "label": "Import gelöscht",
+          "group": "{count} Importe gelöscht"
+        },
+        "candidateAdded": {
+          "label": "Kandidat hinzugefügt",
+          "group": "{count} Kandidaten hinzugefügt"
+        },
+        "candidateDecided": {
+          "label": "Über einen Kandidaten entschieden",
+          "group": "Über {count} Kandidaten entschieden"
+        },
+        "candidateBatch": {
+          "label": "Kandidaten im Stapel entschieden",
+          "group": "{count} Kandidaten im Stapel entschieden"
+        },
+        "characterUpdated": {
+          "label": "Figur aktualisiert",
+          "group": "{count} Figuren aktualisiert"
+        },
+        "conflictResolved": {
+          "label": "Konflikt gelöst",
+          "group": "{count} Konflikte gelöst"
+        },
+        "simulationRun": {
+          "label": "Simulation ausgeführt",
+          "group": "{count} Simulationen ausgeführt"
+        },
+        "simulationReplay": {
+          "label": "Simulation wiedergegeben",
+          "group": "{count} Simulationen wiedergegeben"
+        },
+        "backlogGenerated": {
+          "label": "Backlog erzeugt",
+          "group": "{count} Backlogs erzeugt"
+        },
+        "settingsUpdated": {
+          "label": "Einstellungen aktualisiert",
+          "group": "Einstellungen {count}-mal aktualisiert"
+        },
+        "byokUpdated": {
+          "label": "BYOK aktualisiert",
+          "group": "BYOK {count}-mal aktualisiert"
+        },
+        "coachAnalysis": {
+          "label": "Szene mit Coach analysiert",
+          "group": "Coach hat {count} Szenen geprüft"
+        },
+        "unknown": {
+          "label": "Aktivität protokolliert",
+          "group": "{count} Aktivitäten"
+        }
+      },
+      "utcLabel": "{hh}:{mm} UTC"
+    },
+    "fallback": {
+      "body": "Wir bauen diese Seite noch. Sagen Sie uns Bescheid, falls sie Ihren Arbeitsablauf blockiert.",
+      "systemAuthor": "System",
+      "conflictSurfaced": "System hat einen Konflikt aufgedeckt"
     }
   },
   "pricingPage": {

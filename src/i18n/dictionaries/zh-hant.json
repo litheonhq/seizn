@@ -1833,10 +1833,13 @@
           "label": "活動紀錄",
           "group": "{count} 項活動"
         }
-      }
+      },
+      "utcLabel": "{hh}:{mm} UTC"
     },
     "fallback": {
-      "body": "此頁籤沿用相同的版面樣式。"
+      "body": "此頁面仍在開發中。如果影響您的工作流程，請告訴我們。",
+      "systemAuthor": "系統",
+      "conflictSurfaced": "系統偵測到一處衝突"
     },
     "account": {
       "apiKeys": {
@@ -1897,6 +1900,61 @@
             "scope_denied": "權限拒絕"
           }
         }
+      }
+    },
+    "coach": {
+      "title": "Coach",
+      "subtitle": "貼上一段場景，取得結構化解讀——陳腔濫調、敘事層次、角色弧光與評審意見。",
+      "placeholder": "貼上場景或章節。Coach 會依 Will Storr 的神聖缺陷引擎、Steven Pressfield 的錨點、七層敘事系統與新鮮度檢測逐一分析。",
+      "analyze": "分析場景",
+      "analyzing": "分析中…",
+      "analyzeKbd": "⌘⏎",
+      "words": "字",
+      "cliches": "處陳腔濫調",
+      "cached": "已快取",
+      "runHint": "準備好就按下分析。陳腔濫調掃描會在輸入時即時執行。",
+      "section": {
+        "cliche": "陳腔濫調掃描",
+        "layers": "敘事層次",
+        "arcs": "角色弧光",
+        "critics": "評審意見"
+      },
+      "cliche": {
+        "empty": "未發現陳腔濫調。",
+        "more": "更多",
+        "kbdHint": "Enter 捲動 · Esc 關閉",
+        "dismiss": "略過此項"
+      },
+      "error": {
+        "unknown": "Coach 分析失敗，請稍後再試。",
+        "network": "網路無法連線，請檢查連線後重試。",
+        "empty": "請先貼上文字，Coach 需要場景內容才能分析。",
+        "csrf": "工作階段已逾期，請重新整理頁面後再試。",
+        "tooLong": "場景過長，已自動裁切至最大長度。"
+      },
+      "critic": {
+        "layer_auditor": "層次審查員",
+        "rhetoric_examiner": "修辭檢視員",
+        "freshness_inspector": "新鮮度督察",
+        "reader_surrogate": "讀者代理",
+        "subtext_analyst": "潛台詞分析師",
+        "continuity_editor": "連戲編輯",
+        "pacing_surgeon": "節奏外科醫師",
+        "voice_enforcer": "敘事聲調守門人"
+      },
+      "layers": {
+        "pending": "敘事層次將於分析完成後顯示。"
+      },
+      "arcs": {
+        "empty": "尚未偵測到角色弧光。"
+      },
+      "critics": {
+        "empty": "分析完成後將顯示評審意見。"
+      },
+      "arc": {
+        "sacredFlaw": "神聖缺陷",
+        "want": "外在渴望",
+        "need": "內在需求"
       }
     }
   },

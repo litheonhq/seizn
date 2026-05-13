@@ -1,0 +1,155 @@
+{
+  "coach": {
+    "title": "โค้ช",
+    "subtitle": "วางฉากของคุณ แล้วรับการวิเคราะห์อย่างเป็นระบบ ทั้งสำนวนซ้ำซาก เลเยอร์ของเรื่อง อาร์กตัวละคร และโน้ตจากนักวิจารณ์",
+    "placeholder": "วางฉากหรือบทมาได้เลย โค้ชจะวิเคราะห์ผ่านระบบ sacred-flaw ของ Will Storr แองเคอร์ของ Steven Pressfield ระบบเจ็ดเลเยอร์ และการตรวจความสดใหม่",
+    "analyze": "วิเคราะห์ฉาก",
+    "analyzing": "กำลังวิเคราะห์…",
+    "analyzeKbd": "⌘⏎",
+    "words": "คำ",
+    "cliches": "สำนวนซ้ำซากที่พบ",
+    "cached": "แคชแล้ว",
+    "runHint": "กดวิเคราะห์เมื่อคุณพร้อม ระบบจะสแกนสำนวนซ้ำซากให้อัตโนมัติขณะที่คุณพิมพ์",
+    "section": {
+      "cliche": "สแกนสำนวนซ้ำซาก",
+      "layers": "เลเยอร์ของเรื่อง",
+      "arcs": "อาร์กตัวละคร",
+      "critics": "โน้ตจากนักวิจารณ์"
+    },
+    "cliche": {
+      "empty": "ไม่พบสำนวนซ้ำซาก",
+      "more": "เพิ่มเติม",
+      "kbdHint": "Enter เพื่อเลื่อน · Esc เพื่อปิด",
+      "dismiss": "ปิดสำนวนซ้ำซากนี้"
+    },
+    "error": {
+      "unknown": "การวิเคราะห์ของโค้ชล้มเหลว กรุณาลองอีกครั้งในอีกสักครู่",
+      "network": "เครือข่ายไม่พร้อมใช้งาน กรุณาตรวจสอบการเชื่อมต่อแล้วลองใหม่",
+      "empty": "กรุณาเพิ่มข้อความก่อน โค้ชต้องมีฉากให้วิเคราะห์",
+      "csrf": "เซสชันหมดอายุ กรุณารีโหลดหน้าแล้วลองใหม่",
+      "tooLong": "ฉากยาวเกินไป ระบบตัดให้พอดีกับความยาวสูงสุดแล้ว"
+    },
+    "critic": {
+      "layer_auditor": "Layer Auditor",
+      "rhetoric_examiner": "Rhetoric Examiner",
+      "freshness_inspector": "Freshness Inspector",
+      "reader_surrogate": "Reader Surrogate",
+      "subtext_analyst": "Subtext Analyst",
+      "continuity_editor": "Continuity Editor",
+      "pacing_surgeon": "Pacing Surgeon",
+      "voice_enforcer": "Voice Enforcer"
+    },
+    "layers": {
+      "pending": "เลเยอร์ของเรื่องจะปรากฏหลังจากคุณวิเคราะห์"
+    },
+    "arcs": {
+      "empty": "ยังไม่พบอาร์กตัวละคร"
+    },
+    "critics": {
+      "empty": "โน้ตจากนักวิจารณ์จะปรากฏเมื่อการวิเคราะห์เสร็จ"
+    },
+    "arc": {
+      "sacredFlaw": "ข้อบกพร่องศักดิ์สิทธิ์",
+      "want": "ความต้องการภายนอก",
+      "need": "ความต้องการภายใน"
+    }
+  },
+  "timeline": {
+    "title": "ไทม์ไลน์",
+    "subtitle": "บันทึกสิ่งที่คุณและ Seizn ทำในโปรเจกต์นี้ ใหม่สุดอยู่ด้านบน",
+    "loadMore": "โหลดรายการเก่ากว่า",
+    "loadingMore": "กำลังโหลด…",
+    "error": "โหลดไทม์ไลน์ไม่สำเร็จ กรุณาลองใหม่",
+    "empty": {
+      "title": "ยังไม่มีกิจกรรม",
+      "body": "การนำเข้า การตัดสินใจ การจำลอง และผลจากโค้ชจะปรากฏที่นี่"
+    },
+    "day": {
+      "today": "วันนี้",
+      "yesterday": "เมื่อวาน"
+    },
+    "range": {
+      "window": "แรก {first} · ล่าสุด {last}"
+    },
+    "event": {
+      "projectCreated": {
+        "label": "สร้างโปรเจกต์",
+        "group": "สร้างโปรเจกต์ {count} รายการ"
+      },
+      "importUpload": {
+        "label": "อัปโหลดไฟล์",
+        "group": "อัปโหลดไฟล์ {count} ไฟล์"
+      },
+      "importParsed": {
+        "label": "แปลงไฟล์นำเข้าเรียบร้อย",
+        "group": "แปลงไฟล์นำเข้าเรียบร้อย {count} รายการ"
+      },
+      "importFailed": {
+        "label": "การนำเข้าล้มเหลว",
+        "group": "การนำเข้าล้มเหลว {count} รายการ"
+      },
+      "importRetried": {
+        "label": "ลองนำเข้าใหม่อีกครั้ง",
+        "group": "ลองนำเข้าใหม่ {count} รายการ"
+      },
+      "importDeleted": {
+        "label": "ลบไฟล์ที่นำเข้า",
+        "group": "ลบไฟล์ที่นำเข้า {count} รายการ"
+      },
+      "candidateAdded": {
+        "label": "เพิ่มแคนดิเดต",
+        "group": "เพิ่มแคนดิเดต {count} รายการ"
+      },
+      "candidateDecided": {
+        "label": "ตัดสินใจกับแคนดิเดต",
+        "group": "ตัดสินใจกับแคนดิเดต {count} รายการ"
+      },
+      "candidateBatch": {
+        "label": "ตัดสินใจกับแคนดิเดตเป็นชุด",
+        "group": "ตัดสินใจกับแคนดิเดตเป็นชุด {count} รายการ"
+      },
+      "characterUpdated": {
+        "label": "อัปเดตตัวละคร",
+        "group": "อัปเดตตัวละคร {count} ตัว"
+      },
+      "conflictResolved": {
+        "label": "แก้ความขัดแย้งเรียบร้อย",
+        "group": "แก้ความขัดแย้งเรียบร้อย {count} รายการ"
+      },
+      "simulationRun": {
+        "label": "รันการจำลอง",
+        "group": "รันการจำลอง {count} ครั้ง"
+      },
+      "simulationReplay": {
+        "label": "เล่นซ้ำการจำลอง",
+        "group": "เล่นซ้ำการจำลอง {count} ครั้ง"
+      },
+      "backlogGenerated": {
+        "label": "สร้างแบ็กล็อก",
+        "group": "สร้างแบ็กล็อก {count} รายการ"
+      },
+      "settingsUpdated": {
+        "label": "อัปเดตการตั้งค่า",
+        "group": "อัปเดตการตั้งค่า {count} ครั้ง"
+      },
+      "byokUpdated": {
+        "label": "อัปเดต BYOK",
+        "group": "อัปเดต BYOK {count} ครั้ง"
+      },
+      "coachAnalysis": {
+        "label": "ให้โค้ชวิเคราะห์ฉาก",
+        "group": "โค้ชวิเคราะห์ฉาก {count} ฉาก"
+      },
+      "unknown": {
+        "label": "บันทึกกิจกรรมแล้ว",
+        "group": "กิจกรรม {count} รายการ"
+      }
+    },
+    "utcLabel": "{hh}:{mm} UTC"
+  },
+  "fallback": {
+    "body": "เรากำลังพัฒนาหน้านี้อยู่ หากติดขัดงานของคุณ กรุณาแจ้งให้เราทราบ",
+    "systemAuthor": "System",
+    "conflictSurfaced": "ระบบพบความขัดแย้ง"
+  }
+}

@@ -1940,10 +1940,13 @@
           "label": "Activity logged",
           "group": "{count} activities"
         }
-      }
+      },
+      "utcLabel": "{hh}:{mm} UTC"
     },
     "fallback": {
-      "body": "We're still building this page. Let us know if it's blocking your workflow."
+      "body": "We're still building this page. Let us know if it's blocking your workflow.",
+      "systemAuthor": "System",
+      "conflictSurfaced": "System surfaced a conflict"
     },
     "account": {
       "apiKeys": {
