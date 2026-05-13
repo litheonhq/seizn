@@ -4,6 +4,7 @@ import { ensureCsrfCookie, verifyCsrfToken } from '@/lib/csrf';
 import { AuthorLlmError } from '@/lib/author/llm/types';
 import {
   AuthorUiNotFoundError,
+  AuthorUiServiceUnavailableError,
   AuthorUiValidationError,
   getAuthorUiService,
   type AuthorUiService,
@@ -43,6 +44,14 @@ export async function withAuthorUiService(
     }
     if (error instanceof AuthorUiNotFoundError) {
       return ensureCsrfCookie(request, NextResponse.json({ error: error.message }, { status: 404 }));
+    }
+    if (error instanceof AuthorUiServiceUnavailableError) {
+      const response = NextResponse.json(
+        { error: error.message, code: 'service_unavailable' },
+        { status: 503 }
+      );
+      response.headers.set('Retry-After', String(error.retryAfterSeconds));
+      return ensureCsrfCookie(request, response);
     }
     if (error instanceof AuthorLlmError) {
       const status = error.status ?? 500;

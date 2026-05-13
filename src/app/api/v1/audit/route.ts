@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import * as Sentry from '@sentry/nextjs';
 import { createServerClient } from '@/lib/supabase';
 import { logRequest } from '@/lib/api-auth';
 import { requireComplianceApiActor, withComplianceHeaders } from '@/lib/compliance/api-auth';
@@ -45,6 +46,12 @@ export async function GET(request: NextRequest) {
       actor.rateLimitHeaders
     );
   } catch (error) {
+    Sentry.withScope((scope) => {
+      scope.setTag('api_version', 'v1');
+      scope.setTag('endpoint', '/api/v1/audit');
+      scope.setTag('error_class', 'internal');
+      Sentry.captureException(error);
+    });
     logServerError('[v1/audit] query error', error);
     return NextResponse.json(
       {

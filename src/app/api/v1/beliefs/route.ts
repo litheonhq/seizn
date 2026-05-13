@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import * as Sentry from '@sentry/nextjs';
 import {
   authenticateRequest,
   authErrorResponse,
@@ -98,6 +99,13 @@ export async function GET(request: NextRequest) {
       meta: { ...META, latencyMs: Date.now() - startTime },
     });
   } catch (error) {
+    Sentry.withScope((scope) => {
+      scope.setTag('api_version', 'v1');
+      scope.setTag('endpoint', '/api/v1/beliefs');
+      scope.setTag('method', 'GET');
+      scope.setTag('error_class', 'internal');
+      Sentry.captureException(error);
+    });
     logServerError('[v1/beliefs] GET error', error);
     return ServerErrors.internal('list_beliefs');
   }
@@ -161,6 +169,13 @@ export async function POST(request: NextRequest) {
       meta: { ...META, latencyMs: Date.now() - startTime },
     });
   } catch (error) {
+    Sentry.withScope((scope) => {
+      scope.setTag('api_version', 'v1');
+      scope.setTag('endpoint', '/api/v1/beliefs');
+      scope.setTag('method', 'POST');
+      scope.setTag('error_class', 'internal');
+      Sentry.captureException(error);
+    });
     logServerError('[v1/beliefs] POST error', error);
     return ServerErrors.internal('record_belief');
   }
