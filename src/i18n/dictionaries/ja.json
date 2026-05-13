@@ -440,9 +440,10 @@
       "graph": "関係グラフ",
       "timeline": "タイムライン",
       "conflicts": "対立",
-      "coach": "執筆コーチ",
+      "coach": "コーチ",
       "simulate": "シミュレーション",
-      "byok": "持ち込みAPIキー"
+      "byok": "持ち込みAPIキー",
+      "replay": "リプレイ"
     },
     "pinSidebar": "サイドバーを固定",
     "unpinSidebar": "サイドバーを折りたたむ",

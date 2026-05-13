@@ -292,8 +292,8 @@
     },
     "nav": {
       "overview": "Overview",
-      "memories": "Entities",
-      "mindMap": "Relation graph",
+      "memories": "Memories",
+      "mindMap": "Mind map",
       "candidates": "Event inbox",
       "devTools": "Dev tools",
       "playground": "Playground",
@@ -314,7 +314,7 @@
       "organizations": "Projects",
       "settings": "Settings",
       "groups": {
-        "memory": "MEMORY",
+        "memory": "Memory",
         "observe": "OBSERVE",
         "govern": "POLICIES",
         "finops": "USAGE & COST",
@@ -350,7 +350,7 @@
         "byok": "BYOK",
         "settings": "Settings"
       },
-      "memoryEditor": "Memory Editor",
+      "memoryEditor": "Memory editor",
       "import": "Import",
       "replay": "Replay",
       "canon": "Canon Lock",
@@ -369,7 +369,7 @@
       "conflicts": "Conflicts",
       "coach": "Coach",
       "simulate": "Simulate",
-      "byok": "BYOK",
+      "byok": "Provider keys",
       "billing": "Billing",
       "adminMetrics": "Admin metrics"
     },
