@@ -126,7 +126,7 @@ jobs:
 
       - name: Download trace artifacts
         id: download-traces
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         continue-on-error: true
         with:
           name: seizn-traces
@@ -170,14 +170,14 @@ jobs:
         run: npm ci
 
       - name: Download trace artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: seizn-traces
           path: .seizn-traces/
         continue-on-error: true
 
       - name: Download generated tests
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: seizn-generated-tests
           path: .seizn-generated-tests/

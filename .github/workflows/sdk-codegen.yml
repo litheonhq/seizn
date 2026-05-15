@@ -368,7 +368,7 @@ jobs:
           fetch-depth: 0
 
       - name: Download generated SDK
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: sdk-typescript-generated
           path: ${{ env.OUTPUT_DIR }}
@@ -427,7 +427,7 @@ jobs:
           fetch-depth: 0
 
       - name: Download generated SDK
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: sdk-typescript-generated
           path: ${{ env.OUTPUT_DIR }}
