@@ -97,7 +97,7 @@ jobs:
           fi
 
       - name: Upload trace artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: seizn-traces
@@ -144,7 +144,7 @@ jobs:
           SEIZN_API_KEY: ${{ secrets.SEIZN_API_KEY }}
 
       - name: Upload generated tests
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: seizn-generated-tests
           path: .seizn-generated-tests/

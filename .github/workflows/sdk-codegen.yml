@@ -348,7 +348,7 @@ jobs:
           fi
 
       - name: Upload generated SDK as artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: sdk-typescript-generated
           path: ${{ env.OUTPUT_DIR }}
