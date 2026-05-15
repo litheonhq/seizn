@@ -195,7 +195,7 @@ jobs:
           SEIZN_API_KEY: ${{ secrets.SEIZN_API_KEY }}
 
       - name: Post PR comment
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
