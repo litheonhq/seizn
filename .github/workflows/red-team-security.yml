@@ -227,7 +227,7 @@ jobs:
 
     steps:
       - name: Download Report
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: red-team-report-${{ github.run_number }}
         continue-on-error: true
