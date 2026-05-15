@@ -85,7 +85,7 @@ jobs:
           echo "$RESPONSE" > analysis.json
 
       - name: Upload analysis artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: analysis
           path: analysis.json
@@ -165,7 +165,7 @@ jobs:
           echo "$RESPONSE" > fix.json
 
       - name: Upload fix artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: fix
           path: fix.json
