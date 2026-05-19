@@ -29,38 +29,6 @@
   ],
   "crons": [
     {
-      "path": "/api/internal/optimize",
-      "schedule": "0 4 * * *"
-    },
-    {
-      "path": "/api/internal/webhooks",
-      "schedule": "* * * * *"
-    },
-    {
-      "path": "/api/internal/usage/flush",
-      "schedule": "0 * * * *"
-    },
-    {
-      "path": "/api/internal/chaos/worker",
-      "schedule": "* * * * *"
-    },
-    {
-      "path": "/api/internal/story-health/evaluate",
-      "schedule": "0 6 * * *"
-    },
-    {
-      "path": "/api/cron/usage-alerts",
-      "schedule": "0 9 * * *"
-    },
-    {
-      "path": "/api/cron/weekly-summary",
-      "schedule": "0 9 * * 1"
-    },
-    {
-      "path": "/api/cron/drift-analysis",
-      "schedule": "0 4 * * *"
-    },
-    {
       "path": "/api/cron/subscription-expiry",
       "schedule": "0 0 * * *"
     },
@@ -69,32 +37,16 @@
       "schedule": "0 0 1 * *"
     },
     {
-      "path": "/api/cron/usage-cleanup",
-      "schedule": "0 3 * * 0"
-    },
-    {
-      "path": "/api/internal/eval-processor",
-      "schedule": "* * * * *"
-    },
-    {
-      "path": "/api/cron/audit-batch",
+      "path": "/api/internal/usage/flush",
       "schedule": "0 * * * *"
     },
     {
-      "path": "/api/cron/dsr-worker",
+      "path": "/api/internal/webhooks",
       "schedule": "*/5 * * * *"
     },
     {
-      "path": "/api/cron/tier-demotion",
-      "schedule": "0 3 * * *"
-    },
-    {
-      "path": "/api/cron/mrr-snapshot",
-      "schedule": "5 0 * * *"
-    },
-    {
-      "path": "/api/cron/continuity-reports",
-      "schedule": "0 2 * * *"
+      "path": "/api/cron/dsr-worker",
+      "schedule": "0 * * * *"
     }
   ]
 }
