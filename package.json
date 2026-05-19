@@ -62,7 +62,7 @@
     "@opentelemetry/exporter-trace-otlp-http": "^0.217.0",
     "@opentelemetry/exporter-trace-otlp-proto": "^0.217.0",
     "@opentelemetry/resources": "^2.5.0",
-    "@opentelemetry/sdk-node": "^0.217.0",
+    "@opentelemetry/sdk-node": "^0.218.0",
     "@opentelemetry/sdk-trace-base": "^2.5.0",
     "@opentelemetry/semantic-conventions": "^1.39.0",
     "@react-pdf/renderer": "^4.5.1",
