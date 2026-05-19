@@ -107,11 +107,11 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.11.3",
-    "@eslint/eslintrc": "^3.3.4",
+    "@eslint/eslintrc": "^3.3.5",
     "@next/bundle-analyzer": "^16.3.0-canary.8",
-    "@playwright/test": "^1.57.0",
+    "@playwright/test": "^1.60.0",
     "@tailwindcss/postcss": "^4",
-    "@testing-library/react": "^16.3.1",
+    "@testing-library/react": "^16.3.2",
     "@types/node": "^20",
     "@types/pdf-parse": "^1.1.5",
     "@types/react": "^18.3.27",
@@ -124,14 +124,14 @@
     "eslint-config-next": "^16.3.0-canary.8",
     "jsdom": "^27.4.0",
     "jszip": "^3.10.1",
-    "pg": "^8.16.3",
+    "pg": "^8.21.0",
     "png-to-ico": "^3.0.1",
-    "postgres": "^3.4.8",
+    "postgres": "^3.4.9",
     "tailwindcss": "^4",
     "typescript": "^5",
     "vite": "^7.3.2",
-    "vitest": "^4.0.17",
-    "wait-on": "^9.0.3"
+    "vitest": "^4.1.6",
+    "wait-on": "^9.0.10"
   },
   "overrides": {
     "@tootallnate/once": "^3.0.1",
